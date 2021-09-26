@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 1 Simple Linear Regression | MATH3714 Linear Regression and Robustness</title>
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 1 Simple Linear Regression | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 1 Simple Linear Regression | MATH3714 Linear Regression and Robustness" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="S00-about.html"/>
+
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">MATH3714 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
+<ul>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#teams"><i class="fa fa-check"></i>Discussion Board</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
+<li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#matrix-notation"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
+</ul></li>
+<li class="divider"></li>
+<li></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH3714 Linear Regression and Robustness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="S01-simple" class="section level1" number="1">
+<h1><span class="header-section-number">Section 1</span> Simple Linear Regression</h1>
+<p>As a reminder, we consider simple linear regression in this section.
+My hope is, that all of you have seen this material before at some
+stage, <em>e.g.</em> in school or in some first or second year modules.</p>
+<p>In preparation for notation introduced in the next section, we rename
+the parameters from <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> to the new names <span class="math inline">\(\beta_0\)</span>
+for the intercept and <span class="math inline">\(\beta_1\)</span> for the slope.</p>
+<div class="mysummary">
+<ul>
+<li>simple linear regression is the case where there is only one input</li>
+<li>a regression line is fitted by minimising the residual sum of squares</li>
+<li>linear regression is a statistical parameter estimation problem</li>
+<li>the problem can be conveniently written in matrix/vector notation</li>
+</ul>
+</div>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/w9t5sLIRzFY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<div id="residual-sum-of-squares" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Residual Sum of Squares</h2>
+<p>In simple linear regression, the aim is to find a regression line <span class="math inline">\(y = \beta_0 + \beta_1 x\)</span>, such that the line is “close” to given data points
+<span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n) \in\mathbb{R}^2\)</span> for <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>. The ususal way to find <span class="math inline">\(alpha\)</span> and <span class="math inline">\(\beta_1\)</span>, and thus the regression
+line, is by minimising the <strong>residual sum of squares</strong>:
+<span class="math display" id="eq:RSS">\[\begin{equation}
+  r(\beta_0, \beta_1)
+  = \sum_{i=1}^n \bigl( y_i - (\beta_0 + \beta_1 x_i) \bigr)^2.
+  \tag{1.1}
+\end{equation}\]</span>
+For given <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>, the value <span class="math inline">\(r(\beta_0, \beta_1)\)</span> measures
+how close (in vertical direction) the given data points <span class="math inline">\((x_i, y_i)\)</span>
+are to the regression line <span class="math inline">\(\beta_0 + \beta_1 x\)</span>. By minimising
+<span class="math inline">\(r(\beta_0, \beta_1)\)</span> we find the regression line which is “closest” to
+the data. The solution of this minimisation problem is usually
+expressed in terms of the sample variance <span class="math inline">\(\mathrm{s}_x\)</span> and the
+sample covariance <span class="math inline">\(\mathrm{s}_{xy}\)</span>.</p>
+<div class="definition">
+<p><span id="def:sx" class="definition"><strong>Definition 1.1  </strong></span>The <strong>sample covariance</strong> of <span class="math inline">\(x_1, \ldots, x_n \in \mathbb{R}\)</span> and
+<span class="math inline">\(y_1, \ldots, y_n\in\mathbb{R}\)</span> is given by
+<span class="math display">\[\begin{equation*}
+    \mathrm{s}_{xy}
+    := \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar x) (y_i - \bar y),
+  \end{equation*}\]</span>
+where <span class="math inline">\(\bar x\)</span> and <span class="math inline">\(\bar y\)</span> are the sample means.</p>
+<p>The <strong>sample variance</strong> of <span class="math inline">\(x_1, \ldots, x_n \in \mathbb{R}\)</span> is given by
+<span class="math display">\[\begin{equation*}
+    \mathrm{s}_{x}^2
+    := \mathrm{s}_{xx}
+    = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar x)^2,
+  \end{equation*}\]</span>
+where, again, <span class="math inline">\(\bar x\)</span> is the sample mean of the <span class="math inline">\(x_i\)</span>.</p>
+</div>
+<div class="lemma">
+<p><span id="lem:simple-LSQ" class="lemma"><strong>Lemma 1.1  </strong></span>Assume that <span class="math inline">\(\mathrm{s}_x^2 &gt; 0\)</span>. Then the function <span class="math inline">\(r(\beta_0, \beta_1)\)</span>
+from <a href="S01-simple.html#eq:RSS">(1.1)</a> takes its minimum at the point <span class="math inline">\((\beta_0, \beta_1)\)</span>
+given by
+<span class="math display">\[\begin{equation*}
+    \hat\beta_1 = \frac{\mathrm{s}_{xy}}{\mathrm{s}_x^2},
+    \qquad
+    \hat\beta_0 = \bar y - \hat \beta_1 \bar x,
+  \end{equation*}\]</span>
+where <span class="math inline">\(\bar x, \bar y\)</span> are the sample means, <span class="math inline">\(\mathrm{s}_{xy}\)</span> is the
+sample covariance and <span class="math inline">\(\mathrm{s}_x^2\)</span> is the sample variance.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-1" class="proof"><em>Proof</em>. </span>We could find the minimum of <span class="math inline">\(r\)</span> by differentiating and setting the
+derivatives to zero. Here we follow a different approach which uses
+a “trick” to simplify the algebra: Let <span class="math inline">\(\tilde x_i = x_i - \bar x\)</span>
+and <span class="math inline">\(\tilde y_i = y_i - \bar y\)</span> for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.
+Then we have
+<span class="math display">\[\begin{equation*}
+    \sum_{i=1}^n \tilde x_i
+    = \sum_{i=1}^n x_i - n \bar x
+    = 0
+  \end{equation*}\]</span>
+and, similarly, <span class="math inline">\(\sum_{i=1}^n \tilde y_i = 0\)</span>. Using the new
+coordinates <span class="math inline">\(\tilde x_i\)</span> and <span class="math inline">\(\tilde y_i\)</span> we find
+<span class="math display">\[\begin{align*}
+    r(\beta_0, \beta_1)
+    &amp;= \sum_{i=1}^n \bigl(y_i - \beta_0 - \beta_1 x_i \bigr)^2 \\
+    &amp;= \sum_{i=1}^n \bigl( \tilde y_i + \bar y - \beta_0 - \beta_1 \tilde x_i - \beta_1 \bar x \bigr)^2 \\
+    &amp;= \sum_{i=1}^n \Bigl( \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)
+    + \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr) \Bigr)^2 \\
+    &amp;= \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)^2
+    + 2 \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr) \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)
+    + n \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr)^2
+  \end{align*}\]</span>
+Since <span class="math inline">\(\sum_{i=1}^n \tilde x_i = \sum_{i=1}^n \tilde y_i = 0\)</span>, the
+second term on the right-hand side vanishes and we get
+<span class="math display" id="eq:RSS-rewrite" id="eq:RSS-rewrite">\[\begin{equation}
+    r(\beta_0, \beta_1)
+    = \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)^2
+    + n \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr)^2.  \tag{1.2}
+  \end{equation}\]</span>
+Both of these terms are positive and we can minimise the second term
+(without changing the first term) by setting
+<span class="math inline">\(\beta_0 = \bar y - \beta_1 \bar x\)</span>.</p>
+<p>To find the value of <span class="math inline">\(\beta_1\)</span> which minimises the first term on the
+right-hand side of \tag{1.2} we now set the
+(one-dimensional) derivative w.r.t. <span class="math inline">\(\beta_1\)</span> equal to <span class="math inline">\(0\)</span>. We get
+the condition
+<span class="math display">\[\begin{align*}
+    0
+    &amp;\overset{!}{=} \frac{d}{d\beta_1} \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)^2 \\
+    &amp;= \sum_{i=1}^n 2 \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr) \frac{d}{d\beta_1} \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr) \\
+    &amp;= - 2 \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr) \tilde x_i \\
+    &amp;= -2  \sum_{i=1}^n \tilde x_i \tilde y_i + 2 \beta_1 \sum_{i=1}^n \tilde x_i^2.
+  \end{align*}\]</span>
+The only solution to this equation is
+<span class="math display">\[\begin{align*}
+    \beta_1
+    &amp;= \frac{\sum_{i=1}^n \tilde x_i \tilde y_i}{\sum_{i=1}^n \tilde x_i^2} \\
+    &amp;= \frac{\sum_{i=1}^n (x_i - \bar x) (y_i - \bar y)}%
+    {\sum_{i=1}^n (x_i - \bar x)^2} \\
+    &amp;= \frac{\frac{1}{n-1}\sum_{i=1}^n (x_i - \bar x) (y_i - \bar y)}%
+    {\frac{1}{n-1}\sum_{i=1}^n (x_i - \bar x)^2} \\
+    &amp;= \frac{\mathrm{s}_{xy}}{\mathrm{s}_x^2}.
+  \end{align*}\]</span>
+Since the second derivative is <span class="math inline">\(2 \sum_{i=1}^n \tilde x_i^2 \geq 0\)</span>,
+this is indeed a minimum and the proof is complete.</p>
+</div>
+</div>
+<div id="linear-regression-as-a-parameter-estimation-problem" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Linear Regression as a Parameter Estimation Problem</h2>
+<p>In statistics, any analysis starts by making a statistical model of
+the data. This is done by writing random variables which have the
+same structure as the data, and which are chosen so that the data
+“looks like” a random sample from these random variables.</p>
+<p>To construct a model for the data used in a simple linear regression
+problem, we use random variables <span class="math inline">\(Y_1, \ldots, Y_n\)</span> such that
+<span class="math display" id="eq:regression">\[\begin{equation}
+  Y_i
+  = \beta_0 + \beta_1 x_i + \varepsilon_i \tag{1.3}
+\end{equation}\]</span>
+for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, where <span class="math inline">\(\varepsilon_1, \ldots, \varepsilon_n\)</span>
+are i.i.d. random variables with <span class="math inline">\(\mathbb{E}(\varepsilon_i) = 0\)</span> and
+<span class="math inline">\(\mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\)</span>.</p>
+<ul>
+<li>Here we assume that the <span class="math inline">\(x\)</span>-values as fixed and known. The only
+random quantities in the model are <span class="math inline">\(\varepsilon_i\)</span> and <span class="math inline">\(Y_i\)</span>. (There are
+more complicated models which also allow for randomness of <span class="math inline">\(x\)</span>, but
+we won’t consider such models here.)</li>
+<li>The random variables <span class="math inline">\(\varepsilon_i\)</span> are called <strong>residuals</strong> or
+<strong>errors</strong>. In a scatter plot, the residuals correspond to the
+vertical distance between the samples and the regression line.
+Often one assumes that <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span> for all
+<span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>.</li>
+<li>The values <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma^2\)</span> are parameters of
+the model. To fit the model to data, we need to estimate these
+parameters.</li>
+</ul>
+<p>This model is more complex than the models considered in some
+introductory courses to statistics:</p>
+<ul>
+<li>The data consists now of pairs of numbers, instead of just
+single numbers.</li>
+<li>We have
+<span class="math display">\[\begin{equation*}
+  \mathbb{E}(Y_i)
+  = \mathbb{E}\bigl( \beta_0 + \beta_1 x_i + \varepsilon_i \bigr)
+  = \beta_0 + \beta_1 x_i + \mathbb{E}(\varepsilon_i)
+  = \beta_0 + \beta_1 x_i.
+\end{equation*}\]</span>
+Thus, the expectation of <span class="math inline">\(Y_i\)</span> depends on <span class="math inline">\(x_i\)</span> and, at least for
+<span class="math inline">\(\beta_1 \neq 0\)</span>, the random variables <span class="math inline">\(Y_i\)</span> are not identically
+distributed.</li>
+</ul>
+<p>In this setup, we can consider the estimates <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span>
+from the previous subsection as statistcal parameter estimates for the
+model parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
+<p>In order to fit a linear model we also need to estimate the residual
+variance <span class="math inline">\(\sigma^2\)</span>. This can be done using the estimator
+<span class="math display" id="eq:reg-sigma-est">\[\begin{equation}
+  \hat\sigma^2
+  = \frac{1}{n-2} \sum_{i=1}^n \hat\varepsilon_i^2
+  = \frac{1}{n-2} \sum_{i=1}^n (y_i - \hat\beta_0 - \hat\beta_1 x_i)^2.
+  \tag{1.4}
+\end{equation}\]</span>
+To understand the form of this estimator, we have to remember that
+<span class="math inline">\(\sigma^2\)</span> is the variance of the <span class="math inline">\(\varepsilon_i\)</span>. Thus, using the standard
+estimator for the variance, we could estimate <span class="math inline">\(\sigma^2\)</span> as
+<span class="math display" id="eq:resid-var-est">\[\begin{equation}
+  \sigma^2
+  \approx \frac{1}{n-1} \sum_{i=1}^n \bigl(\varepsilon_i - \bar\varepsilon\bigr)^2
+  \approx \frac{1}{n-1} \sum_{i=1}^n \bigl(\hat\varepsilon_i - \overline{\hat\varepsilon}\bigr)^2,
+  \tag{1.5}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\bar\varepsilon\)</span> and <span class="math inline">\(\overline{\hat\varepsilon}\)</span> are the averages of the
+<span class="math inline">\(\varepsilon_i\)</span> and the <span class="math inline">\(\hat\varepsilon_i\)</span>, respectively. One can show that
+<span class="math inline">\(\overline{\hat\varepsilon} = 0\)</span>. The estimates of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> are
+sensitive to fluctuations in the data, with the effect that the
+estimated regression line is, on average, slightly closer to the data
+points than the true regression line would be. This causes the sample
+variance of the <span class="math inline">\(\hat\varepsilon_i\)</span>, on average, to be slightly smaller than
+the true residual variance <span class="math inline">\(\sigma^2\)</span> and the thus the
+estimator <a href="S01-simple.html#eq:resid-var-est">(1.5)</a> is slightly biased. A more
+detailed analysis reveals that an unbiased estimator can be obtained
+if one replaces the pre-factor <span class="math inline">\(1/(n-1)\)</span> in equation <a href="S01-simple.html#eq:resid-var-est">(1.5)</a>
+with <span class="math inline">\(1/(n-2)\)</span>. This leads to the estimator <a href="S01-simple.html#eq:reg-sigma-est">(1.4)</a>.</p>
+<p>The main advantage gained by considering a statistical model is, that
+we now can consider how close the estimators <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span>
+and <span class="math inline">\(\hat\sigma^2\)</span> are to the true values. Results one can obtain
+include the following:</p>
+<ul>
+<li><p>The estimators <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span> and <span class="math inline">\(\hat\sigma^2\)</span>
+are unbiased: This means that when we plug in random data
+<span class="math inline">\((x_i, Y_i)\)</span> from the model <a href="S01-simple.html#eq:regression">(1.3)</a>, on
+average we get the correc answer: <span class="math inline">\(\mathbb{E}(\hat\beta_0) = \beta_0\)</span>,
+<span class="math inline">\(\mathbb{E}(\hat\beta_1) = \beta_1\)</span>, <span class="math inline">\(\mathbb{E}(\hat\sigma^2) = \sigma^2\)</span>.</p></li>
+<li><p>One can ask about the average distance between the estimated
+parameters <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span> and <span class="math inline">\(\hat\sigma^2\)</span>
+and the (unknown) true values <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma^2\)</span>.
+One measure for these distances is the root mean squared error
+of the estimators.</p></li>
+<li><p>One can consider confidence intervals for the parameters
+<span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma^2\)</span>.</p></li>
+<li><p>One can consider statistical hypothesis tests to answer
+yes/no questions about the parameters. For example, one might ask
+whether the data could have come from the model with <span class="math inline">\(\beta_0=0\)</span>.</p></li>
+<li><p>One can consider whether the data is compatible with the model
+at all, irrespective of parameter values. If there is a non-linear
+relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, the model <a href="S01-simple.html#eq:regression">(1.3)</a>
+will no longer be appropriate.</p></li>
+</ul>
+<p>We will consider most of these questions over the course of the
+module.</p>
+</div>
+<div id="matrix-notation" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Matrix Notation</h2>
+<p>To conclude this section, we will rewrite the results of this section
+in a form which we will extensively use for multiple linear regression
+in the rest of this module. The idea here is to arrange all quantities
+in the problem as matrices and vectors in order to simplify notation.
+We write
+<span class="math display">\[\begin{equation*}
+  X = \begin{pmatrix}
+    1 &amp; x_1\\ 1 &amp; x_2\\\vdots &amp; \vdots\\1 &amp; x_n
+  \end{pmatrix}
+  \in \mathbb{R}^{n\times 2},
+  \qquad
+  y = \begin{pmatrix}
+    y_1 \\ y_2 \\ \vdots \\ y_n
+  \end{pmatrix}
+  \in \mathbb{R}^n,
+  \qquad
+  \varepsilon= \begin{pmatrix}
+    \varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n
+  \end{pmatrix}
+  \in \mathbb{R}^n,
+  \qquad
+  \beta = \begin{pmatrix}
+    \beta_0 \\
+    \beta_1
+  \end{pmatrix}
+  \in\mathbb{R}^2
+\end{equation*}\]</span>
+Using this notation, we can rewrite the <span class="math inline">\(n\)</span> equations <span class="math inline">\(y_i = \beta_0 + x_i \beta_1 + \varepsilon_i\)</span> for <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> as one
+vector-valued equation in <span class="math inline">\(\mathbb{R}^n\)</span>: we get
+<span class="math display">\[\begin{equation*}
+  y = X\beta + \varepsilon,
+\end{equation*}\]</span>
+and we want to “solve” this vector-valued equation for <span class="math inline">\(\beta\)</span>.
+The sum of squares can now be written as
+<span class="math display">\[\begin{equation*}
+  r(\beta)
+  = \sum_{i=1}^n \varepsilon_i^2
+  = \varepsilon^\top \varepsilon
+  = (y - X\beta)^\top (y - X\beta)
+  = y^\top y - 2\beta^\top X^\top y + \beta^\top X^\top X \beta.
+\end{equation*}\]</span>
+In the next section we will see that the minimum of <span class="math inline">\(r\)</span> is attained
+for
+<span class="math display">\[\begin{equation*}
+  \hat\beta
+  = (X X^\top)^{-1} X^\top y
+\end{equation*}\]</span>
+and one can check that the components of this vector <span class="math inline">\(\hat\beta = (\hat\beta_0, \hat\beta_1)\)</span> coincide with the estimates we obtained above.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="S00-about.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
