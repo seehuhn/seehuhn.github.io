@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 2 Least Squares Estimates | MATH3714 Linear Regression and Robustness</title>
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 2 Least Squares Estimates | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 2 Least Squares Estimates | MATH3714 Linear Regression and Robustness" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="S01-simple.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">MATH3714 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
+<ul>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#teams"><i class="fa fa-check"></i>Discussion Board</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
+<li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
+<li class="chapter" data-level="2.2" data-path="S02-multiple.html"><a href="S02-multiple.html#the-normal-equations"><i class="fa fa-check"></i><b>2.2</b> The Normal Equations</a></li>
+<li class="chapter" data-level="2.3" data-path="S02-multiple.html"><a href="S02-multiple.html#fitted-values"><i class="fa fa-check"></i><b>2.3</b> Fitted Values</a></li>
+<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.4</b> Example</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#vectors"><i class="fa fa-check"></i><b>A.1</b> Vectors</a></li>
+<li class="chapter" data-level="A.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-rules"><i class="fa fa-check"></i><b>A.2</b> Matrices</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#transpose"><i class="fa fa-check"></i><b>A.2.1</b> Transpose</a></li>
+<li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-matrix Product</a></li>
+<li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-vector Product</a></li>
+<li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.4</b> Positive Definite Matrices</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH3714 Linear Regression and Robustness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="S02-multiple" class="section level1" number="2">
+<h1><span class="header-section-number">Section 2</span> Least Squares Estimates</h1>
+<div id="data-and-models" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Data and Models</h2>
+<p>For multiple linear regression we assume that there are <span class="math inline">\(p\)</span> inputs and
+one output. If we have a sample of <span class="math inline">\(n\)</span> obervations, we have <span class="math inline">\(np\)</span>
+inputs and one output in total. Here we denote the <span class="math inline">\(i\)</span>th observation
+of the <span class="math inline">\(j\)</span>th input by <span class="math inline">\(x_{ij}\)</span> and the corresponding output by <span class="math inline">\(y_j\)</span>.</p>
+<p>As an example, we consider the <code>mtcars</code> dataset built into R. This is
+a small dataset, which contains information about 32 automobiles
+(1973–74 models). The table lists fuel consumption <code>mpg</code>, gross horsepower <code>hp</code>,
+and 9 other aspects of these cars. Here we consider <code>mpg</code> to be the output,
+and the other listed aspects to be inputs. Type <code>help(mtcars)</code> in R to learn
+more about this dataset:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="S02-multiple.html#cb1-1" aria-hidden="true" tabindex="-1"></a>mtcars</span></code></pre></div>
+<pre><code>##                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+## Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+## Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+## Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+## Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+## Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+## Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+## Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+## Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+## Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+## Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+## Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+## Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+## Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+## Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+## Toyota Corolla      33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+## Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+## Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+## AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+## Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+## Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+## Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+## Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+## Lotus Europa        30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+## Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+## Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+## Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+## Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
+<p>For this dataset we have <span class="math inline">\(n = 32\)</span> (number of cars), and <span class="math inline">\(p = 10\)</span> (number
+of attributes, excluding <code>mpg</code>). The values <span class="math inline">\(y_1, \ldots, y_{32}\)</span> are listed
+in the first column of the table, the values <span class="math inline">\(x_{i,1}\)</span> for <span class="math inline">\(i \in \{1, \ldots, 32\}\)</span> are shown in the second column, and the values <span class="math inline">\(x_{i,10}\)</span> are shown in
+the last column.</p>
+<p>In this data set it is easy to make scatter plots which show how a single
+input affects the output. For example, we can show how the engine power
+affects fuel consumption:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="S02-multiple.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mtcars<span class="sc">$</span>hp, mtcars<span class="sc">$</span>mpg,</span>
+<span id="cb3-2"><a href="S02-multiple.html#cb3-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;power [hp]&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;fuel consumption [mpg]&quot;</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>We can see that cars with stronger engines tend to use more fuel
+(<em>i.e.</em> a gallon of fuel lasts for fewer miles; the curve goes down),
+but leaving out the other inputs omits a lot of information. It is
+not easy to make a plot which takes all inputs into account. Is is
+also not immediately obvious which of the variables are most
+important.</p>
+<p>In linear regression, we assume that the output depends on the
+inputs in a linear (or more precisely, <em>affine</em>) way. We write
+this as
+<span class="math display" id="eq:lmdata">\[\begin{equation}
+  y_i
+  = \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i \tag{2.1}
+\end{equation}\]</span>
+where the residuals <span class="math inline">\(\varepsilon_i\)</span> are assumed to be “small”.</p>
+<p>The parameters <span class="math inline">\(\beta_j\)</span> can be interpreted as the expected change in
+the response <span class="math inline">\(y\)</span> per unit change in <span class="math inline">\(x_j\)</span> when all other regressor
+variables are held fixed. For this reason the parameters <span class="math inline">\(\beta_j\)</span>
+(for <span class="math inline">\(j=1, \ldots, p\)</span>) are sometimes called <em>partial</em> regression
+coefficients.</p>
+<p>This model describes a hyperplane in the <span class="math inline">\((p+1)\)</span>-dimensional space of
+the inputs <span class="math inline">\(x_j\)</span> and the output <span class="math inline">\(y\)</span>. The hyperplane is easily
+visualized when <span class="math inline">\(p=1\)</span> (as a line in <span class="math inline">\(\mathbb{R}^2\)</span>), and visualisation can be
+attempted for <span class="math inline">\(p=2\)</span> (as a plane in <span class="math inline">\(\mathbb{R}^3\)</span>) but is very hard for <span class="math inline">\(p&gt;2\)</span>.</p>
+<p>We defer making a proper statistical model for multiple linear regression
+until the next section.</p>
+</div>
+<div id="the-normal-equations" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> The Normal Equations</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/H_ehgg2nTSw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>Similar to what we did in Section <a href="S01-simple.html#sec:simple-mat">1.3</a>, we rewrite
+the model using matrix notation. We define the vectors
+<span class="math display">\[\begin{equation*}
+  y = \begin{pmatrix}
+    y_1 \\ y_2 \\ \vdots \\ y_n
+  \end{pmatrix}
+  \in \mathbb{R}^n,
+  \qquad
+  \varepsilon= \begin{pmatrix}
+    \varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n
+  \end{pmatrix}
+  \in \mathbb{R}^n,
+  \qquad
+  \beta = \begin{pmatrix}
+    \beta_0 \\
+    \beta_1 \\
+    \vdots \\
+    \beta_p
+  \end{pmatrix}
+  \in\mathbb{R}^{1+p}
+\end{equation*}\]</span>
+as well as the matrix
+<span class="math display">\[\begin{equation*}
+  X = \begin{pmatrix}
+    1 &amp; x_{1,1} &amp; \cdots &amp; x_{1,p} \\
+    1 &amp; x_{2,1} &amp; \cdots &amp; x_{2,p} \\
+    \vdots &amp; \vdots &amp; &amp; \vdots \\
+    1 &amp; x_{n,1} &amp; \cdots &amp; x_{n,p} \\
+  \end{pmatrix}
+  \in \mathbb{R}^{n\times (1+p)}.
+\end{equation*}\]</span>
+The matrix <span class="math inline">\(X\)</span> is often called the <strong>design matrix</strong>.</p>
+<p>Using this notation, the model <a href="S02-multiple.html#eq:lmdata">(2.1)</a> can be written
+as
+<span class="math display" id="eq:lmmodel">\[\begin{equation}
+  y = X \beta + \varepsilon,  \tag{2.2}
+\end{equation}\]</span>
+where again <span class="math inline">\(X\beta\)</span> is a matrix-vector multiplication which “hides”
+the sums in equation <a href="S02-multiple.html#eq:lmdata">(2.1)</a>, and <a href="S02-multiple.html#eq:lmmodel">(2.2)</a>
+is an equation of vectors of size <span class="math inline">\(n\)</span>, which combines the <span class="math inline">\(n\)</span>
+individual equations from <a href="S02-multiple.html#eq:lmdata">(2.1)</a> for the different
+values of <span class="math inline">\(i\)</span>.</p>
+<p>To simplify notation, we index the columns of <span class="math inline">\(X\)</span> by <span class="math inline">\(0, 1, \ldots, p\)</span> (instead of the more conventional <span class="math inline">\(1, \ldots, p+1\)</span>), so that we
+can for example write
+<span class="math display">\[\begin{equation*}
+  (X \beta)_i
+  = \sum_{j=0}^p x_{i,j} \beta_j
+  = \beta_0 + \sum_{j=1}^p x_{i,j} \beta_j.
+\end{equation*}\]</span></p>
+<p>As before, we find the regression coefficients by minimising
+the residual sum of squares:
+<span class="math display">\[\begin{align*}
+  r(\beta)
+  &amp;= \sum_{i=1}^n \varepsilon_i^2 \\
+  &amp;= \sum_{i=1}^n \bigl( y_i - (\beta_0 + \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p}) \bigr)^2.
+\end{align*}\]</span>
+In practice, this notation turns out to be cumbersome, and we will
+use matrix notation in the following proof.</p>
+<div class="lemma">
+<p><span id="lem:multiple-LSQ" class="lemma"><strong>Lemma 2.1  </strong></span>Assume that the matrix <span class="math inline">\(X^\top X \in \mathbb{R}^{(1+p) \times (1+p)}\)</span> is
+invertible. Then the function <span class="math inline">\(r(\beta)\)</span> takes its minimum at the
+vector <span class="math inline">\(\hat\beta\in\mathbb{R}^{p+1}\)</span> given by
+<span class="math display">\[\begin{equation*}
+  \hat\beta
+  = (X^\top X)^{-1} X^\top y.
+\end{equation*}\]</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-2" class="proof"><em>Proof</em>. </span>Using the vector equation <span class="math inline">\(\varepsilon= y - X \beta\)</span>, we can also write the
+residual sum of squares as
+<span class="math display">\[\begin{align*}
+    r(\beta)
+    &amp;= \sum_{i=1}^n \varepsilon_i^2 \\
+    &amp;= \varepsilon^\top \varepsilon\\
+    &amp;= (y - X \beta)^\top (y - X \beta) \\
+    &amp;= y^\top y - y^\top X\beta - (X\beta)^\top y + (X\beta)^\top (X\beta).
+  \end{align*}\]</span>
+Using the linear algebra rules from Appendix <a href="Sx1-matrices.html#matrix-rules">A.2</a> we find
+that <span class="math inline">\(y^\top X\beta = (X\beta)^\top y = \beta^\top X^\top y\)</span>
+and <span class="math inline">\((X\beta)^\top (X\beta) = \beta^\top X^\top X \beta\)</span>. Thus we get
+<span class="math display">\[\begin{equation*}
+    r(\beta)
+    = y^\top y - 2\beta^\top X^\top y + \beta^\top X^\top X \beta.
+  \end{equation*}\]</span>
+Note that in this eqation <span class="math inline">\(X\)</span> is a matrix, <span class="math inline">\(y\)</span> and <span class="math inline">\(\beta\)</span> are vectors,
+and <span class="math inline">\(r(\beta)\)</span> is a number.</p>
+<p>To find the minimum of this function, we set all partial derivatives
+<span class="math inline">\(\frac{\partial}{\partial \beta_i} r(\beta)\)</span> equal to <span class="math inline">\(0\)</span>. Going through the terms in
+the formula for <span class="math inline">\(r(\beta)\)</span> we find: (1) <span class="math inline">\(y^\top y\)</span> does not depend on <span class="math inline">\(\beta\)</span>,
+so we have <span class="math inline">\(\frac{\partial}{\partial \beta_i} y^\top y = 0\)</span> for all <span class="math inline">\(i\)</span>, (2) we have
+<span class="math display">\[\begin{equation*}
+    \frac{\partial}{\partial \beta_i} \beta^\top X^\top y
+    = \frac{\partial}{\partial \beta_i} \sum_{j=1}^{p+1} \beta_j (X^\top y)_j
+    = (X^\top y)_i
+  \end{equation*}\]</span>
+and (3) finally
+<span class="math display">\[\begin{equation*}
+    \frac{\partial}{\partial \beta_i} \beta^\top X^\top X \beta
+    = \frac{\partial}{\partial \beta_i} \sum_{j,k=1}^{p+1} \beta_j (X^\top X)_{j,k} \beta_k
+    = 2 \sum_{k=1}^{p+1} (X^\top X)_{i,k} \beta_k
+    = 2 \bigl( (X^\top X) \beta \bigr)_i.
+  \end{equation*}\]</span>
+(Some care is needed, when checking that the middle equality sign in
+the previous equation is correct.)
+Combining these derivatives, we find
+<span class="math display" id="eq:normal-first">\[\begin{equation}
+    \frac{\partial}{\partial \beta_i} r(\beta)
+    = 0 - 2 (X^\top y)_i + 2 \bigl( (X^\top X)_{i,k} \beta \bigr)_i
+                           \tag{2.3}
+  \end{equation}\]</span>
+for all <span class="math inline">\(i \in \{0, 1, \ldots, p\}\)</span>. At a local minimum of <span class="math inline">\(r\)</span>,
+all of these partial derivatives must be zero and using a vector
+equation we find that a necessary condition for a minimum is
+<span class="math display" id="eq:normal-equations">\[\begin{equation}
+    X^\top X \beta = X^\top y.  \tag{2.4}
+  \end{equation}\]</span>
+Since we assumed that <span class="math inline">\(X^\top X\)</span> is invertible, there is exactly
+one vector <span class="math inline">\(beta\)</span> which solves <a href="S02-multiple.html#eq:normal-equations">(2.4)</a>. This
+vector is given by
+<span class="math display">\[\begin{equation*}
+    \hat\beta
+    := (X^\top X)^{-1} X^\top y.
+  \end{equation*}\]</span></p>
+<p>As for one-dimensional minimisation, there is a condition on the
+second derivatives which must be checked to see which local extrema
+are local minima. Here we are only going to sketch this argument: A
+sufficient condition for <span class="math inline">\(\hat\beta\)</span> to be a minimum is for the
+second derivative matrix (<a href="https://en.wikipedia.org/wiki/Hessian_matrix">the Hessian
+matrix</a>)
+to be positive definite (see appendix <a href="Sx1-matrices.html#positive-definite">A.2.4</a>).
+Using equation <a href="S02-multiple.html#eq:normal-first">(2.3)</a> we find
+<span class="math display">\[\begin{equation*}
+    \frac{\partial}{\partial\beta_i \partial\beta_j} r(\beta)
+    = 2 (X^\top X)_{i,j}
+  \end{equation*}\]</span>
+And thus the Hessian matrix is <span class="math inline">\(H = 2 X^\top X\)</span>. Using results from
+linear algebra, one can show that this matrix is indeed positive
+definite and thus <span class="math inline">\(\hat\beta\)</span> is the unique minimum of <span class="math inline">\(r\)</span>.</p>
+</div>
+<p>Equation <a href="S02-multiple.html#eq:normal-equations">(2.4)</a> gives a system of <span class="math inline">\(p+1\)</span> linear
+equations with <span class="math inline">\(p+1\)</span> unknowns. This system of linear equations,
+<span class="math inline">\(X^\top X \beta = X^\top y\)</span> is called the <strong>normal equations</strong>.
+If <span class="math inline">\(X^\top X\)</span> is invertible, as assumed in the lemma, this
+system of equations has <span class="math inline">\(\hat\beta\)</span> as its unique solution.
+Otherwise, there may be more than one <span class="math inline">\(\beta\)</span> which leads to the
+same value <span class="math inline">\(r(\beta)\)</span> and the minimum will no longer be unique.
+This happens for example, if two of the inputs are identical to
+each other (or, more generally, one input is linearly dependent
+on one or more other inputs).</p>
+<p>The condition that <span class="math inline">\(X^\top X\)</span> must be invertible in multiple linear
+regression corresponds to the condition <span class="math inline">\(\mathrm{s}_x^2 &gt; 0\)</span> from
+lemma <a href="#simple-LSQ"><strong>??</strong></a> for simple linear regression.</p>
+<p>The value <span class="math inline">\(\hat\beta\)</span> found in the lemma is called the <strong>least squares
+estimator</strong> for <span class="math inline">\(\beta\)</span>, or sometimes the ordinary least squares (OLS)
+estimator.</p>
+</div>
+<div id="fitted-values" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Fitted Values</h2>
+<p>Let us again consider our model
+<span class="math display">\[\begin{equation*}
+  y = X \beta + \varepsilon,
+\end{equation*}\]</span>
+using the matrix notation introduced above. Here we can think of
+<span class="math inline">\(X\beta\)</span> as the <strong>true values</strong>, while <span class="math inline">\(\varepsilon\)</span> are the errors. The
+design matrix <span class="math inline">\(X\)</span> (containing the inputs) and the response <span class="math inline">\(y\)</span> are
+known to us, while the true coefficients <span class="math inline">\(\beta\)</span> and the errors <span class="math inline">\(\varepsilon\)</span>
+are unknown. Solving for <span class="math inline">\(\varepsilon\)</span> we find that the errors satisfy
+<span class="math display">\[\begin{equation*}
+  \varepsilon= y - X\beta.
+\end{equation*}\]</span></p>
+<p>Using the least squares estimate <span class="math inline">\(\hat\beta\)</span> we can estimate the true
+values as
+<span class="math display">\[\begin{equation*}
+  \hat y = X \hat\beta.
+\end{equation*}\]</span>
+These estimates are called the <strong>fitted values</strong>. Using the
+definition of <span class="math inline">\(\hat\beta\)</span> we get
+<span class="math display">\[\begin{equation*}
+  \hat y
+  = X (X^\top X)^{-1} X^\top y
+  =: Hy.
+\end{equation*}\]</span>
+The matrix <span class="math inline">\(H = X (X^\top X)^{-1} X^\top\)</span> is commonly called the <strong>hat
+matrix</strong> (because it “puts the hat on <span class="math inline">\(y\)</span>”).</p>
+<p>Finally, we can estimate the errors using the residuals
+<span class="math display">\[\begin{equation*}
+  \hat\varepsilon
+  = y - X \hat\beta
+  = y - \hat y
+  = y - H y
+  = (I - H) y,
+\end{equation*}\]</span>
+where <span class="math inline">\(I\)</span> is the <span class="math inline">\((p+1)\times (p+1)\)</span> identity matrix.</p>
+</div>
+<div id="example" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Example</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/VX2-WoRI4Z0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>To conclude this section, we demonstrate how these methods can be used
+in R. For this we consider the <code>mtcars</code> example from the beginning of
+the section again. I will first show how to do the analysis “by hand”,
+and later show how the same result can be obtained using R’s built-in functions.</p>
+<p>We first split <code>mtcars</code> into the respons column <code>y</code> (the first column)
+and the design matrix <code>X</code> (a column of ones, followed by columns 2 to 11
+of <code>mtcars</code>):</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="S02-multiple.html#cb4-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> mtcars[, <span class="dv">1</span>]</span>
+<span id="cb4-2"><a href="S02-multiple.html#cb4-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, <span class="fu">data.matrix</span>(mtcars[, <span class="dv">2</span><span class="sc">:</span><span class="dv">11</span>]))</span></code></pre></div>
+<p>Next we compute <span class="math inline">\(X^\top X\)</span> and solve the normal equations. Often it is
+faster, easier, and has lower numerical errors to solve the normal equations
+rather than inverting the matrix <span class="math inline">\(X^\top X\)</span>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="S02-multiple.html#cb5-1" aria-hidden="true" tabindex="-1"></a>XtX <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X</span>
+<span id="cb5-2"><a href="S02-multiple.html#cb5-2" aria-hidden="true" tabindex="-1"></a>beta.hat <span class="ot">&lt;-</span> <span class="fu">solve</span>(XtX, <span class="fu">t</span>(X) <span class="sc">%*%</span> y)</span>
+<span id="cb5-3"><a href="S02-multiple.html#cb5-3" aria-hidden="true" tabindex="-1"></a>beta.hat</span></code></pre></div>
+<pre><code>##             [,1]
+##      12.30337416
+## cyl  -0.11144048
+## disp  0.01333524
+## hp   -0.02148212
+## drat  0.78711097
+## wt   -3.71530393
+## qsec  0.82104075
+## vs    0.31776281
+## am    2.52022689
+## gear  0.65541302
+## carb -0.19941925</code></pre>
+<p>Without further checks it is hard to know whether the result is correct, or
+whether we made a mistake somewhere along the lines. One good sign is that
+we argued earlier that higher <code>hp</code> should lead to lower <code>mpg</code>, and indeed the
+corresponding coefficient <code>-0.02148212</code> is negative.</p>
+<p>Finally, compute the fitted values and generate a plot of fitted values
+against responses. If everything worked, we would expect the points in this
+plot to be close to the diagonal.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="S02-multiple.html#cb7-1" aria-hidden="true" tabindex="-1"></a>y.hat <span class="ot">&lt;-</span> X <span class="sc">%*%</span> beta.hat</span>
+<span id="cb7-2"><a href="S02-multiple.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y, y.hat, <span class="at">xlab =</span> <span class="st">&quot;responses&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;fitted values&quot;</span>)</span>
+<span id="cb7-3"><a href="S02-multiple.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">1</span>) <span class="co"># plot the diagonal</span></span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>For comparison we now re-do the analysis using built-in R commands.
+In the <code>lm()</code> command below, we use <code>data=mtcars</code> to tell R where the
+data is stored, and the formula <code>mpg ~ .</code> states that we want to
+model <code>mpg</code> as a function of all other variable (this is the meaning of <code>.</code>).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="S02-multiple.html#cb8-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars) <span class="co"># fit a linear model</span></span>
+<span id="cb8-2"><a href="S02-multiple.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m) <span class="co"># get the estimated coefficients</span></span></code></pre></div>
+<pre><code>## (Intercept)         cyl        disp          hp        drat          wt 
+## 12.30337416 -0.11144048  0.01333524 -0.02148212  0.78711097 -3.71530393 
+##        qsec          vs          am        gear        carb 
+##  0.82104075  0.31776281  2.52022689  0.65541302 -0.19941925</code></pre>
+<p>Comparing these coefficients to the vector <code>beta.hat</code> from above shows
+that we got the same result using both methods. The fitted values
+can be computed using <code>fitted.values(m)</code>. Here we just check that we get
+the same result as above:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="S02-multiple.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(<span class="fu">fitted.values</span>(m) <span class="sc">-</span> y.hat))</span></code></pre></div>
+<pre><code>## [1] 5.329071e-13</code></pre>
+<p>This results <code>5.329071e-13</code> stands for the number <span class="math inline">\(5.329071 \cdot 10^{-13}\)</span>,
+which is extremely small. The difference between our results and R’s result
+is caused by rounding errors.</p>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>multiple linear regression allows for more than one input
+but still has only one output</li>
+<li>the least squared estimate for the coefficients is found
+by minimising the residual sum of squares</li>
+<li>the estimate can be computed as the solution to the normal equations</li>
+<li>the hat matrix transforms responses into fitted values</li>
+</ul>
+</div>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="S01-simple.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH3714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
