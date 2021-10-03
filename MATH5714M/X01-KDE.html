@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 1 Kernel Density Estimation | MATH5714 Linear Regression, Robustness and Smoothing</title>
+  <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 1 Kernel Density Estimation | MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH5714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 1 Kernel Density Estimation | MATH5714 Linear Regression, Robustness and Smoothing" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">MATH5714M Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="X01-KDE.html"><a href="X01-KDE.html"><i class="fa fa-check"></i><b>1</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms"><i class="fa fa-check"></i><b>1.1</b> Histograms</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#probability-densities"><i class="fa fa-check"></i><b>1.1.1</b> Probability Densities</a></li>
+<li class="chapter" data-level="1.1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms-1"><i class="fa fa-check"></i><b>1.1.2</b> Histograms</a></li>
+<li class="chapter" data-level="1.1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#choice-of-buckets"><i class="fa fa-check"></i><b>1.1.3</b> Choice of Buckets</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation"><i class="fa fa-check"></i><b>1.2</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="X01-KDE.html"><a href="X01-KDE.html#motivation"><i class="fa fa-check"></i><b>1.2.1</b> Motivation</a></li>
+<li class="chapter" data-level="1.2.2" data-path="X01-KDE.html"><a href="X01-KDE.html#definition-of-a-kernel-density-estimator"><i class="fa fa-check"></i><b>1.2.2</b> Definition of a Kernel Density Estimator</a></li>
+<li class="chapter" data-level="1.2.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernels"><i class="fa fa-check"></i><b>1.2.3</b> Kernels</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation-in-r"><i class="fa fa-check"></i><b>1.3</b> Kernel Density Estimation in R</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH5714 Linear Regression, Robustness and Smoothing</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="X01-KDE" class="section level1" number="1">
+<h1><span class="header-section-number">Section 1</span> Kernel Density Estimation</h1>
+<p>In this section we discuss the topic of “Kernel Density Estimation”.
+Here we suppose we are given data <span class="math inline">\(x_1,\ldots, x_n \in\mathbb{R}^d\)</span> from an
+unknown probability density, say <span class="math inline">\(f\)</span>. Our objective is to estimate
+the density <span class="math inline">\(f\)</span>. This section lays the foundations for many of the
+following topics.</p>
+<div id="histograms" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Histograms</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/EyHa_ZVvRX8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<div id="probability-densities" class="section level3" number="1.1.1">
+<h3><span class="header-section-number">1.1.1</span> Probability Densities</h3>
+<p>Before we consider how to estimate a density, let just remember what a
+density is. A random variable <span class="math inline">\(X \in \mathbb{R}\)</span> has <strong>density</strong> <span class="math inline">\(f\colon \mathbb{R}\to [0, \infty)\)</span> if
+<span class="math display">\[\begin{equation*}
+  P\bigl(X \in [a,b]\bigr)
+  = \int_a^b f(x) \,dx
+\end{equation*}\]</span>
+for all <span class="math inline">\(a, b\in\mathbb{R}\)</span> with <span class="math inline">\(a &lt; b\)</span>. Densities are sometimes also called
+“probability densities” or even “probability density functions”.</p>
+<p>A density <span class="math inline">\(f\)</span> is large in regions where <span class="math inline">\(X\)</span> is very likely to take
+values, and small in regions where <span class="math inline">\(X\)</span> is less likely to take values.
+If <span class="math inline">\(f(x) = 0\)</span> for all <span class="math inline">\(x\)</span> in a region, that means that <span class="math inline">\(X\)</span> never takes
+values there. Graphically, the integral <span class="math inline">\(\int_a^b f(x) \,dx\)</span> can be
+interpreted as the area under the graph of <span class="math inline">\(f\)</span>. This is illustrated
+in figure <a href="X01-KDE.html#fig:density">1.1</a>.</p>
+
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:density"></span>
+<img src="MATH5714_files/figure-html/density-1.png" alt="An illustration of how the area under the graph of a density can be interpreted as a probability." width="672" />
+<p class="caption">
+Figure 1.1: An illustration of how the area under the graph of a density can be interpreted as a probability.
+</p>
+</div>
+<p>A function <span class="math inline">\(f\)</span> is the density of some random variable <span class="math inline">\(X\)</span>,
+if and only if <span class="math inline">\(f \geq 0\)</span> and
+<span class="math display">\[\begin{equation*}
+  \int_{-\infty}^\infty f(x) \,dx = 1.
+\end{equation*}\]</span></p>
+</div>
+<div id="histograms-1" class="section level3" number="1.1.2">
+<h3><span class="header-section-number">1.1.2</span> Histograms</h3>
+<p>In the univariate case, <em>i.e.</em> for <span class="math inline">\(d = 1\)</span>, a commonly used technique
+to approximate density of a sample is to plot a histogram. To
+illustrate this, we use the <code>faithful</code> dataset built in R, which
+contains waiting times between eruptions and the duration of the
+eruption for the Old Faithful geyser in the Yellowstone National Park.
+(You can type <code>help(faithful)</code> in R to learn more about this data
+set.) Here we focus on the waiting times only. A simple histogram
+for this dataset is shown in figure <a href="X01-KDE.html#fig:hist">1.2</a>.</p>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="X01-KDE.html#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> faithful<span class="sc">$</span>waiting</span>
+<span id="cb1-2"><a href="X01-KDE.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(x, <span class="at">probability =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-3"><a href="X01-KDE.html#cb1-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="cn">NULL</span>, <span class="at">xlab =</span> <span class="st">&quot;time between eruptions [mins]&quot;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:hist"></span>
+<img src="MATH5714_files/figure-html/hist-1.png" alt="This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes." width="672" />
+<p class="caption">
+Figure 1.2: This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes.
+</p>
+</div>
+<p>The histograms splits the range of the data into “buckets”, and for
+every bucket <span class="math inline">\([a, b]\)</span> it shows a bar where the height is proportional
+the number of samples in the bucket. I am ignoring the case that a
+sample may fall exactly on the boundary between two buckets here; in
+reality all but one buckets need to be half-open intervals, for
+example <span class="math inline">\([40, 45]\)</span>, <span class="math inline">\((45, 50]\)</span>, …, <span class="math inline">\((95, 100]\)</span>.</p>
+<p>As we have seen, the area under the graph of the density <span class="math inline">\(f\)</span> over the
+interval <span class="math inline">\([a, b]\)</span> corresponds to the probability <span class="math inline">\(P\bigl(X \in [a,b]\bigr)\)</span>. For the histogram to approximate the density, we need
+to scale the height <span class="math inline">\(h_{a,b}\)</span> of the bucket <span class="math inline">\([a, b]\)</span> so that the area
+in the histogram is also close to this probability. Since we don’t
+know the probability <span class="math inline">\(P\bigl(X \in [a,b]\bigr)\)</span> exactly, we have to
+approximate it as
+<span class="math display">\[\begin{equation*}
+  P\bigl(X \in [a,b]\bigr)
+  \approx \frac{n_{a,b}}{n},
+\end{equation*}\]</span>
+where <span class="math inline">\(n_{a,b}\)</span> is the number of samples in the bucket <span class="math inline">\([a,b]\)</span>,
+and <span class="math inline">\(n\)</span> is the total number of samples. So we need
+<span class="math display">\[\begin{align*}
+  (b-a) \cdot h_{a,b}
+    &amp;= \mbox{area of the histogram bar} \\
+    &amp;\approx \mbox{area of the density} \\
+    &amp;= P\bigl(X \in [a,b]\bigr) \\
+    &amp;\approx \frac{n_{a,b}}{n}.
+\end{align*}\]</span>
+and thus we choose
+<span class="math display">\[\begin{equation*}
+  h_{a,b}
+  = \frac{1}{(b - a) n} n_{a,b}.
+\end{equation*}\]</span>
+As expected, the height of the bar for the bucket <span class="math inline">\([a,b]\)</span> is proportional
+to the number <span class="math inline">\(n_{a,b}\)</span> of samples in the bucket.</p>
+</div>
+<div id="choice-of-buckets" class="section level3" number="1.1.3">
+<h3><span class="header-section-number">1.1.3</span> Choice of Buckets</h3>
+<p>Histograms are only meaningful if the buckets are chosen well. If
+the buckets are too large, not much of the structure of <span class="math inline">\(f\)</span> can be
+resolved. If the buckets are too small, the estimate <span class="math inline">\(P\bigl(X \in [a,b]\bigr) \approx n_{a,b}/n\)</span> will be poor and the histogram will
+no longer resemble the shape of <span class="math inline">\(f\)</span>. This</p>
+
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="X01-KDE.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb2-2"><a href="X01-KDE.html#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>)</span>
+<span id="cb2-3"><a href="X01-KDE.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(x, <span class="at">probability =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="cn">NULL</span>,</span>
+<span id="cb2-4"><a href="X01-KDE.html#cb2-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">2.5</span>, <span class="fl">2.5</span>, <span class="at">length.out =</span> <span class="dv">500</span>))</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:broken-hist"></span>
+<img src="MATH5714_files/figure-html/broken-hist-1.png" alt="This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes." width="672" />
+<p class="caption">
+Figure 1.3: This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes.
+</p>
+</div>
+<p>Finally, even if reasonable bucket sizes are chosen, the result can
+depend quite strongly on the exact locations of these buckets. To illustrate
+this effect, we consider a
+(dataset about the annual amount of snow)[<a href="https://teaching.seehuhn.de/data/buffalo/" class="uri">https://teaching.seehuhn.de/data/buffalo/</a>]
+falling in Buffalo, New York for different years. Figures <a href="X01-KDE.html#fig:buffalo1">1.4</a>
+and <a href="X01-KDE.html#fig:buffalo2">1.5</a> show that same data in two different ways,
+allowing to come to different conclusions about the distribution.</p>
+
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="X01-KDE.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># downloaded from https://teaching.seehuhn.de/data/buffalo/</span></span>
+<span id="cb3-2"><a href="X01-KDE.html#cb3-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/buffalo.csv&quot;</span>)</span>
+<span id="cb3-3"><a href="X01-KDE.html#cb3-3" aria-hidden="true" tabindex="-1"></a>snowfall <span class="ot">&lt;-</span> x<span class="sc">$</span>snowfall</span>
+<span id="cb3-4"><a href="X01-KDE.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(snowfall, <span class="at">probability =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-5"><a href="X01-KDE.html#cb3-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="fl">24.30</span>, <span class="fl">208.22</span>, <span class="at">length.out =</span> <span class="dv">20</span>),</span>
+<span id="cb3-6"><a href="X01-KDE.html#cb3-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="cn">NULL</span>, <span class="at">xlab =</span> <span class="st">&quot;snowfall [in]&quot;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:buffalo1"></span>
+<img src="MATH5714_files/figure-html/buffalo1-1.png" alt="The annual amount of snowfall in Buffalo, New York, in inches. The histogram makes it plausible that there is one main peak in the distribution." width="672" />
+<p class="caption">
+Figure 1.4: The annual amount of snowfall in Buffalo, New York, in inches. The histogram makes it plausible that there is one main peak in the distribution.
+</p>
+</div>
+
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="X01-KDE.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(snowfall, <span class="at">probability =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-2"><a href="X01-KDE.html#cb4-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="fl">22.85</span>, <span class="fl">204.92</span>, <span class="at">length.out =</span> <span class="dv">20</span>),</span>
+<span id="cb4-3"><a href="X01-KDE.html#cb4-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="cn">NULL</span>, <span class="at">xlab =</span> <span class="st">&quot;snowfall [in]&quot;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:buffalo2"></span>
+<img src="MATH5714_files/figure-html/buffalo2-1.png" alt="Continued from 1.4, this histogram shows the dataset in a way that three peaks are visible." width="672" />
+<p class="caption">
+Figure 1.5: Continued from <a href="X01-KDE.html#fig:buffalo1">1.4</a>, this histogram shows the dataset in a way that three peaks are visible.
+</p>
+</div>
+<p>As a further illustration of the effect of bucket width, the code in
+figure <a href="X01-KDE.html#fig:snow-hist-col">1.6</a> shows how histograms with different
+bucket widths can be generated in R. Here we simply specify numeric
+values for the <code>break</code> argument to <code>hist()</code>, which R uses as the
+<em>approximate</em> number of buckets in the plot.</p>
+
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="X01-KDE.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb5-2"><a href="X01-KDE.html#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="X01-KDE.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (breaks <span class="cf">in</span> <span class="fu">list</span>(<span class="dv">80</span>, <span class="dv">40</span>, <span class="dv">20</span>, <span class="dv">10</span>)) {</span>
+<span id="cb5-4"><a href="X01-KDE.html#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(snowfall,</span>
+<span id="cb5-5"><a href="X01-KDE.html#cb5-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">prob =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-6"><a href="X01-KDE.html#cb5-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">breaks =</span> breaks,</span>
+<span id="cb5-7"><a href="X01-KDE.html#cb5-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">200</span>),</span>
+<span id="cb5-8"><a href="X01-KDE.html#cb5-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.03</span>),</span>
+<span id="cb5-9"><a href="X01-KDE.html#cb5-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="fu">paste</span>(<span class="st">&quot;breaks =&quot;</span>, breaks),</span>
+<span id="cb5-10"><a href="X01-KDE.html#cb5-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="cn">NULL</span>)</span>
+<span id="cb5-11"><a href="X01-KDE.html#cb5-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:snow-hist-col"></span>
+<img src="MATH5714_files/figure-html/snow-hist-col-1.png" alt="This figure illustrates how the bucket size in a histogram can be controlled in R." width="672" />
+<p class="caption">
+Figure 1.6: This figure illustrates how the bucket size in a histogram can be controlled in R.
+</p>
+</div>
+</div>
+</div>
+<div id="kernel-density-estimation" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Kernel Density Estimation</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/IT90OYOyWN8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>Kernel density estimation allows to estimate the density <span class="math inline">\(f\)</span> for given
+data while avoiding some of the disadvantages of histograms.
+Again, we suppose that we are given data <span class="math inline">\(x_1, \ldots, x_n \in \mathbb{R}\)</span>
+and that we want to estimate the density <span class="math inline">\(f\)</span>.</p>
+<div id="motivation" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Motivation</h3>
+<p>Similar to the argument in the previous subsection, for <span class="math inline">\(x\)</span> in a “small”
+interval <span class="math inline">\([a,b]\)</span> we can estimate <span class="math inline">\(f(x)\)</span> as
+<span class="math display">\[\begin{equation*}
+  f(x)
+  \approx \frac{1}{b-a} \int_a^b f(y) \,dy
+  = \frac{1}{b-a} P\bigl( X\in [a,b] \bigr)
+  \approx \frac{1}{b-a} \frac{n_{a,b}}{n},
+\end{equation*}\]</span>
+where <span class="math inline">\(n_{a,b}\)</span> denotes the number of samples in the interval <span class="math inline">\([a, b]\)</span>.
+This equation contains two approximation. The first one,
+<span class="math inline">\(f(x) \approx 1/(ba) \int_a^b f(y) \,dy\)</span>, is more accurate if the
+interval is small, because then <span class="math inline">\(f\)</span> will be nearly constant over the
+interval. The second approximation will be more accurate if the
+interval is large, because then the interval <span class="math inline">\([a,b]\)</span> covers more samples
+and the estimate of the probability is based on more data. We will later
+discuss in detail how these two concerns can be optimally balanced.</p>
+<p>A mathematical “trick” to write more clearly how <span class="math inline">\(n_{a,b}\)</span> depends on the
+data is to write the value as
+<span class="math display">\[\begin{equation*}
+  n_{a,b}
+  = \sum_{i=1}^n I_{[a,b]}(x_i),
+\end{equation*}\]</span>
+where
+<span class="math display">\[\begin{equation*}
+  I_{[a,b]}(x)
+  = \begin{cases}
+    1 &amp; \mbox{if $x \in [a,b]$, and} \\
+    0 &amp; \mbox{otherwise.}
+  \end{cases}
+\end{equation*}\]</span>
+The function <span class="math inline">\(I_{[a,b]}\)</span> is called the <strong>indicator function</strong> of the
+set <span class="math inline">\([a, b]\)</span>.</p>
+<p>Using the indicator function notation, the estimate for <span class="math inline">\(f(x)\)</span>
+can be written as
+<span class="math display">\[\begin{align*}
+  f(x)
+  \approx \frac{1}{n(b-a)} n_{a,b}
+  = \frac{1}{n} \sum_{i=1}^n \frac{1}{b-a} I_{[a,b]}(x_i)
+\end{align*}\]</span>
+whenever <span class="math inline">\(x \in [a,b]\)</span> and when <span class="math inline">\(b-a\)</span> is “not too large and not too small”.
+For symmetry we choose the interval <span class="math inline">\([a, b]\)</span> centred around <span class="math inline">\(x\)</span>,
+say <span class="math inline">\([a, b] = [x - h, x + h]\)</span> where <span class="math inline">\(h\)</span> can be chosen to control the
+width of the interval. In this case we have <span class="math inline">\(b - a = x + h - x + h = 2h\)</span> and thus
+<span class="math display">\[\begin{align*}
+  f(x)
+  &amp;\approx \frac{1}{n} \sum_{i=1}^n \frac{1}{2h} I_{[x-h,x+h]}(x_i) \\
+  &amp;= \frac{1}{n} \sum_{i=1}^n \frac{1}{2h} I_{[-h,+h]}(x_i-x) \\
+  &amp;= \frac{1}{n} \sum_{i=1}^n \frac{1}{2h} I_{[-1,+1]}\Bigl(\frac{x_i-x}{h}\Bigr)
+\end{align*}\]</span>
+for all <span class="math inline">\(x \in \mathbb{R}\)</span>. This is an example of a kernel density estimate.
+The function <span class="math inline">\(K(x) = 1/2 \, I_{[-1,+1]}(x)\)</span> on the right-hand side is
+called the kernel of the estimate, and the parameter <span class="math inline">\(h\)</span> is called the
+<strong>bandwidth</strong> or the smoothing parameter.</p>
+</div>
+<div id="definition-of-a-kernel-density-estimator" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Definition of a Kernel Density Estimator</h3>
+<p>The general kernel density estimate is a generalisation of the idea
+from the previous subsection. We first define the class of functions
+which we use to replace the function <span class="math inline">\(1/2 \, I_{[-1,+1]}\)</span>.</p>
+<div class="definition">
+<p><span id="def:kernel" class="definition"><strong>Definition 1.1  </strong></span>A <strong>kernel</strong> is a function <span class="math inline">\(K\colon \mathbb{R}\to \mathbb{R}\)</span> such that</p>
+<ul>
+<li><span class="math inline">\(\int_{-\infty}^\infty K(x) \,dx = 1\)</span>,</li>
+<li><span class="math inline">\(K(x) \geq 0\)</span>, and</li>
+<li><span class="math inline">\(K(x) = K(-x)\)</span> for all <span class="math inline">\(x\in \mathbb{R}\)</span>.</li>
+</ul>
+</div>
+<p>Of these three properties, the third one is the most important one.
+While most authors list all three properties shown above, sometimes
+the second condition and very rarely also the first condition are
+omitted. One advantage of including the second condition is, that with
+this condition in place, kernel functions are also probability distribution
+functions.</p>
+<p>It is easy to check that <span class="math inline">\(K(x) = 1/2 \, I_{[-1,+1]}(x)\)</span> satisfies all
+three conditions of definition <a href="X01-KDE.html#def:kernel">1.1</a>. This function <span class="math inline">\(K\)</span>
+is sometimes called the “uniform kernel”, because it is the density
+of the uniform distribution <span class="math inline">\(\mathcal{U}[-1,+1]\)</span>.</p>
+<p>Based on the concept of a kernel, we now can define
+what a Kernel Density Estimate is.</p>
+<div class="definition">
+<p><span id="def:KDE" class="definition"><strong>Definition 1.2  </strong></span>For a kernel <span class="math inline">\(K\)</span>, bandwidth <span class="math inline">\(h &gt; 0\)</span> and <span class="math inline">\(x \in \mathbb{R}\)</span>, the
+<strong>kernel density estimate</strong> for <span class="math inline">\(f(x)\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  \hat f_h(x)
+  = \frac{1}{n} \sum_{i=1}^n K_h(x - x_i),
+\end{equation*}\]</span>
+where <span class="math inline">\(K_h\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  K_h(y)
+  = \frac{1}{h} K(y/h)
+\end{equation*}\]</span>
+for all <span class="math inline">\(y\in \mathbb{R}\)</span>.</p>
+</div>
+<p>For <span class="math inline">\(K(x) = 1/2 \, I_{[-1,+1]}(x)\)</span> this definition recovers the
+approximation we discussed in the previous section. In later sections
+we will see how the kernel <span class="math inline">\(K\)</span> can be chosen for the estimator <span class="math inline">\(\hat f\)</span> to have “good” properties. As a simple example we note that if <span class="math inline">\(K\)</span>
+is continuous, then the rescaled kernel <span class="math inline">\(K_h\)</span> and thus also the
+estimate <span class="math inline">\(f_h\)</span> are continuous functions.</p>
+<p>Similar to the bucket width in histograms, the bandwidth parameter <span class="math inline">\(h\)</span>
+controls how smooth the density estimate <span class="math inline">\(\hat f_h\)</span> is, as a function
+of <span class="math inline">\(x\)</span>.</p>
+</div>
+<div id="kernels" class="section level3" number="1.2.3">
+<h3><span class="header-section-number">1.2.3</span> Kernels</h3>
+<p>There are many different kernels in use. Some examples are listed
+below. A more exhautive list can, for example, be found
+<a href="https://en.wikipedia.org/wiki/Kernel_(statistics)#Kernel_functions_in_common_use">on Wikipedia</a>.</p>
+<div id="uniform-kernel" class="section level4" number="1.2.3.1">
+<h4><span class="header-section-number">1.2.3.1</span> Uniform Kernel</h4>
+<p><span class="math display">\[\begin{equation*}
+  K(x)
+  = \begin{cases}
+      1/2 &amp; \mbox{if $-1 \leq x \leq 1$} \\
+      0 &amp; \mbox{otherwise}
+    \end{cases}
+\end{equation*}\]</span></p>
+<p><img src="MATH5714_files/figure-html/kUniform-1.png" width="172.8" /></p>
+</div>
+<div id="triangular-kernel" class="section level4" number="1.2.3.2">
+<h4><span class="header-section-number">1.2.3.2</span> Triangular Kernel</h4>
+<p><span class="math display">\[\begin{equation*}
+  K(x)
+  = \begin{cases}
+      1-|x| &amp; \mbox{if $-1 \leq x \leq 1$} \\
+      0 &amp; \mbox{otherwise}
+    \end{cases}
+\end{equation*}\]</span></p>
+<p><img src="MATH5714_files/figure-html/kTriangular-1.png" width="172.8" /></p>
+</div>
+<div id="epanechnikov-kernel" class="section level4" number="1.2.3.3">
+<h4><span class="header-section-number">1.2.3.3</span> Epanechnikov Kernel</h4>
+<p><span class="math display">\[\begin{equation*}
+  K(x)
+  = \begin{cases}
+      \frac34 (1-x^2) &amp; \mbox{if $-1 \leq x \leq 1$} \\
+      0 &amp; \mbox{otherwise}
+    \end{cases}
+\end{equation*}\]</span></p>
+<p><img src="MATH5714_files/figure-html/kEpanechnikov-1.png" width="172.8" /></p>
+</div>
+<div id="gaussian-kernel" class="section level4" number="1.2.3.4">
+<h4><span class="header-section-number">1.2.3.4</span> Gaussian Kernel</h4>
+<p><span class="math display">\[\begin{equation*}
+  K(x)
+  = \frac{1}{\sqrt{2\pi}} \exp\bigl(-x^2/2\bigr)
+\end{equation*}\]</span></p>
+<p><img src="MATH5714_files/figure-html/kGaussian-1.png" width="172.8" /></p>
+</div>
+</div>
+</div>
+<div id="kernel-density-estimation-in-r" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Kernel Density Estimation in R</h2>
+<p>Kernel density estimates can be computed in R using the built-in
+<code>density()</code> function. If <code>x</code> is a vector containing the data, then
+<code>density(x)</code> computes a basic kernel density estimate, using the
+Gaussian kernel. The function has a number of optional arguments,
+which can be used to control details of the estimate:</p>
+<ul>
+<li><p><code>bw = ...</code> can be used to control the bandwidth <span class="math inline">\(h\)</span>.
+If no numeric value is given, a heuristic is used.
+Note that for some kernels, <code>bw</code> differs from our <span class="math inline">\(h\)</span>
+by a constant factor. The value <code>bw=1</code> always corresponds
+to the case where the probability distribution with density
+<span class="math inline">\(K_h\)</span> has variance 1.</p></li>
+<li><p><code>kernel = ...</code> can be used to choose the kernel.
+Choices incluse <code>"rectangular"</code> (the uniform kernel), <code>"triangular"</code>,
+<code>"epanechnikov"</code> and <code>"gaussian"</code>.</p></li>
+</ul>
+<p>Details about how to call <code>density()</code> can be found by using the
+command <code>help(density)</code> in R. The help page is also
+<a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/density.html">available online</a>.</p>
+<p>The return value of <code>density</code> is an R object which contains information
+about the kernel density estimate.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="X01-KDE.html#cb6-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">density</span>(snowfall)</span>
+<span id="cb6-2"><a href="X01-KDE.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(m)</span></code></pre></div>
+<pre><code>## List of 7
+##  $ x        : num [1:512] -4.17 -3.72 -3.26 -2.81 -2.35 ...
+##  $ y        : num [1:512] 4.32e-06 4.98e-06 5.73e-06 6.56e-06 7.48e-06 ...
+##  $ bw       : num 9.72
+##  $ n        : int 109
+##  $ call     : language density.default(x = snowfall)
+##  $ data.name: chr &quot;snowfall&quot;
+##  $ has.na   : logi FALSE
+##  - attr(*, &quot;class&quot;)= chr &quot;density&quot;</code></pre>
+<p>The field <code>$x</code> and <code>$y</code> contain the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> coordinates, respectively,
+of points on the <span class="math inline">\(x \mapsto \hat f_h(x)\)</span> curve, which approximates <span class="math inline">\(f\)</span>.
+The field <code>$bw</code> shows the numeric value for the bandwidth chosen by
+the heuristic. The returned object can also directly be used
+as an argument to <code>plot()</code> and <code>lines()</code>, to add the graph of <span class="math inline">\(\hat f_h\)</span>
+to a plot. The commands in figure <a href="X01-KDE.html#fig:snow-dens-col">1.7</a> show how the
+command <code>density()</code> can be used and illustrate the effect of the
+bandwidth parameter.</p>
+
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="X01-KDE.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb8-2"><a href="X01-KDE.html#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="X01-KDE.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (bw <span class="cf">in</span> <span class="fu">list</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">8</span>)) {</span>
+<span id="cb8-4"><a href="X01-KDE.html#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="fu">density</span>(snowfall, <span class="at">bw =</span> bw, <span class="at">kernel =</span> <span class="st">&quot;triangular&quot;</span>, <span class="at">n =</span> <span class="dv">1000</span>),</span>
+<span id="cb8-5"><a href="X01-KDE.html#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">200</span>),</span>
+<span id="cb8-6"><a href="X01-KDE.html#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.03</span>),</span>
+<span id="cb8-7"><a href="X01-KDE.html#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="fu">paste</span>(<span class="st">&quot;bandwidth =&quot;</span>, bw),</span>
+<span id="cb8-8"><a href="X01-KDE.html#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="cn">NA</span>)</span>
+<span id="cb8-9"><a href="X01-KDE.html#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:snow-dens-col"></span>
+<img src="MATH5714_files/figure-html/snow-dens-col-1.png" alt="This figure illustrates how the bandwidth of a kernel density estimate can be controlled in R." width="672" />
+<p class="caption">
+Figure 1.7: This figure illustrates how the bandwidth of a kernel density estimate can be controlled in R.
+</p>
+</div>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>Histograms can be scaled so that they approximate densities.</li>
+<li>Some care is needed when choosing buckets for a histogram.</li>
+<li>Kernel density estimates can be used to estimate densities from data.</li>
+<li>A variety of different kernel functions are commonly used.</li>
+</ul>
+</div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH5714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
