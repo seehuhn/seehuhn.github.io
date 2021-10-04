@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Interlude: Linear Regression in R | MATH3714 Linear Regression and Robustness</title>
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Interlude: Linear Regression in R | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Interlude: Linear Regression in R | MATH3714 Linear Regression and Robustness" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="S02-multiple.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">MATH3714 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
+<ul>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#teams"><i class="fa fa-check"></i>Discussion Board</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
+<li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
+<li class="chapter" data-level="2.2" data-path="S02-multiple.html"><a href="S02-multiple.html#the-normal-equations"><i class="fa fa-check"></i><b>2.2</b> The Normal Equations</a></li>
+<li class="chapter" data-level="2.3" data-path="S02-multiple.html"><a href="S02-multiple.html#fitted-values"><i class="fa fa-check"></i><b>2.3</b> Fitted Values</a></li>
+<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.4</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html"><i class="fa fa-check"></i>Interlude: Linear Regression in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-fitting"><i class="fa fa-check"></i>Specifying a Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-model"><i class="fa fa-check"></i>Working with the fitted model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-predict"><i class="fa fa-check"></i>Making Predictions</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#vectors"><i class="fa fa-check"></i><b>A.1</b> Vectors</a></li>
+<li class="chapter" data-level="A.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-rules"><i class="fa fa-check"></i><b>A.2</b> Matrices</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#transpose"><i class="fa fa-check"></i><b>A.2.1</b> Transpose</a></li>
+<li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-matrix Product</a></li>
+<li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-vector Product</a></li>
+<li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.4</b> Positive Definite Matrices</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH3714 Linear Regression and Robustness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="I01-lm" class="section level1 unnumbered">
+<h1>Interlude: Linear Regression in R</h1>
+<div id="lm-fitting" class="section level2 unnumbered">
+<h2>Specifying a Model</h2>
+<p>The function <code>lm()</code> is used to fit a linear model in R. There are different
+ways to specify the form of the model and the data to be used for fitting the
+model.</p>
+<ul>
+<li><p>The most basic way to call <code>lm()</code> is the case where the explanatory
+variables and the response variable are stored as separate vectors.
+Assuming, for example, that the explanatory variables are <code>x1</code>, <code>x2</code>, <code>x3</code>
+and that the response variable is <code>y</code> in R, we can tell R to fit the
+linear model <span class="math inline">\(y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \varepsilon\)</span>
+by using the following command:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="I01-lm.html#cb12-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3)</span></code></pre></div>
+<p>Note that R automatically added the intercept term <span class="math inline">\(\beta_0\)</span> to this
+model. If we want to fit a model without an intercept,
+<em>i.e.</em> the model
+<span class="math inline">\(y = \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \varepsilon\)</span>, we have to add
+<code>0 +</code> in front of the explanatory variables:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="I01-lm.html#cb13-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3)</span></code></pre></div>
+<p>The general form of a model specification is the response variable,
+followed by <code>~</code>, followed by a plus-separated list of explanatory
+variables. For this form of calling <code>lm()</code>, the variables <code>y</code>,
+<code>x1</code>, <code>x2</code>, and <code>x3</code> in the examples above must be already defined before
+<code>lm()</code> is called. It may be a good idea to double-check that the variables
+have the correct values before trying to call <code>lm()</code>.</p></li>
+<li><p>Both for the response and for explanatory variables we can
+specify arbitrary R expressions to compute the numeric values to be
+used. For example, to fit the model
+<span class="math inline">\(\log(y) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \varepsilon\)</span> (assuming
+that all <span class="math inline">\(y_i\)</span> are positive) we can use the following command:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="I01-lm.html#cb14-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(<span class="fu">log</span>(y) <span class="sc">~</span> x1 <span class="sc">+</span> x2)</span></code></pre></div>
+<p>Some care is needed, because <code>+</code>, <code>*</code> and <code>^</code> have a
+special meaning inside the first argument of <code>lm()</code>; any time
+we want to compute a variable for <code>lm()</code> using these
+operations, we need to surround the corresponding expression with
+<code>I()</code>, to tell R that <code>+</code>, <code>*</code> or <code>^</code> should
+have their usual, arithmetic meaning. For example, to fit a model
+of the form <span class="math inline">\(y \sim \beta_0 + \beta_1 x + \beta_2 x^2 + \varepsilon\)</span>, we
+can use the following R command:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="I01-lm.html#cb15-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
+<p>Here, the use of <code>I()</code> tells R that <code>x^2</code> is to be
+interpreted as the vector <span class="math inline">\((x_1^2, \ldots, x_n^2)\)</span>. Similarly, we
+can fit a model of the form
+<span class="math inline">\(y = \beta_0 + \beta_1 (x_1 + x_2) + \varepsilon\)</span>:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="I01-lm.html#cb16-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">I</span>(x1<span class="sc">+</span>x2))</span></code></pre></div>
+<p>Here, the use of <code>I()</code> tells R that <code>x1+x2</code> indicates the
+vector <span class="math inline">\((x_{1,1}+x_{2,1}, \ldots, x_{1,n}+x_{2,n})\)</span> instead of two
+separate explanatory variables.</p>
+<p>Details about how to specify models in calls to <code>lm()</code> can be found by
+using the <a href="https://rdrr.io/r/stats/formula.html">command <code>help(formula)</code></a>
+in R.</p></li>
+<li><p>If the response and the explanatory variables are stored in the
+columns of a data frame, we can use the <code>data=...</code> argument to <code>lm()</code> to
+specify this data frame and then just use the column names to specify the
+regression model. For example, the
+<a href="https://rdrr.io/r/datasets/stackloss.html"><code>stackloss</code> data set</a>
+built into R consists of a data frame with columns <code>Air.Flow</code>,
+<code>Water.Temp</code>, <code>Acid.Conc.</code>, <code>stack.loss</code>. To predict
+<code>stackloss$stack.loss</code> from <code>stackloss$Air.Flow</code> we can write</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="I01-lm.html#cb17-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> Air.Flow, <span class="at">data=</span>stackloss)</span></code></pre></div>
+<p>As a special case, a single dot “<code>.</code>” can be used in place of
+the explanatory variables in the model to indicate that all columns
+except for the given response should be used. Thus, the following
+two commands are equivalent:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="I01-lm.html#cb18-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data=</span>stackloss)</span>
+<span id="cb18-2"><a href="I01-lm.html#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> Air.Flow <span class="sc">+</span> Water.Temp <span class="sc">+</span> Acid.Conc., <span class="at">data=</span>stackloss)</span></code></pre></div></li>
+</ul>
+</div>
+<div id="lm-model" class="section level2 unnumbered">
+<h2>Working with the fitted model</h2>
+<p>The output of the <code>lm()</code> function is an R object which can be used the extract
+information about the fitted model. A good way to work with this object is to
+store it in a variable and then use commands like the ones listed below to work
+with this variable. For example, the following R command fits a model for the
+<code>stackloss</code> data set and stores it in the variable <code>m</code>:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="I01-lm.html#cb19-1" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data=</span>stackloss)</span></code></pre></div>
+<p>Many operations are available to use with this object <code>m</code>:</p>
+<ul>
+<li><p>Printing <code>m</code> to the screen:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="I01-lm.html#cb20-1" aria-hidden="true" tabindex="-1"></a>  m</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = stack.loss ~ ., data = stackloss)
+## 
+## Coefficients:
+## (Intercept)     Air.Flow   Water.Temp   Acid.Conc.  
+##    -39.9197       0.7156       1.2953      -0.1521</code></pre>
+<p>This shows the estimated values for the regression coefficient.</p></li>
+<li><p>The command <code>summary()</code> can be used to print additional
+information about the fitted model:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="I01-lm.html#cb22-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(m)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = stack.loss ~ ., data = stackloss)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.2377 -1.7117 -0.4551  2.3614  5.6978 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -39.9197    11.8960  -3.356  0.00375 ** 
+## Air.Flow      0.7156     0.1349   5.307  5.8e-05 ***
+## Water.Temp    1.2953     0.3680   3.520  0.00263 ** 
+## Acid.Conc.   -0.1521     0.1563  -0.973  0.34405    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.243 on 17 degrees of freedom
+## Multiple R-squared:  0.9136, Adjusted R-squared:  0.8983 
+## F-statistic:  59.9 on 3 and 17 DF,  p-value: 3.016e-09</code></pre>
+<p>We will learn over the course of this module how to interpret
+most of this output.</p></li>
+<li><p>The coefficient vector <span class="math inline">\(\beta\)</span> can be obtained using
+<code>coef(m)</code>:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="I01-lm.html#cb24-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(m)</span></code></pre></div>
+<pre><code>## (Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
+## -39.9196744   0.7156402   1.2952861  -0.1521225</code></pre></li>
+<li><p>The fitted values <span class="math inline">\(\hat y_i\)</span> can be obtained using
+the command <code>fitted(m)</code>:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="I01-lm.html#cb26-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fitted</span>(m)</span></code></pre></div>
+<pre><code>##         1         2         3         4         5         6         7         8 
+## 38.765363 38.917485 32.444467 22.302226 19.711654 21.006940 21.389491 21.389491 
+##         9        10        11        12        13        14        15        16 
+## 18.144379 12.732806 11.363703 10.220540 12.428561 12.050499  5.638582  6.094949 
+##        17        18        19        20        21 
+##  9.519951  8.455093  9.598257 13.587853 22.237713</code></pre></li>
+<li><p>The estimated residuals <span class="math inline">\(\hat\varepsilon_i = y_i - \hat y_i\)</span> can
+be obtained using the command <code>resid(m)</code>:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="I01-lm.html#cb28-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">resid</span>(m)</span></code></pre></div>
+<pre><code>##           1           2           3           4           5           6 
+##  3.23463723 -1.91748529  4.55553300  5.69777417 -1.71165358 -3.00693970 
+##           7           8           9          10          11          12 
+## -2.38949071 -1.38949071 -3.14437890  1.26719408  2.63629676  2.77946036 
+##          13          14          15          16          17          18 
+## -1.42856088 -0.05049929  2.36141836  0.90505080 -1.51995059 -0.45509295 
+##          19          20          21 
+## -0.59825656  1.41214728 -7.23771286</code></pre></li>
+<li><p>The design matrix <span class="math inline">\(X\)</span> can be found using <code>model.matrix(m)</code>:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="I01-lm.html#cb30-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model.matrix</span>(m)</span></code></pre></div>
+<pre><code>##    (Intercept) Air.Flow Water.Temp Acid.Conc.
+## 1            1       80         27         89
+## 2            1       80         27         88
+## 3            1       75         25         90
+## 4            1       62         24         87
+## 5            1       62         22         87
+## 6            1       62         23         87
+## 7            1       62         24         93
+## 8            1       62         24         93
+## 9            1       58         23         87
+## 10           1       58         18         80
+## 11           1       58         18         89
+## 12           1       58         17         88
+## 13           1       58         18         82
+## 14           1       58         19         93
+## 15           1       50         18         89
+## 16           1       50         18         86
+## 17           1       50         19         72
+## 18           1       50         19         79
+## 19           1       50         20         80
+## 20           1       56         20         82
+## 21           1       70         20         91
+## attr(,&quot;assign&quot;)
+## [1] 0 1 2 3</code></pre></li>
+</ul>
+</div>
+<div id="lm-predict" class="section level2 unnumbered">
+<h2>Making Predictions</h2>
+<p>One of the main aims of fitting a linear model is to use the model to make
+predictions for new, not previously observed <span class="math inline">\(x\)</span>-values, <em>i.e.</em> to compute
+<span class="math inline">\(y_{\mathrm{new}} = X_{\mathrm{new}} \hat\beta\)</span>. The general form of the
+command for prediction is <code>predict(m, newdata)</code>, where <code>m</code> is the model
+previously fitted using <code>lm()</code>, and <code>newdata</code> specifies the new <span class="math inline">\(x\)</span>-values to
+predict responses for. The argument <code>new.data</code> should be a <code>data.frame</code> and
+for each variable in the original model there should be a column in <code>newdata</code>
+which has the name of the original variable and contains the new values. For
+example, if the model was fitted using</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="I01-lm.html#cb32-1" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
+<p>and if the new samples are stored in <code>x.new</code>, then responses for
+the <span class="math inline">\(x\)</span>-values in <code>x.new</code> can be predicted using the following
+command:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="I01-lm.html#cb33-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">x=</span>x.new))</span></code></pre></div>
+<p>As a second example, for the <code>stackloss</code> data set, the following
+commands can be used to predict <code>stack.loss</code> for two new
+<span class="math inline">\(x\)</span>-values:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="I01-lm.html#cb34-1" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data=</span>stackloss)</span>
+<span id="cb34-2"><a href="I01-lm.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  new.data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Air.Flow=</span><span class="fu">c</span>(<span class="dv">70</span>, <span class="dv">73</span>), <span class="at">Water.Temp=</span><span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">24</span>), <span class="at">Acid.Conc.=</span><span class="fu">c</span>(<span class="dv">78</span>,<span class="dv">90</span>))</span>
+<span id="cb34-3"><a href="I01-lm.html#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(m, new.data)</span></code></pre></div>
+<pre><code>##        1        2 
+## 30.69174 29.71790</code></pre>
+<p>More information about <code>predict()</code> can be found by reading
+the <a href="https://rdrr.io/r/stats/predict.html">output of <code>help(predict.lm)</code></a>.</p>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="S02-multiple.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH3714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

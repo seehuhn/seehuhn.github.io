@@ -927,7 +927,7 @@ on one or more other inputs).
 
 The condition that \(X^\top X\) must be invertible in multiple linear
 regression corresponds to the condition \(\mathrm{s}_x^2 > 0\) from
-lemma~\ref{simple-LSQ} for simple linear regression.
+lemma~\ref{lem:simple-LSQ} for simple linear regression.
 
 The value \(\hat\beta\) found in the lemma is called the \textbf{least squares
 estimator} for \(\beta\), or sometimes the ordinary least squares (OLS)
@@ -1092,6 +1092,339 @@ is caused by rounding errors.
 \item
   the hat matrix transforms responses into fitted values
 \end{itemize}
+
+\hypertarget{I01-lm}{%
+\section*{Interlude: Linear Regression in R}\label{I01-lm}}
+\addcontentsline{toc}{section}{Interlude: Linear Regression in R}
+
+\hypertarget{lm-fitting}{%
+\subsection*{Specifying a Model}\label{lm-fitting}}
+\addcontentsline{toc}{subsection}{Specifying a Model}
+
+The function \texttt{lm()} is used to fit a linear model in~R. There are different
+ways to specify the form of the model and the data to be used for fitting the
+model.
+
+\begin{itemize}
+\item
+  The most basic way to call \texttt{lm()} is the case where the explanatory
+  variables and the response variable are stored as separate vectors.
+  Assuming, for example, that the explanatory variables are \texttt{x1}, \texttt{x2}, \texttt{x3}
+  and that the response variable is~\texttt{y} in~R, we can tell R to fit the
+  linear model \(y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \varepsilon\)
+  by using the following command:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2 }\SpecialCharTok{+}\NormalTok{ x3)}
+\end{Highlighting}
+\end{Shaded}
+
+  Note that R automatically added the intercept term \(\beta_0\) to this
+  model. If we want to fit a model without an intercept,
+  \emph{i.e.} the model
+  \(y = \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \varepsilon\), we have to add
+  \texttt{0\ +} in front of the explanatory variables:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+    \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \DecValTok{0} \SpecialCharTok{+}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2 }\SpecialCharTok{+}\NormalTok{ x3)}
+\end{Highlighting}
+\end{Shaded}
+
+  The general form of a model specification is the response variable,
+  followed by \texttt{\textasciitilde{}}, followed by a plus-separated list of explanatory
+  variables. For this form of calling \texttt{lm()}, the variables \texttt{y},
+  \texttt{x1}, \texttt{x2}, and \texttt{x3} in the examples above must be already defined before
+  \texttt{lm()} is called. It may be a good idea to double-check that the variables
+  have the correct values before trying to call~\texttt{lm()}.
+\item
+  Both for the response and for explanatory variables we can
+  specify arbitrary R expressions to compute the numeric values to be
+  used. For example, to fit the model
+  \(\log(y) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \varepsilon\) (assuming
+  that all \(y_i\) are positive) we can use the following command:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(y) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2)}
+\end{Highlighting}
+\end{Shaded}
+
+  Some care is needed, because \texttt{+}, \texttt{*} and \texttt{\^{}} have a
+  special meaning inside the first argument of \texttt{lm()}; any time
+  we want to compute a variable for \texttt{lm()} using these
+  operations, we need to surround the corresponding expression with
+  \texttt{I()}, to tell R that \texttt{+}, \texttt{*} or \texttt{\^{}} should
+  have their usual, arithmetic meaning. For example, to fit a model
+  of the form \(y \sim \beta_0 + \beta_1 x + \beta_2 x^2 + \varepsilon\), we
+  can use the following R command:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+  Here, the use of \texttt{I()} tells R that \texttt{x\^{}2} is to be
+  interpreted as the vector \((x_1^2, \ldots, x_n^2)\). Similarly, we
+  can fit a model of the form
+  \(y = \beta_0 + \beta_1 (x_1 + x_2) + \varepsilon\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{I}\NormalTok{(x1}\SpecialCharTok{+}\NormalTok{x2))}
+\end{Highlighting}
+\end{Shaded}
+
+  Here, the use of \texttt{I()} tells R that \texttt{x1+x2} indicates the
+  vector \((x_{1,1}+x_{2,1}, \ldots, x_{1,n}+x_{2,n})\) instead of two
+  separate explanatory variables.
+
+  Details about how to specify models in calls to \texttt{lm()} can be found by
+  using the \href{https://rdrr.io/r/stats/formula.html}{command \texttt{help(formula)}}
+  in~R.
+\item
+  If the response and the explanatory variables are stored in the
+  columns of a data frame, we can use the \texttt{data=...} argument to \texttt{lm()} to
+  specify this data frame and then just use the column names to specify the
+  regression model. For example, the
+  \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} data set}
+  built into R consists of a data frame with columns \texttt{Air.Flow},
+  \texttt{Water.Temp}, \texttt{Acid.Conc.}, \texttt{stack.loss}. To predict
+  \texttt{stackloss\$stack.loss} from \texttt{stackloss\$Air.Flow} we can write
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Air.Flow, }\AttributeTok{data=}\NormalTok{stackloss)}
+\end{Highlighting}
+\end{Shaded}
+
+  As a special case, a single dot ``\texttt{.}'' can be used in place of
+  the explanatory variables in the model to indicate that all columns
+  except for the given response should be used. Thus, the following
+  two commands are equivalent:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data=}\NormalTok{stackloss)}
+  \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Air.Flow }\SpecialCharTok{+}\NormalTok{ Water.Temp }\SpecialCharTok{+}\NormalTok{ Acid.Conc., }\AttributeTok{data=}\NormalTok{stackloss)}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{lm-model}{%
+\subsection*{Working with the fitted model}\label{lm-model}}
+\addcontentsline{toc}{subsection}{Working with the fitted model}
+
+The output of the \texttt{lm()} function is an R object which can be used the extract
+information about the fitted model. A good way to work with this object is to
+store it in a variable and then use commands like the ones listed below to work
+with this variable. For example, the following R command fits a model for the
+\texttt{stackloss} data set and stores it in the variable~\texttt{m}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data=}\NormalTok{stackloss)}
+\end{Highlighting}
+\end{Shaded}
+
+Many operations are available to use with this object~\texttt{m}:
+
+\begin{itemize}
+\item
+  Printing \texttt{m} to the screen:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  m}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = stack.loss ~ ., data = stackloss)
+## 
+## Coefficients:
+## (Intercept)     Air.Flow   Water.Temp   Acid.Conc.  
+##    -39.9197       0.7156       1.2953      -0.1521
+\end{verbatim}
+
+  This shows the estimated values for the regression coefficient.
+\item
+  The command \texttt{summary()} can be used to print additional
+  information about the fitted model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = stack.loss ~ ., data = stackloss)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.2377 -1.7117 -0.4551  2.3614  5.6978 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -39.9197    11.8960  -3.356  0.00375 ** 
+## Air.Flow      0.7156     0.1349   5.307  5.8e-05 ***
+## Water.Temp    1.2953     0.3680   3.520  0.00263 ** 
+## Acid.Conc.   -0.1521     0.1563  -0.973  0.34405    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.243 on 17 degrees of freedom
+## Multiple R-squared:  0.9136, Adjusted R-squared:  0.8983 
+## F-statistic:  59.9 on 3 and 17 DF,  p-value: 3.016e-09
+\end{verbatim}
+
+  We will learn over the course of this module how to interpret
+  most of this output.
+\item
+  The coefficient vector~\(\beta\) can be obtained using
+  \texttt{coef(m)}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{coef}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
+## -39.9196744   0.7156402   1.2952861  -0.1521225
+\end{verbatim}
+\item
+  The fitted values \(\hat y_i\) can be obtained using
+  the command \texttt{fitted(m)}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{fitted}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         1         2         3         4         5         6         7         8 
+## 38.765363 38.917485 32.444467 22.302226 19.711654 21.006940 21.389491 21.389491 
+##         9        10        11        12        13        14        15        16 
+## 18.144379 12.732806 11.363703 10.220540 12.428561 12.050499  5.638582  6.094949 
+##        17        18        19        20        21 
+##  9.519951  8.455093  9.598257 13.587853 22.237713
+\end{verbatim}
+\item
+  The estimated residuals \(\hat\varepsilon_i = y_i - \hat y_i\) can
+  be obtained using the command \texttt{resid(m)}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{resid}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           1           2           3           4           5           6 
+##  3.23463723 -1.91748529  4.55553300  5.69777417 -1.71165358 -3.00693970 
+##           7           8           9          10          11          12 
+## -2.38949071 -1.38949071 -3.14437890  1.26719408  2.63629676  2.77946036 
+##          13          14          15          16          17          18 
+## -1.42856088 -0.05049929  2.36141836  0.90505080 -1.51995059 -0.45509295 
+##          19          20          21 
+## -0.59825656  1.41214728 -7.23771286
+\end{verbatim}
+\item
+  The design matrix \(X\) can be found using \texttt{model.matrix(m)}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{model.matrix}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    (Intercept) Air.Flow Water.Temp Acid.Conc.
+## 1            1       80         27         89
+## 2            1       80         27         88
+## 3            1       75         25         90
+## 4            1       62         24         87
+## 5            1       62         22         87
+## 6            1       62         23         87
+## 7            1       62         24         93
+## 8            1       62         24         93
+## 9            1       58         23         87
+## 10           1       58         18         80
+## 11           1       58         18         89
+## 12           1       58         17         88
+## 13           1       58         18         82
+## 14           1       58         19         93
+## 15           1       50         18         89
+## 16           1       50         18         86
+## 17           1       50         19         72
+## 18           1       50         19         79
+## 19           1       50         20         80
+## 20           1       56         20         82
+## 21           1       70         20         91
+## attr(,"assign")
+## [1] 0 1 2 3
+\end{verbatim}
+\end{itemize}
+
+\hypertarget{lm-predict}{%
+\subsection*{Making Predictions}\label{lm-predict}}
+\addcontentsline{toc}{subsection}{Making Predictions}
+
+One of the main aims of fitting a linear model is to use the model to make
+predictions for new, not previously observed \(x\)-values, \emph{i.e.}~to compute
+\(y_{\mathrm{new}} = X_{\mathrm{new}} \hat\beta\). The general form of the
+command for prediction is \texttt{predict(m,\ newdata)}, where \texttt{m} is the model
+previously fitted using \texttt{lm()}, and \texttt{newdata} specifies the new \(x\)-values to
+predict responses for. The argument \texttt{new.data} should be a \texttt{data.frame} and
+for each variable in the original model there should be a column in \texttt{newdata}
+which has the name of the original variable and contains the new values. For
+example, if the model was fitted using
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+and if the new samples are stored in \texttt{x.new}, then responses for
+the \(x\)-values in \texttt{x.new} can be predicted using the following
+command:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{predict}\NormalTok{(m, }\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x=}\NormalTok{x.new))}
+\end{Highlighting}
+\end{Shaded}
+
+As a second example, for the \texttt{stackloss} data set, the following
+commands can be used to predict \texttt{stack.loss} for two new
+\(x\)-values:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data=}\NormalTok{stackloss)}
+\NormalTok{  new.data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Air.Flow=}\FunctionTok{c}\NormalTok{(}\DecValTok{70}\NormalTok{, }\DecValTok{73}\NormalTok{), }\AttributeTok{Water.Temp=}\FunctionTok{c}\NormalTok{(}\DecValTok{25}\NormalTok{,}\DecValTok{24}\NormalTok{), }\AttributeTok{Acid.Conc.=}\FunctionTok{c}\NormalTok{(}\DecValTok{78}\NormalTok{,}\DecValTok{90}\NormalTok{))}
+  \FunctionTok{predict}\NormalTok{(m, new.data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        1        2 
+## 30.69174 29.71790
+\end{verbatim}
+
+More information about \texttt{predict()} can be found by reading
+the \href{https://rdrr.io/r/stats/predict.html}{output of \texttt{help(predict.lm)}}.
 
 \hypertarget{appendix-appendices}{%
 \appendix}
