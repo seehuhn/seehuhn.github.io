@@ -144,7 +144,9 @@
 \setcounter{tocdepth}{2}
 \tableofcontents
 }
+\newcommand{\Cov}{\mathop{\mathrm{Cov}}}
 \newcommand{\CN}{\mathcal{N}}
+\newcommand{\ds}{\displaystyle}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\argmin}{\mathop{\mathrm{arg\,min}}\limits}
 \newcommand{\eps}{\varepsilon}
@@ -1098,8 +1100,8 @@ is caused by rounding errors.
 \addcontentsline{toc}{section}{Interlude: Linear Regression in R}
 
 \hypertarget{lm-fitting}{%
-\subsection*{Specifying a Model}\label{lm-fitting}}
-\addcontentsline{toc}{subsection}{Specifying a Model}
+\subsection*{Fitting a Model}\label{lm-fitting}}
+\addcontentsline{toc}{subsection}{Fitting a Model}
 
 The function \texttt{lm()} is used to fit a linear model in~R. There are different
 ways to specify the form of the model and the data to be used for fitting the
@@ -1214,8 +1216,8 @@ model.
 \end{itemize}
 
 \hypertarget{lm-model}{%
-\subsection*{Working with the fitted model}\label{lm-model}}
-\addcontentsline{toc}{subsection}{Working with the fitted model}
+\subsection*{Understanding the Model}\label{lm-model}}
+\addcontentsline{toc}{subsection}{Understanding the Model}
 
 The output of the \texttt{lm()} function is an R object which can be used the extract
 information about the fitted model. A good way to work with this object is to
@@ -1425,6 +1427,44 @@ commands can be used to predict \texttt{stack.loss} for two new
 
 More information about \texttt{predict()} can be found by reading
 the \href{https://rdrr.io/r/stats/predict.html}{output of \texttt{help(predict.lm)}}.
+
+\hypertarget{P01}{%
+\section*{Problem Sheet 1}\label{P01}}
+\addcontentsline{toc}{section}{Problem Sheet 1}
+
+You should attempt all these questions and write up your solutions in advance
+of your workshop in week 3 where the answers will be discussed.
+
+\textbf{1} Consider the simple linear regression model
+\(y_i = \beta_0 + x_{i} \beta_1 + \varepsilon_i\) for
+\(i \in \{1, 2, \ldots, n\}\) and let \(X\) be the design matrix.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\item
+  Show that \(\displaystyle X^\top X = \begin{pmatrix}  n & \sum_{i=1}^n x_i \\  \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2  \end{pmatrix} \in \mathbb{R}^{2\times 2}\).
+\item
+  Using the formula
+  \begin{equation*}
+   \begin{pmatrix} a & b \\ c & d \end{pmatrix}^{-1}
+   = \frac{1}{ad-bc} \begin{pmatrix} \;d & -b \\ -c & \,a \end{pmatrix},
+      \end{equation*}
+  find \((X^\top X)^{-1}\).
+\item
+  Find \(X^\top y\) and use this to derive an explicit formula for
+  the least squares estimate \(\hat\beta = (X^\top X)^{-1} X^\top y\).
+\end{enumerate}
+
+\textbf{2} Let \(H = X (X^\top X)^{-1} X^\top \in\mathbb{R}^{n\times n}\) be the hat matrix
+and \(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\). Show that \(H \mathbf{1} = \mathbf{1}\).
+
+\textbf{3} For the \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} data set}
+built into R, predict a value for \texttt{stack.loss} when the inputs are
+\texttt{Air.Flow\ =\ 60}, \texttt{Water.Temp\ =\ 21} and \texttt{Acid.Conc\ =\ 87}.
+
+\textbf{4} Let \(\varepsilon_1, \ldots, \varepsilon_n \sim \mathcal{N}(\mu, \sigma^2)\) be independent.
+Then \(\varepsilon= (\varepsilon_1, \ldots, \varepsilon_n)\) is a random vector. Determine
+\(\mathbb{E}(\varepsilon)\), \(\mathop{\mathrm{Cov}}(\varepsilon)\) and \(\mathbb{E}\bigl(\|\varepsilon\|^2\bigr)\).
 
 \hypertarget{appendix-appendices}{%
 \appendix}
