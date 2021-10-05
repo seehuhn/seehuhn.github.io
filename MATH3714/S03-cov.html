@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness</title>
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="P01.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH3714 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
+<ul>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#teams"><i class="fa fa-check"></i>Discussion Board</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
+<li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
+<li class="chapter" data-level="2.2" data-path="S02-multiple.html"><a href="S02-multiple.html#the-normal-equations"><i class="fa fa-check"></i><b>2.2</b> The Normal Equations</a></li>
+<li class="chapter" data-level="2.3" data-path="S02-multiple.html"><a href="S02-multiple.html#fitted-values"><i class="fa fa-check"></i><b>2.3</b> Fitted Values</a></li>
+<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.4</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html"><i class="fa fa-check"></i>Interlude: Linear Regression in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-fitting"><i class="fa fa-check"></i>Fitting a Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-model"><i class="fa fa-check"></i>Understanding the Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-predict"><i class="fa fa-check"></i>Making Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
+<li class="chapter" data-level="3" data-path="S03-cov.html"><a href="S03-cov.html"><i class="fa fa-check"></i><b>3</b> Random Vectors and Covariance</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="S03-cov.html"><a href="S03-cov.html#expectation"><i class="fa fa-check"></i><b>3.1</b> Expectation</a></li>
+<li class="chapter" data-level="3.2" data-path="S03-cov.html"><a href="S03-cov.html#covariance-matrix"><i class="fa fa-check"></i><b>3.2</b> Covariance Matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="S03-cov.html"><a href="S03-cov.html#the-multivariate-normal-distribution"><i class="fa fa-check"></i><b>3.3</b> The Multivariate Normal Distribution</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#vectors"><i class="fa fa-check"></i><b>A.1</b> Vectors</a></li>
+<li class="chapter" data-level="A.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-rules"><i class="fa fa-check"></i><b>A.2</b> Matrices</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#transpose"><i class="fa fa-check"></i><b>A.2.1</b> Transpose</a></li>
+<li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-matrix Product</a></li>
+<li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-vector Product</a></li>
+<li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.4</b> Positive Definite Matrices</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH3714 Linear Regression and Robustness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="S03-cov" class="section level1" number="3">
+<h1><span class="header-section-number">Section 3</span> Random Vectors and Covariance</h1>
+<p>Like in the one-dimensional case, we can build a <strong>statistical model</strong>
+for the data where we assume that the errors are random. More
+precisely we will assume
+<span class="math display">\[\begin{equation}
+  Y_i
+  = \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i
+\end{equation}\]</span>
+for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, where <span class="math inline">\(\varepsilon_1, \ldots, \varepsilon_n\)</span>
+are now independent and identically distributed (i.i.d.)
+random variables with <span class="math inline">\(\mathbb{E}(\varepsilon_i) = 0\)</span> and
+<span class="math inline">\(\mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\)</span>.
+As in <a href="S02-multiple.html#eq:lmmodel">(2.2)</a>, the statistical model can be written in vector
+form as
+<span class="math display" id="eq:lmstat0">\[\begin{equation}
+  Y = X \beta + \varepsilon.  \tag{3.1}
+\end{equation}\]</span>
+This is a vector-valued equation which contains two “random vectors”, <span class="math inline">\(Y\)</span>
+and <span class="math inline">\(\varepsilon\)</span>.</p>
+<p>A <strong>random vector</strong> is a vector <span class="math inline">\(Z = (Z_1, \ldots, Z_n)\)</span>
+where each component <span class="math inline">\(Z_i\)</span> is a random variable.</p>
+<div id="expectation" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Expectation</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bHbq8AFxRzo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>The expectation of a random vector is taken for each component separately.
+This is formalised in the following definition.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-3" class="definition"><strong>Definition 3.1  </strong></span>Let <span class="math inline">\(Z = (Z_1, \ldots, Z_n) \in \mathbb{R}^n\)</span> be a random vector.
+Then the expectation of <span class="math inline">\(Z\)</span> is the (non-random) vector
+<span class="math display">\[\begin{equation*}
+    \mathbb{E}(X)
+    = \begin{pmatrix}
+      \mathbb{E}(Z_1) \\ \vdots \\ \mathbb{E}(Z_n)
+    \end{pmatrix}
+    \in \mathbb{R}^n.
+  \end{equation*}\]</span></p>
+</div>
+<p>The same convention is sometimes used for random matrices <span class="math inline">\(M\)</span>,
+as <span class="math inline">\(\mathbb{E}(M)_{ij} = \mathbb{E}(M_{ij})\)</span>.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-4" class="example"><strong>Example 3.1  </strong></span>The random vector <span class="math inline">\(\varepsilon\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has
+<span class="math display">\[\begin{equation*}
+    \mathbb{E}(\varepsilon)_i = \mathbb{E}(\varepsilon_i) = 0
+  \end{equation*}\]</span>
+for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> and thus <span class="math inline">\(\mathbb{E}(\varepsilon) = 0 \in \mathbb{R}^n\)</span>,
+where <span class="math inline">\(0\)</span> here denotes the zero-vector <span class="math inline">\((0, \ldots, 0) \in \mathbb{R}^n\)</span>.</p>
+</div>
+<p>Since the expectation of a random vector is defined in term of the
+usual expectation, most rules we know for expectations still hold.
+For example, if <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span> are two random vectors, we have
+<span class="math inline">\(\mathbb{E}(Y+Z) = \mathbb{E}(Y) + \mathbb{E}(Z)\)</span>.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-5" class="example"><strong>Example 3.2  </strong></span>The random vector <span class="math inline">\(Y\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has
+<span class="math display">\[\begin{equation*}
+    \mathbb{E}(Y)_i
+    = \mathbb{E}(Y_i)
+    = \mathbb{E}\bigl( (X\beta)_i + \varepsilon_i \bigr)
+    = (X\beta)_i + \mathbb{E}(\varepsilon_i)
+    = (X\beta)_i
+  \end{equation*}\]</span>
+for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> and thus <span class="math inline">\(\mathbb{E}(Y) = X\beta \in \mathbb{R}^n\)</span>.
+We often will write the above derivation in vector form
+as
+<span class="math display">\[\begin{equation*}
+    \mathbb{E}(Y)
+    = \mathbb{E}(X\beta + \varepsilon)
+    = X\beta + \mathbb{E}(\varepsilon)
+    = X\beta.
+  \end{equation*}\]</span></p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-6" class="example"><strong>Example 3.3  </strong></span>If <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span> is a matrix and <span class="math inline">\(Z \in \mathbb{R}^n\)</span> is a random
+vector, then we find the expectation of <span class="math inline">\(AZ\in\mathbb{R}^m\)</span> as
+<span class="math display">\[\begin{equation*}
+    \mathbb{E}(AZ)_i
+    = \mathbb{E}(AZ_i)
+    = \mathbb{E}\bigl( \sum_{j=1}^n a_{ij} Z_j \bigr)
+    = \sum_{j=1}^n \mathbb{E}\bigl( a_{ij} Z_j \bigr)
+    = \sum_{j=1}^n a_{ij} \mathbb{E}(Z_j)
+    = \sum_{j=1}^n a_{ij} \mathbb{E}(Z)_j
+  \end{equation*}\]</span>
+for all <span class="math inline">\(i \in \{1, \ldots, m\}\)</span> and thus we have <span class="math inline">\(\mathbb{E}(AZ) = A \mathbb{E}(Z)\)</span>.</p>
+</div>
+</div>
+<div id="covariance-matrix" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Covariance Matrix</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NJGqepkU2Yk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>The variance of random variables is replaced with the concept of
+a “covariance matrix” for random vectors.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-7" class="definition"><strong>Definition 3.2  </strong></span>Let <span class="math inline">\(Z = (Z_1, \ldots, Z_n) \in \mathbb{R}^n\)</span> be a random vector.
+Then the covariance matrix of <span class="math inline">\(Z\)</span> is the matrix <span class="math inline">\(\mathop{\mathrm{Cov}}(Z) \in \mathbb{R}^{n\times n}\)</span>
+given by
+<span class="math display">\[\begin{equation*}
+    \mathop{\mathrm{Cov}}(Z)_{ij}
+    = \mathop{\mathrm{Cov}}(Z_i, Z_j),
+  \end{equation*}\]</span>
+for all <span class="math inline">\(i, j \in \{1, \ldots, n\}\)</span>,
+where <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j)\)</span> denotes the usual covariance between random
+variables.</p>
+</div>
+<p>We collect some basic properties of covariance matrices here. Most of these
+arguments use concepts and rules from linear algebra, as summarised in
+section <a href="Sx1-matrices.html#Sx1-matrices">A</a> in the appendix.</p>
+<ul>
+<li><p>Since <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j) = \mathop{\mathrm{Cov}}(Z_j, Z_i)\)</span>, covariance matrices are
+symmetric.</p></li>
+<li><p>The diagonal elements of <span class="math inline">\(\mathop{\mathrm{Cov}}(Z)\)</span> are
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Cov}}(Z)_{ii}
+  = \mathop{\mathrm{Cov}}(Z_i, Z_i)
+  = \mathop{\mathrm{Var}}(Z_i).
+\end{equation*}\]</span></p></li>
+<li><p>If the elements <span class="math inline">\(Z_i\)</span> of <span class="math inline">\(Z\)</span> are (statistically) independent,
+we have <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j) = 0\)</span> and thus <span class="math inline">\(\mathop{\mathrm{Cov}}(Z)_{ij} = 0\)</span>
+for <span class="math inline">\(i \neq j\)</span>. If <span class="math inline">\(Z\)</span> is a vector of independent random variables,
+the covariance matrix of <span class="math inline">\(Z\)</span> is diagonal.</p></li>
+<li><p>Let <span class="math inline">\(\mu = \mathbb{E}(Z) \in \mathbb{R}^n\)</span>. If we interpret <span class="math inline">\(\mu\)</span> as a column vector,
+then <span class="math inline">\(M = (Z - \mu) (Z - \mu)^\top\)</span> is an <span class="math inline">\(n\times n\)</span> matrix and we have
+<span class="math display">\[\begin{equation*}
+  M_{ij}
+  = \bigl( (Z - \mu) (Z - \mu)^\top \bigr)_{ij}
+  = (Z - \mu)_i (Z - \mu)_j.
+\end{equation*}\]</span>
+Taking expectations gives <span class="math inline">\(\mathbb{E}(M_{ij}) = E\bigl( (Z - \mu)_i (Z - \mu)_j \bigr) = \mathop{\mathrm{Cov}}(Z_i, Z_j)\)</span> and thus we can write
+<span class="math display" id="eq:cov-prod">\[\begin{equation}
+  \mathop{\mathrm{Cov}}(Z)
+  = \mathbb{E}\bigl( (Z - \mu) (Z - \mu)^\top \bigr).  \tag{3.2}
+\end{equation}\]</span></p></li>
+<li><p>Covariance matrices are positive semi-definite. To see this, let
+<span class="math inline">\(C = \mathop{\mathrm{Cov}}(Z)\)</span> and <span class="math inline">\(u \in\mathbb{R}^n\)</span> be a vector. We have to show that
+<span class="math inline">\(u^\top C u \geq 0\)</span>. Writing <span class="math inline">\(\bar Z := Z - \mathbb{E}(Z)\)</span> as an abbreviation,
+we get
+<span class="math display">\[\begin{align*}
+  u^\top C u
+  &amp;= u^\top \mathbb{E}\bigl( \bar Z \bar Z^\top \bigr) u \\
+  &amp;= \mathbb{E}\bigl( u^\top \bar Z \bar Z^\top u \bigr) \\
+  &amp;= \mathbb{E}\bigl( (\bar Z^\top u)^\top \bar Z^\top u \bigr) \\
+  &amp;= \mathbb{E}\bigl( \|\bar Z^\top u\|^2 \bigr),
+\end{align*}\]</span>
+where <span class="math inline">\(\|\bar Z^\top u\|\)</span> denotes the Euclidean length of the
+vector <span class="math inline">\(\bar Z^\top u\)</span>. Since <span class="math inline">\(\|\bar Z^\top u\|^2 \geq 0\)</span>
+we find <span class="math inline">\(u^\top C u \geq 0\)</span>. This shows that the covariance matrix <span class="math inline">\(C\)</span>
+is positive semi-definite. (Note that, nevertheless,
+individual <em>elements</em> of the matrix <span class="math inline">\(C\)</span> can be negative numbers.)</p></li>
+</ul>
+<div class="example">
+<p><span id="exm:unlabeled-div-8" class="example"><strong>Example 3.4  </strong></span>The random vector <span class="math inline">\(\varepsilon\)</span> in equation <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has <span class="math inline">\(\mathbb{E}(\varepsilon) = 0\)</span>.
+We have
+<span class="math inline">\(\mathop{\mathrm{Cov}}(\varepsilon)_{ii} = \mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\)</span> for all <span class="math inline">\(i\in\{1, \ldots, n\}\)</span>.
+Since we assumed the <span class="math inline">\(\varepsilon_i\)</span> to be independent, the covariance matrix is
+diagonal and we find
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I,
+\end{equation*}\]</span>
+where <span class="math inline">\(I\)</span> is the <span class="math inline">\(n\times n\)</span> identity matrix.</p>
+</div>
+<p>An important results about covariance matrices is given in the following
+lemma, which describes how the covariance matrix changes under affine
+transformations.</p>
+<div class="lemma">
+<p><span id="lem:unlabeled-div-9" class="lemma"><strong>Lemma 3.1  </strong></span>Let <span class="math inline">\(Z\in\mathbb{R}^n\)</span> be a random vector, <span class="math inline">\(A\in\mathbb{R}^{m\times n}\)</span> a matrix
+and <span class="math inline">\(b\in\mathbb{R}^m\)</span> a vector. Then
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Cov}}(AZ+b)
+  = A \mathop{\mathrm{Cov}}(Z) A^\top.
+\end{equation*}\]</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>As in equation <a href="S03-cov.html#eq:cov-prod">(3.2)</a>, we can write <span class="math inline">\(\mathop{\mathrm{Cov}}(AZ+b)\)</span>
+as
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Cov}}(AZ+b)
+  = \mathbb{E}\bigl( (AZ + b - \mu) (AZ + b - \mu)^\top \bigr),
+\end{equation*}\]</span>
+where <span class="math inline">\(\mu = \mathbb{E}(AZ + b) = \mathbb{E}(AZ) + b\)</span>. Thus,
+<span class="math inline">\(AZ + b - \mu = AZ - \mathbb{E}(AZ)\)</span> and we find
+<span class="math display">\[\begin{align*}
+  \mathop{\mathrm{Cov}}(AZ+b)
+  &amp;= \mathbb{E}\bigl( (AZ - \mathbb{E}(AZ)) (AZ - \mathbb{E}(AZ))^\top \bigr) \\
+  &amp;= \mathop{\mathrm{Cov}}(AZ).
+\end{align*}\]</span>
+This shows that the covariance matrix ignores non-random shifts.</p>
+<p>Furthermore, we have <span class="math inline">\(AZ - \mathbb{E}(AZ) = AZ - A\mathbb{E}(Z) = A\bigl(Z - \mathbb{E}(Z)\bigr)\)</span>.
+Using equation <a href="S03-cov.html#eq:cov-prod">(3.2)</a> again, we find
+<span class="math display">\[\begin{align*}
+  \mathop{\mathrm{Cov}}(AZ)
+  &amp;= \mathbb{E}\Bigl( \bigl(AZ - \mathbb{E}(AZ)\bigr) \bigl(AZ - \mathbb{E}(AZ)\bigr)^\top \Bigr) \\
+  &amp;= \mathbb{E}\Bigl( A \bigl(Z - \mathbb{E}(Z)\bigr) \bigl(Z - \mathbb{E}(Z)\bigr)^\top A^\top \Bigr) \\
+  &amp;= A \mathbb{E}\Bigl( \bigl(Z - \mathbb{E}(Z)\bigr) \bigl(Z - \mathbb{E}(Z)\bigr)^\top \Bigr) A^\top \\
+  &amp;= A \mathop{\mathrm{Cov}}(Z) A^\top.
+\end{align*}\]</span>
+This completes the proof.</p>
+</div>
+</div>
+<div id="the-multivariate-normal-distribution" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> The Multivariate Normal Distribution</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bgBrgPL77W8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>Since we assume that the random errors <span class="math inline">\(\varepsilon_i\)</span> are normally
+distributed, we will need to understand how vectors of normal distributed
+random variables behave.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-11" class="definition"><strong>Definition 3.3  </strong></span>A random vector <span class="math inline">\(Z\in\mathbb{R}^n\)</span> follows a <strong>multivariate normal distribution</strong>,
+if <span class="math inline">\(u^\top Z\)</span> is normally distributed or constant for every
+vector <span class="math inline">\(u\in\mathbb{R}^n\)</span>.</p>
+</div>
+<p>This definition is takes its slightly surprising form to avoid
+some boundary cases which I will discuss in an example, below.
+To understand the
+definition, a good start is to consider the cases where <span class="math inline">\(u\)</span>
+is one of the standard basis vectors, say <span class="math inline">\(u_i = 1\)</span> and <span class="math inline">\(u_j = 0\)</span>
+for all <span class="math inline">\(j\neq i\)</span>. In this case we have
+<span class="math display">\[\begin{equation*}
+  u^\top Z
+  = \sum_{k=1}^n u_k Z_k
+  = Z_i.
+\end{equation*}\]</span>
+Thus, if <span class="math inline">\(Z\)</span> follows a multivariate normal distribution, each of the
+components <span class="math inline">\(Z_i\)</span> is normally distributed. Example <a href="S03-cov.html#exm:not-normal">3.8</a>,
+below, shows that the converse is not true.</p>
+<p>One can show that a multivariate normal distribution is completely determined
+by the mean <span class="math inline">\(\mu = \mathbb{E}(Z)\)</span> and the covariance <span class="math inline">\(\Sigma = \mathop{\mathrm{Cov}}(Z)\)</span>. The
+distribution of such a <span class="math inline">\(Z\)</span> is denoted by <span class="math inline">\(\mathcal{N}(\mu, \Sigma)\)</span>. Also, for every
+<span class="math inline">\(\mu\in\mathbb{R}^n\)</span> and every positive semi-definite matrix <span class="math inline">\(\Sigma\in\mathbb{R}^{n\times n}\)</span>
+there is a random vector <span class="math inline">\(Z\)</span> which follows a multivariate normal distribution
+with this mean and covariance.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-12" class="example"><strong>Example 3.5  </strong></span>Consider the vector <span class="math inline">\(\varepsilon\)</span> from the model <a href="S03-cov.html#eq:lmstat0">(3.1)</a>.
+This vector has components <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span> and by
+assumption, the componens <span class="math inline">\(\varepsilon_i\)</span> are independent.
+For <span class="math inline">\(u\in\mathbb{R}^n\)</span> we have
+<span class="math display">\[\begin{equation*}
+  u^\top \varepsilon
+  = \sum_{i=1}^n u_i \varepsilon_i.
+\end{equation*}\]</span>
+Since this is a sum of independent, one-dimensional, normally distributed
+random variables, <span class="math inline">\(u^\top \varepsilon\)</span> is also normally distribution, for
+every <span class="math inline">\(u\)</span>. (The independence of the <span class="math inline">\(\varepsilon_i\)</span> is important in this
+argument.) Thus, <span class="math inline">\(\varepsilon\)</span> is a normally distributed random vector.
+We have already seen <span class="math inline">\(\mathbb{E}(\varepsilon) = 0\)</span> and <span class="math inline">\(\mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I\)</span>,
+and thus <span class="math inline">\(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\)</span>.</p>
+</div>
+<p>Without proof we state here some properties of the multivariate normal
+distribution:</p>
+<ul>
+<li><p>If <span class="math inline">\(Z \sim \mathcal{N}(\mu, \Sigma)\)</span> and <span class="math inline">\(a \in \mathbb{R}^n\)</span>, then
+<span class="math inline">\(Z + a \sim \mathcal{N}(\mu + a, \Sigma)\)</span>.</p></li>
+<li><p>If <span class="math inline">\(Z \sim \mathcal{N}(\mu, \Sigma)\)</span> and <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span>, then
+<span class="math inline">\(AZ \sim \mathcal{N}(A\mu, A\Sigma A^\top)\)</span>.</p></li>
+<li><p>If <span class="math inline">\(Z_1 \sim \mathcal{N}(\mu_1, \Sigma_1)\)</span> and <span class="math inline">\(Z_2 \sim \mathcal{N}(\mu_2, \Sigma_2)\)</span>
+are independent, then
+<span class="math inline">\(Z_1 + Z_2 \sim \mathcal{N}(\mu_1 + \mu_2, \Sigma_1 + \Sigma_2)\)</span>.</p></li>
+</ul>
+<div class="example">
+<p><span id="exm:unlabeled-div-13" class="example"><strong>Example 3.6  </strong></span>Let <span class="math inline">\(Z = (Z_1, Z_2)\)</span> where <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span> are independently standard
+normal distributed. Let
+<span class="math display">\[\begin{equation*}
+  A := \begin{pmatrix}
+    2 &amp; -1 \\
+    2 &amp; 1
+  \end{pmatrix}
+  \qquad \mbox{and} \qquad
+  b := \begin{pmatrix}
+    3 \\ 4
+  \end{pmatrix}.
+\end{equation*}\]</span>
+Then <span class="math inline">\(AZ + b \sim \mathcal{N}(b, \Sigma)\)</span> where
+<span class="math display">\[\begin{equation*}
+  \Sigma
+  = A \mathop{\mathrm{Cov}}(Z) A^\top
+  = \begin{pmatrix}
+      2 &amp; -1 \\
+      2 &amp; 1
+    \end{pmatrix}
+    \begin{pmatrix}
+      1 &amp; 0 \\
+      0 &amp; 1
+    \end{pmatrix}
+    \begin{pmatrix}
+      2 &amp; 2 \\
+      -1 &amp; 1
+    \end{pmatrix}
+  = \begin{pmatrix}
+      5 &amp; 3 \\
+      3 &amp; 5
+    \end{pmatrix}
+\end{equation*}\]</span></p>
+<p>We can use R to plot a sample of this two-dimensional normal distribution.
+(The grey cross indicates the mean.)</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="S03-cov.html#cb36-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb36-2"><a href="S03-cov.html#cb36-2" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">rnorm</span>(N), <span class="fu">rnorm</span>(N))</span>
+<span id="cb36-3"><a href="S03-cov.html#cb36-3" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb36-4"><a href="S03-cov.html#cb36-4" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb36-5"><a href="S03-cov.html#cb36-5" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> A <span class="sc">%*%</span> Z <span class="sc">+</span> b</span>
+<span id="cb36-6"><a href="S03-cov.html#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(V[<span class="dv">1</span>,], V[<span class="dv">2</span>,], <span class="at">asp =</span> <span class="dv">1</span>, <span class="at">cex =</span> .<span class="dv">5</span>,</span>
+<span id="cb36-7"><a href="S03-cov.html#cb36-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(V[<span class="dv">1</span>]),</span>
+<span id="cb36-8"><a href="S03-cov.html#cb36-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(V[<span class="dv">2</span>]))</span>
+<span id="cb36-9"><a href="S03-cov.html#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span>
+<span id="cb36-10"><a href="S03-cov.html#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-14" class="example"><strong>Example 3.7  </strong></span>The random vector <span class="math inline">\(Y\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> satisfies <span class="math inline">\(Y = X \beta + \varepsilon\)</span>
+and since <span class="math inline">\(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\)</span> we have
+<span class="math inline">\(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\)</span>.</p>
+</div>
+<div class="example">
+<p><span id="exm:not-normal" class="example"><strong>Example 3.8  </strong></span>Let <span class="math inline">\(Y \sim \mathcal{N}(0, 1)\)</span> be a random variable. Define a random vector
+<span class="math inline">\(Z = (Z_1, Z_2)\)</span> as <span class="math inline">\(Z_1 = Y\)</span> and
+<span class="math display">\[\begin{equation*}
+  Z_2 = \begin{cases}
+    Y &amp; \mbox{if $|Y|&lt;1$, and}\\
+    -Y &amp; \mbox{otherwise.}
+  \end{cases}
+\end{equation*}\]</span>
+Clearly <span class="math inline">\(Z_1\)</span> is standard normally distributed.
+Since <span class="math inline">\(\mathcal{N}(0,1)\)</span> is symmetric, both <span class="math inline">\(Y\)</span> and <span class="math inline">\(-Y\)</span> are standard normally
+distributed and it follows that <span class="math inline">\(Z_2\)</span> is also standard normally distributed.
+Nevertheless, the random vector <span class="math inline">\(Z\)</span> does not follow a multivariate
+normal distribution. Instead of giving a proof of this fact,
+we illustrate this here using an R experiment. We start by verifying
+that <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span> are normally distributed.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="S03-cov.html#cb37-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb37-2"><a href="S03-cov.html#cb37-2" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N)</span>
+<span id="cb37-3"><a href="S03-cov.html#cb37-3" aria-hidden="true" tabindex="-1"></a>Z1 <span class="ot">&lt;-</span> Y</span>
+<span id="cb37-4"><a href="S03-cov.html#cb37-4" aria-hidden="true" tabindex="-1"></a>Z2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">abs</span>(Y)<span class="sc">&lt;</span><span class="dv">1</span>, Y, <span class="sc">-</span>Y)</span>
+<span id="cb37-5"><a href="S03-cov.html#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="S03-cov.html#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb37-7"><a href="S03-cov.html#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(Z1, <span class="at">main=</span><span class="cn">NULL</span>, <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">1</span>]))</span>
+<span id="cb37-8"><a href="S03-cov.html#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(Z2, <span class="at">main=</span><span class="cn">NULL</span>, <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">2</span>]))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>The histograms make it plausible that the components are indeed normally
+distributed. Now we use a scatter plot to show the joint distribution
+of <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span>:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="S03-cov.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Z1, Z2, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">asp=</span><span class="dv">1</span>,</span>
+<span id="cb38-2"><a href="S03-cov.html#cb38-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">1</span>]),</span>
+<span id="cb38-3"><a href="S03-cov.html#cb38-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="fu">expression</span>(Z[<span class="dv">1</span>]))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>This plot looks peculiar! Most people would not call this a normal distribution
+and the formal definition of a multivariate normal distribution is made to
+exclude cases like this.</p>
+</div>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>We learned the rules for computing the expectation of a random vector.</li>
+<li>The covariance matrix of random vectors plays the role of the
+variance for numeric random variables.</li>
+<li>We learned about the definition of the multivariate normal distribution.</li>
+</ul>
+</div>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="P01.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH3714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

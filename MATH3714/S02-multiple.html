@@ -142,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">MATH3714 Notes</a></li>
+<li><a href="./index.html">MATH3714 Notes</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
@@ -175,6 +175,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-predict"><i class="fa fa-check"></i>Making Predictions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
+<li class="chapter" data-level="3" data-path="S03-cov.html"><a href="S03-cov.html"><i class="fa fa-check"></i><b>3</b> Random Vectors and Covariance</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="S03-cov.html"><a href="S03-cov.html#expectation"><i class="fa fa-check"></i><b>3.1</b> Expectation</a></li>
+<li class="chapter" data-level="3.2" data-path="S03-cov.html"><a href="S03-cov.html#covariance-matrix"><i class="fa fa-check"></i><b>3.2</b> Covariance Matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="S03-cov.html"><a href="S03-cov.html#the-multivariate-normal-distribution"><i class="fa fa-check"></i><b>3.3</b> The Multivariate Normal Distribution</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
 <ul>
@@ -261,7 +267,7 @@ input affects the output. For example, we can show how the engine power
 affects fuel consumption:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="S02-multiple.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mtcars<span class="sc">$</span>hp, mtcars<span class="sc">$</span>mpg,</span>
 <span id="cb3-2"><a href="S02-multiple.html#cb3-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;power [hp]&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;fuel consumption [mpg]&quot;</span>)</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="MATH3714_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>We can see that cars with stronger engines tend to use more fuel
 (<em>i.e.</em> a gallon of fuel lasts for fewer miles; the curve goes down),
 but leaving out the other inputs omits a lot of information. It is
@@ -403,7 +409,7 @@ the previous equation is correct.)
 Combining these derivatives, we find
 <span class="math display" id="eq:normal-first">\[\begin{equation}
     \frac{\partial}{\partial \beta_i} r(\beta)
-    = 0 - 2 (X^\top y)_i + 2 \bigl( (X^\top X)_{i,k} \beta \bigr)_i
+    = 0 - 2 (X^\top y)_i + 2 \bigl( X^\top X \beta \bigr)_i
                            \tag{2.3}
   \end{equation}\]</span>
 for all <span class="math inline">\(i \in \{0, 1, \ldots, p\}\)</span>. At a local minimum of <span class="math inline">\(r\)</span>,
@@ -425,7 +431,7 @@ are local minima. Here we are only going to sketch this argument: A
 sufficient condition for <span class="math inline">\(\hat\beta\)</span> to be a minimum is for the
 second derivative matrix (<a href="https://en.wikipedia.org/wiki/Hessian_matrix">the Hessian
 matrix</a>)
-to be positive definite (see appendix <a href="Sx1-matrices.html#positive-definite">A.2.4</a>).
+to be positive definite (see appendix <a href="Sx1-matrices.html#positive-definite">A.2.4</a>).
 Using equation <a href="S02-multiple.html#eq:normal-first">(2.3)</a> we find
 <span class="math display">\[\begin{equation*}
     \frac{\partial}{\partial\beta_i \partial\beta_j} r(\beta)
@@ -535,7 +541,7 @@ plot to be close to the diagonal.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="S02-multiple.html#cb7-1" aria-hidden="true" tabindex="-1"></a>y.hat <span class="ot">&lt;-</span> X <span class="sc">%*%</span> beta.hat</span>
 <span id="cb7-2"><a href="S02-multiple.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y, y.hat, <span class="at">xlab =</span> <span class="st">&quot;responses&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;fitted values&quot;</span>)</span>
 <span id="cb7-3"><a href="S02-multiple.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">1</span>) <span class="co"># plot the diagonal</span></span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="MATH3714_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>For comparison we now re-do the analysis using built-in R commands.
 In the <code>lm()</code> command below, we use <code>data=mtcars</code> to tell R where the
 data is stored, and the formula <code>mpg ~ .</code> states that we want to
