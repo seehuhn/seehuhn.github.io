@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="index.html"/>
-
+<link rel="next" href="X02-Bias.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -142,7 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">MATH5714M Notes</a></li>
+<li><a href="./index.html">MATH5714M Notes</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
@@ -161,6 +161,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.2.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernels"><i class="fa fa-check"></i><b>1.2.3</b> Kernels</a></li>
 </ul></li>
 <li class="chapter" data-level="1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation-in-r"><i class="fa fa-check"></i><b>1.3</b> Kernel Density Estimation in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="X02-Bias.html"><a href="X02-Bias.html"><i class="fa fa-check"></i><b>2</b> The Bias of Kernel Density Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="X02-Bias.html"><a href="X02-Bias.html#a-statistical-model"><i class="fa fa-check"></i><b>2.1</b> A Statistical Model</a></li>
+<li class="chapter" data-level="2.2" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-of-the-estimate"><i class="fa fa-check"></i><b>2.2</b> The Bias of the Estimate</a></li>
+<li class="chapter" data-level="2.3" data-path="X02-Bias.html"><a href="X02-Bias.html#moments-of-kernels"><i class="fa fa-check"></i><b>2.3</b> Moments of Kernels</a></li>
+<li class="chapter" data-level="2.4" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-for-small-bandwidth"><i class="fa fa-check"></i><b>2.4</b> The Bias for Small Bandwidth</a></li>
 </ul></li>
 </ul>
 
@@ -331,7 +338,7 @@ values for the <code>break</code> argument to <code>hist()</code>, which R uses 
 
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="X01-KDE.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
 <span id="cb5-2"><a href="X01-KDE.html#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="X01-KDE.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (breaks <span class="cf">in</span> <span class="fu">list</span>(<span class="dv">80</span>, <span class="dv">40</span>, <span class="dv">20</span>, <span class="dv">10</span>)) {</span>
+<span id="cb5-3"><a href="X01-KDE.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (breaks <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">80</span>, <span class="dv">40</span>, <span class="dv">20</span>, <span class="dv">10</span>)) {</span>
 <span id="cb5-4"><a href="X01-KDE.html#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(snowfall,</span>
 <span id="cb5-5"><a href="X01-KDE.html#cb5-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">prob =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb5-6"><a href="X01-KDE.html#cb5-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">breaks =</span> breaks,</span>
@@ -425,16 +432,15 @@ which we use to replace the function <span class="math inline">\(1/2 \, I_{[-1,+
 <p><span id="def:kernel" class="definition"><strong>Definition 1.1  </strong></span>A <strong>kernel</strong> is a function <span class="math inline">\(K\colon \mathbb{R}\to \mathbb{R}\)</span> such that</p>
 <ul>
 <li><span class="math inline">\(\int_{-\infty}^\infty K(x) \,dx = 1\)</span>,</li>
-<li><span class="math inline">\(K(x) \geq 0\)</span>, and</li>
-<li><span class="math inline">\(K(x) = K(-x)\)</span> for all <span class="math inline">\(x\in \mathbb{R}\)</span>.</li>
+<li><span class="math inline">\(K(x) = K(-x)\)</span> for all <span class="math inline">\(x\in \mathbb{R}\)</span> (i.e. <span class="math inline">\(K\)</span> is <em>symmetric</em>).</li>
+<li><span class="math inline">\(K(x) \geq 0\)</span> (i.e. <span class="math inline">\(K\)</span> is <em>positive</em>), and</li>
 </ul>
 </div>
-<p>Of these three properties, the third one is the most important one.
-While most authors list all three properties shown above, sometimes
-the second condition and very rarely also the first condition are
-omitted. One advantage of including the second condition is, that with
-this condition in place, kernel functions are also probability distribution
-functions.</p>
+<p>Of these three properties, the first one is the most important one.
+The second condition, symmetry, ensures that <span class="math inline">\(K\)</span> is centred around <span class="math inline">\(0\)</span>
+and the third definition, positivity, makes <span class="math inline">\(K\)</span> a probability density.
+(While most authors list all three properties shown above, sometimes
+the third condition is omitted.)</p>
 <p>It is easy to check that <span class="math inline">\(K(x) = 1/2 \, I_{[-1,+1]}(x)\)</span> satisfies all
 three conditions of definition <a href="X01-KDE.html#def:kernel">1.1</a>. This function <span class="math inline">\(K\)</span>
 is sometimes called the “uniform kernel”, because it is the density
@@ -531,8 +537,7 @@ Choices incluse <code>"rectangular"</code> (the uniform kernel), <code>"triangul
 <code>"epanechnikov"</code> and <code>"gaussian"</code>.</p></li>
 </ul>
 <p>Details about how to call <code>density()</code> can be found by using the
-command <code>help(density)</code> in R. The help page is also
-<a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/density.html">available online</a>.</p>
+<a href="https://rdrr.io/r/stats/density.html">command <code>help(density)</code></a> in R.</p>
 <p>The return value of <code>density</code> is an R object which contains information
 about the kernel density estimate.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="X01-KDE.html#cb6-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">density</span>(snowfall)</span>
@@ -557,7 +562,7 @@ bandwidth parameter.</p>
 
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="X01-KDE.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
 <span id="cb8-2"><a href="X01-KDE.html#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="X01-KDE.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (bw <span class="cf">in</span> <span class="fu">list</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">8</span>)) {</span>
+<span id="cb8-3"><a href="X01-KDE.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (bw <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">8</span>)) {</span>
 <span id="cb8-4"><a href="X01-KDE.html#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="fu">density</span>(snowfall, <span class="at">bw =</span> bw, <span class="at">kernel =</span> <span class="st">&quot;triangular&quot;</span>, <span class="at">n =</span> <span class="dv">1000</span>),</span>
 <span id="cb8-5"><a href="X01-KDE.html#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">200</span>),</span>
 <span id="cb8-6"><a href="X01-KDE.html#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.03</span>),</span>
@@ -587,8 +592,8 @@ Figure 1.7: This figure illustrates how the bandwidth of a kernel density estima
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="X02-Bias.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
