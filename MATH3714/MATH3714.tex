@@ -144,13 +144,15 @@
 \setcounter{tocdepth}{2}
 \tableofcontents
 }
+\newcommand{\argmin}{\mathop{\mathrm{arg\,min}}\limits}
+\newcommand{\bias}{\mathop{\mathrm{bias}}}
 \newcommand{\Cov}{\mathop{\mathrm{Cov}}}
 \newcommand{\CN}{\mathcal{N}}
 \newcommand{\ds}{\displaystyle}
 \newcommand{\E}{\mathbb{E}}
-\newcommand{\argmin}{\mathop{\mathrm{arg\,min}}\limits}
 \newcommand{\eps}{\varepsilon}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\rank}{\mathop{\mathrm{rank}}}
 \newcommand{\Var}{\mathop{\mathrm{Var}}}
 
 \hypertarget{home}{%
@@ -223,6 +225,8 @@ will be guided by three different aims of linear regression:
 We will address these aims by considering different questions, like
 how to estimate the coefficients \(\alpha, \beta_1, \ldots, \beta_p\),
 how to assess model fit, or how to deal with outliers in the data.
+
+\clearpage
 
 \hypertarget{S00-about}{%
 \section*{About MATH3714}\label{S00-about}}
@@ -343,6 +347,8 @@ Your final mark for the module will be based on a computer practical
 take place in week 10) you will need to solve some problem using R and
 the methods you learned in the course and to present your results in a
 short report.
+
+\clearpage
 
 \hypertarget{S01-simple}{%
 \section{Simple Linear Regression}\label{S01-simple}}
@@ -658,6 +664,8 @@ and one can check that the components of this vector \(\hat\beta = (\hat\beta_0,
   the problem can be conveniently written in matrix/vector notation
 \end{itemize}
 
+\clearpage
+
 \hypertarget{S02-multiple}{%
 \section{Least Squares Estimates}\label{S02-multiple}}
 
@@ -734,7 +742,7 @@ affects fuel consumption:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/unnamed-chunk-3-1.pdf}
+\includegraphics{MATH3714_files/figure-latex/mtcars-hp-mpg-plot-1.pdf}
 
 We can see that cars with stronger engines tend to use more fuel
 (\emph{i.e.}~a gallon of fuel lasts for fewer miles; the curve goes down),
@@ -953,9 +961,9 @@ are unknown. Solving for \(\varepsilon\) we find that the errors satisfy
 
 Using the least squares estimate \(\hat\beta\) we can estimate the true
 values as
-\begin{equation*}
-  \hat y = X \hat\beta.
-\end{equation*}
+\begin{equation}
+  \hat y = X \hat\beta.  \label{eq:fitted-values}
+\end{equation}
 These estimates are called the \textbf{fitted values}. Using the
 definition of \(\hat\beta\) we get
 \begin{equation*}
@@ -967,13 +975,13 @@ The matrix \(H = X (X^\top X)^{-1} X^\top\) is commonly called the \textbf{hat
 matrix} (because it ``puts the hat on \(y\)'').
 
 Finally, we can estimate the errors using the residuals
-\begin{equation*}
+\begin{equation}
   \hat\varepsilon
   = y - X \hat\beta
   = y - \hat y
   = y - H y
-  = (I - H) y,
-\end{equation*}
+  = (I - H) y,  \label{eq:fitted-errors}
+\end{equation}
 where \(I\) is the \((p+1)\times (p+1)\) identity matrix.
 
 \hypertarget{example}{%
@@ -1039,7 +1047,7 @@ plot to be close to the diagonal.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/unnamed-chunk-6-1.pdf}
+\includegraphics{MATH3714_files/figure-latex/y-y.hat-plot-1.pdf}
 
 For comparison we now re-do the analysis using built-in R commands.
 In the \texttt{lm()} command below, we use \texttt{data=mtcars} to tell R where the
@@ -1094,6 +1102,8 @@ is caused by rounding errors.
 \item
   the hat matrix transforms responses into fitted values
 \end{itemize}
+
+\clearpage
 
 \hypertarget{I01-lm}{%
 \section*{Interlude: Linear Regression in R}\label{I01-lm}}
@@ -1428,6 +1438,8 @@ commands can be used to predict \texttt{stack.loss} for two new
 More information about \texttt{predict()} can be found by reading
 the \href{https://rdrr.io/r/stats/predict.html}{output of \texttt{help(predict.lm)}}.
 
+\clearpage
+
 \hypertarget{P01}{%
 \section*{Problem Sheet 1}\label{P01}}
 \addcontentsline{toc}{section}{Problem Sheet 1}
@@ -1465,6 +1477,8 @@ built into R, predict a value for \texttt{stack.loss} when the inputs are
 \textbf{4} Let \(\varepsilon_1, \ldots, \varepsilon_n \sim \mathcal{N}(\mu, \sigma^2)\) be independent.
 Then \(\varepsilon= (\varepsilon_1, \ldots, \varepsilon_n)\) is a random vector. Determine
 \(\mathbb{E}(\varepsilon)\), \(\mathop{\mathrm{Cov}}(\varepsilon)\) and \(\mathbb{E}\bigl(\|\varepsilon\|^2\bigr)\).
+
+\clearpage
 
 \hypertarget{S03-cov}{%
 \section{Random Vectors and Covariance}\label{S03-cov}}
@@ -1527,7 +1541,7 @@ For example, if \(Y\) and \(Z\) are two random vectors, we have
 \(\mathbb{E}(Y+Z) = \mathbb{E}(Y) + \mathbb{E}(Z)\).
 
 \begin{example}
-The random vector~\(Y\) in \eqref{eq:lmstat0} has
+\protect\hypertarget{exm:E-of-Y}{}\label{exm:E-of-Y}The random vector~\(Y\) in \eqref{eq:lmstat0} has
 \begin{equation*}
     \mathbb{E}(Y)_i
     = \mathbb{E}(Y_i)
@@ -1560,8 +1574,8 @@ vector, then we find the expectation of \(AZ\in\mathbb{R}^m\) as
 for all \(i \in \{1, \ldots, m\}\) and thus we have \(\mathbb{E}(AZ) = A \mathbb{E}(Z)\).
 \end{example}
 
-\hypertarget{covariance-matrix}{%
-\subsection{Covariance Matrix}\label{covariance-matrix}}
+\hypertarget{sec:covariance}{%
+\subsection{Covariance Matrix}\label{sec:covariance}}
 
 The variance of random variables is replaced with the concept of
 a ``covariance matrix'' for random vectors.
@@ -1589,11 +1603,11 @@ section~\ref{Sx1-matrices} in the appendix.
   symmetric.
 \item
   The diagonal elements of \(\mathop{\mathrm{Cov}}(Z)\) are
-  \begin{equation*}
+  \begin{equation}
     \mathop{\mathrm{Cov}}(Z)_{ii}
     = \mathop{\mathrm{Cov}}(Z_i, Z_i)
-    = \mathop{\mathrm{Var}}(Z_i).
-  \end{equation*}
+    = \mathop{\mathrm{Var}}(Z_i).  \label{eq:Cov-diag-elem}
+  \end{equation}
 \item
   If the elements \(Z_i\) of \(Z\) are (statistically) independent,
   we have \(\mathop{\mathrm{Cov}}(Z_i, Z_j) = 0\) and thus \(\mathop{\mathrm{Cov}}(Z)_{ij} = 0\)
@@ -1648,7 +1662,7 @@ lemma, which describes how the covariance matrix changes under affine
 transformations.
 
 \begin{lemma}
-Let \(Z\in\mathbb{R}^n\) be a random vector, \(A\in\mathbb{R}^{m\times n}\) a matrix
+\protect\hypertarget{lem:Cov-is-quadratic}{}\label{lem:Cov-is-quadratic}Let \(Z\in\mathbb{R}^n\) be a random vector, \(A\in\mathbb{R}^{m\times n}\) a matrix
 and \(b\in\mathbb{R}^m\) a vector. Then
 \begin{equation*}
   \mathop{\mathrm{Cov}}(AZ+b)
@@ -1805,7 +1819,7 @@ We can use R to plot a sample of this two-dimensional normal distribution.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/unnamed-chunk-26-1.pdf}
+\includegraphics{MATH3714_files/figure-latex/MVN-plot-1.pdf}
 \end{example}
 
 \begin{example}
@@ -1844,7 +1858,7 @@ that \(Z_1\) and \(Z_2\) are normally distributed.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/unnamed-chunk-27-1.pdf}
+\includegraphics{MATH3714_files/figure-latex/not-a-normal-hist-1.pdf}
 
 The histograms make it plausible that the components are indeed normally
 distributed. Now we use a scatter plot to show the joint distribution
@@ -1858,7 +1872,7 @@ of \(Z_1\) and~\(Z_2\):
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/unnamed-chunk-28-1.pdf}
+\includegraphics{MATH3714_files/figure-latex/not-a-normal-scatter-1.pdf}
 
 This plot looks peculiar! Most people would not call this a normal distribution
 and the formal definition of a multivariate normal distribution is made to
@@ -1877,6 +1891,417 @@ exclude cases like this.
 \item
   We learned about the definition of the multivariate normal distribution.
 \end{itemize}
+
+\clearpage
+
+\hypertarget{S04-model}{%
+\section{Properties of the Least Squares Estimate}\label{S04-model}}
+
+Like in the one-dimensional case, we can build a \textbf{statistical model}
+for the data. Here we assume that the residuals are random. More
+precisely we have
+\begin{equation}
+  Y = X \beta + \varepsilon.  \label{eq:lmstats}
+\end{equation}
+for all \(i \in \{1, 2, \ldots, n\}\), where \(\varepsilon_1, \ldots, \varepsilon_n\)
+are now assumed to be i.i.d.~random variables with \(\mathbb{E}(\varepsilon_i) = 0\) and
+\(\mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\).
+
+\begin{itemize}
+\item
+  Again, we assume that the \(x\)-values are fixed and known. The only
+  random quantities in the model are \(\varepsilon_i\) and \(Y_i\).
+\item
+  The parameters in this model are now \(\beta = (\beta_0, \beta_1, \cdots, \beta_p) \in \mathbb{R}^{p+1}\) and \(\sigma^2\). The parameters \(\beta_j\) are often
+  called the regression coefficients.
+\end{itemize}
+
+The usual approach in statistics to quantify how well an estimator works
+is to apply it to random samples from the statistical model, where we
+can assume that we know the parameters, and then to study how well the
+parameters are reconstructed by the estimators. Since this approach
+uses random samples as input the the estimator, we obtain random estimates
+and we need to use statistical methods to quantify how close the estimate
+is to the truth.
+
+\hypertarget{mean-and-covariance}{%
+\subsection{Mean and Covariance}\label{mean-and-covariance}}
+
+The bias of an estimator is the difference between the expected value
+of the estimate and the truth. For the least squares estimator
+we have
+\begin{equation*}
+  \mathop{\mathrm{bias}}(\hat\beta)
+  = \mathbb{E}(\hat\beta) - \beta,
+\end{equation*}
+where
+\begin{equation*}
+  \hat\beta
+  = (X^\top X)^{-1} X^\top Y
+\end{equation*}
+and \(Y\) is the random vector from~\eqref{eq:lmstats}.
+
+\begin{lemma}
+\protect\hypertarget{lem:hat-beta-dist}{}\label{lem:hat-beta-dist}
+
+We have
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\item
+  \(\hat\beta = \beta + (X^\top X)^{-1} X^\top \varepsilon\) and
+\item
+  \(\hat\beta \sim \mathcal{N}\bigl( \beta, \sigma^2 (X^\top X)^{-1} \bigr)\).
+\end{enumerate}
+
+\end{lemma}
+
+\begin{proof}
+From lemma~\ref{lem:multiple-LSQ} we know
+\begin{equation*}
+  \hat\beta
+  = (X^\top X)^{-1} X^\top Y,
+\end{equation*}
+Using the definition of \(Y\) we can write this as
+\begin{align*}
+  \hat\beta
+  &= (X^\top X)^{-1} X^\top Y \\
+  &= (X^\top X)^{-1} X^\top (X\beta + \varepsilon) \\
+  &= (X^\top X)^{-1} X^\top X \beta + (X^\top X)^{-1} X^\top \varepsilon\\
+  &= \beta + (X^\top X)^{-1} X^\top \varepsilon.
+\end{align*}
+This proves the first claim.
+
+Since \(\varepsilon\) follows a multi-variate normal distribution,
+\(\beta + (X^\top X)^{-1} X^\top \varepsilon\) is also normally distributed.
+Taking expectations we get
+\begin{align*}
+  \mathbb{E}(\hat\beta)
+  &= \mathbb{E}\bigl( \beta + (X^\top X)^{-1} X^\top \varepsilon\bigr) \\
+  &= \beta + (X^\top X)^{-1} X^\top \mathbb{E}(\varepsilon) \\
+  &= \beta,
+\end{align*}
+since \(\mathbb{E}(\varepsilon) = 0\).
+
+For the covariance we find
+\begin{align*}
+  \mathop{\mathrm{Cov}}(\hat\beta)
+  &= \mathop{\mathrm{Cov}}\bigl( \beta + (X^\top X)^{-1} X^\top \varepsilon\bigr) \\
+  &= \mathop{\mathrm{Cov}}\bigl( (X^\top X)^{-1} X^\top \varepsilon\bigr) \\
+  &= (X^\top X)^{-1} X^\top \mathop{\mathrm{Cov}}(\varepsilon) \bigl( (X^\top X)^{-1} X^\top \bigr)^\top \\
+  &= (X^\top X)^{-1} X^\top \mathop{\mathrm{Cov}}(\varepsilon) X (X^\top X)^{-1}.
+\end{align*}
+Since \(\mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I\), this simplifies to
+\begin{align*}
+  \mathop{\mathrm{Cov}}(\hat\beta)
+  &= (X^\top X)^{-1} X^\top \sigma^2 I X (X^\top X)^{-1} \\
+  &= \sigma^2 (X^\top X)^{-1} X^\top X (X^\top X)^{-1} \\
+  &= \sigma^2 (X^\top X)^{-1}.
+\end{align*}
+This completes the proof.
+\end{proof}
+
+The lemma implies that \(\mathbb{E}(\hat\beta) = \beta\), \emph{i.e.}~the estimator
+\(\hat\beta\) is unbiased. Note that for this statement we only used \(\mathbb{E}(\varepsilon) = 0\) to compute the expectation of~\(\hat\beta\). Thus, the estimator will still
+be unbiases for correlated or for noise which is not normally distributed.
+
+We have seen \protect\hyperlink{eq:Cov-diag-elem}{earlier} that the diagonal elements
+of a covariance give the variances of the elements of the random vector.
+Setting \(C := (X^\top X)^{-1}\) as a shorthand here, we find that the
+individual estimated coefficients \(\hat\beta_i\) satisfy
+\begin{equation}
+  \hat\beta_i
+  \sim \mathcal{N}\bigl( \beta, \sigma^2 C_{ii} \bigr)  \label{eq:beta-hat-i}
+\end{equation}
+for all \(i \in \{1, \ldots, n\}\).
+
+These results about the (co-)variances of the estimator are not very
+useful in practice, because the error variance~\(\sigma^2\) is unknown.
+To derive more useful results, we will consider how to estimate this
+variance.
+
+\hypertarget{hat-matrix}{%
+\subsection{Properties of the Hat Matrix}\label{hat-matrix}}
+
+In this and the following sections we will use various
+properties of the hat matrix \(H = X (X^\top X)^{-1} X^\top\).
+
+\begin{lemma}
+
+The hat matrix \(H\) has the following properties:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\tightlist
+\item
+  \(H\) is symmetric, \emph{i.e.}~\(H^\top = H\).
+\item
+  \(H\) is idempotent, \emph{i.e.}~\(H^2 = H\).
+\end{enumerate}
+
+\end{lemma}
+
+\begin{proof}
+For the first statement we have
+\begin{align*}
+  H^\top
+  &= \bigl( X (X^\top X)^{-1} X^\top \bigr)^\top \\
+  &= (X^\top)^\top \bigl((X^\top X)^{-1}\bigr)^\top X^\top \\
+  &= X (X^\top X)^{-1} X^\top \\
+  &= H,
+\end{align*}
+where we used that the inverse of a symmetric matrix is symmetric.
+The second statement follow from
+\begin{align*}
+  H^2
+  &= \bigl( X (X^\top X)^{-1} X^\top \bigr) \bigl( X (X^\top X)^{-1} X^\top \bigr) \\
+  &= X \bigl( (X^\top X)^{-1} X^\top X \bigr) (X^\top X)^{-1} X^\top \\
+  &= X (X^\top X)^{-1} X^\top.
+\end{align*}
+This completes the proof.
+\end{proof}
+
+Both properties from the lemma carry over from \(H\) to \(I - H\): we
+have \((I - H)^\top = I^\top - H^\top = I - H\) and
+\begin{align*}
+  (I - H)^2
+  &= (I - H)(I - H) \\
+  &= I^2 - HI - IH + H^2 \\
+  &= I - H - H + H \\
+  &= I - H.
+\end{align*}
+
+For future reference we also state two simpler results: we have
+\begin{equation}
+  H X = X (X^\top X)^{-1} X^\top X = X  \label{eq:XH}
+\end{equation}
+and
+\begin{equation}
+  (I - H) X = IX - HX = X - X = 0.  \label{eq:XIH}
+\end{equation}
+
+Finally, if we have a vector \(v \in \mathbb{R}^n\) we can write \(v\) as
+\begin{align*}
+  v
+  &= (H + I - H)v \\
+  &= Hv + (I-H)v.
+\end{align*}
+The inner product between these two components is
+\begin{align*}
+  (Hv)^\top (I-H)v
+  &= v^\top H^\top (I-H) v \\
+  &= v^\top H (I-H) v \\
+  &= v^\top (H-H^2) v \\
+  &= v^\top (H-H) v \\
+  &= 0,
+\end{align*}
+so the two vectors are orthogonal.
+As a result we get
+\begin{align*}
+  \|v\|^2
+  &= v^\top v \\
+  &= \bigl( Hv + (I-H)v \bigr)^\top \bigl( Hv + (I-H)v \bigr) \\
+  &= (Hv)^\top Hv + 2 (Hv)^\top (I-H)v + \bigl((I-H)v\bigr)^\top (I-H)v \\
+  &= \| Hv \|^2 + \|(I-H)v \|^2
+\end{align*}
+(This is \href{https://en.wikipedia.org/wiki/Pythagorean_theorem}{Pythagoras' theorem} in \(\mathbb{R}^n\).)
+Since \(\hat y = Hy\) and \(\hat\varepsilon= (I - H)y\), we can apply this idea to the
+vector \(y\) of observations to get \(\|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2\).
+
+We note without proof that geometrically, \(H\) can be interpreted as the
+orthogonal projection onto the subspace of \(\mathbb{R}^n\) which is spanned by
+the columns of \(X\). This subspace contains the possible output vectors
+of the linear system and the least squares procedure finds the point \(\hat y\)
+in this subspace which is closest to the observed data \(y\in\mathbb{R}^n\).
+
+Some authors define:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\mathrm{SS}_\mathrm{T} = \sum_{i=1}^n y_i^2\) (where ``T'' stands for ``total'')
+\item
+  \(\mathrm{SS}_\mathrm{R} = \sum_{i=1}^n \hat y_i^2\) (where ``R'' stands for ``regression'')
+\item
+  \(\mathrm{SS}_\mathrm{E} = \sum_{i=1}^n (y_i-\hat y_i)^2\) (where ``E'' stands for ``error'')
+\end{itemize}
+
+Using this notation, our equation
+\(\|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2\)
+turns into
+\begin{equation*}
+  \mathrm{SS}_\mathrm{T}
+  = \mathrm{SS}_\mathrm{R} + \mathrm{SS}_\mathrm{E}.
+\end{equation*}
+
+\hypertarget{Cochran}{%
+\subsection{Cochran's theorem}\label{Cochran}}
+
+Our main tool in this and the following section will be a simplified
+version of \href{https://en.wikipedia.org/wiki/Cochran\%27s_theorem}{Cochran's theorem}.
+
+\begin{theorem}
+
+The following statements are true:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\item
+  \(\frac{1}{\sigma^2} \varepsilon^\top H \varepsilon\sim \chi^2_{p+1}\)
+\item
+  \(\frac{1}{\sigma^2} \varepsilon^\top (I - H) \varepsilon\sim \chi^2_{n - p - 1}\)
+\item
+  \(H \varepsilon\) and \((I-H)\varepsilon\) are independent.
+\end{enumerate}
+
+\end{theorem}
+
+\begin{proof}
+Since \(H\) is symmetric, we can diagonalise \(H\) (see \ref{thm:spectral}
+in the appendix): there is an orthogonal matrix \(U\) such that
+\(D := U H U^\top\) is diagonal, and the diagonal elements of \(D\) are
+the eigenvalues of \(H\). Since \(H\) is idempotent, these diagonal elements
+can only be \(0\) or~\(1\). Also, since \(U\) is orthogonal, we have \(U^\top U = I\)
+and thus
+\begin{equation*}
+  U^\top D U
+  = U^\top U H U^\top U
+  = H.
+\end{equation*}
+The same matrix \(U\) also diagonalises \(I-H\), since
+\(U (I -H) U^\top = U U^\top - U H U^\top = I - D\). Exactly one
+of the diagonal elements \(D_{ii}\) and \((I - D)_{ii}\) is \(1\) and the other
+one is \(0\) for every~\(i\).
+
+Since \(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\) we find that \(\eta := U \varepsilon\) is normally
+distributed with mean \(U 0 = 0\) and covariance matrix \(\sigma^2 U I U^\top = \sigma^2 U U^\top = \sigma^2 I\). Thus \(\eta\) has the same distribution as
+\(\varepsilon\) does: \(\eta \sim \mathcal{N}(0, \sigma^2I)\) and the components \(\eta_i\)
+are independent of each other. We have
+\begin{equation*}
+  H \varepsilon
+  = U^\top D U \varepsilon
+  = U^\top D \eta.
+\end{equation*}
+and
+\begin{equation*}
+  (I - H) \varepsilon
+  = U^\top (I - D) U \varepsilon
+  = U^\top (I - D) \eta.
+\end{equation*}
+Since \((D\eta)_i = 0\) if \(D_{ii}=0\) and \(\bigl((I - D) \eta)_i = 0\)
+otherwise, each component of \(\eta\) contributes to exactly one of the
+two vectors \(D\eta\) and \((I-D)\eta\). Thus, \(D\eta\) and \((I-D)\eta\)
+are independent, and thus \(H\varepsilon\) and \((I - H)\varepsilon\) are also independent.
+This proves the third statement of the theorem.
+
+For the first statement, we note that
+\begin{align*}
+  \varepsilon^\top H \varepsilon
+  &= \varepsilon^\top U^\top D U \varepsilon\\
+  &= \eta^\top D \eta \\
+  &= \sum_{i=1 \atop D_{ii}=1}^n \eta_i^2.
+\end{align*}
+Since \((X^\top X) \in\mathbb{R}^{(p+1)\times (p+1)}\) is invertible, one can show
+that \(\mathop{\mathrm{rank}}(H) = p+1\) and thus that there are \(p+1\) terms contributing
+to the sum (we skip the proof of this statement here). Thus,
+\begin{equation*}
+  \frac{1}{\sigma^2} \varepsilon^\top H \varepsilon
+  = \sum_{i=1 \atop D_{ii}=1}^n \bigl(\eta_i/\sigma)^2
+\end{equation*}
+is the sum of the squares of \(p+1\) independent standard normals,
+and thus is \(\chi^2_{p+1}\) distributed. This completes the proof of the
+first statement.
+
+Finally, the second statement follows in much of the same way as the
+first one, except that \(H\) is replaced with \(I-H\) and the sum is
+over the \(n - p - 1\) indices \(i\) where \(D_{ii} = 0\).
+This completes the proof.
+\end{proof}
+
+Expressions of the form \(x^\top A x\) for \(x\in\mathbb{R}^n\) and \(A\in\mathbb{R}^{n\times n}\)
+are called \textbf{quadratic forms}.
+
+While the theorem as written only states that \(H \varepsilon\) and \((I - H)\varepsilon\)
+are independent of each other, we can replace one or both of these terms
+the corresponding quadratic forms as still keep the independence. Since
+\((H \varepsilon)^\top (H \varepsilon) = \varepsilon^\top H^\top H \varepsilon= \varepsilon^\top H \varepsilon\),
+the quadratic form \(\varepsilon^\top H \varepsilon\) is a function of \(H \varepsilon\) and a similar
+statement holds with \(H-I\) instead of \(H\).
+
+\hypertarget{var-est-bias}{%
+\subsection{Estimating the Error Variance}\label{var-est-bias}}
+
+So far we have only considered how to estimate the parameter
+vector~\(\beta\) and we have ignored the parameter~\(\sigma^2\).
+We will see that an unbiased estimator for \(\sigma^2\) is
+given by
+\begin{equation}
+  \hat\sigma^2
+  = \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2,
+\end{equation}
+where \(\hat y_i\) are the fitted values from equation~\eqref{eq:fitted-values}.
+As for the one-dimensional case in~\eqref{eq:reg-sigma-est}, the estimate
+does not have the prefactor \(1/n\), which one might naively expect,
+but the denomintor is decreased by one for each component of the
+vector~\(\beta\). Using Cochran's theorem, we can now show that the estimator
+\(\hat\sigma^2\) is unbiased.
+
+We first note that
+\begin{align*}
+  (n - p - 1) \hat\sigma^2
+  &= (y - \hat y)^\top (y - \hat y) \\
+  &= (y - H y)^\top (y - H y) \\
+  &= y^\top (I - H)^\top (I - H) y \\
+  &= y^\top (I - H) y
+\end{align*}
+To determine the bias, we need to use \(Y = X\beta + \varepsilon\) in place of the
+data. This gives
+\begin{align*}
+  (n - p - 1) \hat\sigma^2
+  &= Y^\top (I-H) Y \\
+  &= (X\beta + \varepsilon)^\top (I-H) (X\beta + \varepsilon) \\
+  &= \beta^\top X^\top (I-H) X \beta
+      + 2 \varepsilon^\top (I-H) X \beta
+      + \varepsilon^\top (I-H) \varepsilon\\
+  &= \varepsilon^\top (I-H) \varepsilon,
+\end{align*}
+where we used equation~\eqref{eq:XIH} to see that the first two terms in
+the sum equal zero.
+
+Now we can apply Cochran's theorem. This shows that
+\begin{equation}
+  \frac{1}{\sigma^2} (n - p - 1) \hat\sigma^2
+  = \frac{1}{\sigma^2} \varepsilon^\top (I-H) \varepsilon
+  \sim \chi^2_{n - p - 1}.  \label{eq:sigma-hat-chi-squared}
+\end{equation}
+Since the expectation of a \(\chi^2_r\) distribution equals \(r\), we find
+\begin{equation*}
+  \frac{1}{\sigma^2} (n - p - 1) \mathbb{E}(\hat\sigma^2)
+  = n - p - 1
+\end{equation*}
+and thus
+\begin{equation*}
+  \mathbb{E}(\hat\sigma^2)
+  = \sigma^2.
+\end{equation*}
+This proves that \(\hat\sigma^2\) is an unbiased estimator for \(\sigma^2\).
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  The least squares estimator for the regression coefficients is unbiased.
+\item
+  The hat matrix is idempotent and symmetric.
+\item
+  Cochran's theorem allows to understand the distribution of some
+  quadratic forms involving the hat matrix.
+\item
+  \(\hat\sigma^2\) is an unbiased estimator for \(\sigma^2\).
+\end{itemize}
+
+\clearpage
 
 \hypertarget{appendix-appendices}{%
 \appendix}
@@ -1905,7 +2330,8 @@ is given by
   = \sum_{i=1}^d u_i v_i.  \label{eq:inner-product}
 \end{equation}
 Note that the two vectors must have the same length for the inner product
-to exist.
+to exist. The vectors \(u\) and~\(v\) are said to be \textbf{orthogonal}, if
+\(u^\top v = 0\).
 
 Using this notation, the \textbf{Euclidean length} of a vector~\(v\)
 can be written as
@@ -1950,6 +2376,29 @@ this can be written as
 A matrix \(A\) is called \textbf{symmetric}, if \(A^\top = A\).
 \end{definition}
 
+\hypertarget{matrix-vector-product}{%
+\subsubsection{Matrix-vector Product}\label{matrix-vector-product}}
+
+If \(A \in \mathbb{R}^{m \times n}\) and \(v \in \mathbb{R}^n\), then
+\(Av \in \mathbb{R}^m\) is the vector with
+\begin{equation*}
+  (Av)_i
+  = \sum_{j=1}^n a_{ij} v_j
+\end{equation*}
+for all \(i \in \{1, \ldots, m\}\).
+
+If we consider \(v\) to be a \((n\times 1)\)-matrix instead of a vector,
+\(Av\) can also be interpreted as a matrix-matrix product between an \(m \times n\) and an \(n\times 1\) matrix. Using this convention, \(v^\top\)
+is then interpreted as an \(1 \times n\) matrix and if \(u\in\mathbb{R}^m\) we
+have \(u^\top A \in \mathbb{R}^{1 \times n} \cong \mathbb{R}^n\) with
+\begin{equation*}
+  (u^\top A)_j
+  = \sum_{i=1}^m u_i a_{ij}
+\end{equation*}
+for all \(j \in \{1, \ldots, n\}\). Going one step further, this
+notation also motivates the expression \(u^\top v\) in
+equation~\eqref{eq:inner-product}.
+
 \hypertarget{matrix-matrix-product}{%
 \subsubsection{Matrix-matrix Product}\label{matrix-matrix-product}}
 
@@ -1985,28 +2434,35 @@ Properties:
   \end{equation}
 \end{itemize}
 
-\hypertarget{matrix-vector-product}{%
-\subsubsection{Matrix-vector Product}\label{matrix-vector-product}}
+\hypertarget{matrix-inverse}{%
+\subsubsection{Matrix Inverse}\label{matrix-inverse}}
 
-If \(A \in \mathbb{R}^{m \times n}\) and \(v \in \mathbb{R}^n\), then
-\(Av \in \mathbb{R}^m\) is the vector with
-\begin{equation*}
-  (Av)_i
-  = \sum_{j=1}^n a_{ij} v_j
-\end{equation*}
-for all \(i \in \{1, \ldots, m\}\).
+If \(A\) is a square matrix and if there is a matrix \(B\) such that
+\(AB = I\), then \(A\) is called \textbf{invertible} and the matrix \(B\) is
+called the \textbf{inverse} of~\(A\), denoted by \(A^{-1} := B\).
+Some important properties of the inverse:
 
-If we consider \(v\) to be a \((n\times 1)\)-matrix instead of a vector,
-\(Av\) can also be interpreted as a matrix-matrix product between an \(m \times n\) and an \(n\times 1\) matrix. Using this convention, \(v^\top\)
-is then interpreted as an \(1 \times n\) matrix and if \(u\in\mathbb{R}^m\) we
-have \(u^\top A \in \mathbb{R}^{1 \times n} \cong \mathbb{R}^n\) with
-\begin{equation*}
-  (u^\top A)_j
-  = \sum_{i=1}^m u_i a_{ij}
-\end{equation*}
-for all \(j \in \{1, \ldots, n\}\). Going one step further, this
-notation also motivates the expression \(u^\top v\) in
-equation~\eqref{eq:inner-product}.
+\begin{itemize}
+\item
+  The inverse, if it exists, is unique.
+\item
+  Left-inverse and right-inverse for matrices are the same:
+  \(A^{-1} A = I\) holds if and only if \(A A^{-1} = I\).
+\item
+  If \(A\) is symmetric and invertible, then \(A^{-1}\) is also
+  symmetric. (Proof: \(A (A^{-1})^\top = (A^{-1} A)^\top = I^\top = I\) and thus \((A^{-1})^\top\) is an inverse of \(A\).
+  Since the inverse is unique, \((A^{-1})^\top = A^{-1}\).)
+\end{itemize}
+
+\hypertarget{orthogonal-matrices}{%
+\subsubsection{Orthogonal Matrices}\label{orthogonal-matrices}}
+
+\begin{definition}
+A matrix \(U\) is called \textbf{orthogonal}, if \(U^\top U = I = U U^\top\).
+\end{definition}
+
+If \(U\) is orthogonal, the inverse and the transpose are the same:
+\(U^\top = U^{-1}\).
 
 \hypertarget{positive-definite}{%
 \subsubsection{Positive Definite Matrices}\label{positive-definite}}
@@ -2023,5 +2479,44 @@ for all \(x \in \mathbb{R}^n\) with \(x\neq 0\). The matrix is called
 \end{equation*}
 for all \(x \in \mathbb{R}^n\).
 \end{definition}
+
+\hypertarget{idempotent}{%
+\subsubsection{Idempotent Matrices}\label{idempotent}}
+
+\begin{definition}
+The matrix \(A\) is \textbf{idempotent}, if \(A^2 = A\).
+\end{definition}
+
+\hypertarget{eigenvalues}{%
+\subsection{Eigenvalues}\label{eigenvalues}}
+
+\begin{definition}
+Let \(A \in\mathbb{R}^{n\times n}\) be a square matrix and \(\lambda\in R\).
+The number \(\lambda\) is called an \textbf{eigenvalue} of \(A\), if there
+exists a vector \(v \neq 0\) such that \(A x = \lambda x\). Any
+such vector \(x\) is called an \textbf{eigenvector} of \(A\) with eigenvalue~\(\lambda\).
+\end{definition}
+
+While there are very many results about eigenvectors and eigenvalues
+in Linear Algebra, here we will only use a small number of these results.
+We summarise what we need for this module:
+
+\begin{itemize}
+\tightlist
+\item
+  If \(A\) is idempotent and \(x\) is an eigenvector with eigenvalue \(\lambda\),
+  then we have \(\lambda x = A x = A^2 x = \lambda Ax = \lambda^2 x\). Thus we
+  have \(\lambda^2 = \lambda\). This shows that the only eigenvalues possible
+  for idempotent matrices are \(0\) and~\(1\).
+\end{itemize}
+
+\begin{theorem}
+\protect\hypertarget{thm:spectral}{}\label{thm:spectral}Let \(A\in\mathbb{R}^{n\times n}\) be symmetric. Then there is an orthogonal
+matrix \(U\) such that \(D := U A U^\top\) is diagonal. The diagonal
+elements of \(D\) are the eigenvalues of \(A\) and the rows of \(U\)
+are corresponding eigenvectors.
+\end{theorem}
+
+\clearpage
 
 \end{document}
