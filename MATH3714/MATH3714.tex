@@ -110,6 +110,9 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
+\usepackage{comment}
+\specialcomment{myanswers}{\smallbreak\begingroup\leftskip=\leftmargini\noindent Solution: }%
+  {\medbreak\endgroup}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -153,7 +156,10 @@
 \newcommand{\eps}{\varepsilon}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\rank}{\mathop{\mathrm{rank}}}
+\newcommand{\se}{\mathop{\mathrm{se}}}
+\newcommand{\stdev}{\mathop{\mathrm{stdev}}}
 \newcommand{\Var}{\mathop{\mathrm{Var}}}
+\newcommand{\xfrac}[2]{\frac{\,#1\,}{\,#2\,}}
 
 \hypertarget{home}{%
 \section*{Preface}\label{home}}
@@ -1444,6 +1450,8 @@ the \href{https://rdrr.io/r/stats/predict.html}{output of \texttt{help(predict.l
 \section*{Problem Sheet 1}\label{P01}}
 \addcontentsline{toc}{section}{Problem Sheet 1}
 
+\excludecomment{myanswers}
+
 You should attempt all these questions and write up your solutions in advance
 of your workshop in week 3 where the answers will be discussed.
 
@@ -1453,8 +1461,49 @@ of your workshop in week 3 where the answers will be discussed.
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
+\tightlist
 \item
   Show that \(\displaystyle X^\top X = \begin{pmatrix}  n & \sum_{i=1}^n x_i \\  \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2  \end{pmatrix} \in \mathbb{R}^{2\times 2}\).
+\end{enumerate}
+
+\begin{myanswers}
+For simple linear regression, we have \(p=1\) and the design matrix is
+\begin{equation*}
+    X = \begin{pmatrix}
+      1 & x_1 \\
+      1 & x_2 \\
+      \vdots & \vdots \\
+      1 & x_n
+    \end{pmatrix}.
+  \end{equation*}
+Thus we have
+\begin{align*}
+    X^\top X
+    &= \begin{pmatrix}
+        1 & 1 & \cdots & 1 \\
+        x_1 & x_2 & \cdots & x_n
+    \end{pmatrix} \begin{pmatrix}
+      1 & x_1 \\
+      1 & x_2 \\
+      \vdots & \vdots \\
+      1 & x_n
+    \end{pmatrix} \\
+    &= \begin{pmatrix}
+      \sum_{i=1}^n 1 &  \sum_{i=1}^n 1 \cdot x_i \\
+      \sum_{i=1}^n x_i \cdot 1 & \sum_{i=1}^n x_i^2
+    \end{pmatrix} \\
+    &= \begin{pmatrix}
+      n & \sum_{i=1}^n x_i \\
+      \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2
+    \end{pmatrix}.
+  \end{align*}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
 \item
   Using the formula
   \begin{equation*}
@@ -1462,21 +1511,157 @@ of your workshop in week 3 where the answers will be discussed.
    = \frac{1}{ad-bc} \begin{pmatrix} \;d & -b \\ -c & \,a \end{pmatrix},
       \end{equation*}
   find \((X^\top X)^{-1}\).
+\end{enumerate}
+
+\begin{myanswers}
+Using the formula for the inverse of a \(2\times 2\)-matrix, we find
+\begin{align*}
+    (X^\top X)^{-1}
+    &= \begin{pmatrix}
+      n & \sum_{i=1}^n x_i \\
+      \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2
+    \end{pmatrix}^{-1} \\
+    &= \frac{1}{n \sum_{i=1}^n x_i^2 - \bigl(\sum_{i=1}^n x_i\bigr)^2}
+      \begin{pmatrix}
+      \sum_{i=1}^n x_i^2 & -\sum_{i=1}^n x_i \\
+      -\sum_{i=1}^n x_i & n
+    \end{pmatrix}.
+  \end{align*}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
 \item
   Find \(X^\top y\) and use this to derive an explicit formula for
   the least squares estimate \(\hat\beta = (X^\top X)^{-1} X^\top y\).
 \end{enumerate}
 
+\begin{myanswers}
+Omitting the indices in the sums for brevity, we have
+\begin{equation*}
+    X^\top y
+    = \begin{pmatrix}
+        1 & 1 & \cdots & 1 \\
+        x_1 & x_2 & \cdots & x_n
+    \end{pmatrix} \begin{pmatrix}
+      y_1 \\ y_2 \\ \vdots \\ y_n
+    \end{pmatrix}
+    = \begin{pmatrix}
+      \sum y_i \\
+      \sum x_i y_i
+    \end{pmatrix}
+  \end{equation*}
+and thus
+\begin{align*}
+    \hat\beta
+    &= (X^\top X)^{-1} X^\top y \\
+    &= \frac{1}{n \sum x_i^2 - \bigl(\sum x_i\bigr)^2}
+      \begin{pmatrix}
+      \sum x_i^2 & -\sum x_i \\
+      -\sum x_i & n
+    \end{pmatrix}
+    \begin{pmatrix}
+      \sum y_i \\
+      \sum x_i y_i
+    \end{pmatrix} \\
+    &= \frac{1}{n \sum x_i^2 - \bigl(\sum x_i\bigr)^2}
+      \begin{pmatrix}
+        \sum x_i^2 \sum y_i - \sum x_i \sum x_i y_i \\
+        -\sum x_i \sum y_i + n \sum x_i y_i
+      \end{pmatrix} \\
+    &= \frac{1}{\frac1n \sum_{i=1}^n x_i^2 - \bigl(\frac1n \sum_{i=1}^n x_i\bigr)^2}
+      \begin{pmatrix}
+        \frac1n \sum_{i=1}^n x_i^2 \cdot \frac1n\sum_{i=1}^n y_i
+            - \frac1n\sum_{i=1}^n x_i \cdot \frac1n\sum_{i=1}^n x_i y_i \\
+        \frac1n\sum_{i=1}^n x_i y_i
+            - \frac1n\sum_{i=1}^n x_i \cdot \frac1n\sum_{i=1}^n y_i
+      \end{pmatrix}.
+  \end{align*}
+This completes the answer.
+
+Inspection of the final result shows that we have recovered the traditional
+formula for the coefficients in simple linear regression, only written in
+slightly unusual form. For example, the term \(\frac1n \sum_{i=1}^n x_i^2 -  \bigl(\frac1n \sum_{i=1}^n x_i\bigr)^2\) equals the sample variance of the
+\(x_i\) (up to a factor of \(n/(n-1)\)). The algebra in this answer could be
+slightly simplified by changing to new coordinates \(\tilde x_i = x_i - \bar  x\) and \(\tilde y_i = y_i - \bar y\) before fitting the regression model.
+
+\end{myanswers}
+
 \textbf{2} Let \(H = X (X^\top X)^{-1} X^\top \in\mathbb{R}^{n\times n}\) be the hat matrix
 and \(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\). Show that \(H \mathbf{1} = \mathbf{1}\).
+
+\begin{myanswers}
+We already know that \(H X = X (X^\top X)^{-1} X^\top X = X\). Since
+the first column of \(X\) equals \(\mathbf{1}\), the first column of
+the matrix equation \(HX = X\) is \(H\mathbf{1} = \mathbf{1}\). This
+completes the proof.
+
+\end{myanswers}
 
 \textbf{3} For the \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} data set}
 built into R, predict a value for \texttt{stack.loss} when the inputs are
 \texttt{Air.Flow\ =\ 60}, \texttt{Water.Temp\ =\ 21} and \texttt{Acid.Conc\ =\ 87}.
 
+\begin{myanswers}
+We can fit the model using \texttt{lm()} as usual:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\NormalTok{m}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = stack.loss ~ ., data = stackloss)
+## 
+## Coefficients:
+## (Intercept)     Air.Flow   Water.Temp   Acid.Conc.  
+##    -39.9197       0.7156       1.2953      -0.1521
+\end{verbatim}
+
+To predict a new value, we use the \texttt{predict()} command. Note that
+\texttt{Acid.Conc.} is spelled with a trailing dot, which we need to include
+in the name when we supply the new input values here.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(m, }\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Air.Flow =} \DecValTok{60}\NormalTok{, }\AttributeTok{Water.Temp =} \DecValTok{21}\NormalTok{, }\AttributeTok{Acid.Conc. =} \DecValTok{87}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        1 
+## 16.98509
+\end{verbatim}
+
+Thus, the predicted value for \texttt{stack.loss} is \(16.98509\).
+
+\end{myanswers}
+
 \textbf{4} Let \(\varepsilon_1, \ldots, \varepsilon_n \sim \mathcal{N}(\mu, \sigma^2)\) be independent.
 Then \(\varepsilon= (\varepsilon_1, \ldots, \varepsilon_n)\) is a random vector. Determine
-\(\mathbb{E}(\varepsilon)\), \(\mathop{\mathrm{Cov}}(\varepsilon)\) and \(\mathbb{E}\bigl(\|\varepsilon\|^2\bigr)\).
+\(\mathbb{E}(\varepsilon)\), \(\mathop{\mathrm{Cov}}(\varepsilon)\) and \(\mathbb{E}\bigl( \|\varepsilon\|^2 \bigr)\).
+
+\begin{myanswers}
+We immediately find \(\mathbb{E}(\varepsilon) = \mu \mathbf{1}\) where
+\(\mathbf{1} = (1, \ldots, 1) \in\mathbb{R}^n\). Since the \(\varepsilon_i\) are independent,
+we have \(\mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I\). Finally we have
+\begin{align*}
+  \mathbb{E}\bigl(\|\varepsilon\|^2\bigr)
+  &= \mathbb{E}\bigl( \sum_{i=1}^n \varepsilon_i^2 \bigr) \\
+  &= \sum_{i=1}^n E(\varepsilon_i^2) \\
+  &= n \mathbb{E}(\varepsilon_1^2).
+\end{align*}
+Since \(\mathbb{E}(\varepsilon_1^2) = \mathop{\mathrm{Var}}(\varepsilon_1) + \mathbb{E}(\varepsilon_1)^2 = \sigma^2 + \mu^2\)
+we get \(\mathbb{E}\bigl(\|\varepsilon\|^2\bigr) = n (\sigma^2 + \mu^2)\).
+
+\end{myanswers}
 
 \clearpage
 
@@ -2147,9 +2332,9 @@ The following statements are true:
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi})}
 \item
-  \(\frac{1}{\sigma^2} \varepsilon^\top H \varepsilon\sim \chi^2_{p+1}\)
+  \(\frac{1}{\sigma^2} \varepsilon^\top H \varepsilon\sim \chi^2(p+1)\)
 \item
-  \(\frac{1}{\sigma^2} \varepsilon^\top (I - H) \varepsilon\sim \chi^2_{n - p - 1}\)
+  \(\frac{1}{\sigma^2} \varepsilon^\top (I - H) \varepsilon\sim \chi^2(n - p - 1)\)
 \item
   \(H \varepsilon\) and \((I-H)\varepsilon\) are independent.
 \end{enumerate}
@@ -2209,7 +2394,7 @@ to the sum (we skip the proof of this statement here). Thus,
   = \sum_{i=1 \atop D_{ii}=1}^n \bigl(\eta_i/\sigma)^2
 \end{equation*}
 is the sum of the squares of \(p+1\) independent standard normals,
-and thus is \(\chi^2_{p+1}\) distributed. This completes the proof of the
+and thus is \(\chi^2(p+1)\) distributed. This completes the proof of the
 first statement.
 
 Finally, the second statement follows in much of the same way as the
@@ -2237,7 +2422,7 @@ We will see that an unbiased estimator for \(\sigma^2\) is
 given by
 \begin{equation}
   \hat\sigma^2
-  = \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2,
+  = \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \label{eq:hat-sigma-squared}
 \end{equation}
 where \(\hat y_i\) are the fitted values from equation~\eqref{eq:fitted-values}.
 As for the one-dimensional case in~\eqref{eq:reg-sigma-est}, the estimate
@@ -2272,9 +2457,10 @@ Now we can apply Cochran's theorem. This shows that
 \begin{equation}
   \frac{1}{\sigma^2} (n - p - 1) \hat\sigma^2
   = \frac{1}{\sigma^2} \varepsilon^\top (I-H) \varepsilon
-  \sim \chi^2_{n - p - 1}.  \label{eq:sigma-hat-chi-squared}
+  \sim \chi^2(n - p - 1).  \label{eq:sigma-hat-chi-squared}
 \end{equation}
-Since the expectation of a \(\chi^2_r\) distribution equals \(r\), we find
+Since the expectation of a \(\chi^2(\nu)\) distribution equals \(\nu\)
+(see appendix~\ref{chi-square}), we find
 \begin{equation*}
   \frac{1}{\sigma^2} (n - p - 1) \mathbb{E}(\hat\sigma^2)
   = n - p - 1
@@ -2299,6 +2485,422 @@ This proves that \(\hat\sigma^2\) is an unbiased estimator for \(\sigma^2\).
   quadratic forms involving the hat matrix.
 \item
   \(\hat\sigma^2\) is an unbiased estimator for \(\sigma^2\).
+\end{itemize}
+
+\clearpage
+
+\hypertarget{S05-single}{%
+\section{Uncertainty for Individual Regression Coefficients}\label{S05-single}}
+
+In this section we will consider different ways to study the uncertainty in the
+estimates \(\hat\beta_i\) for the regression coefficient~\(\beta_i\) individually.
+In the following sections we will then consider the problem of simultaneously
+estimating several or all coefficients.
+
+\hypertarget{measuring-the-estimation-error}{%
+\subsection{Measuring the Estimation Error}\label{measuring-the-estimation-error}}
+
+We have seen that \(\hat\beta \sim \mathcal{N}(0, \sigma^2 X)\), where
+\((X^\top X)^{-1}\). Restricting this to a single coefficient, we find
+\begin{equation*}
+  \hat\beta_i
+  \sim \mathcal{N}\bigl( \beta, \sigma^2 C_{ii} \bigr),
+\end{equation*}
+since the diagonal elements of the covariance matrix contains the
+variances of the elements of a random vector. In practice we will not
+know the value of \(\sigma^2\), so we have to estimate this from data,
+using the estimator
+\begin{equation*}
+  \hat\sigma^2
+  = \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2,
+\end{equation*}
+from equation~\eqref{eq:hat-sigma-squared}. As a first application of
+Cochran's theorem we showed in equation~\eqref{eq:sigma-hat-chi-squared}
+that
+\begin{equation*}
+  \frac{1}{\sigma^2} (n - p - 1) \hat\sigma^2
+  \sim \chi^2(n - p - 1).
+\end{equation*}
+
+Note that in the equations above, we index the rows and columns of \(C\)
+using \(i,j\in \{0, 1, \ldots, p\}\), \emph{i.e.} the first row and column are
+using the index 0 each. This is to match the convention for the
+components of \(\beta = (\beta_0, \beta_1, \ldots, \beta_p)\).
+
+\begin{lemma}
+\protect\hypertarget{lem:hat-beta-sigma-indep}{}\label{lem:hat-beta-sigma-indep}The random vector \(\hat\beta\) and the random number
+\(\hat\sigma^2\) are independent of each other.
+\end{lemma}
+
+\begin{proof}
+We will show that \(\hat\beta\) can be written as a function of \(H\varepsilon\)
+and that \(\hat\sigma^2\) can be written as a function of \((I-H)\varepsilon\).
+The result then follows from Cochran's theorem.
+
+From lemma~\ref{lem:hat-beta-dist}
+we know that the least squares estimate \(\hat\beta\) can be written as
+\begin{equation*}
+  \hat\beta
+  = \beta + (X^\top X)^{-1} X^\top \varepsilon
+\end{equation*}
+and that \(H = X (X^\top X)^{-1} X^\top\). Thus we can write \(\hat\beta\) as
+\begin{align*}
+  \hat\beta
+  &= \beta + (X^\top X)^{-1} X^\top X \, (X^\top X)^{-1} X^\top \varepsilon\\
+  &= \beta + (X^\top X)^{-1} X^\top H \varepsilon,
+\end{align*}
+which is a function of \(H\varepsilon\).
+
+Similar to the argument at the end of the previous section, we can
+write \(\hat\sigma^2\) as
+\begin{align*}
+  (n - p - 1) \hat\sigma^2
+  &= (Y - \hat Y)^\top (Y - \hat Y) \\
+  &= (Y - H Y)^\top (Y - H Y) \\
+  &= Y^\top (I - H)^\top (I - H) Y \\
+  &= \bigl\| (I - H) Y \|.
+\end{align*}
+Since \(Y = X\beta + \varepsilon\) and since we know \((I-H)X = 0\) from
+equation~\eqref{eq:XIH}, we find
+\begin{align*}
+  \hat\sigma^2
+  &= \frac{1}{n-p-1} \bigl\| (I - H) (X\beta + \varepsilon) \| \\
+  &= \frac{1}{n-p-1} \bigl\| (I - H) \varepsilon\|,
+\end{align*}
+which is a function of \((I - H)\varepsilon\).
+
+From Cochran's theorem we know that \(H \varepsilon\) and \((I-H)\varepsilon\) are independent
+and thus we can conclude that \(\hat\beta\) and \(\hat\sigma^2\) are also
+independent of each other. This completes the proof.
+\end{proof}
+
+We now construct a quantity \(T\) which measures the distance between
+the estimated value \(\hat\beta_i\) and the unknown true value~\(\beta_i\):
+\begin{equation}
+  T
+  := \frac{\hat\beta_i - \beta_i}{\sqrt{\hat\sigma^2 C_{ii}}}. \label{eq:single-T}
+\end{equation}
+While there are many ways to measure this distance, the \(T\) constructed
+here has two main advantages:
+
+\begin{itemize}
+\item
+  The value of \(T\) can be computed from the given data, without
+  any reference to unknown quantities.
+\item
+  Below, we will be able to find the distribution of \(T\). This will
+  allow us to use \(T\) to construct confidence intervals and statistical
+  tests.
+\end{itemize}
+
+\begin{lemma}
+\protect\hypertarget{lem:beta-i-follows-t}{}\label{lem:beta-i-follows-t}Assume that the data follows the model~\eqref{eq:lmstats}.
+Then \(T \sim t_{n-p-1}\), \emph{i.e.} \(T\) follows a
+\(t\)-distribution with \(n-p-1\) degrees of freedom (see appendix \ref{t}).
+\end{lemma}
+
+\begin{proof}
+We have
+\begin{align*}
+  T
+  &= \frac{(\hat\beta_i - \beta_i) / \sqrt{C_{ii}}}
+      {\sqrt{\hat\sigma^2}} \\
+  &= \frac{(\hat\beta_i - \beta_i) / \sqrt{\sigma^2 C_{ii}}}
+      {\sqrt{\hat\sigma^2 / \sigma^2}} \\
+  &= \frac{(\hat\beta_i - \beta_i) / \sqrt{\sigma^2 C_{ii}}}
+      {\sqrt{(n - p - 1) \hat\sigma^2 / \sigma^2 / (n - p -1)}} \\
+  &=: \frac{Z}{\sqrt{Y / (n - p - 1)}},
+\end{align*}
+where \(Z = (\hat\beta_i - \beta_i) / \sqrt{\sigma^2 C_{ii}} \sim \mathcal{N}(0,1)\)
+and \(Y = (n - p - 1) \hat\sigma^2/\sigma^2 \sim \chi^2(n-p-1)\)
+are independent, by lemma~\ref{lem:hat-beta-sigma-indep}.
+Thus, \(T \sim t_{n-p-1}\) as required.
+\end{proof}
+
+The quantity \(\sqrt{\sigma^2 C_{ii}}\) is sometimes called the
+\textbf{standard error} of the estimator \(\hat\beta_i\), denoted by
+\(\mathop{\mathrm{se}}(\hat\beta_i)\).
+
+\hypertarget{confidence-intervals}{%
+\subsection{Confidence Intervals}\label{confidence-intervals}}
+
+Using the scaled distance~\(T\), it is easy to construct a confidence
+interval for \(\hat\beta_i\): For \(\alpha \in (0, 1)\), say \(\alpha = 5\%\),
+lemma~\ref{lem:beta-i-follows-t} shows that
+\begin{equation*}
+  P\Bigl( T \in \bigl[-t_{n-p-1}(\alpha/2), +t_{n-p-1}(\alpha/2)\bigr] \Bigr)
+  = 1 - \alpha,
+\end{equation*}
+where \(t_{n-p-1}(\alpha/2)\) is the \((1 - \alpha/2)\)-quantile of the
+\(t(n-p-1)\)-distribution. Rewriting this expression as a condition on
+\(\hat\beta_i\) instead of on \(T\) gives a confidence interval for \(\beta_i\).
+
+\begin{lemma}
+The interval
+\begin{equation*}
+  [U, V]
+  := \Bigl[ \hat\beta_i - \sqrt{\hat\sigma^2 C_{ii}}t_{n-p-1}(\alpha/2), \hat\beta_i + \sqrt{\hat\sigma^2 C_{ii}}t_{n-p-1}(\alpha/2) \Bigr]
+\end{equation*}
+is a \((1-\alpha)\)-confidence interval for \(\beta_i\).
+\end{lemma}
+
+\begin{proof}
+We have to show that \(P(\beta_i \in [U, V]) \geq 1-\alpha\). We have
+\begin{align*}
+  &\hskip-5mm \beta_i \in [U, V] \\
+  &\Longleftrightarrow
+    \bigl| \hat\beta_i - \beta_i \bigr|
+        \leq \sqrt{\hat\sigma^2 C_{ii}}t_{n-p-1}(\alpha/2) \\
+  &\Longleftrightarrow
+    \Bigl| \frac{\hat\beta_i - \beta_i}{\sqrt{\hat\sigma^2 C_{ii}}} \Bigr|
+        \leq t_{n-p-1}(\alpha/2) \\
+  &\Longleftrightarrow
+    T \in \bigl[-t_{n-p-1}(\alpha/2), +t_{n-p-1}(\alpha/2)\bigr]
+\end{align*}
+and thus \(P(\beta_i \in [U, V]) = 1 - \alpha\). This completes the proof.
+\end{proof}
+
+\hypertarget{hypthesis-tests}{%
+\subsection{Hypthesis Tests}\label{hypthesis-tests}}
+
+Very similar to the argument for confidence intervals, we can
+derive a hypothesis test to test the hypothesis
+\begin{equation*}
+  H_0\colon \beta_i = b
+\end{equation*}
+against the alternative
+\begin{equation*}
+  H_0\colon \beta_i \neq b.
+\end{equation*}
+
+Here we redefine \(T\) as
+\begin{equation*}
+  T
+  := \frac{\hat\beta_i - b}{\sqrt{\hat\sigma^2 C_{ii}}},
+\end{equation*}
+using \(b\) in place of the \(\beta_i\) above. Then the new defintion of \(T\)
+is the same as~\eqref{eq:single-T} if \(H_0\) is true.
+
+\begin{lemma}
+The test which rejects \(H_0\) if and only if \(|T| > t_{n-p-1}(\alpha/2)\)
+has confidence level~\(\alpha\).
+\end{lemma}
+
+\begin{proof}
+We have to show that the probability of type~I errors (\emph{i.e.} of wrongly
+rejecting \(H_0\) when it is true) is less than or equal to~\(\alpha\).
+Assume that \(H_0\) is true. Then we have \(\beta_i = b\) and thus
+the \(T\) defined in this section coincides with the expression from
+equation~\eqref{eq:single-T}. From lemma~\ref{lem:beta-i-follows-t}
+we know that \(T \sim t(n-p-1)\). Thus we have
+\begin{align*}
+  P( \mbox{type I error} )
+  &= P\bigl( |T| > t_{n-p-1}(\alpha/2) \bigr) \\
+  &= P\bigl(T < -t_{n-p-1}(\alpha/2) \bigr) + P\bigl(T > t_{n-p-1}(\alpha/2) \bigr) \\
+  &= 2 P\bigl(T > t_{n-p-1}(\alpha/2) \bigr) \\
+  &= 2 P\bigl(T > t_{n-p-1}(\alpha/2) \bigr) \\
+  &= 2 \frac{\alpha}{2} \\
+  &= \alpha.
+\end{align*}
+This completes the proof.
+\end{proof}
+
+If we use \(b = 0\) in the test, we can test whether \(\beta_i = 0\).
+If \(\beta_i = 0\) is true, the corresponding input \(x_i\) has no influence
+on the output.
+
+As usual with statistical tests, one needs to be extremely careful when
+performing several tests on the same data. In particular, it would be
+unwise to test more than one component of \(\beta\) using this procedure
+for the same data. Instead, in the next section we will consider how
+to perform tests for several components of \(\beta\) simultaneously.
+Before we do this, we will perform some experiments with R.
+
+\hypertarget{r-experiments}{%
+\subsection{R Experiments}\label{r-experiments}}
+
+\hypertarget{fitting-the-model}{%
+\subsubsection{Fitting the model}\label{fitting-the-model}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = stack.loss ~ ., data = stackloss)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.2377 -1.7117 -0.4551  2.3614  5.6978 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -39.9197    11.8960  -3.356  0.00375 ** 
+## Air.Flow      0.7156     0.1349   5.307  5.8e-05 ***
+## Water.Temp    1.2953     0.3680   3.520  0.00263 ** 
+## Acid.Conc.   -0.1521     0.1563  -0.973  0.34405    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.243 on 17 degrees of freedom
+## Multiple R-squared:  0.9136, Adjusted R-squared:  0.8983 
+## F-statistic:  59.9 on 3 and 17 DF,  p-value: 3.016e-09
+\end{verbatim}
+
+\hypertarget{estimating-the-variance-of-the-error}{%
+\subsubsection{Estimating the Variance of the Error}\label{estimating-the-variance-of-the-error}}
+
+We can get the design matrix \(X\) and the covariance matrix \(C\) as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m)}
+\NormalTok{C }\OtherTok{\textless{}{-}} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X)}
+\FunctionTok{round}\NormalTok{(C, }\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             (Intercept) Air.Flow Water.Temp Acid.Conc.
+## (Intercept)     13.4527   0.0273    -0.0620    -0.1594
+## Air.Flow         0.0273   0.0017    -0.0035    -0.0007
+## Water.Temp      -0.0620  -0.0035     0.0129     0.0000
+## Acid.Conc.      -0.1594  -0.0007     0.0000     0.0023
+\end{verbatim}
+
+Next we need to estimate the variance \(\sigma^2\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ stackloss}\SpecialCharTok{$}\NormalTok{stack.loss}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(stackloss)}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{ncol}\NormalTok{(stackloss) }\SpecialCharTok{{-}} \DecValTok{1}
+\NormalTok{hat.sigma2 }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((y }\SpecialCharTok{{-}} \FunctionTok{fitted}\NormalTok{(m))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{hat.sigma2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 10.51941
+\end{verbatim}
+
+The square root of this number, so the estimated standard deviation of the
+\(\varepsilon_i\) is shown as \texttt{Residual\ standard\ error} in the summary output above.
+We check that we get the same result:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sqrt}\NormalTok{(hat.sigma2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.243364
+\end{verbatim}
+
+This result is also listed as the \texttt{Residual\ standard\ error} near the
+bottom of the \texttt{summary(m)} output, above.
+
+\hypertarget{estimating-the-standard-errors}{%
+\subsubsection{Estimating the Standard Errors}\label{estimating-the-standard-errors}}
+
+We can the standard errors, \emph{i.e.}~the standard deviations
+\(\mathop{\mathrm{stdev}}(\hat\beta)_i\) as \(\sqrt{\hat\sigma^2 C_ii}\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{se }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(hat.sigma2 }\SpecialCharTok{*} \FunctionTok{diag}\NormalTok{(C))}
+\NormalTok{se}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
+##  11.8959969   0.1348582   0.3680243   0.1562940
+\end{verbatim}
+
+These values are also listed in the \texttt{Std.\ Error} column of the \texttt{summary(m)}
+output.
+
+\hypertarget{hypothesis-tests}{%
+\subsubsection{Hypothesis tests}\label{hypothesis-tests}}
+
+Let us now test the hypothesis \(H_0\colon \beta_i = 0\). The test statistic
+for this case is the following:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{T }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(m) }\SpecialCharTok{/}\NormalTok{ se}
+\NormalTok{T}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
+##  -3.3557234   5.3066130   3.5195672  -0.9733098
+\end{verbatim}
+
+These values are also listed in the \texttt{t\ value} column of the \texttt{summary(m)}
+output.
+
+Before we can perform the test, we need to choose \(\alpha\) and to
+find the corresponding critical value:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alpha }\OtherTok{\textless{}{-}} \FloatTok{0.05}
+\NormalTok{t }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{/}\DecValTok{2}\NormalTok{ , n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{t}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.109816
+\end{verbatim}
+
+Using the critical value \(t\) we can decided whether \(H_0\) should be accepted or
+rejected. For example, looking at the intercept \(\beta_0\), we find \(|T_0| = |-3.3557234| > 2.109816 = t_{n-p-1}(1-\alpha/2)\) and thus we can reject the
+hypothesis \(H_0\colon \beta_0 = 0\). This means that the intercept is
+significantly different from 0.
+
+\hypertarget{confidence-intervals-1}{%
+\subsubsection{Confidence Intervals}\label{confidence-intervals-1}}
+
+Using the quantile \texttt{t} we can also get confidence intervals. Here we
+only show the confidence interval for the intercept \(\beta_0\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{c}\NormalTok{(}\FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ se[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{*}\NormalTok{ t, }\FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+}\NormalTok{ se[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{*}\NormalTok{ t)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept) (Intercept) 
+##   -65.01803   -14.82131
+\end{verbatim}
+
+Confidence intervals for the remaining coefficients can be obtained simimlarly.
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We know how to scale the distance between individual parameter estimates
+  and the truth.
+\item
+  We have seen how to construct confidence intervals for \(\beta_i\).
+\item
+  We have seen how to construct statistical tests for \(\beta_i\).
+\item
+  We have understood some more of the summary output for the \texttt{lm()}
+  function in~R.
 \end{itemize}
 
 \clearpage
@@ -2516,6 +3118,91 @@ matrix \(U\) such that \(D := U A U^\top\) is diagonal. The diagonal
 elements of \(D\) are the eigenvalues of \(A\) and the rows of \(U\)
 are corresponding eigenvectors.
 \end{theorem}
+
+\clearpage
+
+\hypertarget{Sx2-probability}{%
+\section{Probability Reminders}\label{Sx2-probability}}
+
+\hypertarget{independence}{%
+\subsection{Independence}\label{independence}}
+
+\begin{definition}
+Two random variables \(X\) and \(Y\) are (statistically) \textbf{independent}, if
+\(P(X\in A, Y\in B) = P(X\in A) P(Y\in B)\) for all sets \(A\) and~\(B\).
+\end{definition}
+
+We list some properties of independent random variables:
+
+\begin{itemize}
+\tightlist
+\item
+  If \(X\) and \(Y\) are independent, and if \(f\) and \(g\) are functions,
+  then \(f(X)\) and \(g(Y)\) are also independent.
+\end{itemize}
+
+\hypertarget{chi-square}{%
+\subsection{The Chi-Squared Distribution}\label{chi-square}}
+
+\begin{definition}
+\protect\hypertarget{def:chi-squared-dist}{}\label{def:chi-squared-dist}Let \(X_1, \ldots, X_\nu \sim \mathcal{N}(0, 1)\) be i.i.d. Then the
+distribution of \(\sum_{i=1}^\nu X_i^2\) is called the
+\(\chi^2\)-distribution with \(\nu\) degrees of freedom. The
+distribution is denoted by~\(\chi^2(\nu)\).
+\end{definition}
+
+Some important results about the \(\chi^2\)-distribution are:
+
+\begin{itemize}
+\item
+  \(\chi^2\)-distributed random variables are always positive.
+\item
+  If \(Y\sim \chi^2(\nu)\), then \(\mathbb{E}(Y) = \nu\) and \(\mathop{\mathrm{Var}}(Y) = 2\nu\).
+\item
+  The R command \texttt{pchisq(\textbar{}}\(x\)\texttt{,}\(\nu\)\texttt{)} gives the value
+  \(\Phi_\nu(x)\) of the CDF of the \(\chi^2(\nu)\)-distribution.
+\item
+  The R command \texttt{qchisq(}\(\alpha\)\texttt{,}\(\nu\)\texttt{)} can
+  be used to obtain the
+  \(\alpha\)-quantile of the \(\chi^2(\nu)\)-distribution.
+\item
+  More properties can be found
+  \href{https://en.wikipedia.org/wiki/Chi-squared_distribution}{on Wikipedia}.
+\end{itemize}
+
+\hypertarget{t}{%
+\subsection{The t-distribution}\label{t}}
+
+\begin{definition}
+\protect\hypertarget{def:t-dist}{}\label{def:t-dist}Let \(Z \sim \mathcal{N}(0,1)\) and \(Y \sim \chi^2(\nu)\) be independent. Then
+the distribution of
+\begin{equation}
+  T
+  = \frac{\,Z\,}{\,\sqrt{Y / \nu}\,}  \label{eq:t-def}
+\end{equation}
+is called the \(t\)-distribution with \(\nu\) degrees of freedom.
+This distribution is denoted by~\(t(\nu)\).
+\end{definition}
+
+Some important results about the \(t\)-distribution are:
+
+\begin{itemize}
+\item
+  The \(t\)-distribution is symmetric: if \(T \sim t(\nu)\), then
+  \(-T \sim t(\nu)\)
+\item
+  If \(T\sim t(\nu)\), then \(\mathbb{E}(T) = 0\).
+\item
+  The R command \texttt{pt(\textbar{}}\(x\)\texttt{,}\(\nu\)\texttt{)} gives the value
+  \(\Phi_\nu(x)\) of the CDF of the \(t(\nu)\)-distribution.
+\item
+  The R command \texttt{qt(}\(\alpha\)\texttt{,}\(\nu\)\texttt{)} can
+  be used to obtain the
+  \(\alpha\)-quantile of the \(t(\nu)\)-distribution.
+\item
+  More properties can be found
+  \href{https://en.wikipedia.org/wiki/Student\%27s_t-distribution}{on Wikipedia}.
+\end{itemize}
 
 \clearpage
 
