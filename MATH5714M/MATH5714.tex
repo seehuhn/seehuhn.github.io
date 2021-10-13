@@ -151,6 +151,7 @@
 \newcommand{\downto}{\downarrow}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\eps}{\varepsilon}
+\newcommand{\MSE}{\mathop{\mathrm{MSE}}\nolimits}
 \newcommand{\N}{\mathbb{N}}
 \renewcommand{\phi}{\varphi}
 \newcommand{\R}{\mathbb{R}}
@@ -188,6 +189,8 @@ in figure~\ref{fig:accel}.
 
 \caption{An illustration of a data set where a linear (straight line) model is not appropriate. The data represents a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets (the \texttt{mcycle} dataset from the \texttt{MASS} R package).}\label{fig:accel}
 \end{figure}
+
+\clearpage
 
 \hypertarget{X01-KDE}{%
 \section{Kernel Density Estimation}\label{X01-KDE}}
@@ -676,6 +679,8 @@ bandwidth parameter.
   A variety of different kernel functions are commonly used.
 \end{itemize}
 
+\clearpage
+
 \hypertarget{X02-Bias}{%
 \section{The Bias of Kernel Density Estimates}\label{X02-Bias}}
 
@@ -769,7 +774,7 @@ To understand how the bias changes as \(h\) varies, we will need to
 consider properties of \(K\) and \(K_h\) in more detail.
 
 \begin{definition}
-The \textbf{\(k\)th moment} of a kernel~\(K\),
+The \(k\)th \textbf{moment} of a kernel~\(K\),
 for \(k \in \mathbb{N}_0 = \{0, 1, 2, \ldots\}\), is given by
 \begin{equation*}
   \mu_k(K)
@@ -883,11 +888,11 @@ Substituting this into equation~\eqref{eq:hf2} we find
     &= f(x) + \frac12 h^2 \mu_2(K) f''(x)
 \end{align*}
 for small \(h\). Considering the bias again, this gives
-\begin{equation*}
+\begin{equation}
   \mathop{\mathrm{bias}}\bigl( \hat f_h(x) \bigr)
   = \mathbb{E}\bigl( \hat f_h(x) \bigr) - f(x)
-  \approx \frac{\mu_2(K) f''(x)}{2} h^2
-\end{equation*}
+  \approx \frac{\mu_2(K) f''(x)}{2} h^2  \label{eq:fhatbias}
+\end{equation}
 which shows that the bias of the estimator descreases quadratically
 as \(h\) gets smaller.
 
@@ -909,5 +914,263 @@ two effects to find the optimal value of~\(h\).
   The bias for small bandwidth depends on the second moment of the
   kernel and the second derivative of the density.
 \end{itemize}
+
+\clearpage
+
+\hypertarget{X03-Var}{%
+\section{The Variance of Kernel Density Estimates}\label{X03-Var}}
+
+In the previous section we considered the bias of the estimator
+\begin{equation*}
+  \hat f_h(x)
+  = \frac{1}{n} \sum_{i=1}^n K_h(x - x_i).
+\end{equation*}
+We found
+\begin{equation}
+  \mathbb{E}\bigl( \hat f_h(x) \bigr)
+  = \mathbb{E}\bigl( K_h(x - X_i) \bigr)  \label{eq:E-hat-f-K-h}
+\end{equation}
+for all \(i \in \{1, \ldots, n\}\) (we used \(i=1\)), and we used this relation
+to compute the bias. In this section, we will use similar arguments to compute
+the variance and the mean squared error of the estimator.
+
+\hypertarget{variance}{%
+\subsection{Variance}\label{variance}}
+
+We use the formula
+\begin{equation*}
+  \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
+  = \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2
+\end{equation*}
+and consider the two terms separately.
+
+\hypertarget{second-moment}{%
+\subsubsection{Second Moment}\label{second-moment}}
+
+For the second moment term in the definition of the variance we get
+\begin{align*}
+  \mathbb{E}\bigl( \hat f_h(x)^2 \bigr)
+  &= \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n K_h(x - X_i) \frac{1}{n} \sum_{j=1}^n K_h(x - X_j) \Bigr) \\
+  &= \frac{1}{n^2} \mathbb{E}\Bigl( \sum_{i,j=1}^n K_h(x - X_i) K_h(x - X_j) \Bigr) \\
+  &= \frac{1}{n^2} \sum_{i,j=1}^n \mathbb{E}\Bigl( K_h(x - X_i) K_h(x - X_j) \Bigr)
+\end{align*}
+Since the \(X_i\) are independent, the values of \(i\) and \(j\) in this sum do not
+matter. For the \(n\) terms where \(i=j\) we can assume that both indices equal
+1, and for the \(n(n-1)\) terms where \(i\neq j\) we can assume \(i=1\) and \(j=2\),
+without changing the value of the expectation. So we get
+\begin{align*}
+  \mathbb{E}\bigl( \hat f_h(x)^2 \bigr)
+  &= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 ) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) K_h(x - X_2) \bigr) \Bigr) \\
+  &= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 ) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) \bigr) \mathbb{E}\bigl( K_h(x - X_2) \bigr) \Bigr) \\
+  &= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 ) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) \bigr)^2 \Bigr) \\
+  &= \frac{1}{n} \mathbb{E}\Bigl( K_h(x - X_1)^2 \Bigr) + \frac{n-1}{n} \mathbb{E}\bigl( \hat f_h(x) \bigr)^2,
+\end{align*}
+where we used equation~\eqref{eq:E-hat-f-K-h} for the last term.
+Using this equation, we can write the expectation as
+\begin{align*}
+  \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
+  &= \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2 \\
+  &= \frac{1}{n} \mathbb{E}\bigl( K_h(x - X_1)^2 ) + \Bigl(\frac{n-1}{n} - 1\Bigr) \mathbb{E}\bigl( \hat f_h(x) \bigr)^2.
+\end{align*}
+Since \((n-1)/n = -1/n\) we get
+\begin{equation}
+  \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
+  = \frac{1}{n} \Bigl( \mathbb{E}\bigl( K_h(x - X_1)^2 ) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2 \Bigr).
+                                                          \label{eq:Var-hat-f-2}
+\end{equation}
+
+\hypertarget{the-roughness-of-a-kernel}{%
+\subsubsection{The Roughness of a Kernel}\label{the-roughness-of-a-kernel}}
+
+Similar to what we did in the last section, we will use Taylor expansion
+of \(f\) around the point \(x\) to understand the behaviour of the variance
+for small~\(h\). Some more care is needed here, because this time the
+result also depends on the sample size~\(n\) and we will consider the joint
+limit of \(n \to \infty\) and \(h\to 0\). For the first term in
+equation~\eqref{eq:Var-hat-f-2} we find
+\begin{align*}
+  \mathbb{E}\bigl( K_h(x - X_1)^2 )
+  &= \int K_h(x - y)^2 f(y) \,dy \\
+  &= \int K_h(y - x)^2 f(y) \,dy \\
+  &= \int \frac{1}{h^2} K\Bigl( \frac{y - x}{h} \Bigr)^2 f(y) \,dy.
+\end{align*}
+Now we use the substitution \(z = (y - x) / h\). This gives
+\begin{align*}
+  \mathbb{E}\bigl( K_h(x - X_1)^2 )
+  &= \int \frac{1}{h^2} K(z)^2 f(x + hz) \,h \,dz
+\end{align*}
+Finally, we use Taylor approximation to get
+\begin{align*}
+  \mathbb{E}\bigl( K_h(x - X_1)^2 )
+  &\approx \int \frac{1}{h} K(z)^2 \Bigl( f(x) + hz\,f'(x) + \frac12 h^2 z^2 \,f''(x) \Bigr) \,dz \\
+  &= \frac{1}{h} f(x) \int K(z)^2 \,dz
+      + f'(x) \int z K(z)^2 \,dz
+      + \frac12 h f''(x) \int z^2 K(z)^2 \,dz \\
+  &= \frac{1}{h} f(x) \int K(z)^2 \,dz
+      + \frac12 h f''(x) \int z^2 K(z)^2 \,dz
+\end{align*}
+where the first-order term disappears since \(z \mapsto z K(z)^2\) is an
+asymmetric function. As a shorthand we use the following definition.
+
+\begin{definition}
+The \textbf{roughness} of a kernel \(K\) is given by
+\begin{equation*}
+  R(K)
+  := \int_{-\infty}^\infty K(x)^2 \,dx.
+\end{equation*}
+\end{definition}
+
+This gives the result
+\begin{equation}
+  \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)
+  \approx \frac{1}{h} f(x) R(K) + \frac12 h f''(x) \int z^2 K(z)^2 \,dz
+                             \label{eq:Var-frag1}
+\end{equation}
+for small \(h\).
+
+\hypertarget{the-variance-for-small-bandwidth}{%
+\subsubsection{The Variance for Small Bandwidth}\label{the-variance-for-small-bandwidth}}
+
+Here we consider the term \(\mathbb{E}\bigl( \hat f_h(x) \bigr)^2\) in the formula
+for the variance. From the previous section we know
+\begin{equation*}
+    \mathbb{E}\bigl( \hat f_h(x) \bigr)
+    \approx f(x) + \frac12 h^2 \mu_2(K) f''(x)
+\end{equation*}
+and thus we get
+\begin{equation}
+    \mathbb{E}\bigl( \hat f_h(x) \bigr)^2
+    \approx f(x)^2 + h^2 \mu_2(K) f(x) f''(x) + \frac14 h^4 \mu_2(K)^2 f''(x)^2
+                             \label{eq:Var-frag2}
+\end{equation}
+for small \(h\).
+
+Substituting \eqref{eq:Var-frag1} and~\eqref{eq:Var-frag2} into
+equation~\eqref{eq:Var-hat-f-2} we finally find
+\begin{equation*}
+  \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
+  = \frac{1}{n} \Bigl(
+    \frac{1}{h} f(x) R(K)
+    - f(x)^2
+    + \cdots
+   \Bigr),
+\end{equation*}
+where all the omitted terms go to zero as \(h \downarrow 0\).
+Omitting one more term and keeping only the leading term
+we find
+\begin{equation}
+  \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
+  \approx \frac{1}{nh} f(x) R(K)     \label{eq:fhatvar}
+\end{equation}
+as~\(h\downarrow 0\).
+
+\hypertarget{mean-squared-error}{%
+\subsection{Mean Squared Error}\label{mean-squared-error}}
+
+The Mean Squared Error of the estimator \(\hat f_h(x)\) for \(f(x)\) is given
+by
+\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = \mathbb{E}\Bigl( \bigl( \hat f_h(x) - f(x) \bigr)^2 \Bigr).
+\end{equation*}
+It is an easy exercise to show that this can equivalently be written as
+\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr) + \mathop{\mathrm{bias}}\bigl( \hat f_h(x) \bigr)^2.
+\end{equation*}
+Substituing equations \eqref{eq:fhatbias} and~\eqref{eq:fhatvar} into
+the formula for the MSE, we get
+\begin{equation}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  \approx \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f''(x)^2 h^4.
+                           \label{eq:f-hat-MSE}
+\end{equation}
+
+Some care is needed to make sure that the omitted terms from the Taylor
+approximations really don't make a significant contribution in this formula for
+the MSE: The additional contributions from the variance have the form \(e_1(h) / n\), where the error term \(e_1\) does not depend on \(n\) and is negligible
+compared to \(f(x) R(K) / h\) as \(h \downarrow 0\). Using
+\href{https://en.wikipedia.org/wiki/Big_O_notation\#Little-o_notation}{little-o notation},
+This is sometimes denoted by \(e_1(h) = o(1/h)\), which indicates that \(e_1(h) / (1/h) \to 0\) as \(h \downarrow 0\). The additional terms from the squared bias, say
+\(e_2(h)\), do not depend on \(n\) and are negligible compared to \(\mu_2(K)^2 f''(x)^2 h^4\). We can write \(e_2(h) = o(h^4)\) as \(n \downarrow 0\), to reflect
+this fact. We can summarise these results as
+\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = \frac{1}{nh} f(x) R(K)
+      + \frac14 \mu_2(K)^2 f''(x)^2 h^4
+      + o(1/nh) + o(h^4)
+\end{equation*}
+as \(h \downarrow 0\),
+with the understanding that the constants in the definition of \(o(h^4)\)
+do not depend on \(n\) and that \(o(1/nh)\) really means ``\(o(1/h)\), where the
+constants are proportional to \(1/n\).''
+
+\hypertarget{optimal-bandwidth}{%
+\subsection{Optimal Bandwidth}\label{optimal-bandwidth}}
+
+The two terms on the right-hand side of \eqref{eq:f-hat-MSE} are balanced in
+that the first term decreases for large \(h\) while the second term decreases for
+small \(h\). By taking derivatives with respect to \(h\), we can
+find the optimal value of \(h\). Ignoring the higher order terms, we get
+\begin{equation*}
+  \frac{\partial}{\partial h} \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = -\frac{1}{nh^2} f(x) R(K) + \mu_2(K)^2 f''(x)^2 h^3
+\end{equation*}
+and thus the derivative equals zero, if
+\begin{equation*}
+  \frac{1}{nh^2} f(x) R(K) = \mu_2(K)^2 f''(x)^2 h^3
+\end{equation*}
+or, equivalently,
+\begin{equation*}
+  h^5 = \frac{f(x) R(K)}{n \mu_2(K)^2 f''(x)^2}.
+\end{equation*}
+It is easy to check that this \(h\) corresponds to the minimum of the MSE.
+This shows how the optimal bandwidth depends both on the kernel and on
+the target density~\(f\). In practice, this formula is hard to use,
+since \(f''\) is unknown. (We don't even know \(f\)!)
+
+Substituting the optimal value of \(h\) back into equation~\eqref{eq:f-hat-MSE},
+we get
+\begin{align*}
+  \mathop{\mathrm{MSE}}\nolimits_\mathrm{opt}
+  &= \frac{1}{n} f(x) R(K) \Bigl( \frac{n \mu_2(K)^2 f''(x)^2}{f(x) R(K)} \Bigr)^{1/5}
+     + \frac14 \mu_2(K)^2 f''(x)^2 \Bigl( \frac{f(x) R(K)}{n \mu_2(K)^2 f''(x)^2} \Bigr)^{4/5} \\
+  &= \frac54 \; \frac{1}{n^{4/5}}
+      \; \Bigl( R(K)^2 \mu_2(K) \Bigr)^{2/5}
+      \; \Bigl( f(x)^2 |f''(x)| \Bigr)^{2/5}.
+\end{align*}
+This expression clearly shows the contribution of \(n\), \(K\) and \(f\):
+
+\begin{itemize}
+\item
+  If the bandwidth is chosen optimally, as \(n\) increases the bandwidth~\(h\)
+  decreases proportionally to \(1/n^{1/5}\) and the MSE decreases
+  proportionally to \(1 / n^{4/5}\). For comparison, in a Monte Carlo
+  estimate for an expectation, the MSE decreases proportionally to \(1/n\).
+  The error in kernel density estimation decreases slightly slower than
+  for Monte Carlo estimates.
+\item
+  The error is proportional to \(\bigl( R(K)^2 \mu_2(K) \bigr)^{2/5}\).
+  Thus we should use kernels where the value \(R(K)^2 \mu_2(K)\)
+  is small.
+\item
+  The error is proportional to \(f(x)^2 |f''(x)|\). We cannot influence
+  this term, but we can see that \(x\) where \(f\) is large or has
+  high curvature have higher estimation error.
+\end{itemize}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We found the variance of the kernel density estimate.
+\item
+  We studied the mean squared error for small \(h\).
+\item
+  We derived a formula for the optimal value of the bandwidth~\(h\).
+\end{itemize}
+
+\clearpage
 
 \end{document}

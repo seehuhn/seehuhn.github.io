@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 3 The Variance of Kernel Density Estimates | MATH5714 Linear Regression, Robustness and Smoothing</title>
+  <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 3 The Variance of Kernel Density Estimates | MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH5714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 3 The Variance of Kernel Density Estimates | MATH5714 Linear Regression, Robustness and Smoothing" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="X02-Bias.html"/>
+
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH5714M Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="X01-KDE.html"><a href="X01-KDE.html"><i class="fa fa-check"></i><b>1</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms"><i class="fa fa-check"></i><b>1.1</b> Histograms</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#probability-densities"><i class="fa fa-check"></i><b>1.1.1</b> Probability Densities</a></li>
+<li class="chapter" data-level="1.1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms-1"><i class="fa fa-check"></i><b>1.1.2</b> Histograms</a></li>
+<li class="chapter" data-level="1.1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#choice-of-buckets"><i class="fa fa-check"></i><b>1.1.3</b> Choice of Buckets</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation"><i class="fa fa-check"></i><b>1.2</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="X01-KDE.html"><a href="X01-KDE.html#motivation"><i class="fa fa-check"></i><b>1.2.1</b> Motivation</a></li>
+<li class="chapter" data-level="1.2.2" data-path="X01-KDE.html"><a href="X01-KDE.html#definition-of-a-kernel-density-estimator"><i class="fa fa-check"></i><b>1.2.2</b> Definition of a Kernel Density Estimator</a></li>
+<li class="chapter" data-level="1.2.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernels"><i class="fa fa-check"></i><b>1.2.3</b> Kernels</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation-in-r"><i class="fa fa-check"></i><b>1.3</b> Kernel Density Estimation in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="X02-Bias.html"><a href="X02-Bias.html"><i class="fa fa-check"></i><b>2</b> The Bias of Kernel Density Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="X02-Bias.html"><a href="X02-Bias.html#a-statistical-model"><i class="fa fa-check"></i><b>2.1</b> A Statistical Model</a></li>
+<li class="chapter" data-level="2.2" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-of-the-estimate"><i class="fa fa-check"></i><b>2.2</b> The Bias of the Estimate</a></li>
+<li class="chapter" data-level="2.3" data-path="X02-Bias.html"><a href="X02-Bias.html#moments-of-kernels"><i class="fa fa-check"></i><b>2.3</b> Moments of Kernels</a></li>
+<li class="chapter" data-level="2.4" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-for-small-bandwidth"><i class="fa fa-check"></i><b>2.4</b> The Bias for Small Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="X03-Var.html"><a href="X03-Var.html"><i class="fa fa-check"></i><b>3</b> The Variance of Kernel Density Estimates</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="X03-Var.html"><a href="X03-Var.html#variance"><i class="fa fa-check"></i><b>3.1</b> Variance</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="X03-Var.html"><a href="X03-Var.html#second-moment"><i class="fa fa-check"></i><b>3.1.1</b> Second Moment</a></li>
+<li class="chapter" data-level="3.1.2" data-path="X03-Var.html"><a href="X03-Var.html#the-roughness-of-a-kernel"><i class="fa fa-check"></i><b>3.1.2</b> The Roughness of a Kernel</a></li>
+<li class="chapter" data-level="3.1.3" data-path="X03-Var.html"><a href="X03-Var.html#the-variance-for-small-bandwidth"><i class="fa fa-check"></i><b>3.1.3</b> The Variance for Small Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="X03-Var.html"><a href="X03-Var.html#mean-squared-error"><i class="fa fa-check"></i><b>3.2</b> Mean Squared Error</a></li>
+<li class="chapter" data-level="3.3" data-path="X03-Var.html"><a href="X03-Var.html#optimal-bandwidth"><i class="fa fa-check"></i><b>3.3</b> Optimal Bandwidth</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH5714 Linear Regression, Robustness and Smoothing</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="X03-Var" class="section level1" number="3">
+<h1><span class="header-section-number">Section 3</span> The Variance of Kernel Density Estimates</h1>
+<p>In the previous section we considered the bias of the estimator
+<span class="math display">\[\begin{equation*}
+  \hat f_h(x)
+  = \frac{1}{n} \sum_{i=1}^n K_h(x - x_i).
+\end{equation*}\]</span>
+We found
+<span class="math display" id="eq:E-hat-f-K-h">\[\begin{equation}
+  \mathbb{E}\bigl( \hat f_h(x) \bigr)
+  = \mathbb{E}\bigl( K_h(x - X_i) \bigr)  \tag{3.1}
+\end{equation}\]</span>
+for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> (we used <span class="math inline">\(i=1\)</span>), and we used this relation
+to compute the bias. In this section, we will use similar arguments to compute
+the variance and the mean squared error of the estimator.</p>
+<div id="variance" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Variance</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Ij7IDvO9IuQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>We use the formula
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
+  = \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2
+\end{equation*}\]</span>
+and consider the two terms separately.</p>
+<div id="second-moment" class="section level3" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Second Moment</h3>
+<p>For the second moment term in the definition of the variance we get
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\bigl( \hat f_h(x)^2 \bigr)
+  &amp;= \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n K_h(x - X_i) \frac{1}{n} \sum_{j=1}^n K_h(x - X_j) \Bigr) \\
+  &amp;= \frac{1}{n^2} \mathbb{E}\Bigl( \sum_{i,j=1}^n K_h(x - X_i) K_h(x - X_j) \Bigr) \\
+  &amp;= \frac{1}{n^2} \sum_{i,j=1}^n \mathbb{E}\Bigl( K_h(x - X_i) K_h(x - X_j) \Bigr)
+\end{align*}\]</span>
+Since the <span class="math inline">\(X_i\)</span> are independent, the values of <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> in this sum do not
+matter. For the <span class="math inline">\(n\)</span> terms where <span class="math inline">\(i=j\)</span> we can assume that both indices equal
+1, and for the <span class="math inline">\(n(n-1)\)</span> terms where <span class="math inline">\(i\neq j\)</span> we can assume <span class="math inline">\(i=1\)</span> and <span class="math inline">\(j=2\)</span>,
+without changing the value of the expectation. So we get
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\bigl( \hat f_h(x)^2 \bigr)
+  &amp;= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 ) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) K_h(x - X_2) \bigr) \Bigr) \\
+  &amp;= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 ) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) \bigr) \mathbb{E}\bigl( K_h(x - X_2) \bigr) \Bigr) \\
+  &amp;= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 ) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) \bigr)^2 \Bigr) \\
+  &amp;= \frac{1}{n} \mathbb{E}\Bigl( K_h(x - X_1)^2 \Bigr) + \frac{n-1}{n} \mathbb{E}\bigl( \hat f_h(x) \bigr)^2,
+\end{align*}\]</span>
+where we used equation <a href="X03-Var.html#eq:E-hat-f-K-h">(3.1)</a> for the last term.
+Using this equation, we can write the expectation as
+<span class="math display">\[\begin{align*}
+  \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
+  &amp;= \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2 \\
+  &amp;= \frac{1}{n} \mathbb{E}\bigl( K_h(x - X_1)^2 ) + \Bigl(\frac{n-1}{n} - 1\Bigr) \mathbb{E}\bigl( \hat f_h(x) \bigr)^2.
+\end{align*}\]</span>
+Since <span class="math inline">\((n-1)/n = -1/n\)</span> we get
+<span class="math display" id="eq:Var-hat-f-2">\[\begin{equation}
+  \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
+  = \frac{1}{n} \Bigl( \mathbb{E}\bigl( K_h(x - X_1)^2 ) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2 \Bigr).
+                                                          \tag{3.2}
+\end{equation}\]</span></p>
+</div>
+<div id="the-roughness-of-a-kernel" class="section level3" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> The Roughness of a Kernel</h3>
+<p>Similar to what we did in the last section, we will use Taylor expansion
+of <span class="math inline">\(f\)</span> around the point <span class="math inline">\(x\)</span> to understand the behaviour of the variance
+for small <span class="math inline">\(h\)</span>. Some more care is needed here, because this time the
+result also depends on the sample size <span class="math inline">\(n\)</span> and we will consider the joint
+limit of <span class="math inline">\(n \to \infty\)</span> and <span class="math inline">\(h\to 0\)</span>. For the first term in
+equation <a href="X03-Var.html#eq:Var-hat-f-2">(3.2)</a> we find
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\bigl( K_h(x - X_1)^2 )
+  &amp;= \int K_h(x - y)^2 f(y) \,dy \\
+  &amp;= \int K_h(y - x)^2 f(y) \,dy \\
+  &amp;= \int \frac{1}{h^2} K\Bigl( \frac{y - x}{h} \Bigr)^2 f(y) \,dy.
+\end{align*}\]</span>
+Now we use the substitution <span class="math inline">\(z = (y - x) / h\)</span>. This gives
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\bigl( K_h(x - X_1)^2 )
+  &amp;= \int \frac{1}{h^2} K(z)^2 f(x + hz) \,h \,dz
+\end{align*}\]</span>
+Finally, we use Taylor approximation to get
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\bigl( K_h(x - X_1)^2 )
+  &amp;\approx \int \frac{1}{h} K(z)^2 \Bigl( f(x) + hz\,f&#39;(x) + \frac12 h^2 z^2 \,f&#39;&#39;(x) \Bigr) \,dz \\
+  &amp;= \frac{1}{h} f(x) \int K(z)^2 \,dz
+      + f&#39;(x) \int z K(z)^2 \,dz
+      + \frac12 h f&#39;&#39;(x) \int z^2 K(z)^2 \,dz \\
+  &amp;= \frac{1}{h} f(x) \int K(z)^2 \,dz
+      + \frac12 h f&#39;&#39;(x) \int z^2 K(z)^2 \,dz
+\end{align*}\]</span>
+where the first-order term disappears since <span class="math inline">\(z \mapsto z K(z)^2\)</span> is an
+asymmetric function. As a shorthand we use the following definition.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-3" class="definition"><strong>Definition 3.1  </strong></span>The <strong>roughness</strong> of a kernel <span class="math inline">\(K\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  R(K)
+  := \int_{-\infty}^\infty K(x)^2 \,dx.
+\end{equation*}\]</span></p>
+</div>
+<p>This gives the result
+<span class="math display" id="eq:Var-frag1">\[\begin{equation}
+  \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)
+  \approx \frac{1}{h} f(x) R(K) + \frac12 h f&#39;&#39;(x) \int z^2 K(z)^2 \,dz
+                             \tag{3.3}
+\end{equation}\]</span>
+for small <span class="math inline">\(h\)</span>.</p>
+</div>
+<div id="the-variance-for-small-bandwidth" class="section level3" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> The Variance for Small Bandwidth</h3>
+<p>Here we consider the term <span class="math inline">\(\mathbb{E}\bigl( \hat f_h(x) \bigr)^2\)</span> in the formula
+for the variance. From the previous section we know
+<span class="math display">\[\begin{equation*}
+    \mathbb{E}\bigl( \hat f_h(x) \bigr)
+    \approx f(x) + \frac12 h^2 \mu_2(K) f&#39;&#39;(x)
+\end{equation*}\]</span>
+and thus we get
+<span class="math display" id="eq:Var-frag2">\[\begin{equation}
+    \mathbb{E}\bigl( \hat f_h(x) \bigr)^2
+    \approx f(x)^2 + h^2 \mu_2(K) f(x) f&#39;&#39;(x) + \frac14 h^4 \mu_2(K)^2 f&#39;&#39;(x)^2
+                             \tag{3.4}
+\end{equation}\]</span>
+for small <span class="math inline">\(h\)</span>.</p>
+<p>Substituting <a href="X03-Var.html#eq:Var-frag1">(3.3)</a> and <a href="X03-Var.html#eq:Var-frag2">(3.4)</a> into
+equation <a href="X03-Var.html#eq:Var-hat-f-2">(3.2)</a> we finally find
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
+  = \frac{1}{n} \Bigl(
+    \frac{1}{h} f(x) R(K)
+    - f(x)^2
+    + \cdots
+   \Bigr),
+\end{equation*}\]</span>
+where all the omitted terms go to zero as <span class="math inline">\(h \downarrow 0\)</span>.
+Omitting one more term and keeping only the leading term
+we find
+<span class="math display" id="eq:fhatvar">\[\begin{equation}
+  \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
+  \approx \frac{1}{nh} f(x) R(K)     \tag{3.5}
+\end{equation}\]</span>
+as <span class="math inline">\(h\downarrow 0\)</span>.</p>
+</div>
+</div>
+<div id="mean-squared-error" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Mean Squared Error</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bxiJ4wb71aU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>The Mean Squared Error of the estimator <span class="math inline">\(\hat f_h(x)\)</span> for <span class="math inline">\(f(x)\)</span> is given
+by
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = \mathbb{E}\Bigl( \bigl( \hat f_h(x) - f(x) \bigr)^2 \Bigr).
+\end{equation*}\]</span>
+It is an easy exercise to show that this can equivalently be written as
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr) + \mathop{\mathrm{bias}}\bigl( \hat f_h(x) \bigr)^2.
+\end{equation*}\]</span>
+Substituing equations <a href="X02-Bias.html#eq:fhatbias">(2.5)</a> and <a href="X03-Var.html#eq:fhatvar">(3.5)</a> into
+the formula for the MSE, we get
+<span class="math display" id="eq:f-hat-MSE">\[\begin{equation}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  \approx \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 h^4.
+                           \tag{3.6}
+\end{equation}\]</span></p>
+<p>Some care is needed to make sure that the omitted terms from the Taylor
+approximations really don’t make a significant contribution in this formula for
+the MSE: The additional contributions from the variance have the form <span class="math inline">\(e_1(h) / n\)</span>, where the error term <span class="math inline">\(e_1\)</span> does not depend on <span class="math inline">\(n\)</span> and is negligible
+compared to <span class="math inline">\(f(x) R(K) / h\)</span> as <span class="math inline">\(h \downarrow 0\)</span>. Using
+<a href="https://en.wikipedia.org/wiki/Big_O_notation#Little-o_notation">little-o notation</a>,
+This is sometimes denoted by <span class="math inline">\(e_1(h) = o(1/h)\)</span>, which indicates that <span class="math inline">\(e_1(h) / (1/h) \to 0\)</span> as <span class="math inline">\(h \downarrow 0\)</span>. The additional terms from the squared bias, say
+<span class="math inline">\(e_2(h)\)</span>, do not depend on <span class="math inline">\(n\)</span> and are negligible compared to <span class="math inline">\(\mu_2(K)^2 f&#39;&#39;(x)^2 h^4\)</span>. We can write <span class="math inline">\(e_2(h) = o(h^4)\)</span> as <span class="math inline">\(n \downarrow 0\)</span>, to reflect
+this fact. We can summarise these results as
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = \frac{1}{nh} f(x) R(K)
+      + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 h^4
+      + o(1/nh) + o(h^4)
+\end{equation*}\]</span>
+as <span class="math inline">\(h \downarrow 0\)</span>,
+with the understanding that the constants in the definition of <span class="math inline">\(o(h^4)\)</span>
+do not depend on <span class="math inline">\(n\)</span> and that <span class="math inline">\(o(1/nh)\)</span> really means “<span class="math inline">\(o(1/h)\)</span>, where the
+constants are proportional to <span class="math inline">\(1/n\)</span>.”</p>
+</div>
+<div id="optimal-bandwidth" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Optimal Bandwidth</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Ah4ni7XxRtA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>The two terms on the right-hand side of <a href="X03-Var.html#eq:f-hat-MSE">(3.6)</a> are balanced in
+that the first term decreases for large <span class="math inline">\(h\)</span> while the second term decreases for
+small <span class="math inline">\(h\)</span>. By taking derivatives with respect to <span class="math inline">\(h\)</span>, we can
+find the optimal value of <span class="math inline">\(h\)</span>. Ignoring the higher order terms, we get
+<span class="math display">\[\begin{equation*}
+  \frac{\partial}{\partial h} \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = -\frac{1}{nh^2} f(x) R(K) + \mu_2(K)^2 f&#39;&#39;(x)^2 h^3
+\end{equation*}\]</span>
+and thus the derivative equals zero, if
+<span class="math display">\[\begin{equation*}
+  \frac{1}{nh^2} f(x) R(K) = \mu_2(K)^2 f&#39;&#39;(x)^2 h^3
+\end{equation*}\]</span>
+or, equivalently,
+<span class="math display">\[\begin{equation*}
+  h^5 = \frac{f(x) R(K)}{n \mu_2(K)^2 f&#39;&#39;(x)^2}.
+\end{equation*}\]</span>
+It is easy to check that this <span class="math inline">\(h\)</span> corresponds to the minimum of the MSE.
+This shows how the optimal bandwidth depends both on the kernel and on
+the target density <span class="math inline">\(f\)</span>. In practice, this formula is hard to use,
+since <span class="math inline">\(f&#39;&#39;\)</span> is unknown. (We don’t even know <span class="math inline">\(f\)</span>!)</p>
+<p>Substituting the optimal value of <span class="math inline">\(h\)</span> back into equation <a href="X03-Var.html#eq:f-hat-MSE">(3.6)</a>,
+we get
+<span class="math display">\[\begin{align*}
+  \mathop{\mathrm{MSE}}\nolimits_\mathrm{opt}
+  &amp;= \frac{1}{n} f(x) R(K) \Bigl( \frac{n \mu_2(K)^2 f&#39;&#39;(x)^2}{f(x) R(K)} \Bigr)^{1/5}
+     + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 \Bigl( \frac{f(x) R(K)}{n \mu_2(K)^2 f&#39;&#39;(x)^2} \Bigr)^{4/5} \\
+  &amp;= \frac54 \; \frac{1}{n^{4/5}}
+      \; \Bigl( R(K)^2 \mu_2(K) \Bigr)^{2/5}
+      \; \Bigl( f(x)^2 |f&#39;&#39;(x)| \Bigr)^{2/5}.
+\end{align*}\]</span>
+This expression clearly shows the contribution of <span class="math inline">\(n\)</span>, <span class="math inline">\(K\)</span> and <span class="math inline">\(f\)</span>:</p>
+<ul>
+<li><p>If the bandwidth is chosen optimally, as <span class="math inline">\(n\)</span> increases the bandwidth <span class="math inline">\(h\)</span>
+decreases proportionally to <span class="math inline">\(1/n^{1/5}\)</span> and the MSE decreases
+proportionally to <span class="math inline">\(1 / n^{4/5}\)</span>. For comparison, in a Monte Carlo
+estimate for an expectation, the MSE decreases proportionally to <span class="math inline">\(1/n\)</span>.
+The error in kernel density estimation decreases slightly slower than
+for Monte Carlo estimates.</p></li>
+<li><p>The error is proportional to <span class="math inline">\(\bigl( R(K)^2 \mu_2(K) \bigr)^{2/5}\)</span>.
+Thus we should use kernels where the value <span class="math inline">\(R(K)^2 \mu_2(K)\)</span>
+is small.</p></li>
+<li><p>The error is proportional to <span class="math inline">\(f(x)^2 |f&#39;&#39;(x)|\)</span>. We cannot influence
+this term, but we can see that <span class="math inline">\(x\)</span> where <span class="math inline">\(f\)</span> is large or has
+high curvature have higher estimation error.</p></li>
+</ul>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>We found the variance of the kernel density estimate.</li>
+<li>We studied the mean squared error for small <span class="math inline">\(h\)</span>.</li>
+<li>We derived a formula for the optimal value of the bandwidth <span class="math inline">\(h\)</span>.</li>
+</ul>
+</div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="X02-Bias.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH5714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
