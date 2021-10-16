@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="S04-model.html"/>
-<link rel="next" href="Sx1-matrices.html"/>
+<link rel="next" href="S06-simultaneous.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -202,6 +202,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.4.5" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals-1"><i class="fa fa-check"></i><b>5.4.5</b> Confidence Intervals</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="6" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html"><i class="fa fa-check"></i><b>6</b> Estimating Coefficients Simultaneously</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-dist"><i class="fa fa-check"></i><b>6.1</b> Linear Combinations of Coefficients</a></li>
+<li class="chapter" data-level="6.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#confidence-regions"><i class="fa fa-check"></i><b>6.2</b> Confidence Regions</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#result"><i class="fa fa-check"></i><b>6.2.1</b> Result</a></li>
+<li class="chapter" data-level="6.2.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#numerical-experiments"><i class="fa fa-check"></i><b>6.2.2</b> Numerical Experiments</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#hypothesis-tests-1"><i class="fa fa-check"></i><b>6.3</b> Hypothesis Tests</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
 <ul>
@@ -244,9 +254,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="S05-single" class="section level1" number="5">
 <h1><span class="header-section-number">Section 5</span> Uncertainty for Individual Regression Coefficients</h1>
 <p>In this section we will consider different ways to study the uncertainty in the
-estimates <span class="math inline">\(\hat\beta_i\)</span> for the regression coefficient <span class="math inline">\(\beta_i\)</span> individually.
-In the following sections we will then consider the problem of simultaneously
-estimating several or all coefficients.</p>
+estimates <span class="math inline">\(\hat\beta_i\)</span> for the regression coefficient <span class="math inline">\(\beta_i\)</span>,
+individually. In the following sections we will then consider the problem of
+simultaneously estimating several or all coefficients.</p>
 <div id="measuring-the-estimation-error" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Measuring the Estimation Error</h2>
 <div class="videowrap">
@@ -255,11 +265,11 @@ estimating several or all coefficients.</p>
 </iframe>
 </div>
 </div>
-<p>We have seen that <span class="math inline">\(\hat\beta \sim \mathcal{N}(0, \sigma^2 X)\)</span>, where
-<span class="math inline">\((X^\top X)^{-1}\)</span>. Restricting this to a single coefficient, we find
+<p>We have seen that <span class="math inline">\(\hat\beta \sim \mathcal{N}(\beta, \sigma^2 C)\)</span>, where
+<span class="math inline">\(C := (X^\top X)^{-1}\)</span>. Restricting this to a single coefficient, we find
 <span class="math display">\[\begin{equation*}
   \hat\beta_i
-  \sim \mathcal{N}\bigl( \beta, \sigma^2 C_{ii} \bigr),
+  \sim \mathcal{N}\bigl( \beta_i, \sigma^2 C_{ii} \bigr),
 \end{equation*}\]</span>
 since the diagonal elements of the covariance matrix contains the
 variances of the elements of a random vector. In practice we will not
@@ -285,7 +295,7 @@ components of <span class="math inline">\(\beta = (\beta_0, \beta_1, \ldots, \be
 <span class="math inline">\(\hat\sigma^2\)</span> are independent of each other.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-18" class="proof"><em>Proof</em>. </span>We will show that <span class="math inline">\(\hat\beta\)</span> can be written as a function of <span class="math inline">\(H\varepsilon\)</span>
+<p><span id="unlabeled-div-17" class="proof"><em>Proof</em>. </span>We will show that <span class="math inline">\(\hat\beta\)</span> can be written as a function of <span class="math inline">\(H\varepsilon\)</span>
 and that <span class="math inline">\(\hat\sigma^2\)</span> can be written as a function of <span class="math inline">\((I-H)\varepsilon\)</span>.
 The result then follows from Cochran’s theorem.</p>
 <p>From lemma <a href="S04-model.html#lem:hat-beta-dist">4.1</a>
@@ -343,7 +353,7 @@ Then <span class="math inline">\(T \sim t_{n-p-1}\)</span>, <em>i.e.</em> <span 
 <span class="math inline">\(t\)</span>-distribution with <span class="math inline">\(n-p-1\)</span> degrees of freedom (see appendix <a href="Sx2-probability.html#t">B.3</a>).</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-19" class="proof"><em>Proof</em>. </span>We have
+<p><span id="unlabeled-div-18" class="proof"><em>Proof</em>. </span>We have
 <span class="math display">\[\begin{align*}
   T
   &amp;= \frac{(\hat\beta_i - \beta_i) / \sqrt{C_{ii}}}
@@ -351,7 +361,7 @@ Then <span class="math inline">\(T \sim t_{n-p-1}\)</span>, <em>i.e.</em> <span 
   &amp;= \frac{(\hat\beta_i - \beta_i) / \sqrt{\sigma^2 C_{ii}}}
       {\sqrt{\hat\sigma^2 / \sigma^2}} \\
   &amp;= \frac{(\hat\beta_i - \beta_i) / \sqrt{\sigma^2 C_{ii}}}
-      {\sqrt{(n - p - 1) \hat\sigma^2 / \sigma^2 / (n - p -1)}} \\
+      {\sqrt{((n - p - 1) \hat\sigma^2 / \sigma^2) / (n - p -1)}} \\
   &amp;=: \frac{Z}{\sqrt{Y / (n - p - 1)}},
 \end{align*}\]</span>
 where <span class="math inline">\(Z = (\hat\beta_i - \beta_i) / \sqrt{\sigma^2 C_{ii}} \sim \mathcal{N}(0,1)\)</span>
@@ -382,7 +392,7 @@ where <span class="math inline">\(t_{n-p-1}(\alpha/2)\)</span> is the <span clas
 <span class="math inline">\(t(n-p-1)\)</span>-distribution. Rewriting this expression as a condition on
 <span class="math inline">\(\hat\beta_i\)</span> instead of on <span class="math inline">\(T\)</span> gives a confidence interval for <span class="math inline">\(\beta_i\)</span>.</p>
 <div class="lemma">
-<p><span id="lem:unlabeled-div-20" class="lemma"><strong>Lemma 5.3  </strong></span>The interval
+<p><span id="lem:unlabeled-div-19" class="lemma"><strong>Lemma 5.3  </strong></span>The interval
 <span class="math display">\[\begin{equation*}
   [U, V]
   := \Bigl[ \hat\beta_i - \sqrt{\hat\sigma^2 C_{ii}}t_{n-p-1}(\alpha/2), \hat\beta_i + \sqrt{\hat\sigma^2 C_{ii}}t_{n-p-1}(\alpha/2) \Bigr]
@@ -390,7 +400,7 @@ where <span class="math inline">\(t_{n-p-1}(\alpha/2)\)</span> is the <span clas
 is a <span class="math inline">\((1-\alpha)\)</span>-confidence interval for <span class="math inline">\(\beta_i\)</span>.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-21" class="proof"><em>Proof</em>. </span>We have to show that <span class="math inline">\(P(\beta_i \in [U, V]) \geq 1-\alpha\)</span>. We have
+<p><span id="unlabeled-div-20" class="proof"><em>Proof</em>. </span>We have to show that <span class="math inline">\(P(\beta_i \in [U, V]) \geq 1-\alpha\)</span>. We have
 <span class="math display">\[\begin{align*}
   &amp;\hskip-5mm \beta_i \in [U, V] \\
   &amp;\Longleftrightarrow
@@ -420,7 +430,7 @@ derive a hypothesis test to test the hypothesis
 \end{equation*}\]</span>
 against the alternative
 <span class="math display">\[\begin{equation*}
-  H_0\colon \beta_i \neq b.
+  H_1\colon \beta_i \neq b.
 \end{equation*}\]</span></p>
 <p>Here we redefine <span class="math inline">\(T\)</span> as
 <span class="math display">\[\begin{equation*}
@@ -430,11 +440,11 @@ against the alternative
 using <span class="math inline">\(b\)</span> in place of the <span class="math inline">\(\beta_i\)</span> above. Then the new defintion of <span class="math inline">\(T\)</span>
 is the same as <a href="S05-single.html#eq:single-T">(5.1)</a> if <span class="math inline">\(H_0\)</span> is true.</p>
 <div class="lemma">
-<p><span id="lem:unlabeled-div-22" class="lemma"><strong>Lemma 5.4  </strong></span>The test which rejects <span class="math inline">\(H_0\)</span> if and only if <span class="math inline">\(|T| &gt; t_{n-p-1}(\alpha/2)\)</span>
-has confidence level <span class="math inline">\(\alpha\)</span>.</p>
+<p><span id="lem:unlabeled-div-21" class="lemma"><strong>Lemma 5.4  </strong></span>The test which rejects <span class="math inline">\(H_0\)</span> if and only if <span class="math inline">\(|T| &gt; t_{n-p-1}(\alpha/2)\)</span>
+has significance level <span class="math inline">\(\alpha\)</span>.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-23" class="proof"><em>Proof</em>. </span>We have to show that the probability of type I errors (<em>i.e.</em> of wrongly
+<p><span id="unlabeled-div-22" class="proof"><em>Proof</em>. </span>We have to show that the probability of type I errors (<em>i.e.</em> of wrongly
 rejecting <span class="math inline">\(H_0\)</span> when it is true) is less than or equal to <span class="math inline">\(\alpha\)</span>.
 Assume that <span class="math inline">\(H_0\)</span> is true. Then we have <span class="math inline">\(\beta_i = b\)</span> and thus
 the <span class="math inline">\(T\)</span> defined in this section coincides with the expression from
@@ -575,16 +585,13 @@ function in R.</li>
 </div>
 </div>
 </div>
-
-
-
             </section>
 
           </div>
         </div>
       </div>
 <a href="S04-model.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S06-simultaneous.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

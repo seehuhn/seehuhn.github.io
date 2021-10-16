@@ -154,6 +154,7 @@
 \newcommand{\ds}{\displaystyle}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\eps}{\varepsilon}
+\renewcommand{\phi}{\varphi}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\rank}{\mathop{\mathrm{rank}}}
 \newcommand{\se}{\mathop{\mathrm{se}}}
@@ -1450,8 +1451,6 @@ the \href{https://rdrr.io/r/stats/predict.html}{output of \texttt{help(predict.l
 \section*{Problem Sheet 1}\label{P01}}
 \addcontentsline{toc}{section}{Problem Sheet 1}
 
-\excludecomment{myanswers}
-
 You should attempt all these questions and write up your solutions in advance
 of your workshop in week 3 where the answers will be discussed.
 
@@ -2326,6 +2325,7 @@ Our main tool in this and the following section will be a simplified
 version of \href{https://en.wikipedia.org/wiki/Cochran\%27s_theorem}{Cochran's theorem}.
 
 \begin{theorem}
+\protect\hypertarget{thm:Cochran}{}\label{thm:Cochran}
 
 The following statements are true:
 
@@ -2493,18 +2493,18 @@ This proves that \(\hat\sigma^2\) is an unbiased estimator for \(\sigma^2\).
 \section{Uncertainty for Individual Regression Coefficients}\label{S05-single}}
 
 In this section we will consider different ways to study the uncertainty in the
-estimates \(\hat\beta_i\) for the regression coefficient~\(\beta_i\) individually.
-In the following sections we will then consider the problem of simultaneously
-estimating several or all coefficients.
+estimates \(\hat\beta_i\) for the regression coefficient~\(\beta_i\),
+individually. In the following sections we will then consider the problem of
+simultaneously estimating several or all coefficients.
 
 \hypertarget{measuring-the-estimation-error}{%
 \subsection{Measuring the Estimation Error}\label{measuring-the-estimation-error}}
 
-We have seen that \(\hat\beta \sim \mathcal{N}(0, \sigma^2 X)\), where
-\((X^\top X)^{-1}\). Restricting this to a single coefficient, we find
+We have seen that \(\hat\beta \sim \mathcal{N}(\beta, \sigma^2 C)\), where
+\(C := (X^\top X)^{-1}\). Restricting this to a single coefficient, we find
 \begin{equation*}
   \hat\beta_i
-  \sim \mathcal{N}\bigl( \beta, \sigma^2 C_{ii} \bigr),
+  \sim \mathcal{N}\bigl( \beta_i, \sigma^2 C_{ii} \bigr),
 \end{equation*}
 since the diagonal elements of the covariance matrix contains the
 variances of the elements of a random vector. In practice we will not
@@ -2608,7 +2608,7 @@ We have
   &= \frac{(\hat\beta_i - \beta_i) / \sqrt{\sigma^2 C_{ii}}}
       {\sqrt{\hat\sigma^2 / \sigma^2}} \\
   &= \frac{(\hat\beta_i - \beta_i) / \sqrt{\sigma^2 C_{ii}}}
-      {\sqrt{(n - p - 1) \hat\sigma^2 / \sigma^2 / (n - p -1)}} \\
+      {\sqrt{((n - p - 1) \hat\sigma^2 / \sigma^2) / (n - p -1)}} \\
   &=: \frac{Z}{\sqrt{Y / (n - p - 1)}},
 \end{align*}
 where \(Z = (\hat\beta_i - \beta_i) / \sqrt{\sigma^2 C_{ii}} \sim \mathcal{N}(0,1)\)
@@ -2670,7 +2670,7 @@ derive a hypothesis test to test the hypothesis
 \end{equation*}
 against the alternative
 \begin{equation*}
-  H_0\colon \beta_i \neq b.
+  H_1\colon \beta_i \neq b.
 \end{equation*}
 
 Here we redefine \(T\) as
@@ -2683,7 +2683,7 @@ is the same as~\eqref{eq:single-T} if \(H_0\) is true.
 
 \begin{lemma}
 The test which rejects \(H_0\) if and only if \(|T| > t_{n-p-1}(\alpha/2)\)
-has confidence level~\(\alpha\).
+has significance level~\(\alpha\).
 \end{lemma}
 
 \begin{proof}
@@ -2902,6 +2902,525 @@ Confidence intervals for the remaining coefficients can be obtained simimlarly.
   We have understood some more of the summary output for the \texttt{lm()}
   function in~R.
 \end{itemize}
+
+\clearpage
+
+\hypertarget{S06-simultaneous}{%
+\section{Estimating Coefficients Simultaneously}\label{S06-simultaneous}}
+
+In this section we will study how to assess the uncertainty in two or more
+regression coefficients simultaneously. This is needed since the estimates for
+different coefficients will usually not be independent.
+
+\hypertarget{sec:simult-dist}{%
+\subsection{Linear Combinations of Coefficients}\label{sec:simult-dist}}
+
+As a general setup which allows to describe which coefficients we are
+interested in, we consider the image \(K\beta\), where \(K \in \mathbb{R}^{k \times (p+1)}\) with \(k \leq p+1\).
+
+\begin{example}
+If \(p = 3\) and
+\begin{equation*}
+  K = \begin{pmatrix}
+    0 & 1 & 0 & 0 \\
+    0 & 0 & 1 & 0
+  \end{pmatrix},
+\end{equation*}
+then
+\begin{equation*}
+  K\beta
+  = \begin{pmatrix}
+      0 & 1 & 0 & 0 \\
+      0 & 0 & 1 & 0
+    \end{pmatrix} \begin{pmatrix}
+      \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3
+    \end{pmatrix}
+  = \begin{pmatrix}
+      \beta_1 \\ \beta_2
+    \end{pmatrix}.
+\end{equation*}
+Thus, this choice of \(K\) would be appropriate if we are interested
+in \(\beta_1\) and \(\beta_2\) only.
+\end{example}
+
+The setup allows for more general questions than just selecting components
+of \(\beta\). We can also derive statements about linear combination of
+the \(\beta_i\), \emph{e.g.} we will be able to derive confidence intervals
+for quantities like \(\beta_1 - \beta_2\).
+
+Since \(\hat\beta\) is an estimator for \(\beta\), we can use \(K\hat\beta\) as an
+estimator for \(K\beta\). From lemma~\ref{lem:hat-beta-dist} we know that
+\(\hat\beta \sim \mathcal{N}\bigl( \beta, \sigma^2 (X^\top X)^{-1} \bigr)\) and thus
+we get
+\begin{equation*}
+  K\hat\beta
+  \sim \mathcal{N}\bigl( K \beta, \sigma^2 K (X^\top X)^{-1} K^\top \bigr).
+\end{equation*}
+This shows that the estimator \(K\hat\beta\) is unbiased.
+
+Given an invertible matrix \(Q\), we define the shorthand notation
+\begin{equation*}
+  \| v \|_Q^2
+  := v^\top C^{-1} v.
+\end{equation*}
+Using this notation for \(Q = K(X^\top X)^{-1} K^\top\), we define
+\begin{equation}
+  F
+  := \frac{\bigl\| K \hat\beta - K \beta \bigr\|_{K(X^\top X)^{-1} K^\top}^2}
+          {k \hat\sigma^2} \label{eq:simult-F}
+\end{equation}
+as a measure for the distance between \(K\hat\beta\) and \(K\beta\). This
+quantity plays the role of \(T\) (or more precisely, \(T^2\)) from the previous
+section. We also need to introduce the \(F\)-distribution, which will take the
+place of the \(t\)-distribution from the previous section.
+
+\begin{definition}
+The \(F\)-distribution with \(\nu_1\) and \(\nu_2\) degrees of freedom is the
+distribution of
+\begin{equation*}
+  X
+  =\frac{S_1/\nu_1}{S_2/\nu_2},
+\end{equation*}
+where \(S_1\) and \(S_2\) are independent random variables with chi-square
+distributions with \(\nu_1\) and~\(\nu_2\) degrees of freedom, respectively.
+\end{definition}
+
+With these preparations in place, we can state the main result.
+
+\begin{lemma}
+\protect\hypertarget{lem:F-dist}{}\label{lem:F-dist}Assume that the data follows the model~\eqref{eq:lmstats}
+and that \(Q := K(X^\top X)^{-1} K^\top\) is invertible.
+Then \(F \sim F_{k,n-p-1}\), \emph{i.e.} \(F\) follows a
+\(F\)-distribution with \(k\) and \(n-p-1\) degrees of freedom.
+\end{lemma}
+
+\begin{proof}
+We have
+\begin{align*}
+  \hskip-5mm
+  & \bigl\| K \hat\beta - K \beta \bigr\|_Q^2 \\
+  &= \bigl\| K (\hat\beta - \beta) \bigr\|_Q^2 \\
+  &= \bigl\| K (X^\top X)^{-1} X^\top \varepsilon\bigr\|_Q^2 \\
+  &= \varepsilon^\top X (X^\top X)^{-1} K^\top Q^{-1} K (X^\top X)^{-1} X^\top \varepsilon\\
+  &=: \varepsilon^\top R \varepsilon.
+\end{align*}
+It is tedious but easy to check that \(R\) is idempotent:
+\begin{align*}
+  R^2
+  &= \Bigl(X (X^\top X)^{-1} K^\top Q^{-1} K (X^\top X)^{-1} X^\top\Bigr)
+     \Bigl(X (X^\top X)^{-1} K^\top Q^{-1} K (X^\top X)^{-1} X^\top\Bigr) \\
+  &= X (X^\top X)^{-1} K^\top Q^{-1} K (X^\top X)^{-1} \Bigl(X^\top
+     X (X^\top X)^{-1} \Bigr) K^\top Q^{-1} K (X^\top X)^{-1} X^\top \\
+  &= X (X^\top X)^{-1} K^\top \Bigl( Q^{-1} K (X^\top X)^{-1} K^\top \Bigr)
+      Q^{-1} K (X^\top X)^{-1} X^\top \\
+  &= X (X^\top X)^{-1} K^\top Q^{-1} K (X^\top X)^{-1} X^\top \\
+  &= R.
+\end{align*}
+When we checked in the proof of \protect\hyperlink{thm:Cochran}{Cochran's theorem} that
+\(\varepsilon^\top H \varepsilon\) was chi-squared distributed, so only property of \(H\)
+we used was that \(H\) is idempotent. (If you don't remember the details,
+it would be a good idea to re-read the proof before continuing.) Thus,
+the same argument gives that \(\varepsilon^\top R \varepsilon/ \sigma^2\) is chi-squared distributed,
+and as before the number of degrees of freedom of this chi-squared distribution
+equals the rank of~\(R\). Using the assumption that \(Q\) is invertible,
+one can show (we skip this part of the proof again)
+that the rank of \(Q\) equals \(\min(k, p+1) = k\) and thus we find that
+\begin{equation*}
+  S_1
+  := \frac{1}{\sigma^2} \bigl\| K \hat\beta - K \beta \bigr\|_Q^2
+  \sim \chi^2(k).
+\end{equation*}
+
+Similarly, from the direct application of Cochran's theorem in
+equation~\eqref{eq:sigma-hat-chi-squared}, we know
+\begin{equation*}
+  S_2
+  := \frac{1}{\sigma^2} (n - p - 1) \hat\sigma^2
+  \sim \chi^2(n - p - 1).
+\end{equation*}
+
+Since \(S_1\) is a function of \(\hat\beta\) and \(S_2\) is a function of
+\(\hat\sigma^2\), we can use lemma~@ref\{lem:hat-beta-sigma-indep\} to
+conclude that \(S_1\) and~\(S_2\) are independent.
+Combining these results we find
+\begin{align*}
+  F
+  &= \frac{\bigl\| K \hat\beta - K \beta \bigr\|_{K(X^\top X)^{-1} K^\top}^2}
+          {k \hat\sigma^2} \\
+  &= \frac{\frac{1}{\sigma^2} \bigl\| K \hat\beta - K \beta \bigr\|_{K(X^\top X)^{-1} K^\top}^2 / k}
+          {\frac{1}{\sigma^2} (n - p - 1) \hat\sigma^2 / (n - p - 1)} \\
+  &= \frac{S_1 / k}{S_2 / (n - p - 1)} \\
+  &\sim F_{k, n - p - 1}.
+\end{align*}
+This completes the proof.
+\end{proof}
+
+\hypertarget{confidence-regions}{%
+\subsection{Confidence Regions}\label{confidence-regions}}
+
+Using \(F\) as a distance between the unknown true \(K\beta\) and the estimator
+\(\hat\beta\), it is easy to find a region of \(\mathbb{R}^k\) which covers \(K\beta\) with
+high probability. Since we now have an \(k\)-dimensional parameter vector, this
+region will no longer be an interval. Instead, we will get an \(k\)-dimensional
+ellipsoid.
+
+\hypertarget{result}{%
+\subsubsection{Result}\label{result}}
+
+Define
+\begin{equation*}
+  E
+  := \Bigl\{
+      z \in \mathbb{R}^k
+    \Bigm|
+      \bigl\| z - K \hat\beta \bigr\|_{K(X^\top X)^{-1} K^\top}
+        \leq \sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}
+    \Bigr\},
+\end{equation*}
+where \(f_{k,n-p-1}(\alpha)\) is the \((1-\alpha)\)-quantile of the
+\(F_{k,n-p-1}\)-distribution. This is a ``ball'' around \(K\hat\beta\) in \(\mathbb{R}^k\),
+where distance is measured using the norm \(\| \;\cdot\; \|_{K(X^\top X)^{-1} K^\top}\) introduced above. The following lemma shows that \(\sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}\) is the correct choice of ``radius'' to make the
+ball cover the true value \(K\beta\) with probability \(1-\alpha\).
+
+\begin{lemma}
+We have
+\begin{equation*}
+  P\bigl( K\beta \in E \bigr)
+  = 1 - \alpha,
+\end{equation*}
+\emph{i.e.}~the set \(E\) is a \((1-\alpha)\)-confidence region for \(K\beta\).
+\end{lemma}
+
+\begin{proof}
+We have
+\begin{align*}
+  &\hskip-5mm K\beta \in E \\
+  &\Longleftrightarrow
+      \bigl\| K\beta - K \hat\beta \bigr\|_{K(X^\top X)^{-1} K^\top}
+        \leq \sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)} \\
+  &\Longleftrightarrow
+      \bigl\| K\hat\beta - K\beta \bigr\|_{K(X^\top X)^{-1} K^\top}^2
+        \leq k \hat\sigma^2 f_{k,n-p-1}(\alpha) \\
+  &\Longleftrightarrow
+      \frac{\bigl\| K\hat\beta - K\beta \bigr\|_{K(X^\top X)^{-1} K^\top}^2}
+           {k \hat\sigma^2}
+        \leq f_{k,n-p-1}(\alpha) \\
+  &\Longleftrightarrow
+    F \leq f_{k,n-p-1}(\alpha)
+\end{align*}
+Now the claim follows, since \(f_{k,n-p-1}(\alpha)\) is the
+\((1-\alpha)\)-quantile of~\(F\).
+\end{proof}
+
+\hypertarget{numerical-experiments}{%
+\subsubsection{Numerical Experiments}\label{numerical-experiments}}
+
+We start by fitting a linear model to the \texttt{stackloss} data set as
+before:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = stack.loss ~ ., data = stackloss)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.2377 -1.7117 -0.4551  2.3614  5.6978 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -39.9197    11.8960  -3.356  0.00375 ** 
+## Air.Flow      0.7156     0.1349   5.307  5.8e-05 ***
+## Water.Temp    1.2953     0.3680   3.520  0.00263 ** 
+## Acid.Conc.   -0.1521     0.1563  -0.973  0.34405    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.243 on 17 degrees of freedom
+## Multiple R-squared:  0.9136, Adjusted R-squared:  0.8983 
+## F-statistic:  59.9 on 3 and 17 DF,  p-value: 3.016e-09
+\end{verbatim}
+
+Here I want to consider the two regressions coefficients \(\beta_1\) (\texttt{Air.Flow})
+and \(\beta_2\) (\texttt{Water.Temp}). For this we need to construct a matrix~\(K\)
+with two rows, where each row selects one of the two coefficients:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(X)}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{ncol}\NormalTok{(X) }\SpecialCharTok{{-}} \DecValTok{1}
+
+\NormalTok{K }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{,   }\CommentTok{\# indices in R start at 1, so beta\_1 is col. 2}
+              \DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),  }\CommentTok{\# ... and beta\_2 is column 3.}
+            \AttributeTok{byrow =} \ConstantTok{TRUE}\NormalTok{,}
+            \AttributeTok{nrow =} \DecValTok{2}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{4}\NormalTok{)}
+\NormalTok{k }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(K)}
+\NormalTok{K.beta.hat }\OtherTok{\textless{}{-}} \FunctionTok{as.vector}\NormalTok{(K }\SpecialCharTok{\%*\%} \FunctionTok{coef}\NormalTok{(m))}
+\end{Highlighting}
+\end{Shaded}
+
+As we have seen in the previous section, for this \(K\) the covariance matrix for
+the ellipse is \(Q = K (X^\top X)^{-1} K^\top\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Q }\OtherTok{\textless{}{-}}\NormalTok{ K }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X) }\SpecialCharTok{\%*\%} \FunctionTok{t}\NormalTok{(K)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{a-single-point}{%
+\paragraph{A Single Point}\label{a-single-point}}
+
+To try out the method, we first consider the test point \(m = K\beta = (1, 1)\)
+and we compute the \(F\) value for this point to see whether the point is
+inside or outside the ellipse:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{sigma.hat }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(m)}\SpecialCharTok{$}\NormalTok{sigma}
+\NormalTok{d }\OtherTok{\textless{}{-}}\NormalTok{ a }\SpecialCharTok{{-}}\NormalTok{ K.beta.hat}
+\NormalTok{F }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(d) }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(Q, d) }\SpecialCharTok{/}\NormalTok{ (k }\SpecialCharTok{*}\NormalTok{ sigma.hat}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{F}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          [,1]
+## [1,] 2.834083
+\end{verbatim}
+
+The \(F\) value, measuring the distance from the centre of the ellipse
+is \(2.834\) for this test point. This has to be compared to the
+critical value:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alpha }\OtherTok{\textless{}{-}} \FloatTok{0.05}
+\NormalTok{f.crit }\OtherTok{\textless{}{-}} \FunctionTok{qf}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alpha, k, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{f.crit}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.591531
+\end{verbatim}
+
+Since the \(F\) value is less than the critical value, the point \((1, 1)\)
+is inside the ellipse. As the next step, we will plot a picture of the
+full ellipse.
+
+\hypertarget{points-on-a-grid}{%
+\paragraph{Points on a Grid}\label{points-on-a-grid}}
+
+An easy way to show the ellipse is to repeat the above procedure for
+all points on a rectangular grid, and then colour the points
+depending on whether they are inside or outside the ellipse.
+We start by making a list of grid points.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x.min }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\DecValTok{1}
+\NormalTok{x.max }\OtherTok{\textless{}{-}} \DecValTok{3}
+\NormalTok{y.min }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\FloatTok{0.5}
+\NormalTok{y.max }\OtherTok{\textless{}{-}} \DecValTok{3}
+\NormalTok{L }\OtherTok{\textless{}{-}} \DecValTok{200}
+
+\NormalTok{xx }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(x.min, x.max, }\AttributeTok{length.out =}\NormalTok{ L)}
+\NormalTok{yy }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(y.min, y.max, }\AttributeTok{length.out =}\NormalTok{ L)}
+
+\NormalTok{Z }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(}\FunctionTok{expand.grid}\NormalTok{(}\AttributeTok{x =}\NormalTok{ xx }\SpecialCharTok{{-}}\NormalTok{ K.beta.hat[}\DecValTok{1}\NormalTok{],}
+                           \AttributeTok{y =}\NormalTok{ yy }\SpecialCharTok{{-}}\NormalTok{ K.beta.hat[}\DecValTok{2}\NormalTok{],}
+                           \AttributeTok{KEEP.OUT.ATTRS =} \ConstantTok{FALSE}\NormalTok{))}
+\FunctionTok{dim}\NormalTok{(Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 40000     2
+\end{verbatim}
+
+The matrix \(Z\) now has two columns, containing the \(x\) and \(y\) coordinates
+respectively of the \(200\times 200\) points in our grid.
+Now we need to compute the \(F\) value for every grid point:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{F }\OtherTok{\textless{}{-}} \FunctionTok{rowSums}\NormalTok{(Z }\SpecialCharTok{*} \FunctionTok{t}\NormalTok{(}\FunctionTok{solve}\NormalTok{(Q, }\FunctionTok{t}\NormalTok{(Z)))) }\SpecialCharTok{/}\NormalTok{ (k }\SpecialCharTok{*}\NormalTok{ sigma.hat}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{F }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(F, }\AttributeTok{byrow =} \ConstantTok{TRUE}\NormalTok{, L, L)}
+\FunctionTok{dim}\NormalTok{(F)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 200 200
+\end{verbatim}
+
+The resulting matrix contains the \(F\) value for every grid point.
+Finally, we can mark all the points where \(F\) exceeds the critical
+value in a plot:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{image}\NormalTok{(}\AttributeTok{x =}\NormalTok{ xx, }\AttributeTok{y =}\NormalTok{ yy, }\FunctionTok{t}\NormalTok{(F }\SpecialCharTok{\textgreater{}}\NormalTok{ f.crit), }\AttributeTok{asp =} \DecValTok{1}\NormalTok{,}
+      \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"green"}\NormalTok{, }\StringTok{"white"}\NormalTok{),}
+      \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(beta[}\DecValTok{1}\NormalTok{]), }\AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(beta[}\DecValTok{2}\NormalTok{]))}
+\FunctionTok{points}\NormalTok{(K.beta.hat[}\DecValTok{1}\NormalTok{], K.beta.hat[}\DecValTok{2}\NormalTok{], }\AttributeTok{pch =} \StringTok{"+"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/ellipse-1.pdf}
+
+The green ellipse in this plot is the 95\% confidence ellipse
+for the vector \((\beta_1, \beta_2)\).
+
+\hypertarget{coordinates-of-the-outline}{%
+\paragraph{Coordinates of the Outline}\label{coordinates-of-the-outline}}
+
+\textbf{This sub-section is non-examinable (but hopefully interesting).}
+
+Using some more linear algebra, we can find a formula for the coordinates
+of the points on the ellipse which forms the boundary of the confidence
+region. For this, we use the
+\href{https://en.wikipedia.org/wiki/Singular_value_decomposition}{Singular Value Decomposition}
+of the matrix \(Q\). This allows to write \(Q\) as
+\begin{equation*}
+  Q = U D V^\top
+\end{equation*}
+where \(U\) and \(V\) are orthogonal matrices and \(D\) is a diagonal matrix:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{svd }\OtherTok{\textless{}{-}} \FunctionTok{La.svd}\NormalTok{(Q)}
+\NormalTok{svd}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $d
+## [1] 0.0138678012 0.0007364967
+## 
+## $u
+##            [,1]      [,2]
+## [1,] -0.2749061 0.9614711
+## [2,]  0.9614711 0.2749061
+## 
+## $vt
+##            [,1]      [,2]
+## [1,] -0.2749061 0.9614711
+## [2,]  0.9614711 0.2749061
+\end{verbatim}
+
+The R output shows the diagonal elements \(d_{ii}\) of \(D\) and the matrices \(U\)
+and \(V^\top\). Since \(Q\) is symmetric, we have \(U = V\) and thus \(Q = U D U^\top\)
+in this case, \(i.e.\)~we have found a diagonalisation of~\(Q\).
+
+Using the SVD we can simplify the norm used in the
+definition of the ellipse. We write \(D^{-1/2}\) for the matrix
+which has \(1/\sqrt{d_{ii}}\) on the diagonal. Then we have
+\begin{align*}
+  Q \bigl(D^{-1/2} U^\top \bigr)^\top \bigl(D^{-1/2} U^\top \bigr)
+  &= Q U D^{-1/2} D^{-1/2} U^\top \\
+  &= U D U^\top U D^{-1} U^\top \\
+  &= U D D^{-1} U^\top \\
+  &= U U^\top \\
+  &= I.
+\end{align*}
+Thus, \(\bigl(D^{-1/2} U^\top\bigr)^\top \bigl(D^{-1/2} U^\top\bigr)\) is
+the inverse of \(Q\) and we get
+\begin{align*}
+  \bigl\| z - K \hat\beta \bigr\|_Q^2
+  &= (z - K \hat\beta)^\top Q^{-1} (z - K \hat\beta) \\
+  &= (z - K \hat\beta)^\top \bigl(D^{-1/2} U^\top\bigr)^\top \bigl(D^{-1/2} U^\top\bigr) (z - K \hat\beta) \\
+  &= \Bigl\| D^{-1/2} U^\top (z - K \hat\beta) \Bigr\|^2,
+\end{align*}
+where the norm on the right-hand side is the usual Euclidean norm.
+Thus, the boundary of the ellipse consists of all points of the
+form \(K \hat\beta + d\), where \(e := D^{-1} U^\top d\) is a vector
+of length
+\[ \| e \| = \sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}. \]
+Finally, using polar coordinates, we find the points on the boundary
+to be
+\begin{equation*}
+  d
+  = U D e
+  = U D \sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}
+    \begin{pmatrix}
+      \cos(\varphi) \\ \sin(\varphi)
+    \end{pmatrix}
+\end{equation*}
+with \(\varphi\in [0, 2pi]\). This allows to plot the boundary line in~R.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{phi }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{2}\SpecialCharTok{*}\NormalTok{pi, }\AttributeTok{length.out =} \DecValTok{201}\NormalTok{)}
+\NormalTok{circ }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}\FunctionTok{cos}\NormalTok{(phi), }\FunctionTok{sin}\NormalTok{(phi)) }\SpecialCharTok{*} \FunctionTok{sqrt}\NormalTok{(f.crit }\SpecialCharTok{*}\NormalTok{ k }\SpecialCharTok{*}\NormalTok{ sigma.hat}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+
+\NormalTok{ellipse }\OtherTok{\textless{}{-}}\NormalTok{ svd}\SpecialCharTok{$}\NormalTok{u }\SpecialCharTok{\%*\%}\NormalTok{ (circ }\SpecialCharTok{*} \FunctionTok{sqrt}\NormalTok{(svd}\SpecialCharTok{$}\NormalTok{d)) }\SpecialCharTok{+}\NormalTok{ K.beta.hat}
+
+\FunctionTok{image}\NormalTok{(}\AttributeTok{x =}\NormalTok{ xx, }\AttributeTok{y =}\NormalTok{ yy, }\FunctionTok{t}\NormalTok{(F }\SpecialCharTok{\textgreater{}}\NormalTok{ f.crit), }\AttributeTok{asp =} \DecValTok{1}\NormalTok{,}
+      \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"green"}\NormalTok{, }\StringTok{"white"}\NormalTok{),}
+      \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(beta[}\DecValTok{1}\NormalTok{]), }\AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(beta[}\DecValTok{2}\NormalTok{]))}
+\FunctionTok{lines}\NormalTok{(ellipse[}\DecValTok{1}\NormalTok{,], ellipse[}\DecValTok{2}\NormalTok{,])}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/ellipse2-1.pdf}
+
+To verify that everything is consistent, we have plotted the line on top
+of the image from the previous subsection. Since the black line perfectly
+surrounds the green area, both approaches are consistent.
+
+\hypertarget{hypothesis-tests-1}{%
+\subsection{Hypothesis Tests}\label{hypothesis-tests-1}}
+
+We can easily derive a hypothesis test to test the hypothesis
+\begin{equation*}
+  H_0\colon K\beta = m
+\end{equation*}
+against the alternative
+\begin{equation*}
+  H_1\colon K\beta \neq m,
+\end{equation*}
+where \(m \in \mathbb{R}^k\).
+
+We redefine \(F\) as
+\begin{equation*}
+  F
+  := \frac{\bigl\| K \hat\beta - m \bigr\|_{K(X^\top X)^{-1} K^\top}^2}
+          {k \hat\sigma^2}
+\end{equation*}
+using \(m\) in place of the \(K\beta\) above. Then the new defintion of \(F\)
+is the same as~\eqref{eq:simult-F} if \(H_0\) is true.
+
+\begin{lemma}
+The test which rejects \(H_0\) if and only if \(|F| > f_{k,n-p-1}(\alpha)\)
+has significance level~\(\alpha\).
+\end{lemma}
+
+\begin{proof}
+Assume that \(H_0\) is true. Then we have \(K\beta = m\) and thus
+the \(F\) defined in this section coincides with the expression from
+equation~\eqref{eq:simult-F}. From lemma~\ref{lem:F-dist}
+we know that \(F \sim F_{k, n-p-1}\). Thus we have
+\begin{align*}
+  P( \mbox{type I error} )
+  &= P\bigl( F > f_{k,n-p-1}(\alpha) \bigr) \\
+  &= 1 - P\bigl( F \leq f_{k,n-p-1}(\alpha) \bigr) \\
+  &= 1 - (1 - \alpha) \\
+  &= \alpha.
+\end{align*}
+This completes the proof.
+\end{proof}
 
 \clearpage
 
