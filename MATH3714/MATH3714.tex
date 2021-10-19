@@ -2636,12 +2636,12 @@ where \(t_{n-p-1}(\alpha/2)\) is the \((1 - \alpha/2)\)-quantile of the
 \(\hat\beta_i\) instead of on \(T\) gives a confidence interval for \(\beta_i\).
 
 \begin{lemma}
-The interval
+\protect\hypertarget{lem:single-CI}{}\label{lem:single-CI}The interval
 \begin{equation*}
   [U, V]
   := \Bigl[ \hat\beta_i - \sqrt{\hat\sigma^2 C_{ii}}t_{n-p-1}(\alpha/2), \hat\beta_i + \sqrt{\hat\sigma^2 C_{ii}}t_{n-p-1}(\alpha/2) \Bigr]
 \end{equation*}
-is a \((1-\alpha)\)-confidence interval for \(\beta_i\).
+is a \((1-\alpha)\)-confidence interval for~\(\beta_i\).
 \end{lemma}
 
 \begin{proof}
@@ -2674,12 +2674,12 @@ against the alternative
 \end{equation*}
 
 Here we redefine \(T\) as
-\begin{equation*}
+\begin{equation}
   T
-  := \frac{\hat\beta_i - b}{\sqrt{\hat\sigma^2 C_{ii}}},
-\end{equation*}
-using \(b\) in place of the \(\beta_i\) above. Then the new defintion of \(T\)
-is the same as~\eqref{eq:single-T} if \(H_0\) is true.
+  := \frac{\hat\beta_i - b}{\sqrt{\hat\sigma^2 C_{ii}}},  \label{eq:single-test}
+\end{equation}
+using \(b\) in place of the \(\beta_i\) above. When \(H_0\) is true, this new
+defintion of \(T\) is the same as~\eqref{eq:single-T}.
 
 \begin{lemma}
 The test which rejects \(H_0\) if and only if \(|T| > t_{n-p-1}(\alpha/2)\)
@@ -2810,7 +2810,7 @@ bottom of the \texttt{summary(m)} output, above.
 \subsubsection{Estimating the Standard Errors}\label{estimating-the-standard-errors}}
 
 We can the standard errors, \emph{i.e.}~the standard deviations
-\(\mathop{\mathrm{stdev}}(\hat\beta)_i\) as \(\sqrt{\hat\sigma^2 C_ii}\):
+\(\mathop{\mathrm{stdev}}(\hat\beta)_i\) as \(\sqrt{\hat\sigma^2 C_{ii}}\):
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2961,7 +2961,7 @@ This shows that the estimator \(K\hat\beta\) is unbiased.
 Given an invertible matrix \(Q\), we define the shorthand notation
 \begin{equation*}
   \| v \|_Q^2
-  := v^\top C^{-1} v.
+  := v^\top Q^{-1} v.
 \end{equation*}
 Using this notation for \(Q = K(X^\top X)^{-1} K^\top\), we define
 \begin{equation}
@@ -3055,8 +3055,8 @@ Combining these results we find
 This completes the proof.
 \end{proof}
 
-\hypertarget{confidence-regions}{%
-\subsection{Confidence Regions}\label{confidence-regions}}
+\hypertarget{sec:simult-CI}{%
+\subsection{Confidence Regions}\label{sec:simult-CI}}
 
 Using \(F\) as a distance between the unknown true \(K\beta\) and the estimator
 \(\hat\beta\), it is easy to find a region of \(\mathbb{R}^k\) which covers \(K\beta\) with
@@ -3380,8 +3380,8 @@ To verify that everything is consistent, we have plotted the line on top
 of the image from the previous subsection. Since the black line perfectly
 surrounds the green area, both approaches are consistent.
 
-\hypertarget{hypothesis-tests-1}{%
-\subsection{Hypothesis Tests}\label{hypothesis-tests-1}}
+\hypertarget{sec:simult-test}{%
+\subsection{Hypothesis Tests}\label{sec:simult-test}}
 
 We can easily derive a hypothesis test to test the hypothesis
 \begin{equation*}
@@ -3403,7 +3403,7 @@ using \(m\) in place of the \(K\beta\) above. Then the new defintion of \(F\)
 is the same as~\eqref{eq:simult-F} if \(H_0\) is true.
 
 \begin{lemma}
-The test which rejects \(H_0\) if and only if \(|F| > f_{k,n-p-1}(\alpha)\)
+\protect\hypertarget{lem:simult-test}{}\label{lem:simult-test}The test which rejects \(H_0\) if and only if \(|F| > f_{k,n-p-1}(\alpha)\)
 has significance level~\(\alpha\).
 \end{lemma}
 
@@ -3421,6 +3421,798 @@ we know that \(F \sim F_{k, n-p-1}\). Thus we have
 \end{align*}
 This completes the proof.
 \end{proof}
+
+\clearpage
+
+\hypertarget{I02-read.csv}{%
+\section*{Interlude: Loading Data into R}\label{I02-read.csv}}
+\addcontentsline{toc}{section}{Interlude: Loading Data into R}
+
+Before we can analyse data using R, we have to ``import'' the data
+into~R. How exactly this is done depends on how the data is stored,
+and more specifically on which file format is used. Here we consider
+two commonly used formats: comma-separated values (\texttt{.csv})
+and Microsoft Excel files (\texttt{.xls} or \texttt{.xlsx}).
+
+\hypertarget{importing-csv-files}{%
+\subsection*{Importing CSV Files}\label{importing-csv-files}}
+\addcontentsline{toc}{subsection}{Importing CSV Files}
+
+The \texttt{read.csv()} command can be used to import \texttt{.csv} files
+into R: if we use the command
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"file.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+then the contents of the file \texttt{file.csv} will be stored in the variable~\texttt{x}.
+Optional arguments to \texttt{read.csv()} can be used to specify whether or not the
+file includes column names, and allow to deal with variations of how the data
+may be stored in the file. Some of these are explained below.
+
+The most important things to
+know about the function \texttt{read.csv()} are:
+
+\begin{itemize}
+\item
+  The filename can either denote a file on the local computer, or
+  a file available for download from the internet. If you want R to read the
+  file directly from the internet, replace the file name with the web address
+  (starting with \texttt{http://} or~\texttt{https://}).
+\item
+  If the input file is on the local computer, you may
+  need to change R's current directory to the directory where the file is
+  stored before calling \texttt{read.csv()}. In RStudio you can use the menu
+  ``Session \textgreater{} Set Working Directory \textgreater{} Choose Directory \ldots{}'' to do this. If you
+  are not sure what the filename for a given input file is, you can use the
+  command \texttt{file.choose()} in place of the file name, to choose a file
+  interactively.
+\item
+  By default, R uses the first row of the \texttt{.csv} file to set
+  the column names of the data frame and assumes that the actual data
+  starts in row~2 of the \texttt{.csv} file. If the file does not
+  contain column names, you can use the \texttt{header=FALSE} option
+  with \texttt{read.csv()} to tell R that the column names are not
+  included in the data:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"file.csv"}\NormalTok{, }\AttributeTok{header=}\ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+  You can see whether this option is needed by opening the file in
+  Excel and looking whether the first row contains headers or not.
+  Alternatively you can inspect the column names and the contents of
+  the first data row in R to see whether everything looks right after
+  importing the data.
+\item
+  R uses a special data type called \texttt{Factor} to represent categorical
+  data. If the \texttt{.csv} file contains such data, the option
+  \texttt{stringsAsFactors=TRUE} can be used to automatically convert
+  text to factors. (This option used to be the default for R versions
+  before 4.0.0.)
+\item
+  Sometimes, the columns in a \texttt{.csv} file are separated not
+  by a comma, but using a semicolon instead. In this case you
+  need to use the option \texttt{sep=";"} when you import the data:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"file.csv"}\NormalTok{, }\AttributeTok{sep=}\StringTok{";"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\item
+  Missing values should be represented by empty cells in the \texttt{.csv}
+  file and are represented as special \texttt{NA} values in the data frame.
+  If the \texttt{.csv} file uses a different encoding for missing values,
+  the \texttt{na.strings} option can be used to tell \texttt{read.csv()}
+  which cell values should be interpreted as missing values. For example,
+  \texttt{read.csv("file.csv",\ na.strings=c("",\ "-"))} can be used for a file
+  where missing values are indicated by either empty cells or cells
+  containing a hyphen.
+\end{itemize}
+
+Further details about the function \texttt{read.csv()} can be found using the
+\href{https://rdrr.io/r/utils/read.table.html}{command \texttt{help(read.csv)}} in~R.
+
+\begin{example}
+\protect\hypertarget{exm:l1-poll-import}{}\label{exm:l1-poll-import}In the 2016 version of the MATH1712 module, I performed a small questionnaire
+in the first lecture. The following R~command can be used to load the data
+from the questionnaire into R
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"http://www1.maths.leeds.ac.uk/\textasciitilde{}voss/rintro/Q2016.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The variable \texttt{x} now contains the questionnaire results.
+Instead of
+directly downloading the data from the internet into R, you can
+alternatively first download the data using a web browser, and then
+import the data directly from your computer:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"Q2016.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Both approaches give the same result.
+\end{example}
+
+\hypertarget{importing-microsoft-excel-files}{%
+\subsection*{Importing Microsoft Excel Files}\label{importing-microsoft-excel-files}}
+\addcontentsline{toc}{subsection}{Importing Microsoft Excel Files}
+
+The easiest way to import Excel files into R is to first convert these
+files to \texttt{.csv} format. To do this:
+
+\begin{itemize}
+\item
+  Open the file with the data in Excel.
+\item
+  Open a new, empty file (choosing ``Blank workbook'' in Excel).
+\item
+  Copy and paste the relevant cells into the empty file. It is
+  important to just copy the required data and to leave out any
+  explanatory text and and empty rows/columns. The data must form a
+  tidy rectangle, with one sample per row and one variate per
+  column. Optionally, you can put column headers into the first row.
+\item
+  Save the new file in \texttt{.csv} format
+  in a folder where you will find it again.
+\item
+  Read the resulting \texttt{.csv} into R as explained above.
+\end{itemize}
+
+Alternatively, you can try the \texttt{read\_excel()} function from the \texttt{readxl}
+package. (You may need to install this R package first.) You can learn how to
+use this function at
+\url{https://readxl.tidyverse.org/} or using the
+\href{https://rdrr.io/cran/readxl/man/read_excel.html}{command \texttt{help(read\_excel)}}.
+Note that these functions return a \href{https://tibble.tidyverse.org/}{``tibble''}
+instead of a data frame, so some additional knowledge is required to use the
+result.
+
+\hypertarget{checking-the-imported-data}{%
+\subsection*{Checking the Imported Data}\label{checking-the-imported-data}}
+\addcontentsline{toc}{subsection}{Checking the Imported Data}
+
+The following commands can be used to get a quick overview over the data:
+
+\begin{itemize}
+\item
+  \texttt{dim(x)} gives the number of rows and columns of the data
+  frame. Similarly, \texttt{nrow(x)} shows the number of rows
+  and \texttt{ncol(x)} shows the number of columns in the data frame.
+\item
+  \texttt{str(x)} shows the structure of any R object. This command
+  is often an excellent way to understand the nature of any problems
+  one may encounter while importing data into~R.
+\item
+  \texttt{summary(x)} prints, for each variate, the values of
+  various summary statistics. For variates with numeric values,
+  these are the minimum, first quartile, median, mean, third quartile,
+  maximum, and the number of missing values. For attribute data
+  this gives the counts for each observed value.
+\item
+  \texttt{head(x)} shows the first few rows of the data.
+\end{itemize}
+
+Every time you import a data set into R, you should use some
+of these commands to check that everything went well.
+In case you discover problems, you should either fix the data file
+(\emph{e.g.}~using Microsoft Excel) or by using the correct options
+for the \texttt{read.csv()} command.
+
+\begin{example}
+Continuing with the data set from example above, we can try the following
+commands: We first check that the data has plausible dimensions:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dim}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 220   5
+\end{verbatim}
+
+This tells us that the data has \(n=220\) rows and \(p=5\) columns, as expected.
+Next, we get some details about the five columns of the data frame:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    220 obs. of  5 variables:
+##  $ gender     : chr  "M" "M" "M" "M" ...
+##  $ height     : num  180 183 183 182 164 ...
+##  $ handedness : chr  "R" "R" "R" "R" ...
+##  $ travel.time: int  20 25 20 12 5 20 15 10 11 7 ...
+##  $ R.skills   : chr  "basic" "basic" "basic" "basic" ...
+\end{verbatim}
+
+This shows, for each column, the name, the ``data type'' and the
+first few values. The ``data type'' is a good indicator to detect
+problems; it should read \texttt{int} for integer valued numeric data,
+\texttt{num} for all other numeric data, and \texttt{Factor} for
+attribute data. For attribute data, the range of observed values is
+also shown. For our data set, we see that the fields \texttt{\$gender},
+\texttt{\$handedness} and \texttt{\$R.skills} are represented as text data (type \texttt{chr})
+instead of categorical data. To fix this, we re-import the data
+using the \texttt{stringsAsFactors=TRUE} option:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/Q2016.csv"}\NormalTok{, }\AttributeTok{stringsAsFactors=}\ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{str}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    220 obs. of  5 variables:
+##  $ gender     : Factor w/ 2 levels "F","M": 2 2 2 2 1 1 1 1 1 2 ...
+##  $ height     : num  180 183 183 182 164 ...
+##  $ handedness : Factor w/ 3 levels "L","R","both": 2 2 2 2 2 2 2 2 2 2 ...
+##  $ travel.time: int  20 25 20 12 5 20 15 10 11 7 ...
+##  $ R.skills   : Factor w/ 4 levels "basic","good",..: 1 1 1 1 1 1 1 3 1 1 ...
+\end{verbatim}
+
+Now the output is as expected, and the correct ``levels'' are shown
+for the categorical variables.
+
+Finally, we can print summary statistics for all columns:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  gender      height      handedness  travel.time       R.skills  
+##  F:102   Min.   :147.0   L   : 18   Min.   :  0.00   basic :157  
+##  M:118   1st Qu.:167.0   R   :201   1st Qu.:  5.00   good  :  4  
+##          Median :175.0   both:  1   Median : 15.00   medium: 28  
+##          Mean   :173.7              Mean   : 19.15   none  : 31  
+##          3rd Qu.:180.3              3rd Qu.: 25.00               
+##          Max.   :195.6              Max.   :150.00               
+##          NA's   :23
+\end{verbatim}
+
+None of these commands showed any remaining problems, so we are now ready
+to use the data.
+\end{example}
+
+\hypertarget{common-problems}{%
+\subsection*{Common Problems}\label{common-problems}}
+\addcontentsline{toc}{subsection}{Common Problems}
+
+There are many things which can go wrong when importing data. Some commonly
+encountered problems are the following:
+
+\begin{itemize}
+\item
+  If the data file contains no line with headers, but the
+  \texttt{header=FALSE} option for \texttt{read.csv()} has been omitted,
+  the first row of data will be used in place of the column names.
+  This can, for example, be seen in the \texttt{str()} output. The
+  solution to this problem is to correctly use the
+  \texttt{header=FALSE} option.
+\item
+  If the data in a \texttt{.csv} file is not separated by commas but
+  by some other character like a semicolon, R will be unable to
+  separate the columns. When this is the case, the imported data will
+  appear to only have one column, where each entry shows as some
+  garbled version of the data for the whole row. The solution to this
+  problem is to use the \texttt{sep=...} option.
+\item
+  If attribute values are encoded inconsistently, \emph{e.g.}~if
+  a mix of \texttt{m} and \texttt{M} is used to encode the gender
+  ``male'', this will be visible in the \texttt{str()} output. One
+  solution to this problem is to fix the \texttt{.csv} file using
+  Microsoft Excel, before trying to import it into R again.
+\item
+  If a numeric column in the input file contains one or more
+  entries which are neither numbers nor empty, R will interpret the
+  whole column as attribute data. This problem can be detected in the
+  \texttt{str()} output, when a numeric column is listed as having data
+  type \texttt{Factor}. One solution to this problem is to use
+  Microsoft Excel to remove or fix the offending entry from the file.
+\end{itemize}
+
+\clearpage
+
+\hypertarget{S07-examples}{%
+\section{Examples}\label{S07-examples}}
+
+To illustrate the results of the last two sections, we consider a series
+of examples.
+
+\hypertarget{simple-confidence-interval}{%
+\subsection{Simple Confidence Interval}\label{simple-confidence-interval}}
+
+In this subsection we will illustrate how to compute a simple confidence interval
+for a single regression coefficient. We use a dataset about toxicity of
+chemicals towards aquatic life from the from the UCI Machine Learning
+Repository. The data is available at
+
+\begin{itemize}
+\tightlist
+\item
+  \url{https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity}
+\end{itemize}
+
+There are nine different variables. (The web page explains the interpretation
+of these variables.) We will fit a model which describes \texttt{LC50} as a function
+of the remaining variables:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data from https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity}
+\NormalTok{qsar }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/qsar\_aquatic\_toxicity.csv"}\NormalTok{, }\AttributeTok{sep =} \StringTok{";"}\NormalTok{, }\AttributeTok{header =} \ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(qsar) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"TPSA"}\NormalTok{,}
+    \StringTok{"SAacc"}\NormalTok{,}
+    \StringTok{"H050"}\NormalTok{,}
+    \StringTok{"MLOGP"}\NormalTok{,}
+    \StringTok{"RDCHI"}\NormalTok{,}
+    \StringTok{"GATS1p"}\NormalTok{,}
+    \StringTok{"nN"}\NormalTok{,}
+    \StringTok{"C040"}\NormalTok{,}
+    \StringTok{"LC50"}
+\NormalTok{)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(LC50 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ qsar)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = LC50 ~ ., data = qsar)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.4934 -0.7579 -0.1120  0.5829  4.9778 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  2.698887   0.244554  11.036  < 2e-16 ***
+## TPSA         0.027201   0.002661  10.220  < 2e-16 ***
+## SAacc       -0.015081   0.002091  -7.211 1.90e-12 ***
+## H050         0.040619   0.059787   0.679 0.497186    
+## MLOGP        0.446108   0.063296   7.048 5.60e-12 ***
+## RDCHI        0.513928   0.135565   3.791 0.000167 ***
+## GATS1p      -0.571313   0.153882  -3.713 0.000227 ***
+## nN          -0.224751   0.048301  -4.653 4.12e-06 ***
+## C040         0.003194   0.077972   0.041 0.967340    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.203 on 537 degrees of freedom
+## Multiple R-squared:  0.4861, Adjusted R-squared:  0.4785 
+## F-statistic:  63.5 on 8 and 537 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+Our aim is to find a 95\% confidence interval for \texttt{GATS1p}.
+
+\hypertarget{from-first-principles}{%
+\subsubsection{From First Principles}\label{from-first-principles}}
+
+To compute the confidence interval from first principles,
+we can use Lemma~\ref{lem:single-CI}. The centre of the confidence
+interval is given by \(\hat\beta_i\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mid }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{7}\NormalTok{]}
+\NormalTok{mid}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     GATS1p 
+## -0.5713131
+\end{verbatim}
+
+To find the half-width of the interval, we need to first construct the
+covariance matrix \(C\) and the estimated residual variance \(\hat\sigma^2\).
+We will also need the corresponding quantile of the \(t\)-distribution.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m)}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ qsar}\SpecialCharTok{$}\NormalTok{LC50}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(X)}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{ncol}\NormalTok{(X) }\SpecialCharTok{{-}} \DecValTok{1}
+
+\NormalTok{Cii }\OtherTok{\textless{}{-}} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X)[}\DecValTok{7}\NormalTok{, }\DecValTok{7}\NormalTok{]}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Cii ="}\NormalTok{, Cii, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Cii = 0.01637454
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sigma.hat.squared }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((}\FunctionTok{fitted}\NormalTok{(m) }\SpecialCharTok{{-}}\NormalTok{ y)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"hat.sigma.square ="}\NormalTok{, sigma.hat.squared, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## hat.sigma.square = 1.446134
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alpha }\OtherTok{\textless{}{-}} \FloatTok{0.05}
+\NormalTok{t }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{/}\DecValTok{2}\NormalTok{, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"t ="}\NormalTok{, t, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## t = 1.964391
+\end{verbatim}
+
+With this information in place, we can easily find the confidence
+interval:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(Cii }\SpecialCharTok{*}\NormalTok{ sigma.hat.squared) }\SpecialCharTok{*}\NormalTok{ t}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"["}\NormalTok{, mid }\SpecialCharTok{{-}}\NormalTok{ d, }\StringTok{", "}\NormalTok{, mid }\SpecialCharTok{+}\NormalTok{ d, }\StringTok{"]}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\AttributeTok{sep =} \StringTok{""}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [-0.8735983, -0.2690279]
+\end{verbatim}
+
+\hypertarget{from-the-lm-output}{%
+\subsubsection{\texorpdfstring{From the \texttt{lm()} Output}{From the lm() Output}}\label{from-the-lm-output}}
+
+We can obtain the same result using only the quantile \(t\) and
+numbers shows in the \texttt{summary(m)} output. We focus on the
+row corresponding to \texttt{GATS1p} in the output shown above:
+
+\begin{verbatim}
+GATS1p      -0.571313   0.153882  -3.713 0.000227 ***
+\end{verbatim}
+
+The first number in this row is the centre of the confidence
+interval, the second number corresponds to \(\sqrt{\hat\sigma^2 C_{ii}}\).
+To have everything in one place, we copy the commands for computing~\(t\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alpha }\OtherTok{\textless{}{-}} \FloatTok{0.05}
+\NormalTok{t }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{/}\DecValTok{2}\NormalTok{, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"["}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.571313} \SpecialCharTok{{-}} \FloatTok{0.153882}\SpecialCharTok{*}\NormalTok{t, }\StringTok{", "}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.571313} \SpecialCharTok{+} \FloatTok{0.153882}\SpecialCharTok{*}\NormalTok{t, }\StringTok{"]}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\AttributeTok{sep =} \StringTok{""}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [-0.8735975, -0.2690285]
+\end{verbatim}
+
+This is the same result as above.
+
+\hypertarget{confidence-intervals-for-the-mean}{%
+\subsection{Confidence Intervals for the Mean}\label{confidence-intervals-for-the-mean}}
+
+So far we have only seen how to compute confidence intervals for the
+regression coefficients \(\beta_i\). Using the same techniques we can
+also compute confidence intervals for the model mean corresponding
+to an input \((\tilde x_1, \ldots, \tilde x_p)\). If we write
+\begin{equation*}
+  \tilde x = (1, \tilde x_1, \ldots, \tilde x_p),
+\end{equation*}
+then the model mean corresponding to this input is
+\begin{equation*}
+  \tilde y
+  = \beta_0 + x_1 \beta_1 + \cdots + x_p \beta_p.
+  = \tilde x^\top \beta,
+\end{equation*}
+To derive a confidence interval for this quantity, we follow the same
+steps as we did when we derived a confidence interval for \(\hat\beta_i\).
+
+Our estimator for this \(\tilde y\) is
+\begin{equation*}
+  \hat y
+  = \tilde x^\top \hat\beta
+  \sim \mathcal{N}\bigl( \tilde x^\top \beta, \sigma^2 \tilde x^\top (X^\top X)^{-1} \tilde x \bigr).
+\end{equation*}
+Thus,
+\begin{align*}
+  \tilde T
+  &:= \frac{\tilde x^\top \hat\beta - \tilde x^\top \beta}
+           {\sqrt{\hat\sigma^2 \tilde x^\top (X^\top X)^{-1} \tilde x}} \\
+  &= \frac{\frac{1}{\sqrt{\sigma^2\tilde x^\top (X^\top X)^{-1} \tilde x}}\bigl(\tilde x^\top \hat\beta - \tilde x^\top \beta\bigr)}
+           {\sqrt{\frac{1}{\sigma^2}\hat\sigma^2}}
+\end{align*}
+
+is \(t(n-p-1)\)-distributed, since the numerator is \(\mathcal{N}(0,1)\), the denominator
+is \(\sqrt{\chi^2(n-p-1) / (n-p-1)}\) and \(\hat\beta\) is independent
+of~\(\hat\sigma^2\).
+Let \(t_{n-p-1}(\alpha/2)\) be the \((1 - \alpha/2)\)-quantile of the \(t(n-p-1)\)-distribution.
+Then we can solve the inequality \(|T| \leq t_{n-p-1}(\alpha/2)\) for
+\(\tilde x^\top \beta\) to find the required confidence interval:
+\begin{equation*}
+  \Bigl[
+    \tilde x^\top \hat\beta - \sqrt{\hat\sigma^2 \tilde x^\top (X^\top X)^{-1} \tilde x} t_{n-p-1}(\alpha/2),
+    \tilde x^\top \hat\beta + \sqrt{\hat\sigma^2 \tilde x^\top (X^\top X)^{-1} \tilde x} t_{n-p-1}(\alpha/2)
+  \Bigr].
+\end{equation*}
+
+We illustrate this using a numerical example.
+For the \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} data set}
+with input values \texttt{Air.Flow\ =\ 60}, \texttt{Water.Temp\ =\ 21} and \texttt{Acid.Conc\ =\ 87},
+we can get the following results:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(X)}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{ncol}\NormalTok{(X) }\SpecialCharTok{{-}} \DecValTok{1}
+
+\NormalTok{tilde.x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{60}\NormalTok{, }\DecValTok{21}\NormalTok{, }\DecValTok{87}\NormalTok{)}
+\NormalTok{hat.beta }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(m)}
+
+\NormalTok{c }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(tilde.x) }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X, tilde.x)}
+\NormalTok{sigma.hat.squared }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((}\FunctionTok{fitted}\NormalTok{(m) }\SpecialCharTok{{-}}\NormalTok{ stackloss}\SpecialCharTok{$}\NormalTok{stack.loss)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{t }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+
+\NormalTok{mid }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(tilde.x) }\SpecialCharTok{\%*\%}\NormalTok{ hat.beta}
+\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(c }\SpecialCharTok{*}\NormalTok{ sigma.hat.squared) }\SpecialCharTok{*}\NormalTok{ t}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"["}\NormalTok{, mid }\SpecialCharTok{{-}}\NormalTok{ d, }\StringTok{", "}\NormalTok{, mid }\SpecialCharTok{+}\NormalTok{ d, }\StringTok{"]}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\AttributeTok{sep =} \StringTok{""}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [15.46463, 18.50554]
+\end{verbatim}
+
+\hypertarget{testing-a-single-coefficient}{%
+\subsection{Testing a Single Coefficient}\label{testing-a-single-coefficient}}
+
+Continuing with the dataset from the previous example, we can test whether the
+regression coefficient corresponding to the water temperature might equal zero.
+We will perform a test at \(5\%\)-level.
+
+\hypertarget{from-first-principles-1}{%
+\subsubsection{From First Principles}\label{from-first-principles-1}}
+
+We can compute the test statistic manually, using the formula from
+equation~\eqref{eq:single-test} with \(b = 0\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{T }\OtherTok{\textless{}{-}}\NormalTok{ hat.beta[}\DecValTok{3}\NormalTok{] }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(sigma.hat.squared }\SpecialCharTok{*} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X)[}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{])}
+\NormalTok{T}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Water.Temp 
+##   3.519567
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t.crit }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\FunctionTok{abs}\NormalTok{(T) }\SpecialCharTok{\textgreater{}}\NormalTok{ t.crit}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Water.Temp 
+##       TRUE
+\end{verbatim}
+
+Since the test statistic is larger than the critical value,
+we reject the hypothesis that \(\beta_2 = 0\).
+
+\hypertarget{using-the-lm-output-i}{%
+\subsubsection{\texorpdfstring{Using the \texttt{lm()} Output, I}{Using the lm() Output, I}}\label{using-the-lm-output-i}}
+
+We can also find the test statistic in the \texttt{lm()} output:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = stack.loss ~ ., data = stackloss)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.2377 -1.7117 -0.4551  2.3614  5.6978 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -39.9197    11.8960  -3.356  0.00375 ** 
+## Air.Flow      0.7156     0.1349   5.307  5.8e-05 ***
+## Water.Temp    1.2953     0.3680   3.520  0.00263 ** 
+## Acid.Conc.   -0.1521     0.1563  -0.973  0.34405    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.243 on 17 degrees of freedom
+## Multiple R-squared:  0.9136, Adjusted R-squared:  0.8983 
+## F-statistic:  59.9 on 3 and 17 DF,  p-value: 3.016e-09
+\end{verbatim}
+
+The column \texttt{t\ value} shows the value of the test statistic \(T\) for
+the hypothesis that \(\beta_i = 0\). For \(\beta_2\) we find the value \(3.520\),
+which is a rounded version of the \(3.519567\) we found above.
+
+Again, we can use the command \texttt{qt(0.975,\ 17)} to get the critical value, where
+we can find the degrees of freedom in the \texttt{Residual\ standard\ error} row near
+the bottom. Alternatively, we can use the so called ``p-value'' listed in the
+\texttt{Pr(\textgreater{}\textbar{}t\textbar{})} column. This value is the smallest significance level at which
+\(H_0\) is still rejected. Here we find \(0.00263\) and since we have
+\(\alpha = 0.05 > 0.00263\), we can see that \(H_0\) is rejected.
+
+If we wanted to test \(\beta_2 = 1\) instead, we could use the value \(\hat\beta_2 = 1.2953\) from the \texttt{Estimate} column and \(\sqrt{\hat\sigma^2 C_{ii}} = 0.3680\)
+from the \texttt{Std.\ Error} column, to get \(T = (1.2953 - 1) / 0.3680\) and then we
+would accept or reject the hypothesis \(\beta_2 = 1\) by comparing the result to
+the critical value~\texttt{qt(0.975,\ 17)}.
+
+\hypertarget{using-the-lm-output-ii}{%
+\subsubsection{\texorpdfstring{Using the \texttt{lm()} Output, II}{Using the lm() Output, II}}\label{using-the-lm-output-ii}}
+
+For the hypotheses \(\beta_i = 0\), we can also use the stars (or sometimes dots)
+shown in the right margin to perform the test. Since the \texttt{Water.Temp} row ends
+in \texttt{**}, we would reject \(\beta_2 = 0\) even at the stricter \(\alpha=0.01\)
+level, and thus we would also reject this hypothesis at \(\alpha=0.05\) level.
+
+\hypertarget{testing-multiple-coefficents}{%
+\subsection{Testing Multiple Coefficents}\label{testing-multiple-coefficents}}
+
+This section illustrates how a group of coefficients can be tested
+simultaneously. We consider a small, synthetic dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/data/small/small.csv}
+\NormalTok{small }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/small.csv"}\NormalTok{)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ small)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ ., data = small)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.64664 -0.09369 -0.03420  0.07768  0.63353 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  5.53329    0.12360  44.768 6.92e-12 ***
+## x1           0.18903    0.12059   1.568   0.1514    
+## x2          -0.30731    0.18011  -1.706   0.1221    
+## x3          -0.12382    0.05639  -2.196   0.0557 .  
+## x4          -0.11731    0.12619  -0.930   0.3768    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.3822 on 9 degrees of freedom
+## Multiple R-squared:  0.6404, Adjusted R-squared:  0.4806 
+## F-statistic: 4.007 on 4 and 9 DF,  p-value: 0.03891
+\end{verbatim}
+
+From the R output it is clear that the intercept is non-zero,
+but none of the remaining regression coefficients are significantly
+different from zero when testing at \(5\%\) level. This poses the question
+whether the inputs have any effect on the output at all.
+To answer this question, we test the hypothesis
+\begin{equation*}
+  H_0\colon \beta_1 = \beta_2 = \beta_3 = \beta_4 = 0,
+\end{equation*}
+omitting only \(\beta_0\) in the hypothesis. We use the method from
+section~\ref{sec:simult-test} to perform this test.
+
+\hypertarget{from-first-principles-2}{%
+\subsubsection{From First Principles}\label{from-first-principles-2}}
+
+The matrix \(K\) which selects the regression coefficents
+is
+\begin{equation*}
+  K
+  = \begin{pmatrix}
+    0 & 1 & 0 & 0 & 0 \\
+    0 & 0 & 1 & 0 & 0 \\
+    0 & 0 & 0 & 1 & 0 \\
+    0 & 0 & 0 & 0 & 1
+  \end{pmatrix}
+  \in \mathbb{R}^{4\times 5}.
+\end{equation*}
+The test statistic is
+\begin{equation*}
+  F
+  = \frac{\bigl\| K \hat\beta - 0 \bigr\|_{K(X^\top X)^{-1} K^\top}^2}
+          {4 \hat\sigma^2},
+\end{equation*}
+where \(K \hat\beta = (\hat\beta_1, \ldots, \hat\beta_4)\)
+and \(K(X^\top X)^{-1} K^\top\) is obtained by removing the first row and
+column from \((X^\top X)^{-1}\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{5}\NormalTok{]}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m)}
+\NormalTok{C }\OtherTok{\textless{}{-}} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X)[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{5}\NormalTok{, }\DecValTok{2}\SpecialCharTok{:}\DecValTok{5}\NormalTok{]}
+\NormalTok{F }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(b) }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(C, b) }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{4} \SpecialCharTok{*} \FunctionTok{summary}\NormalTok{(m)}\SpecialCharTok{$}\NormalTok{sigma}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{F}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          [,1]
+## [1,] 4.007393
+\end{verbatim}
+
+From lemma~\ref{lem:simult-test} we know that under \(H_0\)
+the test statistic is \(F_{k, n-p-1}\) distributed, and the
+critical value is the \(1-\alpha\) quantile of this distribution:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(X)      }\CommentTok{\# 14}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{ncol}\NormalTok{(X) }\SpecialCharTok{{-}} \DecValTok{1}  \CommentTok{\# 4}
+\NormalTok{k }\OtherTok{\textless{}{-}} \DecValTok{4}
+\NormalTok{t }\OtherTok{\textless{}{-}} \FunctionTok{qf}\NormalTok{(}\FloatTok{0.95}\NormalTok{, k, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{t}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.633089
+\end{verbatim}
+
+Since the test statistic is larger than the critical value, we can
+reject \(H_0\) and conclude at significance level \(5\%\) that not
+all regression coefficients can be zero.
+
+\hypertarget{using-the-lm-output}{%
+\subsubsection{\texorpdfstring{Using the \texttt{lm()} output}{Using the lm() output}}\label{using-the-lm-output}}
+
+The information required to perform this \(F\) test is contained
+in the last row of the \texttt{summary(m)} output:
+
+\begin{verbatim}
+F-statistic: 4.007 on 4 and 9 DF,  p-value: 0.03891
+\end{verbatim}
+
+Here we can see that the test statistic is \(4.007\) (a rounded version
+of the value we found above) and the degreen of freedom for the \(F\)-test
+are \(k = 4\) and \(n - p - 1 = 9\). The ``p-value'' listed is the smallest
+significance level at which the test still rejects~\(H_0\).
+We see that \(H_0\) is rejected at significance level \(0.03891\),
+and thus also at \(\alpha=0.05\).
 
 \clearpage
 

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 1 Simple Linear Regression | MATH3714 Linear Regression and Robustness</title>
+  <title>Interlude: Loading Data into R | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 1 Simple Linear Regression | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Interlude: Loading Data into R | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 1 Simple Linear Regression | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Interlude: Loading Data into R | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="S00-about.html"/>
-<link rel="next" href="S02-multiple.html"/>
+<link rel="prev" href="S06-simultaneous.html"/>
+<link rel="next" href="S07-examples.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -278,287 +278,205 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="S01-simple" class="section level1" number="1">
-<h1><span class="header-section-number">Section 1</span> Simple Linear Regression</h1>
-<p>As a reminder, we consider simple linear regression in this section.
-My hope is, that all of you have seen this material before at some
-stage, <em>e.g.</em> in school or in some first or second year modules.</p>
-<p>In preparation for notation introduced in the next section, we rename
-the parameters from <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> to the new names <span class="math inline">\(\beta_0\)</span>
-for the intercept and <span class="math inline">\(\beta_1\)</span> for the slope.</p>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/w9t5sLIRzFY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<div id="residual-sum-of-squares" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> Residual Sum of Squares</h2>
-<p>In simple linear regression, the aim is to find a regression line <span class="math inline">\(y = \beta_0 + \beta_1 x\)</span>, such that the line is “close” to given data points
-<span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n) \in\mathbb{R}^2\)</span> for <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>. The ususal way to find <span class="math inline">\(alpha\)</span> and <span class="math inline">\(\beta_1\)</span>, and thus the regression
-line, is by minimising the <strong>residual sum of squares</strong>:
-<span class="math display" id="eq:RSS">\[\begin{equation}
-  r(\beta_0, \beta_1)
-  = \sum_{i=1}^n \bigl( y_i - (\beta_0 + \beta_1 x_i) \bigr)^2.
-  \tag{1.1}
-\end{equation}\]</span>
-For given <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>, the value <span class="math inline">\(r(\beta_0, \beta_1)\)</span> measures
-how close (in vertical direction) the given data points <span class="math inline">\((x_i, y_i)\)</span>
-are to the regression line <span class="math inline">\(\beta_0 + \beta_1 x\)</span>. By minimising
-<span class="math inline">\(r(\beta_0, \beta_1)\)</span> we find the regression line which is “closest” to
-the data. The solution of this minimisation problem is usually
-expressed in terms of the sample variance <span class="math inline">\(\mathrm{s}_x\)</span> and the
-sample covariance <span class="math inline">\(\mathrm{s}_{xy}\)</span>.</p>
-<div class="definition">
-<p><span id="def:sx" class="definition"><strong>Definition 1.1  </strong></span>The <strong>sample covariance</strong> of <span class="math inline">\(x_1, \ldots, x_n \in \mathbb{R}\)</span> and
-<span class="math inline">\(y_1, \ldots, y_n\in\mathbb{R}\)</span> is given by
-<span class="math display">\[\begin{equation*}
-    \mathrm{s}_{xy}
-    := \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar x) (y_i - \bar y),
-  \end{equation*}\]</span>
-where <span class="math inline">\(\bar x\)</span> and <span class="math inline">\(\bar y\)</span> are the sample means.</p>
-<p>The <strong>sample variance</strong> of <span class="math inline">\(x_1, \ldots, x_n \in \mathbb{R}\)</span> is given by
-<span class="math display">\[\begin{equation*}
-    \mathrm{s}_{x}^2
-    := \mathrm{s}_{xx}
-    = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar x)^2,
-  \end{equation*}\]</span>
-where, again, <span class="math inline">\(\bar x\)</span> is the sample mean of the <span class="math inline">\(x_i\)</span>.</p>
-</div>
-<div class="lemma">
-<p><span id="lem:simple-LSQ" class="lemma"><strong>Lemma 1.1  </strong></span>Assume that <span class="math inline">\(\mathrm{s}_x^2 &gt; 0\)</span>. Then the function <span class="math inline">\(r(\beta_0, \beta_1)\)</span>
-from <a href="S01-simple.html#eq:RSS">(1.1)</a> takes its minimum at the point <span class="math inline">\((\beta_0, \beta_1)\)</span>
-given by
-<span class="math display">\[\begin{equation*}
-    \hat\beta_1 = \frac{\mathrm{s}_{xy}}{\mathrm{s}_x^2},
-    \qquad
-    \hat\beta_0 = \bar y - \hat \beta_1 \bar x,
-  \end{equation*}\]</span>
-where <span class="math inline">\(\bar x, \bar y\)</span> are the sample means, <span class="math inline">\(\mathrm{s}_{xy}\)</span> is the
-sample covariance and <span class="math inline">\(\mathrm{s}_x^2\)</span> is the sample variance.</p>
-</div>
-<div class="proof">
-<p><span id="unlabeled-div-1" class="proof"><em>Proof</em>. </span>We could find the minimum of <span class="math inline">\(r\)</span> by differentiating and setting the
-derivatives to zero. Here we follow a different approach which uses
-a “trick” to simplify the algebra: Let <span class="math inline">\(\tilde x_i = x_i - \bar x\)</span>
-and <span class="math inline">\(\tilde y_i = y_i - \bar y\)</span> for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.
-Then we have
-<span class="math display">\[\begin{equation*}
-    \sum_{i=1}^n \tilde x_i
-    = \sum_{i=1}^n x_i - n \bar x
-    = 0
-  \end{equation*}\]</span>
-and, similarly, <span class="math inline">\(\sum_{i=1}^n \tilde y_i = 0\)</span>. Using the new
-coordinates <span class="math inline">\(\tilde x_i\)</span> and <span class="math inline">\(\tilde y_i\)</span> we find
-<span class="math display">\[\begin{align*}
-    r(\beta_0, \beta_1)
-    &amp;= \sum_{i=1}^n \bigl(y_i - \beta_0 - \beta_1 x_i \bigr)^2 \\
-    &amp;= \sum_{i=1}^n \bigl( \tilde y_i + \bar y - \beta_0 - \beta_1 \tilde x_i - \beta_1 \bar x \bigr)^2 \\
-    &amp;= \sum_{i=1}^n \Bigl( \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)
-    + \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr) \Bigr)^2 \\
-    &amp;= \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)^2
-    + 2 \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr) \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)
-    + n \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr)^2
-  \end{align*}\]</span>
-Since <span class="math inline">\(\sum_{i=1}^n \tilde x_i = \sum_{i=1}^n \tilde y_i = 0\)</span>, the
-second term on the right-hand side vanishes and we get
-<span class="math display" id="eq:RSS-rewrite">\[\begin{equation}
-    r(\beta_0, \beta_1)
-    = \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)^2
-    + n \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr)^2.  \tag{1.2}
-  \end{equation}\]</span>
-Both of these terms are positive and we can minimise the second term
-(without changing the first term) by setting
-<span class="math inline">\(\beta_0 = \bar y - \beta_1 \bar x\)</span>.</p>
-<p>To find the value of <span class="math inline">\(\beta_1\)</span> which minimises the first term on the
-right-hand side of <a href="S01-simple.html#eq:RSS-rewrite">(1.2)</a> we now set the
-(one-dimensional) derivative w.r.t. <span class="math inline">\(\beta_1\)</span> equal to <span class="math inline">\(0\)</span>. We get
-the condition
-<span class="math display">\[\begin{align*}
-    0
-    &amp;\overset{!}{=} \frac{d}{d\beta_1} \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)^2 \\
-    &amp;= \sum_{i=1}^n 2 \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr) \frac{d}{d\beta_1} \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr) \\
-    &amp;= - 2 \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr) \tilde x_i \\
-    &amp;= -2  \sum_{i=1}^n \tilde x_i \tilde y_i + 2 \beta_1 \sum_{i=1}^n \tilde x_i^2.
-  \end{align*}\]</span>
-The only solution to this equation is
-<span class="math display">\[\begin{align*}
-    \beta_1
-    &amp;= \frac{\sum_{i=1}^n \tilde x_i \tilde y_i}{\sum_{i=1}^n \tilde x_i^2} \\
-    &amp;= \frac{\sum_{i=1}^n (x_i - \bar x) (y_i - \bar y)}%
-    {\sum_{i=1}^n (x_i - \bar x)^2} \\
-    &amp;= \frac{\frac{1}{n-1}\sum_{i=1}^n (x_i - \bar x) (y_i - \bar y)}%
-    {\frac{1}{n-1}\sum_{i=1}^n (x_i - \bar x)^2} \\
-    &amp;= \frac{\mathrm{s}_{xy}}{\mathrm{s}_x^2}.
-  \end{align*}\]</span>
-Since the second derivative is <span class="math inline">\(2 \sum_{i=1}^n \tilde x_i^2 \geq 0\)</span>,
-this is indeed a minimum and the proof is complete.</p>
-</div>
-</div>
-<div id="linear-regression-as-a-parameter-estimation-problem" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> Linear Regression as a Parameter Estimation Problem</h2>
-<p>In statistics, any analysis starts by making a statistical model of
-the data. This is done by writing random variables which have the
-same structure as the data, and which are chosen so that the data
-“looks like” a random sample from these random variables.</p>
-<p>To construct a model for the data used in a simple linear regression
-problem, we use random variables <span class="math inline">\(Y_1, \ldots, Y_n\)</span> such that
-<span class="math display" id="eq:regression">\[\begin{equation}
-  Y_i
-  = \beta_0 + \beta_1 x_i + \varepsilon_i \tag{1.3}
-\end{equation}\]</span>
-for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, where <span class="math inline">\(\varepsilon_1, \ldots, \varepsilon_n\)</span>
-are i.i.d. random variables with <span class="math inline">\(\mathbb{E}(\varepsilon_i) = 0\)</span> and
-<span class="math inline">\(\mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\)</span>.</p>
+<div id="I02-read.csv" class="section level1 unnumbered">
+<h1>Interlude: Loading Data into R</h1>
+<p>Before we can analyse data using R, we have to “import” the data
+into R. How exactly this is done depends on how the data is stored,
+and more specifically on which file format is used. Here we consider
+two commonly used formats: comma-separated values (<code>.csv</code>)
+and Microsoft Excel files (<code>.xls</code> or <code>.xlsx</code>).</p>
+<div id="importing-csv-files" class="section level2 unnumbered">
+<h2>Importing CSV Files</h2>
+<p>The <code>read.csv()</code> command can be used to import <code>.csv</code> files
+into R: if we use the command</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="I02-read.html#cb75-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;file.csv&quot;</span>)</span></code></pre></div>
+<p>then the contents of the file <code>file.csv</code> will be stored in the variable <code>x</code>.
+Optional arguments to <code>read.csv()</code> can be used to specify whether or not the
+file includes column names, and allow to deal with variations of how the data
+may be stored in the file. Some of these are explained below.</p>
+<p>The most important things to
+know about the function <code>read.csv()</code> are:</p>
 <ul>
-<li>Here we assume that the <span class="math inline">\(x\)</span>-values are fixed and known. The only
-random quantities in the model are <span class="math inline">\(\varepsilon_i\)</span> and <span class="math inline">\(Y_i\)</span>. (There are
-more complicated models which also allow for randomness of <span class="math inline">\(x\)</span>, but
-we won’t consider such models here.)</li>
-<li>The random variables <span class="math inline">\(\varepsilon_i\)</span> are called <strong>residuals</strong> or
-<strong>errors</strong>. In a scatter plot, the residuals correspond to the
-vertical distance between the samples and the regression line.
-Often one assumes that <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span> for all
-<span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>.</li>
-<li>The values <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma^2\)</span> are parameters of
-the model. To fit the model to data, we need to estimate these
-parameters.</li>
+<li><p>The filename can either denote a file on the local computer, or
+a file available for download from the internet. If you want R to read the
+file directly from the internet, replace the file name with the web address
+(starting with <code>http://</code> or <code>https://</code>).</p></li>
+<li><p>If the input file is on the local computer, you may
+need to change R’s current directory to the directory where the file is
+stored before calling <code>read.csv()</code>. In RStudio you can use the menu
+“Session &gt; Set Working Directory &gt; Choose Directory …” to do this. If you
+are not sure what the filename for a given input file is, you can use the
+command <code>file.choose()</code> in place of the file name, to choose a file
+interactively.</p></li>
+<li><p>By default, R uses the first row of the <code>.csv</code> file to set
+the column names of the data frame and assumes that the actual data
+starts in row 2 of the <code>.csv</code> file. If the file does not
+contain column names, you can use the <code>header=FALSE</code> option
+with <code>read.csv()</code> to tell R that the column names are not
+included in the data:</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="I02-read.html#cb76-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;file.csv&quot;</span>, <span class="at">header=</span><span class="cn">FALSE</span>)</span></code></pre></div>
+<p>You can see whether this option is needed by opening the file in
+Excel and looking whether the first row contains headers or not.
+Alternatively you can inspect the column names and the contents of
+the first data row in R to see whether everything looks right after
+importing the data.</p></li>
+<li><p>R uses a special data type called <code>Factor</code> to represent categorical
+data. If the <code>.csv</code> file contains such data, the option
+<code>stringsAsFactors=TRUE</code> can be used to automatically convert
+text to factors. (This option used to be the default for R versions
+before 4.0.0.)</p></li>
+<li><p>Sometimes, the columns in a <code>.csv</code> file are separated not
+by a comma, but using a semicolon instead. In this case you
+need to use the option <code>sep=";"</code> when you import the data:</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="I02-read.html#cb77-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;file.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;;&quot;</span>)</span></code></pre></div></li>
+<li><p>Missing values should be represented by empty cells in the <code>.csv</code>
+file and are represented as special <code>NA</code> values in the data frame.
+If the <code>.csv</code> file uses a different encoding for missing values,
+the <code>na.strings</code> option can be used to tell <code>read.csv()</code>
+which cell values should be interpreted as missing values. For example,
+<code>read.csv("file.csv", na.strings=c("", "-"))</code> can be used for a file
+where missing values are indicated by either empty cells or cells
+containing a hyphen.</p></li>
 </ul>
-<p>This model is more complex than the models considered in some
-introductory courses to statistics:</p>
-<ul>
-<li>The data consists now of pairs of numbers, instead of just
-single numbers.</li>
-<li>We have
-<span class="math display">\[\begin{equation*}
-  \mathbb{E}(Y_i)
-  = \mathbb{E}\bigl( \beta_0 + \beta_1 x_i + \varepsilon_i \bigr)
-  = \beta_0 + \beta_1 x_i + \mathbb{E}(\varepsilon_i)
-  = \beta_0 + \beta_1 x_i.
-\end{equation*}\]</span>
-Thus, the expectation of <span class="math inline">\(Y_i\)</span> depends on <span class="math inline">\(x_i\)</span> and, at least for
-<span class="math inline">\(\beta_1 \neq 0\)</span>, the random variables <span class="math inline">\(Y_i\)</span> are not identically
-distributed.</li>
-</ul>
-<p>In this setup, we can consider the estimates <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span>
-from the previous subsection as statistcal parameter estimates for the
-model parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
-<p>In order to fit a linear model we also need to estimate the residual
-variance <span class="math inline">\(\sigma^2\)</span>. This can be done using the estimator
-<span class="math display" id="eq:reg-sigma-est">\[\begin{equation}
-  \hat\sigma^2
-  = \frac{1}{n-2} \sum_{i=1}^n \hat\varepsilon_i^2
-  = \frac{1}{n-2} \sum_{i=1}^n (y_i - \hat\beta_0 - \hat\beta_1 x_i)^2.
-  \tag{1.4}
-\end{equation}\]</span>
-To understand the form of this estimator, we have to remember that
-<span class="math inline">\(\sigma^2\)</span> is the variance of the <span class="math inline">\(\varepsilon_i\)</span>. Thus, using the standard
-estimator for the variance, we could estimate <span class="math inline">\(\sigma^2\)</span> as
-<span class="math display" id="eq:resid-var-est">\[\begin{equation}
-  \sigma^2
-  \approx \frac{1}{n-1} \sum_{i=1}^n \bigl(\varepsilon_i - \bar\varepsilon\bigr)^2
-  \approx \frac{1}{n-1} \sum_{i=1}^n \bigl(\hat\varepsilon_i - \overline{\hat\varepsilon}\bigr)^2,
-  \tag{1.5}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\bar\varepsilon\)</span> and <span class="math inline">\(\overline{\hat\varepsilon}\)</span> are the averages of the
-<span class="math inline">\(\varepsilon_i\)</span> and the <span class="math inline">\(\hat\varepsilon_i\)</span>, respectively. One can show that
-<span class="math inline">\(\overline{\hat\varepsilon} = 0\)</span>. The estimates of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> are
-sensitive to fluctuations in the data, with the effect that the
-estimated regression line is, on average, slightly closer to the data
-points than the true regression line would be. This causes the sample
-variance of the <span class="math inline">\(\hat\varepsilon_i\)</span>, on average, to be slightly smaller than
-the true residual variance <span class="math inline">\(\sigma^2\)</span> and the thus the
-estimator <a href="S01-simple.html#eq:resid-var-est">(1.5)</a> is slightly biased. A more
-detailed analysis reveals that an unbiased estimator can be obtained
-if one replaces the pre-factor <span class="math inline">\(1/(n-1)\)</span> in equation <a href="S01-simple.html#eq:resid-var-est">(1.5)</a>
-with <span class="math inline">\(1/(n-2)\)</span>. This leads to the estimator <a href="S01-simple.html#eq:reg-sigma-est">(1.4)</a>.</p>
-<p>The main advantage gained by considering a statistical model is, that
-we now can consider how close the estimators <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span>
-and <span class="math inline">\(\hat\sigma^2\)</span> are to the true values. Results one can obtain
-include the following:</p>
-<ul>
-<li><p>The estimators <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span> and <span class="math inline">\(\hat\sigma^2\)</span>
-are unbiased: This means that when we plug in random data
-<span class="math inline">\((x_i, Y_i)\)</span> from the model <a href="S01-simple.html#eq:regression">(1.3)</a>, on
-average we get the correc answer: <span class="math inline">\(\mathbb{E}(\hat\beta_0) = \beta_0\)</span>,
-<span class="math inline">\(\mathbb{E}(\hat\beta_1) = \beta_1\)</span>, <span class="math inline">\(\mathbb{E}(\hat\sigma^2) = \sigma^2\)</span>.</p></li>
-<li><p>One can ask about the average distance between the estimated
-parameters <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span> and <span class="math inline">\(\hat\sigma^2\)</span>
-and the (unknown) true values <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma^2\)</span>.
-One measure for these distances is the root mean squared error
-of the estimators.</p></li>
-<li><p>One can consider confidence intervals for the parameters
-<span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma^2\)</span>.</p></li>
-<li><p>One can consider statistical hypothesis tests to answer
-yes/no questions about the parameters. For example, one might ask
-whether the data could have come from the model with <span class="math inline">\(\beta_0=0\)</span>.</p></li>
-<li><p>One can consider whether the data is compatible with the model
-at all, irrespective of parameter values. If there is a non-linear
-relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, the model <a href="S01-simple.html#eq:regression">(1.3)</a>
-will no longer be appropriate.</p></li>
-</ul>
-<p>We will consider most of these questions over the course of the
-module.</p>
+<p>Further details about the function <code>read.csv()</code> can be found using the
+<a href="https://rdrr.io/r/utils/read.table.html">command <code>help(read.csv)</code></a> in R.</p>
+<div class="example">
+<p><span id="exm:l1-poll-import" class="example"><strong>Example 6.2  </strong></span>In the 2016 version of the MATH1712 module, I performed a small questionnaire
+in the first lecture. The following R command can be used to load the data
+from the questionnaire into R</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="I02-read.html#cb78-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;http://www1.maths.leeds.ac.uk/~voss/rintro/Q2016.csv&quot;</span>)</span></code></pre></div>
+<p>The variable <code>x</code> now contains the questionnaire results.
+Instead of
+directly downloading the data from the internet into R, you can
+alternatively first download the data using a web browser, and then
+import the data directly from your computer:</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="I02-read.html#cb79-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;Q2016.csv&quot;</span>)</span></code></pre></div>
+<p>Both approaches give the same result.</p>
 </div>
-<div id="sec:simple-mat" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> Matrix Notation</h2>
-<p>To conclude this section, we will rewrite the results of this section
-in a form which we will extensively use for multiple linear regression
-in the rest of this module. The idea here is to arrange all quantities
-in the problem as matrices and vectors in order to simplify notation.
-We write
-<span class="math display">\[\begin{equation*}
-  X = \begin{pmatrix}
-    1 &amp; x_1\\ 1 &amp; x_2\\\vdots &amp; \vdots\\1 &amp; x_n
-  \end{pmatrix}
-  \in \mathbb{R}^{n\times 2},
-  \qquad
-  y = \begin{pmatrix}
-    y_1 \\ y_2 \\ \vdots \\ y_n
-  \end{pmatrix}
-  \in \mathbb{R}^n,
-  \qquad
-  \varepsilon= \begin{pmatrix}
-    \varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n
-  \end{pmatrix}
-  \in \mathbb{R}^n,
-  \qquad
-  \beta = \begin{pmatrix}
-    \beta_0 \\
-    \beta_1
-  \end{pmatrix}
-  \in\mathbb{R}^2
-\end{equation*}\]</span>
-Using this notation, we can rewrite the <span class="math inline">\(n\)</span> equations <span class="math inline">\(y_i = \beta_0 + x_i \beta_1 + \varepsilon_i\)</span> for <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> as one
-vector-valued equation in <span class="math inline">\(\mathbb{R}^n\)</span>: we get
-<span class="math display">\[\begin{equation*}
-  y = X\beta + \varepsilon,
-\end{equation*}\]</span>
-and we want to “solve” this vector-valued equation for <span class="math inline">\(\beta\)</span>.
-The sum of squares can now be written as
-<span class="math display">\[\begin{equation*}
-  r(\beta)
-  = \sum_{i=1}^n \varepsilon_i^2
-  = \varepsilon^\top \varepsilon
-  = (y - X\beta)^\top (y - X\beta)
-  = y^\top y - 2\beta^\top X^\top y + \beta^\top X^\top X \beta.
-\end{equation*}\]</span>
-In the next section we will see that the minimum of <span class="math inline">\(r\)</span> is attained
-for
-<span class="math display">\[\begin{equation*}
-  \hat\beta
-  = (X X^\top)^{-1} X^\top y
-\end{equation*}\]</span>
-and one can check that the components of this vector <span class="math inline">\(\hat\beta = (\hat\beta_0, \hat\beta_1)\)</span> coincide with the estimates we obtained above.</p>
-<div class="mysummary">
-<p><strong>Summary</strong></p>
-<ul>
-<li>simple linear regression is the case where there is only one input</li>
-<li>a regression line is fitted by minimising the residual sum of squares</li>
-<li>linear regression is a statistical parameter estimation problem</li>
-<li>the problem can be conveniently written in matrix/vector notation</li>
-</ul>
 </div>
+<div id="importing-microsoft-excel-files" class="section level2 unnumbered">
+<h2>Importing Microsoft Excel Files</h2>
+<p>The easiest way to import Excel files into R is to first convert these
+files to <code>.csv</code> format. To do this:</p>
+<ul>
+<li><p>Open the file with the data in Excel.</p></li>
+<li><p>Open a new, empty file (choosing “Blank workbook” in Excel).</p></li>
+<li><p>Copy and paste the relevant cells into the empty file. It is
+important to just copy the required data and to leave out any
+explanatory text and and empty rows/columns. The data must form a
+tidy rectangle, with one sample per row and one variate per
+column. Optionally, you can put column headers into the first row.</p></li>
+<li><p>Save the new file in <code>.csv</code> format
+in a folder where you will find it again.</p></li>
+<li><p>Read the resulting <code>.csv</code> into R as explained above.</p></li>
+</ul>
+<p>Alternatively, you can try the <code>read_excel()</code> function from the <code>readxl</code>
+package. (You may need to install this R package first.) You can learn how to
+use this function at
+<a href="https://readxl.tidyverse.org/">https://readxl.tidyverse.org/</a> or using the
+<a href="https://rdrr.io/cran/readxl/man/read_excel.html">command <code>help(read_excel)</code></a>.
+Note that these functions return a <a href="https://tibble.tidyverse.org/">“tibble”</a>
+instead of a data frame, so some additional knowledge is required to use the
+result.</p>
+</div>
+<div id="checking-the-imported-data" class="section level2 unnumbered">
+<h2>Checking the Imported Data</h2>
+<p>The following commands can be used to get a quick overview over the data:</p>
+<ul>
+<li><p><code>dim(x)</code> gives the number of rows and columns of the data
+frame. Similarly, <code>nrow(x)</code> shows the number of rows
+and <code>ncol(x)</code> shows the number of columns in the data frame.</p></li>
+<li><p><code>str(x)</code> shows the structure of any R object. This command
+is often an excellent way to understand the nature of any problems
+one may encounter while importing data into R.</p></li>
+<li><p><code>summary(x)</code> prints, for each variate, the values of
+various summary statistics. For variates with numeric values,
+these are the minimum, first quartile, median, mean, third quartile,
+maximum, and the number of missing values. For attribute data
+this gives the counts for each observed value.</p></li>
+<li><p><code>head(x)</code> shows the first few rows of the data.</p></li>
+</ul>
+<p>Every time you import a data set into R, you should use some
+of these commands to check that everything went well.
+In case you discover problems, you should either fix the data file
+(<em>e.g.</em> using Microsoft Excel) or by using the correct options
+for the <code>read.csv()</code> command.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-28" class="example"><strong>Example 6.3  </strong></span>Continuing with the data set from example above, we can try the following
+commands: We first check that the data has plausible dimensions:</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="I02-read.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(x)</span></code></pre></div>
+<pre><code>## [1] 220   5</code></pre>
+<p>This tells us that the data has <span class="math inline">\(n=220\)</span> rows and <span class="math inline">\(p=5\)</span> columns, as expected.
+Next, we get some details about the five columns of the data frame:</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="I02-read.html#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(x)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    220 obs. of  5 variables:
+##  $ gender     : chr  &quot;M&quot; &quot;M&quot; &quot;M&quot; &quot;M&quot; ...
+##  $ height     : num  180 183 183 182 164 ...
+##  $ handedness : chr  &quot;R&quot; &quot;R&quot; &quot;R&quot; &quot;R&quot; ...
+##  $ travel.time: int  20 25 20 12 5 20 15 10 11 7 ...
+##  $ R.skills   : chr  &quot;basic&quot; &quot;basic&quot; &quot;basic&quot; &quot;basic&quot; ...</code></pre>
+<p>This shows, for each column, the name, the “data type” and the
+first few values. The “data type” is a good indicator to detect
+problems; it should read <code>int</code> for integer valued numeric data,
+<code>num</code> for all other numeric data, and <code>Factor</code> for
+attribute data. For attribute data, the range of observed values is
+also shown. For our data set, we see that the fields <code>$gender</code>,
+<code>$handedness</code> and <code>$R.skills</code> are represented as text data (type <code>chr</code>)
+instead of categorical data. To fix this, we re-import the data
+using the <code>stringsAsFactors=TRUE</code> option:</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="I02-read.html#cb84-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/Q2016.csv&quot;</span>, <span class="at">stringsAsFactors=</span><span class="cn">TRUE</span>)</span>
+<span id="cb84-2"><a href="I02-read.html#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(x)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    220 obs. of  5 variables:
+##  $ gender     : Factor w/ 2 levels &quot;F&quot;,&quot;M&quot;: 2 2 2 2 1 1 1 1 1 2 ...
+##  $ height     : num  180 183 183 182 164 ...
+##  $ handedness : Factor w/ 3 levels &quot;L&quot;,&quot;R&quot;,&quot;both&quot;: 2 2 2 2 2 2 2 2 2 2 ...
+##  $ travel.time: int  20 25 20 12 5 20 15 10 11 7 ...
+##  $ R.skills   : Factor w/ 4 levels &quot;basic&quot;,&quot;good&quot;,..: 1 1 1 1 1 1 1 3 1 1 ...</code></pre>
+<p>Now the output is as expected, and the correct “levels” are shown
+for the categorical variables.</p>
+<p>Finally, we can print summary statistics for all columns:</p>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="I02-read.html#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(x)</span></code></pre></div>
+<pre><code>##  gender      height      handedness  travel.time       R.skills  
+##  F:102   Min.   :147.0   L   : 18   Min.   :  0.00   basic :157  
+##  M:118   1st Qu.:167.0   R   :201   1st Qu.:  5.00   good  :  4  
+##          Median :175.0   both:  1   Median : 15.00   medium: 28  
+##          Mean   :173.7              Mean   : 19.15   none  : 31  
+##          3rd Qu.:180.3              3rd Qu.: 25.00               
+##          Max.   :195.6              Max.   :150.00               
+##          NA&#39;s   :23</code></pre>
+<p>None of these commands showed any remaining problems, so we are now ready
+to use the data.</p>
+</div>
+</div>
+<div id="common-problems" class="section level2 unnumbered">
+<h2>Common Problems</h2>
+<p>There are many things which can go wrong when importing data. Some commonly
+encountered problems are the following:</p>
+<ul>
+<li><p>If the data file contains no line with headers, but the
+<code>header=FALSE</code> option for <code>read.csv()</code> has been omitted,
+the first row of data will be used in place of the column names.
+This can, for example, be seen in the <code>str()</code> output. The
+solution to this problem is to correctly use the
+<code>header=FALSE</code> option.</p></li>
+<li><p>If the data in a <code>.csv</code> file is not separated by commas but
+by some other character like a semicolon, R will be unable to
+separate the columns. When this is the case, the imported data will
+appear to only have one column, where each entry shows as some
+garbled version of the data for the whole row. The solution to this
+problem is to use the <code>sep=...</code> option.</p></li>
+<li><p>If attribute values are encoded inconsistently, <em>e.g.</em> if
+a mix of <code>m</code> and <code>M</code> is used to encode the gender
+“male”, this will be visible in the <code>str()</code> output. One
+solution to this problem is to fix the <code>.csv</code> file using
+Microsoft Excel, before trying to import it into R again.</p></li>
+<li><p>If a numeric column in the input file contains one or more
+entries which are neither numbers nor empty, R will interpret the
+whole column as attribute data. This problem can be detected in the
+<code>str()</code> output, when a numeric column is listed as having data
+type <code>Factor</code>. One solution to this problem is to use
+Microsoft Excel to remove or fix the offending entry from the file.</p></li>
+</ul>
 
 </div>
 </div>
@@ -567,8 +485,8 @@ and one can check that the components of this vector <span class="math inline">\
           </div>
         </div>
       </div>
-<a href="S00-about.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="S02-multiple.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S06-simultaneous.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="S07-examples.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

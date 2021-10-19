@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 7 Examples | MATH3714 Linear Regression and Robustness</title>
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 7 Examples | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 7 Examples | MATH3714 Linear Regression and Robustness" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="I02-read.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH3714 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
+<ul>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#teams"><i class="fa fa-check"></i>Discussion Board</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
+<li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
+<li class="chapter" data-level="2.2" data-path="S02-multiple.html"><a href="S02-multiple.html#the-normal-equations"><i class="fa fa-check"></i><b>2.2</b> The Normal Equations</a></li>
+<li class="chapter" data-level="2.3" data-path="S02-multiple.html"><a href="S02-multiple.html#fitted-values"><i class="fa fa-check"></i><b>2.3</b> Fitted Values</a></li>
+<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.4</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html"><i class="fa fa-check"></i>Interlude: Linear Regression in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-fitting"><i class="fa fa-check"></i>Fitting a Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-model"><i class="fa fa-check"></i>Understanding the Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-predict"><i class="fa fa-check"></i>Making Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
+<li class="chapter" data-level="3" data-path="S03-cov.html"><a href="S03-cov.html"><i class="fa fa-check"></i><b>3</b> Random Vectors and Covariance</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="S03-cov.html"><a href="S03-cov.html#expectation"><i class="fa fa-check"></i><b>3.1</b> Expectation</a></li>
+<li class="chapter" data-level="3.2" data-path="S03-cov.html"><a href="S03-cov.html#sec:covariance"><i class="fa fa-check"></i><b>3.2</b> Covariance Matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="S03-cov.html"><a href="S03-cov.html#the-multivariate-normal-distribution"><i class="fa fa-check"></i><b>3.3</b> The Multivariate Normal Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="S04-model.html"><a href="S04-model.html"><i class="fa fa-check"></i><b>4</b> Properties of the Least Squares Estimate</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="S04-model.html"><a href="S04-model.html#mean-and-covariance"><i class="fa fa-check"></i><b>4.1</b> Mean and Covariance</a></li>
+<li class="chapter" data-level="4.2" data-path="S04-model.html"><a href="S04-model.html#hat-matrix"><i class="fa fa-check"></i><b>4.2</b> Properties of the Hat Matrix</a></li>
+<li class="chapter" data-level="4.3" data-path="S04-model.html"><a href="S04-model.html#Cochran"><i class="fa fa-check"></i><b>4.3</b> Cochran’s theorem</a></li>
+<li class="chapter" data-level="4.4" data-path="S04-model.html"><a href="S04-model.html#var-est-bias"><i class="fa fa-check"></i><b>4.4</b> Estimating the Error Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="S05-single.html"><a href="S05-single.html"><i class="fa fa-check"></i><b>5</b> Uncertainty for Individual Regression Coefficients</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="S05-single.html"><a href="S05-single.html#measuring-the-estimation-error"><i class="fa fa-check"></i><b>5.1</b> Measuring the Estimation Error</a></li>
+<li class="chapter" data-level="5.2" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals"><i class="fa fa-check"></i><b>5.2</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="5.3" data-path="S05-single.html"><a href="S05-single.html#hypthesis-tests"><i class="fa fa-check"></i><b>5.3</b> Hypthesis Tests</a></li>
+<li class="chapter" data-level="5.4" data-path="S05-single.html"><a href="S05-single.html#r-experiments"><i class="fa fa-check"></i><b>5.4</b> R Experiments</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="S05-single.html"><a href="S05-single.html#fitting-the-model"><i class="fa fa-check"></i><b>5.4.1</b> Fitting the model</a></li>
+<li class="chapter" data-level="5.4.2" data-path="S05-single.html"><a href="S05-single.html#estimating-the-variance-of-the-error"><i class="fa fa-check"></i><b>5.4.2</b> Estimating the Variance of the Error</a></li>
+<li class="chapter" data-level="5.4.3" data-path="S05-single.html"><a href="S05-single.html#estimating-the-standard-errors"><i class="fa fa-check"></i><b>5.4.3</b> Estimating the Standard Errors</a></li>
+<li class="chapter" data-level="5.4.4" data-path="S05-single.html"><a href="S05-single.html#hypothesis-tests"><i class="fa fa-check"></i><b>5.4.4</b> Hypothesis tests</a></li>
+<li class="chapter" data-level="5.4.5" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals-1"><i class="fa fa-check"></i><b>5.4.5</b> Confidence Intervals</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html"><i class="fa fa-check"></i><b>6</b> Estimating Coefficients Simultaneously</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-dist"><i class="fa fa-check"></i><b>6.1</b> Linear Combinations of Coefficients</a></li>
+<li class="chapter" data-level="6.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-CI"><i class="fa fa-check"></i><b>6.2</b> Confidence Regions</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#result"><i class="fa fa-check"></i><b>6.2.1</b> Result</a></li>
+<li class="chapter" data-level="6.2.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#numerical-experiments"><i class="fa fa-check"></i><b>6.2.2</b> Numerical Experiments</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-test"><i class="fa fa-check"></i><b>6.3</b> Hypothesis Tests</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html"><i class="fa fa-check"></i>Interlude: Loading Data into R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-csv-files"><i class="fa fa-check"></i>Importing CSV Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-microsoft-excel-files"><i class="fa fa-check"></i>Importing Microsoft Excel Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#checking-the-imported-data"><i class="fa fa-check"></i>Checking the Imported Data</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#common-problems"><i class="fa fa-check"></i>Common Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="S07-examples.html"><a href="S07-examples.html"><i class="fa fa-check"></i><b>7</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="S07-examples.html"><a href="S07-examples.html#simple-confidence-interval"><i class="fa fa-check"></i><b>7.1</b> Simple Confidence Interval</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles"><i class="fa fa-check"></i><b>7.1.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.1.2" data-path="S07-examples.html"><a href="S07-examples.html#from-the-lm-output"><i class="fa fa-check"></i><b>7.1.2</b> From the <code>lm()</code> Output</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="S07-examples.html"><a href="S07-examples.html#confidence-intervals-for-the-mean"><i class="fa fa-check"></i><b>7.2</b> Confidence Intervals for the Mean</a></li>
+<li class="chapter" data-level="7.3" data-path="S07-examples.html"><a href="S07-examples.html#testing-a-single-coefficient"><i class="fa fa-check"></i><b>7.3</b> Testing a Single Coefficient</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-1"><i class="fa fa-check"></i><b>7.3.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.3.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-i"><i class="fa fa-check"></i><b>7.3.2</b> Using the <code>lm()</code> Output, I</a></li>
+<li class="chapter" data-level="7.3.3" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-ii"><i class="fa fa-check"></i><b>7.3.3</b> Using the <code>lm()</code> Output, II</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="S07-examples.html"><a href="S07-examples.html#testing-multiple-coefficents"><i class="fa fa-check"></i><b>7.4</b> Testing Multiple Coefficents</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-2"><i class="fa fa-check"></i><b>7.4.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.4.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output"><i class="fa fa-check"></i><b>7.4.2</b> Using the <code>lm()</code> output</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#vectors"><i class="fa fa-check"></i><b>A.1</b> Vectors</a></li>
+<li class="chapter" data-level="A.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-rules"><i class="fa fa-check"></i><b>A.2</b> Matrices</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#transpose"><i class="fa fa-check"></i><b>A.2.1</b> Transpose</a></li>
+<li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-vector Product</a></li>
+<li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-matrix Product</a></li>
+<li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-inverse"><i class="fa fa-check"></i><b>A.2.4</b> Matrix Inverse</a></li>
+<li class="chapter" data-level="A.2.5" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#orthogonal-matrices"><i class="fa fa-check"></i><b>A.2.5</b> Orthogonal Matrices</a></li>
+<li class="chapter" data-level="A.2.6" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.6</b> Positive Definite Matrices</a></li>
+<li class="chapter" data-level="A.2.7" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#idempotent"><i class="fa fa-check"></i><b>A.2.7</b> Idempotent Matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#eigenvalues"><i class="fa fa-check"></i><b>A.3</b> Eigenvalues</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="Sx2-probability.html"><a href="Sx2-probability.html"><i class="fa fa-check"></i><b>B</b> Probability Reminders</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="Sx2-probability.html"><a href="Sx2-probability.html#independence"><i class="fa fa-check"></i><b>B.1</b> Independence</a></li>
+<li class="chapter" data-level="B.2" data-path="Sx2-probability.html"><a href="Sx2-probability.html#chi-square"><i class="fa fa-check"></i><b>B.2</b> The Chi-Squared Distribution</a></li>
+<li class="chapter" data-level="B.3" data-path="Sx2-probability.html"><a href="Sx2-probability.html#t"><i class="fa fa-check"></i><b>B.3</b> The t-distribution</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH3714 Linear Regression and Robustness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="S07-examples" class="section level1" number="7">
+<h1><span class="header-section-number">Section 7</span> Examples</h1>
+<p>To illustrate the results of the last two sections, we consider a series
+of examples.</p>
+<div id="simple-confidence-interval" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Simple Confidence Interval</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0UCq-7KGiHs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>In this subsection we will illustrate how to compute a simple confidence interval
+for a single regression coefficient. We use a dataset about toxicity of
+chemicals towards aquatic life from the from the UCI Machine Learning
+Repository. The data is available at</p>
+<ul>
+<li><a href="https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity">https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity</a></li>
+</ul>
+<p>There are nine different variables. (The web page explains the interpretation
+of these variables.) We will fit a model which describes <code>LC50</code> as a function
+of the remaining variables:</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="S07-examples.html#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity</span></span>
+<span id="cb88-2"><a href="S07-examples.html#cb88-2" aria-hidden="true" tabindex="-1"></a>qsar <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/qsar_aquatic_toxicity.csv&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb88-3"><a href="S07-examples.html#cb88-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(qsar) <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb88-4"><a href="S07-examples.html#cb88-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;TPSA&quot;</span>,</span>
+<span id="cb88-5"><a href="S07-examples.html#cb88-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;SAacc&quot;</span>,</span>
+<span id="cb88-6"><a href="S07-examples.html#cb88-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;H050&quot;</span>,</span>
+<span id="cb88-7"><a href="S07-examples.html#cb88-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;MLOGP&quot;</span>,</span>
+<span id="cb88-8"><a href="S07-examples.html#cb88-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;RDCHI&quot;</span>,</span>
+<span id="cb88-9"><a href="S07-examples.html#cb88-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;GATS1p&quot;</span>,</span>
+<span id="cb88-10"><a href="S07-examples.html#cb88-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;nN&quot;</span>,</span>
+<span id="cb88-11"><a href="S07-examples.html#cb88-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;C040&quot;</span>,</span>
+<span id="cb88-12"><a href="S07-examples.html#cb88-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;LC50&quot;</span></span>
+<span id="cb88-13"><a href="S07-examples.html#cb88-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb88-14"><a href="S07-examples.html#cb88-14" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar)</span>
+<span id="cb88-15"><a href="S07-examples.html#cb88-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = LC50 ~ ., data = qsar)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.4934 -0.7579 -0.1120  0.5829  4.9778 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  2.698887   0.244554  11.036  &lt; 2e-16 ***
+## TPSA         0.027201   0.002661  10.220  &lt; 2e-16 ***
+## SAacc       -0.015081   0.002091  -7.211 1.90e-12 ***
+## H050         0.040619   0.059787   0.679 0.497186    
+## MLOGP        0.446108   0.063296   7.048 5.60e-12 ***
+## RDCHI        0.513928   0.135565   3.791 0.000167 ***
+## GATS1p      -0.571313   0.153882  -3.713 0.000227 ***
+## nN          -0.224751   0.048301  -4.653 4.12e-06 ***
+## C040         0.003194   0.077972   0.041 0.967340    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.203 on 537 degrees of freedom
+## Multiple R-squared:  0.4861, Adjusted R-squared:  0.4785 
+## F-statistic:  63.5 on 8 and 537 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Our aim is to find a 95% confidence interval for <code>GATS1p</code>.</p>
+<div id="from-first-principles" class="section level3" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> From First Principles</h3>
+<p>To compute the confidence interval from first principles,
+we can use Lemma <a href="S05-single.html#lem:single-CI">5.3</a>. The centre of the confidence
+interval is given by <span class="math inline">\(\hat\beta_i\)</span>:</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="S07-examples.html#cb90-1" aria-hidden="true" tabindex="-1"></a>mid <span class="ot">&lt;-</span> <span class="fu">coef</span>(m)[<span class="dv">7</span>]</span>
+<span id="cb90-2"><a href="S07-examples.html#cb90-2" aria-hidden="true" tabindex="-1"></a>mid</span></code></pre></div>
+<pre><code>##     GATS1p 
+## -0.5713131</code></pre>
+<p>To find the half-width of the interval, we need to first construct the
+covariance matrix <span class="math inline">\(C\)</span> and the estimated residual variance <span class="math inline">\(\hat\sigma^2\)</span>.
+We will also need the corresponding quantile of the <span class="math inline">\(t\)</span>-distribution.</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="S07-examples.html#cb92-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb92-2"><a href="S07-examples.html#cb92-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> qsar<span class="sc">$</span>LC50</span>
+<span id="cb92-3"><a href="S07-examples.html#cb92-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb92-4"><a href="S07-examples.html#cb92-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb92-5"><a href="S07-examples.html#cb92-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-6"><a href="S07-examples.html#cb92-6" aria-hidden="true" tabindex="-1"></a>Cii <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)[<span class="dv">7</span>, <span class="dv">7</span>]</span>
+<span id="cb92-7"><a href="S07-examples.html#cb92-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Cii =&quot;</span>, Cii, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Cii = 0.01637454</code></pre>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="S07-examples.html#cb94-1" aria-hidden="true" tabindex="-1"></a>sigma.hat.squared <span class="ot">&lt;-</span> <span class="fu">sum</span>((<span class="fu">fitted</span>(m) <span class="sc">-</span> y)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb94-2"><a href="S07-examples.html#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;hat.sigma.square =&quot;</span>, sigma.hat.squared, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## hat.sigma.square = 1.446134</code></pre>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="S07-examples.html#cb96-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb96-2"><a href="S07-examples.html#cb96-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb96-3"><a href="S07-examples.html#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;t =&quot;</span>, t, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## t = 1.964391</code></pre>
+<p>With this information in place, we can easily find the confidence
+interval:</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="S07-examples.html#cb98-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(Cii <span class="sc">*</span> sigma.hat.squared) <span class="sc">*</span> t</span>
+<span id="cb98-2"><a href="S07-examples.html#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, mid <span class="sc">-</span> d, <span class="st">&quot;, &quot;</span>, mid <span class="sc">+</span> d, <span class="st">&quot;]</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<pre><code>## [-0.8735983, -0.2690279]</code></pre>
+</div>
+<div id="from-the-lm-output" class="section level3" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> From the <code>lm()</code> Output</h3>
+<p>We can obtain the same result using only the quantile <span class="math inline">\(t\)</span> and
+numbers shows in the <code>summary(m)</code> output. We focus on the
+row corresponding to <code>GATS1p</code> in the output shown above:</p>
+<pre><code>GATS1p      -0.571313   0.153882  -3.713 0.000227 ***</code></pre>
+<p>The first number in this row is the centre of the confidence
+interval, the second number corresponds to <span class="math inline">\(\sqrt{\hat\sigma^2 C_{ii}}\)</span>.
+To have everything in one place, we copy the commands for computing <span class="math inline">\(t\)</span>:</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="S07-examples.html#cb101-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb101-2"><a href="S07-examples.html#cb101-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb101-3"><a href="S07-examples.html#cb101-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="sc">-</span><span class="fl">0.571313</span> <span class="sc">-</span> <span class="fl">0.153882</span><span class="sc">*</span>t, <span class="st">&quot;, &quot;</span>, <span class="sc">-</span><span class="fl">0.571313</span> <span class="sc">+</span> <span class="fl">0.153882</span><span class="sc">*</span>t, <span class="st">&quot;]</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<pre><code>## [-0.8735975, -0.2690285]</code></pre>
+<p>This is the same result as above.</p>
+</div>
+</div>
+<div id="confidence-intervals-for-the-mean" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Confidence Intervals for the Mean</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/tKlEb7S61o4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>So far we have only seen how to compute confidence intervals for the
+regression coefficients <span class="math inline">\(\beta_i\)</span>. Using the same techniques we can
+also compute confidence intervals for the model mean corresponding
+to an input <span class="math inline">\((\tilde x_1, \ldots, \tilde x_p)\)</span>. If we write
+<span class="math display">\[\begin{equation*}
+  \tilde x = (1, \tilde x_1, \ldots, \tilde x_p),
+\end{equation*}\]</span>
+then the model mean corresponding to this input is
+<span class="math display">\[\begin{equation*}
+  \tilde y
+  = \beta_0 + x_1 \beta_1 + \cdots + x_p \beta_p.
+  = \tilde x^\top \beta,
+\end{equation*}\]</span>
+To derive a confidence interval for this quantity, we follow the same
+steps as we did when we derived a confidence interval for <span class="math inline">\(\hat\beta_i\)</span>.</p>
+<p>Our estimator for this <span class="math inline">\(\tilde y\)</span> is
+<span class="math display">\[\begin{equation*}
+  \hat y
+  = \tilde x^\top \hat\beta
+  \sim \mathcal{N}\bigl( \tilde x^\top \beta, \sigma^2 \tilde x^\top (X^\top X)^{-1} \tilde x \bigr).
+\end{equation*}\]</span>
+Thus,
+<span class="math display">\[\begin{align*}
+  \tilde T
+  &amp;:= \frac{\tilde x^\top \hat\beta - \tilde x^\top \beta}
+           {\sqrt{\hat\sigma^2 \tilde x^\top (X^\top X)^{-1} \tilde x}} \\
+  &amp;= \frac{\frac{1}{\sqrt{\sigma^2\tilde x^\top (X^\top X)^{-1} \tilde x}}\bigl(\tilde x^\top \hat\beta - \tilde x^\top \beta\bigr)}
+           {\sqrt{\frac{1}{\sigma^2}\hat\sigma^2}}
+\end{align*}\]</span></p>
+<p>is <span class="math inline">\(t(n-p-1)\)</span>-distributed, since the numerator is <span class="math inline">\(\mathcal{N}(0,1)\)</span>, the denominator
+is <span class="math inline">\(\sqrt{\chi^2(n-p-1) / (n-p-1)}\)</span> and <span class="math inline">\(\hat\beta\)</span> is independent
+of <span class="math inline">\(\hat\sigma^2\)</span>.
+Let <span class="math inline">\(t_{n-p-1}(\alpha/2)\)</span> be the <span class="math inline">\((1 - \alpha/2)\)</span>-quantile of the <span class="math inline">\(t(n-p-1)\)</span>-distribution.
+Then we can solve the inequality <span class="math inline">\(|T| \leq t_{n-p-1}(\alpha/2)\)</span> for
+<span class="math inline">\(\tilde x^\top \beta\)</span> to find the required confidence interval:
+<span class="math display">\[\begin{equation*}
+  \Bigl[
+    \tilde x^\top \hat\beta - \sqrt{\hat\sigma^2 \tilde x^\top (X^\top X)^{-1} \tilde x} t_{n-p-1}(\alpha/2),
+    \tilde x^\top \hat\beta + \sqrt{\hat\sigma^2 \tilde x^\top (X^\top X)^{-1} \tilde x} t_{n-p-1}(\alpha/2)
+  \Bigr].
+\end{equation*}\]</span></p>
+<p>We illustrate this using a numerical example.
+For the <a href="https://rdrr.io/r/datasets/stackloss.html"><code>stackloss</code> data set</a>
+with input values <code>Air.Flow = 60</code>, <code>Water.Temp = 21</code> and <code>Acid.Conc = 87</code>,
+we can get the following results:</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="S07-examples.html#cb103-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb103-2"><a href="S07-examples.html#cb103-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb103-3"><a href="S07-examples.html#cb103-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb103-4"><a href="S07-examples.html#cb103-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb103-5"><a href="S07-examples.html#cb103-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-6"><a href="S07-examples.html#cb103-6" aria-hidden="true" tabindex="-1"></a>tilde.x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">60</span>, <span class="dv">21</span>, <span class="dv">87</span>)</span>
+<span id="cb103-7"><a href="S07-examples.html#cb103-7" aria-hidden="true" tabindex="-1"></a>hat.beta <span class="ot">&lt;-</span> <span class="fu">coef</span>(m)</span>
+<span id="cb103-8"><a href="S07-examples.html#cb103-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-9"><a href="S07-examples.html#cb103-9" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">t</span>(tilde.x) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, tilde.x)</span>
+<span id="cb103-10"><a href="S07-examples.html#cb103-10" aria-hidden="true" tabindex="-1"></a>sigma.hat.squared <span class="ot">&lt;-</span> <span class="fu">sum</span>((<span class="fu">fitted</span>(m) <span class="sc">-</span> stackloss<span class="sc">$</span>stack.loss)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb103-11"><a href="S07-examples.html#cb103-11" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb103-12"><a href="S07-examples.html#cb103-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-13"><a href="S07-examples.html#cb103-13" aria-hidden="true" tabindex="-1"></a>mid <span class="ot">&lt;-</span> <span class="fu">t</span>(tilde.x) <span class="sc">%*%</span> hat.beta</span>
+<span id="cb103-14"><a href="S07-examples.html#cb103-14" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(c <span class="sc">*</span> sigma.hat.squared) <span class="sc">*</span> t</span>
+<span id="cb103-15"><a href="S07-examples.html#cb103-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, mid <span class="sc">-</span> d, <span class="st">&quot;, &quot;</span>, mid <span class="sc">+</span> d, <span class="st">&quot;]</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<pre><code>## [15.46463, 18.50554]</code></pre>
+</div>
+<div id="testing-a-single-coefficient" class="section level2" number="7.3">
+<h2><span class="header-section-number">7.3</span> Testing a Single Coefficient</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/4tC4VNHCo9Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>Continuing with the dataset from the previous example, we can test whether the
+regression coefficient corresponding to the water temperature might equal zero.
+We will perform a test at <span class="math inline">\(5\%\)</span>-level.</p>
+<div id="from-first-principles-1" class="section level3" number="7.3.1">
+<h3><span class="header-section-number">7.3.1</span> From First Principles</h3>
+<p>We can compute the test statistic manually, using the formula from
+equation <a href="S05-single.html#eq:single-test">(5.2)</a> with <span class="math inline">\(b = 0\)</span>:</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="S07-examples.html#cb105-1" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> hat.beta[<span class="dv">3</span>] <span class="sc">/</span> <span class="fu">sqrt</span>(sigma.hat.squared <span class="sc">*</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)[<span class="dv">3</span>, <span class="dv">3</span>])</span>
+<span id="cb105-2"><a href="S07-examples.html#cb105-2" aria-hidden="true" tabindex="-1"></a>T</span></code></pre></div>
+<pre><code>## Water.Temp 
+##   3.519567</code></pre>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="S07-examples.html#cb107-1" aria-hidden="true" tabindex="-1"></a>t.crit <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb107-2"><a href="S07-examples.html#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abs</span>(T) <span class="sc">&gt;</span> t.crit</span></code></pre></div>
+<pre><code>## Water.Temp 
+##       TRUE</code></pre>
+<p>Since the test statistic is larger than the critical value,
+we reject the hypothesis that <span class="math inline">\(\beta_2 = 0\)</span>.</p>
+</div>
+<div id="using-the-lm-output-i" class="section level3" number="7.3.2">
+<h3><span class="header-section-number">7.3.2</span> Using the <code>lm()</code> Output, I</h3>
+<p>We can also find the test statistic in the <code>lm()</code> output:</p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="S07-examples.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = stack.loss ~ ., data = stackloss)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.2377 -1.7117 -0.4551  2.3614  5.6978 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -39.9197    11.8960  -3.356  0.00375 ** 
+## Air.Flow      0.7156     0.1349   5.307  5.8e-05 ***
+## Water.Temp    1.2953     0.3680   3.520  0.00263 ** 
+## Acid.Conc.   -0.1521     0.1563  -0.973  0.34405    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.243 on 17 degrees of freedom
+## Multiple R-squared:  0.9136, Adjusted R-squared:  0.8983 
+## F-statistic:  59.9 on 3 and 17 DF,  p-value: 3.016e-09</code></pre>
+<p>The column <code>t value</code> shows the value of the test statistic <span class="math inline">\(T\)</span> for
+the hypothesis that <span class="math inline">\(\beta_i = 0\)</span>. For <span class="math inline">\(\beta_2\)</span> we find the value <span class="math inline">\(3.520\)</span>,
+which is a rounded version of the <span class="math inline">\(3.519567\)</span> we found above.</p>
+<p>Again, we can use the command <code>qt(0.975, 17)</code> to get the critical value, where
+we can find the degrees of freedom in the <code>Residual standard error</code> row near
+the bottom. Alternatively, we can use the so called “p-value” listed in the
+<code>Pr(&gt;|t|)</code> column. This value is the smallest significance level at which
+<span class="math inline">\(H_0\)</span> is still rejected. Here we find <span class="math inline">\(0.00263\)</span> and since we have
+<span class="math inline">\(\alpha = 0.05 &gt; 0.00263\)</span>, we can see that <span class="math inline">\(H_0\)</span> is rejected.</p>
+<p>If we wanted to test <span class="math inline">\(\beta_2 = 1\)</span> instead, we could use the value <span class="math inline">\(\hat\beta_2 = 1.2953\)</span> from the <code>Estimate</code> column and <span class="math inline">\(\sqrt{\hat\sigma^2 C_{ii}} = 0.3680\)</span>
+from the <code>Std. Error</code> column, to get <span class="math inline">\(T = (1.2953 - 1) / 0.3680\)</span> and then we
+would accept or reject the hypothesis <span class="math inline">\(\beta_2 = 1\)</span> by comparing the result to
+the critical value <code>qt(0.975, 17)</code>.</p>
+</div>
+<div id="using-the-lm-output-ii" class="section level3" number="7.3.3">
+<h3><span class="header-section-number">7.3.3</span> Using the <code>lm()</code> Output, II</h3>
+<p>For the hypotheses <span class="math inline">\(\beta_i = 0\)</span>, we can also use the stars (or sometimes dots)
+shown in the right margin to perform the test. Since the <code>Water.Temp</code> row ends
+in <code>**</code>, we would reject <span class="math inline">\(\beta_2 = 0\)</span> even at the stricter <span class="math inline">\(\alpha=0.01\)</span>
+level, and thus we would also reject this hypothesis at <span class="math inline">\(\alpha=0.05\)</span> level.</p>
+</div>
+</div>
+<div id="testing-multiple-coefficents" class="section level2" number="7.4">
+<h2><span class="header-section-number">7.4</span> Testing Multiple Coefficents</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BxKgrBH5i6g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>This section illustrates how a group of coefficients can be tested
+simultaneously. We consider a small, synthetic dataset:</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="S07-examples.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/data/small/small.csv</span></span>
+<span id="cb111-2"><a href="S07-examples.html#cb111-2" aria-hidden="true" tabindex="-1"></a>small <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/small.csv&quot;</span>)</span>
+<span id="cb111-3"><a href="S07-examples.html#cb111-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> small)</span>
+<span id="cb111-4"><a href="S07-examples.html#cb111-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ ., data = small)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.64664 -0.09369 -0.03420  0.07768  0.63353 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  5.53329    0.12360  44.768 6.92e-12 ***
+## x1           0.18903    0.12059   1.568   0.1514    
+## x2          -0.30731    0.18011  -1.706   0.1221    
+## x3          -0.12382    0.05639  -2.196   0.0557 .  
+## x4          -0.11731    0.12619  -0.930   0.3768    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3822 on 9 degrees of freedom
+## Multiple R-squared:  0.6404, Adjusted R-squared:  0.4806 
+## F-statistic: 4.007 on 4 and 9 DF,  p-value: 0.03891</code></pre>
+<p>From the R output it is clear that the intercept is non-zero,
+but none of the remaining regression coefficients are significantly
+different from zero when testing at <span class="math inline">\(5\%\)</span> level. This poses the question
+whether the inputs have any effect on the output at all.
+To answer this question, we test the hypothesis
+<span class="math display">\[\begin{equation*}
+  H_0\colon \beta_1 = \beta_2 = \beta_3 = \beta_4 = 0,
+\end{equation*}\]</span>
+omitting only <span class="math inline">\(\beta_0\)</span> in the hypothesis. We use the method from
+section <a href="S06-simultaneous.html#sec:simult-test">6.3</a> to perform this test.</p>
+<div id="from-first-principles-2" class="section level3" number="7.4.1">
+<h3><span class="header-section-number">7.4.1</span> From First Principles</h3>
+<p>The matrix <span class="math inline">\(K\)</span> which selects the regression coefficents
+is
+<span class="math display">\[\begin{equation*}
+  K
+  = \begin{pmatrix}
+    0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\
+    0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 \\
+    0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 \\
+    0 &amp; 0 &amp; 0 &amp; 0 &amp; 1
+  \end{pmatrix}
+  \in \mathbb{R}^{4\times 5}.
+\end{equation*}\]</span>
+The test statistic is
+<span class="math display">\[\begin{equation*}
+  F
+  = \frac{\bigl\| K \hat\beta - 0 \bigr\|_{K(X^\top X)^{-1} K^\top}^2}
+          {4 \hat\sigma^2},
+\end{equation*}\]</span>
+where <span class="math inline">\(K \hat\beta = (\hat\beta_1, \ldots, \hat\beta_4)\)</span>
+and <span class="math inline">\(K(X^\top X)^{-1} K^\top\)</span> is obtained by removing the first row and
+column from <span class="math inline">\((X^\top X)^{-1}\)</span>:</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="S07-examples.html#cb113-1" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">coef</span>(m)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb113-2"><a href="S07-examples.html#cb113-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb113-3"><a href="S07-examples.html#cb113-3" aria-hidden="true" tabindex="-1"></a>C <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb113-4"><a href="S07-examples.html#cb113-4" aria-hidden="true" tabindex="-1"></a>F <span class="ot">&lt;-</span> <span class="fu">t</span>(b) <span class="sc">%*%</span> <span class="fu">solve</span>(C, b) <span class="sc">/</span> (<span class="dv">4</span> <span class="sc">*</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb113-5"><a href="S07-examples.html#cb113-5" aria-hidden="true" tabindex="-1"></a>F</span></code></pre></div>
+<pre><code>##          [,1]
+## [1,] 4.007393</code></pre>
+<p>From lemma <a href="S06-simultaneous.html#lem:simult-test">6.3</a> we know that under <span class="math inline">\(H_0\)</span>
+the test statistic is <span class="math inline">\(F_{k, n-p-1}\)</span> distributed, and the
+critical value is the <span class="math inline">\(1-\alpha\)</span> quantile of this distribution:</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="S07-examples.html#cb115-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)      <span class="co"># 14</span></span>
+<span id="cb115-2"><a href="S07-examples.html#cb115-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X) <span class="sc">-</span> <span class="dv">1</span>  <span class="co"># 4</span></span>
+<span id="cb115-3"><a href="S07-examples.html#cb115-3" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb115-4"><a href="S07-examples.html#cb115-4" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="fl">0.95</span>, k, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb115-5"><a href="S07-examples.html#cb115-5" aria-hidden="true" tabindex="-1"></a>t</span></code></pre></div>
+<pre><code>## [1] 3.633089</code></pre>
+<p>Since the test statistic is larger than the critical value, we can
+reject <span class="math inline">\(H_0\)</span> and conclude at significance level <span class="math inline">\(5\%\)</span> that not
+all regression coefficients can be zero.</p>
+</div>
+<div id="using-the-lm-output" class="section level3" number="7.4.2">
+<h3><span class="header-section-number">7.4.2</span> Using the <code>lm()</code> output</h3>
+<p>The information required to perform this <span class="math inline">\(F\)</span> test is contained
+in the last row of the <code>summary(m)</code> output:</p>
+<pre><code>F-statistic: 4.007 on 4 and 9 DF,  p-value: 0.03891</code></pre>
+<p>Here we can see that the test statistic is <span class="math inline">\(4.007\)</span> (a rounded version
+of the value we found above) and the degreen of freedom for the <span class="math inline">\(F\)</span>-test
+are <span class="math inline">\(k = 4\)</span> and <span class="math inline">\(n - p - 1 = 9\)</span>. The “p-value” listed is the smallest
+significance level at which the test still rejects <span class="math inline">\(H_0\)</span>.
+We see that <span class="math inline">\(H_0\)</span> is rejected at significance level <span class="math inline">\(0.03891\)</span>,
+and thus also at <span class="math inline">\(\alpha=0.05\)</span>.</p>
+
+</div>
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="I02-read.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH3714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
