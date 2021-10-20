@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Interlude: Linear Regression in R | MATH3714 Linear Regression and Robustness</title>
+  <title>Problem Sheet 2 | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Interlude: Linear Regression in R | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Problem Sheet 2 | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Interlude: Linear Regression in R | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Problem Sheet 2 | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="S02-multiple.html"/>
-<link rel="next" href="P01.html"/>
+<link rel="prev" href="S07-examples.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -279,99 +279,145 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="I01-lm" class="section level1 unnumbered">
-<h1>Interlude: Linear Regression in R</h1>
-<div id="lm-fitting" class="section level2 unnumbered">
-<h2>Fitting a Model</h2>
-<p>The function <code>lm()</code> is used to fit a linear model in R. There are different
-ways to specify the form of the model and the data to be used for fitting the
-model.</p>
+<div id="P02" class="section level1 unnumbered">
+<h1>Problem Sheet 2</h1>
+<style>
+.fold-btn {
+  float: right;
+  margin: -12px 0 0 0;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function() {
+  $folds = $(".myanswers");
+  $folds.wrapInner("<div class=\"fold-blck\">"); // wrap a div container around content
+  $folds.prepend("<button class=\"fold-btn\">Show solution</button>");  // add a button
+  $(".fold-blck").toggle();  // fold all blocks
+  $(".fold-btn").on("click", function() {  // add onClick event
+    $(this).text($(this).text() === "Hide solution" ? "Show solution" : "Hide solution");  // if the text equals "Fold", change it to "Unfold"or else to "Fold"
+    $(this).next(".fold-blck").toggle("linear");  // "swing" is the default easing function. This can be further customized in its speed or the overall animation itself.
+  })
+});
+</script>
+<style>.myanswers { display: none !important; }</style>
+<div class="myq">
+<p><strong>5</strong> Assume that <span class="math inline">\(X \sim \mathcal{N}(0, 1)\)</span>, <span class="math inline">\(Y\sim \chi^2(2)\)</span> and
+<span class="math inline">\(Z \sim \chi^2(3)\)</span> are independent. What are the distributions of
+the following random variables?</p>
 <ul>
-<li><p>The most basic way to call <code>lm()</code> is the case where the explanatory
-variables and the response variable are stored as separate vectors.
-Assuming, for example, that the explanatory variables are <code>x1</code>, <code>x2</code>, <code>x3</code>
-and that the response variable is <code>y</code> in R, we can tell R to fit the
-linear model <span class="math inline">\(y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \varepsilon\)</span>
-by using the following command:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="I01-lm.html#cb12-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3)</span></code></pre></div>
-<p>Note that R automatically added the intercept term <span class="math inline">\(\beta_0\)</span> to this
-model. If we want to fit a model without an intercept,
-<em>i.e.</em> the model
-<span class="math inline">\(y = \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \varepsilon\)</span>, we have to add
-<code>0 +</code> in front of the explanatory variables:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="I01-lm.html#cb13-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3)</span></code></pre></div>
-<p>The general form of a model specification is the response variable,
-followed by <code>~</code>, followed by a plus-separated list of explanatory
-variables. For this form of calling <code>lm()</code>, the variables <code>y</code>,
-<code>x1</code>, <code>x2</code>, and <code>x3</code> in the examples above must be already defined before
-<code>lm()</code> is called. It may be a good idea to double-check that the variables
-have the correct values before trying to call <code>lm()</code>.</p></li>
-<li><p>Both for the response and for explanatory variables we can
-specify arbitrary R expressions to compute the numeric values to be
-used. For example, to fit the model
-<span class="math inline">\(\log(y) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \varepsilon\)</span> (assuming
-that all <span class="math inline">\(y_i\)</span> are positive) we can use the following command:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="I01-lm.html#cb14-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(<span class="fu">log</span>(y) <span class="sc">~</span> x1 <span class="sc">+</span> x2)</span></code></pre></div>
-<p>Some care is needed, because <code>+</code>, <code>*</code> and <code>^</code> have a
-special meaning inside the first argument of <code>lm()</code>; any time
-we want to compute a variable for <code>lm()</code> using these
-operations, we need to surround the corresponding expression with
-<code>I()</code>, to tell R that <code>+</code>, <code>*</code> or <code>^</code> should
-have their usual, arithmetic meaning. For example, to fit a model
-of the form <span class="math inline">\(y \sim \beta_0 + \beta_1 x + \beta_2 x^2 + \varepsilon\)</span>, we
-can use the following R command:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="I01-lm.html#cb15-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
-<p>Here, the use of <code>I()</code> tells R that <code>x^2</code> is to be
-interpreted as the vector <span class="math inline">\((x_1^2, \ldots, x_n^2)\)</span>. Similarly, we
-can fit a model of the form
-<span class="math inline">\(y = \beta_0 + \beta_1 (x_1 + x_2) + \varepsilon\)</span>:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="I01-lm.html#cb16-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">I</span>(x1<span class="sc">+</span>x2))</span></code></pre></div>
-<p>Here, the use of <code>I()</code> tells R that <code>x1+x2</code> indicates the
-vector <span class="math inline">\((x_{1,1}+x_{2,1}, \ldots, x_{1,n}+x_{2,n})\)</span> instead of two
-separate explanatory variables.</p>
-<p>Details about how to specify models in calls to <code>lm()</code> can be found by
-using the <a href="https://rdrr.io/r/stats/formula.html">command <code>help(formula)</code></a>
-in R.</p></li>
-<li><p>If the response and the explanatory variables are stored in the
-columns of a data frame, we can use the <code>data=...</code> argument to <code>lm()</code> to
-specify this data frame and then just use the column names to specify the
-regression model. For example, the
-<a href="https://rdrr.io/r/datasets/stackloss.html"><code>stackloss</code> data set</a>
-built into R consists of a data frame with columns <code>Air.Flow</code>,
-<code>Water.Temp</code>, <code>Acid.Conc.</code>, <code>stack.loss</code>. To predict
-<code>stackloss$stack.loss</code> from <code>stackloss$Air.Flow</code> we can write</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="I01-lm.html#cb17-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> Air.Flow, <span class="at">data=</span>stackloss)</span></code></pre></div>
-<p>As a special case, a single dot “<code>.</code>” can be used in place of
-the explanatory variables in the model to indicate that all columns
-except for the given response should be used. Thus, the following
-two commands are equivalent:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="I01-lm.html#cb18-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data=</span>stackloss)</span>
-<span id="cb18-2"><a href="I01-lm.html#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> Air.Flow <span class="sc">+</span> Water.Temp <span class="sc">+</span> Acid.Conc., <span class="at">data=</span>stackloss)</span></code></pre></div></li>
+<li><p><span class="math inline">\(X^2\)</span>,</p></li>
+<li><p><span class="math inline">\(X^2 + Y + Z\)</span>,</p></li>
+<li><p><span class="math inline">\(\displaystyle \frac{\sqrt{2}X}{\sqrt{Y}}\)</span>,</p></li>
+<li><p><span class="math inline">\(\displaystyle \frac{2X^2}{Y}\)</span>, and</p></li>
+<li><p><span class="math inline">\(1.5\, Y/Z\)</span>.</p></li>
+</ul>
+<div class="myanswers">
+<p>The distributions involved in this question are the normal
+distribution, the <span class="math inline">\(\chi^2\)</span>-dis-tri-bu-tion, the <span class="math inline">\(t\)</span>-distribution
+and the <span class="math inline">\(F\)</span>-distribution. The general rules are: (1) the sum of
+squares of <span class="math inline">\(d\)</span> independent, standard normally distributed random
+variables follows a <span class="math inline">\(\chi^2(d)\)</span>-distribution. (2) If
+<span class="math inline">\(Z\sim\mathcal{N}(0,1)\)</span> and <span class="math inline">\(V \sim \chi^2(d)\)</span> are independent, then
+<span class="math inline">\(Z / \sqrt{V / d} \sim t(d)\)</span>, and finally (3) If
+<span class="math inline">\(V_1\sim \chi^2(d_1)\)</span> and <span class="math inline">\(V_2\sim \chi^2(d_2)\)</span> are independent,
+then <span class="math inline">\((V_1/d_1)/(V_2/d_2) \sim F(d_1, d_2)\)</span>. Using these rules:</p>
+<ul>
+<li><p><span class="math inline">\(X^2 \sim \chi^2(1)\)</span>,</p></li>
+<li><p><span class="math inline">\(X^2 + Y + Z \sim \chi^2(1+2+3) = \chi^2(6)\)</span>,</p></li>
+<li><p><span class="math inline">\(\displaystyle \frac{\sqrt{2}X}{\sqrt{Y}} = \frac{X}{\sqrt{Y/2}} \sim t(2)\)</span>,</p></li>
+<li><p><span class="math inline">\(\displaystyle \frac{2X^2}{Y} = \frac{X^2/1}{Y/2} \sim F(1,2)\)</span>,</p></li>
+<li><p><span class="math inline">\(\displaystyle 1.5\, Y/Z = \frac{Y/2}{Z/3} \sim F(2, 3)\)</span>.</p></li>
 </ul>
 </div>
-<div id="lm-model" class="section level2 unnumbered">
-<h2>Understanding the Model</h2>
-<p>The output of the <code>lm()</code> function is an R object which can be used the extract
-information about the fitted model. A good way to work with this object is to
-store it in a variable and then use commands like the ones listed below to work
-with this variable. For example, the following R command fits a model for the
-<code>stackloss</code> data set and stores it in the variable <code>m</code>:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="I01-lm.html#cb19-1" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data=</span>stackloss)</span></code></pre></div>
-<p>Many operations are available to use with this object <code>m</code>:</p>
+</div>
+<div class="myq">
+<p><strong>6</strong> Let <span class="math inline">\(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\)</span> and let <span class="math inline">\(X \sim \mathcal{N}(\mu, \sigma^2 I)\)</span> be a normally-distributed random vector, where <span class="math inline">\(I\)</span> is the
+<span class="math inline">\(n\times n\)</span> identity matrix. Define <span class="math inline">\(A = \frac1n \mathbf{1} \mathbf{1}^\top \in \mathbb{R}^{n\times n}\)</span>.</p>
 <ul>
-<li><p>Printing <code>m</code> to the screen:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="I01-lm.html#cb20-1" aria-hidden="true" tabindex="-1"></a>  m</span></code></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = stack.loss ~ ., data = stackloss)
-## 
-## Coefficients:
-## (Intercept)     Air.Flow   Water.Temp   Acid.Conc.  
-##    -39.9197       0.7156       1.2953      -0.1521</code></pre>
-<p>This shows the estimated values for the regression coefficient.</p></li>
-<li><p>The command <code>summary()</code> can be used to print additional
-information about the fitted model:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="I01-lm.html#cb22-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(m)</span></code></pre></div>
+<li><p>Show that <span class="math inline">\((AX)_i = \bar X\)</span> for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>,
+where <span class="math inline">\(\bar X = \frac1n \sum_{j=1}^n X_j\)</span>.</p></li>
+<li><p>Show that <span class="math inline">\(A\)</span> is symmetric.</p></li>
+<li><p>Show that <span class="math inline">\(A\)</span> is idempotent.</p></li>
+<li><p>Use results from lectures to conclude that the random
+variables <span class="math inline">\(AX\)</span> and <span class="math inline">\(X^\top (I-A)X\)</span> are independent.</p></li>
+<li><p>Using the previous parts of the question, show that <span class="math inline">\(\bar X\)</span>
+and <span class="math inline">\(\frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2\)</span> are independent.</p></li>
+</ul>
+<div class="myanswers">
+<p>The matrix <span class="math inline">\(A = (a_{ij})\)</span> has entries <span class="math inline">\(a_{ij} = 1/n\)</span> for all
+<span class="math inline">\(i, j \in \{1, \ldots, n\}\)</span>. Using this observation, the statements
+of the first few questions follow easily:</p>
+<ul>
+<li><p>We have
+<span class="math display">\[\begin{equation*}
+  (Ax)_i
+  = \sum_{j=1}^n a_{ij} x_j
+  = \sum_{j=1}^n \frac1n x_j
+  = \frac1n \sum_{j=1}^n x_j
+  = \bar x
+\end{equation*}\]</span>
+for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.</p></li>
+<li><p>We have
+<span class="math display">\[\begin{equation*}
+  a_{ij}
+  = \frac1n
+  = a_{ji}
+\end{equation*}\]</span>
+for all <span class="math inline">\(i, j \in \{1, \ldots, n\}\)</span> and thus <span class="math inline">\(A\)</span> is symmetric.</p></li>
+<li><p>We have
+<span class="math inline">\(\mathbf{1}^\top \mathbf{1} = \sum_{i=1}^n 1 \cdot 1 = n\)</span> and
+thus
+<span class="math display">\[\begin{equation*}
+  A^2
+  = \bigl( \frac1n \mathbf{1} \mathbf{1}^\top \bigr)
+      \bigl( \frac1n \mathbf{1} \mathbf{1}^\top \bigr)
+  = \frac{1}{n^2} \mathbf{1}
+      \bigl(\mathbf{1}^\top\mathbf{1}\bigr) \mathbf{1}^\top
+  = \frac1n \mathbf{1} \mathbf{1}^\top
+  = A.
+\end{equation*}\]</span>
+(Alternatively, we could use the fact that we know the entries
+of <span class="math inline">\(A\)</span> and compute <span class="math inline">\(A^2\)</span> explicitly.)</p></li>
+<li><p>For the remaining statements we will use the fact that <span class="math inline">\(X\)</span> is
+normally distributed. We will repeatedly use the
+result that if two random variables <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent,
+that then any function of <span class="math inline">\(X\)</span> is independent of any function of
+<span class="math inline">\(Y\)</span>.</p>
+<p>In lectures we learned that, if <span class="math inline">\(A\)</span> is symmetric and idempotent
+and if <span class="math inline">\(\varepsilon\sim \mathcal{N}(0, I)\)</span>, then <span class="math inline">\(A\varepsilon\)</span> and <span class="math inline">\((I-A)\varepsilon\)</span> are
+independent. Applying this result with
+<span class="math inline">\(\varepsilon= (X - \mu \mathbf{1}) / \sigma\)</span> we
+find that <span class="math inline">\(AX = \sigma A\varepsilon+ \mu A \mathbf{1}\)</span> and
+<span class="math inline">\((I-A)X = \sigma (I-A)\varepsilon+ \mu (I-A)\mathbf{1}\)</span>
+are independent, since they are functions of <span class="math inline">\(A\varepsilon\)</span> and <span class="math inline">\((I-A)\varepsilon\)</span>.</p>
+<p>Since
+<span class="math inline">\((I - A)^\top (I - A) = I^2 - I A - A I + A^2 = I - A - A + A = I - A\)</span> we have
+<span class="math display">\[\begin{equation*}
+  X^\top (I-A)X
+  = X^\top (I - A)^\top (I-A)X
+  = \Bigl( (I-A)X \Bigr)^\top \Bigl( (I-A)X \Bigr).
+\end{equation*}\]</span>
+Thus, <span class="math inline">\(X^\top (I-A)X\)</span> is a function of <span class="math inline">\((I-A)X\)</span> and as such is
+also independent of <span class="math inline">\(AX\)</span>.</p></li>
+<li><p>We have seen <span class="math inline">\((AX)_i = \bar X\)</span> and thus
+<span class="math inline">\(\bigl((I - A)X\bigr)_i = X_i - \bar X\)</span>. This gives
+<span class="math display">\[\begin{align*}
+  X^\top (I-A)X
+  &amp;= \Bigl( (I-A)X \Bigr)^\top \Bigl( (I-A)X \Bigr) \\
+  &amp;= \sum_{i=1}^n \Bigl( (I-A)X \Bigr)_i^2 \\
+  &amp;= \sum_{i=1}^n (X_i - \bar X)^2
+\end{align*}\]</span>
+Thus we can write the sample mean as <span class="math inline">\(\bar X = (AX)_i\)</span>, and the
+sample variance as
+<span class="math inline">\(\mathrm{s}_X^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2 = X^\top (I-A)X / (n-1)\)</span>, and if <span class="math inline">\(X\)</span> is normally distributed the
+two values <span class="math inline">\(\bar X\)</span> and <span class="math inline">\(\mathrm{s}_X^2\)</span> are independent.</p></li>
+</ul>
+</div>
+</div>
+<div class="myq">
+<p><strong>7</strong> Consider the following R commands:</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="P02.html#cb118-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data=</span>stackloss)</span>
+<span id="cb118-2"><a href="P02.html#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = stack.loss ~ ., data = stackloss)
@@ -392,97 +438,74 @@ information about the fitted model:</p>
 ## Residual standard error: 3.243 on 17 degrees of freedom
 ## Multiple R-squared:  0.9136, Adjusted R-squared:  0.8983 
 ## F-statistic:  59.9 on 3 and 17 DF,  p-value: 3.016e-09</code></pre>
-<p>We will learn over the course of this module how to interpret
-most of this output.</p></li>
-<li><p>The coefficient vector <span class="math inline">\(\beta\)</span> can be obtained using
-<code>coef(m)</code>:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="I01-lm.html#cb24-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(m)</span></code></pre></div>
-<pre><code>## (Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
-## -39.9196744   0.7156402   1.2952861  -0.1521225</code></pre></li>
-<li><p>The fitted values <span class="math inline">\(\hat y_i\)</span> can be obtained using
-the command <code>fitted(m)</code>:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="I01-lm.html#cb26-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fitted</span>(m)</span></code></pre></div>
-<pre><code>##         1         2         3         4         5         6         7         8 
-## 38.765363 38.917485 32.444467 22.302226 19.711654 21.006940 21.389491 21.389491 
-##         9        10        11        12        13        14        15        16 
-## 18.144379 12.732806 11.363703 10.220540 12.428561 12.050499  5.638582  6.094949 
-##        17        18        19        20        21 
-##  9.519951  8.455093  9.598257 13.587853 22.237713</code></pre></li>
-<li><p>The estimated residuals <span class="math inline">\(\hat\varepsilon_i = y_i - \hat y_i\)</span> can
-be obtained using the command <code>resid(m)</code>:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="I01-lm.html#cb28-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">resid</span>(m)</span></code></pre></div>
-<pre><code>##           1           2           3           4           5           6 
-##  3.23463723 -1.91748529  4.55553300  5.69777417 -1.71165358 -3.00693970 
-##           7           8           9          10          11          12 
-## -2.38949071 -1.38949071 -3.14437890  1.26719408  2.63629676  2.77946036 
-##          13          14          15          16          17          18 
-## -1.42856088 -0.05049929  2.36141836  0.90505080 -1.51995059 -0.45509295 
-##          19          20          21 
-## -0.59825656  1.41214728 -7.23771286</code></pre></li>
-<li><p>The design matrix <span class="math inline">\(X\)</span> can be found using <code>model.matrix(m)</code>:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="I01-lm.html#cb30-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model.matrix</span>(m)</span></code></pre></div>
-<pre><code>##    (Intercept) Air.Flow Water.Temp Acid.Conc.
-## 1            1       80         27         89
-## 2            1       80         27         88
-## 3            1       75         25         90
-## 4            1       62         24         87
-## 5            1       62         22         87
-## 6            1       62         23         87
-## 7            1       62         24         93
-## 8            1       62         24         93
-## 9            1       58         23         87
-## 10           1       58         18         80
-## 11           1       58         18         89
-## 12           1       58         17         88
-## 13           1       58         18         82
-## 14           1       58         19         93
-## 15           1       50         18         89
-## 16           1       50         18         86
-## 17           1       50         19         72
-## 18           1       50         19         79
-## 19           1       50         20         80
-## 20           1       56         20         82
-## 21           1       70         20         91
-## attr(,&quot;assign&quot;)
-## [1] 0 1 2 3</code></pre></li>
-</ul>
+<p>Either using this output, or using R to further inspect the built-in
+<code>stackloss</code> data set, find a <span class="math inline">\(99\%\)</span>-confidence interval for the
+parameter <span class="math inline">\(\beta_\mathtt{Acid.Conc.}\)</span>.</p>
+<div class="myanswers">
+<p>From lectures, we know that a confidence interval for a single
+coefficient <span class="math inline">\(\beta_j\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  [U, V]
+  = \Bigl[ \hat\beta_j - t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}},
+        \hat\beta_j + t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}} \Bigr],
+\end{equation*}\]</span>
+where <span class="math inline">\(t_{n-p-1}\)</span> is a quantile of the <span class="math inline">\(t\)</span>-distribution,
+<span class="math inline">\(C_{jj} = (X^\top X)^{-1}_{jj}\)</span>, and <span class="math inline">\(X\)</span> is the design matrix.</p>
+<p>We can read off the required values for computing the confidence
+interval from the output of <code>summary(m)</code>: the centre of the
+confidence interval can be found in the column <code>Estimate</code>, the
+standard error <span class="math inline">\(\sqrt{\widehat{\sigma^2} C_{jj}}\)</span> is given in column
+<code>Std. Error</code>, and the value <span class="math inline">\(n-p-1\)</span> for the <span class="math inline">\(t\)</span>-quantile can be
+found as the <code>degrees of freedom</code> for the residual standard error,
+near the bottom of the output. Using these values, we can find a
+<span class="math inline">\(95\%\)</span>-confidence interval for <code>Acid.Conc.</code> as
+follows:</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="P02.html#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1521</span> <span class="sc">-</span> <span class="fu">qt</span>(<span class="fl">0.995</span>, <span class="dv">17</span>) <span class="sc">*</span> <span class="fl">0.1563</span>, <span class="sc">-</span><span class="fl">0.1521</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.995</span>, <span class="dv">17</span>) <span class="sc">*</span> <span class="fl">0.1563</span>)</span></code></pre></div>
+<pre><code>## [1] -0.6050934  0.3008934</code></pre>
+<p>Thus, the confidence interval is <span class="math inline">\(\bigl[ -0.605, 0.301 \bigr]\)</span>.</p>
 </div>
-<div id="lm-predict" class="section level2 unnumbered">
-<h2>Making Predictions</h2>
-<p>One of the main aims of fitting a linear model is to use the model to make
-predictions for new, not previously observed <span class="math inline">\(x\)</span>-values, <em>i.e.</em> to compute
-<span class="math inline">\(y_{\mathrm{new}} = X_{\mathrm{new}} \hat\beta\)</span>. The general form of the
-command for prediction is <code>predict(m, newdata)</code>, where <code>m</code> is the model
-previously fitted using <code>lm()</code>, and <code>newdata</code> specifies the new <span class="math inline">\(x\)</span>-values to
-predict responses for. The argument <code>new.data</code> should be a <code>data.frame</code> and
-for each variable in the original model there should be a column in <code>newdata</code>
-which has the name of the original variable and contains the new values. For
-example, if the model was fitted using</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="I01-lm.html#cb32-1" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
-<p>and if the new samples are stored in <code>x.new</code>, then responses for
-the <span class="math inline">\(x\)</span>-values in <code>x.new</code> can be predicted using the following
-command:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="I01-lm.html#cb33-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">x=</span>x.new))</span></code></pre></div>
-<p>As a second example, for the <code>stackloss</code> data set, the following
-commands can be used to predict <code>stack.loss</code> for two new
-<span class="math inline">\(x\)</span>-values:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="I01-lm.html#cb34-1" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data=</span>stackloss)</span>
-<span id="cb34-2"><a href="I01-lm.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  new.data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Air.Flow=</span><span class="fu">c</span>(<span class="dv">70</span>, <span class="dv">73</span>), <span class="at">Water.Temp=</span><span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">24</span>), <span class="at">Acid.Conc.=</span><span class="fu">c</span>(<span class="dv">78</span>,<span class="dv">90</span>))</span>
-<span id="cb34-3"><a href="I01-lm.html#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(m, new.data)</span></code></pre></div>
-<pre><code>##        1        2 
-## 30.69174 29.71790</code></pre>
-<p>More information about <code>predict()</code> can be found by reading
-the <a href="https://rdrr.io/r/stats/predict.html">output of <code>help(predict.lm)</code></a>.</p>
+</div>
+<div class="myq">
+<p><strong>8</strong> The file <code>20211020.csv</code> from</p>
+<ul>
+<li><a href="https://www1.maths.leeds.ac.uk/~voss/data/20211020.csv">https://www1.maths.leeds.ac.uk/~voss/data/20211020.csv</a></li>
+</ul>
+<p>contains pairs of <span class="math inline">\((x, y)\)</span> values. Fit the following models to the data:</p>
+<ul>
+<li><p><span class="math inline">\(y = \beta_0 + \beta_1 x + \varepsilon\)</span></p></li>
+<li><p><span class="math inline">\(y = \beta_0 + \beta_1 x + \beta_2 x^2 + \varepsilon\)</span></p></li>
+<li><p><span class="math inline">\(y = \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \varepsilon\)</span></p></li>
+</ul>
+<p>For each model, create a “residual plot”, <em>i.e.</em> a scatter plot which
+has the fitted values on the horizontal axis and the residuals on the
+vertical axis. Comment on the resulting plots.</p>
+<div class="myanswers">
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="P02.html#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/data/20211020.csv</span></span>
+<span id="cb122-2"><a href="P02.html#cb122-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/20211020.csv&quot;</span>)</span>
+<span id="cb122-3"><a href="P02.html#cb122-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-4"><a href="P02.html#cb122-4" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> d)</span>
+<span id="cb122-5"><a href="P02.html#cb122-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m1), <span class="fu">resid</span>(m1))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/P02Q08-1.png" width="672" /></p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="P02.html#cb123-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> d)</span>
+<span id="cb123-2"><a href="P02.html#cb123-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m2), <span class="fu">resid</span>(m2))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/P02Q08-2.png" width="672" /></p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="P02.html#cb124-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">3</span>), <span class="at">data =</span> d)</span>
+<span id="cb124-2"><a href="P02.html#cb124-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m3), <span class="fu">resid</span>(m3))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/P02Q08-3.png" width="672" /></p>
+</div>
+</div>
 
 </div>
-</div>
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="S02-multiple.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="P01.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S07-examples.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
