@@ -180,6 +180,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="X03-Var.html"><a href="X03-Var.html#mean-squared-error"><i class="fa fa-check"></i><b>3.2</b> Mean Squared Error</a></li>
 <li class="chapter" data-level="3.3" data-path="X03-Var.html"><a href="X03-Var.html#optimal-bandwidth"><i class="fa fa-check"></i><b>3.3</b> Optimal Bandwidth</a></li>
 </ul></li>
+<li class="chapter" data-level="4" data-path="X04-practice.html"><a href="X04-practice.html"><i class="fa fa-check"></i><b>4</b> Kernel Density Estimation in Practice</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="X04-practice.html"><a href="X04-practice.html#integrated-error"><i class="fa fa-check"></i><b>4.1</b> Integrated Error</a></li>
+<li class="chapter" data-level="4.2" data-path="X04-practice.html"><a href="X04-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>4.2</b> Choice of Kernel</a></li>
+<li class="chapter" data-level="4.3" data-path="X04-practice.html"><a href="X04-practice.html#bandwidth-selection"><i class="fa fa-check"></i><b>4.3</b> Bandwidth Selection</a></li>
+<li class="chapter" data-level="4.4" data-path="X04-practice.html"><a href="X04-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>4.4</b> Higher Dimensions</a></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -230,7 +237,7 @@ interpreted as the area under the graph of <span class="math inline">\(f\)</spa
 in figure <a href="X01-KDE.html#fig:density">1.1</a>.</p>
 
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:density"></span>
-<img src="MATH5714_files/figure-html/density-1.png" alt="An illustration of how the area under the graph of a density can be interpreted as a probability." width="672" />
+<img src="MATH5714M_files/figure-html/density-1.png" alt="An illustration of how the area under the graph of a density can be interpreted as a probability." width="672" />
 <p class="caption">
 Figure 1.1: An illustration of how the area under the graph of a density can be interpreted as a probability.
 </p>
@@ -256,7 +263,7 @@ for this dataset is shown in figure <a href="X01-KDE.html#fig:hist">1.2</a>.</p
 <span id="cb1-2"><a href="X01-KDE.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(x, <span class="at">probability =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb1-3"><a href="X01-KDE.html#cb1-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="cn">NULL</span>, <span class="at">xlab =</span> <span class="st">&quot;time between eruptions [mins]&quot;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:hist"></span>
-<img src="MATH5714_files/figure-html/hist-1.png" alt="This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes." width="672" />
+<img src="MATH5714M_files/figure-html/hist-1.png" alt="This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes." width="672" />
 <p class="caption">
 Figure 1.2: This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes.
 </p>
@@ -306,7 +313,7 @@ no longer resemble the shape of <span class="math inline">\(f\)</span>. This</p
 <span id="cb2-3"><a href="X01-KDE.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(x, <span class="at">probability =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="cn">NULL</span>,</span>
 <span id="cb2-4"><a href="X01-KDE.html#cb2-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">2.5</span>, <span class="fl">2.5</span>, <span class="at">length.out =</span> <span class="dv">500</span>))</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:broken-hist"></span>
-<img src="MATH5714_files/figure-html/broken-hist-1.png" alt="This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes." width="672" />
+<img src="MATH5714M_files/figure-html/broken-hist-1.png" alt="This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes." width="672" />
 <p class="caption">
 Figure 1.3: This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes.
 </p>
@@ -326,7 +333,7 @@ allowing to come to different conclusions about the distribution.</p>
 <span id="cb3-5"><a href="X01-KDE.html#cb3-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="fl">24.30</span>, <span class="fl">208.22</span>, <span class="at">length.out =</span> <span class="dv">20</span>),</span>
 <span id="cb3-6"><a href="X01-KDE.html#cb3-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="cn">NULL</span>, <span class="at">xlab =</span> <span class="st">&quot;snowfall [in]&quot;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:buffalo1"></span>
-<img src="MATH5714_files/figure-html/buffalo1-1.png" alt="The annual amount of snowfall in Buffalo, New York, in inches. The histogram makes it plausible that there is one main peak in the distribution." width="672" />
+<img src="MATH5714M_files/figure-html/buffalo1-1.png" alt="The annual amount of snowfall in Buffalo, New York, in inches. The histogram makes it plausible that there is one main peak in the distribution." width="672" />
 <p class="caption">
 Figure 1.4: The annual amount of snowfall in Buffalo, New York, in inches. The histogram makes it plausible that there is one main peak in the distribution.
 </p>
@@ -336,7 +343,7 @@ Figure 1.4: The annual amount of snowfall in Buffalo, New York, in inches. The h
 <span id="cb4-2"><a href="X01-KDE.html#cb4-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="fl">22.85</span>, <span class="fl">204.92</span>, <span class="at">length.out =</span> <span class="dv">20</span>),</span>
 <span id="cb4-3"><a href="X01-KDE.html#cb4-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="cn">NULL</span>, <span class="at">xlab =</span> <span class="st">&quot;snowfall [in]&quot;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:buffalo2"></span>
-<img src="MATH5714_files/figure-html/buffalo2-1.png" alt="Continued from 1.4, this histogram shows the dataset in a way that three peaks are visible." width="672" />
+<img src="MATH5714M_files/figure-html/buffalo2-1.png" alt="Continued from 1.4, this histogram shows the dataset in a way that three peaks are visible." width="672" />
 <p class="caption">
 Figure 1.5: Continued from <a href="X01-KDE.html#fig:buffalo1">1.4</a>, this histogram shows the dataset in a way that three peaks are visible.
 </p>
@@ -359,7 +366,7 @@ values for the <code>break</code> argument to <code>hist()</code>, which R uses 
 <span id="cb5-10"><a href="X01-KDE.html#cb5-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="cn">NULL</span>)</span>
 <span id="cb5-11"><a href="X01-KDE.html#cb5-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:snow-hist-col"></span>
-<img src="MATH5714_files/figure-html/snow-hist-col-1.png" alt="This figure illustrates how the bucket size in a histogram can be controlled in R." width="672" />
+<img src="MATH5714M_files/figure-html/snow-hist-col-1.png" alt="This figure illustrates how the bucket size in a histogram can be controlled in R." width="672" />
 <p class="caption">
 Figure 1.6: This figure illustrates how the bucket size in a histogram can be controlled in R.
 </p>
@@ -443,8 +450,8 @@ which we use to replace the function <span class="math inline">\(1/2 \, I_{[-1,+
 <p><span id="def:kernel" class="definition"><strong>Definition 1.1  </strong></span>A <strong>kernel</strong> is a function <span class="math inline">\(K\colon \mathbb{R}\to \mathbb{R}\)</span> such that</p>
 <ul>
 <li><span class="math inline">\(\int_{-\infty}^\infty K(x) \,dx = 1\)</span>,</li>
-<li><span class="math inline">\(K(x) = K(-x)\)</span> for all <span class="math inline">\(x\in \mathbb{R}\)</span> (i.e. <span class="math inline">\(K\)</span> is <em>symmetric</em>).</li>
-<li><span class="math inline">\(K(x) \geq 0\)</span> (i.e. <span class="math inline">\(K\)</span> is <em>positive</em>), and</li>
+<li><span class="math inline">\(K(x) = K(-x)\)</span> (i.e. <span class="math inline">\(K\)</span> is <em>symmetric</em>) and</li>
+<li><span class="math inline">\(K(x) \geq 0\)</span> (i.e. <span class="math inline">\(K\)</span> is <em>positive</em>) for all <span class="math inline">\(x\in \mathbb{R}\)</span>.</li>
 </ul>
 </div>
 <p>Of these three properties, the first one is the most important one.
@@ -495,7 +502,7 @@ below. A more exhautive list can, for example, be found
       0 &amp; \mbox{otherwise}
     \end{cases}
 \end{equation*}\]</span></p>
-<p><img src="MATH5714_files/figure-html/kUniform-1.png" width="172.8" /></p>
+<p><img src="MATH5714M_files/figure-html/kUniform-1.png" width="172.8" /></p>
 </div>
 <div id="triangular-kernel" class="section level4" number="1.2.3.2">
 <h4><span class="header-section-number">1.2.3.2</span> Triangular Kernel</h4>
@@ -506,7 +513,7 @@ below. A more exhautive list can, for example, be found
       0 &amp; \mbox{otherwise}
     \end{cases}
 \end{equation*}\]</span></p>
-<p><img src="MATH5714_files/figure-html/kTriangular-1.png" width="172.8" /></p>
+<p><img src="MATH5714M_files/figure-html/kTriangular-1.png" width="172.8" /></p>
 </div>
 <div id="epanechnikov-kernel" class="section level4" number="1.2.3.3">
 <h4><span class="header-section-number">1.2.3.3</span> Epanechnikov Kernel</h4>
@@ -517,7 +524,7 @@ below. A more exhautive list can, for example, be found
       0 &amp; \mbox{otherwise}
     \end{cases}
 \end{equation*}\]</span></p>
-<p><img src="MATH5714_files/figure-html/kEpanechnikov-1.png" width="172.8" /></p>
+<p><img src="MATH5714M_files/figure-html/kEpanechnikov-1.png" width="172.8" /></p>
 </div>
 <div id="gaussian-kernel" class="section level4" number="1.2.3.4">
 <h4><span class="header-section-number">1.2.3.4</span> Gaussian Kernel</h4>
@@ -525,7 +532,7 @@ below. A more exhautive list can, for example, be found
   K(x)
   = \frac{1}{\sqrt{2\pi}} \exp\bigl(-x^2/2\bigr)
 \end{equation*}\]</span></p>
-<p><img src="MATH5714_files/figure-html/kGaussian-1.png" width="172.8" /></p>
+<p><img src="MATH5714M_files/figure-html/kGaussian-1.png" width="172.8" /></p>
 </div>
 </div>
 </div>
@@ -581,7 +588,7 @@ bandwidth parameter.</p>
 <span id="cb8-8"><a href="X01-KDE.html#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="cn">NA</span>)</span>
 <span id="cb8-9"><a href="X01-KDE.html#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:snow-dens-col"></span>
-<img src="MATH5714_files/figure-html/snow-dens-col-1.png" alt="This figure illustrates how the bandwidth of a kernel density estimate can be controlled in R." width="672" />
+<img src="MATH5714M_files/figure-html/snow-dens-col-1.png" alt="This figure illustrates how the bandwidth of a kernel density estimate can be controlled in R." width="672" />
 <p class="caption">
 Figure 1.7: This figure illustrates how the bandwidth of a kernel density estimate can be controlled in R.
 </p>
@@ -636,7 +643,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["MATH5714.pdf"],
+"download": ["MATH5714M.pdf"],
 "search": {
 "engine": "fuse",
 "options": null

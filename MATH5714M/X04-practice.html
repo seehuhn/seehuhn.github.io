@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 4 Kernel Density Estimation in Practice | MATH5714 Linear Regression, Robustness and Smoothing</title>
+  <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 4 Kernel Density Estimation in Practice | MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH5714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 4 Kernel Density Estimation in Practice | MATH5714 Linear Regression, Robustness and Smoothing" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="X03-Var.html"/>
+
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH5714M Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="X01-KDE.html"><a href="X01-KDE.html"><i class="fa fa-check"></i><b>1</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms"><i class="fa fa-check"></i><b>1.1</b> Histograms</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#probability-densities"><i class="fa fa-check"></i><b>1.1.1</b> Probability Densities</a></li>
+<li class="chapter" data-level="1.1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms-1"><i class="fa fa-check"></i><b>1.1.2</b> Histograms</a></li>
+<li class="chapter" data-level="1.1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#choice-of-buckets"><i class="fa fa-check"></i><b>1.1.3</b> Choice of Buckets</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation"><i class="fa fa-check"></i><b>1.2</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="X01-KDE.html"><a href="X01-KDE.html#motivation"><i class="fa fa-check"></i><b>1.2.1</b> Motivation</a></li>
+<li class="chapter" data-level="1.2.2" data-path="X01-KDE.html"><a href="X01-KDE.html#definition-of-a-kernel-density-estimator"><i class="fa fa-check"></i><b>1.2.2</b> Definition of a Kernel Density Estimator</a></li>
+<li class="chapter" data-level="1.2.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernels"><i class="fa fa-check"></i><b>1.2.3</b> Kernels</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation-in-r"><i class="fa fa-check"></i><b>1.3</b> Kernel Density Estimation in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="X02-Bias.html"><a href="X02-Bias.html"><i class="fa fa-check"></i><b>2</b> The Bias of Kernel Density Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="X02-Bias.html"><a href="X02-Bias.html#a-statistical-model"><i class="fa fa-check"></i><b>2.1</b> A Statistical Model</a></li>
+<li class="chapter" data-level="2.2" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-of-the-estimate"><i class="fa fa-check"></i><b>2.2</b> The Bias of the Estimate</a></li>
+<li class="chapter" data-level="2.3" data-path="X02-Bias.html"><a href="X02-Bias.html#moments-of-kernels"><i class="fa fa-check"></i><b>2.3</b> Moments of Kernels</a></li>
+<li class="chapter" data-level="2.4" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-for-small-bandwidth"><i class="fa fa-check"></i><b>2.4</b> The Bias for Small Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="X03-Var.html"><a href="X03-Var.html"><i class="fa fa-check"></i><b>3</b> The Variance of Kernel Density Estimates</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="X03-Var.html"><a href="X03-Var.html#variance"><i class="fa fa-check"></i><b>3.1</b> Variance</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="X03-Var.html"><a href="X03-Var.html#second-moment"><i class="fa fa-check"></i><b>3.1.1</b> Second Moment</a></li>
+<li class="chapter" data-level="3.1.2" data-path="X03-Var.html"><a href="X03-Var.html#the-roughness-of-a-kernel"><i class="fa fa-check"></i><b>3.1.2</b> The Roughness of a Kernel</a></li>
+<li class="chapter" data-level="3.1.3" data-path="X03-Var.html"><a href="X03-Var.html#the-variance-for-small-bandwidth"><i class="fa fa-check"></i><b>3.1.3</b> The Variance for Small Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="X03-Var.html"><a href="X03-Var.html#mean-squared-error"><i class="fa fa-check"></i><b>3.2</b> Mean Squared Error</a></li>
+<li class="chapter" data-level="3.3" data-path="X03-Var.html"><a href="X03-Var.html#optimal-bandwidth"><i class="fa fa-check"></i><b>3.3</b> Optimal Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="X04-practice.html"><a href="X04-practice.html"><i class="fa fa-check"></i><b>4</b> Kernel Density Estimation in Practice</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="X04-practice.html"><a href="X04-practice.html#integrated-error"><i class="fa fa-check"></i><b>4.1</b> Integrated Error</a></li>
+<li class="chapter" data-level="4.2" data-path="X04-practice.html"><a href="X04-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>4.2</b> Choice of Kernel</a></li>
+<li class="chapter" data-level="4.3" data-path="X04-practice.html"><a href="X04-practice.html#bandwidth-selection"><i class="fa fa-check"></i><b>4.3</b> Bandwidth Selection</a></li>
+<li class="chapter" data-level="4.4" data-path="X04-practice.html"><a href="X04-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>4.4</b> Higher Dimensions</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH5714 Linear Regression, Robustness and Smoothing</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="X04-practice" class="section level1" number="4">
+<h1><span class="header-section-number">Section 4</span> Kernel Density Estimation in Practice</h1>
+<p>In this section we conclude our discussion of kernel density estimation
+by considering different aspects which are important when using the method
+in practice.</p>
+<div id="integrated-error" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Integrated Error</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/03TrU8ZgsGQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>From equation <a href="X03-Var.html#eq:f-hat-MSE">(3.6)</a> we know
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  \approx \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 h^4.
+\end{equation*}\]</span>
+This gives the mean squared error when trying to estimate the density
+<span class="math inline">\(f(x)\)</span> at a fixed point <span class="math inline">\(x\)</span>. Usually we are interested in estimating
+the function <span class="math inline">\(f\)</span> rather than individual points <span class="math inline">\(f(x)\)</span>. In this case,
+we consider the <strong>integrated mean squared error (IMSE)</strong>:
+<span class="math display">\[\begin{equation*}
+  \mathrm{IMSE}\bigl( \hat f_h \bigr)
+  := \int_{-\infty}^\infty \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr) \,dx.
+\end{equation*}\]</span>
+Using our result from above we find
+<span class="math display">\[\begin{align*}
+  \mathrm{IMSE}\bigl( \hat f_h \bigr)
+  &amp;\approx \int \Bigl( \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 h^4 \Bigr) \,dx \\
+  &amp;= \frac{1}{nh} R(K) \int f(x) \,dx + \frac{h^4}{4} \mu_2(K)^2 \int f&#39;&#39;(x)^2 \,dx \\
+  &amp;= \frac{1}{nh} R(K) + \frac{1}{4} \mu_2(K)^2 R(f&#39;&#39;) h^4,
+\end{align*}\]</span>
+where we (mis-)use the definition of roughness as an abbreviation to express
+the integral over <span class="math inline">\(f&#39;&#39;\)</span>.</p>
+<p>As before, we can use differentiation to find the optimal value of <span class="math inline">\(h\)</span>.
+Here we get
+<span class="math display">\[\begin{equation*}
+  h_\mathrm{opt}
+  = \Bigl( \frac{R(K)}{n \mu_2(K)^2 R(f&#39;&#39;)} \Bigr)^{1/5}.
+\end{equation*}\]</span>
+and the corresponding error is
+<span class="math display" id="eq:IMSE-opt">\[\begin{equation}
+  \mathrm{IMSE}_\mathrm{opt}
+  = \frac54 \; \frac{1}{n^{4/5}}
+      \; \Bigl( R(K)^2 \mu_2(K) \Bigr)^{2/5}
+      \; R(f&#39;&#39;)^{1/5}.  \tag{4.1}
+\end{equation}\]</span>
+Thus, in order to minimise the error we still need to choose
+<span class="math inline">\(h \propto n^{-1/5}\)</span> and we should choose a kernel <span class="math inline">\(K\)</span> which minimises
+the value <span class="math inline">\(R(K)^2 \mu_2(K)\)</span>.</p>
+</div>
+<div id="choice-of-kernel" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Choice of Kernel</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/lz8Fy0X3iCs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>The integrated error in equation <a href="X04-practice.html#eq:IMSE-opt">(4.1)</a> is proportional to
+<span class="math inline">\(\bigl( R(K)^2 \mu_2(K) \bigr)^{2/5}\)</span>, and none of the remaining terms in
+the equation depends on the choice of the kernel. Thus, we can minimise
+the error by choosing a kernel which has minimal <span class="math inline">\(R(K)^2 \mu_2(K)\)</span>.
+For a given kernel, it is easy to work out the value of <span class="math inline">\(R(K)^2 \mu_2(K)\)</span>.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-4" class="example"><strong>Example 4.1  </strong></span>For the uniform kernel we have
+<span class="math display">\[\begin{equation*}
+  K(x)
+  = \begin{cases}
+      1/2 &amp; \mbox{if $-1 \leq x \leq 1$} \\
+      0 &amp; \mbox{otherwise.}
+    \end{cases}
+\end{equation*}\]</span>
+From this we find
+<span class="math display">\[\begin{equation*}
+  R(K)
+  = \int_{-\infty}^\infty K(x)^2 \,dx
+  = \int_{-1}^1 \frac14 \,dx
+  = \frac12
+\end{equation*}\]</span>
+and
+<span class="math display">\[\begin{equation*}
+  \mu_2(K)
+  = \int_{-\infty}^\infty x^2 K(x) \,dx
+  = \int_{-1}^1 \frac12 x^2 \,dx
+  = \frac16 \Bigl. x^3 \Bigr|_{x=-1}^1
+  = \frac16 \bigl( 1 - (-1) \bigr)
+  = \frac13.
+\end{equation*}\]</span>
+Thus, for the triangular kernel we have
+<span class="math display">\[\begin{equation*}
+  R(K)^2 \mu_2(K)
+  = \Bigl( \frac12 \Bigr)^2 \frac13
+  = \frac{1}{12}
+  \approx 0.083333.
+\end{equation*}\]</span></p>
+</div>
+<p>Calculations similar to the ones in the example give the following
+values:</p>
+<table>
+<colgroup>
+<col width="13%" />
+<col width="51%" />
+<col width="14%" />
+<col width="14%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">kernel</th>
+<th align="center"></th>
+<th align="center"><span class="math inline">\(\mu_2(K)\)</span></th>
+<th align="center"><span class="math inline">\(R(K)\)</span></th>
+<th align="left"><span class="math inline">\(R(K)^2 \mu_2(K)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Uniform</td>
+<td align="center"><img src="MATH5714M_files/figure-html/kUniform-1.png" style="width:4cm" alt="uniform kernel" /></td>
+<td align="center"><span class="math inline">\(\displaystyle\frac13\)</span></td>
+<td align="center"><span class="math inline">\(\displaystyle\frac12\)</span></td>
+<td align="left"><span class="math inline">\(0.08333\)</span></td>
+</tr>
+<tr class="even">
+<td align="right">Triangular</td>
+<td align="center"><img src="MATH5714M_files/figure-html/kTriangular-1.png" style="width:4cm" alt="triangluar kernel" /></td>
+<td align="center"><span class="math inline">\(\displaystyle\frac16\)</span></td>
+<td align="center"><span class="math inline">\(\displaystyle\frac23\)</span></td>
+<td align="left"><span class="math inline">\(0.07407\)</span></td>
+</tr>
+<tr class="odd">
+<td align="right">Epanechnikov</td>
+<td align="center"><img src="MATH5714M_files/figure-html/kEpanechnikov-1.png" style="width:4cm" alt="Epanechnikov kernel" /></td>
+<td align="center"><span class="math inline">\(\displaystyle\frac15\)</span></td>
+<td align="center"><span class="math inline">\(\displaystyle\frac35\)</span></td>
+<td align="left"><span class="math inline">\(0.07200\)</span></td>
+</tr>
+<tr class="even">
+<td align="right">Gaussian</td>
+<td align="center"><img src="MATH5714M_files/figure-html/kGaussian-1.png" style="width:4cm" alt="Gaussian kernel" /></td>
+<td align="center"><span class="math inline">\(1\)</span></td>
+<td align="center"><span class="math inline">\(\displaystyle\frac{1}{2\sqrt{\pi}}\)</span></td>
+<td align="left"><span class="math inline">\(0.07958\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The best value in the table is obtained for the Epanechnikov kernel,
+with <span class="math inline">\(R(K)^2 \mu_2(K) = 9/125 = 0.072\)</span>. One can show that this value
+is indeed optimal amongst all kernels. Since the difference in error
+for the kernels listed abive is only a few percent, any of these kernels
+would be a reasonable choice.</p>
+</div>
+<div id="bandwidth-selection" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Bandwidth Selection</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5zNYHX4p0KM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>Our formulas for the optimal bandwidth contain the terms
+<span class="math inline">\(f(x)^2 |f&#39;&#39;(x)|\)</span> for fixed <span class="math inline">\(x\)</span> and <span class="math inline">\(R(f&#39;&#39;)\)</span> for the integrated error.
+Since <span class="math inline">\(f\)</span> is unknown, neither of these quantities are available and instead
+different rules of thumb are used in the literature. Here we present
+one possible choice of bandwidth estimator.</p>
+<p>Suppose that <span class="math inline">\(f\)</span> is a normal density, with mean <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\sigma^2\)</span>.
+Then we have
+<span class="math display">\[\begin{equation*}
+  f(x)
+  = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\bigl( - (x-\mu)^2 / 2\sigma^2 \bigr).
+\end{equation*}\]</span>
+Taking derivatives we get
+<span class="math display">\[\begin{equation*}
+  f&#39;(x)
+  = - \frac{1}{\sqrt{2\pi\sigma^2}} \frac{x-\mu}{\sigma^2} \exp\bigl( - (x-\mu)^2 / 2\sigma^2 \bigr)
+\end{equation*}\]</span>
+and
+<span class="math display">\[\begin{equation*}
+  f&#39;&#39;(x)
+  = \frac{1}{\sqrt{2\pi\sigma^2}}
+      \Bigl( \frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2} \Bigr)
+      \exp\bigl( - (x-\mu)^2 / 2\sigma^2 \bigr)
+\end{equation*}\]</span>
+Patiently integrating the square of this function gives
+<span class="math display">\[\begin{align*}
+  R(f&#39;&#39;)
+  = \int_{-\infty}^\infty f&#39;&#39;(x)^2 \,dx
+  = \cdots
+  = \frac{3}{8\sigma^5\sqrt{\pi}}.
+\end{align*}\]</span>
+This can be used as a simple “plug-in rule” with <span class="math inline">\(\sigma\)</span> estimated by the
+sample standard deviation.</p>
+<p>We now demonstrate how this rule of thumb could be used in R to obtain a kernel
+density estimate for the snowfall data. We will use the Epanechnikov kernel.
+For compatibility with the kernels built into R, we rescale this kernel, so
+that <span class="math inline">\(\mu_2(K) = 1\)</span>, i.e. we consider <span class="math inline">\(K_{\sqrt{5}}\)</span> in place of <span class="math inline">\(K\)</span>. An easy
+calculation shows that the roughness is then <span class="math inline">\(R(K) = 3 / (5*\sqrt(5))\)</span>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="X04-practice.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># downloaded from https://teaching.seehuhn.de/data/buffalo/</span></span>
+<span id="cb9-2"><a href="X04-practice.html#cb9-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/buffalo.csv&quot;</span>)</span>
+<span id="cb9-3"><a href="X04-practice.html#cb9-3" aria-hidden="true" tabindex="-1"></a>snowfall <span class="ot">&lt;-</span> x<span class="sc">$</span>snowfall</span>
+<span id="cb9-4"><a href="X04-practice.html#cb9-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(snowfall)</span>
+<span id="cb9-5"><a href="X04-practice.html#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="X04-practice.html#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Roughness of the Epanechnikov kernel, after rescaling with h = sqrt(5)</span></span>
+<span id="cb9-7"><a href="X04-practice.html#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># so that the second moment becomes mu_2 = 1:</span></span>
+<span id="cb9-8"><a href="X04-practice.html#cb9-8" aria-hidden="true" tabindex="-1"></a>R.K <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">/</span> (<span class="dv">5</span> <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">5</span>))</span>
+<span id="cb9-9"><a href="X04-practice.html#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="X04-practice.html#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Rule of thumb:</span></span>
+<span id="cb9-11"><a href="X04-practice.html#cb9-11" aria-hidden="true" tabindex="-1"></a>R.fpp <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">/</span> (<span class="dv">8</span> <span class="sc">*</span> <span class="fu">sd</span>(snowfall)<span class="sc">^</span><span class="dv">5</span> <span class="sc">*</span> <span class="fu">sqrt</span>(pi))</span>
+<span id="cb9-12"><a href="X04-practice.html#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="X04-practice.html#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># formula for the optimal h</span></span>
+<span id="cb9-14"><a href="X04-practice.html#cb9-14" aria-hidden="true" tabindex="-1"></a>my.bw <span class="ot">&lt;-</span> (R.K <span class="sc">/</span> (n <span class="sc">*</span> <span class="dv">1</span><span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> R.fpp))<span class="sc">^</span><span class="fl">0.2</span></span>
+<span id="cb9-15"><a href="X04-practice.html#cb9-15" aria-hidden="true" tabindex="-1"></a>my.bw</span></code></pre></div>
+<pre><code>## [1] 11.58548</code></pre>
+<p>R has a variety of different builtin methods to estimate bandwidths.
+See stats/bandwidth for a description. For comparison to our result,
+we list here the bandwidths suggested by some of R’s algorithms:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="X04-practice.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb11-2"><a href="X04-practice.html#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="fu">c</span>(<span class="st">&quot;nrd0&quot;</span>, <span class="st">&quot;nrd&quot;</span>, <span class="st">&quot;SJ&quot;</span>),</span>
+<span id="cb11-3"><a href="X04-practice.html#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">bw =</span> <span class="fu">c</span>(<span class="fu">bw.nrd0</span>(snowfall), <span class="fu">bw.nrd</span>(snowfall), <span class="fu">bw.SJ</span>(snowfall)))</span></code></pre></div>
+<pre><code>##   name        bw
+## 1 nrd0  9.724206
+## 2  nrd 11.452953
+## 3   SJ 11.903840</code></pre>
+<p>All of these value seem close the value we obtained manually. Using
+our bandwidth estimate, we get the following estimated density.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="X04-practice.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(snowfall, <span class="at">bw =</span> my.bw, <span class="at">kernel =</span> <span class="st">&quot;epanechnikov&quot;</span>),</span>
+<span id="cb13-2"><a href="X04-practice.html#cb13-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="cn">NA</span>)</span></code></pre></div>
+<p><img src="MATH5714M_files/figure-html/buffalo-final-1.png" width="672" /></p>
+<p>In practice one would just use one of the built-in methods, for example using
+<code>bw="SJ"</code> instead of estimating the bandwidth manually.</p>
+</div>
+<div id="higher-dimensions" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Higher Dimensions</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/wtEH4DlRM5M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>So far we have only considered the one-dimensional case, where the samples <span class="math inline">\(x_i\)</span>
+are real numbers. In this subsection we will sketch how these methods will need
+to be adjusted for the multivariate case of <span class="math inline">\(x_i = (x_{i,1}, \ldots, x_{i,p}) \in \mathbb{R}^p\)</span>.</p>
+<p>In this setup, a <strong>kernel</strong> is a function <span class="math inline">\(K\colon \mathbb{R}^p\to \mathbb{R}\)</span> such that</p>
+<ul>
+<li><span class="math inline">\(\int \cdots \int K(x) \,dx_p \cdots dx_1 = 1\)</span>,</li>
+<li><span class="math inline">\(K(x) = K(-x)\)</span> and</li>
+<li><span class="math inline">\(K(x) \geq 0\)</span> for all <span class="math inline">\(x\in \mathbb{R}\)</span>,</li>
+</ul>
+<p>where the integral in the first condition is now over all <span class="math inline">\(p\)</span> coordinates.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-5" class="example"><strong>Example 4.2  </strong></span>If <span class="math inline">\(K_1, \ldots, K_p\)</span> are one-dimensional kernels, then the product
+<span class="math display">\[\begin{equation*}
+  K(x_1, \ldots, x_p)
+  := K_1(x_1) \cdots K_p(x_p)
+\end{equation*}\]</span>
+is a kernel in <span class="math inline">\(p\)</span> dimensions. If we use the product of <span class="math inline">\(p\)</span>
+Gaussian kernels, we get
+<span class="math display">\[\begin{align*}
+  K(x)
+  &amp;= \prod_{i=1}^p \frac{1}{\sqrt{2\pi}} \exp\bigl(-x_i^2/2\bigr) \\
+  &amp;=  \frac{1}{(2\pi)^{p/2}} \exp\Bigl(-\frac12 (x_1^2 + \cdots + x_p^2) \Bigr).
+\end{align*}\]</span></p>
+</div>
+<p>There are different possibilities for rescaling these kernels:</p>
+<ul>
+<li><p>If all coordinates live on “comparable scales” (e.g., if they are
+measured in the same units), the formula
+<span class="math display">\[ K_h(x) = \frac{1}{h^p} K(x/h) \]</span>
+for all <span class="math inline">\(x\in\mathbb{R}^p\)</span> can be used, where <span class="math inline">\(h&gt;0\)</span> is a bandwidth parameter
+as before. The scaling by <span class="math inline">\(1/h^p\)</span> is required
+to ensure that the integral of <span class="math inline">\(K_h\)</span> equals <span class="math inline">\(1\)</span>, so that <span class="math inline">\(K_h\)</span> is
+a kernel again.</p></li>
+<li><p>If different scaling is desirable for different components, the formula
+<span class="math display">\[\begin{equation*}
+  K_h(x)
+  = \frac{1}{h_1 \cdots h_p} K(x_1/h_1, \ldots, x_p/h_p)
+\end{equation*}\]</span>
+for all <span class="math inline">\(x\in\mathbb{R}^p\)</span> can be used, where <span class="math inline">\(h = (h_1, \ldots, h_p)\)</span> is a vector
+of bandwidth parameters.</p></li>
+<li><p>A more general version would be to use a symmetric, positive definite
+bandwidth matrix <span class="math inline">\(H \in \mathbb{R}^{p\times p}\)</span>.
+In this case the required scaling is
+<span class="math display">\[\begin{equation*}
+  K_H(x)
+  = \frac{1}{\mathrm{det}(H)} K\bigl( H^{-1} x \bigr)
+\end{equation*}\]</span>
+for all <span class="math inline">\(x\in\mathbb{R}^p\)</span>.</p></li>
+</ul>
+<p>For all of these choices, the kernel density estimator is given by
+<span class="math display">\[\begin{equation*}
+  \hat f_h(x)
+  = \frac{1}{n} \sum_{i=1}^n K_h(x - x_i)
+\end{equation*}\]</span>
+(using <span class="math inline">\(K_H\)</span> for the third option) for all <span class="math inline">\(x\in\mathbb{R}^p\)</span>.
+Bandwidth selection in the multivariate case is a difficult problem
+and we will not discuss this here.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="X03-Var.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH5714M.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
