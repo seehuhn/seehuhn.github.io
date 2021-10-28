@@ -245,6 +245,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.1" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#plots"><i class="fa fa-check"></i><b>8.1</b> Diagnostic Plots</a></li>
 <li class="chapter" data-level="8.2" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#R-squared"><i class="fa fa-check"></i><b>8.2</b> The Coefficient of Multiple Determination</a></li>
 </ul></li>
+<li class="chapter" data-level="9" data-path="S09-influence.html"><a href="S09-influence.html"><i class="fa fa-check"></i><b>9</b> The Influence of Observations</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting-observations"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#cooks-distance"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
 <ul>
@@ -639,20 +644,20 @@ the inverse of <span class="math inline">\(Q\)</span> and we get
 \end{align*}\]</span>
 where the norm on the right-hand side is the usual Euclidean norm.
 Thus, the boundary of the ellipse consists of all points of the
-form <span class="math inline">\(K \hat\beta + d\)</span>, where <span class="math inline">\(e := D^{-1} U^\top d\)</span> is a vector
+form <span class="math inline">\(K \hat\beta + d\)</span>, where <span class="math inline">\(e := D^{-1/2} U^\top d\)</span> is a vector
 of length
 <span class="math display">\[ \| e \| = \sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}. \]</span>
 Finally, using polar coordinates, we find the points on the boundary
 to be
 <span class="math display">\[\begin{equation*}
   d
-  = U D e
-  = U D \sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}
+  = U D^{1/2} e
+  = U D^{1/2} \sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}
     \begin{pmatrix}
       \cos(\varphi) \\ \sin(\varphi)
     \end{pmatrix}
 \end{equation*}\]</span>
-with <span class="math inline">\(\varphi\in [0, 2pi]\)</span>. This allows to plot the boundary line in R.</p>
+with <span class="math inline">\(\varphi\in [0, 2\pi]\)</span>. This allows to plot the boundary line in R.</p>
 <div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="S06-simultaneous.html#cb74-1" aria-hidden="true" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">201</span>)</span>
 <span id="cb74-2"><a href="S06-simultaneous.html#cb74-2" aria-hidden="true" tabindex="-1"></a>circ <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">cos</span>(phi), <span class="fu">sin</span>(phi)) <span class="sc">*</span> <span class="fu">sqrt</span>(f.crit <span class="sc">*</span> k <span class="sc">*</span> sigma.hat<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb74-3"><a href="S06-simultaneous.html#cb74-3" aria-hidden="true" tabindex="-1"></a></span>

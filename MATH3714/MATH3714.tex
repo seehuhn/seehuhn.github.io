@@ -2305,7 +2305,7 @@ Some authors define:
 \item
   \(\mathrm{SS}_\mathrm{R} = \sum_{i=1}^n \hat y_i^2\) (where ``R'' stands for ``regression'')
 \item
-  \(\mathrm{SS}_\mathrm{E} = \sum_{i=1}^n (y_i-\hat y_i)^2\) (where ``E'' stands for ``error'')
+  \(\mathrm{SS}_\mathrm{E} = \sum_{i=1}^n \hat\varepsilon_i^2 = \sum_{i=1}^n (y_i-\hat y_i)^2\) (where ``E'' stands for ``error'')
 \end{itemize}
 
 Using this notation, our equation
@@ -2420,7 +2420,7 @@ We will see that an unbiased estimator for \(\sigma^2\) is
 given by
 \begin{equation}
   \hat\sigma^2
-  = \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \label{eq:hat-sigma-squared}
+  := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \label{eq:hat-sigma-squared}
 \end{equation}
 where \(\hat y_i\) are the fitted values from equation~\eqref{eq:fitted-values}.
 As for the one-dimensional case in~\eqref{eq:reg-sigma-est}, the estimate
@@ -3343,20 +3343,20 @@ the inverse of \(Q\) and we get
 \end{align*}
 where the norm on the right-hand side is the usual Euclidean norm.
 Thus, the boundary of the ellipse consists of all points of the
-form \(K \hat\beta + d\), where \(e := D^{-1} U^\top d\) is a vector
+form \(K \hat\beta + d\), where \(e := D^{-1/2} U^\top d\) is a vector
 of length
 \[ \| e \| = \sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}. \]
 Finally, using polar coordinates, we find the points on the boundary
 to be
 \begin{equation*}
   d
-  = U D e
-  = U D \sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}
+  = U D^{1/2} e
+  = U D^{1/2} \sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}
     \begin{pmatrix}
       \cos(\varphi) \\ \sin(\varphi)
     \end{pmatrix}
 \end{equation*}
-with \(\varphi\in [0, 2pi]\). This allows to plot the boundary line in~R.
+with \(\varphi\in [0, 2\pi]\). This allows to plot the boundary line in~R.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4849,6 +4849,496 @@ As expected, the \(R^2\) value has increased here (from 0.9136 to 0.9334).
 Since the adjusted \(R^2\) value has also increased (from 0.8983 to 0.9167),
 the extended model may be better than the original model.
 \end{example}
+
+\clearpage
+
+\hypertarget{S09-influence}{%
+\section{The Influence of Observations}\label{S09-influence}}
+
+In this section we consider the influence which individual samples have on
+the estimate. Samples with a large influence may be outliers, and are
+worth checking for validity.
+
+\hypertarget{deleting-observations}{%
+\subsection{Deleting Observations}\label{deleting-observations}}
+
+The most direct way to check for the influence of an observation
+is to compute the parameter estimate \(\hat\beta\) both with and without
+the observation in question, and to see how much the two results differ.
+
+\begin{definition}
+For \(I \subset \{1, \ldots, n\}\) we write~\(\hat\beta^{(I)}\) for the estimate
+where all observations \(i\in I\) have been removed. As a shorthand we write
+\(\hat\beta^{(i)}\) instead of \(\hat\beta^{(\{i\})}\) for the case where only
+a single observation has been removed.
+\end{definition}
+
+This approach is very different from what we used in the
+section about \protect\hyperlink{S06-simultaneous}{Estimating Coefficients Simultaneously}. There, we selected a
+subset of regression coefficients, corresponding to columns in the design
+matrix~\(X\), whereas here we are considering a subset of the observations,
+corresponding to rows of~\(X\).
+
+Using the formula for the least squares estimate, we know that
+\begin{equation}
+  \hat\beta^{(I)}
+  = (X_{(I)}^\top X_{(I)})^{-1} X_{(I)}^\top y,  \label{eq:hat-beta-I1}
+\end{equation}
+where now \(X_{(I)}\) is \(X\) with all rows \(i\in I\) removed. (We write the
+``\((I)\)'' as a subscript, to make space for the transpose sign.) Our first aim
+is to find an explicit formula for the difference between \(\hat\beta\) and
+\(\hat\beta^{(I)}\).
+
+We have
+\begin{align*}
+  (X_{(I)}^\top y)_k
+  &= \sum_{j \notin I} X_{jk} y_j \\
+  &= \sum_{j=1}^n X_{jk} y_j - \sum_{j\in I} X_{jk} y_j
+\end{align*}
+for all \(k \in \{0, \ldots, p\}\), and thus
+\begin{equation}
+  X_{(I)}^\top y
+  = X^\top y - X_I^\top y_I,  \label{eq:X-I-top-y}
+\end{equation}
+where \(X_I\) stands for the matrix which only contains the rows \(i\in I\) of~the
+matrix \(X\), and \(y_I = (y_i)_{i\in I}\). Before we substitute this result into
+equation~\eqref{eq:hat-beta-I1}, we first consider how we can write the the
+inverse \((X_{(I)}^\top X_{(I)})^{-1}\) in terms of \((X^\top X)^{-1}\).
+
+\begin{lemma}
+\protect\hypertarget{lem:low-rank-inverse}{}\label{lem:low-rank-inverse}Let \(A \in \mathbb{R}^{(p+1)\times (p+1)}\) and let \(U, V \in \mathbb{R}^{m \times (p+1)}\).
+Then
+\begin{equation*}
+  (A - U^\top V)^{-1}
+  = A^{-1} + A^{-1} U^\top (I - V A^{-1} U^\top)^{-1} V A^{-1}.
+\end{equation*}
+\end{lemma}
+
+\begin{proof}
+This statement is proved by multiplying the equation with \(A - U^\top V\).
+Expanding all brackets and using the relation \(A A^{-1} = I\), we find
+\begin{equation*}
+  \bigl( A - U^\top V \bigr)
+    \bigl( A^{-1} + A^{-1} U^\top (I - V A^{-1} U^\top)^{-1} V A^{-1} \bigr)
+  = \cdots
+  = I.
+\end{equation*}
+This shows that we have indeed found the inverse of~\(A - U^\top V\).
+\end{proof}
+
+Using this result, we can now derive a formula for the change in \(\hat\beta\)
+when some observations are omitted.
+
+\begin{lemma}
+\protect\hypertarget{lem:hat-beta-I}{}\label{lem:hat-beta-I}We have
+\begin{equation*}
+  \hat\beta^{(I)} - \hat\beta
+  = - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} \hat\varepsilon_I,
+\end{equation*}
+where \(H_{II} := X_I (X^\top X)^{-1} X_I^\top = (h_{ij})_{i,j\in I}\) is the
+matrix which contains the elements of the hat matrix~\(H\) where both row and
+column are in \(I\), and \(\hat\varepsilon_I = (\hat\varepsilon_i)_{i\in I} = (y_i - \hat y_i)_{i\in I}\) is the vector of residuals at the omitted samples.
+\end{lemma}
+
+The vector \(\hat\varepsilon_I\) consists of a subset of the original
+residuals, computed using the original \(\hat y\) and \(\hat\beta\). It does not
+refer to the modified estimate \(\hat\beta^{(I)}\) which was computing with some
+observations omitted. Similarly, \(H_{II}\) is a submatrix of the original
+hat matrix.
+
+\begin{proof}
+Similar to \eqref{eq:X-I-top-y}, we
+\begin{equation*}
+  (X_{(I)}^\top X_{(I)})_{ik}
+  = \sum_{j\notin I} X_{ji} X_{jk}
+  = \sum_{j=1}^n X_{ji} X_{jk} - \sum_{j\in I} X_{ji} X_{jk}
+\end{equation*}
+and thus
+\begin{equation*}
+  X_{(I)}^\top X_{(I)}
+  = X^\top X - X_I^\top X_I.
+\end{equation*}
+Now we can use the lemma with \(U = V = X_I\) to get
+\begin{align*}
+  (X_{(I)}^\top X_{(I)})^{-1}
+  &= (X^\top X)^{-1} + (X^\top X)^{-1} X_I^\top (I - X_I (X^\top X)^{-1} X_I^\top)^{-1} X_I (X^\top X)^{-1} \\
+  &= (X^\top X)^{-1} + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I (X^\top X)^{-1}.
+\end{align*}
+
+Using equations \eqref{eq:hat-beta-I1} and~\eqref{eq:X-I-top-y} and
+lemma~\ref{lem:low-rank-inverse} we get
+\begin{align*}
+  \hat\beta^{(I)}
+  &= (X_{(I)}^\top X_{(I)})^{-1} X_{(I)}^\top y \\
+  &= (X_{(I)}^\top X_{(I)})^{-1} (X^\top y - X_I^\top y_I) \\
+  &= \Bigl( (X^\top X)^{-1} + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I (X^\top X)^{-1} \Bigr) (X^\top y - X_I^\top y_I) \\
+  &= (X^\top X)^{-1} X^\top y \\
+    &\hskip1cm + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I \hat\beta \\
+    &\hskip1cm - (X^\top X)^{-1} X_I^\top y_I \\
+    &\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I (X^\top X)^{-1} X_I^\top y_I \\
+  &= \hat\beta
+               + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I \hat\beta \\
+    &\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} (I - H_{II}) y_I \\
+    &\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} H_{II} y \\
+  &= \hat\beta
+               + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I \hat\beta \\
+    &\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} y_I \\
+  &= \hat\beta - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} \bigl( y_I -  X_I \hat\beta \bigr) \\
+  &= \hat\beta - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} \hat\varepsilon_I.
+\end{align*}
+This completes the proof.
+\end{proof}
+
+We can also find the change in estimated error variance, when samples
+are omitted from the estimate. The estimated variance in the modified model
+is
+\begin{equation*}
+  \hat\sigma_{(I)}^2
+  := \frac{1}{n-m-p-1} \sum_{i\notin I} \Bigl( y_i - (X\hat\beta^{(I)})_i \Bigr)^2
+  = \frac{1}{n-m-p-1} \Bigl\| y_{(I)} - X_{(I)} \hat\beta^{(I)} \Bigr\|^2
+\end{equation*}
+where \(m = |I|\) so that \(n-m\) is the number of observations used
+in the estimate. We want to compare this quantity to the original estimate
+\begin{equation*}
+  \hat\sigma^2
+  := \frac{1}{n-p-1} \sum_{i=1}^n \Bigl( y_i - (X\hat\beta)_i \Bigr)^2
+  = \frac{1}{n-p-1} \Bigl\| y - X \hat\beta \Bigr\|^2.
+\end{equation*}
+Here we used again the Euclidean norm as a shorthand for the sum of squares
+used in these estimates. The following lemma shows how the residual sum
+of squares decreases when the observations \(I\) are omitted from the
+estimate.
+
+\begin{lemma}
+\protect\hypertarget{lem:sigma-I}{}\label{lem:sigma-I}We have
+\begin{equation*}
+  \| y_{(I)} - X_{(I)} \hat\beta^{(I)} \|^2 - \| y - \hat y \|^2
+  = - \hat\varepsilon_I^\top (I - H_{II})^{-1} \hat\varepsilon_I.
+\end{equation*}
+\end{lemma}
+
+The proof of this lemma is similar to the proof of lemma~\ref{lem:hat-beta-I},
+but we omit the tedious calculations here.
+
+\begin{example}
+To illustrate the results of this subsection, we give a numerical example.
+In the example we consider the \texttt{stackloss} dataset, and study what happens
+when the first two observations are omitted:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss[}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{),])}
+\FunctionTok{coef}\NormalTok{(m2) }\SpecialCharTok{{-}} \FunctionTok{coef}\NormalTok{(m1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
+##  0.86331016 -0.03780761 -0.02706305  0.02124533
+\end{verbatim}
+
+Using the result of lemma~\ref{lem:hat-beta-I}, we can get the difference
+between the two estimates without using the model \texttt{m2}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m1)}
+\NormalTok{H }\OtherTok{\textless{}{-}}\NormalTok{ X }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X, }\FunctionTok{t}\NormalTok{(X))}
+\NormalTok{XI }\OtherTok{\textless{}{-}}\NormalTok{ X[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{,]}
+\NormalTok{hII }\OtherTok{\textless{}{-}}\NormalTok{ H[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{]}
+\NormalTok{hat.epsI }\OtherTok{\textless{}{-}} \FunctionTok{resid}\NormalTok{(m1)[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{]}
+
+\SpecialCharTok{{-}}\FunctionTok{as.vector}\NormalTok{(}\FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X) }\SpecialCharTok{\%*\%} \FunctionTok{t}\NormalTok{(XI) }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{diag}\NormalTok{(}\DecValTok{2}\NormalTok{) }\SpecialCharTok{{-}}\NormalTok{ hII, hat.epsI))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  0.86331016 -0.03780761 -0.02706305  0.02124533
+\end{verbatim}
+
+This is the same result as we obtained above. (I used \texttt{as.vector()} to
+convert the result from a \(4\times 1\) matrix into a vector.)
+
+Similarly, we can compare the residual sum of squares:
+A direct comparison gives
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m2)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m1)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -15.41758
+\end{verbatim}
+
+Using the result of lemma~\ref{lem:sigma-I}, we get the same result
+without requiring \texttt{m2}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{{-}}\FunctionTok{t}\NormalTok{(hat.epsI) }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{diag}\NormalTok{(}\DecValTok{2}\NormalTok{) }\SpecialCharTok{{-}}\NormalTok{ hII, hat.epsI)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           [,1]
+## [1,] -15.41758
+\end{verbatim}
+
+Again, the results using both methods agree.
+\end{example}
+
+In the special case of \(m = 1\), where \(I = \{i\}\) for some
+\(i \in \{1, \ldots, n\}\), our results simplify to
+\begin{equation}
+  \hat\beta^{(i)} - \hat\beta
+    = - (X^\top X)^{-1} x_i \frac{\hat\varepsilon_i}{1 - h_{ii}} \label{eq:dbeta-i}
+\end{equation}
+and
+\begin{equation*}
+  \| y_{(i)} - x_i^\top \hat\beta^{(i)} \|^2 - \| y - \hat y \|^2
+    = - \frac{\hat\varepsilon_i^2}{1 - h_{ii}},
+\end{equation*}
+where \(x_i \in \mathbb{R}^{p+1}\) is the \(i\)th row of \(X\) as a vector,
+\(\hat\varepsilon_i\) is the usual \(i\)th residual,
+and \(h_{ii}\) is the \(i\)th diagonal element of the hat matrix.
+Using the correct prefactors the second result gives
+\begin{equation*}
+  (n-p-2) \hat\sigma_{(i)}^2
+    = (n-p-1)\hat\sigma^2 - \frac{\hat\varepsilon_i^2}{1 - h_{ii}}.
+\end{equation*}
+
+We can find numerical values for these quantities using
+the function \texttt{influence()}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{10}\NormalTok{)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{data =}\NormalTok{ stackloss)}
+\FunctionTok{influence}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $hat
+##    1    2    3    4 
+## 0.43 0.33 0.27 0.97 
+## 
+## $coefficients
+##   (Intercept)            x
+## 1  0.01719298 -0.002105263
+## 2 -0.19582090  0.019104478
+## 3  0.15369863 -0.009315068
+## 4  0.30666667 -0.160000000
+## 
+## $sigma
+##         1         2         3         4 
+## 0.4682929 0.2591605 0.2482818 0.4082483 
+## 
+## $wt.res
+##     1     2     3     4 
+##  0.02 -0.32  0.34 -0.04
+\end{verbatim}
+
+The output lists the diagonal elements \(h_{ii}\) of the hat matrix
+as \texttt{\$hat}, the vectors \(\hat\beta^{(i)} - \hat\beta\) for each \(i\)
+as \texttt{\$coefficients}, the standard deviations \(\hat\sigma_{(i)}\)
+for each \(i\) as \texttt{\$sigma}, and the residuals \(\hat\varepsilon_i\) as~\texttt{\$wt.res}.
+
+\hypertarget{cooks-distance}{%
+\subsection{Cook's Distance}\label{cooks-distance}}
+
+In the section about \protect\hyperlink{S06-simultaneous}{Estimating Coefficients Simultaneously} we learned
+how to measure distances of estimated parameter vectors: To compare
+\(K\hat\beta\) to a vector \(K\beta\) we used the norm
+\begin{equation*}
+  \bigl\| K\hat\beta - K\beta \bigr\|_{K(X^\top X)^{-1}K^\top}^2
+  = (K\hat\beta - K\beta)^\top \bigl(K(X^\top X)^{-1}K^\top\bigr)^{-1} (K\hat\beta - K\beta).
+\end{equation*}
+If we consider the full parameter vector, we can use \(K = I\) to get
+\begin{equation*}
+  \bigl\| \hat\beta - \beta \bigr\|_{(X^\top X)^{-1}}^2
+  = (\hat\beta - \beta)^\top X^\top X (\hat\beta - \beta).
+\end{equation*}
+From lemma~\ref{lem:F-dist} we know that
+\begin{equation*}
+  F = \frac{\bigl\| \hat\beta - \beta \bigr\|_{(X^\top X)^{-1}}^2}{(p+1)\hat\sigma^2}
+\end{equation*}
+follows an \(F_{p+1, n-p-1}\)-distribution. We can use this measure to
+quantify when the difference \(\hat\beta^{(i)} - \hat\beta\) should be
+considered ``large''.
+
+\begin{definition}
+\protect\hypertarget{def:Cook-D}{}\label{def:Cook-D}\textbf{Cook's distance} for observation \(i\) is defined as
+\begin{equation*}
+  D_i
+  = \frac{(\hat\beta^{(i)} - \hat\beta)^\top X^\top X (\hat\beta^{(i)} - \hat\beta)}{(p+1)\hat\sigma^2}.
+\end{equation*}
+\end{definition}
+
+We will consider observation \(i\) to be ``influential'' if \(D_i\) is large.
+Since this ``lives on the scale'' of an \(F_{p+1, n-p-1}\)-distribution,
+we should compare \(D_i\) to typical values of such a distribution. For
+example, we could consider the median. Here is a sample of median values
+for different \(n\) and~\(p\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{100}\NormalTok{)}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{)}
+\NormalTok{xx }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(}\AttributeTok{n =}\NormalTok{ n, }\AttributeTok{p =}\NormalTok{ p)}
+\FunctionTok{cbind}\NormalTok{(xx, }\AttributeTok{median =} \FunctionTok{qf}\NormalTok{(}\FloatTok{0.5}\NormalTok{, xx}\SpecialCharTok{$}\NormalTok{p }\SpecialCharTok{+} \DecValTok{1}\NormalTok{, xx}\SpecialCharTok{$}\NormalTok{n }\SpecialCharTok{{-}}\NormalTok{ xx}\SpecialCharTok{$}\NormalTok{p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     n p    median
+## 1  10 1 0.7568285
+## 2  30 1 0.7105929
+## 3 100 1 0.6980730
+## 4  10 3 0.9419133
+## 5  30 3 0.8614530
+## 6 100 3 0.8451308
+## 7  10 5 1.0616689
+## 8  30 5 0.9168687
+## 9 100 5 0.8977754
+\end{verbatim}
+
+In practice, some authors suggest that an observation is ``influential''
+if \(D_i > 1\), instead of using an exact quantile of the \(F\)-distribution.
+
+The following lemma provides two additional ways to compute Cook's
+distance.
+
+\begin{lemma}
+\protect\hypertarget{lem:Cook-D-alt}{}\label{lem:Cook-D-alt}We have
+\begin{align*}
+  D_i
+  &= \frac{(\hat y^{(i)} - \hat y)^\top (\hat y^{(i)} - \hat y)}{(p+1)\hat\sigma^2} \\
+  &= \frac{\hat\varepsilon_i^2}{(p+1)\hat\sigma^2} \cdot \frac{h_{ii}}{(1-h_{ii})^2}.
+\end{align*}
+where \(\hat y^{(i)} := X \hat\beta^{(i)}\) is the fitted value which is
+predicted for observation \(i\) when this observation is not used to fit the
+model, \(\hat\varepsilon_i\) are the usual residuals, and \(h_{ii}\) are the
+diagonal elements of the hat matrix.
+\end{lemma}
+
+\begin{proof}
+We have \(\hat y^{(i)} - \hat y = X \hat\beta^{(i)} - X \hat\beta\) and thus
+\begin{equation*}
+  (\hat y^{(i)} - \hat y)^\top (\hat y^{(i)} - \hat y)
+  = (\hat\beta^{(i)} - \hat\beta)^\top X^\top X (\hat\beta^{(i)} - \hat\beta).
+\end{equation*}
+This proves the first equality. From equation~\eqref{eq:dbeta-i} we know
+\begin{equation*}
+  \hat\beta^{(i)} - \hat\beta
+    = - (X^\top X)^{-1} x_i \frac{\hat\varepsilon_i}{1 - h_{ii}}
+\end{equation*}
+and thus we find
+\begin{align*}
+  (\hat\beta^{(i)} - \hat\beta)^\top X^\top X (\hat\beta^{(i)} - \hat\beta)
+  &= \frac{\hat\varepsilon_i^2}{(1 - h_{ii})^2} x_i^\top (X^\top X)^{-1} X^\top X (X^\top X)^{-1} x_i \\
+  &= \frac{\hat\varepsilon_i^2}{(1 - h_{ii})^2} x_i^\top (X^\top X)^{-1} x_i \\
+  &= \frac{\hat\varepsilon_i^2}{(1 - h_{ii})^2} h_{ii}
+\end{align*}
+and dividing by \((p+1)\hat\sigma^2\) completes the proof.
+\end{proof}
+
+\begin{example}
+To illustrate how Cook's \(D\) is computed, we use a small dataset with
+simulated data. We include an \(x\)-space outlier:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20211026}\NormalTok{)}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{6}\NormalTok{))}
+\NormalTok{y }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{+} \FloatTok{0.1} \SpecialCharTok{*}\NormalTok{ x }\SpecialCharTok{+} \FloatTok{0.1} \SpecialCharTok{*} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{7}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(x, y)}
+
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{abline}\NormalTok{(m)}
+
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{] }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{])}
+\FunctionTok{abline}\NormalTok{(m2, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/influence-1.pdf}
+
+The black line in the plot is the regression line using all data,
+the red line is the regression line fitted using only the left-most
+six points and leaving out the ``outlier'' at \(x=5\). The difference
+between the two lines makes it clear that the point at \(x=5\) has a
+large effect on the estimated regression line. The easiest way
+to compute the \(D\)-values seems to be the second formula from
+lemma~\ref{lem:Cook-D-alt}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m)}
+\NormalTok{H }\OtherTok{\textless{}{-}}\NormalTok{ X }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X, }\FunctionTok{t}\NormalTok{(X))}
+\NormalTok{hii }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(H)}
+\NormalTok{D }\OtherTok{\textless{}{-}} \FunctionTok{resid}\NormalTok{(m)}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ hii }\SpecialCharTok{/} \DecValTok{2} \SpecialCharTok{/} \FunctionTok{summary}\NormalTok{(m)}\SpecialCharTok{$}\NormalTok{sigma}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ hii)}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{D}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           1           2           3           4           5           6 
+## 6.456405260 0.035318182 0.002129694 0.042504418 0.268374731 0.040765842 
+##           7 
+## 0.162580015
+\end{verbatim}
+
+The results show as expected a very large value for the first observation,
+\(D_1 = 6.456\), and small values for the remaining \(D_i\).
+We can also find Cook's \(D\)-values in the output of the
+\texttt{influence.measures()} function:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{influence.measures}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Influence measures of
+##   lm(formula = y ~ x) :
+## 
+##    dfb.1_   dfb.x   dffit  cov.r  cook.d   hat inf
+## 1 -0.7475  3.1083  3.3670 39.046 6.45641 0.967   *
+## 2 -0.2441  0.1415 -0.2441  1.791 0.03532 0.215    
+## 3  0.0583 -0.0296  0.0585  1.920 0.00213 0.192    
+## 4  0.2674 -0.1142  0.2720  1.596 0.04250 0.173    
+## 5  0.9536 -0.3189  0.9959  0.348 0.26837 0.159    
+## 6 -0.2461  0.0560 -0.2681  1.512 0.04077 0.149    
+## 7 -0.5620  0.0577 -0.6512  0.687 0.16258 0.144
+\end{verbatim}
+
+The table also shows the diagonal elements of the hat matrix, in the
+column \texttt{hat}, and some additional measures which we will not discuss here.
+A star in the last column, titled \texttt{inf}, marks influential observations.
+The star is placed if \emph{any} of the measures shown in the table is significantly
+large.
+\end{example}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We can measure the influence of an observation by the amount
+  the estimated parameters change when the observation is deleted.
+\item
+  We learned how to determine the amount of change without
+  having to fit \(n\) additional models.
+\item
+  Cook's distance provides a numerical measure for the influence of each
+  observation.
+\end{itemize}
 
 \clearpage
 

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 9 The Influence of Observations | MATH3714 Linear Regression and Robustness</title>
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 9 The Influence of Observations | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 9 The Influence of Observations | MATH3714 Linear Regression and Robustness" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="S08-diagnostics.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH3714 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
+<ul>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#teams"><i class="fa fa-check"></i>Discussion Board</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
+<li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
+<li class="chapter" data-level="2.2" data-path="S02-multiple.html"><a href="S02-multiple.html#the-normal-equations"><i class="fa fa-check"></i><b>2.2</b> The Normal Equations</a></li>
+<li class="chapter" data-level="2.3" data-path="S02-multiple.html"><a href="S02-multiple.html#fitted-values"><i class="fa fa-check"></i><b>2.3</b> Fitted Values</a></li>
+<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.4</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html"><i class="fa fa-check"></i>Interlude: Linear Regression in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-fitting"><i class="fa fa-check"></i>Fitting a Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-model"><i class="fa fa-check"></i>Understanding the Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-predict"><i class="fa fa-check"></i>Making Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
+<li class="chapter" data-level="3" data-path="S03-cov.html"><a href="S03-cov.html"><i class="fa fa-check"></i><b>3</b> Random Vectors and Covariance</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="S03-cov.html"><a href="S03-cov.html#expectation"><i class="fa fa-check"></i><b>3.1</b> Expectation</a></li>
+<li class="chapter" data-level="3.2" data-path="S03-cov.html"><a href="S03-cov.html#sec:covariance"><i class="fa fa-check"></i><b>3.2</b> Covariance Matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="S03-cov.html"><a href="S03-cov.html#the-multivariate-normal-distribution"><i class="fa fa-check"></i><b>3.3</b> The Multivariate Normal Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="S04-model.html"><a href="S04-model.html"><i class="fa fa-check"></i><b>4</b> Properties of the Least Squares Estimate</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="S04-model.html"><a href="S04-model.html#mean-and-covariance"><i class="fa fa-check"></i><b>4.1</b> Mean and Covariance</a></li>
+<li class="chapter" data-level="4.2" data-path="S04-model.html"><a href="S04-model.html#hat-matrix"><i class="fa fa-check"></i><b>4.2</b> Properties of the Hat Matrix</a></li>
+<li class="chapter" data-level="4.3" data-path="S04-model.html"><a href="S04-model.html#Cochran"><i class="fa fa-check"></i><b>4.3</b> Cochran’s theorem</a></li>
+<li class="chapter" data-level="4.4" data-path="S04-model.html"><a href="S04-model.html#var-est-bias"><i class="fa fa-check"></i><b>4.4</b> Estimating the Error Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="S05-single.html"><a href="S05-single.html"><i class="fa fa-check"></i><b>5</b> Uncertainty for Individual Regression Coefficients</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="S05-single.html"><a href="S05-single.html#measuring-the-estimation-error"><i class="fa fa-check"></i><b>5.1</b> Measuring the Estimation Error</a></li>
+<li class="chapter" data-level="5.2" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals"><i class="fa fa-check"></i><b>5.2</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="5.3" data-path="S05-single.html"><a href="S05-single.html#hypthesis-tests"><i class="fa fa-check"></i><b>5.3</b> Hypthesis Tests</a></li>
+<li class="chapter" data-level="5.4" data-path="S05-single.html"><a href="S05-single.html#r-experiments"><i class="fa fa-check"></i><b>5.4</b> R Experiments</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="S05-single.html"><a href="S05-single.html#fitting-the-model"><i class="fa fa-check"></i><b>5.4.1</b> Fitting the model</a></li>
+<li class="chapter" data-level="5.4.2" data-path="S05-single.html"><a href="S05-single.html#estimating-the-variance-of-the-error"><i class="fa fa-check"></i><b>5.4.2</b> Estimating the Variance of the Error</a></li>
+<li class="chapter" data-level="5.4.3" data-path="S05-single.html"><a href="S05-single.html#estimating-the-standard-errors"><i class="fa fa-check"></i><b>5.4.3</b> Estimating the Standard Errors</a></li>
+<li class="chapter" data-level="5.4.4" data-path="S05-single.html"><a href="S05-single.html#hypothesis-tests"><i class="fa fa-check"></i><b>5.4.4</b> Hypothesis tests</a></li>
+<li class="chapter" data-level="5.4.5" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals-1"><i class="fa fa-check"></i><b>5.4.5</b> Confidence Intervals</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html"><i class="fa fa-check"></i><b>6</b> Estimating Coefficients Simultaneously</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-dist"><i class="fa fa-check"></i><b>6.1</b> Linear Combinations of Coefficients</a></li>
+<li class="chapter" data-level="6.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-CI"><i class="fa fa-check"></i><b>6.2</b> Confidence Regions</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#result"><i class="fa fa-check"></i><b>6.2.1</b> Result</a></li>
+<li class="chapter" data-level="6.2.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#numerical-experiments"><i class="fa fa-check"></i><b>6.2.2</b> Numerical Experiments</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-test"><i class="fa fa-check"></i><b>6.3</b> Hypothesis Tests</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html"><i class="fa fa-check"></i>Interlude: Loading Data into R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-csv-files"><i class="fa fa-check"></i>Importing CSV Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-microsoft-excel-files"><i class="fa fa-check"></i>Importing Microsoft Excel Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#checking-the-imported-data"><i class="fa fa-check"></i>Checking the Imported Data</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#common-problems"><i class="fa fa-check"></i>Common Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="S07-examples.html"><a href="S07-examples.html"><i class="fa fa-check"></i><b>7</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="S07-examples.html"><a href="S07-examples.html#simple-confidence-interval"><i class="fa fa-check"></i><b>7.1</b> Simple Confidence Interval</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles"><i class="fa fa-check"></i><b>7.1.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.1.2" data-path="S07-examples.html"><a href="S07-examples.html#from-the-lm-output"><i class="fa fa-check"></i><b>7.1.2</b> From the <code>lm()</code> Output</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="S07-examples.html"><a href="S07-examples.html#confidence-intervals-for-the-mean"><i class="fa fa-check"></i><b>7.2</b> Confidence Intervals for the Mean</a></li>
+<li class="chapter" data-level="7.3" data-path="S07-examples.html"><a href="S07-examples.html#testing-a-single-coefficient"><i class="fa fa-check"></i><b>7.3</b> Testing a Single Coefficient</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-1"><i class="fa fa-check"></i><b>7.3.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.3.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-i"><i class="fa fa-check"></i><b>7.3.2</b> Using the <code>lm()</code> Output, I</a></li>
+<li class="chapter" data-level="7.3.3" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-ii"><i class="fa fa-check"></i><b>7.3.3</b> Using the <code>lm()</code> Output, II</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="S07-examples.html"><a href="S07-examples.html#testing-multiple-coefficents"><i class="fa fa-check"></i><b>7.4</b> Testing Multiple Coefficents</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-2"><i class="fa fa-check"></i><b>7.4.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.4.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output"><i class="fa fa-check"></i><b>7.4.2</b> Using the <code>lm()</code> output</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P02.html"><a href="P02.html"><i class="fa fa-check"></i>Problem Sheet 2</a></li>
+<li class="chapter" data-level="8" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html"><i class="fa fa-check"></i><b>8</b> Regression Diagnostics</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#plots"><i class="fa fa-check"></i><b>8.1</b> Diagnostic Plots</a></li>
+<li class="chapter" data-level="8.2" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#R-squared"><i class="fa fa-check"></i><b>8.2</b> The Coefficient of Multiple Determination</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="S09-influence.html"><a href="S09-influence.html"><i class="fa fa-check"></i><b>9</b> The Influence of Observations</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting-observations"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#cooks-distance"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#vectors"><i class="fa fa-check"></i><b>A.1</b> Vectors</a></li>
+<li class="chapter" data-level="A.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-rules"><i class="fa fa-check"></i><b>A.2</b> Matrices</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#transpose"><i class="fa fa-check"></i><b>A.2.1</b> Transpose</a></li>
+<li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-vector Product</a></li>
+<li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-matrix Product</a></li>
+<li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-inverse"><i class="fa fa-check"></i><b>A.2.4</b> Matrix Inverse</a></li>
+<li class="chapter" data-level="A.2.5" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#orthogonal-matrices"><i class="fa fa-check"></i><b>A.2.5</b> Orthogonal Matrices</a></li>
+<li class="chapter" data-level="A.2.6" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.6</b> Positive Definite Matrices</a></li>
+<li class="chapter" data-level="A.2.7" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#idempotent"><i class="fa fa-check"></i><b>A.2.7</b> Idempotent Matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#eigenvalues"><i class="fa fa-check"></i><b>A.3</b> Eigenvalues</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="Sx2-probability.html"><a href="Sx2-probability.html"><i class="fa fa-check"></i><b>B</b> Probability Reminders</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="Sx2-probability.html"><a href="Sx2-probability.html#independence"><i class="fa fa-check"></i><b>B.1</b> Independence</a></li>
+<li class="chapter" data-level="B.2" data-path="Sx2-probability.html"><a href="Sx2-probability.html#chi-square"><i class="fa fa-check"></i><b>B.2</b> The Chi-Squared Distribution</a></li>
+<li class="chapter" data-level="B.3" data-path="Sx2-probability.html"><a href="Sx2-probability.html#t"><i class="fa fa-check"></i><b>B.3</b> The t-distribution</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH3714 Linear Regression and Robustness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="S09-influence" class="section level1" number="9">
+<h1><span class="header-section-number">Section 9</span> The Influence of Observations</h1>
+<p>In this section we consider the influence which individual samples have on
+the estimate. Samples with a large influence may be outliers, and are
+worth checking for validity.</p>
+<div id="deleting-observations" class="section level2" number="9.1">
+<h2><span class="header-section-number">9.1</span> Deleting Observations</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/U5pgFVxZwvw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>The most direct way to check for the influence of an observation
+is to compute the parameter estimate <span class="math inline">\(\hat\beta\)</span> both with and without
+the observation in question, and to see how much the two results differ.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-35" class="definition"><strong>Definition 9.1  </strong></span>For <span class="math inline">\(I \subset \{1, \ldots, n\}\)</span> we write <span class="math inline">\(\hat\beta^{(I)}\)</span> for the estimate
+where all observations <span class="math inline">\(i\in I\)</span> have been removed. As a shorthand we write
+<span class="math inline">\(\hat\beta^{(i)}\)</span> instead of <span class="math inline">\(\hat\beta^{(\{i\})}\)</span> for the case where only
+a single observation has been removed.</p>
+</div>
+<p>This approach is very different from what we used in the
+section about <a href="S06-simultaneous.html#S06-simultaneous">Estimating Coefficients Simultaneously</a>. There, we selected a
+subset of regression coefficients, corresponding to columns in the design
+matrix <span class="math inline">\(X\)</span>, whereas here we are considering a subset of the observations,
+corresponding to rows of <span class="math inline">\(X\)</span>.</p>
+<p>Using the formula for the least squares estimate, we know that
+<span class="math display" id="eq:hat-beta-I1">\[\begin{equation}
+  \hat\beta^{(I)}
+  = (X_{(I)}^\top X_{(I)})^{-1} X_{(I)}^\top y,  \tag{9.1}
+\end{equation}\]</span>
+where now <span class="math inline">\(X_{(I)}\)</span> is <span class="math inline">\(X\)</span> with all rows <span class="math inline">\(i\in I\)</span> removed. (We write the
+“<span class="math inline">\((I)\)</span>” as a subscript, to make space for the transpose sign.) Our first aim
+is to find an explicit formula for the difference between <span class="math inline">\(\hat\beta\)</span> and
+<span class="math inline">\(\hat\beta^{(I)}\)</span>.</p>
+<p>We have
+<span class="math display">\[\begin{align*}
+  (X_{(I)}^\top y)_k
+  &amp;= \sum_{j \notin I} X_{jk} y_j \\
+  &amp;= \sum_{j=1}^n X_{jk} y_j - \sum_{j\in I} X_{jk} y_j
+\end{align*}\]</span>
+for all <span class="math inline">\(k \in \{0, \ldots, p\}\)</span>, and thus
+<span class="math display" id="eq:X-I-top-y">\[\begin{equation}
+  X_{(I)}^\top y
+  = X^\top y - X_I^\top y_I,  \tag{9.2}
+\end{equation}\]</span>
+where <span class="math inline">\(X_I\)</span> stands for the matrix which only contains the rows <span class="math inline">\(i\in I\)</span> of the
+matrix <span class="math inline">\(X\)</span>, and <span class="math inline">\(y_I = (y_i)_{i\in I}\)</span>. Before we substitute this result into
+equation <a href="S09-influence.html#eq:hat-beta-I1">(9.1)</a>, we first consider how we can write the the
+inverse <span class="math inline">\((X_{(I)}^\top X_{(I)})^{-1}\)</span> in terms of <span class="math inline">\((X^\top X)^{-1}\)</span>.</p>
+<div class="lemma">
+<p><span id="lem:low-rank-inverse" class="lemma"><strong>Lemma 9.1  </strong></span>Let <span class="math inline">\(A \in \mathbb{R}^{(p+1)\times (p+1)}\)</span> and let <span class="math inline">\(U, V \in \mathbb{R}^{m \times (p+1)}\)</span>.
+Then
+<span class="math display">\[\begin{equation*}
+  (A - U^\top V)^{-1}
+  = A^{-1} + A^{-1} U^\top (I - V A^{-1} U^\top)^{-1} V A^{-1}.
+\end{equation*}\]</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-36" class="proof"><em>Proof</em>. </span>This statement is proved by multiplying the equation with <span class="math inline">\(A - U^\top V\)</span>.
+Expanding all brackets and using the relation <span class="math inline">\(A A^{-1} = I\)</span>, we find
+<span class="math display">\[\begin{equation*}
+  \bigl( A - U^\top V \bigr)
+    \bigl( A^{-1} + A^{-1} U^\top (I - V A^{-1} U^\top)^{-1} V A^{-1} \bigr)
+  = \cdots
+  = I.
+\end{equation*}\]</span>
+This shows that we have indeed found the inverse of <span class="math inline">\(A - U^\top V\)</span>.</p>
+</div>
+<p>Using this result, we can now derive a formula for the change in <span class="math inline">\(\hat\beta\)</span>
+when some observations are omitted.</p>
+<div class="lemma">
+<p><span id="lem:hat-beta-I" class="lemma"><strong>Lemma 9.2  </strong></span>We have
+<span class="math display">\[\begin{equation*}
+  \hat\beta^{(I)} - \hat\beta
+  = - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} \hat\varepsilon_I,
+\end{equation*}\]</span>
+where <span class="math inline">\(H_{II} := X_I (X^\top X)^{-1} X_I^\top = (h_{ij})_{i,j\in I}\)</span> is the
+matrix which contains the elements of the hat matrix <span class="math inline">\(H\)</span> where both row and
+column are in <span class="math inline">\(I\)</span>, and <span class="math inline">\(\hat\varepsilon_I = (\hat\varepsilon_i)_{i\in I} = (y_i - \hat y_i)_{i\in I}\)</span> is the vector of residuals at the omitted samples.</p>
+</div>
+<p>The vector <span class="math inline">\(\hat\varepsilon_I\)</span> consists of a subset of the original
+residuals, computed using the original <span class="math inline">\(\hat y\)</span> and <span class="math inline">\(\hat\beta\)</span>. It does not
+refer to the modified estimate <span class="math inline">\(\hat\beta^{(I)}\)</span> which was computing with some
+observations omitted. Similarly, <span class="math inline">\(H_{II}\)</span> is a submatrix of the original
+hat matrix.</p>
+<div class="proof">
+<p><span id="unlabeled-div-37" class="proof"><em>Proof</em>. </span>Similar to <a href="S09-influence.html#eq:X-I-top-y">(9.2)</a>, we
+<span class="math display">\[\begin{equation*}
+  (X_{(I)}^\top X_{(I)})_{ik}
+  = \sum_{j\notin I} X_{ji} X_{jk}
+  = \sum_{j=1}^n X_{ji} X_{jk} - \sum_{j\in I} X_{ji} X_{jk}
+\end{equation*}\]</span>
+and thus
+<span class="math display">\[\begin{equation*}
+  X_{(I)}^\top X_{(I)}
+  = X^\top X - X_I^\top X_I.
+\end{equation*}\]</span>
+Now we can use the lemma with <span class="math inline">\(U = V = X_I\)</span> to get
+<span class="math display">\[\begin{align*}
+  (X_{(I)}^\top X_{(I)})^{-1}
+  &amp;= (X^\top X)^{-1} + (X^\top X)^{-1} X_I^\top (I - X_I (X^\top X)^{-1} X_I^\top)^{-1} X_I (X^\top X)^{-1} \\
+  &amp;= (X^\top X)^{-1} + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I (X^\top X)^{-1}.
+\end{align*}\]</span></p>
+<p>Using equations <a href="S09-influence.html#eq:hat-beta-I1">(9.1)</a> and <a href="S09-influence.html#eq:X-I-top-y">(9.2)</a> and
+lemma <a href="S09-influence.html#lem:low-rank-inverse">9.1</a> we get
+<span class="math display">\[\begin{align*}
+  \hat\beta^{(I)}
+  &amp;= (X_{(I)}^\top X_{(I)})^{-1} X_{(I)}^\top y \\
+  &amp;= (X_{(I)}^\top X_{(I)})^{-1} (X^\top y - X_I^\top y_I) \\
+  &amp;= \Bigl( (X^\top X)^{-1} + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I (X^\top X)^{-1} \Bigr) (X^\top y - X_I^\top y_I) \\
+  &amp;= (X^\top X)^{-1} X^\top y \\
+    &amp;\hskip1cm + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I \hat\beta \\
+    &amp;\hskip1cm - (X^\top X)^{-1} X_I^\top y_I \\
+    &amp;\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I (X^\top X)^{-1} X_I^\top y_I \\
+  &amp;= \hat\beta
+               + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I \hat\beta \\
+    &amp;\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} (I - H_{II}) y_I \\
+    &amp;\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} H_{II} y \\
+  &amp;= \hat\beta
+               + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I \hat\beta \\
+    &amp;\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} y_I \\
+  &amp;= \hat\beta - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} \bigl( y_I -  X_I \hat\beta \bigr) \\
+  &amp;= \hat\beta - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} \hat\varepsilon_I.
+\end{align*}\]</span>
+This completes the proof.</p>
+</div>
+<p>We can also find the change in estimated error variance, when samples
+are omitted from the estimate. The estimated variance in the modified model
+is
+<span class="math display">\[\begin{equation*}
+  \hat\sigma_{(I)}^2
+  := \frac{1}{n-m-p-1} \sum_{i\notin I} \Bigl( y_i - (X\hat\beta^{(I)})_i \Bigr)^2
+  = \frac{1}{n-m-p-1} \Bigl\| y_{(I)} - X_{(I)} \hat\beta^{(I)} \Bigr\|^2
+\end{equation*}\]</span>
+where <span class="math inline">\(m = |I|\)</span> so that <span class="math inline">\(n-m\)</span> is the number of observations used
+in the estimate. We want to compare this quantity to the original estimate
+<span class="math display">\[\begin{equation*}
+  \hat\sigma^2
+  := \frac{1}{n-p-1} \sum_{i=1}^n \Bigl( y_i - (X\hat\beta)_i \Bigr)^2
+  = \frac{1}{n-p-1} \Bigl\| y - X \hat\beta \Bigr\|^2.
+\end{equation*}\]</span>
+Here we used again the Euclidean norm as a shorthand for the sum of squares
+used in these estimates. The following lemma shows how the residual sum
+of squares decreases when the observations <span class="math inline">\(I\)</span> are omitted from the
+estimate.</p>
+<div class="lemma">
+<p><span id="lem:sigma-I" class="lemma"><strong>Lemma 9.3  </strong></span>We have
+<span class="math display">\[\begin{equation*}
+  \| y_{(I)} - X_{(I)} \hat\beta^{(I)} \|^2 - \| y - \hat y \|^2
+  = - \hat\varepsilon_I^\top (I - H_{II})^{-1} \hat\varepsilon_I.
+\end{equation*}\]</span></p>
+</div>
+<p>The proof of this lemma is similar to the proof of lemma <a href="S09-influence.html#lem:hat-beta-I">9.2</a>,
+but we omit the tedious calculations here.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-38" class="example"><strong>Example 9.1  </strong></span>To illustrate the results of this subsection, we give a numerical example.
+In the example we consider the <code>stackloss</code> dataset, and study what happens
+when the first two observations are omitted:</p>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="S09-influence.html#cb134-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb134-2"><a href="S09-influence.html#cb134-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),])</span>
+<span id="cb134-3"><a href="S09-influence.html#cb134-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m2) <span class="sc">-</span> <span class="fu">coef</span>(m1)</span></code></pre></div>
+<pre><code>## (Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
+##  0.86331016 -0.03780761 -0.02706305  0.02124533</code></pre>
+<p>Using the result of lemma <a href="S09-influence.html#lem:hat-beta-I">9.2</a>, we can get the difference
+between the two estimates without using the model <code>m2</code>:</p>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="S09-influence.html#cb136-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m1)</span>
+<span id="cb136-2"><a href="S09-influence.html#cb136-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
+<span id="cb136-3"><a href="S09-influence.html#cb136-3" aria-hidden="true" tabindex="-1"></a>XI <span class="ot">&lt;-</span> X[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,]</span>
+<span id="cb136-4"><a href="S09-influence.html#cb136-4" aria-hidden="true" tabindex="-1"></a>hII <span class="ot">&lt;-</span> H[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb136-5"><a href="S09-influence.html#cb136-5" aria-hidden="true" tabindex="-1"></a>hat.epsI <span class="ot">&lt;-</span> <span class="fu">resid</span>(m1)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb136-6"><a href="S09-influence.html#cb136-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb136-7"><a href="S09-influence.html#cb136-7" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">as.vector</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X) <span class="sc">%*%</span> <span class="fu">t</span>(XI) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">diag</span>(<span class="dv">2</span>) <span class="sc">-</span> hII, hat.epsI))</span></code></pre></div>
+<pre><code>## [1]  0.86331016 -0.03780761 -0.02706305  0.02124533</code></pre>
+<p>This is the same result as we obtained above. (I used <code>as.vector()</code> to
+convert the result from a <span class="math inline">\(4\times 1\)</span> matrix into a vector.)</p>
+<p>Similarly, we can compare the residual sum of squares:
+A direct comparison gives</p>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="S09-influence.html#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(m2)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m1)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] -15.41758</code></pre>
+<p>Using the result of lemma <a href="S09-influence.html#lem:sigma-I">9.3</a>, we get the same result
+without requiring <code>m2</code>:</p>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="S09-influence.html#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">t</span>(hat.epsI) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">diag</span>(<span class="dv">2</span>) <span class="sc">-</span> hII, hat.epsI)</span></code></pre></div>
+<pre><code>##           [,1]
+## [1,] -15.41758</code></pre>
+<p>Again, the results using both methods agree.</p>
+</div>
+<p>In the special case of <span class="math inline">\(m = 1\)</span>, where <span class="math inline">\(I = \{i\}\)</span> for some
+<span class="math inline">\(i \in \{1, \ldots, n\}\)</span>, our results simplify to
+<span class="math display" id="eq:dbeta-i">\[\begin{equation}
+  \hat\beta^{(i)} - \hat\beta
+    = - (X^\top X)^{-1} x_i \frac{\hat\varepsilon_i}{1 - h_{ii}} \tag{9.3}
+\end{equation}\]</span>
+and
+<span class="math display">\[\begin{equation*}
+  \| y_{(i)} - x_i^\top \hat\beta^{(i)} \|^2 - \| y - \hat y \|^2
+    = - \frac{\hat\varepsilon_i^2}{1 - h_{ii}},
+\end{equation*}\]</span>
+where <span class="math inline">\(x_i \in \mathbb{R}^{p+1}\)</span> is the <span class="math inline">\(i\)</span>th row of <span class="math inline">\(X\)</span> as a vector,
+<span class="math inline">\(\hat\varepsilon_i\)</span> is the usual <span class="math inline">\(i\)</span>th residual,
+and <span class="math inline">\(h_{ii}\)</span> is the <span class="math inline">\(i\)</span>th diagonal element of the hat matrix.
+Using the correct prefactors the second result gives
+<span class="math display">\[\begin{equation*}
+  (n-p-2) \hat\sigma_{(i)}^2
+    = (n-p-1)\hat\sigma^2 - \frac{\hat\varepsilon_i^2}{1 - h_{ii}}.
+\end{equation*}\]</span></p>
+<p>We can find numerical values for these quantities using
+the function <code>influence()</code>:</p>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="S09-influence.html#cb142-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">10</span>)</span>
+<span id="cb142-2"><a href="S09-influence.html#cb142-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>)</span>
+<span id="cb142-3"><a href="S09-influence.html#cb142-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> stackloss)</span>
+<span id="cb142-4"><a href="S09-influence.html#cb142-4" aria-hidden="true" tabindex="-1"></a><span class="fu">influence</span>(m)</span></code></pre></div>
+<pre><code>## $hat
+##    1    2    3    4 
+## 0.43 0.33 0.27 0.97 
+## 
+## $coefficients
+##   (Intercept)            x
+## 1  0.01719298 -0.002105263
+## 2 -0.19582090  0.019104478
+## 3  0.15369863 -0.009315068
+## 4  0.30666667 -0.160000000
+## 
+## $sigma
+##         1         2         3         4 
+## 0.4682929 0.2591605 0.2482818 0.4082483 
+## 
+## $wt.res
+##     1     2     3     4 
+##  0.02 -0.32  0.34 -0.04</code></pre>
+<p>The output lists the diagonal elements <span class="math inline">\(h_{ii}\)</span> of the hat matrix
+as <code>$hat</code>, the vectors <span class="math inline">\(\hat\beta^{(i)} - \hat\beta\)</span> for each <span class="math inline">\(i\)</span>
+as <code>$coefficients</code>, the standard deviations <span class="math inline">\(\hat\sigma_{(i)}\)</span>
+for each <span class="math inline">\(i\)</span> as <code>$sigma</code>, and the residuals <span class="math inline">\(\hat\varepsilon_i\)</span> as <code>$wt.res</code>.</p>
+</div>
+<div id="cooks-distance" class="section level2" number="9.2">
+<h2><span class="header-section-number">9.2</span> Cook’s Distance</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/JNorvZHp0kQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>In the section about <a href="S06-simultaneous.html#S06-simultaneous">Estimating Coefficients Simultaneously</a> we learned
+how to measure distances of estimated parameter vectors: To compare
+<span class="math inline">\(K\hat\beta\)</span> to a vector <span class="math inline">\(K\beta\)</span> we used the norm
+<span class="math display">\[\begin{equation*}
+  \bigl\| K\hat\beta - K\beta \bigr\|_{K(X^\top X)^{-1}K^\top}^2
+  = (K\hat\beta - K\beta)^\top \bigl(K(X^\top X)^{-1}K^\top\bigr)^{-1} (K\hat\beta - K\beta).
+\end{equation*}\]</span>
+If we consider the full parameter vector, we can use <span class="math inline">\(K = I\)</span> to get
+<span class="math display">\[\begin{equation*}
+  \bigl\| \hat\beta - \beta \bigr\|_{(X^\top X)^{-1}}^2
+  = (\hat\beta - \beta)^\top X^\top X (\hat\beta - \beta).
+\end{equation*}\]</span>
+From lemma <a href="S06-simultaneous.html#lem:F-dist">6.1</a> we know that
+<span class="math display">\[\begin{equation*}
+  F = \frac{\bigl\| \hat\beta - \beta \bigr\|_{(X^\top X)^{-1}}^2}{(p+1)\hat\sigma^2}
+\end{equation*}\]</span>
+follows an <span class="math inline">\(F_{p+1, n-p-1}\)</span>-distribution. We can use this measure to
+quantify when the difference <span class="math inline">\(\hat\beta^{(i)} - \hat\beta\)</span> should be
+considered “large”.</p>
+<div class="definition">
+<p><span id="def:Cook-D" class="definition"><strong>Definition 9.2  </strong></span><strong>Cook’s distance</strong> for observation <span class="math inline">\(i\)</span> is defined as
+<span class="math display">\[\begin{equation*}
+  D_i
+  = \frac{(\hat\beta^{(i)} - \hat\beta)^\top X^\top X (\hat\beta^{(i)} - \hat\beta)}{(p+1)\hat\sigma^2}.
+\end{equation*}\]</span></p>
+</div>
+<p>We will consider observation <span class="math inline">\(i\)</span> to be “influential” if <span class="math inline">\(D_i\)</span> is large.
+Since this “lives on the scale” of an <span class="math inline">\(F_{p+1, n-p-1}\)</span>-distribution,
+we should compare <span class="math inline">\(D_i\)</span> to typical values of such a distribution. For
+example, we could consider the median. Here is a sample of median values
+for different <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span>:</p>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="S09-influence.html#cb144-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">100</span>)</span>
+<span id="cb144-2"><a href="S09-influence.html#cb144-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>)</span>
+<span id="cb144-3"><a href="S09-influence.html#cb144-3" aria-hidden="true" tabindex="-1"></a>xx <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">n =</span> n, <span class="at">p =</span> p)</span>
+<span id="cb144-4"><a href="S09-influence.html#cb144-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(xx, <span class="at">median =</span> <span class="fu">qf</span>(<span class="fl">0.5</span>, xx<span class="sc">$</span>p <span class="sc">+</span> <span class="dv">1</span>, xx<span class="sc">$</span>n <span class="sc">-</span> xx<span class="sc">$</span>p <span class="sc">-</span> <span class="dv">1</span>))</span></code></pre></div>
+<pre><code>##     n p    median
+## 1  10 1 0.7568285
+## 2  30 1 0.7105929
+## 3 100 1 0.6980730
+## 4  10 3 0.9419133
+## 5  30 3 0.8614530
+## 6 100 3 0.8451308
+## 7  10 5 1.0616689
+## 8  30 5 0.9168687
+## 9 100 5 0.8977754</code></pre>
+<p>In practice, some authors suggest that an observation is “influential”
+if <span class="math inline">\(D_i &gt; 1\)</span>, instead of using an exact quantile of the <span class="math inline">\(F\)</span>-distribution.</p>
+<p>The following lemma provides two additional ways to compute Cook’s
+distance.</p>
+<div class="lemma">
+<p><span id="lem:Cook-D-alt" class="lemma"><strong>Lemma 9.4  </strong></span>We have
+<span class="math display">\[\begin{align*}
+  D_i
+  &amp;= \frac{(\hat y^{(i)} - \hat y)^\top (\hat y^{(i)} - \hat y)}{(p+1)\hat\sigma^2} \\
+  &amp;= \frac{\hat\varepsilon_i^2}{(p+1)\hat\sigma^2} \cdot \frac{h_{ii}}{(1-h_{ii})^2}.
+\end{align*}\]</span>
+where <span class="math inline">\(\hat y^{(i)} := X \hat\beta^{(i)}\)</span> is the fitted value which is
+predicted for observation <span class="math inline">\(i\)</span> when this observation is not used to fit the
+model, <span class="math inline">\(\hat\varepsilon_i\)</span> are the usual residuals, and <span class="math inline">\(h_{ii}\)</span> are the
+diagonal elements of the hat matrix.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-39" class="proof"><em>Proof</em>. </span>We have <span class="math inline">\(\hat y^{(i)} - \hat y = X \hat\beta^{(i)} - X \hat\beta\)</span> and thus
+<span class="math display">\[\begin{equation*}
+  (\hat y^{(i)} - \hat y)^\top (\hat y^{(i)} - \hat y)
+  = (\hat\beta^{(i)} - \hat\beta)^\top X^\top X (\hat\beta^{(i)} - \hat\beta).
+\end{equation*}\]</span>
+This proves the first equality. From equation <a href="S09-influence.html#eq:dbeta-i">(9.3)</a> we know
+<span class="math display">\[\begin{equation*}
+  \hat\beta^{(i)} - \hat\beta
+    = - (X^\top X)^{-1} x_i \frac{\hat\varepsilon_i}{1 - h_{ii}}
+\end{equation*}\]</span>
+and thus we find
+<span class="math display">\[\begin{align*}
+  (\hat\beta^{(i)} - \hat\beta)^\top X^\top X (\hat\beta^{(i)} - \hat\beta)
+  &amp;= \frac{\hat\varepsilon_i^2}{(1 - h_{ii})^2} x_i^\top (X^\top X)^{-1} X^\top X (X^\top X)^{-1} x_i \\
+  &amp;= \frac{\hat\varepsilon_i^2}{(1 - h_{ii})^2} x_i^\top (X^\top X)^{-1} x_i \\
+  &amp;= \frac{\hat\varepsilon_i^2}{(1 - h_{ii})^2} h_{ii}
+\end{align*}\]</span>
+and dividing by <span class="math inline">\((p+1)\hat\sigma^2\)</span> completes the proof.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-40" class="example"><strong>Example 9.2  </strong></span>To illustrate how Cook’s <span class="math inline">\(D\)</span> is computed, we use a small dataset with
+simulated data. We include an <span class="math inline">\(x\)</span>-space outlier:</p>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="S09-influence.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211026</span>)</span>
+<span id="cb146-2"><a href="S09-influence.html#cb146-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">6</span>))</span>
+<span id="cb146-3"><a href="S09-influence.html#cb146-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> <span class="fu">rnorm</span>(<span class="dv">7</span>)</span>
+<span id="cb146-4"><a href="S09-influence.html#cb146-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y)</span>
+<span id="cb146-5"><a href="S09-influence.html#cb146-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb146-6"><a href="S09-influence.html#cb146-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb146-7"><a href="S09-influence.html#cb146-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m)</span>
+<span id="cb146-8"><a href="S09-influence.html#cb146-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb146-9"><a href="S09-influence.html#cb146-9" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">~</span> x[<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb146-10"><a href="S09-influence.html#cb146-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m2, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/influence-1.png" width="672" /></p>
+<p>The black line in the plot is the regression line using all data,
+the red line is the regression line fitted using only the left-most
+six points and leaving out the “outlier” at <span class="math inline">\(x=5\)</span>. The difference
+between the two lines makes it clear that the point at <span class="math inline">\(x=5\)</span> has a
+large effect on the estimated regression line. The easiest way
+to compute the <span class="math inline">\(D\)</span>-values seems to be the second formula from
+lemma <a href="S09-influence.html#lem:Cook-D-alt">9.4</a>:</p>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="S09-influence.html#cb147-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb147-2"><a href="S09-influence.html#cb147-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
+<span id="cb147-3"><a href="S09-influence.html#cb147-3" aria-hidden="true" tabindex="-1"></a>hii <span class="ot">&lt;-</span> <span class="fu">diag</span>(H)</span>
+<span id="cb147-4"><a href="S09-influence.html#cb147-4" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> hii <span class="sc">/</span> <span class="dv">2</span> <span class="sc">/</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> hii)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb147-5"><a href="S09-influence.html#cb147-5" aria-hidden="true" tabindex="-1"></a>D</span></code></pre></div>
+<pre><code>##           1           2           3           4           5           6 
+## 6.456405260 0.035318182 0.002129694 0.042504418 0.268374731 0.040765842 
+##           7 
+## 0.162580015</code></pre>
+<p>The results show as expected a very large value for the first observation,
+<span class="math inline">\(D_1 = 6.456\)</span>, and small values for the remaining <span class="math inline">\(D_i\)</span>.
+We can also find Cook’s <span class="math inline">\(D\)</span>-values in the output of the
+<code>influence.measures()</code> function:</p>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="S09-influence.html#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">influence.measures</span>(m)</span></code></pre></div>
+<pre><code>## Influence measures of
+##   lm(formula = y ~ x) :
+## 
+##    dfb.1_   dfb.x   dffit  cov.r  cook.d   hat inf
+## 1 -0.7475  3.1083  3.3670 39.046 6.45641 0.967   *
+## 2 -0.2441  0.1415 -0.2441  1.791 0.03532 0.215    
+## 3  0.0583 -0.0296  0.0585  1.920 0.00213 0.192    
+## 4  0.2674 -0.1142  0.2720  1.596 0.04250 0.173    
+## 5  0.9536 -0.3189  0.9959  0.348 0.26837 0.159    
+## 6 -0.2461  0.0560 -0.2681  1.512 0.04077 0.149    
+## 7 -0.5620  0.0577 -0.6512  0.687 0.16258 0.144</code></pre>
+<p>The table also shows the diagonal elements of the hat matrix, in the
+column <code>hat</code>, and some additional measures which we will not discuss here.
+A star in the last column, titled <code>inf</code>, marks influential observations.
+The star is placed if <em>any</em> of the measures shown in the table is significantly
+large.</p>
+</div>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>We can measure the influence of an observation by the amount
+the estimated parameters change when the observation is deleted.</li>
+<li>We learned how to determine the amount of change without
+having to fit <span class="math inline">\(n\)</span> additional models.</li>
+<li>Cook’s distance provides a numerical measure for the influence of each
+observation.</li>
+</ul>
+</div>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="S08-diagnostics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH3714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
