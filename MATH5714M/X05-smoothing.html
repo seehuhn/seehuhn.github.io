@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 5 Kernel Smoothing | MATH5714 Linear Regression, Robustness and Smoothing</title>
+  <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 5 Kernel Smoothing | MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH5714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 5 Kernel Smoothing | MATH5714 Linear Regression, Robustness and Smoothing" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="X04-practice.html"/>
+
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH5714M Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="X01-KDE.html"><a href="X01-KDE.html"><i class="fa fa-check"></i><b>1</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms"><i class="fa fa-check"></i><b>1.1</b> Histograms</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#probability-densities"><i class="fa fa-check"></i><b>1.1.1</b> Probability Densities</a></li>
+<li class="chapter" data-level="1.1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms-1"><i class="fa fa-check"></i><b>1.1.2</b> Histograms</a></li>
+<li class="chapter" data-level="1.1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#choice-of-buckets"><i class="fa fa-check"></i><b>1.1.3</b> Choice of Buckets</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation"><i class="fa fa-check"></i><b>1.2</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="X01-KDE.html"><a href="X01-KDE.html#motivation"><i class="fa fa-check"></i><b>1.2.1</b> Motivation</a></li>
+<li class="chapter" data-level="1.2.2" data-path="X01-KDE.html"><a href="X01-KDE.html#definition-of-a-kernel-density-estimator"><i class="fa fa-check"></i><b>1.2.2</b> Definition of a Kernel Density Estimator</a></li>
+<li class="chapter" data-level="1.2.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernels"><i class="fa fa-check"></i><b>1.2.3</b> Kernels</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation-in-r"><i class="fa fa-check"></i><b>1.3</b> Kernel Density Estimation in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="X02-Bias.html"><a href="X02-Bias.html"><i class="fa fa-check"></i><b>2</b> The Bias of Kernel Density Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="X02-Bias.html"><a href="X02-Bias.html#a-statistical-model"><i class="fa fa-check"></i><b>2.1</b> A Statistical Model</a></li>
+<li class="chapter" data-level="2.2" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-of-the-estimate"><i class="fa fa-check"></i><b>2.2</b> The Bias of the Estimate</a></li>
+<li class="chapter" data-level="2.3" data-path="X02-Bias.html"><a href="X02-Bias.html#moments-of-kernels"><i class="fa fa-check"></i><b>2.3</b> Moments of Kernels</a></li>
+<li class="chapter" data-level="2.4" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-for-small-bandwidth"><i class="fa fa-check"></i><b>2.4</b> The Bias for Small Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="X03-Var.html"><a href="X03-Var.html"><i class="fa fa-check"></i><b>3</b> The Variance of Kernel Density Estimates</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="X03-Var.html"><a href="X03-Var.html#variance"><i class="fa fa-check"></i><b>3.1</b> Variance</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="X03-Var.html"><a href="X03-Var.html#second-moment"><i class="fa fa-check"></i><b>3.1.1</b> Second Moment</a></li>
+<li class="chapter" data-level="3.1.2" data-path="X03-Var.html"><a href="X03-Var.html#the-roughness-of-a-kernel"><i class="fa fa-check"></i><b>3.1.2</b> The Roughness of a Kernel</a></li>
+<li class="chapter" data-level="3.1.3" data-path="X03-Var.html"><a href="X03-Var.html#the-variance-for-small-bandwidth"><i class="fa fa-check"></i><b>3.1.3</b> The Variance for Small Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="X03-Var.html"><a href="X03-Var.html#mean-squared-error"><i class="fa fa-check"></i><b>3.2</b> Mean Squared Error</a></li>
+<li class="chapter" data-level="3.3" data-path="X03-Var.html"><a href="X03-Var.html#optimal-bandwidth"><i class="fa fa-check"></i><b>3.3</b> Optimal Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="X04-practice.html"><a href="X04-practice.html"><i class="fa fa-check"></i><b>4</b> Kernel Density Estimation in Practice</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="X04-practice.html"><a href="X04-practice.html#integrated-error"><i class="fa fa-check"></i><b>4.1</b> Integrated Error</a></li>
+<li class="chapter" data-level="4.2" data-path="X04-practice.html"><a href="X04-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>4.2</b> Choice of Kernel</a></li>
+<li class="chapter" data-level="4.3" data-path="X04-practice.html"><a href="X04-practice.html#bandwidth-selection"><i class="fa fa-check"></i><b>4.3</b> Bandwidth Selection</a></li>
+<li class="chapter" data-level="4.4" data-path="X04-practice.html"><a href="X04-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>4.4</b> Higher Dimensions</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="X05-smoothing.html"><a href="X05-smoothing.html"><i class="fa fa-check"></i><b>5</b> Kernel Smoothing</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="X05-smoothing.html"><a href="X05-smoothing.html#the-nadaraya-watson-estimator"><i class="fa fa-check"></i><b>5.1</b> The Nadaraya-Watson Estimator</a></li>
+<li class="chapter" data-level="5.2" data-path="X05-smoothing.html"><a href="X05-smoothing.html#estimation-error"><i class="fa fa-check"></i><b>5.2</b> Estimation Error</a>
+<ul>
+<li class="chapter" data-level="" data-path="X05-smoothing.html"><a href="X05-smoothing.html#denominator"><i class="fa fa-check"></i>Denominator</a></li>
+<li class="chapter" data-level="" data-path="X05-smoothing.html"><a href="X05-smoothing.html#numerator"><i class="fa fa-check"></i>Numerator</a></li>
+<li class="chapter" data-level="" data-path="X05-smoothing.html"><a href="X05-smoothing.html#mean-squared-error-1"><i class="fa fa-check"></i>Mean Squared Error</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH5714 Linear Regression, Robustness and Smoothing</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="X05-smoothing" class="section level1" number="5">
+<h1><span class="header-section-number">Section 5</span> Kernel Smoothing</h1>
+<p>We now consider the statistical model
+<span class="math display">\[\begin{equation*}
+  Y_i
+  = m(x_i) + \varepsilon_i,
+\end{equation*}\]</span>
+where <span class="math inline">\(m\colon \mathbb{R}\to \mathbb{R}\)</span> is a smooth function and <span class="math inline">\(\varepsilon_i\)</span> are independent
+random variables with <span class="math inline">\(\mathbb{E}(\varepsilon_i) = 0\)</span>. We are given data <span class="math inline">\((x_i, y_i)\)</span> for
+<span class="math inline">\(i\in \{1, \ldots, n\}\)</span> and our aim is to estimate the function <span class="math inline">\(m\)</span>. The
+task of estimating the function <span class="math inline">\(m\)</span> from data is called <strong>smoothing</strong>.</p>
+<div id="the-nadaraya-watson-estimator" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> The Nadaraya-Watson Estimator</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0BThC65FgOo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>Since we have
+<span class="math display">\[\begin{equation*}
+  \mathbb{E}(Y_i)
+  = \mathbb{E}\bigl( m(x_i) + \varepsilon_i \bigr)
+  = m(x_i) + \mathbb{E}( \varepsilon_i )
+  = m(x_i),
+\end{equation*}\]</span>
+we could attempt to use a Monte-Carlo approach where we estimate the
+expectation <span class="math inline">\(\mathbb{E}(Y_i)\)</span> using an average of many <span class="math inline">\(Y\)</span> values. This approach is
+not feasible in practice, since typically we will only have <em>a single</em>
+observation <span class="math inline">\(y_i\)</span> corresponding to a given <span class="math inline">\(x_i\)</span>. The idea of the
+Nadaraya-Watson Estimator is to average the <span class="math inline">\(y_i\)</span> corresponding to nearby <span class="math inline">\(x_i\)</span>
+instead. A weighted average is used, which gives less weight to further away
+values. This leads to the following definition.</p>
+<div class="definition">
+<p><span id="def:NW" class="definition"><strong>Definition 5.1  </strong></span>The <strong>Nadaraya-Watson Estimator</strong> for <span class="math inline">\(m(x)\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  \hat m_h(x)
+  = \frac{\sum_{i=1}^n K_h(x - x_i) y_i}{\sum_{j=1}^n K_h(x - x_j)},
+\end{equation*}\]</span>
+where <span class="math inline">\(K_h\)</span> is a kernel scaled to bandwidth <span class="math inline">\(h\)</span> as in
+definition <a href="X01-KDE.html#def:KDE">1.2</a>.</p>
+</div>
+<p>The proble of finding <span class="math inline">\(m\)</span> using kernel functions are called <strong>kernel smoothing</strong>
+or <strong>kernel regression</strong>. In this context, the bandwidth <span class="math inline">\(h\)</span> is also called
+the <strong>smoothing parameter</strong>. The Nadaraya-Watson Estimator is not the only
+method for kernel smoothing. We will learn about different methods in the
+next sections.</p>
+<p>Using the shorthand
+<span class="math display">\[\begin{equation*}
+  w_i(x)
+  := \frac{K_h(x - x_i)}{\sum_{j=1}^n K_h(x - x_j)}
+\end{equation*}\]</span>
+we can write the Nadaraya-Watson Estimator as
+<span class="math inline">\(\hat m_h(x) = \sum_{i=1}^n w_i(x) y_i\)</span> and since
+<span class="math display">\[\begin{align*}
+  \sum_{i=1}^n w_i(x)
+  &amp;= \sum_{i=1}^n \frac{K_h(x - x_i)}{\sum_{j=1}^n K_h(x - x_j)} \\
+  &amp;= \frac{\sum_{i=1}^n K_h(x - x_i)}{\sum_{j=1}^n K_h(x - x_j)} \\
+  &amp;= 1,
+\end{align*}\]</span>
+this is indeed a weighted average.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-6" class="example"><strong>Example 5.1  </strong></span>The <code>faithful</code> dataset built into R contains 272 observations of
+waiting time between eruptions and the duration of the eruption for the Old Faithful geyser in Yellowstone National Park. We can use the
+<code>ksmooth()</code> function to compute Nadaraya-Watson estimate for the
+waiting time after an eruption of a given length. Here we use
+a Gaussian kernel with bandwidth 1.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="X05-smoothing.html#cb14-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> faithful<span class="sc">$</span>eruptions</span>
+<span id="cb14-2"><a href="X05-smoothing.html#cb14-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> faithful<span class="sc">$</span>waiting</span>
+<span id="cb14-3"><a href="X05-smoothing.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>,</span>
+<span id="cb14-4"><a href="X05-smoothing.html#cb14-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;eruption time [mins]&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;time to next eruption [mins]&quot;</span>)</span>
+<span id="cb14-5"><a href="X05-smoothing.html#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> <span class="dv">1</span>, <span class="at">n.points =</span> <span class="dv">1000</span>),</span>
+<span id="cb14-6"><a href="X05-smoothing.html#cb14-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="MATH5714M_files/figure-html/faithful2-1.png" width="672" /></p>
+<p>The estimate <span class="math inline">\(\hat m_h\)</span> (red line) smoothly connects the two clusters
+visible in the scatter plot.</p>
+</div>
+<p>For kernels with bounded support, <em>e.g.</em> for the Epanechnikov kernel,
+the denominator <span class="math inline">\(\sum_{j=1}^n K_h(x - x_j)\)</span> will equal zero for <span class="math inline">\(x\)</span>
+which are too far away from all of the <span class="math inline">\(x_i\)</span>. For these <span class="math inline">\(x\)</span>, the weights
+<span class="math inline">\(w_i\)</span> and thus also the estimate <span class="math inline">\(\hat m_h(x)\)</span> are undefined. This
+problem can easily be seen in practice, when the bandwidth is chosen
+too small.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-7" class="example"><strong>Example 5.2  </strong></span>To illustrate the problem of the estimate becoming undefined far away
+from the data points, we redo the previous estimate using a uniform
+kernel:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="X05-smoothing.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>,</span>
+<span id="cb15-2"><a href="X05-smoothing.html#cb15-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;eruption time [mins]&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;time to next eruption [mins]&quot;</span>)</span>
+<span id="cb15-3"><a href="X05-smoothing.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;box&quot;</span>, <span class="at">bandwidth =</span> <span class="dv">1</span>, <span class="at">n.points =</span> <span class="dv">1000</span>),</span>
+<span id="cb15-4"><a href="X05-smoothing.html#cb15-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb15-5"><a href="X05-smoothing.html#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;box&quot;</span>, <span class="at">bandwidth =</span> <span class="fl">0.1</span>, <span class="at">n.points =</span> <span class="dv">1000</span>),</span>
+<span id="cb15-6"><a href="X05-smoothing.html#cb15-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="MATH5714M_files/figure-html/faithful1-1.png" width="672" /></p>
+<p>For <span class="math inline">\(h = 1\)</span> (red line) we get a line <span class="math inline">\(\hat m_h\)</span> which is less smooth than
+the estimate using the Gaussian kernel, but is otherwise looks similar to
+the previous estimate. In contrast, if we reduce the bandwidth to <span class="math inline">\(h = 0.1\)</span>
+(blue line), gaps start to appear in the plot of <span class="math inline">\(\hat m_h\)</span> where the
+spacing of the data points is too large.</p>
+</div>
+</div>
+<div id="estimation-error" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Estimation Error</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/QBIUrvpN4RU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>Here we will discuss how fast the estimation error decreases in the
+limit of <span class="math inline">\(n\to \infty\)</span>, <em>i.e.</em> for the case when we have a large dateset
+to use for the estimate. As before, we will find that we need to decrease
+the bandwidth <span class="math inline">\(h\)</span> as <span class="math inline">\(n\)</span> increases.</p>
+<p>To allow for <span class="math inline">\(n\)</span> to change, we will introduce a statistical model
+also for the inputs <span class="math inline">\(x_i\)</span>. (This is different from what we did
+in the level 3 part of the module for linear regression.) Here
+we will consider the following model:</p>
+<ul>
+<li><span class="math inline">\(X_1, \ldots, X_n\)</span> are independent and identically distributed with
+density <span class="math inline">\(f\)</span>.</li>
+<li><span class="math inline">\(\eta_1, \ldots \eta_n\)</span> are independent, with <span class="math inline">\(\mathbb{E}(\eta_i) = 0\)</span>
+and <span class="math inline">\(\mathop{\mathrm{Var}}(\eta_i) = 1\)</span>.</li>
+<li><span class="math inline">\(\varepsilon_i = s(X_i) \eta_i\)</span> for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>,
+where <span class="math inline">\(s\colon \mathbb{R}\to (0, \infty)\)</span> is a smooth function.</li>
+<li><span class="math inline">\(Y_i = m(X_i) + \varepsilon_i\)</span> where <span class="math inline">\(m\colon \mathbb{R}\to \mathbb{R}\)</span> is a smooth function.</li>
+</ul>
+<p>While this extended model allows us to increase <span class="math inline">\(n\)</span>, it also creates
+a practical problem: the estimator
+<span class="math display">\[\begin{equation*}
+  \hat m_h(x)
+  = \frac{\sum_{i=1}^n K_h(x - X_i) Y_i}{\sum_{j=1}^n K_h(x - X_j)},
+\end{equation*}\]</span>
+now has random terms both in the numerator and in the denominator.
+This will make it more challenging to determine the behaviour
+of <span class="math inline">\(\mathbb{E}\bigl( \hat m_h(x) \bigr)\)</span> and <span class="math inline">\(\mathop{\mathrm{Var}}\bigl( \hat m_h(x) \bigr)\)</span>
+as <span class="math inline">\(n \to \infty\)</span> and <span class="math inline">\(h \downarrow 0\)</span>. We can write <span class="math inline">\(\hat m_h(x)\)</span> as
+<span class="math display" id="eq:m-hat-h">\[\begin{equation}
+  \hat m_h(x)
+  = \frac{\frac1n \sum_{i=1}^n K_h(x - X_i) Y_i}{\frac1n \sum_{j=1}^n K_h(x - X_j)}
+  = \frac{\frac1n \sum_{i=1}^n K_h(x - X_i) Y_i}{\hat f_h(x)}
+  = \frac{\hat r_h(x)}{\hat f_h(x)}  \tag{5.1}
+\end{equation}\]</span>
+where <span class="math inline">\(\hat f_h(x)\)</span> is the kernel density estimator from
+<a href="X01-KDE.html#X01-KDE">Section 1</a> and
+<span class="math display">\[\begin{equation*}
+  \hat r_h(x)
+  := \frac1n \sum_{i=1}^n K_h(x - X_i) Y_i.
+\end{equation*}\]</span>
+We will consider the numerator and denominator of equation <a href="X05-smoothing.html#eq:m-hat-h">(5.1)</a>
+separately</p>
+<div id="denominator" class="section level3 unnumbered">
+<h3>Denominator</h3>
+<p>From equations <a href="X02-Bias.html#eq:fhatbias">(2.5)</a> and <a href="X03-Var.html#eq:fhatvar">(3.5)</a> we know that
+<span class="math display">\[\begin{equation*}
+  \mathbb{E}\bigl( \hat f_h(x) \bigr)
+  \approx f(x) + \frac{\mu_2(K) f&#39;&#39;(x)}{2} h^2
+\end{equation*}\]</span>
+and
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
+  \approx \frac{1}{nh} f(x) R(K)
+\end{equation*}\]</span>
+as <span class="math inline">\(h \downarrow 0\)</span>.</p>
+</div>
+<div id="numerator" class="section level3 unnumbered">
+<h3>Numerator</h3>
+<p>We start by considering the numerator <span class="math inline">\(\hat r_h(x)\)</span>. The arguments used here
+will be very similar to the arguments used in the section about the
+<a href="X03-Var.html#X03-Var">variance of kernel density estimates</a>.</p>
+<p>The expectation of <span class="math inline">\(\hat r_h(x)\)</span> is
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\bigl( \hat r_h(x) \bigr)
+  &amp;= \mathbb{E}\Bigl( \frac1n \sum_{i=1}^n K_h(x - X_i) Y_i \Bigr) \\
+  &amp;= \frac1n \sum_{i=1}^n \mathbb{E}\bigl( K_h(x - X_i) Y_i \bigr) \\
+  &amp;= \mathbb{E}\bigl( K_h(x - X) Y \bigr) \\
+  &amp;= \mathbb{E}\Bigl( K_h(x - X) (m(X) + \sigma(X)\eta) \Bigr).
+\end{align*}\]</span>
+We use integrals to average over the randomness in <span class="math inline">\(X\)</span> and <span class="math inline">\(\eta\)</span>,
+denoting the density of <span class="math inline">\(\eta\)</span> by <span class="math inline">\(\varphi\)</span>:
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\bigl( \hat r_h(x) \bigr)
+  &amp;= \int \int K_h(x - \xi) \bigl( m(\xi) + \sigma(\xi) e \bigr) \, \varphi(e) \, de \, f(\xi) \, d\xi \\
+  &amp;= \int K_h(x - \xi) \Bigl( m(\xi) +\sigma(\xi) \int e \, \varphi(e) \, de \Bigr) \, f(\xi) \, d\xi \\
+  &amp;= \int K_h(x - \xi) m(\xi) f(\xi) \, d\xi,
+\end{align*}\]</span>
+since
+<span class="math display">\[\begin{equation*}
+  \int e \, \varphi(e) \, de
+  = \mathbb{E}(\eta)
+  = 0.
+\end{equation*}\]</span>
+Writing
+<span class="math display">\[\begin{equation*}
+  r(x)
+  := m(x) f(x)
+\end{equation*}\]</span>
+as an abbreviation, we finally get
+<span class="math display">\[\begin{equation*}
+  \mathbb{E}\bigl( \hat r_h(x) \bigr)
+  = \int K_h(x - \xi) r(\xi) \, d\xi.
+\end{equation*}\]</span></p>
+<p>We now formalise an argument which we already used earlier.</p>
+<div class="lemma">
+<p><span id="lem:kernel-limit" class="lemma"><strong>Lemma 5.1  </strong></span>Let <span class="math inline">\(g\colon \mathbb{R}\to \mathbb{R}\)</span> be two times continuously differentiable
+and let <span class="math inline">\(K\)</span> be a kernel function. Then we have</p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(\displaystyle\int K_h(x - \xi) g(\xi) \, d\xi = g(x) + \frac12 \mu_2(K) g&#39;&#39;(x) h^2 + o(h^2)\)</span>
+as <span class="math inline">\(h \downarrow 0\)</span>, and</li>
+<li><span class="math inline">\(\displaystyle\int K_h(x - \xi)^2 g(\xi) \, d\xi = \frac1h R(K) g(x) + o(1/h)\)</span>
+as <span class="math inline">\(h \downarrow 0\)</span>.</li>
+</ol>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>The first statement is proved using substitution and Taylor expandion of <span class="math inline">\(r\)</span>
+around <span class="math inline">\(x\)</span> as shown in the derivation of equation <a href="X02-Bias.html#eq:fhatbias">(2.5)</a>.
+The second statement is proved similarly, as shown in the derivation of
+equation <a href="X03-Var.html#eq:Var-frag1">(3.3)</a>.</p>
+</div>
+<p>Using the first part of lemma <a href="X05-smoothing.html#lem:kernel-limit">5.1</a> for <span class="math inline">\(g = r\)</span> we get
+<span class="math display">\[\begin{equation*}
+  \mathbb{E}\bigl( \hat r_h(x) \bigr)
+  = r(x) + \frac12 \mu_2(K) r&#39;&#39;(x) h^2 + o(h^2).
+\end{equation*}\]</span></p>
+<p>For the variance of <span class="math inline">\(\hat r_h(x)\)</span> we get
+<span class="math display">\[\begin{align*}
+  \mathop{\mathrm{Var}}\bigl( \hat r_h(x) \bigr)
+  &amp;= \mathop{\mathrm{Var}}\Bigl( \frac1n \sum_{i=1}^n K_h(x - X_i) Y_i \Bigr) \\
+  &amp;= \frac{1}{n^2} \sum_{i=1}^n \mathop{\mathrm{Var}}\bigl( K_h(x - X_i) Y_i \bigr) \\
+  &amp;= \frac1n \mathop{\mathrm{Var}}\bigl( K_h(x - X) Y \bigr) \\
+  &amp;= \frac1n \Bigl( \mathbb{E}\bigl( K_h(x - X)^2 Y^2 \bigr) - \mathbb{E}\bigl( K_h(x - X) Y \bigr)^2 \Bigr).
+\end{align*}\]</span>
+We have already seen that
+<span class="math display">\[\begin{equation*}
+  \mathbb{E}\bigl( K_h(x - X) Y \bigr)
+  = \mathbb{E}\bigl( \hat r_h(x) \bigr)
+  = r(x) + \frac12 \mu_2(K) r&#39;&#39;(x) h^2 + o(h^2)
+\end{equation*}\]</span>
+and thus
+<span class="math display">\[\begin{equation*}
+  \mathbb{E}\bigl( K_h(x - X) Y \bigr)^2
+  = r(x)^2 + O(h^2).
+\end{equation*}\]</span>
+Using the second part of lemma <a href="X05-smoothing.html#lem:kernel-limit">5.1</a> one can show that
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\bigl( K_h(x - X)^2 Y^2 \bigr)
+  &amp;= \int \int K_h(x - \xi)^2 \bigl( m(\xi) + s(\xi)e \bigr)^2 \,\varphi(e)\,de \,f(\xi)\,d\xi \\
+  &amp;= \int K_h(x - \xi)^2 \bigl( m(\xi)^2 + s(\xi)^2 \bigr) f(\xi) \,d\xi \\
+  &amp;= \frac1h R(K) \bigl( m(x)^2 + s(x)^2 \bigr) f(x) + o(1/h).
+\end{align*}\]</span>
+Combining these equations we find
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Var}}\bigl( \hat r_h(x) \bigr)
+  \approx \frac{1}{nh} R(K) \bigl( m(x)^2 + s(x)^2 \bigr) f(x)
+    + \frac1n r(x)^2
+\end{equation*}\]</span>
+as <span class="math inline">\(n\to\infty\)</span>, <span class="math inline">\(h\downarrow 0\)</span> and <span class="math inline">\(nh\to\infty\)</span>.</p>
+</div>
+<div id="mean-squared-error-1" class="section level3 unnumbered">
+<h3>Mean Squared Error</h3>
+<p>To turn our results about <span class="math inline">\(\hat r_h\)</span> and our previous results about
+<span class="math inline">\(\hat f\)</span> into an error estimate for
+<span class="math display">\[\begin{equation*}
+  \hat m_h(x)
+  = \frac{\hat r_h(x)}{\hat f_h(x)},
+\end{equation*}\]</span>
+we consider Taylor expansion of the function <span class="math inline">\(g(y) = 1/y\)</span>:
+<span class="math display">\[\begin{align*}
+  g(y + h)
+  &amp;= g(y) + g&#39;(y) h + o(h) \\
+  &amp;= \frac1y - \frac{1}{y^2} h + o(h).
+\end{align*}\]</span>
+Using this approximation we get
+<span class="math display">\[\begin{align*}
+  \hat m_h(x)
+  &amp;= \hat r_h(x) g\bigl( \hat f_h(x) \bigr) \\
+  &amp;= \hat r_h(x) g\bigl( f(x) + \hat f_h(x) - f(x) \bigr) \\
+  &amp;\approx \hat r_h(x) \Bigl( \frac{1}{f(x)} - \frac{1}{f(x)^2} (\hat f_h(x) - f(x)) \Bigr) \\
+  &amp;= \frac{\hat r_h(x)}{f(x)} - \frac{\hat r_h(x) \bigl(\hat f_h(x) - f(x) \bigr)}{f(x)^2}.
+\end{align*}\]</span>
+With the help of this trick, we have achieved that now all random terms
+are in the denominator and thus we can take expectations easily:
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\bigl( \hat m_h(x) \bigr)
+  &amp;= \frac{\mathbb{E}\bigl( \hat r_h(x) \bigr)}{f(x)}
+      - \frac{\mathbb{E}\Bigl( \hat r_h(x) \bigl(\hat f_h(x) - f(x) \bigr) \Bigr)}{f(x)^2} \\
+  &amp;\approx \frac{\mathbb{E}\bigl( \hat r_h(x) \bigr)}{f(x)}
+      - \frac{\mathbb{E}\bigl( \hat r_h(x) \bigr) \mathbb{E}\bigl( \hat f_h(x) - f(x) \bigr)}{f(x)^2}.
+\end{align*}\]</span>
+Substituting in our previous results we get
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\bigl( \hat m_h(x) \bigr)
+  &amp;\approx \frac{r(x) + \frac12 \mu_2(K) r&#39;&#39;(x) h^2 + o(h^2)}{f(x)}
+      - \frac{\bigl( r(x) + \frac12 \mu_2(K) r&#39;&#39;(x) h^2 + o(h^2) \bigr)
+          \frac12 \mu_2(K) f&#39;&#39;(x) h^2}{f(x)^2} \\
+  &amp;= \frac{r(x)}{f(x)}
+    + \frac12 \frac{\mu_2(K) r&#39;&#39;(x)}{f(x)} h^2
+    - \frac12 \frac{\mu_2(x) r(x) f&#39;&#39;(x)}{f(x)^2} h^2
+    + o(h^2)
+\end{align*}\]</span>
+Using <span class="math inline">\(r(x) = f(x) m(x)\)</span> we find the derivative
+<span class="math inline">\(r&#39;(x) = f&#39;(x) m(x) + f(x) m&#39;(x)\)</span>
+as well as the second derivative
+<span class="math inline">\(r&#39;&#39;(x) = f&#39;&#39;(x) m(x) + 2 f&#39;(x) m&#39;(x) + f(x) m&#39;&#39;(x)\)</span>.
+This gives
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\bigl( \hat m_h(x) \bigr)
+  &amp;= m(x)
+    + \frac12 \frac{\mu_2(K) r&#39;&#39;(x)}{f(x)} h^2
+    - \frac12 \frac{\mu_2(x) m(x) f&#39;&#39;(x)}{f(x)} h^2
+    + o(h^2) \\
+  &amp;= m(x)
+    + \frac12 \frac{\mu_2(K) \bigl(2 f&#39;(x) m&#39;(x) + f(x) m&#39;&#39;(x)\bigr)}{f(x)} h^2
+    + o(h^2) \\
+  &amp;= m(x)
+    + \mu_2(K) \Bigl( \frac{f&#39;(x)}{f(x)} m&#39;(x) + \frac12 m&#39;&#39;(x) \Bigr) h^2
+    + o(h^2)
+\end{align*}\]</span>
+and
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{bias}}\bigl( \hat m_h(x) \bigr)
+  = \mu_2(K) \Bigl( \frac{f&#39;(x)}{f(x)} m&#39;(x) + \frac12 m&#39;&#39;(x) \Bigr) h^2
+    + o(h^2).
+\end{equation*}\]</span></p>
+<p>A similar calculation gives the approximate variance as
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Var}}\bigl( \hat m_h(x) \bigr)
+  = \frac{1}{nh} \frac{\sigma^2(x) R(K)}{f(x)} + o\Bigl( \frac{1}{nh} \Bigr).
+\end{equation*}\]</span>
+So finally we have
+<span class="math display">\[\begin{align*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat m_h(x) \bigr)
+  &amp;= \frac{h^4 \mu_2(K)^2}{4} \Bigl(m&#39;&#39;(x) +\frac{2m&#39;(x) f&#39;(x)}{f(x)} \Bigr)^2 \\
+  &amp;\hskip1cm + \frac{1}{nh} \frac{\sigma^2(x) R(K)}{f(x)} + o\Bigl( \frac{1}{nh} \Bigr) + o(h^4).
+\end{align*}\]</span></p>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>A more careful calculation will need to take into account that <span class="math inline">\(\hat m(x)\)</span>
+may be undefined. All expectations and variances are conditional on
+<span class="math inline">\(\hat f(x) \neq 0\)</span>. One can show that <span class="math inline">\(P\bigl( \hat f(x) \neq 0 \bigr) \to 1\)</span>
+as <span class="math inline">\(n\to\infty\)</span> for all <span class="math inline">\(x\in\mathbb{R}\)</span> with <span class="math inline">\(f(x) &gt; 0\)</span>, so this is not a problem.</li>
+<li>The MSE is of order <span class="math inline">\(O(n^{-4/5})\)</span> when we choose <span class="math inline">\(h \sim n^{-1/5}\)</span>, as before.</li>
+<li>The formula for the variance shows that the regression curve is more stable
+in those areas where there are plenty of observations.</li>
+<li>The bias-squared is either dominated by the second derivative
+<span class="math inline">\(m&#39;&#39;(x)\)</span> - when we are close to a local extremum of <span class="math inline">\(m(x)\)</span> (turning point),
+or by the first derivative <span class="math inline">\(m&#39;(x)\)</span> when we have few observations.</li>
+<li>This calculation is helpful in creating confidence intervals for the estimate
+<span class="math inline">\(\hat m_h(x)\)</span> in which <span class="math inline">\(\sigma^2(x)\)</span> can be estimated by
+<span class="math display">\[\hat \sigma^2(x) = \sum w_i(x) \bigl( y_i-\hat m_h^{(i)}(x_i) \bigr)^2,\]</span>
+where <span class="math inline">\(\hat m_h^{(i)}(x_i)\)</span> is the estimate of <span class="math inline">\(m\)</span> at the point <span class="math inline">\(x_i\)</span> using
+all of the data except for the observation at <span class="math inline">\((x_i, y_i)\)</span>.</li>
+</ul>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>We have learned how the Nadaraya-Watson Estimator can be used
+for smoothing.</li>
+<li>We have considered the mean squared error of this estimator.</li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="X04-practice.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH5714M.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
