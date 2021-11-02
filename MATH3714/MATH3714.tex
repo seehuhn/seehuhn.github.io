@@ -3922,7 +3922,7 @@ to an input \((\tilde x_1, \ldots, \tilde x_p)\). If we write
 then the model mean corresponding to this input is
 \begin{equation*}
   \tilde y
-  = \beta_0 + x_1 \beta_1 + \cdots + x_p \beta_p.
+  = \beta_0 + \tilde x_1 \beta_1 + \cdots + \tilde x_p \beta_p
   = \tilde x^\top \beta,
 \end{equation*}
 To derive a confidence interval for this quantity, we follow the same
@@ -3942,7 +3942,6 @@ Thus,
   &= \frac{\frac{1}{\sqrt{\sigma^2\tilde x^\top (X^\top X)^{-1} \tilde x}}\bigl(\tilde x^\top \hat\beta - \tilde x^\top \beta\bigr)}
            {\sqrt{\frac{1}{\sigma^2}\hat\sigma^2}}
 \end{align*}
-
 is \(t(n-p-1)\)-distributed, since the numerator is \(\mathcal{N}(0,1)\), the denominator
 is \(\sqrt{\chi^2(n-p-1) / (n-p-1)}\) and \(\hat\beta\) is independent
 of~\(\hat\sigma^2\).
@@ -4217,8 +4216,6 @@ and thus also at \(\alpha=0.05\).
 \hypertarget{P02}{%
 \section*{Problem Sheet 2}\label{P02}}
 \addcontentsline{toc}{section}{Problem Sheet 2}
-
-\excludecomment{myanswers}
 
 You should attempt all these questions and write up your solutions in advance
 of your workshop in week 5 where the answers will be discussed.
@@ -5338,6 +5335,340 @@ large.
 \item
   Cook's distance provides a numerical measure for the influence of each
   observation.
+\end{itemize}
+
+\clearpage
+
+\hypertarget{S10-multicoll}{%
+\section{Multicollinearity}\label{S10-multicoll}}
+
+\begin{definition}
+In linear regression, \textbf{Multicollinearity} denotes the situation
+when the columns of the design matrix \(X\) are (approximately) linearly
+dependent.
+\end{definition}
+
+The columns of \(X\) are linearly dependent, if and only if
+there is a \(v \in \mathbb{R}^{p+1}\) such that \(X v = 0\). The columns
+are approximately linearly dependent, if there is a vector \(v\)
+such that \(X v \approx 0\).
+
+\hypertarget{consequences-of-multicollinearity}{%
+\subsection{Consequences of Multicollinearity}\label{consequences-of-multicollinearity}}
+
+In the derivation of the least squares estimator \(\hat\beta = (X^\top X)^{-1} X^\top y\) we had to assume that the matrix \(X^\top X\) is
+invertible. If the columns of \(X\) are linearly dependent, \(X^\top X\) is no
+longer invertible and the least squares estimate is no longer uniquely
+defined.
+
+\begin{example}
+Consider the following data:
+
+\begin{longtable}[]{@{}rcl@{}}
+\toprule
+\(y\) & \(x_1\) & \(x_2\) \\
+\midrule
+\endhead
+2 & 1 & 1 \\
+4 & 2 & 2 \\
+6 & 3 & 3 \\
+\bottomrule
+\end{longtable}
+
+In this case, an exact match with no residuals can be achieved
+as \(y = x_1 + x_2\), \emph{i.e.}~for \(\beta_1 = \beta_2 = 1\). But this solution
+is not unique: we could just as well write \(y = 2 x_1\) or \(y = 2 x_2\).
+Any choice of \(\beta_1\) and \(\beta_2\) with \(\beta_1 + \beta_2 = 2\) will
+lead to zero residuals.
+\end{example}
+
+The problem in the example above occurs, since the two input columns in the
+data are identical. The same problem, in a less obvious way, would occur in
+datasets with more inputs when one column of \(X\) can be written as a linear
+combination of other columns. This is a problem of the given
+input data, not of the responsees or of the statistical model.
+
+In the case where there is only approximate linear dependency between the
+columns of \(X\), the inverse \((X^\top X)^{-1}\) exists and an estimate \(\hat\beta\)
+can be computed, but there will be huge uncertainties in some of the stimated
+coefficients. We illustrate this effect using a numerical example.
+
+\begin{example}
+\protect\hypertarget{exm:mulcollell}{}\label{exm:mulcollell}Here we simulate data which has similar characteristics to the toy
+example above: we have two inputs, each of which equals the
+output with a small amount of noise added. We
+fit a model without the intercept, so that there are only two
+coefficients to estimate and plotting these is no problem.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20211101}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{10}
+\NormalTok{y }\OtherTok{\textless{}{-}} \DecValTok{2} \SpecialCharTok{*}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n)}
+\NormalTok{x1 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\NormalTok{n, }\FloatTok{0.15}\NormalTok{)}
+\NormalTok{x2 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\NormalTok{n, }\FloatTok{0.15}\NormalTok{)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \DecValTok{0} \SpecialCharTok{+}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2)}
+\end{Highlighting}
+\end{Shaded}
+
+Similar to the approach in \protect\hyperlink{coordinates-of-the-outline}{section~6},
+we can plot a confidence ellipse. (Don't worry about the details of the
+commands used to plot the ellipse.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sigma.hat }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(m)}\SpecialCharTok{$}\NormalTok{sigma}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m)}
+\NormalTok{svd }\OtherTok{\textless{}{-}} \FunctionTok{La.svd}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X)}
+\NormalTok{alpha }\OtherTok{\textless{}{-}} \FloatTok{0.05}
+\NormalTok{f.crit }\OtherTok{\textless{}{-}} \FunctionTok{qf}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ alpha, }\FunctionTok{ncol}\NormalTok{(X), }\FunctionTok{nrow}\NormalTok{(X) }\SpecialCharTok{{-}} \FunctionTok{ncol}\NormalTok{(X))}
+\NormalTok{phi }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{2}\SpecialCharTok{*}\NormalTok{pi, }\AttributeTok{length.out =} \DecValTok{201}\NormalTok{)}
+\NormalTok{circ }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}\FunctionTok{cos}\NormalTok{(phi), }\FunctionTok{sin}\NormalTok{(phi)) }\SpecialCharTok{*} \FunctionTok{sqrt}\NormalTok{(f.crit }\SpecialCharTok{*} \FunctionTok{ncol}\NormalTok{(X) }\SpecialCharTok{*}\NormalTok{ sigma.hat}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{ellipse }\OtherTok{\textless{}{-}}\NormalTok{ svd}\SpecialCharTok{$}\NormalTok{u }\SpecialCharTok{\%*\%}\NormalTok{ (circ }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(svd}\SpecialCharTok{$}\NormalTok{d)) }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)}
+
+\FunctionTok{plot}\NormalTok{(ellipse[}\DecValTok{1}\NormalTok{,], ellipse[}\DecValTok{2}\NormalTok{,], }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }\AttributeTok{asp =} \DecValTok{1}\NormalTok{,}
+     \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(beta[}\DecValTok{1}\NormalTok{]),}
+     \AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(beta[}\DecValTok{2}\NormalTok{]))}
+\FunctionTok{abline}\NormalTok{(}\DecValTok{2}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\AttributeTok{lty =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{], }\AttributeTok{lty =} \StringTok{"dotted"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{], }\AttributeTok{lty =} \StringTok{"dotted"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/multicollellipse-1.pdf}
+
+We can see that, as in the toy example above, the confidence region
+places \((\beta_1, \beta_2)\) close to the line where \(\beta_1 + \beta_2 = 2\)
+(the diagonal dashed line), but there is considerable uncertainty about
+where on this line the coefficients are located. The effect gets
+more pronounced when the amount of noise in the definition of \texttt{x1} and~\texttt{x2}
+is reduced.
+\end{example}
+
+There are two, slightly different effects of multicollinearity:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  In the case of exact multicollinearity, \(X^\top X\) is not invertible.
+  If the columns of \(X\) are approximately linearly dependent, then
+  \((X^\top X)^{-1}\) does exist, but small changes of \(X\) lead to large changes
+  of \((X^\top X)^{-1}\) and numerical computation of the inverse is
+  strongly affected by rounding errors.
+\item
+  If the columns of \(X\) are approximately linearly dependent,
+  the computed value of the estimator \(\hat\beta\) is strongly affected
+  by small changes to the system: the noise in the model strongly affects
+  \(\hat\beta\) (as demonstrated in example~\ref{exm:mulcollell}, above),
+  leaving out a single observation may lead to large changes in \(\hat\beta\)
+  and computation of \(\hat\beta\) is sensitive to rounding errors.
+\end{enumerate}
+
+While multicollinearity can make the regression coefficients ambiguous,
+the outputs \(y\) are not affected. Predictions made using a model
+where multicollinearity is present are still reliable.
+
+\hypertarget{detecting-multicollinearity}{%
+\subsection{Detecting Multicollinearity}\label{detecting-multicollinearity}}
+
+While collinearity of two columns of \(X\) is easy to spot, for example in
+a pair scatter plot of the inputs \(x_i\), multicollinearity which involves
+more than two columns can be harder to notice. The condition number of
+\(X\) is a quantitative measure of how close \(X\) is to multicollinearity.
+
+\begin{definition}
+The \textbf{condition number} of \(X\) is defined to be
+\begin{equation*}
+  \kappa(X)
+  = \frac{\sigma_\mathrm{max}(X)}{\sigma_\mathrm{min}(X)},
+\end{equation*}
+where \(\sigma_\mathrm{max}(X) = \sqrt{\lambda_\mathrm{max}(X^\top X)}\) is the
+largest singular value of \(X\), computed as the square root of the largest
+eigenvalue of \(X^\top X\), and similarly \(\sigma_\mathrm{min}(X) = \sqrt{\lambda_\mathrm{min}(X^\top X)}\) is the smallest singular value of \(X\),
+computed as the square root of the smallest eigenvalue of \(X^\top X\).
+\end{definition}
+
+As a rule of thumb, if \(\kappa(X) < 10\) there are no significant problems
+with multicollinearity, and if \(\kappa(X) > 30\) the regression problem
+sufferes severe problems with multicollinearity. In the case where the
+columns of \(X\) are exactly linearly dependent, we have \(\sigma_\mathrm{min}(X) = 0\) and \(\kappa(X) = \infty\).
+
+In R, the condition number can be computed using the
+\href{https://rdrr.io/r/base/kappa.html}{function \texttt{kappa()}}. The function
+can either be called as \texttt{kappa(X,\ exact\ =\ TRUE)},
+where \texttt{X} is the design matrix,
+or as \texttt{kappa(m,\ exact\ =\ TRUE)}
+where \texttt{m} is the object returned by \texttt{lm()}. If the optional
+argument \texttt{exact\ =\ TRUE} is omitted, only an approximate result
+is returned (using a faster algorithm).
+
+\begin{example}
+\protect\hypertarget{exm:multicollell}{}\label{exm:multicollell}Consider the following toy dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        y   x.1    x.2    x.3    x.4
+## 1   7.37 4.182  0.078  0.008  1.043
+## 2   9.86 6.039  1.106 -0.009  0.137
+## 3  13.44 9.220  0.151 -0.158  0.965
+## 4  12.95 8.260 -0.018  1.133  0.203
+## 5  13.05 8.415  1.078  0.057  0.002
+## 6  13.17 9.272 -0.019  0.062  0.974
+## 7   5.28 1.575 -0.160  1.031  0.099
+## 8   8.18 4.595  0.091  0.014  0.909
+## 9   5.13 2.779 -0.074  0.923 -0.004
+## 10  6.80 2.248 -0.045  0.182  1.088
+\end{verbatim}
+
+To inspect these data, we use a pair scatter plot of the input variables,
+leaving out the responses in column~1:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pairs}\NormalTok{(data[,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/multicollairs-1.pdf}
+
+While there are visbile patterns, there are no clear signs of
+a linear dependency between any two columns.
+To see whether there are problems with multicollinearity, we fit
+a linear model and determine the condition number.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ data)}
+\FunctionTok{kappa}\NormalTok{(m, }\AttributeTok{exact =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 97.38214
+\end{verbatim}
+
+Since the condition number is larger than 30, we can say that the
+data shows severe multicollinearity. To find out which variables
+are involved, we can use \href{https://en.wikipedia.org/wiki/Singular_value_decomposition}{singular value decomposition}.
+This allows to write \(X\) as \(X = U D V^\top\), where \(D\in\mathbb{R}^{(p+1)\times(p+1)}\)
+is a diagonal matrix and \(U\in\mathbb{R}^{n\times(p+1)}\) and
+\(V\in\mathbb{R}^{(p+1)\times(p+1)}\) are matrices with orthogonal columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{svd}\NormalTok{(X, }\AttributeTok{nu =} \DecValTok{0}\NormalTok{)}
+\NormalTok{s}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $d
+## [1] 20.3002516  2.0294781  1.8122508  1.2526330  0.2084597
+## 
+## $v
+##             [,1]       [,2]        [,3]        [,4]          [,5]
+## [1,] -0.14024576 -0.5552821  0.04218055 -0.62161197 -0.5327403485
+## [2,] -0.98554152  0.1088264 -0.04131956  0.12311216 -0.0009051211
+## [3,] -0.04170949  0.4036310 -0.21603327 -0.75981456  0.4597323397
+## [4,] -0.03395454 -0.6495911 -0.55665792  0.11926737  0.5027780067
+## [5,] -0.07839927 -0.3081105  0.79998442 -0.08306065  0.5020431792
+\end{verbatim}
+
+We used the optional argument \texttt{nu\ =\ 0} to tell R that we won't need the
+matrix~\(U\). The diagonal elements \(\sigma_0(X), \ldots, \sigma_{p}(X)\),
+stored in \texttt{s\$d}, are the singular values of \(X\) in decreasing order.
+We can find the condition number using these values:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s}\SpecialCharTok{$}\NormalTok{d[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{/}\NormalTok{ s}\SpecialCharTok{$}\NormalTok{d[}\FunctionTok{length}\NormalTok{(s}\SpecialCharTok{$}\NormalTok{d)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 97.38214
+\end{verbatim}
+
+This agrees with the value for \(\kappa(X)\) we found above.
+
+Finally, the columns \(v_1, \ldots, v_{p+1}\) of \texttt{s\$v} are called the (right)
+singular vectors of \(X\). We can use these vectors to identify which variables
+are involved in multicollinearity: It is easy to show that \(\| X v_k \| = \sigma_k(X)\), so every ``small'' \(\sigma_k(X)\) corresponds to a vector \(v_k\)
+which describes an approximate linear dependency between the columns of \(X\).
+Looking at \(\sigma_4(X)\) (the 5th element of \texttt{s\$d}) we get
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{round}\NormalTok{(s}\SpecialCharTok{$}\NormalTok{v[,}\DecValTok{5}\NormalTok{], }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -0.533 -0.001  0.460  0.503  0.502
+\end{verbatim}
+
+Rounding the numbers some more and remembering that the first
+value corresponds to the intercept, we get that
+\begin{equation*}
+  -0.5 \cdot 1 + 0.5 \cdot x_2 + 0.5 \cdot x_3 + 0.5 \cdot x_4
+  \approx 0
+\end{equation*}
+or, equivalently
+\begin{equation*}
+  x_2 + x_3 + x_4
+  \approx 1.
+\end{equation*}
+Looking back over the original numbers we see that this relation
+indeed holds.
+\end{example}
+
+\hypertarget{mitigations}{%
+\subsection{Mitigations}\label{mitigations}}
+
+There are various ways problems resulting from multicollinearity can
+be addressed:
+
+\begin{itemize}
+\item
+  Sometimes columns are lineraly dependent, because a redundant input
+  is present. Removing one of the input variables in a group
+  of linearly dependent inputs can solve this problem.
+\item
+  The inputs can be transformed by choosing new variables as functions
+  of the original inputs. For example, in example~\ref{exm:multicollell}
+  one could try the input variables \(\tilde x_1 = (x_1 + x_2) / 2\) and
+  \(\tilde x_2 = (x_1 - x_2) / 2\). The confidence ellipse shown above
+  indicates that it should be possible to get good estimates for the
+  coefficient for \(\tilde x_1\).
+\item
+  If \(n\) is small, the problem may be resolved by getting more data.
+  In particular, for \(n < p+1\), we \emph{always} have strict multicollinearity.
+\item
+  Alternative estimation approaches may be used. The basic idea is to sacrifice the
+  requirement that \(\hat\beta\) is unbiased, in exchange for a large variance
+  reduction. In a later section we will discuss ``ridge regression'' as an
+  example of this approach.
+\end{itemize}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  Multicollinearity can lead to numerical problems and large variances in the
+  estimated regression coefficients.
+\item
+  The condition number of the design matrix can be used to detect
+  multicollinearity.
+\item
+  Singular value decomposition can used to better understand linear
+  dependencies in the inputs.
 \end{itemize}
 
 \clearpage

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 1 Simple Linear Regression | MATH3714 Linear Regression and Robustness</title>
+  <title>Section 10 Multicollinearity | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 1 Simple Linear Regression | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Section 10 Multicollinearity | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 1 Simple Linear Regression | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Section 10 Multicollinearity | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="S00-about.html"/>
-<link rel="next" href="S02-multiple.html"/>
+<link rel="prev" href="S09-influence.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -295,295 +295,281 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="S01-simple" class="section level1" number="1">
-<h1><span class="header-section-number">Section 1</span> Simple Linear Regression</h1>
-<p>As a reminder, we consider simple linear regression in this section.
-My hope is, that all of you have seen this material before at some
-stage, <em>e.g.</em> in school or in some first or second year modules.</p>
-<p>In preparation for notation introduced in the next section, we rename
-the parameters from <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> to the new names <span class="math inline">\(\beta_0\)</span>
-for the intercept and <span class="math inline">\(\beta_1\)</span> for the slope.</p>
+<div id="S10-multicoll" class="section level1" number="10">
+<h1><span class="header-section-number">Section 10</span> Multicollinearity</h1>
+<div class="definition">
+<p><span id="def:unlabeled-div-41" class="definition"><strong>Definition 10.1  </strong></span>In linear regression, <strong>Multicollinearity</strong> denotes the situation
+when the columns of the design matrix <span class="math inline">\(X\)</span> are (approximately) linearly
+dependent.</p>
+</div>
+<p>The columns of <span class="math inline">\(X\)</span> are linearly dependent, if and only if
+there is a <span class="math inline">\(v \in \mathbb{R}^{p+1}\)</span> such that <span class="math inline">\(X v = 0\)</span>. The columns
+are approximately linearly dependent, if there is a vector <span class="math inline">\(v\)</span>
+such that <span class="math inline">\(X v \approx 0\)</span>.</p>
+<div id="consequences-of-multicollinearity" class="section level2" number="10.1">
+<h2><span class="header-section-number">10.1</span> Consequences of Multicollinearity</h2>
 <div class="videowrap">
 <div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/w9t5sLIRzFY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/DBdeSoPbjb4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </div>
 </div>
-<div id="residual-sum-of-squares" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> Residual Sum of Squares</h2>
-<p>In simple linear regression, the aim is to find a regression line <span class="math inline">\(y = \beta_0 + \beta_1 x\)</span>, such that the line is “close” to given data points
-<span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n) \in\mathbb{R}^2\)</span> for <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>. The ususal way to find <span class="math inline">\(alpha\)</span> and <span class="math inline">\(\beta_1\)</span>, and thus the regression
-line, is by minimising the <strong>residual sum of squares</strong>:
-<span class="math display" id="eq:RSS">\[\begin{equation}
-  r(\beta_0, \beta_1)
-  = \sum_{i=1}^n \bigl( y_i - (\beta_0 + \beta_1 x_i) \bigr)^2.
-  \tag{1.1}
-\end{equation}\]</span>
-For given <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>, the value <span class="math inline">\(r(\beta_0, \beta_1)\)</span> measures
-how close (in vertical direction) the given data points <span class="math inline">\((x_i, y_i)\)</span>
-are to the regression line <span class="math inline">\(\beta_0 + \beta_1 x\)</span>. By minimising
-<span class="math inline">\(r(\beta_0, \beta_1)\)</span> we find the regression line which is “closest” to
-the data. The solution of this minimisation problem is usually
-expressed in terms of the sample variance <span class="math inline">\(\mathrm{s}_x\)</span> and the
-sample covariance <span class="math inline">\(\mathrm{s}_{xy}\)</span>.</p>
+<p>In the derivation of the least squares estimator <span class="math inline">\(\hat\beta = (X^\top X)^{-1} X^\top y\)</span> we had to assume that the matrix <span class="math inline">\(X^\top X\)</span> is
+invertible. If the columns of <span class="math inline">\(X\)</span> are linearly dependent, <span class="math inline">\(X^\top X\)</span> is no
+longer invertible and the least squares estimate is no longer uniquely
+defined.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-42" class="example"><strong>Example 10.1  </strong></span>Consider the following data:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right"><span class="math inline">\(y\)</span></th>
+<th align="center"><span class="math inline">\(x_1\)</span></th>
+<th align="left"><span class="math inline">\(x_2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2</td>
+<td align="center">1</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="center">2</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="right">6</td>
+<td align="center">3</td>
+<td align="left">3</td>
+</tr>
+</tbody>
+</table>
+<p>In this case, an exact match with no residuals can be achieved
+as <span class="math inline">\(y = x_1 + x_2\)</span>, <em>i.e.</em> for <span class="math inline">\(\beta_1 = \beta_2 = 1\)</span>. But this solution
+is not unique: we could just as well write <span class="math inline">\(y = 2 x_1\)</span> or <span class="math inline">\(y = 2 x_2\)</span>.
+Any choice of <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span> with <span class="math inline">\(\beta_1 + \beta_2 = 2\)</span> will
+lead to zero residuals.</p>
+</div>
+<p>The problem in the example above occurs, since the two input columns in the
+data are identical. The same problem, in a less obvious way, would occur in
+datasets with more inputs when one column of <span class="math inline">\(X\)</span> can be written as a linear
+combination of other columns. This is a problem of the given
+input data, not of the responsees or of the statistical model.</p>
+<p>In the case where there is only approximate linear dependency between the
+columns of <span class="math inline">\(X\)</span>, the inverse <span class="math inline">\((X^\top X)^{-1}\)</span> exists and an estimate <span class="math inline">\(\hat\beta\)</span>
+can be computed, but there will be huge uncertainties in some of the stimated
+coefficients. We illustrate this effect using a numerical example.</p>
+<div class="example">
+<p><span id="exm:mulcollell" class="example"><strong>Example 10.2  </strong></span>Here we simulate data which has similar characteristics to the toy
+example above: we have two inputs, each of which equals the
+output with a small amount of noise added. We
+fit a model without the intercept, so that there are only two
+coefficients to estimate and plotting these is no problem.</p>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="S10-multicoll.html#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211101</span>)</span>
+<span id="cb151-2"><a href="S10-multicoll.html#cb151-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb151-3"><a href="S10-multicoll.html#cb151-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> (<span class="dv">1</span><span class="sc">:</span>n)</span>
+<span id="cb151-4"><a href="S10-multicoll.html#cb151-4" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span>n, <span class="fl">0.15</span>)</span>
+<span id="cb151-5"><a href="S10-multicoll.html#cb151-5" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span>n, <span class="fl">0.15</span>)</span>
+<span id="cb151-6"><a href="S10-multicoll.html#cb151-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2)</span></code></pre></div>
+<p>Similar to the approach in <a href="S06-simultaneous.html#coordinates-of-the-outline">section 6</a>,
+we can plot a confidence ellipse. (Don’t worry about the details of the
+commands used to plot the ellipse.)</p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="S10-multicoll.html#cb152-1" aria-hidden="true" tabindex="-1"></a>sigma.hat <span class="ot">&lt;-</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma</span>
+<span id="cb152-2"><a href="S10-multicoll.html#cb152-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb152-3"><a href="S10-multicoll.html#cb152-3" aria-hidden="true" tabindex="-1"></a>svd <span class="ot">&lt;-</span> <span class="fu">La.svd</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)</span>
+<span id="cb152-4"><a href="S10-multicoll.html#cb152-4" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb152-5"><a href="S10-multicoll.html#cb152-5" aria-hidden="true" tabindex="-1"></a>f.crit <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, <span class="fu">ncol</span>(X), <span class="fu">nrow</span>(X) <span class="sc">-</span> <span class="fu">ncol</span>(X))</span>
+<span id="cb152-6"><a href="S10-multicoll.html#cb152-6" aria-hidden="true" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">201</span>)</span>
+<span id="cb152-7"><a href="S10-multicoll.html#cb152-7" aria-hidden="true" tabindex="-1"></a>circ <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">cos</span>(phi), <span class="fu">sin</span>(phi)) <span class="sc">*</span> <span class="fu">sqrt</span>(f.crit <span class="sc">*</span> <span class="fu">ncol</span>(X) <span class="sc">*</span> sigma.hat<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb152-8"><a href="S10-multicoll.html#cb152-8" aria-hidden="true" tabindex="-1"></a>ellipse <span class="ot">&lt;-</span> svd<span class="sc">$</span>u <span class="sc">%*%</span> (circ <span class="sc">/</span> <span class="fu">sqrt</span>(svd<span class="sc">$</span>d)) <span class="sc">+</span> <span class="fu">coef</span>(m)</span>
+<span id="cb152-9"><a href="S10-multicoll.html#cb152-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb152-10"><a href="S10-multicoll.html#cb152-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ellipse[<span class="dv">1</span>,], ellipse[<span class="dv">2</span>,], <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">asp =</span> <span class="dv">1</span>,</span>
+<span id="cb152-11"><a href="S10-multicoll.html#cb152-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(beta[<span class="dv">1</span>]),</span>
+<span id="cb152-12"><a href="S10-multicoll.html#cb152-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(beta[<span class="dv">2</span>]))</span>
+<span id="cb152-13"><a href="S10-multicoll.html#cb152-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb152-14"><a href="S10-multicoll.html#cb152-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>], <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>)</span>
+<span id="cb152-15"><a href="S10-multicoll.html#cb152-15" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>], <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/multicollellipse-1.png" width="672" /></p>
+<p>We can see that, as in the toy example above, the confidence region
+places <span class="math inline">\((\beta_1, \beta_2)\)</span> close to the line where <span class="math inline">\(\beta_1 + \beta_2 = 2\)</span>
+(the diagonal dashed line), but there is considerable uncertainty about
+where on this line the coefficients are located. The effect gets
+more pronounced when the amount of noise in the definition of <code>x1</code> and <code>x2</code>
+is reduced.</p>
+</div>
+<p>There are two, slightly different effects of multicollinearity:</p>
+<ol style="list-style-type: decimal">
+<li><p>In the case of exact multicollinearity, <span class="math inline">\(X^\top X\)</span> is not invertible.
+If the columns of <span class="math inline">\(X\)</span> are approximately linearly dependent, then
+<span class="math inline">\((X^\top X)^{-1}\)</span> does exist, but small changes of <span class="math inline">\(X\)</span> lead to large changes
+of <span class="math inline">\((X^\top X)^{-1}\)</span> and numerical computation of the inverse is
+strongly affected by rounding errors.</p></li>
+<li><p>If the columns of <span class="math inline">\(X\)</span> are approximately linearly dependent,
+the computed value of the estimator <span class="math inline">\(\hat\beta\)</span> is strongly affected
+by small changes to the system: the noise in the model strongly affects
+<span class="math inline">\(\hat\beta\)</span> (as demonstrated in example <a href="S10-multicoll.html#exm:mulcollell">10.2</a>, above),
+leaving out a single observation may lead to large changes in <span class="math inline">\(\hat\beta\)</span>
+and computation of <span class="math inline">\(\hat\beta\)</span> is sensitive to rounding errors.</p></li>
+</ol>
+<p>While multicollinearity can make the regression coefficients ambiguous,
+the outputs <span class="math inline">\(y\)</span> are not affected. Predictions made using a model
+where multicollinearity is present are still reliable.</p>
+</div>
+<div id="detecting-multicollinearity" class="section level2" number="10.2">
+<h2><span class="header-section-number">10.2</span> Detecting Multicollinearity</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/JGykLGrluoo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>While collinearity of two columns of <span class="math inline">\(X\)</span> is easy to spot, for example in
+a pair scatter plot of the inputs <span class="math inline">\(x_i\)</span>, multicollinearity which involves
+more than two columns can be harder to notice. The condition number of
+<span class="math inline">\(X\)</span> is a quantitative measure of how close <span class="math inline">\(X\)</span> is to multicollinearity.</p>
 <div class="definition">
-<p><span id="def:sx" class="definition"><strong>Definition 1.1  </strong></span>The <strong>sample covariance</strong> of <span class="math inline">\(x_1, \ldots, x_n \in \mathbb{R}\)</span> and
-<span class="math inline">\(y_1, \ldots, y_n\in\mathbb{R}\)</span> is given by
+<p><span id="def:unlabeled-div-43" class="definition"><strong>Definition 10.2  </strong></span>The <strong>condition number</strong> of <span class="math inline">\(X\)</span> is defined to be
 <span class="math display">\[\begin{equation*}
-    \mathrm{s}_{xy}
-    := \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar x) (y_i - \bar y),
-  \end{equation*}\]</span>
-where <span class="math inline">\(\bar x\)</span> and <span class="math inline">\(\bar y\)</span> are the sample means.</p>
-<p>The <strong>sample variance</strong> of <span class="math inline">\(x_1, \ldots, x_n \in \mathbb{R}\)</span> is given by
+  \kappa(X)
+  = \frac{\sigma_\mathrm{max}(X)}{\sigma_\mathrm{min}(X)},
+\end{equation*}\]</span>
+where <span class="math inline">\(\sigma_\mathrm{max}(X) = \sqrt{\lambda_\mathrm{max}(X^\top X)}\)</span> is the
+largest singular value of <span class="math inline">\(X\)</span>, computed as the square root of the largest
+eigenvalue of <span class="math inline">\(X^\top X\)</span>, and similarly <span class="math inline">\(\sigma_\mathrm{min}(X) = \sqrt{\lambda_\mathrm{min}(X^\top X)}\)</span> is the smallest singular value of <span class="math inline">\(X\)</span>,
+computed as the square root of the smallest eigenvalue of <span class="math inline">\(X^\top X\)</span>.</p>
+</div>
+<p>As a rule of thumb, if <span class="math inline">\(\kappa(X) &lt; 10\)</span> there are no significant problems
+with multicollinearity, and if <span class="math inline">\(\kappa(X) &gt; 30\)</span> the regression problem
+sufferes severe problems with multicollinearity. In the case where the
+columns of <span class="math inline">\(X\)</span> are exactly linearly dependent, we have <span class="math inline">\(\sigma_\mathrm{min}(X) = 0\)</span> and <span class="math inline">\(\kappa(X) = \infty\)</span>.</p>
+<p>In R, the condition number can be computed using the
+<a href="https://rdrr.io/r/base/kappa.html">function <code>kappa()</code></a>. The function
+can either be called as <code>kappa(X, exact = TRUE)</code>,
+where <code>X</code> is the design matrix,
+or as <code>kappa(m, exact = TRUE)</code>
+where <code>m</code> is the object returned by <code>lm()</code>. If the optional
+argument <code>exact = TRUE</code> is omitted, only an approximate result
+is returned (using a faster algorithm).</p>
+<div class="example">
+<p><span id="exm:multicollell" class="example"><strong>Example 10.3  </strong></span>Consider the following toy dataset:</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="S10-multicoll.html#cb153-1" aria-hidden="true" tabindex="-1"></a>data</span></code></pre></div>
+<pre><code>##        y   x.1    x.2    x.3    x.4
+## 1   7.37 4.182  0.078  0.008  1.043
+## 2   9.86 6.039  1.106 -0.009  0.137
+## 3  13.44 9.220  0.151 -0.158  0.965
+## 4  12.95 8.260 -0.018  1.133  0.203
+## 5  13.05 8.415  1.078  0.057  0.002
+## 6  13.17 9.272 -0.019  0.062  0.974
+## 7   5.28 1.575 -0.160  1.031  0.099
+## 8   8.18 4.595  0.091  0.014  0.909
+## 9   5.13 2.779 -0.074  0.923 -0.004
+## 10  6.80 2.248 -0.045  0.182  1.088</code></pre>
+<p>To inspect these data, we use a pair scatter plot of the input variables,
+leaving out the responses in column 1:</p>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="S10-multicoll.html#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data[,<span class="sc">-</span><span class="dv">1</span>])</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/multicollairs-1.png" width="672" /></p>
+<p>While there are visbile patterns, there are no clear signs of
+a linear dependency between any two columns.
+To see whether there are problems with multicollinearity, we fit
+a linear model and determine the condition number.</p>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="S10-multicoll.html#cb156-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> data)</span>
+<span id="cb156-2"><a href="S10-multicoll.html#cb156-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 97.38214</code></pre>
+<p>Since the condition number is larger than 30, we can say that the
+data shows severe multicollinearity. To find out which variables
+are involved, we can use <a href="https://en.wikipedia.org/wiki/Singular_value_decomposition">singular value decomposition</a>.
+This allows to write <span class="math inline">\(X\)</span> as <span class="math inline">\(X = U D V^\top\)</span>, where <span class="math inline">\(D\in\mathbb{R}^{(p+1)\times(p+1)}\)</span>
+is a diagonal matrix and <span class="math inline">\(U\in\mathbb{R}^{n\times(p+1)}\)</span> and
+<span class="math inline">\(V\in\mathbb{R}^{(p+1)\times(p+1)}\)</span> are matrices with orthogonal columns.</p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="S10-multicoll.html#cb158-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb158-2"><a href="S10-multicoll.html#cb158-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">svd</span>(X, <span class="at">nu =</span> <span class="dv">0</span>)</span>
+<span id="cb158-3"><a href="S10-multicoll.html#cb158-3" aria-hidden="true" tabindex="-1"></a>s</span></code></pre></div>
+<pre><code>## $d
+## [1] 20.3002516  2.0294781  1.8122508  1.2526330  0.2084597
+## 
+## $v
+##             [,1]       [,2]        [,3]        [,4]          [,5]
+## [1,] -0.14024576 -0.5552821  0.04218055 -0.62161197 -0.5327403485
+## [2,] -0.98554152  0.1088264 -0.04131956  0.12311216 -0.0009051211
+## [3,] -0.04170949  0.4036310 -0.21603327 -0.75981456  0.4597323397
+## [4,] -0.03395454 -0.6495911 -0.55665792  0.11926737  0.5027780067
+## [5,] -0.07839927 -0.3081105  0.79998442 -0.08306065  0.5020431792</code></pre>
+<p>We used the optional argument <code>nu = 0</code> to tell R that we won’t need the
+matrix <span class="math inline">\(U\)</span>. The diagonal elements <span class="math inline">\(\sigma_0(X), \ldots, \sigma_{p}(X)\)</span>,
+stored in <code>s$d</code>, are the singular values of <span class="math inline">\(X\)</span> in decreasing order.
+We can find the condition number using these values:</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="S10-multicoll.html#cb160-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>d[<span class="dv">1</span>] <span class="sc">/</span> s<span class="sc">$</span>d[<span class="fu">length</span>(s<span class="sc">$</span>d)]</span></code></pre></div>
+<pre><code>## [1] 97.38214</code></pre>
+<p>This agrees with the value for <span class="math inline">\(\kappa(X)\)</span> we found above.</p>
+<p>Finally, the columns <span class="math inline">\(v_1, \ldots, v_{p+1}\)</span> of <code>s$v</code> are called the (right)
+singular vectors of <span class="math inline">\(X\)</span>. We can use these vectors to identify which variables
+are involved in multicollinearity: It is easy to show that <span class="math inline">\(\| X v_k \| = \sigma_k(X)\)</span>, so every “small” <span class="math inline">\(\sigma_k(X)\)</span> corresponds to a vector <span class="math inline">\(v_k\)</span>
+which describes an approximate linear dependency between the columns of <span class="math inline">\(X\)</span>.
+Looking at <span class="math inline">\(\sigma_4(X)\)</span> (the 5th element of <code>s$d</code>) we get</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="S10-multicoll.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(s<span class="sc">$</span>v[,<span class="dv">5</span>], <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## [1] -0.533 -0.001  0.460  0.503  0.502</code></pre>
+<p>Rounding the numbers some more and remembering that the first
+value corresponds to the intercept, we get that
 <span class="math display">\[\begin{equation*}
-    \mathrm{s}_{x}^2
-    := \mathrm{s}_{xx}
-    = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar x)^2,
-  \end{equation*}\]</span>
-where, again, <span class="math inline">\(\bar x\)</span> is the sample mean of the <span class="math inline">\(x_i\)</span>.</p>
-</div>
-<div class="lemma">
-<p><span id="lem:simple-LSQ" class="lemma"><strong>Lemma 1.1  </strong></span>Assume that <span class="math inline">\(\mathrm{s}_x^2 &gt; 0\)</span>. Then the function <span class="math inline">\(r(\beta_0, \beta_1)\)</span>
-from <a href="S01-simple.html#eq:RSS">(1.1)</a> takes its minimum at the point <span class="math inline">\((\beta_0, \beta_1)\)</span>
-given by
+  -0.5 \cdot 1 + 0.5 \cdot x_2 + 0.5 \cdot x_3 + 0.5 \cdot x_4
+  \approx 0
+\end{equation*}\]</span>
+or, equivalently
 <span class="math display">\[\begin{equation*}
-    \hat\beta_1 = \frac{\mathrm{s}_{xy}}{\mathrm{s}_x^2},
-    \qquad
-    \hat\beta_0 = \bar y - \hat \beta_1 \bar x,
-  \end{equation*}\]</span>
-where <span class="math inline">\(\bar x, \bar y\)</span> are the sample means, <span class="math inline">\(\mathrm{s}_{xy}\)</span> is the
-sample covariance and <span class="math inline">\(\mathrm{s}_x^2\)</span> is the sample variance.</p>
-</div>
-<div class="proof">
-<p><span id="unlabeled-div-1" class="proof"><em>Proof</em>. </span>We could find the minimum of <span class="math inline">\(r\)</span> by differentiating and setting the
-derivatives to zero. Here we follow a different approach which uses
-a “trick” to simplify the algebra: Let <span class="math inline">\(\tilde x_i = x_i - \bar x\)</span>
-and <span class="math inline">\(\tilde y_i = y_i - \bar y\)</span> for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.
-Then we have
-<span class="math display">\[\begin{equation*}
-    \sum_{i=1}^n \tilde x_i
-    = \sum_{i=1}^n x_i - n \bar x
-    = 0
-  \end{equation*}\]</span>
-and, similarly, <span class="math inline">\(\sum_{i=1}^n \tilde y_i = 0\)</span>. Using the new
-coordinates <span class="math inline">\(\tilde x_i\)</span> and <span class="math inline">\(\tilde y_i\)</span> we find
-<span class="math display">\[\begin{align*}
-    r(\beta_0, \beta_1)
-    &amp;= \sum_{i=1}^n \bigl(y_i - \beta_0 - \beta_1 x_i \bigr)^2 \\
-    &amp;= \sum_{i=1}^n \bigl( \tilde y_i + \bar y - \beta_0 - \beta_1 \tilde x_i - \beta_1 \bar x \bigr)^2 \\
-    &amp;= \sum_{i=1}^n \Bigl( \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)
-    + \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr) \Bigr)^2 \\
-    &amp;= \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)^2
-    + 2 \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr) \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)
-    + n \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr)^2
-  \end{align*}\]</span>
-Since <span class="math inline">\(\sum_{i=1}^n \tilde x_i = \sum_{i=1}^n \tilde y_i = 0\)</span>, the
-second term on the right-hand side vanishes and we get
-<span class="math display" id="eq:RSS-rewrite">\[\begin{equation}
-    r(\beta_0, \beta_1)
-    = \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)^2
-    + n \bigl( \bar y - \beta_0 - \beta_1 \bar x \bigr)^2.  \tag{1.2}
-  \end{equation}\]</span>
-Both of these terms are positive and we can minimise the second term
-(without changing the first term) by setting
-<span class="math inline">\(\beta_0 = \bar y - \beta_1 \bar x\)</span>.</p>
-<p>To find the value of <span class="math inline">\(\beta_1\)</span> which minimises the first term on the
-right-hand side of <a href="S01-simple.html#eq:RSS-rewrite">(1.2)</a> we now set the
-(one-dimensional) derivative w.r.t. <span class="math inline">\(\beta_1\)</span> equal to <span class="math inline">\(0\)</span>. We get
-the condition
-<span class="math display">\[\begin{align*}
-    0
-    &amp;\overset{!}{=} \frac{d}{d\beta_1} \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr)^2 \\
-    &amp;= \sum_{i=1}^n 2 \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr) \frac{d}{d\beta_1} \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr) \\
-    &amp;= - 2 \sum_{i=1}^n \bigl( \tilde y_i - \beta_1 \tilde x_i \bigr) \tilde x_i \\
-    &amp;= -2  \sum_{i=1}^n \tilde x_i \tilde y_i + 2 \beta_1 \sum_{i=1}^n \tilde x_i^2.
-  \end{align*}\]</span>
-The only solution to this equation is
-<span class="math display">\[\begin{align*}
-    \beta_1
-    &amp;= \frac{\sum_{i=1}^n \tilde x_i \tilde y_i}{\sum_{i=1}^n \tilde x_i^2} \\
-    &amp;= \frac{\sum_{i=1}^n (x_i - \bar x) (y_i - \bar y)}{\sum_{i=1}^n (x_i - \bar x)^2} \\
-    &amp;= \frac{\frac{1}{n-1}\sum_{i=1}^n (x_i - \bar x) (y_i - \bar y)}{\frac{1}{n-1}\sum_{i=1}^n (x_i - \bar x)^2} \\
-    &amp;= \frac{\mathrm{s}_{xy}}{\mathrm{s}_x^2}.
-  \end{align*}\]</span>
-Since the second derivative is <span class="math inline">\(2 \sum_{i=1}^n \tilde x_i^2 \geq 0\)</span>,
-this is indeed a minimum and the proof is complete.</p>
+  x_2 + x_3 + x_4
+  \approx 1.
+\end{equation*}\]</span>
+Looking back over the original numbers we see that this relation
+indeed holds.</p>
 </div>
 </div>
-<div id="linear-regression-as-a-parameter-estimation-problem" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> Linear Regression as a Parameter Estimation Problem</h2>
-<p>In statistics, any analysis starts by making a statistical model of
-the data. This is done by writing random variables which have the
-same structure as the data, and which are chosen so that the data
-“looks like” a random sample from these random variables.</p>
-<p>To construct a model for the data used in a simple linear regression
-problem, we use random variables <span class="math inline">\(Y_1, \ldots, Y_n\)</span> such that
-<span class="math display" id="eq:regression">\[\begin{equation}
-  Y_i
-  = \beta_0 + \beta_1 x_i + \varepsilon_i \tag{1.3}
-\end{equation}\]</span>
-for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, where <span class="math inline">\(\varepsilon_1, \ldots, \varepsilon_n\)</span>
-are i.i.d. random variables with <span class="math inline">\(\mathbb{E}(\varepsilon_i) = 0\)</span> and
-<span class="math inline">\(\mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\)</span>.</p>
+<div id="mitigations" class="section level2" number="10.3">
+<h2><span class="header-section-number">10.3</span> Mitigations</h2>
+<p>There are various ways problems resulting from multicollinearity can
+be addressed:</p>
 <ul>
-<li>Here we assume that the <span class="math inline">\(x\)</span>-values are fixed and known. The only
-random quantities in the model are <span class="math inline">\(\varepsilon_i\)</span> and <span class="math inline">\(Y_i\)</span>. (There are
-more complicated models which also allow for randomness of <span class="math inline">\(x\)</span>, but
-we won’t consider such models here.)</li>
-<li>The random variables <span class="math inline">\(\varepsilon_i\)</span> are called <strong>residuals</strong> or
-<strong>errors</strong>. In a scatter plot, the residuals correspond to the
-vertical distance between the samples and the regression line.
-Often one assumes that <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span> for all
-<span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>.</li>
-<li>The values <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma^2\)</span> are parameters of
-the model. To fit the model to data, we need to estimate these
-parameters.</li>
+<li><p>Sometimes columns are lineraly dependent, because a redundant input
+is present. Removing one of the input variables in a group
+of linearly dependent inputs can solve this problem.</p></li>
+<li><p>The inputs can be transformed by choosing new variables as functions
+of the original inputs. For example, in example <a href="S10-multicoll.html#exm:multicollell">10.3</a>
+one could try the input variables <span class="math inline">\(\tilde x_1 = (x_1 + x_2) / 2\)</span> and
+<span class="math inline">\(\tilde x_2 = (x_1 - x_2) / 2\)</span>. The confidence ellipse shown above
+indicates that it should be possible to get good estimates for the
+coefficient for <span class="math inline">\(\tilde x_1\)</span>.</p></li>
+<li><p>If <span class="math inline">\(n\)</span> is small, the problem may be resolved by getting more data.
+In particular, for <span class="math inline">\(n &lt; p+1\)</span>, we <em>always</em> have strict multicollinearity.</p></li>
+<li><p>Alternative estimation approaches may be used. The basic idea is to sacrifice the
+requirement that <span class="math inline">\(\hat\beta\)</span> is unbiased, in exchange for a large variance
+reduction. In a later section we will discuss “ridge regression” as an
+example of this approach.</p></li>
 </ul>
-<p>This model is more complex than the models considered in some
-introductory courses to statistics:</p>
-<ul>
-<li>The data consists now of pairs of numbers, instead of just
-single numbers.</li>
-<li>We have
-<span class="math display">\[\begin{equation*}
-  \mathbb{E}(Y_i)
-  = \mathbb{E}\bigl( \beta_0 + \beta_1 x_i + \varepsilon_i \bigr)
-  = \beta_0 + \beta_1 x_i + \mathbb{E}(\varepsilon_i)
-  = \beta_0 + \beta_1 x_i.
-\end{equation*}\]</span>
-Thus, the expectation of <span class="math inline">\(Y_i\)</span> depends on <span class="math inline">\(x_i\)</span> and, at least for
-<span class="math inline">\(\beta_1 \neq 0\)</span>, the random variables <span class="math inline">\(Y_i\)</span> are not identically
-distributed.</li>
-</ul>
-<p>In this setup, we can consider the estimates <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span>
-from the previous subsection as statistcal parameter estimates for the
-model parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
-<p>In order to fit a linear model we also need to estimate the residual
-variance <span class="math inline">\(\sigma^2\)</span>. This can be done using the estimator
-<span class="math display" id="eq:reg-sigma-est">\[\begin{equation}
-  \hat\sigma^2
-  = \frac{1}{n-2} \sum_{i=1}^n \hat\varepsilon_i^2
-  = \frac{1}{n-2} \sum_{i=1}^n (y_i - \hat\beta_0 - \hat\beta_1 x_i)^2.
-  \tag{1.4}
-\end{equation}\]</span>
-To understand the form of this estimator, we have to remember that
-<span class="math inline">\(\sigma^2\)</span> is the variance of the <span class="math inline">\(\varepsilon_i\)</span>. Thus, using the standard
-estimator for the variance, we could estimate <span class="math inline">\(\sigma^2\)</span> as
-<span class="math display" id="eq:resid-var-est">\[\begin{equation}
-  \sigma^2
-  \approx \frac{1}{n-1} \sum_{i=1}^n \bigl(\varepsilon_i - \bar\varepsilon\bigr)^2
-  \approx \frac{1}{n-1} \sum_{i=1}^n \bigl(\hat\varepsilon_i - \overline{\hat\varepsilon}\bigr)^2,
-  \tag{1.5}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\bar\varepsilon\)</span> and <span class="math inline">\(\overline{\hat\varepsilon}\)</span> are the averages of the
-<span class="math inline">\(\varepsilon_i\)</span> and the <span class="math inline">\(\hat\varepsilon_i\)</span>, respectively. One can show that
-<span class="math inline">\(\overline{\hat\varepsilon} = 0\)</span>. The estimates of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> are
-sensitive to fluctuations in the data, with the effect that the
-estimated regression line is, on average, slightly closer to the data
-points than the true regression line would be. This causes the sample
-variance of the <span class="math inline">\(\hat\varepsilon_i\)</span>, on average, to be slightly smaller than
-the true residual variance <span class="math inline">\(\sigma^2\)</span> and the thus the
-estimator <a href="S01-simple.html#eq:resid-var-est">(1.5)</a> is slightly biased. A more
-detailed analysis reveals that an unbiased estimator can be obtained
-if one replaces the pre-factor <span class="math inline">\(1/(n-1)\)</span> in equation <a href="S01-simple.html#eq:resid-var-est">(1.5)</a>
-with <span class="math inline">\(1/(n-2)\)</span>. This leads to the estimator <a href="S01-simple.html#eq:reg-sigma-est">(1.4)</a>.</p>
-<p>The main advantage gained by considering a statistical model is, that
-we now can consider how close the estimators <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span>
-and <span class="math inline">\(\hat\sigma^2\)</span> are to the true values. Results one can obtain
-include the following:</p>
-<ul>
-<li><p>The estimators <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span> and <span class="math inline">\(\hat\sigma^2\)</span>
-are unbiased: This means that when we plug in random data
-<span class="math inline">\((x_i, Y_i)\)</span> from the model <a href="S01-simple.html#eq:regression">(1.3)</a>, on
-average we get the correc answer: <span class="math inline">\(\mathbb{E}(\hat\beta_0) = \beta_0\)</span>,
-<span class="math inline">\(\mathbb{E}(\hat\beta_1) = \beta_1\)</span>, <span class="math inline">\(\mathbb{E}(\hat\sigma^2) = \sigma^2\)</span>.</p></li>
-<li><p>One can ask about the average distance between the estimated
-parameters <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span> and <span class="math inline">\(\hat\sigma^2\)</span>
-and the (unknown) true values <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma^2\)</span>.
-One measure for these distances is the root mean squared error
-of the estimators.</p></li>
-<li><p>One can consider confidence intervals for the parameters
-<span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma^2\)</span>.</p></li>
-<li><p>One can consider statistical hypothesis tests to answer
-yes/no questions about the parameters. For example, one might ask
-whether the data could have come from the model with <span class="math inline">\(\beta_0=0\)</span>.</p></li>
-<li><p>One can consider whether the data is compatible with the model
-at all, irrespective of parameter values. If there is a non-linear
-relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, the model <a href="S01-simple.html#eq:regression">(1.3)</a>
-will no longer be appropriate.</p></li>
-</ul>
-<p>We will consider most of these questions over the course of the
-module.</p>
-</div>
-<div id="sec:simple-mat" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> Matrix Notation</h2>
-<p>To conclude this section, we will rewrite the results of this section
-in a form which we will extensively use for multiple linear regression
-in the rest of this module. The idea here is to arrange all quantities
-in the problem as matrices and vectors in order to simplify notation.
-We write
-<span class="math display">\[\begin{equation*}
-  X = \begin{pmatrix}
-    1 &amp; x_1\\ 1 &amp; x_2\\\vdots &amp; \vdots\\1 &amp; x_n
-  \end{pmatrix}
-  \in \mathbb{R}^{n\times 2},
-  \qquad
-  y = \begin{pmatrix}
-    y_1 \\ y_2 \\ \vdots \\ y_n
-  \end{pmatrix}
-  \in \mathbb{R}^n,
-  \qquad
-  \varepsilon= \begin{pmatrix}
-    \varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n
-  \end{pmatrix}
-  \in \mathbb{R}^n,
-  \qquad
-  \beta = \begin{pmatrix}
-    \beta_0 \\
-    \beta_1
-  \end{pmatrix}
-  \in\mathbb{R}^2
-\end{equation*}\]</span>
-Using this notation, we can rewrite the <span class="math inline">\(n\)</span> equations <span class="math inline">\(y_i = \beta_0 + x_i \beta_1 + \varepsilon_i\)</span> for <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> as one
-vector-valued equation in <span class="math inline">\(\mathbb{R}^n\)</span>: we get
-<span class="math display">\[\begin{equation*}
-  y = X\beta + \varepsilon,
-\end{equation*}\]</span>
-and we want to “solve” this vector-valued equation for <span class="math inline">\(\beta\)</span>.
-The sum of squares can now be written as
-<span class="math display">\[\begin{equation*}
-  r(\beta)
-  = \sum_{i=1}^n \varepsilon_i^2
-  = \varepsilon^\top \varepsilon
-  = (y - X\beta)^\top (y - X\beta)
-  = y^\top y - 2\beta^\top X^\top y + \beta^\top X^\top X \beta.
-\end{equation*}\]</span>
-In the next section we will see that the minimum of <span class="math inline">\(r\)</span> is attained
-for
-<span class="math display">\[\begin{equation*}
-  \hat\beta
-  = (X X^\top)^{-1} X^\top y
-\end{equation*}\]</span>
-and one can check that the components of this vector <span class="math inline">\(\hat\beta = (\hat\beta_0, \hat\beta_1)\)</span> coincide with the estimates we obtained above.</p>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>simple linear regression is the case where there is only one input</li>
-<li>a regression line is fitted by minimising the residual sum of squares</li>
-<li>linear regression is a statistical parameter estimation problem</li>
-<li>the problem can be conveniently written in matrix/vector notation</li>
+<li>Multicollinearity can lead to numerical problems and large variances in the
+estimated regression coefficients.</li>
+<li>The condition number of the design matrix can be used to detect
+multicollinearity.</li>
+<li>Singular value decomposition can used to better understand linear
+dependencies in the inputs.</li>
 </ul>
 </div>
 
 </div>
 </div>
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="S00-about.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="S02-multiple.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S09-influence.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
