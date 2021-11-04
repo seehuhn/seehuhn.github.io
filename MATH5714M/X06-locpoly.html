@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 6 Local Polynomial Regression | MATH5714 Linear Regression, Robustness and Smoothing</title>
+  <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 6 Local Polynomial Regression | MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH5714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 6 Local Polynomial Regression | MATH5714 Linear Regression, Robustness and Smoothing" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="X05-smoothing.html"/>
+
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH5714M Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="X01-KDE.html"><a href="X01-KDE.html"><i class="fa fa-check"></i><b>1</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms"><i class="fa fa-check"></i><b>1.1</b> Histograms</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#probability-densities"><i class="fa fa-check"></i><b>1.1.1</b> Probability Densities</a></li>
+<li class="chapter" data-level="1.1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms-1"><i class="fa fa-check"></i><b>1.1.2</b> Histograms</a></li>
+<li class="chapter" data-level="1.1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#choice-of-buckets"><i class="fa fa-check"></i><b>1.1.3</b> Choice of Buckets</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation"><i class="fa fa-check"></i><b>1.2</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="X01-KDE.html"><a href="X01-KDE.html#motivation"><i class="fa fa-check"></i><b>1.2.1</b> Motivation</a></li>
+<li class="chapter" data-level="1.2.2" data-path="X01-KDE.html"><a href="X01-KDE.html#definition-of-a-kernel-density-estimator"><i class="fa fa-check"></i><b>1.2.2</b> Definition of a Kernel Density Estimator</a></li>
+<li class="chapter" data-level="1.2.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernels"><i class="fa fa-check"></i><b>1.2.3</b> Kernels</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation-in-r"><i class="fa fa-check"></i><b>1.3</b> Kernel Density Estimation in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="X02-Bias.html"><a href="X02-Bias.html"><i class="fa fa-check"></i><b>2</b> The Bias of Kernel Density Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="X02-Bias.html"><a href="X02-Bias.html#a-statistical-model"><i class="fa fa-check"></i><b>2.1</b> A Statistical Model</a></li>
+<li class="chapter" data-level="2.2" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-of-the-estimate"><i class="fa fa-check"></i><b>2.2</b> The Bias of the Estimate</a></li>
+<li class="chapter" data-level="2.3" data-path="X02-Bias.html"><a href="X02-Bias.html#moments-of-kernels"><i class="fa fa-check"></i><b>2.3</b> Moments of Kernels</a></li>
+<li class="chapter" data-level="2.4" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-for-small-bandwidth"><i class="fa fa-check"></i><b>2.4</b> The Bias for Small Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="X03-Var.html"><a href="X03-Var.html"><i class="fa fa-check"></i><b>3</b> The Variance of Kernel Density Estimates</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="X03-Var.html"><a href="X03-Var.html#variance"><i class="fa fa-check"></i><b>3.1</b> Variance</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="X03-Var.html"><a href="X03-Var.html#second-moment"><i class="fa fa-check"></i><b>3.1.1</b> Second Moment</a></li>
+<li class="chapter" data-level="3.1.2" data-path="X03-Var.html"><a href="X03-Var.html#the-roughness-of-a-kernel"><i class="fa fa-check"></i><b>3.1.2</b> The Roughness of a Kernel</a></li>
+<li class="chapter" data-level="3.1.3" data-path="X03-Var.html"><a href="X03-Var.html#the-variance-for-small-bandwidth"><i class="fa fa-check"></i><b>3.1.3</b> The Variance for Small Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="X03-Var.html"><a href="X03-Var.html#mean-squared-error"><i class="fa fa-check"></i><b>3.2</b> Mean Squared Error</a></li>
+<li class="chapter" data-level="3.3" data-path="X03-Var.html"><a href="X03-Var.html#optimal-bandwidth"><i class="fa fa-check"></i><b>3.3</b> Optimal Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="X04-practice.html"><a href="X04-practice.html"><i class="fa fa-check"></i><b>4</b> Kernel Density Estimation in Practice</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="X04-practice.html"><a href="X04-practice.html#integrated-error"><i class="fa fa-check"></i><b>4.1</b> Integrated Error</a></li>
+<li class="chapter" data-level="4.2" data-path="X04-practice.html"><a href="X04-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>4.2</b> Choice of Kernel</a></li>
+<li class="chapter" data-level="4.3" data-path="X04-practice.html"><a href="X04-practice.html#bandwidth-selection"><i class="fa fa-check"></i><b>4.3</b> Bandwidth Selection</a></li>
+<li class="chapter" data-level="4.4" data-path="X04-practice.html"><a href="X04-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>4.4</b> Higher Dimensions</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="X05-smoothing.html"><a href="X05-smoothing.html"><i class="fa fa-check"></i><b>5</b> Kernel Smoothing</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="X05-smoothing.html"><a href="X05-smoothing.html#the-nadaraya-watson-estimator"><i class="fa fa-check"></i><b>5.1</b> The Nadaraya-Watson Estimator</a></li>
+<li class="chapter" data-level="5.2" data-path="X05-smoothing.html"><a href="X05-smoothing.html#estimation-error"><i class="fa fa-check"></i><b>5.2</b> Estimation Error</a>
+<ul>
+<li class="chapter" data-level="" data-path="X05-smoothing.html"><a href="X05-smoothing.html#denominator"><i class="fa fa-check"></i>Denominator</a></li>
+<li class="chapter" data-level="" data-path="X05-smoothing.html"><a href="X05-smoothing.html#numerator"><i class="fa fa-check"></i>Numerator</a></li>
+<li class="chapter" data-level="" data-path="X05-smoothing.html"><a href="X05-smoothing.html#mean-squared-error-1"><i class="fa fa-check"></i>Mean Squared Error</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="X06-locpoly.html"><a href="X06-locpoly.html"><i class="fa fa-check"></i><b>6</b> Local Polynomial Regression</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="X06-locpoly.html"><a href="X06-locpoly.html#linear-regression-with-weights"><i class="fa fa-check"></i><b>6.1</b> Linear Regression with Weights</a></li>
+<li class="chapter" data-level="6.2" data-path="X06-locpoly.html"><a href="X06-locpoly.html#polynomial-regression"><i class="fa fa-check"></i><b>6.2</b> Polynomial Regression</a></li>
+<li class="chapter" data-level="6.3" data-path="X06-locpoly.html"><a href="X06-locpoly.html#polynomial-regression-with-weights"><i class="fa fa-check"></i><b>6.3</b> Polynomial Regression with Weights</a></li>
+<li class="chapter" data-level="6.4" data-path="X06-locpoly.html"><a href="X06-locpoly.html#special-cases"><i class="fa fa-check"></i><b>6.4</b> Special Cases</a>
+<ul>
+<li><a href="X06-locpoly.html#p-0"><span class="math inline">\(p = 0\)</span></a></li>
+<li><a href="X06-locpoly.html#p-1"><span class="math inline">\(p = 1\)</span></a></li>
+<li><a href="X06-locpoly.html#p-2"><span class="math inline">\(p = 2\)</span></a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH5714 Linear Regression, Robustness and Smoothing</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="X06-locpoly" class="section level1" number="6">
+<h1><span class="header-section-number">Section 6</span> Local Polynomial Regression</h1>
+<p>Local polynomial regression is a generalisation of the
+Nadaraya-Watson estimator. The method combines the two ideas of
+linear regression with weights and polynomial regression. The aim
+is still to estimate the model mean <span class="math inline">\(m \colon\mathbb{R}\to \mathbb{R}\)</span> from
+given data <span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n)\)</span>.</p>
+<div id="linear-regression-with-weights" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Linear Regression with Weights</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/SE0IS4OvQhA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>In the <a href="https://seehuhn.github.io/MATH3714/S02-multiple.html#the-normal-equations">level 3 part of the module</a>,
+we introduced the least squares method for linear regression. This method
+estimartes the regression coefficients by minimizing the residual sum of
+squares:
+<span class="math display">\[\begin{align*}
+  r(\beta)
+  &amp;= \sum_{i=1}^n \hat\varepsilon_i^2 \\
+  &amp;= \hat\varepsilon^\top \hat\varepsilon.
+\end{align*}\]</span>
+Here we will extend this method to include weights for the observations.
+Given weights
+<span class="math inline">\(w_1, \ldots, w_n &gt; 0\)</span>, the weighted least squares method minimises
+<span class="math display">\[\begin{equation*}
+  r_w(\beta)
+  = \sum_{i=1}^n w_i \varepsilon_i^2.
+\end{equation*}\]</span>
+In matrix notation, this function can be written as
+<span class="math display">\[\begin{align*}
+  r_w(\beta)
+  = \varepsilon^\top W \varepsilon
+  = (y - X \beta)^\top W (y - X \beta),
+\end{align*}\]</span>
+where <span class="math inline">\(W\)</span> is a diagonal matrix with the weights on the diagonal:
+<span class="math display" id="eq:W-diagonal">\[\begin{equation}
+  W
+  = \begin{pmatrix}
+      w_1 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 \\
+      0 &amp; w_2 &amp; 0 &amp; \cdots &amp; 0 \\
+      0 &amp; 0 &amp; w_3 &amp; \cdots &amp; 0 \\
+      \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+      0 &amp; 0 &amp; 0 &amp; \cdots &amp; w_n
+    \end{pmatrix}.  \tag{6.1}
+\end{equation}\]</span>
+Similar to <a href="https://seehuhn.github.io/MATH3714/S02-multiple.html#lem:multiple-LSQ">lemma 2.1 in the level 3 notes</a>,
+we can take derivatives to find
+the minimum of <span class="math inline">\(r_w\)</span>. The result is
+<span class="math display">\[\begin{equation*}
+  \hat\beta
+  = (X^\top W X)^{-1} X^\top W y.
+\end{equation*}\]</span></p>
+<p>Since <span class="math inline">\(W\)</span> appears once in the inverse and once before the <span class="math inline">\(y\)</span>, we can
+multiply <span class="math inline">\(W\)</span> by any number without changing the result. Thus we don’t
+need to “normalise” the weights <span class="math inline">\(w_i\)</span> to sum to one.</p>
+<p>As before, the fitted value for inputs <span class="math inline">\((\tilde x_1, \ldots, \tilde x_p) \in \mathbb{R}^p\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  \hat\beta_0 + \hat\beta_1 \tilde x_1 + \cdots + \hat\beta_p \tilde x_p
+  = \tilde x^\top \hat\beta,
+\end{equation*}\]</span>
+where <span class="math inline">\(\tilde x = (1, \tilde x_1, \ldots, \tilde x_n)\)</span>.</p>
+</div>
+<div id="polynomial-regression" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Polynomial Regression</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/va2zZO2Ivko" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>In these notes we only consider the case of <span class="math inline">\(p=1\)</span>. In this case we
+can easily fit a polynomial of degree <span class="math inline">\(p\)</span> to the data by using
+<span class="math inline">\(x, x^2, \ldots, x^p\)</span> as the input variables. The corresponding
+model is
+<span class="math display">\[\begin{equation*}
+  y
+  = \beta_0 + \beta_1 x + \beta_2 x^2 + \cdots + \beta_p x^p + \varepsilon.
+\end{equation*}\]</span>
+This leads to the design matrix
+<span class="math display">\[\begin{equation*}
+  X
+  = \begin{pmatrix}
+      1 &amp; x_1 &amp; x_1^2 &amp; \cdots &amp; x_1^p \\
+      1 &amp; x_2 &amp; x_2^2 &amp; \cdots &amp; x_2^p \\
+      \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+      1 &amp; x_n &amp; x_n^2 &amp; \cdots &amp; x_n^p
+    \end{pmatrix}.
+\end{equation*}\]</span></p>
+<div class="example">
+<p><span id="exm:unlabeled-div-9" class="example"><strong>Example 6.1  </strong></span>To illustrate polynomial regression, we fit a third-order polynomial
+to a simple, simulated data set. Since the operator <code>^</code> has a special
+meaning inside <code>lm()</code>, we have to use the function <code>I()</code> (which disables
+the special meaning of <code>+</code> and <code>^</code> for its arguments) when computing
+the inputs <span class="math inline">\(x^2\)</span> and <span class="math inline">\(x^3\)</span>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="X06-locpoly.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211102</span>)</span>
+<span id="cb16-2"><a href="X06-locpoly.html#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="X06-locpoly.html#cb16-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">40</span></span>
+<span id="cb16-4"><a href="X06-locpoly.html#cb16-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb16-5"><a href="X06-locpoly.html#cb16-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">cos</span>(x) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb16-6"><a href="X06-locpoly.html#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="X06-locpoly.html#cb16-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">3</span>))</span>
+<span id="cb16-8"><a href="X06-locpoly.html#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="X06-locpoly.html#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y)</span>
+<span id="cb16-10"><a href="X06-locpoly.html#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(m))</span></code></pre></div>
+<p><img src="MATH5714M_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>The resulting regression line seems like a resonable fit for the data.
+We note that a third-order polynomial grows very quickly to <span class="math inline">\(\pm\infty\)</span>
+as <span class="math inline">\(|x|\)</span> increases. Thus, the fitted model cannot be used for extrapolating
+beyond the range of the data.</p>
+</div>
+<p>When the regression is set up in this way, the design matrix often suffers
+from collinearity. To check for this, we can consider the condition
+number <span class="math inline">\(\kappa\)</span>. For the example above we get the following value:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="X06-locpoly.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m)</span></code></pre></div>
+<pre><code>## [1] 2813.242</code></pre>
+<p>This is a large value, indicating collinearity. To improve the setup
+of the problem we can use the model
+<span class="math display">\[\begin{equation*}
+  y
+  = \beta_0 + \beta_1 (x - \tilde x) + \beta_2 (x - \tilde x)^2 + \cdots + \beta_p (x - \tilde x)^p + \varepsilon,
+\end{equation*}\]</span>
+where <span class="math inline">\(\tilde x\)</span> is inside the interval if <span class="math inline">\(x\)</span> values.
+This leads to the design matrix
+<span class="math display" id="eq:X-local">\[\begin{equation}
+  X
+  = \begin{pmatrix}
+      1 &amp; (x_1-\tilde x) &amp; (x_1-\tilde x)^2 &amp; \cdots &amp; (x_1-\tilde x)^p \\
+      1 &amp; (x_2-\tilde x) &amp; (x_2-\tilde x)^2 &amp; \cdots &amp; (x_2-\tilde x)^p \\
+      \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+      1 &amp; (x_n-\tilde x) &amp; (x_n-\tilde x)^2 &amp; \cdots &amp; (x_n-\tilde x)^p
+    \end{pmatrix}.  \tag{6.2}
+\end{equation}\]</span></p>
+<div class="example">
+<p><span id="exm:unlabeled-div-10" class="example"><strong>Example 6.2  </strong></span>Continuing from the previous example, we can see that writing the model as in<br />
+<a href="X06-locpoly.html#eq:X-local">(6.2)</a> greatly improves the condition number:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="X06-locpoly.html#cb19-1" aria-hidden="true" tabindex="-1"></a>x.tilde <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb19-2"><a href="X06-locpoly.html#cb19-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">I</span>(x<span class="sc">-</span>x.tilde) <span class="sc">+</span> <span class="fu">I</span>((x<span class="sc">-</span>x.tilde)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>((x<span class="sc">-</span>x.tilde)<span class="sc">^</span><span class="dv">3</span>))</span>
+<span id="cb19-3"><a href="X06-locpoly.html#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m2)</span></code></pre></div>
+<pre><code>## [1] 65.75674</code></pre>
+<p>While there is still collinearity, the condition number is now much smaller.</p>
+</div>
+<p>Polynomials of higher degree take very large values as <span class="math inline">\(|x|\)</span> increases.
+These polynomials are best used for local interpolation of data.
+In contrast, polynomials of higher degree often make poor global models.</p>
+</div>
+<div id="polynomial-regression-with-weights" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Polynomial Regression with Weights</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/U6pBCtFUZP0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>The idea of local polynomial regression is to combine polynomial regression
+with weights which give more weight to close by observations: to get an
+estimate at a point <span class="math inline">\(\tilde x \in \mathbb{R}\)</span>, we define
+<span class="math display">\[\begin{equation*}
+  w_i
+  := K_h(\tilde x - x_i),
+\end{equation*}\]</span>
+where <span class="math inline">\(K_h\)</span> is a scaled kernel function as before. Using the diagonal
+matrix <span class="math inline">\(W\)</span> from <a href="X06-locpoly.html#eq:W-diagonal">(6.1)</a> for the weights and the matrix
+<span class="math inline">\(X\)</span> from <a href="X06-locpoly.html#eq:X-local">(6.2)</a> as the design matrix, we can fit a polynomial
+of degree <span class="math inline">\(p\)</span> to the data which fits the data near <span class="math inline">\(\tilde x\)</span> well.
+The regression coefficients are again estimated as
+<span class="math display">\[\begin{equation*}
+  \hat\beta
+  = (X^\top W X)^{-1} X^\top W y
+\end{equation*}\]</span>
+and the model mean near <span class="math inline">\(\tilde x\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  \hat m_h(x; \tilde x)
+  = \hat\beta_0 + \hat\beta_1 (x - \tilde x) + \hat\beta_2 (x - \tilde x)^2 + \cdots + \hat\beta_p (x - \tilde x)^p,
+\end{equation*}\]</span>
+where the weights <span class="math inline">\(\hat\beta\)</span> depend on <span class="math inline">\(\tilde x\)</span>. The model mean at
+<span class="math inline">\(x = \tilde x\)</span> simplifies to
+<span class="math display">\[\begin{align*}
+  \hat m_h(\tilde x)
+  &amp;= \hat m_h(\tilde x; \tilde x) \\
+  &amp;= \hat\beta_0 + \hat\beta_1 (\tilde x - \tilde x) + \hat\beta_2 (\tilde x - \tilde x)^2 + \cdots + \hat\beta_p (\tilde x - \tilde x)^p \\
+  &amp;= \hat\beta_0.
+\end{align*}\]</span>
+Using matrix notation, we can write this as
+<span class="math display">\[\begin{align*}
+  \hat m_h(\tilde x)
+  &amp;= \hat\beta_0 \\
+  &amp;= e_0^\top \hat\beta \\
+  &amp;= e_0^\top (X^\top W X)^{-1} X^\top W y,
+\end{align*}\]</span>
+where <span class="math inline">\(e_0 = (1, 0, \ldots, 0) \in \mathbb{R}^{p+1}\)</span>.</p>
+<p>Since both <span class="math inline">\(X\)</span> and <span class="math inline">\(W\)</span> depend on <span class="math inline">\(\tilde x\)</span>, we need to evaluate
+<span class="math inline">\((X^\top W X)^{-1} X^\top W y\)</span> separately for each <span class="math inline">\(\tilde x\)</span> where
+an estimate of <span class="math inline">\(\hat m_h\)</span> is needed. To get a regression line, this needs
+to be done over a grid of <span class="math inline">\(\tilde x\)</span> values. Thus, this method can
+be computationally expensive.</p>
+</div>
+<div id="special-cases" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> Special Cases</h2>
+<p>Here we discuss the special cases of <span class="math inline">\(p=0\)</span>, <span class="math inline">\(p=1\)</span>, and <span class="math inline">\(p=2\)</span>.</p>
+<div id="p-0" class="section level3 unnumbered">
+<h3><span class="math inline">\(p = 0\)</span></h3>
+<p>For <span class="math inline">\(p=0\)</span>, the polynomial consists only of the constant term <span class="math inline">\(\beta_0\)</span>.
+In this case, the design matrix <span class="math inline">\(X\)</span> simplifies to <span class="math inline">\(X = (1, \ldots, 1) \in \mathbb{R}^{n\times 1}\)</span>. Thus we have
+<span class="math display">\[\begin{align*}
+  X^\top W X
+  &amp;= (1, \ldots, 1)^\top W (1, \ldots, 1) \\
+  &amp;= \sum_{i=1}^n w_i \\
+  &amp;= \sum_{i=1}^n K_h(\tilde x - x_i).
+\end{align*}\]</span>
+Similarly, we have
+<span class="math display">\[\begin{align*}
+  X^\top W y
+  &amp;= (1, \ldots, 1)^\top W y \\
+  &amp;= \sum_{i=1}^n w_i y_i \\
+  &amp;= \sum_{i=1}^n K_h(\tilde x - x_i) y_i.
+\end{align*}\]</span>
+Thus we find
+<span class="math display">\[\begin{align*}
+  \hat m_h(\tilde x)
+  &amp;= (X^\top W X)^{-1} X^\top W y \\
+  &amp;= \frac{\sum_{i=1}^n K_h(\tilde x - x_i) y_i}{\sum_{i=1}^n K_h(\tilde x - x_i)}.
+\end{align*}\]</span>
+This is the same formula as in definition <a href="X05-smoothing.html#def:NW">5.1</a>: for <span class="math inline">\(p=0\)</span>
+the local polynomial regression estimator is the same as the Nadaraya-Watson
+estimator.</p>
+</div>
+<div id="p-1" class="section level3 unnumbered">
+<h3><span class="math inline">\(p = 1\)</span></h3>
+<p>For <span class="math inline">\(p=1\)</span> the polynomial is a straight line, allowing to model the
+value as well as the slope of the mean line. This sometimes gives
+a better fit than the Nadaraya-Watson estimator, for example at the boundaries
+of the domain.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-11" class="example"><strong>Example 6.3  </strong></span>We can use the R function <code>locpoly</code> from the <code>KernSmooth</code> package to
+compute locally polynomial regression estimates. Here we plot
+the estimate for <span class="math inline">\(p=1\)</span> (blue line) together with the Nadaraya-Watson
+estimator (red line), for a simple, simulated dataset.
+Unfortunately, the function <code>locpoly()</code> has an interpretation of the bandwidth
+which is different from what <code>ksmooth()</code> uses. Experimentally I found
+that <code>bandwidth = 0.3</code> for <code>ksmooth()</code> corresponds to
+<code>bandwidth = 0.11</code> for <code>locpoly()</code>: the output of
+<code>ksmooth(..., bandwidth = 0.3)</code>
+and of <code>locpoly(x.., degree = 0, bandwidth = 0.11)</code> is near identical.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="X06-locpoly.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>
+<span id="cb21-2"><a href="X06-locpoly.html#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="X06-locpoly.html#cb21-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb21-4"><a href="X06-locpoly.html#cb21-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb21-5"><a href="X06-locpoly.html#cb21-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.05</span>)</span>
+<span id="cb21-6"><a href="X06-locpoly.html#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>)</span>
+<span id="cb21-7"><a href="X06-locpoly.html#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="X06-locpoly.html#cb21-8" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> <span class="fl">0.3</span>)</span>
+<span id="cb21-9"><a href="X06-locpoly.html#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m1, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb21-10"><a href="X06-locpoly.html#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="X06-locpoly.html#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span></code></pre></div>
+<pre><code>## KernSmooth 2.23 loaded
+## Copyright M. P. Wand 1997-2009</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="X06-locpoly.html#cb23-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">1</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
+<span id="cb23-2"><a href="X06-locpoly.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="MATH5714M_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>Near the boundaries the Nadaray-Watson estimator is biased, because on
+the left-hand boundary all nearby samples correspond to larger values of the
+mean line, and similarly on the right-hand all nearby samples correspond to
+smaller values of the mean line. In contrast, the local polynomial estimate
+retains its slope right up to the boundary.</p>
+</div>
+</div>
+<div id="p-2" class="section level3 unnumbered">
+<h3><span class="math inline">\(p = 2\)</span></h3>
+<p>For <span class="math inline">\(p=2\)</span> the local polynomials are parabolas. This allows sometimes to reduce
+bias near peaks.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-12" class="example"><strong>Example 6.4  </strong></span>We compare the Nadaraya-Watson estimator to locally polynomial regression
+with <span class="math inline">\(p=2\)</span>, using a simulated dataset which has a peak in the middle of the
+domain. We choose the same bandwidths as in the previous example.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="X06-locpoly.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>
+<span id="cb24-2"><a href="X06-locpoly.html#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="X06-locpoly.html#cb24-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb24-4"><a href="X06-locpoly.html#cb24-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb24-5"><a href="X06-locpoly.html#cb24-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.05</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb24-6"><a href="X06-locpoly.html#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>)</span>
+<span id="cb24-7"><a href="X06-locpoly.html#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="X06-locpoly.html#cb24-8" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> <span class="fl">0.3</span>, <span class="at">n.points =</span> <span class="dv">100</span>)</span>
+<span id="cb24-9"><a href="X06-locpoly.html#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m1, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb24-10"><a href="X06-locpoly.html#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="X06-locpoly.html#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
+<span id="cb24-12"><a href="X06-locpoly.html#cb24-12" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
+<span id="cb24-13"><a href="X06-locpoly.html#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="MATH5714M_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>We can see that the Nadaraya-Watson estimator (red line) is biased near the
+peak, because all nearby samples correspond to smaller values of the mean line.
+In contrast, the local polynomial estimate (blue line) has much lower bias.</p>
+</div>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>Regression with weights can be used to fit models to the data near
+a given point.</li>
+<li>A simple application of linear regression can fit polynomials as well
+as straight lines.</li>
+<li>The local polynomial regression estimator is a generalization of the
+Nadaraya-Watson estimator.</li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="X05-smoothing.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH5714M.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
