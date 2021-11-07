@@ -871,7 +871,7 @@ and \((X\beta)^\top (X\beta) = \beta^\top X^\top X \beta\). Thus we get
     r(\beta)
     = y^\top y - 2\beta^\top X^\top y + \beta^\top X^\top X \beta.
   \end{equation*}
-Note that in this eqation \(X\) is a matrix, \(y\) and \(\beta\) are vectors,
+Note that in this equation \(X\) is a matrix, \(y\) and \(\beta\) are vectors,
 and \(r(\beta)\) is a number.
 
 To find the minimum of this function, we set all partial derivatives
@@ -5557,7 +5557,7 @@ data shows severe multicollinearity. To find out which variables
 are involved, we can use \href{https://en.wikipedia.org/wiki/Singular_value_decomposition}{singular value decomposition}.
 This allows to write \(X\) as \(X = U D V^\top\), where \(D\in\mathbb{R}^{(p+1)\times(p+1)}\)
 is a diagonal matrix and \(U\in\mathbb{R}^{n\times(p+1)}\) and
-\(V\in\mathbb{R}^{(p+1)\times(p+1)}\) are matrices with orthogonal columns.
+\(V\in\mathbb{R}^{(p+1)\times(p+1)}\) are matrices with orthonormal columns.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -5581,7 +5581,7 @@ is a diagonal matrix and \(U\in\mathbb{R}^{n\times(p+1)}\) and
 \end{verbatim}
 
 We used the optional argument \texttt{nu\ =\ 0} to tell R that we won't need the
-matrix~\(U\). The diagonal elements \(\sigma_0(X), \ldots, \sigma_{p}(X)\),
+matrix~\(U\). The diagonal elements \(\sigma_0(X), \ldots, \sigma_{p}(X) \geq 0\),
 stored in \texttt{s\$d}, are the singular values of \(X\) in decreasing order.
 We can find the condition number using these values:
 
@@ -5673,6 +5673,373 @@ be addressed:
 
 \clearpage
 
+\hypertarget{P03}{%
+\section*{Problem Sheet 3}\label{P03}}
+\addcontentsline{toc}{section}{Problem Sheet 3}
+
+\excludecomment{myanswers}
+
+You should attempt all these questions and write up your solutions in advance
+of your workshop in week 7 where the answers will be discussed.
+
+\textbf{9} Consider the following data set. Our aim is to predict \(y\) from the
+variables \(x_1\), \(x_2\) and \(x_3\).
+
+\begin{longtable}[]{@{}rrrrr@{}}
+\toprule
+\(i\) & \(x_{1,i}\) & \(x_{2,i}\) & \(x_{3,i}\) & \(y_i\) \\
+\midrule
+\endhead
+1 & -2.17 & -2.08 & -2.16 & 4.47 \\
+2 & -1.35 & -0.50 & -0.74 & 5.60 \\
+3 & -1.22 & -1.00 & -1.78 & 4.16 \\
+4 & -1.04 & -0.32 & -0.40 & 5.52 \\
+5 & -0.87 & -0.39 & -0.67 & 5.27 \\
+6 & -0.41 & 0.07 & -0.66 & 4.70 \\
+7 & 0.07 & 0.74 & 0.37 & 5.50 \\
+8 & 0.25 & 0.35 & 0.02 & 4.84 \\
+9 & 0.87 & 1.28 & 0.52 & 4.92 \\
+10 & 1.53 & 2.30 & 1.35 & 5.35 \\
+11 & 2.46 & 2.55 & 1.77 & 4.86 \\
+12 & 5.00 & 5.04 & 4.05 & 5.09 \\
+\bottomrule
+\end{longtable}
+
+These data are also available in machine-readable form at
+
+\begin{itemize}
+\tightlist
+\item
+  \url{http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P03Q09.csv}
+\end{itemize}
+
+Using these data:
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Fit a linear model of the form
+  \(y_i = \beta_0 + x_{1,i} \beta_1 + x_{2,i} \beta_2 + x_{3,i} \beta_3 + \varepsilon_i\) to the data.
+\end{enumerate}
+
+\begin{myanswers}
+
+To fit the required model we can use the following R commands:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{"http://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2021/MATH3714/P03Q09.csv"}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(url)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2 }\SpecialCharTok{+}\NormalTok{ x3, }\AttributeTok{data=}\NormalTok{x)}
+\end{Highlighting}
+\end{Shaded}
+
+The fitted model has the following coefficients:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ x1 + x2 + x3, data = x)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.104928 -0.032723 -0.001836  0.024802  0.142993 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  4.97725    0.06026  82.598 5.15e-13 ***
+## x1          -1.11954    0.07427 -15.074 3.71e-07 ***
+## x2           0.28176    0.12023   2.344   0.0472 *  
+## x3           1.06621    0.09492  11.232 3.54e-06 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.07109 on 8 degrees of freedom
+## Multiple R-squared:  0.9817, Adjusted R-squared:  0.9748 
+## F-statistic: 142.8 on 3 and 8 DF,  p-value: 2.76e-07
+\end{verbatim}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Determine a \(95\%\) confidence interval for the coefficient~\(\beta_2\).
+\end{enumerate}
+
+\begin{myanswers}
+From lectures we know that a confidence interval for a single
+coefficient~\(\beta_j\) is given by
+\begin{equation*}
+  [U, V]
+  = \Bigl[ \hat\beta_j - t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}},
+       \hat\beta_j + t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}} \Bigr],
+\end{equation*}
+where \(t_{n-p-1}\) is a quantile of the \(t\)-distribution,
+\(C_{jj} = (X^\top X)^{-1}_{jj}\), and \(X\) is the design matrix.
+
+We can read off the required values for computing the confidence
+interval from the output of \texttt{summary(m)}: the centre of the
+confidence interval can be found in the column \texttt{Estimate},
+the standard error \(\sqrt{\widehat{\sigma^2} C_{jj}}\) is given in
+column \texttt{Std.\ Error}, and \(n-p-1 = 12 - 3 - 1 = 8\). Using
+these values, we can find a \(95\%\)-confidence interval for
+\(\beta_2\) as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{c}\NormalTok{(}\FloatTok{0.28176} \SpecialCharTok{{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DecValTok{8}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.12023}\NormalTok{, }\FloatTok{0.28176} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DecValTok{8}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.12023}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.004509123 0.559010877
+\end{verbatim}
+
+Thus, the confidence interval is \(\bigl[ 0.0045, 0.5590 \bigr]\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Perform a hypothesis test, at the \(95\%\)-level, for the
+  hypothesis \(H_0\colon \beta_2 = 0\) with alternative \(H_1\colon \beta_2 \neq 0\).
+\end{enumerate}
+
+\begin{myanswers}
+The test statistic is
+\begin{equation*}
+  T
+  = \frac{\bigl|\hat\beta_2\bigr|}{\sqrt{\widehat{\sigma^2} C_{jj}} }
+  = \frac{0.28176}{0.12023}
+  = 2.344.
+\end{equation*}
+(This value is also shown in the column \texttt{t\ value} of the R
+summary output.) The critical value is
+\begin{equation*}
+  t
+  = t_{n-p-1}(\alpha/2)
+  = 2.306.
+\end{equation*}
+Since \(T > t\), we can reject the hypothesis \(\beta_2 = 0\) at the
+\(95\%\)-level.
+
+\end{myanswers}
+
+\textbf{10} Let \(x_1, \ldots, x_n, y_1, \ldots, y_n \in \mathbb{R}\) be given. Assume
+that it is known that the \(y\)-values satisfy
+\(y \approx 1 - x + c x^2 - d x^3\), where \(c\) and \(d\) are unknown
+constants.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Explain how linear regression can be used to estimate the
+  parameters \(c\) and \(d\) from the given data.
+\end{enumerate}
+
+\begin{myanswers}
+We can rewrite the equation for \(y\) as
+\begin{equation*}
+  y + x - 1 = c x^2 - d x^3,
+\end{equation*}
+where \(c\) and \(d\) are the unknown quantities, and \(x\) and \(y\)
+are given. Thus we can estimate \(c\) and \(d\) by fitting
+a linear model with two inputs, \(x_i^2\) and \(x_i^3\)
+and one output \(y_i + x_i - 1\). The model does not include
+an intercept.
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  What is the design matrix in this situation?
+\end{enumerate}
+
+\begin{myanswers}
+Since there is no intercept, the design matrix is
+\begin{equation*}
+  X = \begin{pmatrix}
+    x_1^2 & x_1^3 \\
+    x_2^2 & x_2^3 \\
+    \vdots & \vdots \\
+    x_n^2 & x_n^3 \\
+  \end{pmatrix}
+  \in \mathbb{R}^{n\times 2}.
+\end{equation*}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Why can \emph{linear} regression be used, despite the presence
+  of the \emph{non-linear} terms \(x^2\) and~\(x^3\)?
+\end{enumerate}
+
+\begin{myanswers}
+A linear model is appropriate, because the response depends
+on the unknown coefficients \(c\) and \(d\) in a linear way: \(c\) and \(d\)
+are only multiplied by known constants, and there are no non-linear
+functions of \(c\) and \(d\) in the model.
+
+\end{myanswers}
+
+\textbf{11} In this question we consider four different data sets, given by
+inputs \(x_i\) and responses \(y_i\) for \(i \in \{1, 2, 3, 4\}\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Based on the following plots, discuss model fit of each model.
+  Describe all relevant features of the plots.
+  Describe any problems with the model fit you find.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+    \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{    m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y1 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1)}
+    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
+    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m1), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
+
+\NormalTok{    m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y2 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x2)}
+    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
+    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m2), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
+
+\NormalTok{    m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y3 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x3)}
+    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m3), }\FunctionTok{resid}\NormalTok{(m3), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
+    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m3), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
+
+\NormalTok{    m4 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y4 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x4)}
+    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m4), }\FunctionTok{resid}\NormalTok{(m4), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
+    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m4), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/four-models-1.pdf}
+
+\begin{myanswers}
+
+We first note that the given R commands generate the plots along
+rows, so the first row of plots corresponds to model~\texttt{m1}, the
+second row to model~\texttt{m2}, and so on. The plots shown are
+residual plots in the left column, and Q-Q-plots in the right
+column.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{m1:} Samples in the residual plot on the left
+  seem to follow an upside down parabola indicating a non-linear
+  relationship between \(x\) and \(y\). Samples in the QQ-plot on the
+  right seem to (approximately?) follow a straight line, so
+  residuals seem to be (approximately?) normally distributed. No
+  outliers are visible.
+\item
+  \textbf{m2:} Samples in the residual plot form a band
+  centred at zero. Possibly very negative residuals are less
+  frequent for fitted values \(\hat y_i < 4\)? No outliers are
+  apparent. The samples in the QQ-plot seem to clearly fall on a
+  straight line. Overall, model fit seems very good.
+\item
+  \textbf{m3:} The samples in the residual plot are
+  centred around \(\hat\varepsilon= 0\), but the width of the spread
+  increases as the fitted values increase, leasing to a triangular
+  shape. This indicates that the variance of the residuals is not
+  constant but increases with \(y\). Possibly, a model with
+  multiplicative noise would be appropriate for these data. The
+  QQ-plot shows an approximately straight line, but fit is not as
+  good as for model~\texttt{m2}.
+\item
+  \textbf{m4:} The samples in the residual plot form a
+  horizontal band centred at~\(\hat\varepsilon= 0\), no outliers are
+  visible. The QQ-plot shows clearly that the residuals are not
+  normally distributed: the samples form an ``S-shaped'' line,
+  indicating that the errors have lighter tails than we would expect
+  for a normal distribution.
+\end{itemize}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Which of the four models has the best fit?
+\end{enumerate}
+
+\begin{myanswers}
+The data in \texttt{m1} seems to
+have a non-linear relationship between \(x\) and~\(y\), the data
+in~\texttt{m3} seems to be better modelled using multiplicative noise,
+and the residuals in~\texttt{m4} seem not to be normally
+distributed. Thus, the model with the best fit is~\texttt{m2},
+because it is the only model which does not show any obvious
+problems.
+
+\end{myanswers}
+
+\textbf{12} Using singular value decomposition,
+we can write a design matrix \(X\) as \(X = U D V^\top\),
+where \(D\in\mathbb{R}^{(p+1)\times(p+1)}\) is a diagonal matrix
+and \(U\in\mathbb{R}^{n\times(p+1)}\) and \(V\in\mathbb{R}^{(p+1)\times(p+1)}\) are matrices with orthonormal columns.
+Denote the diagonal elements of \(D\) by \(\sigma_0(X), \ldots, \sigma_p(X) \geq 0\),
+and the columns of \(V\) by \(v_0, \ldots, v_p\).
+Show that \(\| X v_k \| = \sigma_k(X)\).
+(We used this fact in example~\ref{exm:multicollell}.)
+
+\begin{myanswers}
+Using the singular value decomposition of \(X\), we find
+\begin{equation*}
+  \| X v_k \|
+  = \| U D V^\top v_k \|.
+\end{equation*}
+For every vector \(x\) we
+have \(\| U x \|^2 = x^\top U^\top U x = x^\top x = \| x \|^2\).
+Thus, multiplying a vector \(x\) by \(U\) does
+not change its length. Using this rule we find
+\begin{equation*}
+  \| X v_k \|
+  = \| D V^\top v_k \|.
+\end{equation*}
+Since the columns of \(V\) are orthonormal, we have \(V^\top v_k = e_k\),
+where \(e_k = (0, \ldots, 1, \ldots, 0)\) is the \(k\)th standard basis vector.
+Thus we get
+\begin{equation*}
+  \| X v_k \|
+  = \| D e_k \|
+  = \| \sigma_k(X) e_k \|
+  = \sigma_k(X) \| e_k \|
+  = \sigma_k(X)
+\end{equation*}
+as required. This completes the proof.
+
+\end{myanswers}
+
+\clearpage
+
 \hypertarget{appendix-appendices}{%
 \appendix}
 
@@ -5700,8 +6067,7 @@ is given by
   = \sum_{i=1}^d u_i v_i.  \label{eq:inner-product}
 \end{equation}
 Note that the two vectors must have the same length for the inner product
-to exist. The vectors \(u\) and~\(v\) are said to be \textbf{orthogonal}, if
-\(u^\top v = 0\).
+to exist.
 
 Using this notation, the \textbf{Euclidean length} of a vector~\(v\)
 can be written as
@@ -5710,6 +6076,11 @@ can be written as
   = \sqrt{\sum_{i=1}^d v_i^2}
   = \sqrt{v^\top v}.
 \end{equation*}
+
+Vectors \(v_1, \ldots, v_n\) are said to be \textbf{orthogonal},
+if \(v_i^\top v_j = 0\) for all \(i \neq j\). The vectors are said to be
+\textbf{orthonormal}, if they are orthogonal and satisfy \(\|v_i\| = 1\)
+for all~\(i\).
 
 \hypertarget{matrix-rules}{%
 \subsection{Matrices}\label{matrix-rules}}
@@ -5831,8 +6202,17 @@ Some important properties of the inverse:
 A matrix \(U\) is called \textbf{orthogonal}, if \(U^\top U = I = U U^\top\).
 \end{definition}
 
-If \(U\) is orthogonal, the inverse and the transpose are the same:
-\(U^\top = U^{-1}\).
+Some important properties of orthogonal matrices:
+
+\begin{itemize}
+\item
+  If \(U\) is orthogonal, the inverse and the transpose are the same:
+  \(U^\top = U^{-1}\).
+\item
+  We have \(\| U x \|^2 = x^\top U^\top U x = x^\top x = \| x \|^2\).
+  Thus, multiplying a vector \(x\) by an orthogonal matrix \(U\) does
+  not change its length.
+\end{itemize}
 
 \hypertarget{positive-definite}{%
 \subsubsection{Positive Definite Matrices}\label{positive-definite}}

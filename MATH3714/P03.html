@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 8 Regression Diagnostics | MATH3714 Linear Regression and Robustness</title>
+  <title>Problem Sheet 3 | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 8 Regression Diagnostics | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Problem Sheet 3 | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 8 Regression Diagnostics | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Problem Sheet 3 | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="P02.html"/>
-<link rel="next" href="S09-influence.html"/>
+<link rel="prev" href="S10-multicoll.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -296,293 +296,398 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="S08-diagnostics" class="section level1" number="8">
-<h1><span class="header-section-number">Section 8</span> Regression Diagnostics</h1>
-<p>The traditional principle of data analysis could be described by the following
-steps</p>
-<ol style="list-style-type: decimal">
-<li>Explore the data; identify a plausible model.</li>
-<li>Estimate any parameters specified by the model.</li>
-<li>Check that the model is adequate — often by examining the discrepancy
-between the observed data and that predicted (or fitted) by the model — if
-necessary go back a step with a refined/revised model.</li>
-<li>See if the model can be simplified; if necessary go to step 2.</li>
-<li>Conclude (using the results as required).</li>
-</ol>
-<p>In (multiple) regression there are many checks which can be used in step 3.
-These can consider the model as a whole, or be very specific by examining each
-observation, and the effect it has on the model.</p>
-<div id="plots" class="section level2" number="8.1">
-<h2><span class="header-section-number">8.1</span> Diagnostic Plots</h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/AOZICnbvLms" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
+<div id="P03" class="section level1 unnumbered">
+<h1>Problem Sheet 3</h1>
+<style>
+.fold-btn {
+  float: right;
+  margin: -12px 0 0 0;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function() {
+  $folds = $(".myanswers");
+  $folds.wrapInner("<div class=\"fold-blck\">"); // wrap a div container around content
+  $folds.prepend("<button class=\"fold-btn\">Show solution</button>");  // add a button
+  $(".fold-blck").toggle();  // fold all blocks
+  $(".fold-btn").on("click", function() {  // add onClick event
+    $(this).text($(this).text() === "Hide solution" ? "Show solution" : "Hide solution");  // if the text equals "Fold", change it to "Unfold"or else to "Fold"
+    $(this).next(".fold-blck").toggle("linear");  // "swing" is the default easing function. This can be further customized in its speed or the overall animation itself.
+  })
+});
+</script>
+<style>.myanswers { display: none !important; }</style>
+<div class="mysummary">
+<p>You should attempt all these questions and write up your solutions in advance
+of your workshop in week 7 where the answers will be discussed.</p>
 </div>
-</div>
-<p>The regression model is often checked by examining the residuals. Various plots
-are used:</p>
-<ol style="list-style-type: decimal">
-<li><p>A scatter plot of the response <span class="math inline">\(y\)</span> against each of the explanatory
-variables <span class="math inline">\(x_j\)</span> for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>.</p></li>
-<li><p>A scatter plot of <span class="math inline">\(\hat\varepsilon\)</span> against each of the explanatory variables
-<span class="math inline">\(x_j\)</span> for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>. The presence of a curvilinear
-relationship (in this plot, or the ones above) suggests a higher-order term,
-perhaps a quadratic in the explanatory variable, should be added to the
-model. Or possibly a transformation.</p></li>
-<li><p>A plot of <span class="math inline">\(\hat\varepsilon_i\)</span> <em>vs.</em> <span class="math inline">\(\hat y_i\)</span>. If the variance of the residuals
-seems to increase with <span class="math inline">\(\hat y\)</span> then a transformation may be necessary.</p></li>
-<li><p>A plot of <span class="math inline">\(\hat\varepsilon_i\)</span> <em>vs.</em> any explanatory variables not
-used in the model. A relationship suggests that the variable should be
-included.</p></li>
-<li><p>A <a href="https://en.wikipedia.org/wiki/Q%E2%80%93Q_plot">Q-Q plot</a>
-of the residuals can be used to assess whether the residuals are normally
-distributed. These plots plot quantiles of the data against quantiles
-of a normal distribution. If the residual are normally distributed,
-the points in a Q-Q plot will approximately lie on a straight line.
-(Most inference assumes that the errors are normally distributed, though
-the least squares estimate for <span class="math inline">\(\hat\beta\)</span> itself does not.) The R
-command to produce Q-Q plots for the normal distribution is <code>qqnorm()</code>.</p></li>
-<li><p>Data are often collected in time order. Even if time is not an explanatory
-variable, a plot of <span class="math inline">\(y\)</span> <em>vs.</em> time can be of interest. It can reveal
-serial correlation in the data. Similarly, plotting the residuals <em>vs.</em>
-time.</p></li>
-<li><p>A plot of <span class="math inline">\(x_j\)</span> <em>vs.</em> <span class="math inline">\(x_k\)</span> for <span class="math inline">\(j\neq k\)</span> can also be useful.
-If two or more regressors are highly correlated, we say that
-multicollinearity is present. When this occurs the least squares estimate
-<span class="math inline">\(\hat\beta\)</span> becomes numerically unstable.</p></li>
-</ol>
-<div class="example">
-<p><span id="exm:stackloss-plot" class="example"><strong>Example 8.1  </strong></span>An example for the first type of diagnostic plot would be to
-plot <code>stack.loss</code> against <code>Water.Temp</code> for the <code>stackloss</code> dataset:</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="S08-diagnostics.html#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stackloss<span class="sc">$</span>Water.Temp, stackloss<span class="sc">$</span>stack.loss,</span>
-<span id="cb125-2"><a href="S08-diagnostics.html#cb125-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;water temperature&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Stack loss&quot;</span>)</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/stackloss-plot-1.png" width="672" /></p>
-<p>Clearly the stack loss increases with water temperature, but the
-relationship may not be linear. It may make sense to include
-the square of the water temperature as an additional input variable
-in the model.</p>
-</div>
-</div>
-<div id="R-squared" class="section level2" number="8.2">
-<h2><span class="header-section-number">8.2</span> The Coefficient of Multiple Determination</h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/rBzSlQVx3A0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>We have seen
-<span class="math display">\[\begin{equation*}
-  \|y\|^2
-  = \|\hat y\|^2 + \|\hat\varepsilon\|^2.
-\end{equation*}\]</span>
-The next lemma shows that a similar relation also holds after the sample
-means are subtracted.</p>
-<div class="lemma">
-<p><span id="lem:explained-variance" class="lemma"><strong>Lemma 8.1  </strong></span>We have
-<span class="math display">\[\begin{align*}
-  \sum_{i=1}^n (y_i - \overline{y})^2
-  &amp;= \sum_{i=1}^n (\hat y_i - \overline{y})^2
-    + \sum_{i=1}^n \hat \varepsilon_i^2 \\
-  &amp;= \sum_{i=1}^n \bigl( \hat y_i - \overline{\hat y} \bigr)^2
-    + \sum_{i=1}^n \bigl( \hat \varepsilon_i - \overline{\hat\varepsilon} \bigr)^2,
-\end{align*}\]</span>
-where <span class="math inline">\(\overline{y}\)</span>, <span class="math inline">\(\overline{\hat y}\)</span> and <span class="math inline">\(\overline{\hat\varepsilon}\)</span>
-are the sample means of the three vectors <span class="math inline">\(y\)</span>, <span class="math inline">\(\hat y\)</span> and <span class="math inline">\(\hat\varepsilon\)</span>.</p>
-</div>
-<div class="proof">
-<p><span id="unlabeled-div-29" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(\mathbf{1} = (1, \ldots, 1) \in \mathbb{R}^p\)</span>. From exercise 3 on
-problem sheet 1 we know that <span class="math inline">\(H\mathbf{1} = \mathbf{1}\)</span> and since <span class="math inline">\(H\)</span>
-is symmetric we also have <span class="math inline">\(\mathbf{1}^\top H = \mathbf{1}^\top\)</span>.
-This gives
-<span class="math display" id="eq:I-H-left">\[\begin{equation}
-  \mathbf{1}^\top (I - H)
-  = \mathbf{1}^\top - \mathbf{1}^\top H
-  = \mathbf{1}^\top - \mathbf{1}^\top
-  = 0.  \tag{8.1}
-\end{equation}\]</span></p>
-<p>As we have already seen previously, we have
-<span class="math display">\[\begin{align*}
-  \hat y^\top \hat\varepsilon
-  &amp;= (H y)^\top (I - H) y \\
-  &amp;= y^\top H (I - H) y \\
-  &amp;= 0
-\end{align*}\]</span>
-and using equation <a href="S08-diagnostics.html#eq:I-H-left">(8.1)</a> we also get
-<span class="math display">\[\begin{equation}
-  \mathbf{1}^\top \hat\varepsilon
-  = \mathbf{1}^\top (I - H) y
-  = 0.
-\end{equation}\]</span>
-Thus, <span class="math inline">\((\hat y - \overline{y} \mathbf{1})^\top \hat\varepsilon= 0\)</span> and using
-Pythagoras’ theorem as in the section about <a href="S04-model.html#hat-matrix">Properties of the Hat Matrix</a>, we
-find
-<span class="math display">\[\begin{align*}
-  \| y - \overline{y} \mathbf{1} \|^2
-  &amp;= \| y - \hat y + \hat y - \overline{y} \mathbf{1} \|^2 \\
-  &amp;= \| \hat \varepsilon+ \hat y - \overline{y} \mathbf{1} \|^2 \\
-  &amp;= \| \hat \varepsilon\|^2 + \| \hat y - \overline{y} \mathbf{1} \|^2.
-\end{align*}\]</span>
-This proves the first equality.</p>
-<p>Using equation <a href="S08-diagnostics.html#eq:I-H-left">(8.1)</a> again, we find
-<span class="math display">\[\begin{equation*}
-  \sum_{i=1}^n \hat\varepsilon_i
-  = \mathbf{1}^\top \hat\varepsilon
-  = \mathbf{1}^\top (y - \hat y)
-  = \mathbf{1}^\top (I - H) y
-  = 0
-\end{equation*}\]</span>
-and thus <span class="math inline">\(\overline{\hat\varepsilon} = 0\)</span>.
-Since <span class="math inline">\(y = \hat y + (y - \hat y) = \hat y + \hat\varepsilon\)</span> we also have
-<span class="math display">\[\begin{equation*}
-  \overline{y}
-  = \overline{\hat y} + \overline{\hat\varepsilon}
-  = \overline{\hat y}.
-\end{equation*}\]</span>
-This completes the proof.</p>
-</div>
-<p>We can express the terms in the statement of lemma <a href="S08-diagnostics.html#lem:explained-variance">8.1</a>
-as sample variances. For example, we write
-<span class="math display">\[\begin{equation*}
-  \mathrm{s}_y^2
-  = \frac{1}{n-1} \sum_{i=1}^n (y_i - \bar y)^2
-\end{equation*}\]</span>
-for the sample variance of <span class="math inline">\(y\)</span>. Using this notation, the statement of
-the lemma can be written as
-<span class="math display">\[\begin{equation*}
-  \mathrm{s}_y^2
-  = \mathrm{s}_{\hat y}^2 + \mathrm{s}_{\hat\varepsilon}^2.
-\end{equation*}\]</span></p>
-<p>Some authors define</p>
+<div class="myq">
+<p><strong>9</strong> Consider the following data set. Our aim is to predict <span class="math inline">\(y\)</span> from the
+variables <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span> and <span class="math inline">\(x_3\)</span>.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right"><span class="math inline">\(i\)</span></th>
+<th align="right"><span class="math inline">\(x_{1,i}\)</span></th>
+<th align="right"><span class="math inline">\(x_{2,i}\)</span></th>
+<th align="right"><span class="math inline">\(x_{3,i}\)</span></th>
+<th align="right"><span class="math inline">\(y_i\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">-2.17</td>
+<td align="right">-2.08</td>
+<td align="right">-2.16</td>
+<td align="right">4.47</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">-1.35</td>
+<td align="right">-0.50</td>
+<td align="right">-0.74</td>
+<td align="right">5.60</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">-1.22</td>
+<td align="right">-1.00</td>
+<td align="right">-1.78</td>
+<td align="right">4.16</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">-1.04</td>
+<td align="right">-0.32</td>
+<td align="right">-0.40</td>
+<td align="right">5.52</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">-0.87</td>
+<td align="right">-0.39</td>
+<td align="right">-0.67</td>
+<td align="right">5.27</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">-0.41</td>
+<td align="right">0.07</td>
+<td align="right">-0.66</td>
+<td align="right">4.70</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="right">0.07</td>
+<td align="right">0.74</td>
+<td align="right">0.37</td>
+<td align="right">5.50</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="right">0.25</td>
+<td align="right">0.35</td>
+<td align="right">0.02</td>
+<td align="right">4.84</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="right">0.87</td>
+<td align="right">1.28</td>
+<td align="right">0.52</td>
+<td align="right">4.92</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="right">1.53</td>
+<td align="right">2.30</td>
+<td align="right">1.35</td>
+<td align="right">5.35</td>
+</tr>
+<tr class="odd">
+<td align="right">11</td>
+<td align="right">2.46</td>
+<td align="right">2.55</td>
+<td align="right">1.77</td>
+<td align="right">4.86</td>
+</tr>
+<tr class="even">
+<td align="right">12</td>
+<td align="right">5.00</td>
+<td align="right">5.04</td>
+<td align="right">4.05</td>
+<td align="right">5.09</td>
+</tr>
+</tbody>
+</table>
+<p>These data are also available in machine-readable form at</p>
 <ul>
-<li><span class="math inline">\(\mathrm{SS}_\mathrm{tot} = \sum_{i=1}^n (y_i - \bar y)^2\)</span>
-(where “tot” stands for “total”)</li>
-<li><span class="math inline">\(\mathrm{SS}_\mathrm{reg} = \sum_{i=1}^n (\hat y_i - \overline{\hat y})^2\)</span>
-(where “reg” stands for “regression”)</li>
-<li><span class="math inline">\(\mathrm{SS}_\mathrm{res} = \sum_{i=1}^n (y_i-\hat y_i)^2\)</span>
-(where “res” stands for “residual”)</li>
+<li><a href="http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P03Q09.csv">http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P03Q09.csv</a></li>
 </ul>
-<p>Using this notation, the statement of lemma <a href="S08-diagnostics.html#lem:explained-variance">8.1</a>
-becomes
-<span class="math display">\[\begin{equation*}
-  \mathrm{SS}_\mathrm{tot}
-  = \mathrm{SS}_\mathrm{reg} + \mathrm{SS}_\mathrm{res}.
-\end{equation*}\]</span></p>
-<div class="definition">
-<p><span id="def:unlabeled-div-30" class="definition"><strong>Definition 8.1  </strong></span>The <strong>coefficient of multiple determination</strong> is defined to be
-<span class="math display">\[\begin{equation*}
-  R^2
-  := 1 - \frac{\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2}
-  = 1 - \frac{\sum_{i=1}^n \hat\varepsilon_i^2}{\sum_{i=1}^n (y_i - \bar y)^2}.
-\end{equation*}\]</span></p>
-</div>
-<p>Using the result of lemma <a href="S08-diagnostics.html#lem:explained-variance">8.1</a>, we can also
-express <span class="math inline">\(R^2\)</span> as
-<span class="math display">\[\begin{equation*}
-  R^2
-  = \mathrm{s}_{\hat y}^2 / \mathrm{s}_y^2.
-\end{equation*}\]</span>
-Since both numerator and denominator are positive, if is clear the <span class="math inline">\(R^2 \geq 0\)</span>. Similarly, from the definition it is clear that <span class="math inline">\(R^2 \leq 1\)</span>, so that we
-always have <span class="math inline">\(R^2 \in [0, 1]\)</span>. A large value of <span class="math inline">\(R^2\)</span> indicates that
-the residuals are small, compared to the sample variance of the <span class="math inline">\(y_i\)</span>
-and thus often indicates good model fit.</p>
-<div class="example">
-<p><span id="exm:unlabeled-div-31" class="example"><strong>Example 8.2  </strong></span>We can easily compute the <span class="math inline">\(R^2\)</span> value for the <code>stackloss</code> dataset
-manually:</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="S08-diagnostics.html#cb126-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
-<span id="cb126-2"><a href="S08-diagnostics.html#cb126-2" aria-hidden="true" tabindex="-1"></a>R.squared <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">var</span>(<span class="fu">resid</span>(m)) <span class="sc">/</span> <span class="fu">var</span>(stackloss<span class="sc">$</span>stack.loss)</span>
-<span id="cb126-3"><a href="S08-diagnostics.html#cb126-3" aria-hidden="true" tabindex="-1"></a>R.squared</span></code></pre></div>
-<pre><code>## [1] 0.9135769</code></pre>
-<p>We can also find this value near the bottom of the output of
-<code>summary(m)</code>, listed as <code>Multiple R-squared</code>:</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="S08-diagnostics.html#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<p>Using these data:</p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Fit a linear model of the form
+<span class="math inline">\(y_i = \beta_0 + x_{1,i} \beta_1 + x_{2,i} \beta_2 + x_{3,i} \beta_3 + \varepsilon_i\)</span> to the data.</li>
+</ol>
+<div class="myanswers">
+<p>To fit the required model we can use the following R commands:</p>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="P03.html#cb164-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">&quot;http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P03Q09.csv&quot;</span></span>
+<span id="cb164-2"><a href="P03.html#cb164-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url)</span>
+<span id="cb164-3"><a href="P03.html#cb164-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3, <span class="at">data=</span>x)</span></code></pre></div>
+<p>The fitted model has the following coefficients:</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="P03.html#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## lm(formula = stack.loss ~ ., data = stackloss)
+## lm(formula = y ~ x1 + x2 + x3, data = x)
 ## 
 ## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -7.2377 -1.7117 -0.4551  2.3614  5.6978 
+##       Min        1Q    Median        3Q       Max 
+## -0.104928 -0.032723 -0.001836  0.024802  0.142993 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -39.9197    11.8960  -3.356  0.00375 ** 
-## Air.Flow      0.7156     0.1349   5.307  5.8e-05 ***
-## Water.Temp    1.2953     0.3680   3.520  0.00263 ** 
-## Acid.Conc.   -0.1521     0.1563  -0.973  0.34405    
+## (Intercept)  4.97725    0.06026  82.598 5.15e-13 ***
+## x1          -1.11954    0.07427 -15.074 3.71e-07 ***
+## x2           0.28176    0.12023   2.344   0.0472 *  
+## x3           1.06621    0.09492  11.232 3.54e-06 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 3.243 on 17 degrees of freedom
-## Multiple R-squared:  0.9136, Adjusted R-squared:  0.8983 
-## F-statistic:  59.9 on 3 and 17 DF,  p-value: 3.016e-09</code></pre>
+## Residual standard error: 0.07109 on 8 degrees of freedom
+## Multiple R-squared:  0.9817, Adjusted R-squared:  0.9748 
+## F-statistic: 142.8 on 3 and 8 DF,  p-value: 2.76e-07</code></pre>
 </div>
-<p>One problem with the <span class="math inline">\(R^2\)</span> value is, that it always increases when another
-input variable is added to the model. Thus, the <span class="math inline">\(R^2\)</span> value cannot be used
-to compare model fit for models with different numbers of variables. An
-attempt to compensate for this effect is the adjusted <span class="math inline">\(R^2\)</span> value:</p>
-<div class="definition">
-<p><span id="def:unlabeled-div-32" class="definition"><strong>Definition 8.2  </strong></span>The <strong>adjusted <span class="math inline">\(R^2\)</span> value</strong> is given by
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Determine a <span class="math inline">\(95\%\)</span> confidence interval for the coefficient <span class="math inline">\(\beta_2\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>From lectures we know that a confidence interval for a single
+coefficient <span class="math inline">\(\beta_j\)</span> is given by
 <span class="math display">\[\begin{equation*}
-  R^2_\mathrm{adj}
-  := 1 - \frac{\frac{1}{n-p-1}\mathrm{s}_{\hat\varepsilon}^2}{\frac{1}{n-1}\mathrm{s}_y^2}
-  = 1 - \frac{n-1}{n-p-1}(1 - R^2).
+  [U, V]
+  = \Bigl[ \hat\beta_j - t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}},
+       \hat\beta_j + t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}} \Bigr],
+\end{equation*}\]</span>
+where <span class="math inline">\(t_{n-p-1}\)</span> is a quantile of the <span class="math inline">\(t\)</span>-distribution,
+<span class="math inline">\(C_{jj} = (X^\top X)^{-1}_{jj}\)</span>, and <span class="math inline">\(X\)</span> is the design matrix.</p>
+<p>We can read off the required values for computing the confidence
+interval from the output of <code>summary(m)</code>: the centre of the
+confidence interval can be found in the column <code>Estimate</code>,
+the standard error <span class="math inline">\(\sqrt{\widehat{\sigma^2} C_{jj}}\)</span> is given in
+column <code>Std. Error</code>, and <span class="math inline">\(n-p-1 = 12 - 3 - 1 = 8\)</span>. Using
+these values, we can find a <span class="math inline">\(95\%\)</span>-confidence interval for
+<span class="math inline">\(\beta_2\)</span> as follows:</p>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="P03.html#cb167-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.28176</span> <span class="sc">-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="dv">8</span>) <span class="sc">*</span> <span class="fl">0.12023</span>, <span class="fl">0.28176</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="dv">8</span>) <span class="sc">*</span> <span class="fl">0.12023</span>)</span></code></pre></div>
+<pre><code>## [1] 0.004509123 0.559010877</code></pre>
+<p>Thus, the confidence interval is <span class="math inline">\(\bigl[ 0.0045, 0.5590 \bigr]\)</span>.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Perform a hypothesis test, at the <span class="math inline">\(95\%\)</span>-level, for the
+hypothesis <span class="math inline">\(H_0\colon \beta_2 = 0\)</span> with alternative <span class="math inline">\(H_1\colon \beta_2 \neq 0\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>The test statistic is
+<span class="math display">\[\begin{equation*}
+  T
+  = \frac{\bigl|\hat\beta_2\bigr|}{\sqrt{\widehat{\sigma^2} C_{jj}} }
+  = \frac{0.28176}{0.12023}
+  = 2.344.
+\end{equation*}\]</span>
+(This value is also shown in the column <code>t value</code> of the R
+summary output.) The critical value is
+<span class="math display">\[\begin{equation*}
+  t
+  = t_{n-p-1}(\alpha/2)
+  = 2.306.
+\end{equation*}\]</span>
+Since <span class="math inline">\(T &gt; t\)</span>, we can reject the hypothesis <span class="math inline">\(\beta_2 = 0\)</span> at the
+<span class="math inline">\(95\%\)</span>-level.</p>
+</div>
+</div>
+</div>
+<div class="myq">
+<p><strong>10</strong> Let <span class="math inline">\(x_1, \ldots, x_n, y_1, \ldots, y_n \in \mathbb{R}\)</span> be given. Assume
+that it is known that the <span class="math inline">\(y\)</span>-values satisfy
+<span class="math inline">\(y \approx 1 - x + c x^2 - d x^3\)</span>, where <span class="math inline">\(c\)</span> and <span class="math inline">\(d\)</span> are unknown
+constants.</p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Explain how linear regression can be used to estimate the
+parameters <span class="math inline">\(c\)</span> and <span class="math inline">\(d\)</span> from the given data.</li>
+</ol>
+<div class="myanswers">
+<p>We can rewrite the equation for <span class="math inline">\(y\)</span> as
+<span class="math display">\[\begin{equation*}
+  y + x - 1 = c x^2 - d x^3,
+\end{equation*}\]</span>
+where <span class="math inline">\(c\)</span> and <span class="math inline">\(d\)</span> are the unknown quantities, and <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>
+are given. Thus we can estimate <span class="math inline">\(c\)</span> and <span class="math inline">\(d\)</span> by fitting
+a linear model with two inputs, <span class="math inline">\(x_i^2\)</span> and <span class="math inline">\(x_i^3\)</span>
+and one output <span class="math inline">\(y_i + x_i - 1\)</span>. The model does not include
+an intercept.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>What is the design matrix in this situation?</li>
+</ol>
+<div class="myanswers">
+<p>Since there is no intercept, the design matrix is
+<span class="math display">\[\begin{equation*}
+  X = \begin{pmatrix}
+    x_1^2 &amp; x_1^3 \\
+    x_2^2 &amp; x_2^3 \\
+    \vdots &amp; \vdots \\
+    x_n^2 &amp; x_n^3 \\
+  \end{pmatrix}
+  \in \mathbb{R}^{n\times 2}.
 \end{equation*}\]</span></p>
 </div>
-<p>The value <span class="math inline">\(R^2_\mathrm{adj}\)</span> is always smaller than the <span class="math inline">\(R^2\)</span> value, and
-<span class="math inline">\(R^2_\mathrm{adj}\)</span> can be (slightly) negative.</p>
-<div class="example">
-<p><span id="exm:unlabeled-div-33" class="example"><strong>Example 8.3  </strong></span>The adjusted <span class="math inline">\(R^2\)</span> value for the stackloss data set
-can be found as follows:</p>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="S08-diagnostics.html#cb130-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(stackloss)</span>
-<span id="cb130-2"><a href="S08-diagnostics.html#cb130-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(stackloss) <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb130-3"><a href="S08-diagnostics.html#cb130-3" aria-hidden="true" tabindex="-1"></a>R.squared.adj <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> R.squared)</span>
-<span id="cb130-4"><a href="S08-diagnostics.html#cb130-4" aria-hidden="true" tabindex="-1"></a>R.squared.adj</span></code></pre></div>
-<pre><code>## [1] 0.8983258</code></pre>
-<p>We can also find this value near the bottom of the output of
-<code>summary(m)</code>, listed as <code>Adjusted R-squared</code>.</p>
 </div>
-<div class="example">
-<p><span id="exm:unlabeled-div-34" class="example"><strong>Example 8.4  </strong></span>As suggested in example <a href="S08-diagnostics.html#exm:stackloss-plot">8.1</a>, we may want to
-include a new quadratic term in the stackloss data set:</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="S08-diagnostics.html#cb132-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> . <span class="sc">+</span> <span class="fu">I</span>(Water.Temp<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> stackloss)</span>
-<span id="cb132-2"><a href="S08-diagnostics.html#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = stack.loss ~ . + I(Water.Temp^2), data = stackloss)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -4.1217 -1.5205 -0.3091  0.9753  6.0554 
-## 
-## Coefficients:
-##                 Estimate Std. Error t value Pr(&gt;|t|)   
-## (Intercept)     57.73727   46.08487   1.253  0.22826   
-## Air.Flow         0.53683    0.14708   3.650  0.00216 **
-## Water.Temp      -7.62030    4.10441  -1.857  0.08188 . 
-## Acid.Conc.      -0.09697    0.14371  -0.675  0.50946   
-## I(Water.Temp^2)  0.21224    0.09738   2.179  0.04459 * 
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 2.936 on 16 degrees of freedom
-## Multiple R-squared:  0.9334, Adjusted R-squared:  0.9167 
-## F-statistic: 56.02 on 4 and 16 DF,  p-value: 3.293e-09</code></pre>
-<p>As expected, the <span class="math inline">\(R^2\)</span> value has increased here (from 0.9136 to 0.9334).
-Since the adjusted <span class="math inline">\(R^2\)</span> value has also increased (from 0.8983 to 0.9167),
-the extended model may be better than the original model.</p>
+<div class="subq">
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Why can <em>linear</em> regression be used, despite the presence
+of the <em>non-linear</em> terms <span class="math inline">\(x^2\)</span> and <span class="math inline">\(x^3\)</span>?</li>
+</ol>
+<div class="myanswers">
+<p>A linear model is appropriate, because the response depends
+on the unknown coefficients <span class="math inline">\(c\)</span> and <span class="math inline">\(d\)</span> in a linear way: <span class="math inline">\(c\)</span> and <span class="math inline">\(d\)</span>
+are only multiplied by known constants, and there are no non-linear
+functions of <span class="math inline">\(c\)</span> and <span class="math inline">\(d\)</span> in the model.</p>
+</div>
+</div>
+</div>
+<div class="myq">
+<p><strong>11</strong> In this question we consider four different data sets, given by
+inputs <span class="math inline">\(x_i\)</span> and responses <span class="math inline">\(y_i\)</span> for <span class="math inline">\(i \in \{1, 2, 3, 4\}\)</span>.</p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Based on the following plots, discuss model fit of each model.
+Describe all relevant features of the plots.
+Describe any problems with the model fit you find.</li>
+</ol>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="P03.html#cb169-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">2</span>))</span>
+<span id="cb169-2"><a href="P03.html#cb169-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb169-3"><a href="P03.html#cb169-3" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y1 <span class="sc">~</span> x1)</span>
+<span id="cb169-4"><a href="P03.html#cb169-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m1), <span class="fu">resid</span>(m1), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
+<span id="cb169-5"><a href="P03.html#cb169-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m1), <span class="at">main=</span><span class="cn">NULL</span>)</span>
+<span id="cb169-6"><a href="P03.html#cb169-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb169-7"><a href="P03.html#cb169-7" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y2 <span class="sc">~</span> x2)</span>
+<span id="cb169-8"><a href="P03.html#cb169-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m2), <span class="fu">resid</span>(m2), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
+<span id="cb169-9"><a href="P03.html#cb169-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m2), <span class="at">main=</span><span class="cn">NULL</span>)</span>
+<span id="cb169-10"><a href="P03.html#cb169-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb169-11"><a href="P03.html#cb169-11" aria-hidden="true" tabindex="-1"></a>    m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y3 <span class="sc">~</span> x3)</span>
+<span id="cb169-12"><a href="P03.html#cb169-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m3), <span class="fu">resid</span>(m3), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
+<span id="cb169-13"><a href="P03.html#cb169-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m3), <span class="at">main=</span><span class="cn">NULL</span>)</span>
+<span id="cb169-14"><a href="P03.html#cb169-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb169-15"><a href="P03.html#cb169-15" aria-hidden="true" tabindex="-1"></a>    m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y4 <span class="sc">~</span> x4)</span>
+<span id="cb169-16"><a href="P03.html#cb169-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m4), <span class="fu">resid</span>(m4), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
+<span id="cb169-17"><a href="P03.html#cb169-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m4), <span class="at">main=</span><span class="cn">NULL</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/four-models-1.png" width="672" /></p>
+<div class="myanswers">
+<p>We first note that the given R commands generate the plots along
+rows, so the first row of plots corresponds to model <code>m1</code>, the
+second row to model <code>m2</code>, and so on. The plots shown are
+residual plots in the left column, and Q-Q-plots in the right
+column.</p>
+<ul>
+<li><strong>m1:</strong> Samples in the residual plot on the left
+seem to follow an upside down parabola indicating a non-linear
+relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. Samples in the QQ-plot on the
+right seem to (approximately?) follow a straight line, so
+residuals seem to be (approximately?) normally distributed. No
+outliers are visible.</li>
+<li><strong>m2:</strong> Samples in the residual plot form a band
+centred at zero. Possibly very negative residuals are less
+frequent for fitted values <span class="math inline">\(\hat y_i &lt; 4\)</span>? No outliers are
+apparent. The samples in the QQ-plot seem to clearly fall on a
+straight line. Overall, model fit seems very good.</li>
+<li><strong>m3:</strong> The samples in the residual plot are
+centred around <span class="math inline">\(\hat\varepsilon= 0\)</span>, but the width of the spread
+increases as the fitted values increase, leasing to a triangular
+shape. This indicates that the variance of the residuals is not
+constant but increases with <span class="math inline">\(y\)</span>. Possibly, a model with
+multiplicative noise would be appropriate for these data. The
+QQ-plot shows an approximately straight line, but fit is not as
+good as for model <code>m2</code>.</li>
+<li><strong>m4:</strong> The samples in the residual plot form a
+horizontal band centred at <span class="math inline">\(\hat\varepsilon= 0\)</span>, no outliers are
+visible. The QQ-plot shows clearly that the residuals are not
+normally distributed: the samples form an “S-shaped” line,
+indicating that the errors have lighter tails than we would expect
+for a normal distribution.</li>
+</ul>
+</div>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Which of the four models has the best fit?</li>
+</ol>
+<div class="myanswers">
+<p>The data in <code>m1</code> seems to
+have a non-linear relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, the data
+in <code>m3</code> seems to be better modelled using multiplicative noise,
+and the residuals in <code>m4</code> seem not to be normally
+distributed. Thus, the model with the best fit is <code>m2</code>,
+because it is the only model which does not show any obvious
+problems.</p>
+</div>
+</div>
+</div>
+<div class="myq">
+<p><strong>12</strong> Using singular value decomposition,
+we can write a design matrix <span class="math inline">\(X\)</span> as <span class="math inline">\(X = U D V^\top\)</span>,
+where <span class="math inline">\(D\in\mathbb{R}^{(p+1)\times(p+1)}\)</span> is a diagonal matrix
+and <span class="math inline">\(U\in\mathbb{R}^{n\times(p+1)}\)</span> and <span class="math inline">\(V\in\mathbb{R}^{(p+1)\times(p+1)}\)</span> are matrices with orthonormal columns.
+Denote the diagonal elements of <span class="math inline">\(D\)</span> by <span class="math inline">\(\sigma_0(X), \ldots, \sigma_p(X) \geq 0\)</span>,
+and the columns of <span class="math inline">\(V\)</span> by <span class="math inline">\(v_0, \ldots, v_p\)</span>.
+Show that <span class="math inline">\(\| X v_k \| = \sigma_k(X)\)</span>.
+(We used this fact in example <a href="S10-multicoll.html#exm:multicollell">10.3</a>.)</p>
+<div class="myanswers">
+<p>Using the singular value decomposition of <span class="math inline">\(X\)</span>, we find
+<span class="math display">\[\begin{equation*}
+  \| X v_k \|
+  = \| U D V^\top v_k \|.
+\end{equation*}\]</span>
+For every vector <span class="math inline">\(x\)</span> we
+have <span class="math inline">\(\| U x \|^2 = x^\top U^\top U x = x^\top x = \| x \|^2\)</span>.
+Thus, multiplying a vector <span class="math inline">\(x\)</span> by <span class="math inline">\(U\)</span> does
+not change its length. Using this rule we find
+<span class="math display">\[\begin{equation*}
+  \| X v_k \|
+  = \| D V^\top v_k \|.
+\end{equation*}\]</span>
+Since the columns of <span class="math inline">\(V\)</span> are orthonormal, we have <span class="math inline">\(V^\top v_k = e_k\)</span>,
+where <span class="math inline">\(e_k = (0, \ldots, 1, \ldots, 0)\)</span> is the <span class="math inline">\(k\)</span>th standard basis vector.
+Thus we get
+<span class="math display">\[\begin{equation*}
+  \| X v_k \|
+  = \| D e_k \|
+  = \| \sigma_k(X) e_k \|
+  = \sigma_k(X) \| e_k \|
+  = \sigma_k(X)
+\end{equation*}\]</span>
+as required. This completes the proof.</p>
+</div>
 </div>
 
 </div>
-</div>
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="P02.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="S09-influence.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S10-multicoll.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
