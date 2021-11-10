@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 11 Improving the Model Fit | MATH3714 Linear Regression and Robustness</title>
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 11 Improving the Model Fit | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 11 Improving the Model Fit | MATH3714 Linear Regression and Robustness" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="P03.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH3714 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
+<ul>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#teams"><i class="fa fa-check"></i>Discussion Board</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
+<li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
+<li class="chapter" data-level="2.2" data-path="S02-multiple.html"><a href="S02-multiple.html#the-normal-equations"><i class="fa fa-check"></i><b>2.2</b> The Normal Equations</a></li>
+<li class="chapter" data-level="2.3" data-path="S02-multiple.html"><a href="S02-multiple.html#fitted-values"><i class="fa fa-check"></i><b>2.3</b> Fitted Values</a></li>
+<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.4</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html"><i class="fa fa-check"></i>Interlude: Linear Regression in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-fitting"><i class="fa fa-check"></i>Fitting a Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-model"><i class="fa fa-check"></i>Understanding the Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-predict"><i class="fa fa-check"></i>Making Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
+<li class="chapter" data-level="3" data-path="S03-cov.html"><a href="S03-cov.html"><i class="fa fa-check"></i><b>3</b> Random Vectors and Covariance</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="S03-cov.html"><a href="S03-cov.html#expectation"><i class="fa fa-check"></i><b>3.1</b> Expectation</a></li>
+<li class="chapter" data-level="3.2" data-path="S03-cov.html"><a href="S03-cov.html#sec:covariance"><i class="fa fa-check"></i><b>3.2</b> Covariance Matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="S03-cov.html"><a href="S03-cov.html#the-multivariate-normal-distribution"><i class="fa fa-check"></i><b>3.3</b> The Multivariate Normal Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="S04-model.html"><a href="S04-model.html"><i class="fa fa-check"></i><b>4</b> Properties of the Least Squares Estimate</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="S04-model.html"><a href="S04-model.html#mean-and-covariance"><i class="fa fa-check"></i><b>4.1</b> Mean and Covariance</a></li>
+<li class="chapter" data-level="4.2" data-path="S04-model.html"><a href="S04-model.html#hat-matrix"><i class="fa fa-check"></i><b>4.2</b> Properties of the Hat Matrix</a></li>
+<li class="chapter" data-level="4.3" data-path="S04-model.html"><a href="S04-model.html#Cochran"><i class="fa fa-check"></i><b>4.3</b> Cochran’s theorem</a></li>
+<li class="chapter" data-level="4.4" data-path="S04-model.html"><a href="S04-model.html#var-est-bias"><i class="fa fa-check"></i><b>4.4</b> Estimating the Error Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="S05-single.html"><a href="S05-single.html"><i class="fa fa-check"></i><b>5</b> Uncertainty for Individual Regression Coefficients</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="S05-single.html"><a href="S05-single.html#measuring-the-estimation-error"><i class="fa fa-check"></i><b>5.1</b> Measuring the Estimation Error</a></li>
+<li class="chapter" data-level="5.2" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals"><i class="fa fa-check"></i><b>5.2</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="5.3" data-path="S05-single.html"><a href="S05-single.html#hypthesis-tests"><i class="fa fa-check"></i><b>5.3</b> Hypthesis Tests</a></li>
+<li class="chapter" data-level="5.4" data-path="S05-single.html"><a href="S05-single.html#r-experiments"><i class="fa fa-check"></i><b>5.4</b> R Experiments</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="S05-single.html"><a href="S05-single.html#fitting-the-model"><i class="fa fa-check"></i><b>5.4.1</b> Fitting the model</a></li>
+<li class="chapter" data-level="5.4.2" data-path="S05-single.html"><a href="S05-single.html#estimating-the-variance-of-the-error"><i class="fa fa-check"></i><b>5.4.2</b> Estimating the Variance of the Error</a></li>
+<li class="chapter" data-level="5.4.3" data-path="S05-single.html"><a href="S05-single.html#estimating-the-standard-errors"><i class="fa fa-check"></i><b>5.4.3</b> Estimating the Standard Errors</a></li>
+<li class="chapter" data-level="5.4.4" data-path="S05-single.html"><a href="S05-single.html#hypothesis-tests"><i class="fa fa-check"></i><b>5.4.4</b> Hypothesis tests</a></li>
+<li class="chapter" data-level="5.4.5" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals-1"><i class="fa fa-check"></i><b>5.4.5</b> Confidence Intervals</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html"><i class="fa fa-check"></i><b>6</b> Estimating Coefficients Simultaneously</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-dist"><i class="fa fa-check"></i><b>6.1</b> Linear Combinations of Coefficients</a></li>
+<li class="chapter" data-level="6.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-CI"><i class="fa fa-check"></i><b>6.2</b> Confidence Regions</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#result"><i class="fa fa-check"></i><b>6.2.1</b> Result</a></li>
+<li class="chapter" data-level="6.2.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#numerical-experiments"><i class="fa fa-check"></i><b>6.2.2</b> Numerical Experiments</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-test"><i class="fa fa-check"></i><b>6.3</b> Hypothesis Tests</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html"><i class="fa fa-check"></i>Interlude: Loading Data into R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-csv-files"><i class="fa fa-check"></i>Importing CSV Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-microsoft-excel-files"><i class="fa fa-check"></i>Importing Microsoft Excel Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#checking-the-imported-data"><i class="fa fa-check"></i>Checking the Imported Data</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#common-problems"><i class="fa fa-check"></i>Common Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="S07-examples.html"><a href="S07-examples.html"><i class="fa fa-check"></i><b>7</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="S07-examples.html"><a href="S07-examples.html#simple-confidence-interval"><i class="fa fa-check"></i><b>7.1</b> Simple Confidence Interval</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles"><i class="fa fa-check"></i><b>7.1.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.1.2" data-path="S07-examples.html"><a href="S07-examples.html#from-the-lm-output"><i class="fa fa-check"></i><b>7.1.2</b> From the <code>lm()</code> Output</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="S07-examples.html"><a href="S07-examples.html#confidence-intervals-for-the-mean"><i class="fa fa-check"></i><b>7.2</b> Confidence Intervals for the Mean</a></li>
+<li class="chapter" data-level="7.3" data-path="S07-examples.html"><a href="S07-examples.html#testing-a-single-coefficient"><i class="fa fa-check"></i><b>7.3</b> Testing a Single Coefficient</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-1"><i class="fa fa-check"></i><b>7.3.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.3.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-i"><i class="fa fa-check"></i><b>7.3.2</b> Using the <code>lm()</code> Output, I</a></li>
+<li class="chapter" data-level="7.3.3" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-ii"><i class="fa fa-check"></i><b>7.3.3</b> Using the <code>lm()</code> Output, II</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="S07-examples.html"><a href="S07-examples.html#testing-multiple-coefficents"><i class="fa fa-check"></i><b>7.4</b> Testing Multiple Coefficents</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-2"><i class="fa fa-check"></i><b>7.4.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.4.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output"><i class="fa fa-check"></i><b>7.4.2</b> Using the <code>lm()</code> output</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P02.html"><a href="P02.html"><i class="fa fa-check"></i>Problem Sheet 2</a></li>
+<li class="chapter" data-level="8" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html"><i class="fa fa-check"></i><b>8</b> Regression Diagnostics</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#plots"><i class="fa fa-check"></i><b>8.1</b> Diagnostic Plots</a></li>
+<li class="chapter" data-level="8.2" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#R-squared"><i class="fa fa-check"></i><b>8.2</b> The Coefficient of Multiple Determination</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="S09-influence.html"><a href="S09-influence.html"><i class="fa fa-check"></i><b>9</b> The Influence of Observations</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting-observations"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#cooks-distance"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="S10-multicoll.html"><a href="S10-multicoll.html"><i class="fa fa-check"></i><b>10</b> Multicollinearity</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="S10-multicoll.html"><a href="S10-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>10.1</b> Consequences of Multicollinearity</a></li>
+<li class="chapter" data-level="10.2" data-path="S10-multicoll.html"><a href="S10-multicoll.html#detecting-multicollinearity"><i class="fa fa-check"></i><b>10.2</b> Detecting Multicollinearity</a></li>
+<li class="chapter" data-level="10.3" data-path="S10-multicoll.html"><a href="S10-multicoll.html#mitigations"><i class="fa fa-check"></i><b>10.3</b> Mitigations</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
+<li class="chapter" data-level="11" data-path="S11-improving.html"><a href="S11-improving.html"><i class="fa fa-check"></i><b>11</b> Improving the Model Fit</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="S11-improving.html"><a href="S11-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>11.1</b> Linearising the Mean</a></li>
+<li class="chapter" data-level="11.2" data-path="S11-improving.html"><a href="S11-improving.html#stabilising-the-variance"><i class="fa fa-check"></i><b>11.2</b> Stabilising the Variance</a></li>
+<li class="chapter" data-level="11.3" data-path="S11-improving.html"><a href="S11-improving.html#the-power-transform"><i class="fa fa-check"></i><b>11.3</b> The Power Transform</a></li>
+<li class="chapter" data-level="11.4" data-path="S11-improving.html"><a href="S11-improving.html#orthogonal-inputs"><i class="fa fa-check"></i><b>11.4</b> Orthogonal Inputs</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#vectors"><i class="fa fa-check"></i><b>A.1</b> Vectors</a></li>
+<li class="chapter" data-level="A.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-rules"><i class="fa fa-check"></i><b>A.2</b> Matrices</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#transpose"><i class="fa fa-check"></i><b>A.2.1</b> Transpose</a></li>
+<li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-vector Product</a></li>
+<li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-matrix Product</a></li>
+<li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-inverse"><i class="fa fa-check"></i><b>A.2.4</b> Matrix Inverse</a></li>
+<li class="chapter" data-level="A.2.5" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#orthogonal-matrices"><i class="fa fa-check"></i><b>A.2.5</b> Orthogonal Matrices</a></li>
+<li class="chapter" data-level="A.2.6" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.6</b> Positive Definite Matrices</a></li>
+<li class="chapter" data-level="A.2.7" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#idempotent"><i class="fa fa-check"></i><b>A.2.7</b> Idempotent Matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#eigenvalues"><i class="fa fa-check"></i><b>A.3</b> Eigenvalues</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="Sx2-probability.html"><a href="Sx2-probability.html"><i class="fa fa-check"></i><b>B</b> Probability Reminders</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="Sx2-probability.html"><a href="Sx2-probability.html#independence"><i class="fa fa-check"></i><b>B.1</b> Independence</a></li>
+<li class="chapter" data-level="B.2" data-path="Sx2-probability.html"><a href="Sx2-probability.html#chi-square"><i class="fa fa-check"></i><b>B.2</b> The Chi-Squared Distribution</a></li>
+<li class="chapter" data-level="B.3" data-path="Sx2-probability.html"><a href="Sx2-probability.html#t"><i class="fa fa-check"></i><b>B.3</b> The t-distribution</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH3714 Linear Regression and Robustness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="S11-improving" class="section level1" number="11">
+<h1><span class="header-section-number">Section 11</span> Improving the Model Fit</h1>
+<p>When we developed the theory for linear models, we used the following
+assumptions:</p>
+<ul>
+<li><p>Linear relationship between inputs and outputs: <span class="math inline">\(y \approx x^\top \beta\)</span></p></li>
+<li><p>Independence of errors: the <span class="math inline">\(\varepsilon_i = y_i - x_i^\top\beta\)</span> are independent
+of each other.</p></li>
+<li><p>Normally distributed errors: <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span> for all <span class="math inline">\(i\)</span>.
+In particular, the variance of the <span class="math inline">\(\varepsilon_i\)</span> does not depend on <span class="math inline">\(i\)</span>.</p></li>
+</ul>
+<p>The <a href="S08-diagnostics.html#plots">diagnostic plots</a> mentioned in section <a href="S08-diagnostics.html#plots">8.1</a>
+can often reveal if the data do not fit these modelling assumptions.
+In cases where
+the assumptions are violated, sometimes a linear model can still
+be used if the data is transformed first.</p>
+<div id="linearising-the-mean" class="section level2" number="11.1">
+<h2><span class="header-section-number">11.1</span> Linearising the Mean</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/H2U9y-8cX1Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>If the model mean is a non-linear function of the inputs, we
+can sometimes transform the variables to achieve a linear relationship.
+We list some examples of non-linear models which can be transformed
+to linear models:</p>
+<table style="width:100%;">
+<colgroup>
+<col width="51%" />
+<col width="25%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">nonlinear model</th>
+<th align="left">transformation</th>
+<th align="left">linear Model</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(y \approx \beta_0 x^{\beta_1}\)</span></td>
+<td align="left"><span class="math inline">\(x&#39;=\log(x)\)</span>, <span class="math inline">\(y&#39;=\log(y)\)</span></td>
+<td align="left"><span class="math inline">\(y&#39; \approx \log(\beta_0) + \beta_1 x&#39;\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(y \approx \beta_0 e^{\beta_1 x}\)</span></td>
+<td align="left"><span class="math inline">\(y&#39;=\log y\)</span></td>
+<td align="left"><span class="math inline">\(y&#39; \approx \log \beta_0 +\beta_1 x\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(y \approx \beta_0+\beta_1\log x\)</span></td>
+<td align="left"><span class="math inline">\(x&#39;=\log x\)</span></td>
+<td align="left"><span class="math inline">\(y \approx \beta_0+\beta_1 x&#39;\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(y \approx \frac{x}{\beta_0 x-\beta_1}\)</span></td>
+<td align="left"><span class="math inline">\(x&#39;=1/x\)</span>, <span class="math inline">\(y&#39;=1/y\)</span></td>
+<td align="left"><span class="math inline">\(y&#39; \approx \beta_0-\beta_1 x&#39;\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>In all such cases we also would need to check the residuals of the transformed
+models, to see whether linear regression can be used for the transformed model.</p>
+</div>
+<div id="stabilising-the-variance" class="section level2" number="11.2">
+<h2><span class="header-section-number">11.2</span> Stabilising the Variance</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pH9AK_unQzQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>The assumption of constant variance is a basic requirement of regression
+analysis. A common reason for the violation of this assumption is for the
+response variable <span class="math inline">\(y\)</span> to follow a distribution in which the variance depends
+on <span class="math inline">\(y\)</span> or <span class="math inline">\(\mathbb{E}(y)\)</span> and thus on <span class="math inline">\(x\)</span>.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-44" class="example"><strong>Example 11.1  </strong></span>The error in our model
+<span class="math display">\[\begin{equation*}
+  Y
+  = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
+  = x^\top \beta + \varepsilon
+\end{equation*}\]</span>
+is sometimes called <strong>additive error</strong>, since it is added to the model
+mean <span class="math inline">\(x^\top\beta\)</span>. Sometimes the error is instead given in percentages of the
+quantity of interest. In these cases we speak of <strong>multiplicative error</strong>.
+This can, for example, be modelled as
+<span class="math display">\[\begin{equation*}
+  Y
+  = \bigl(\beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p\bigr) \exp(\varepsilon)
+  = x^\top \beta \exp(\varepsilon).
+\end{equation*}\]</span>
+For <span class="math inline">\(\varepsilon= 0\)</span> we have <span class="math inline">\(\exp(0) = 1\)</span> and thus <span class="math inline">\(Y = x^\top \beta\)</span>. Similarly,
+for small <span class="math inline">\(\varepsilon\)</span> we have <span class="math inline">\(Y \approx x^\top \beta\)</span>, but the variance is now
+proportional to <span class="math inline">\((x^\top\beta)^2\)</span> instead of being constant. Also, since the
+exponential is nonlinear we only have <span class="math inline">\(\mathbb{E}(Y) \approx x^\top\beta\)</span> instead of
+strict equality.</p>
+</div>
+<p>Some commonly-used variance stabilising transformations are:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">variance</th>
+<th align="left">transformation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\sigma^2 = \text{constant}\)</span></td>
+<td align="left">no transformation</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\sigma^2 \propto y\)</span></td>
+<td align="left"><span class="math inline">\(y&#39; = \sqrt{y}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\sigma^2 \propto y^2\)</span></td>
+<td align="left"><span class="math inline">\(y&#39; = \log y\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\sigma^2 \propto y^3\)</span></td>
+<td align="left"><span class="math inline">\(y&#39; = \frac{1}{\sqrt{y}}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\sigma^2 \propto y^4\)</span></td>
+<td align="left"><span class="math inline">\(y&#39; = \frac{1}{y}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\sigma^2 \propto y(1-y)\)</span> where <span class="math inline">\(y \in [0,1]\)</span></td>
+<td align="left"><span class="math inline">\(y&#39; = \arcsin(\sqrt{y})\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Of course we do not have accurate knowledge of the relationship, but it can be
+diagnosed from the residual plots and transformations can be selected by
+experimenting with different choices. Any of these transformations will also
+affect the mean and we need to check the model fit for the transformed data, to
+see whether the transformed data can still reasonably be described by a linear
+model.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-45" class="example"><strong>Example 11.2  </strong></span>The last transformation in the table above corresponds to the case of binomial
+sampling: If <span class="math inline">\(x = p\)</span> and <span class="math inline">\(Y \sim B(n, p) / n\)</span> then we have <span class="math inline">\(\mathbb{E}(Y) = n p / n = x\)</span> and a linear model may be appropriate. But we also have <span class="math inline">\(\mathop{\mathrm{Var}}(Y) = p (1 - p) / n \propto \mathbb{E}(Y) \bigl( 1- \mathbb{E}(Y) \bigr)\)</span>, so the assumption of
+constant variance is violated.</p>
+<p>We try to apply the transformation suggested in the table. The
+function <span class="math inline">\(\arcsin\)</span> is the inverse of the sine function. In R
+this function is available as <code>asin()</code>. To get some intuition about
+this transformation, we plot the function <span class="math inline">\(y \mapsto \arcsin(\sqrt{y})\)</span>:</p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="S11-improving.html#cb170-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">l=</span><span class="dv">101</span>)</span>
+<span id="cb170-2"><a href="S11-improving.html#cb170-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y, <span class="fu">asin</span>(<span class="fu">sqrt</span>(y)), <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
+<span id="cb170-3"><a href="S11-improving.html#cb170-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(y <span class="sc">*</span> minute))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/arcsin-transform-1.png" width="672" /></p>
+<p>We can see that the transformation is approximately linear for most
+of the interval, but has a steeper slope near the edges. The effect of
+this is to increase the size of fluctations for small and large
+<span class="math inline">\(y\)</span>-values. We now consider residual plots for the original and transformed
+data, for a simulated dataset:</p>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="S11-improving.html#cb171-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb171-2"><a href="S11-improving.html#cb171-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb171-3"><a href="S11-improving.html#cb171-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">100</span>, x) <span class="sc">/</span> <span class="dv">100</span></span>
+<span id="cb171-4"><a href="S11-improving.html#cb171-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-5"><a href="S11-improving.html#cb171-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb171-6"><a href="S11-improving.html#cb171-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-7"><a href="S11-improving.html#cb171-7" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb171-8"><a href="S11-improving.html#cb171-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m1), <span class="fu">resid</span>(m1))</span>
+<span id="cb171-9"><a href="S11-improving.html#cb171-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-10"><a href="S11-improving.html#cb171-10" aria-hidden="true" tabindex="-1"></a>y.prime <span class="ot">&lt;-</span> <span class="fu">asin</span>(<span class="fu">sqrt</span>(y))</span>
+<span id="cb171-11"><a href="S11-improving.html#cb171-11" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x)</span>
+<span id="cb171-12"><a href="S11-improving.html#cb171-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m2), <span class="fu">resid</span>(m2))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/binomial-sampling-1.png" width="672" /></p>
+<p>The plot shows that the variance has indeed improved, while linearity
+has suffered (an S-shaped curve is now visible). Neither model is perfect and
+whether the transformation
+is benenficial or not depends on the particular circumstances.</p>
+</div>
+<div class="example">
+<p><span id="exm:electric" class="example"><strong>Example 11.3  </strong></span>An electric utility company is interested in developing a model relating the
+peak hour demand (<span class="math inline">\(y\)</span>, measured in kW) to total energy usage during the month
+(<span class="math inline">\(x\)</span>, in kWh). A scatter plot of the data is shown below:</p>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="S11-improving.html#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data at https://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/electric.dat</span></span>
+<span id="cb172-2"><a href="S11-improving.html#cb172-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/electric.dat&quot;</span>, <span class="at">header=</span><span class="cn">FALSE</span>)</span>
+<span id="cb172-3"><a href="S11-improving.html#cb172-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>V1, d<span class="sc">$</span>V2,</span>
+<span id="cb172-4"><a href="S11-improving.html#cb172-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;energy usage [kWh]&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;energy demand [kW]&quot;</span>)</span>
+<span id="cb172-5"><a href="S11-improving.html#cb172-5" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(V2 <span class="sc">~</span> ., <span class="at">data =</span> d)</span>
+<span id="cb172-6"><a href="S11-improving.html#cb172-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m1)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/electric1-1.png" width="672" /></p>
+<p>A linear relationship looks plausible, but we can see that the spread
+of points around the regression line widens as energy usage increases.
+this is more clearly visible in a residual plot:</p>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="S11-improving.html#cb173-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m1), <span class="fu">resid</span>(m1),</span>
+<span id="cb173-2"><a href="S11-improving.html#cb173-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residuals&quot;</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/electric2-1.png" width="672" /></p>
+<p>We try a transformation of the data to stabilise the variance.
+From the “wedge” shape on the left hand side of the plot, it is clear
+that the variance <span class="math inline">\(\sigma^2\)</span> increases as <span class="math inline">\(y\)</span> increases.
+Thus we can try transformations like <span class="math inline">\(y&#39; = \log(y)\)</span> or
+<span class="math inline">\(y&#39; = \sqrt{y}\)</span>. Taking the logarithm for illustration, we get</p>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="S11-improving.html#cb174-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(V2) <span class="sc">~</span> ., <span class="at">data =</span> d)</span>
+<span id="cb174-2"><a href="S11-improving.html#cb174-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>V1, <span class="fu">log</span>(d<span class="sc">$</span>V2),</span>
+<span id="cb174-3"><a href="S11-improving.html#cb174-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;energy usage [kWh]&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;log-transformed y&quot;</span>)</span>
+<span id="cb174-4"><a href="S11-improving.html#cb174-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m2)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/electric3-1.png" width="672" /></p>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="S11-improving.html#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m2), <span class="fu">resid</span>(m2),</span>
+<span id="cb175-2"><a href="S11-improving.html#cb175-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residuals for log-transform&quot;</span>)</span>
+<span id="cb175-3"><a href="S11-improving.html#cb175-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/electric4-1.png" width="672" /></p>
+<p>The spread of residuals now looks somewhat more reasonable.</p>
+</div>
+</div>
+<div id="the-power-transform" class="section level2" number="11.3">
+<h2><span class="header-section-number">11.3</span> The Power Transform</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/THWiYqTEIBU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>A family of transformations for the response variable <span class="math inline">\(y\)</span> is given by the
+<strong>power transform</strong>. These transformations only apply to strictly positive data,
+<em>i.e.</em> <span class="math inline">\(y &gt; 0\)</span>, and are defined by
+<span class="math display">\[\begin{equation*}
+  y^{(\lambda)}
+  = \begin{cases}
+      \frac{\displaystyle y^\lambda-1}{\displaystyle\lambda g^{\lambda-1}} &amp; \mbox{if $\lambda\ne 0$} \\
+      g\log y &amp; \mbox{if $\lambda=0$}
+    \end{cases}
+\end{equation*}\]</span>
+where <span class="math inline">\(g = (\prod_{i=1}^n y_i)^{1/n}\)</span> is the geometric mean.</p>
+<p>The geometric mean is a constant (it does not depend on <span class="math inline">\(i\)</span>) and is not needed
+for the power transform, but it is usually included to make values for
+different <span class="math inline">\(\lambda\)</span> more comparable. For <span class="math inline">\(\lambda = 1\)</span> the transform is <span class="math inline">\(y&#39; = y - 1\)</span>. This is a simple shift which has no effect on the fitted model, it just
+decreases the intercept by <span class="math inline">\(1\)</span> and leaves the residuals unchanged. Thus, this
+case is that same as applying no transformation.</p>
+<p>Using Taylor approximation on the numerator in the definition
+of <span class="math inline">\(y^{(\lambda)}\)</span> we get
+<span class="math display">\[\begin{equation*}
+  y^\lambda
+  = \exp\bigl( \log(y^\lambda) \bigr)
+  = \exp\bigl( \lambda \log(y) \bigr)
+  \approx 1 + \lambda\log(y) + O\Bigl(\bigl(\lambda\log(y)\bigr)^2\Bigr),
+\end{equation*}\]</span>
+where the <span class="math inline">\(O(\cdots)\)</span> stands for terms which are negligible as
+<span class="math inline">\(\lambda\)</span> converges to <span class="math inline">\(0\)</span>. Thus the formula given for <span class="math inline">\(\lambda \neq 0\)</span>
+converges to the case for <span class="math inline">\(\lambda = 0\)</span> as <span class="math inline">\(\lambda\)</span> converges to <span class="math inline">\(0\)</span>.
+This makes the transformation continuous as a function of <span class="math inline">\(\lambda\)</span>.</p>
+<p>A heuristic rule to find a range of <span class="math inline">\(\lambda\)</span> for which the power
+transform is appropriate is based on how the the residual sum of
+squares changes with <span class="math inline">\(\lambda\)</span>: Let
+<span class="math display">\[\begin{equation*}
+  r(\lambda)
+  = \sum_{i=1}^n \bigl( y^{(\lambda)}_i - \hat y^{(\lambda)}_i \bigr)^2,
+\end{equation*}\]</span>
+where <span class="math inline">\(\hat y^{(\lambda)}_i\)</span> denotes the fitted value for the model
+using the transformed data <span class="math inline">\(y^{(\lambda)}_i\)</span>. It is easy to plot
+this function numerically. We want to choose <span class="math inline">\(\lambda\)</span> close to
+where the function has its minimum. The heuristic rule is to consider
+all values of <span class="math inline">\(\lambda\)</span> with
+<span class="math display" id="eq:power-cutoff">\[\begin{equation}
+  r(\lambda)
+  \leq r(\lambda_\mathrm{min}) \Bigl( 1 + \frac{t_{n-p-1}(\alpha/2)^2}{n-p-1} \Bigr),
+      \tag{11.1}
+\end{equation}\]</span>
+where <span class="math inline">\(\lambda_\mathrm{min}\)</span> is the value of <span class="math inline">\(\lambda\)</span> where the residual
+sum of squares has its minimum and <span class="math inline">\(t_{n-p-1}(\alpha/2)\)</span> is the
+<span class="math inline">\((1-\alpha/2)\)</span>-quantile of the <span class="math inline">\(t(n-p-1)\)</span>-distribution. One can show that this
+is an approximate <span class="math inline">\((1-\alpha)\)</span> confidence interval for <span class="math inline">\(\lambda\)</span>. If we want to
+interpret the model, it is usually better to select a “simple” <span class="math inline">\(\lambda\)</span>,
+<em>e.g.</em> <span class="math inline">\(\lambda=0.5\)</span> rather than using the
+“optimal” value <span class="math inline">\(\lambda_\mathrm{min}\)</span>.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-46" class="example"><strong>Example 11.4  </strong></span>Continuing from example <a href="S11-improving.html#exm:electric">11.3</a> above, we can try a power
+transform for the data. We start by plotting <span class="math inline">\(r(\lambda)\)</span> as a function
+of <span class="math inline">\(\lambda\)</span>, together with the cutoff suggested by equation <a href="S11-improving.html#eq:power-cutoff">(11.1)</a>:</p>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="S11-improving.html#cb176-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> d<span class="sc">$</span>V1</span>
+<span id="cb176-2"><a href="S11-improving.html#cb176-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> d<span class="sc">$</span>V2</span>
+<span id="cb176-3"><a href="S11-improving.html#cb176-3" aria-hidden="true" tabindex="-1"></a>gm <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(y))) <span class="co"># more stable way to compute geometric mean</span></span>
+<span id="cb176-4"><a href="S11-improving.html#cb176-4" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">101</span>)</span>
+<span id="cb176-5"><a href="S11-improving.html#cb176-5" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(lambda))</span>
+<span id="cb176-6"><a href="S11-improving.html#cb176-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(lambda)) {</span>
+<span id="cb176-7"><a href="S11-improving.html#cb176-7" aria-hidden="true" tabindex="-1"></a>    li <span class="ot">&lt;-</span> lambda[i]</span>
+<span id="cb176-8"><a href="S11-improving.html#cb176-8" aria-hidden="true" tabindex="-1"></a>    y.prime <span class="ot">&lt;-</span> (y<span class="sc">^</span>li <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (li <span class="sc">*</span> gm<span class="sc">^</span>(li<span class="dv">-1</span>))</span>
+<span id="cb176-9"><a href="S11-improving.html#cb176-9" aria-hidden="true" tabindex="-1"></a>    mi <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x)</span>
+<span id="cb176-10"><a href="S11-improving.html#cb176-10" aria-hidden="true" tabindex="-1"></a>    rss[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(mi)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb176-11"><a href="S11-improving.html#cb176-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb176-12"><a href="S11-improving.html#cb176-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lambda, rss, <span class="at">type=</span><span class="st">&quot;l&quot;</span>)</span>
+<span id="cb176-13"><a href="S11-improving.html#cb176-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb176-14"><a href="S11-improving.html#cb176-14" aria-hidden="true" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">min</span>(rss) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.971</span>, <span class="dv">51</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="dv">51</span>)</span>
+<span id="cb176-15"><a href="S11-improving.html#cb176-15" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> cutoff)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/electric5-1.png" width="672" /></p>
+<p>This suggests the range of reasonable <span class="math inline">\(\lambda\)</span> values to be</p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="S11-improving.html#cb177-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(lambda[<span class="fu">which</span>(rss <span class="sc">&lt;=</span> cutoff)])</span></code></pre></div>
+<pre><code>## [1] 0.307 0.784</code></pre>
+<p>The value <span class="math inline">\(\lambda = 1\)</span> (no transformation) is not contained in the interval,
+suggesting that a transformation may be helpful.
+Choosing a “simple” value inside the interval and close to the minimum,
+we try <span class="math inline">\(\lambda = 0.5\)</span>. This leads to the following transformation:
+<span class="math display">\[\begin{equation*}
+  y&#39;
+  = 2\sqrt{g} (\sqrt{y}-1).
+\end{equation*}\]</span>
+Up to the shift and scaling, this just takes the square root of the data.</p>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="S11-improving.html#cb179-1" aria-hidden="true" tabindex="-1"></a>y.prime <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(y)</span>
+<span id="cb179-2"><a href="S11-improving.html#cb179-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y.prime,</span>
+<span id="cb179-3"><a href="S11-improving.html#cb179-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;energy usage [kWh]&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;sqrt-transformed y&quot;</span>)</span>
+<span id="cb179-4"><a href="S11-improving.html#cb179-4" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x)</span>
+<span id="cb179-5"><a href="S11-improving.html#cb179-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m3)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/electric6-1.png" width="672" /></p>
+<p>To see whether the variance of the residuals has improved, we consider
+a residual plot:</p>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="S11-improving.html#cb180-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m3), <span class="fu">resid</span>(m3),</span>
+<span id="cb180-2"><a href="S11-improving.html#cb180-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residuals for sqrt-transform&quot;</span>)</span>
+<span id="cb180-3"><a href="S11-improving.html#cb180-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/electric7-1.png" width="672" /></p>
+<p>We see that the spread of the residuals has indeed improved, when compared to
+fitting the original data.</p>
+</div>
+</div>
+<div id="orthogonal-inputs" class="section level2" number="11.4">
+<h2><span class="header-section-number">11.4</span> Orthogonal Inputs</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/U14KbPSrSeQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>So far, this chapter has been concerned with what to do when there are problems
+with a given model. In some cases we have the chance to “plan ahead” so that
+problems are less likely to occur.</p>
+<p>Collinearity occurs when there is high correlation amongst the explanatory
+variables. In some situations we have the opportunity to <em>choose</em> the design
+space <span class="math inline">\(X\)</span>. In these cases, there are advantages in creating design variables
+which are orthogonal, thus avoiding or reducing problems caused by
+collinearity.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-47" class="example"><strong>Example 11.5  </strong></span>Suppose we have observations <span class="math inline">\((x_i, y_i)\)</span> for
+<span class="math inline">\(i\in \{1, \ldots, n\}\)</span> and we want to fit a polynomial model of the form
+<span class="math display">\[\begin{equation*}
+  Y_i
+  = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \cdots + \beta_p x_i^p + \varepsilon_i.
+\end{equation*}\]</span></p>
+<p>If we use the actual <span class="math inline">\(x_i\)</span> to create new variables, say <span class="math inline">\(x_j = x^j\)</span>, then
+severe multicollinearity can arise. For example, for
+<span class="math display">\[\begin{equation*}
+  x
+  = (10000, 10001, \ldots, 10010),
+\end{equation*}\]</span>
+we have
+<span class="math display">\[\begin{equation*}
+  x^2
+  = 10^8 + (0, 20001, 40004, \ldots, 200100)
+\end{equation*}\]</span>
+and <span class="math inline">\(\mathop{\mathrm{cor}}(x, x^2) \approx 1 - 9.74\times 10^{-9}\)</span>:</p>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="S11-improving.html#cb181-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">10000</span>, <span class="dv">10010</span>)</span>
+<span id="cb181-2"><a href="S11-improving.html#cb181-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(x, x<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="S11-improving.html#cb183-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">cor</span>(x, x<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 9.740257e-09</code></pre>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="S11-improving.html#cb185-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x, x<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb185-2"><a href="S11-improving.html#cb185-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 1.47006e+23</code></pre>
+<p>The first result, for the correlation, is shown as <span class="math inline">\(1\)</span> due to rounding.
+The internal number representation of the correlation is actually less than
+<span class="math inline">\(1\)</span> and we can print the difference <code>1 - cor(x, x^2)</code> to get the result
+stated above. Since this difference is close to <span class="math inline">\(0\)</span> (instead of close to <span class="math inline">\(1\)</span>),
+R can now use scientific notation to show the very small result. The final line
+of the output shows that the condition number is greater than <span class="math inline">\(10^{23}\)</span>,
+so the problem indeed suffers severe multicollinearity.</p>
+<p>We can greatly improve the conditioning of the problem
+by using the centred data <span class="math inline">\(x^\ast_i = x_i - \bar x\)</span> before taking powers:</p>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="S11-improving.html#cb187-1" aria-hidden="true" tabindex="-1"></a>x.star <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb187-2"><a href="S11-improving.html#cb187-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(x.star, x.star<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="S11-improving.html#cb189-1" aria-hidden="true" tabindex="-1"></a>X.star <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x.star, x.star<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb189-2"><a href="S11-improving.html#cb189-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(<span class="fu">t</span>(X.star) <span class="sc">%*%</span> X.star, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 408.7796</code></pre>
+<p>Now the correlation between <span class="math inline">\(x^\ast\)</span> and <span class="math inline">\((x^\ast)^2\)</span> is exactly zero,
+and the condition number is much improved.</p>
+</div>
+<p>A more systematic approach to choose input variables for polynomial regression
+is to use <strong>orthogonal polynomials</strong> of the form
+<span class="math display">\[\begin{align*}
+  \psi_0(x) &amp;=  1 \\
+  \psi_1(x) &amp;=  \alpha_{1,1} x + \alpha_{1,0} \\
+  \psi_2(x) &amp;=  \alpha_{2,2} x^2 + \alpha_{2,1} x + \alpha_{2,0} \\
+  &amp;\vdots \\
+\end{align*}\]</span>
+where the coefficients <span class="math inline">\(\alpha_{j,k}\)</span> are chosen such that
+<span class="math display">\[\begin{equation*}
+  \sum_{i=1}^n \psi_j(x_i) \psi_k(x_i)
+  = 0
+\end{equation*}\]</span>
+for all <span class="math inline">\(j, k \in \{0, \ldots, p\}\)</span> with <span class="math inline">\(j \neq k\)</span>. We can then use
+input variables
+<span class="math display">\[\begin{equation*}
+  x_j = \psi_j(x)
+\end{equation*}\]</span>
+for <span class="math inline">\(j \in \{0, \ldots, p\}\)</span> to get a design matrix <span class="math inline">\(X\)</span> such that
+<span class="math display">\[\begin{align*}
+  (X^\top X)_{jk}
+  &amp;= \sum_{i=1}^n X_{ij} X_{ik} \\
+  &amp;= \sum_{i=1}^n \psi_j(x_i) \psi_k(x_i) \\
+  &amp;= 0
+\end{align*}\]</span>
+for all <span class="math inline">\(j, k \in \{0, \ldots, p\}\)</span> with <span class="math inline">\(j \neq k\)</span>. In this case the columns
+of <span class="math inline">\(X\)</span> are orthogonal and there is no multicollinearity.
+Our model is now
+<span class="math display">\[\begin{align*}
+  y_i
+  &amp;= \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i \\
+  &amp;= \beta_0 \psi_0(x_i) + \beta_1 \psi_1(x_i) + \beta_2 \psi_2(x_i) + \cdots + \beta_p \psi_p(x_i) + \varepsilon_i.
+\end{align*}\]</span>
+Since <span class="math inline">\(X^\top X\)</span> is diagonal, the inverse of this matrix is trivial to
+compute. If we denote the diagonal elements by
+<span class="math display">\[\begin{equation*}
+  A_j
+  = (X^\top X)_{jj},
+\end{equation*}\]</span>
+then <span class="math inline">\(X^\top X = \mathrm{diag}(A_0, \ldots, A_p)\)</span> and
+<span class="math inline">\((X^\top X)^{-1} = \mathrm{diag}(1/A_0, \ldots, 1/A_p)\)</span>. Thus we get
+<span class="math display">\[\begin{align*}
+  \hat\beta_j
+  &amp;= \bigl( (X^\top X)^{-1} X^\top y \bigr)_j \\
+  &amp;= \frac{1}{A_j} \sum_{i=1}^n \psi_j(x_i) y_i
+\end{align*}\]</span>
+and similarly, using equation <a href="S04-model.html#eq:beta-hat-i">(4.2)</a>, we find
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Var}}( \hat\beta_j )
+  = \frac{\sigma^2}{A_j}.
+\end{equation*}\]</span></p>
+<p>An additional advantage of this approach is, that we can add another term,
+<span class="math inline">\(\psi_{p+1}(x)\)</span>, without changing the previous estimates of the regression
+coefficients. Since <span class="math inline">\(X^\top X\)</span> is diagonal, the change will not affect the
+estimates <span class="math inline">\(\hat\beta_j\)</span> for <span class="math inline">\(j\in \{0, \ldots, p\}\)</span> (but the change will affect
+<span class="math inline">\(\sigma^2\)</span>).</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-48" class="example"><strong>Example 11.6  </strong></span>In R we can create specific orthogonal entries for polynomial regression using
+the command <code>poly(x, p)</code>. The output of this function is a matrix
+with elements <span class="math inline">\(\psi_j(x_i)\)</span> for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span> (omitting the intercept)
+and <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>. Continuing from the example above we find</p>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="S11-improving.html#cb191-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">10000</span>, <span class="dv">10010</span>)</span>
+<span id="cb191-2"><a href="S11-improving.html#cb191-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, <span class="fu">poly</span>(x, <span class="dv">2</span>)) <span class="co"># manually prepend a column of ones</span></span>
+<span id="cb191-3"><a href="S11-improving.html#cb191-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="dv">5</span>)</span></code></pre></div>
+<pre><code>##      1 2
+##   11 0 0
+## 1  0 1 0
+## 2  0 0 1</code></pre>
+<p>Different from our previous approach, the last two columns are now also
+orthogonal to the columns of ones. This further improves the conditioning
+of the design matrix:</p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="S11-improving.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(X, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 3.316625</code></pre>
+<p>We see that the use of orthogonal polynomials entirely eliminated any
+problems with multicollinearity.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-49" class="example"><strong>Example 11.7  </strong></span>To illustrate the use of <code>poly()</code> for fitting a polynomial model to
+real data, we use the built-in <code>cars</code> dataset in R. This dataset
+contains historic data (from the 1920s) about the speed of cars (in mph) and
+the distances taken to stop (in ft). We first fit a second order polynomial
+to the data using the naive approach:</p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="S11-improving.html#cb195-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed <span class="sc">+</span> <span class="fu">I</span>(speed<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> cars)</span>
+<span id="cb195-2"><a href="S11-improving.html#cb195-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cars)</span>
+<span id="cb195-3"><a href="S11-improving.html#cb195-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">predict</span>(m1, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">speed=</span><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="at">l=</span><span class="dv">31</span>))),</span>
+<span id="cb195-4"><a href="S11-improving.html#cb195-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/cars-1.png" width="672" /></p>
+<p>Checking the condition number, we see that there is severe multicollinearity:</p>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="S11-improving.html#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m1, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 2160.976</code></pre>
+<p>We can also see that none of the coefficients is significantly different from
+zero, while the F-test rejects the hypothesis that the vector of all regression
+coefficients is zero. We have seen previously that this effect can be an
+indication of multicollinearity.</p>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="S11-improving.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = dist ~ speed + I(speed^2), data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -28.720  -9.184  -3.188   4.628  45.152 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)  2.47014   14.81716   0.167    0.868
+## speed        0.91329    2.03422   0.449    0.656
+## I(speed^2)   0.09996    0.06597   1.515    0.136
+## 
+## Residual standard error: 15.18 on 47 degrees of freedom
+## Multiple R-squared:  0.6673, Adjusted R-squared:  0.6532 
+## F-statistic: 47.14 on 2 and 47 DF,  p-value: 5.852e-12</code></pre>
+<p>We can fit an improved model using orthogonal polynomials. Since <code>lm()</code>
+automatically adds the intercept, we don’t need to prepend a column of ones to
+the <code>poly()</code> output here.</p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="S11-improving.html#cb200-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> <span class="fu">poly</span>(speed, <span class="dv">2</span>), <span class="at">data =</span> cars)</span>
+<span id="cb200-2"><a href="S11-improving.html#cb200-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m2)</span></code></pre></div>
+<pre><code>## [1] 6.670129</code></pre>
+<p>We see that in the new model there are no problems with multicollinearity any
+more. The new model also has coefficients which are significantly different
+from zero:</p>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="S11-improving.html#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = dist ~ poly(speed, 2), data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -28.720  -9.184  -3.188   4.628  45.152 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       42.980      2.146  20.026  &lt; 2e-16 ***
+## poly(speed, 2)1  145.552     15.176   9.591 1.21e-12 ***
+## poly(speed, 2)2   22.996     15.176   1.515    0.136    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 15.18 on 47 degrees of freedom
+## Multiple R-squared:  0.6673, Adjusted R-squared:  0.6532 
+## F-statistic: 47.14 on 2 and 47 DF,  p-value: 5.852e-12</code></pre>
+</div>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>We have seen different transformations which can be used
+to transform a nonlinear model into a linear one.</li>
+<li>We have discussed transformations which can stabilise the
+variance of the errors in the model.</li>
+<li>We have seen how orthogonal polynomials can be used to avoid
+multicollinearity in polynomial regression.</li>
+</ul>
+</div>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="P03.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH3714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

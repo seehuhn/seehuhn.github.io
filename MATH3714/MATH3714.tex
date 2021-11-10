@@ -149,11 +149,13 @@
 }
 \newcommand{\argmin}{\mathop{\mathrm{arg\,min}}\limits}
 \newcommand{\bias}{\mathop{\mathrm{bias}}}
+\newcommand{\cor}{\mathop{\mathrm{cor}}}
 \newcommand{\Cov}{\mathop{\mathrm{Cov}}}
 \newcommand{\CN}{\mathcal{N}}
 \newcommand{\ds}{\displaystyle}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\eps}{\varepsilon}
+\newcommand{\MSE}{\mathop{\mathrm{MSE}}\nolimits}
 \renewcommand{\phi}{\varphi}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\rank}{\mathop{\mathrm{rank}}}
@@ -736,7 +738,7 @@ of attributes, excluding \texttt{mpg}). The values \(y_1, \ldots, y_{32}\) are l
 in the first column of the table, the values \(x_{i,1}\) for \(i \in \{1, \ldots, 32\}\) are shown in the second column, and the values \(x_{i,10}\) are shown in
 the last column.
 
-In this data set it is easy to make scatter plots which show how a single
+In this dataset it is easy to make scatter plots which show how a single
 input affects the output. For example, we can show how the engine power
 affects fuel consumption:
 
@@ -1085,7 +1087,7 @@ the same result as above:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 5.329071e-13
+## [1] 3.410605e-13
 \end{verbatim}
 
 This results \texttt{5.329071e-13} stands for the number \(5.329071 \cdot 10^{-13}\),
@@ -1206,7 +1208,7 @@ model.
   columns of a data frame, we can use the \texttt{data=...} argument to \texttt{lm()} to
   specify this data frame and then just use the column names to specify the
   regression model. For example, the
-  \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} data set}
+  \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} dataset}
   built into R consists of a data frame with columns \texttt{Air.Flow},
   \texttt{Water.Temp}, \texttt{Acid.Conc.}, \texttt{stack.loss}. To predict
   \texttt{stackloss\$stack.loss} from \texttt{stackloss\$Air.Flow} we can write
@@ -1238,7 +1240,7 @@ The output of the \texttt{lm()} function is an R object which can be used the ex
 information about the fitted model. A good way to work with this object is to
 store it in a variable and then use commands like the ones listed below to work
 with this variable. For example, the following R command fits a model for the
-\texttt{stackloss} data set and stores it in the variable~\texttt{m}:
+\texttt{stackloss} dataset and stores it in the variable~\texttt{m}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1423,7 +1425,7 @@ command:
 \end{Highlighting}
 \end{Shaded}
 
-As a second example, for the \texttt{stackloss} data set, the following
+As a second example, for the \texttt{stackloss} dataset, the following
 commands can be used to predict \texttt{stack.loss} for two new
 \(x\)-values:
 
@@ -1598,7 +1600,7 @@ completes the proof.
 
 \end{myanswers}
 
-\textbf{3} For the \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} data set}
+\textbf{3} For the \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} dataset}
 built into R, predict a value for \texttt{stack.loss} when the inputs are
 \texttt{Air.Flow\ =\ 60}, \texttt{Water.Temp\ =\ 21} and \texttt{Acid.Conc\ =\ 87}.
 
@@ -2593,7 +2595,7 @@ here has two main advantages:
 
 \begin{lemma}
 \protect\hypertarget{lem:beta-i-follows-t}{}\label{lem:beta-i-follows-t}Assume that the data follows the model~\eqref{eq:lmstats}.
-Then \(T \sim t_{n-p-1}\), \emph{i.e.} \(T\) follows a
+Then \(T \sim t(n-p-1)\), \emph{i.e.} \(T\) follows a
 \(t\)-distribution with \(n-p-1\) degrees of freedom (see appendix \ref{t}).
 \end{lemma}
 
@@ -2612,7 +2614,7 @@ We have
 where \(Z = (\hat\beta_i - \beta_i) / \sqrt{\sigma^2 C_{ii}} \sim \mathcal{N}(0,1)\)
 and \(Y = (n - p - 1) \hat\sigma^2/\sigma^2 \sim \chi^2(n-p-1)\)
 are independent, by lemma~\ref{lem:hat-beta-sigma-indep}.
-Thus, \(T \sim t_{n-p-1}\) as required.
+Thus, \(T \sim t(n-p-1)\) as required.
 \end{proof}
 
 The quantity \(\sqrt{\sigma^2 C_{ii}}\) is sometimes called the
@@ -3113,7 +3115,7 @@ Now the claim follows, since \(f_{k,n-p-1}(\alpha)\) is the
 \hypertarget{numerical-experiments}{%
 \subsubsection{Numerical Experiments}\label{numerical-experiments}}
 
-We start by fitting a linear model to the \texttt{stackloss} data set as
+We start by fitting a linear model to the \texttt{stackloss} dataset as
 before:
 
 \begin{Shaded}
@@ -3601,14 +3603,14 @@ The following commands can be used to get a quick overview over the data:
   \texttt{head(x)} shows the first few rows of the data.
 \end{itemize}
 
-Every time you import a data set into R, you should use some
+Every time you import a dataset into R, you should use some
 of these commands to check that everything went well.
 In case you discover problems, you should either fix the data file
 (\emph{e.g.}~using Microsoft Excel) or by using the correct options
 for the \texttt{read.csv()} command.
 
 \begin{example}
-Continuing with the data set from example above, we can try the following
+Continuing with the dataset from example above, we can try the following
 commands: We first check that the data has plausible dimensions:
 
 \begin{Shaded}
@@ -3644,7 +3646,7 @@ first few values. The ``data type'' is a good indicator to detect
 problems; it should read \texttt{int} for integer valued numeric data,
 \texttt{num} for all other numeric data, and \texttt{Factor} for
 attribute data. For attribute data, the range of observed values is
-also shown. For our data set, we see that the fields \texttt{\$gender},
+also shown. For our dataset, we see that the fields \texttt{\$gender},
 \texttt{\$handedness} and \texttt{\$R.skills} are represented as text data (type \texttt{chr})
 instead of categorical data. To fix this, we re-import the data
 using the \texttt{stringsAsFactors=TRUE} option:
@@ -3956,7 +3958,7 @@ Then we can solve the inequality \(|T| \leq t_{n-p-1}(\alpha/2)\) for
 \end{equation*}
 
 We illustrate this using a numerical example.
-For the \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} data set}
+For the \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} dataset}
 with input values \texttt{Air.Flow\ =\ 60}, \texttt{Water.Temp\ =\ 21} and \texttt{Acid.Conc\ =\ 87},
 we can get the following results:
 
@@ -4397,7 +4399,7 @@ of the first few questions follow easily:
 \end{verbatim}
 
 Either using this output, or using R to further inspect the built-in
-\texttt{stackloss} data set, find a \(99\%\)-confidence interval for the
+\texttt{stackloss} dataset, find a \(99\%\)-confidence interval for the
 parameter \(\beta_\mathtt{Acid.Conc.}\).
 
 \begin{myanswers}
@@ -4408,7 +4410,7 @@ coefficient~\(\beta_j\) is given by
   = \Bigl[ \hat\beta_j - t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}},
         \hat\beta_j + t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}} \Bigr],
 \end{equation*}
-where \(t_{n-p-1}\) is a quantile of the \(t\)-distribution,
+where \(t_{n-p-1}\) is the \((1-\alpha/2)\)-quantile of the \(t\)-distribution,
 \(C_{jj} = (X^\top X)^{-1}_{jj}\), and \(X\) is the design matrix.
 
 We can read off the required values for computing the confidence
@@ -4787,7 +4789,7 @@ The value \(R^2_\mathrm{adj}\) is always smaller than the \(R^2\) value, and
 \(R^2_\mathrm{adj}\) can be (slightly) negative.
 
 \begin{example}
-The adjusted \(R^2\) value for the stackloss data set
+The adjusted \(R^2\) value for the stackloss dataset
 can be found as follows:
 
 \begin{Shaded}
@@ -4809,7 +4811,7 @@ We can also find this value near the bottom of the output of
 
 \begin{example}
 As suggested in example~\ref{exm:stackloss-plot}, we may want to
-include a new quadratic term in the stackloss data set:
+include a new quadratic term in the stackloss dataset:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4976,7 +4978,7 @@ lemma~\ref{lem:low-rank-inverse} we get
   &= \hat\beta
                + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I \hat\beta \\
     &\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} (I - H_{II}) y_I \\
-    &\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} H_{II} y \\
+    &\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} H_{II} y_I \\
   &= \hat\beta
                + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I \hat\beta \\
     &\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} y_I \\
@@ -5682,7 +5684,7 @@ be addressed:
 You should attempt all these questions and write up your solutions in advance
 of your workshop in week~7 where the answers will be discussed.
 
-\textbf{9} Consider the following data set. Our aim is to predict \(y\) from the
+\textbf{9} Consider the following dataset. Our aim is to predict \(y\) from the
 variables \(x_1\), \(x_2\) and \(x_3\).
 
 \begin{longtable}[]{@{}rrrrr@{}}
@@ -5784,7 +5786,7 @@ coefficient~\(\beta_j\) is given by
   = \Bigl[ \hat\beta_j - t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}},
        \hat\beta_j + t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}} \Bigr],
 \end{equation*}
-where \(t_{n-p-1}\) is a quantile of the \(t\)-distribution,
+where \(t_{n-p-1}\) is the \((1-\alpha/2)\)-quantile of the \(t\)-distribution,
 \(C_{jj} = (X^\top X)^{-1}_{jj}\), and \(X\) is the design matrix.
 
 We can read off the required values for computing the confidence
@@ -5903,7 +5905,7 @@ functions of \(c\) and \(d\) in the model.
 
 \end{myanswers}
 
-\textbf{11} In this question we consider four different data sets, given by
+\textbf{11} In this question we consider four different datasets, given by
 inputs \(x_i\) and responses \(y_i\) for \(i \in \{1, 2, 3, 4\}\).
 
 \begin{enumerate}
@@ -6037,6 +6039,692 @@ Thus we get
 as required. This completes the proof.
 
 \end{myanswers}
+
+\clearpage
+
+\hypertarget{S11-improving}{%
+\section{Improving the Model Fit}\label{S11-improving}}
+
+When we developed the theory for linear models, we used the following
+assumptions:
+
+\begin{itemize}
+\item
+  Linear relationship between inputs and outputs: \(y \approx x^\top \beta\)
+\item
+  Independence of errors: the \(\varepsilon_i = y_i - x_i^\top\beta\) are independent
+  of each other.
+\item
+  Normally distributed errors: \(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\) for all \(i\).
+  In particular, the variance of the \(\varepsilon_i\) does not depend on~\(i\).
+\end{itemize}
+
+The \protect\hyperlink{plots}{diagnostic plots} mentioned in section~\ref{plots}
+can often reveal if the data do not fit these modelling assumptions.
+In cases where
+the assumptions are violated, sometimes a linear model can still
+be used if the data is transformed first.
+
+\hypertarget{linearising-the-mean}{%
+\subsection{Linearising the Mean}\label{linearising-the-mean}}
+
+If the model mean is a non-linear function of the inputs, we
+can sometimes transform the variables to achieve a linear relationship.
+We list some examples of non-linear models which can be transformed
+to linear models:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5195}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2597}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2208}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedright
+nonlinear model
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+transformation
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+linear Model
+\end{minipage} \\
+\midrule
+\endhead
+\(y \approx \beta_0 x^{\beta_1}\) & \(x'=\log(x)\), \(y'=\log(y)\) & \(y' \approx \log(\beta_0) + \beta_1 x'\) \\
+\(y \approx \beta_0 e^{\beta_1 x}\) & \(y'=\log y\) & \(y' \approx \log \beta_0 +\beta_1 x\) \\
+\(y \approx \beta_0+\beta_1\log x\) & \(x'=\log x\) & \(y \approx \beta_0+\beta_1 x'\) \\
+\(y \approx \frac{x}{\beta_0 x-\beta_1}\) & \(x'=1/x\), \(y'=1/y\) & \(y' \approx \beta_0-\beta_1 x'\) \\
+\bottomrule
+\end{longtable}
+
+In all such cases we also would need to check the residuals of the transformed
+models, to see whether linear regression can be used for the transformed model.
+
+\hypertarget{stabilising-the-variance}{%
+\subsection{Stabilising the Variance}\label{stabilising-the-variance}}
+
+The assumption of constant variance is a basic requirement of regression
+analysis. A common reason for the violation of this assumption is for the
+response variable \(y\) to follow a distribution in which the variance depends
+on \(y\) or \(\mathbb{E}(y)\) and thus on~\(x\).
+
+\begin{example}
+The error in our model
+\begin{equation*}
+  Y
+  = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
+  = x^\top \beta + \varepsilon
+\end{equation*}
+is sometimes called \textbf{additive error}, since it is added to the model
+mean~\(x^\top\beta\). Sometimes the error is instead given in percentages of the
+quantity of interest. In these cases we speak of \textbf{multiplicative error}.
+This can, for example, be modelled as
+\begin{equation*}
+  Y
+  = \bigl(\beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p\bigr) \exp(\varepsilon)
+  = x^\top \beta \exp(\varepsilon).
+\end{equation*}
+For \(\varepsilon= 0\) we have \(\exp(0) = 1\) and thus \(Y = x^\top \beta\). Similarly,
+for small \(\varepsilon\) we have \(Y \approx x^\top \beta\), but the variance is now
+proportional to \((x^\top\beta)^2\) instead of being constant. Also, since the
+exponential is nonlinear we only have \(\mathbb{E}(Y) \approx x^\top\beta\) instead of
+strict equality.
+\end{example}
+
+Some commonly-used variance stabilising transformations are:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+variance & transformation \\
+\midrule
+\endhead
+\(\sigma^2 = \text{constant}\) & no transformation \\
+\(\sigma^2 \propto y\) & \(y' = \sqrt{y}\) \\
+\(\sigma^2 \propto y^2\) & \(y' = \log y\) \\
+\(\sigma^2 \propto y^3\) & \(y' = \frac{1}{\sqrt{y}}\) \\
+\(\sigma^2 \propto y^4\) & \(y' = \frac{1}{y}\) \\
+\(\sigma^2 \propto y(1-y)\) where \(y \in [0,1]\) & \(y' = \arcsin(\sqrt{y})\) \\
+\bottomrule
+\end{longtable}
+
+Of course we do not have accurate knowledge of the relationship, but it can be
+diagnosed from the residual plots and transformations can be selected by
+experimenting with different choices. Any of these transformations will also
+affect the mean and we need to check the model fit for the transformed data, to
+see whether the transformed data can still reasonably be described by a linear
+model.
+
+\begin{example}
+The last transformation in the table above corresponds to the case of binomial
+sampling: If \(x = p\) and \(Y \sim B(n, p) / n\) then we have \(\mathbb{E}(Y) = n p / n = x\) and a linear model may be appropriate. But we also have \(\mathop{\mathrm{Var}}(Y) = p (1 - p) / n \propto \mathbb{E}(Y) \bigl( 1- \mathbb{E}(Y) \bigr)\), so the assumption of
+constant variance is violated.
+
+We try to apply the transformation suggested in the table. The
+function \(\arcsin\) is the inverse of the sine function. In R
+this function is available as \texttt{asin()}. To get some intuition about
+this transformation, we plot the function \(y \mapsto \arcsin(\sqrt{y})\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{l=}\DecValTok{101}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(y, }\FunctionTok{asin}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(y)), }\AttributeTok{type =} \StringTok{"l"}\NormalTok{,}
+     \AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(y }\SpecialCharTok{*}\NormalTok{ minute))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/arcsin-transform-1.pdf}
+
+We can see that the transformation is approximately linear for most
+of the interval, but has a steeper slope near the edges. The effect of
+this is to increase the size of fluctations for small and large
+\(y\)-values. We now consider residual plots for the original and transformed
+data, for a simulated dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{500}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{rbinom}\NormalTok{(n, }\DecValTok{100}\NormalTok{, x) }\SpecialCharTok{/} \DecValTok{100}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1))}
+
+\NormalTok{y.prime }\OtherTok{\textless{}{-}} \FunctionTok{asin}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(y))}
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/binomial-sampling-1.pdf}
+
+The plot shows that the variance has indeed improved, while linearity
+has suffered (an S-shaped curve is now visible). Neither model is perfect and
+whether the transformation
+is benenficial or not depends on the particular circumstances.
+\end{example}
+
+\begin{example}
+\protect\hypertarget{exm:electric}{}\label{exm:electric}An electric utility company is interested in developing a model relating the
+peak hour demand (\(y\), measured in kW) to total energy usage during the month
+(\(x\), in kWh). A scatter plot of the data is shown below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data at https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2021/MATH3714/electric.dat}
+\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}\StringTok{"data/electric.dat"}\NormalTok{, }\AttributeTok{header=}\ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{V1, d}\SpecialCharTok{$}\NormalTok{V2,}
+     \AttributeTok{xlab=}\StringTok{"energy usage [kWh]"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"energy demand [kW]"}\NormalTok{)}
+\NormalTok{m1 }\OtherTok{=} \FunctionTok{lm}\NormalTok{(V2 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{abline}\NormalTok{(m1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/electric1-1.pdf}
+
+A linear relationship looks plausible, but we can see that the spread
+of points around the regression line widens as energy usage increases.
+this is more clearly visible in a residual plot:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1),}
+     \AttributeTok{xlab =} \StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residuals"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/electric2-1.pdf}
+
+We try a transformation of the data to stabilise the variance.
+From the ``wedge'' shape on the left hand side of the plot, it is clear
+that the variance \(\sigma^2\) increases as \(y\) increases.
+Thus we can try transformations like \(y' = \log(y)\) or
+\(y' = \sqrt{y}\). Taking the logarithm for illustration, we get
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(V2) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{V1, }\FunctionTok{log}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{V2),}
+     \AttributeTok{xlab=}\StringTok{"energy usage [kWh]"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"log{-}transformed y"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(m2)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/electric3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2),}
+     \AttributeTok{xlab =} \StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residuals for log{-}transform"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/electric4-1.pdf}
+
+The spread of residuals now looks somewhat more reasonable.
+\end{example}
+
+\hypertarget{the-power-transform}{%
+\subsection{The Power Transform}\label{the-power-transform}}
+
+A family of transformations for the response variable \(y\) is given by the
+\textbf{power transform}. These transformations only apply to strictly positive data,
+\emph{i.e.}~\(y > 0\), and are defined by
+\begin{equation*}
+  y^{(\lambda)}
+  = \begin{cases}
+      \frac{\displaystyle y^\lambda-1}{\displaystyle\lambda g^{\lambda-1}} & \mbox{if $\lambda\ne 0$} \\
+      g\log y & \mbox{if $\lambda=0$}
+    \end{cases}
+\end{equation*}
+where \(g = (\prod_{i=1}^n y_i)^{1/n}\) is the geometric mean.
+
+The geometric mean is a constant (it does not depend on \(i\)) and is not needed
+for the power transform, but it is usually included to make values for
+different \(\lambda\) more comparable. For \(\lambda = 1\) the transform is \(y' = y - 1\). This is a simple shift which has no effect on the fitted model, it just
+decreases the intercept by \(1\) and leaves the residuals unchanged. Thus, this
+case is that same as applying no transformation.
+
+Using Taylor approximation on the numerator in the definition
+of~\(y^{(\lambda)}\) we get
+\begin{equation*}
+  y^\lambda
+  = \exp\bigl( \log(y^\lambda) \bigr)
+  = \exp\bigl( \lambda \log(y) \bigr)
+  \approx 1 + \lambda\log(y) + O\Bigl(\bigl(\lambda\log(y)\bigr)^2\Bigr),
+\end{equation*}
+where the \(O(\cdots)\) stands for terms which are negligible as
+\(\lambda\) converges to \(0\). Thus the formula given for \(\lambda \neq 0\)
+converges to the case for \(\lambda = 0\) as \(\lambda\) converges to \(0\).
+This makes the transformation continuous as a function of \(\lambda\).
+
+A heuristic rule to find a range of \(\lambda\) for which the power
+transform is appropriate is based on how the the residual sum of
+squares changes with~\(\lambda\): Let
+\begin{equation*}
+  r(\lambda)
+  = \sum_{i=1}^n \bigl( y^{(\lambda)}_i - \hat y^{(\lambda)}_i \bigr)^2,
+\end{equation*}
+where \(\hat y^{(\lambda)}_i\) denotes the fitted value for the model
+using the transformed data \(y^{(\lambda)}_i\). It is easy to plot
+this function numerically. We want to choose \(\lambda\) close to
+where the function has its minimum. The heuristic rule is to consider
+all values of \(\lambda\) with
+\begin{equation}
+  r(\lambda)
+  \leq r(\lambda_\mathrm{min}) \Bigl( 1 + \frac{t_{n-p-1}(\alpha/2)^2}{n-p-1} \Bigr),
+      \label{eq:power-cutoff}
+\end{equation}
+where \(\lambda_\mathrm{min}\) is the value of \(\lambda\) where the residual
+sum of squares has its minimum and \(t_{n-p-1}(\alpha/2)\) is the
+\((1-\alpha/2)\)-quantile of the \(t(n-p-1)\)-distribution. One can show that this
+is an approximate \((1-\alpha)\) confidence interval for \(\lambda\). If we want to
+interpret the model, it is usually better to select a ``simple'' \(\lambda\),
+\emph{e.g.}~\(\lambda=0.5\) rather than using the
+``optimal'' value~\(\lambda_\mathrm{min}\).
+
+\begin{example}
+Continuing from example~\ref{exm:electric} above, we can try a power
+transform for the data. We start by plotting \(r(\lambda)\) as a function
+of \(\lambda\), together with the cutoff suggested by equation~\eqref{eq:power-cutoff}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}}\NormalTok{ d}\SpecialCharTok{$}\NormalTok{V1}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ d}\SpecialCharTok{$}\NormalTok{V2}
+\NormalTok{gm }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(}\FunctionTok{mean}\NormalTok{(}\FunctionTok{log}\NormalTok{(y))) }\CommentTok{\# more stable way to compute geometric mean}
+\NormalTok{lambda }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{101}\NormalTok{)}
+\NormalTok{rss }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(lambda))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(lambda)) \{}
+\NormalTok{    li }\OtherTok{\textless{}{-}}\NormalTok{ lambda[i]}
+\NormalTok{    y.prime }\OtherTok{\textless{}{-}}\NormalTok{ (y}\SpecialCharTok{\^{}}\NormalTok{li }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (li }\SpecialCharTok{*}\NormalTok{ gm}\SpecialCharTok{\^{}}\NormalTok{(li}\DecValTok{{-}1}\NormalTok{))}
+\NormalTok{    mi }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\NormalTok{    rss[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{resid}\NormalTok{(mi)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{\}}
+\FunctionTok{plot}\NormalTok{(lambda, rss, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{)}
+
+\NormalTok{cutoff }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(rss) }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.971}\NormalTok{, }\DecValTok{51}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/} \DecValTok{51}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =}\NormalTok{ cutoff)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/electric5-1.pdf}
+
+This suggests the range of reasonable \(\lambda\) values to be
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{range}\NormalTok{(lambda[}\FunctionTok{which}\NormalTok{(rss }\SpecialCharTok{\textless{}=}\NormalTok{ cutoff)])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.307 0.784
+\end{verbatim}
+
+The value \(\lambda = 1\) (no transformation) is not contained in the interval,
+suggesting that a transformation may be helpful.
+Choosing a ``simple'' value inside the interval and close to the minimum,
+we try \(\lambda = 0.5\). This leads to the following transformation:
+\begin{equation*}
+  y'
+  = 2\sqrt{g} (\sqrt{y}-1).
+\end{equation*}
+Up to the shift and scaling, this just takes the square root of the data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y.prime }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(y)}
+\FunctionTok{plot}\NormalTok{(x, y.prime,}
+     \AttributeTok{xlab=}\StringTok{"energy usage [kWh]"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"sqrt{-}transformed y"}\NormalTok{)}
+\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{abline}\NormalTok{(m3)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/electric6-1.pdf}
+
+To see whether the variance of the residuals has improved, we consider
+a residual plot:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m3), }\FunctionTok{resid}\NormalTok{(m3),}
+     \AttributeTok{xlab =} \StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residuals for sqrt{-}transform"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/electric7-1.pdf}
+
+We see that the spread of the residuals has indeed improved, when compared to
+fitting the original data.
+\end{example}
+
+\hypertarget{orthogonal-inputs}{%
+\subsection{Orthogonal Inputs}\label{orthogonal-inputs}}
+
+So far, this chapter has been concerned with what to do when there are problems
+with a given model. In some cases we have the chance to ``plan ahead'' so that
+problems are less likely to occur.
+
+Collinearity occurs when there is high correlation amongst the explanatory
+variables. In some situations we have the opportunity to \emph{choose} the design
+space \(X\). In these cases, there are advantages in creating design variables
+which are orthogonal, thus avoiding or reducing problems caused by
+collinearity.
+
+\begin{example}
+Suppose we have observations \((x_i, y_i)\) for
+\(i\in \{1, \ldots, n\}\) and we want to fit a polynomial model of the form
+\begin{equation*}
+  Y_i
+  = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \cdots + \beta_p x_i^p + \varepsilon_i.
+\end{equation*}
+
+If we use the actual \(x_i\) to create new variables, say \(x_j = x^j\), then
+severe multicollinearity can arise. For example, for
+\begin{equation*}
+  x
+  = (10000, 10001, \ldots, 10010),
+\end{equation*}
+we have
+\begin{equation*}
+  x^2
+  = 10^8 + (0, 20001, 40004, \ldots, 200100)
+\end{equation*}
+and \(\mathop{\mathrm{cor}}(x, x^2) \approx 1 - 9.74\times 10^{-9}\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{10000}\NormalTok{, }\DecValTok{10010}\NormalTok{)}
+\FunctionTok{cor}\NormalTok{(x, x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{cor}\NormalTok{(x, x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 9.740257e-09
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, x, x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\FunctionTok{kappa}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X, }\AttributeTok{exact =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.47006e+23
+\end{verbatim}
+
+The first result, for the correlation, is shown as \(1\) due to rounding.
+The internal number representation of the correlation is actually less than
+\(1\) and we can print the difference \texttt{1\ -\ cor(x,\ x\^{}2)} to get the result
+stated above. Since this difference is close to \(0\) (instead of close to \(1\)),
+R can now use scientific notation to show the very small result. The final line
+of the output shows that the condition number is greater than \(10^{23}\),
+so the problem indeed suffers severe multicollinearity.
+
+We can greatly improve the conditioning of the problem
+by using the centred data \(x^\ast_i = x_i - \bar x\) before taking powers:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x.star }\OtherTok{\textless{}{-}}\NormalTok{ x }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(x)}
+\FunctionTok{cor}\NormalTok{(x.star, x.star}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X.star }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, x.star, x.star}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\FunctionTok{kappa}\NormalTok{(}\FunctionTok{t}\NormalTok{(X.star) }\SpecialCharTok{\%*\%}\NormalTok{ X.star, }\AttributeTok{exact =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 408.7796
+\end{verbatim}
+
+Now the correlation between \(x^\ast\) and \((x^\ast)^2\) is exactly zero,
+and the condition number is much improved.
+\end{example}
+
+A more systematic approach to choose input variables for polynomial regression
+is to use \textbf{orthogonal polynomials} of the form
+\begin{align*}
+  \psi_0(x) &=  1 \\
+  \psi_1(x) &=  \alpha_{1,1} x + \alpha_{1,0} \\
+  \psi_2(x) &=  \alpha_{2,2} x^2 + \alpha_{2,1} x + \alpha_{2,0} \\
+  &\vdots \\
+\end{align*}
+where the coefficients \(\alpha_{j,k}\) are chosen such that
+\begin{equation*}
+  \sum_{i=1}^n \psi_j(x_i) \psi_k(x_i)
+  = 0
+\end{equation*}
+for all \(j, k \in \{0, \ldots, p\}\) with \(j \neq k\). We can then use
+input variables
+\begin{equation*}
+  x_j = \psi_j(x)
+\end{equation*}
+for \(j \in \{0, \ldots, p\}\) to get a design matrix \(X\) such that
+\begin{align*}
+  (X^\top X)_{jk}
+  &= \sum_{i=1}^n X_{ij} X_{ik} \\
+  &= \sum_{i=1}^n \psi_j(x_i) \psi_k(x_i) \\
+  &= 0
+\end{align*}
+for all \(j, k \in \{0, \ldots, p\}\) with \(j \neq k\). In this case the columns
+of \(X\) are orthogonal and there is no multicollinearity.
+Our model is now
+\begin{align*}
+  y_i
+  &= \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i \\
+  &= \beta_0 \psi_0(x_i) + \beta_1 \psi_1(x_i) + \beta_2 \psi_2(x_i) + \cdots + \beta_p \psi_p(x_i) + \varepsilon_i.
+\end{align*}
+Since \(X^\top X\) is diagonal, the inverse of this matrix is trivial to
+compute. If we denote the diagonal elements by
+\begin{equation*}
+  A_j
+  = (X^\top X)_{jj},
+\end{equation*}
+then \(X^\top X = \mathrm{diag}(A_0, \ldots, A_p)\) and
+\((X^\top X)^{-1} = \mathrm{diag}(1/A_0, \ldots, 1/A_p)\). Thus we get
+\begin{align*}
+  \hat\beta_j
+  &= \bigl( (X^\top X)^{-1} X^\top y \bigr)_j \\
+  &= \frac{1}{A_j} \sum_{i=1}^n \psi_j(x_i) y_i
+\end{align*}
+and similarly, using equation~\eqref{eq:beta-hat-i}, we find
+\begin{equation*}
+  \mathop{\mathrm{Var}}( \hat\beta_j )
+  = \frac{\sigma^2}{A_j}.
+\end{equation*}
+
+An additional advantage of this approach is, that we can add another term,
+\(\psi_{p+1}(x)\), without changing the previous estimates of the regression
+coefficients. Since \(X^\top X\) is diagonal, the change will not affect the
+estimates \(\hat\beta_j\) for \(j\in \{0, \ldots, p\}\) (but the change will affect
+\(\sigma^2\)).
+
+\begin{example}
+In R we can create specific orthogonal entries for polynomial regression using
+the command \texttt{poly(x,\ p)}. The output of this function is a matrix
+with elements \(\psi_j(x_i)\) for \(j \in \{1, \ldots, p\}\) (omitting the intercept)
+and \(i \in \{1, \ldots, n\}\). Continuing from the example above we find
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{10000}\NormalTok{, }\DecValTok{10010}\NormalTok{)}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{poly}\NormalTok{(x, }\DecValTok{2}\NormalTok{)) }\CommentTok{\# manually prepend a column of ones}
+\FunctionTok{round}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X, }\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      1 2
+##   11 0 0
+## 1  0 1 0
+## 2  0 0 1
+\end{verbatim}
+
+Different from our previous approach, the last two columns are now also
+orthogonal to the columns of ones. This further improves the conditioning
+of the design matrix:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kappa}\NormalTok{(X, }\AttributeTok{exact =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.316625
+\end{verbatim}
+
+We see that the use of orthogonal polynomials entirely eliminated any
+problems with multicollinearity.
+\end{example}
+
+\begin{example}
+
+To illustrate the use of \texttt{poly()} for fitting a polynomial model to
+real data, we use the built-in \texttt{cars} dataset in R. This dataset
+contains historic data (from the 1920s) about the speed of cars (in mph) and
+the distances taken to stop (in ft). We first fit a second order polynomial
+to the data using the naive approach:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(dist }\SpecialCharTok{\textasciitilde{}}\NormalTok{ speed }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(speed}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{data =}\NormalTok{ cars)}
+\FunctionTok{plot}\NormalTok{(cars)}
+\FunctionTok{lines}\NormalTok{(}\FunctionTok{predict}\NormalTok{(m1, }\AttributeTok{newdata =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{speed=}\FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{30}\NormalTok{, }\AttributeTok{l=}\DecValTok{31}\NormalTok{))),}
+      \AttributeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/cars-1.pdf}
+
+Checking the condition number, we see that there is severe multicollinearity:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kappa}\NormalTok{(m1, }\AttributeTok{exact =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2160.976
+\end{verbatim}
+
+We can also see that none of the coefficients is significantly different from
+zero, while the F-test rejects the hypothesis that the vector of all regression
+coefficients is zero. We have seen previously that this effect can be an
+indication of multicollinearity.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(m1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = dist ~ speed + I(speed^2), data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -28.720  -9.184  -3.188   4.628  45.152 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)
+## (Intercept)  2.47014   14.81716   0.167    0.868
+## speed        0.91329    2.03422   0.449    0.656
+## I(speed^2)   0.09996    0.06597   1.515    0.136
+## 
+## Residual standard error: 15.18 on 47 degrees of freedom
+## Multiple R-squared:  0.6673, Adjusted R-squared:  0.6532 
+## F-statistic: 47.14 on 2 and 47 DF,  p-value: 5.852e-12
+\end{verbatim}
+
+We can fit an improved model using orthogonal polynomials. Since \texttt{lm()}
+automatically adds the intercept, we don't need to prepend a column of ones to
+the \texttt{poly()} output here.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(dist }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(speed, }\DecValTok{2}\NormalTok{), }\AttributeTok{data =}\NormalTok{ cars)}
+\FunctionTok{kappa}\NormalTok{(m2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 6.670129
+\end{verbatim}
+
+We see that in the new model there are no problems with multicollinearity any
+more. The new model also has coefficients which are significantly different
+from zero:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(m2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = dist ~ poly(speed, 2), data = cars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -28.720  -9.184  -3.188   4.628  45.152 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)       42.980      2.146  20.026  < 2e-16 ***
+## poly(speed, 2)1  145.552     15.176   9.591 1.21e-12 ***
+## poly(speed, 2)2   22.996     15.176   1.515    0.136    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 15.18 on 47 degrees of freedom
+## Multiple R-squared:  0.6673, Adjusted R-squared:  0.6532 
+## F-statistic: 47.14 on 2 and 47 DF,  p-value: 5.852e-12
+\end{verbatim}
+
+\end{example}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We have seen different transformations which can be used
+  to transform a nonlinear model into a linear one.
+\item
+  We have discussed transformations which can stabilise the
+  variance of the errors in the model.
+\item
+  We have seen how orthogonal polynomials can be used to avoid
+  multicollinearity in polynomial regression.
+\end{itemize}
 
 \clearpage
 
