@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="X05-smoothing.html"/>
-
+<link rel="next" href="X07-nearest.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -209,6 +209,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="X06-locpoly.html#p-2"><span class="math inline">\(p = 2\)</span></a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="7" data-path="X07-nearest.html"><a href="X07-nearest.html"><i class="fa fa-check"></i><b>7</b> <em>k</em>-Nearest Neighbour Regression</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="X07-nearest.html"><a href="X07-nearest.html#definition-of-the-estimator"><i class="fa fa-check"></i><b>7.1</b> Definition of the Estimator</a></li>
+<li class="chapter" data-level="7.2" data-path="X07-nearest.html"><a href="X07-nearest.html#properties"><i class="fa fa-check"></i><b>7.2</b> Properties</a></li>
+<li class="chapter" data-level="7.3" data-path="X07-nearest.html"><a href="X07-nearest.html#numerical-experiment"><i class="fa fa-check"></i><b>7.3</b> Numerical Experiment</a></li>
+<li class="chapter" data-level="7.4" data-path="X07-nearest.html"><a href="X07-nearest.html#variants-of-the-method"><i class="fa fa-check"></i><b>7.4</b> Variants of the Method</a></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -243,7 +250,7 @@ given data <span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n)\)</span>.<
 </div>
 <p>In the <a href="https://seehuhn.github.io/MATH3714/S02-multiple.html#the-normal-equations">level 3 part of the module</a>,
 we introduced the least squares method for linear regression. This method
-estimartes the regression coefficients by minimizing the residual sum of
+estimartes the regression coefficients by minimising the residual sum of
 squares:
 <span class="math display">\[\begin{align*}
   r(\beta)
@@ -318,8 +325,8 @@ This leads to the design matrix
     \end{pmatrix}.
 \end{equation*}\]</span></p>
 <div class="example">
-<p><span id="exm:unlabeled-div-9" class="example"><strong>Example 6.1  </strong></span>To illustrate polynomial regression, we fit a third-order polynomial
-to a simple, simulated data set. Since the operator <code>^</code> has a special
+<p><span id="exm:unlabeled-div-7" class="example"><strong>Example 6.1  </strong></span>To illustrate polynomial regression, we fit a third-order polynomial
+to a simple, simulated dataset. Since the operator <code>^</code> has a special
 meaning inside <code>lm()</code>, we have to use the function <code>I()</code> (which disables
 the special meaning of <code>+</code> and <code>^</code> for its arguments) when computing
 the inputs <span class="math inline">\(x^2\)</span> and <span class="math inline">\(x^3\)</span>.</p>
@@ -333,7 +340,7 @@ the inputs <span class="math inline">\(x^2\)</span> and <span class="math inlin
 <span id="cb16-8"><a href="X06-locpoly.html#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-9"><a href="X06-locpoly.html#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y)</span>
 <span id="cb16-10"><a href="X06-locpoly.html#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(m))</span></code></pre></div>
-<p><img src="MATH5714M_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="MATH5714M_files/figure-html/polreg1-1.png" width="672" /></p>
 <p>The resulting regression line seems like a resonable fit for the data.
 We note that a third-order polynomial grows very quickly to <span class="math inline">\(\pm\infty\)</span>
 as <span class="math inline">\(|x|\)</span> increases. Thus, the fitted model cannot be used for extrapolating
@@ -362,7 +369,7 @@ This leads to the design matrix
     \end{pmatrix}.  \tag{6.2}
 \end{equation}\]</span></p>
 <div class="example">
-<p><span id="exm:unlabeled-div-10" class="example"><strong>Example 6.2  </strong></span>Continuing from the previous example, we can see that writing the model as in<br />
+<p><span id="exm:unlabeled-div-8" class="example"><strong>Example 6.2  </strong></span>Continuing from the previous example, we can see that writing the model as in<br />
 <a href="X06-locpoly.html#eq:X-local">(6.2)</a> greatly improves the condition number:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="X06-locpoly.html#cb19-1" aria-hidden="true" tabindex="-1"></a>x.tilde <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb19-2"><a href="X06-locpoly.html#cb19-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">I</span>(x<span class="sc">-</span>x.tilde) <span class="sc">+</span> <span class="fu">I</span>((x<span class="sc">-</span>x.tilde)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>((x<span class="sc">-</span>x.tilde)<span class="sc">^</span><span class="dv">3</span>))</span>
@@ -462,7 +469,7 @@ value as well as the slope of the mean line. This sometimes gives
 a better fit than the Nadaraya-Watson estimator, for example at the boundaries
 of the domain.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-11" class="example"><strong>Example 6.3  </strong></span>We can use the R function <code>locpoly</code> from the <code>KernSmooth</code> package to
+<p><span id="exm:unlabeled-div-9" class="example"><strong>Example 6.3  </strong></span>We can use the R function <code>locpoly</code> from the <code>KernSmooth</code> package to
 compute locally polynomial regression estimates. Here we plot
 the estimate for <span class="math inline">\(p=1\)</span> (blue line) together with the Nadaraya-Watson
 estimator (red line), for a simple, simulated dataset.
@@ -487,7 +494,7 @@ and of <code>locpoly(x.., degree = 0, bandwidth = 0.11)</code> is near identical
 ## Copyright M. P. Wand 1997-2009</code></pre>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="X06-locpoly.html#cb23-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">1</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
 <span id="cb23-2"><a href="X06-locpoly.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
-<p><img src="MATH5714M_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="MATH5714M_files/figure-html/locpoly1-1.png" width="672" /></p>
 <p>Near the boundaries the Nadaray-Watson estimator is biased, because on
 the left-hand boundary all nearby samples correspond to larger values of the
 mean line, and similarly on the right-hand all nearby samples correspond to
@@ -500,7 +507,7 @@ retains its slope right up to the boundary.</p>
 <p>For <span class="math inline">\(p=2\)</span> the local polynomials are parabolas. This allows sometimes to reduce
 bias near peaks.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-12" class="example"><strong>Example 6.4  </strong></span>We compare the Nadaraya-Watson estimator to locally polynomial regression
+<p><span id="exm:unlabeled-div-10" class="example"><strong>Example 6.4  </strong></span>We compare the Nadaraya-Watson estimator to locally polynomial regression
 with <span class="math inline">\(p=2\)</span>, using a simulated dataset which has a peak in the middle of the
 domain. We choose the same bandwidths as in the previous example.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="X06-locpoly.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>
@@ -516,7 +523,7 @@ domain. We choose the same bandwidths as in the previous example.</p>
 <span id="cb24-11"><a href="X06-locpoly.html#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
 <span id="cb24-12"><a href="X06-locpoly.html#cb24-12" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
 <span id="cb24-13"><a href="X06-locpoly.html#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
-<p><img src="MATH5714M_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="MATH5714M_files/figure-html/locpoly2-1.png" width="672" /></p>
 <p>We can see that the Nadaraya-Watson estimator (red line) is biased near the
 peak, because all nearby samples correspond to smaller values of the mean line.
 In contrast, the local polynomial estimate (blue line) has much lower bias.</p>
@@ -541,8 +548,8 @@ Nadaraya-Watson estimator.</li>
           </div>
         </div>
       </div>
-<a href="X05-smoothing.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="X05-smoothing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="X07-nearest.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -188,7 +188,7 @@ in figure~\ref{fig:accel}.
 
 }
 
-\caption{An illustration of a data set where a linear (straight line) model is not appropriate. The data represents a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets (the \texttt{mcycle} dataset from the \texttt{MASS} R package).}\label{fig:accel}
+\caption{An illustration of a dataset where a linear (straight line) model is not appropriate. The data represents a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets (the \texttt{mcycle} dataset from the \texttt{MASS} R package).}\label{fig:accel}
 \end{figure}
 
 \clearpage
@@ -1545,7 +1545,7 @@ we can write the Nadaraya-Watson Estimator as
 this is indeed a weighted average.
 
 \begin{example}
-The \texttt{faithful} dataset built into R contains 272 observations of
+\protect\hypertarget{exm:faithful}{}\label{exm:faithful}The \texttt{faithful} dataset built into R contains 272 observations of
 waiting time between eruptions and the duration of the eruption for the Old Faithful geyser in Yellowstone National Park. We can use the
 \texttt{ksmooth()} function to compute Nadaraya-Watson estimate for the
 waiting time after an eruption of a given length. Here we use
@@ -1576,7 +1576,7 @@ problem can easily be seen in practice, when the bandwidth is chosen
 too small.
 
 \begin{example}
-To illustrate the problem of the estimate becoming undefined far away
+\protect\hypertarget{exm:faithless}{}\label{exm:faithless}To illustrate the problem of the estimate becoming undefined far away
 from the data points, we redo the previous estimate using a uniform
 kernel:
 
@@ -1912,7 +1912,7 @@ given data \((x_1, y_1), \ldots, (x_n, y_n)\).
 
 In the \href{https://seehuhn.github.io/MATH3714/S02-multiple.html\#the-normal-equations}{level 3 part of the module},
 we introduced the least squares method for linear regression. This method
-estimartes the regression coefficients by minimizing the residual sum of
+estimartes the regression coefficients by minimising the residual sum of
 squares:
 \begin{align*}
   r(\beta)
@@ -1986,7 +1986,7 @@ This leads to the design matrix
 
 \begin{example}
 To illustrate polynomial regression, we fit a third-order polynomial
-to a simple, simulated data set. Since the operator \texttt{\^{}} has a special
+to a simple, simulated dataset. Since the operator \texttt{\^{}} has a special
 meaning inside \texttt{lm()}, we have to use the function \texttt{I()} (which disables
 the special meaning of \texttt{+} and \texttt{\^{}} for its arguments) when computing
 the inputs \(x^2\) and~\(x^3\).
@@ -2006,7 +2006,7 @@ the inputs \(x^2\) and~\(x^3\).
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH5714M_files/figure-latex/unnamed-chunk-17-1.pdf}
+\includegraphics{MATH5714M_files/figure-latex/polreg1-1.pdf}
 
 The resulting regression line seems like a resonable fit for the data.
 We note that a third-order polynomial grows very quickly to \(\pm\infty\)
@@ -2199,7 +2199,7 @@ and of \texttt{locpoly(x..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is near identic
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH5714M_files/figure-latex/unnamed-chunk-20-1.pdf}
+\includegraphics{MATH5714M_files/figure-latex/locpoly1-1.pdf}
 
 Near the boundaries the Nadaray-Watson estimator is biased, because on
 the left-hand boundary all nearby samples correspond to larger values of the
@@ -2238,7 +2238,7 @@ domain. We choose the same bandwidths as in the previous example.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH5714M_files/figure-latex/unnamed-chunk-21-1.pdf}
+\includegraphics{MATH5714M_files/figure-latex/locpoly2-1.pdf}
 
 We can see that the Nadaraya-Watson estimator (red line) is biased near the
 peak, because all nearby samples correspond to smaller values of the mean line.
@@ -2258,6 +2258,163 @@ In contrast, the local polynomial estimate (blue line) has much lower bias.
 \item
   The local polynomial regression estimator is a generalization of the
   Nadaraya-Watson estimator.
+\end{itemize}
+
+\clearpage
+
+\hypertarget{X07-nearest}{%
+\section{\texorpdfstring{\emph{k}-Nearest Neighbour Regression}{k-Nearest Neighbour Regression}}\label{X07-nearest}}
+
+In the previous sections we used a fixed bandwidth \(h\) to determine the
+scale on which ``closeness'' of existing samples to a new input \(x\) was
+measured. While this approach generally works well, problems can appear
+in regions where samples are sparse (\emph{e.g.}~in
+example~\ref{exm:faithless}). This problem can be addressed by choosing
+\(h\) adaptively, using larger bandwidths where samples are sparse and
+smaller bandwidths in regions where there are many samples. The
+\(k\)-nearest neighbour method is one of several methods which implements
+this idea.
+
+\hypertarget{definition-of-the-estimator}{%
+\subsection{Definition of the Estimator}\label{definition-of-the-estimator}}
+
+\begin{definition}
+For \(k \in \{1, \ldots, n\}\), the \textbf{\emph{k}-nearest neighbour}, or
+\(k\)-NN estimate for the model mean \(m(x)\) is given by
+\begin{equation}
+  \hat m_k(x)
+  := \frac1k \sum_{i\in J_k(x)} y_i,  \label{eq:kNN}
+\end{equation}
+where
+\begin{equation*}
+  J_k(x)
+  := \bigl\{ i \bigm| \mbox{$x_i$ is one of the $k$ nearest observations to $x$} \bigr\}.
+\end{equation*}
+\end{definition}
+
+The \(k\)-NN estimate \(\hat m_k(x)\) is the average of the \(k\) responses
+where the inputs are closest to~\(x\). We can interpret
+equation~\eqref{eq:kNN} as a weighted average \begin{equation*}
+  \hat m_k(x)
+  = \sum_{i=1}^n w_i(x) y_i,
+\end{equation*} where the weights are given by \begin{equation*}
+  w_i(x)
+  = \begin{cases}
+      \frac1k, & \mbox{if $i \in J_k(x)$, and} \\
+      0 & \mbox{otherwise.}
+  \end{cases}
+\end{equation*}
+
+If several \(x_i\) have the same distance to \(x\), some tie-breaking rule
+must be used to decide which indices to include in the set \(J_k(x)\).
+This case is so unlikely that the choice of rule is not important. One
+could, for example, pick one of the tied neighbours at random.
+
+The method can be used both for the one-dimensional case \(x\in\mathbb{R}\), and
+for vector-valued inputs \(x\in\mathbb{R}^p\). For the one-dimensional case, it is
+advantageous to sort the data in order of increasing \(x_i\). In this
+case, the position of \(x\) in the list of the \(x_i\) can be found using a
+binary search, and the nearest neighbours can be identified by search to
+the left and right of this position. For \(p > 1\) the method becomes
+computationally very expensive, since the data needs to be sorted afresh
+for every new input \(x\). Advanced data structures like \href{https://en.wikipedia.org/wiki/Cover_tree}{``cover trees''} can
+be used to speed up the process of finding the nearest neighbours.
+
+\hypertarget{properties}{%
+\subsection{Properties}\label{properties}}
+
+The parameter \(k\) controls the ``smoothness'' of the estimate. In the
+extreme case \(k = n\), we have \(J_n(x) = \{1, \ldots, n\}\) and
+\begin{equation*}
+  \hat m_k(x)
+  = \frac1n \sum_{i=1}^n y_i
+\end{equation*} for all \(x\), \emph{i.e.}~for this case \(\hat m_k\) is
+constant. The other extreme is the case of \(k=1\), where \(\hat m_k(x)\)
+always equals the value of the closest \(x_i\) and has jumps at the
+mid-points between the data points.
+
+In the next section we will learn how \(k\) can be chosen using
+cross-validation.
+
+Independent of the value of \(k\), the function \(\hat m_k\) is always a
+step function, with jumps at points \(x\) where two points have equal
+distance from~\(x\).
+
+\hypertarget{numerical-experiment}{%
+\subsection{Numerical Experiment}\label{numerical-experiment}}
+
+In R, an implementation of the \(k\)-NN method can be found in the \texttt{FNN} package.
+This package implements not only \(k\)-NN regression, but also \(k\)-NN
+classification, and it implements sophisticated algorithms to speed up the
+search for the nearest neighbours in higher-dimensional spaces. The function
+to perform \(k\)-NN regression is
+\href{https://rdrr.io/cran/FNN/man/knn.reg.html}{\texttt{knn.reg()}}.
+
+\begin{example}
+Here we compute a \(k\)-NN estimate for the mean of the \texttt{faithful} dataset,
+which we have already encountered in examples \ref{exm:faithful} and~\ref{exm:faithless}.
+We start by storing the data in the variables \texttt{x} and \texttt{y}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}}\NormalTok{ faithful}\SpecialCharTok{$}\NormalTok{eruptions}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ faithful}\SpecialCharTok{$}\NormalTok{waiting}
+\end{Highlighting}
+\end{Shaded}
+
+Now we use \texttt{knn.reg()} to compute the \(k\)-NN estimate on a grid
+of values. The help page for \texttt{knn.reg()} explains that we need to
+convert the input to either a matrix or a data frame; here we use
+data frames. The grid of input values where we want to estimate
+the \(k\)-NN estimate is passed in via the optional argument \texttt{test\ =\ ...}.
+Here we use the arbitrarily chosen value \(k = 50\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(FNN)}
+
+\NormalTok{x.test }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\FloatTok{1.5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{500}\NormalTok{)}
+
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{knn.reg}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x=}\NormalTok{x),}
+             \AttributeTok{y =}\NormalTok{ y,}
+             \AttributeTok{test =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x=}\NormalTok{x.test),}
+             \AttributeTok{k =} \DecValTok{50}\NormalTok{)}
+
+\FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{cex=}\NormalTok{.}\DecValTok{5}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(x.test, m}\SpecialCharTok{$}\NormalTok{pred, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH5714M_files/figure-latex/faithful-kNN-1.pdf}
+
+The estimated mean curve looks reasonable.
+\end{example}
+
+\hypertarget{variants-of-the-method}{%
+\subsection{Variants of the Method}\label{variants-of-the-method}}
+
+\begin{itemize}
+\item
+  For one-dimensional inputs and even \(k\), the \textbf{symmetric \emph{k}-NN
+  estimate} averages the responses corresponding to the \(k/2\) nearest
+  neighbours smaller than \(x\) and the \(k/2\) nearest neighbours larger
+  than~\(x\).
+\item
+  To obtain a continuous estimate, we can define a ``local bandwidth''
+  \(h(x)\) as \begin{equation*}
+    h(x) = c \max\bigl\{ |x - x_i| \bigm| i \in J_k(x) \bigr\}
+  \end{equation*} for some constant~\(c\), and then use the
+  Nadaraya-Watson estimator with this bandwidth: \begin{equation*}
+    \tilde m(x)
+    = \frac{\sum_{i=1}^n K_{h(x)}(x - x_i) y_i}{\sum_{j=1}^n K_{h(x)}(x - x_j)},
+  \end{equation*} where \(K\) is a kernel function as before. If we use
+  \(c = 1\) together with the uniform kernel \begin{equation*}
+    K(x)
+    = \begin{cases}
+        1/2 & \mbox{if $-1 \leq x \leq 1$} \\
+        0 & \mbox{otherwise,}
+      \end{cases}
+  \end{equation*} this method coincides with the \(k\)-NN estimator.
 \end{itemize}
 
 \clearpage
