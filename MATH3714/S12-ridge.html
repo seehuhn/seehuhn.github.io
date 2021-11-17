@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="S11-improving.html"/>
-<link rel="next" href="Sx1-matrices.html"/>
+<link rel="next" href="S13-models.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -275,6 +275,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="12.3" data-path="S12-ridge.html"><a href="S12-ridge.html#standardisation"><i class="fa fa-check"></i><b>12.3</b> Standardisation</a></li>
 </ul></li>
+<li class="chapter" data-level="13" data-path="S13-models.html"><a href="S13-models.html"><i class="fa fa-check"></i><b>13</b> Model selection</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="S13-models.html"><a href="S13-models.html#candidates-models"><i class="fa fa-check"></i><b>13.1</b> Candidates Models</a></li>
+<li class="chapter" data-level="13.2" data-path="S13-models.html"><a href="S13-models.html#misspecified-models"><i class="fa fa-check"></i><b>13.2</b> Misspecified Models</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="S13-models.html"><a href="S13-models.html#missing-variables"><i class="fa fa-check"></i><b>13.2.1</b> Missing Variables</a></li>
+<li class="chapter" data-level="13.2.2" data-path="S13-models.html"><a href="S13-models.html#unnecessary-variables"><i class="fa fa-check"></i><b>13.2.2</b> Unnecessary Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#assessing-models"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
 <ul>
@@ -285,10 +295,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-vector Product</a></li>
 <li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-matrix Product</a></li>
 <li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#rank"><i class="fa fa-check"></i><b>A.2.4</b> Rank</a></li>
-<li class="chapter" data-level="A.2.5" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-inverse"><i class="fa fa-check"></i><b>A.2.5</b> Matrix Inverse</a></li>
-<li class="chapter" data-level="A.2.6" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#orthogonal-matrices"><i class="fa fa-check"></i><b>A.2.6</b> Orthogonal Matrices</a></li>
-<li class="chapter" data-level="A.2.7" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.7</b> Positive Definite Matrices</a></li>
-<li class="chapter" data-level="A.2.8" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#idempotent"><i class="fa fa-check"></i><b>A.2.8</b> Idempotent Matrices</a></li>
+<li class="chapter" data-level="A.2.5" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#trace"><i class="fa fa-check"></i><b>A.2.5</b> Trace</a></li>
+<li class="chapter" data-level="A.2.6" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-inverse"><i class="fa fa-check"></i><b>A.2.6</b> Matrix Inverse</a></li>
+<li class="chapter" data-level="A.2.7" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#orthogonal-matrices"><i class="fa fa-check"></i><b>A.2.7</b> Orthogonal Matrices</a></li>
+<li class="chapter" data-level="A.2.8" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.8</b> Positive Definite Matrices</a></li>
+<li class="chapter" data-level="A.2.9" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#idempotent"><i class="fa fa-check"></i><b>A.2.9</b> Idempotent Matrices</a></li>
 </ul></li>
 <li class="chapter" data-level="A.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#eigenvalues"><i class="fa fa-check"></i><b>A.3</b> Eigenvalues</a></li>
 </ul></li>
@@ -339,7 +350,7 @@ estimator.</p>
 <div id="definition-the-estimator" class="section level2" number="12.1">
 <h2><span class="header-section-number">12.1</span> Definition the Estimator</h2>
 <div class="definition">
-<p><span id="def:unlabeled-div-50" class="definition"><strong>Definition 12.1  </strong></span>In multiple linear regression, the <strong>ridge regression</strong> estimate for
+<p><span id="def:unlabeled-div-48" class="definition"><strong>Definition 12.1  </strong></span>In multiple linear regression, the <strong>ridge regression</strong> estimate for
 the parameter vector <span class="math inline">\(\beta\)</span> is given by
 <span class="math display">\[\begin{equation}
   \hat\beta^{(\lambda)}
@@ -521,11 +532,11 @@ It is an easy exercise to show that this can equivalently be written as
 Using the formulas for the variance and bias from above, we
 can find an formula for <span class="math inline">\(\mathop{\mathrm{MSE}}\nolimits(\hat\beta^{(\lambda)}_j)\)</span>,
 but the result is hard to interpret. Instead of considering these analytical
-expressions, we illustrate the mean squared error using a numerical
+expressions, we illustrate the MSE using a numerical
 example.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-51" class="example"><strong>Example 12.2  </strong></span>Continuing from example <a href="S12-ridge.html#exm:knorkel">12.1</a> above, we can determine
-the mean squared error for every value of <span class="math inline">\(\lambda\)</span>. Here we
+<p><span id="exm:unlabeled-div-49" class="example"><strong>Example 12.2  </strong></span>Continuing from example <a href="S12-ridge.html#exm:knorkel">12.1</a> above, we can determine
+the MSE for every value of <span class="math inline">\(\lambda\)</span>. Here we
 use the fact that this is simulated data where we know the true
 values of <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\sigma^2\)</span>.</p>
 <p>We start with the bias:</p>
@@ -544,8 +555,8 @@ x2          0.0499545553</code></pre>
 (Intercept)  7.291379e-05 -7.580602e-06 -9.226941e-06
 x1          -7.580602e-06  3.831264e-06 -1.540098e-06
 x2          -9.226941e-06 -1.540098e-06  4.221464e-06</code></pre>
-<p>Now we repeat these calculations in a loop, to plot the mean squared
-error as a function of <span class="math inline">\(\lambda\)</span>:</p>
+<p>Now we repeat these calculations in a loop, to plot the MSE
+as a function of <span class="math inline">\(\lambda\)</span>:</p>
 <div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="S12-ridge.html#cb212-1" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>, <span class="at">length.out =</span> <span class="dv">100</span>) <span class="co"># range of lambda to try</span></span>
 <span id="cb212-2"><a href="S12-ridge.html#cb212-2" aria-hidden="true" tabindex="-1"></a>j.plus<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span> <span class="co"># we plot the error of \beta_1</span></span>
 <span id="cb212-3"><a href="S12-ridge.html#cb212-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -728,16 +739,13 @@ ridge regression.</li>
 
 </div>
 </div>
-
-
-
             </section>
 
           </div>
         </div>
       </div>
 <a href="S11-improving.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S13-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

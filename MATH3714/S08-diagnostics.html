@@ -275,6 +275,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="12.3" data-path="S12-ridge.html"><a href="S12-ridge.html#standardisation"><i class="fa fa-check"></i><b>12.3</b> Standardisation</a></li>
 </ul></li>
+<li class="chapter" data-level="13" data-path="S13-models.html"><a href="S13-models.html"><i class="fa fa-check"></i><b>13</b> Model selection</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="S13-models.html"><a href="S13-models.html#candidates-models"><i class="fa fa-check"></i><b>13.1</b> Candidates Models</a></li>
+<li class="chapter" data-level="13.2" data-path="S13-models.html"><a href="S13-models.html#misspecified-models"><i class="fa fa-check"></i><b>13.2</b> Misspecified Models</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="S13-models.html"><a href="S13-models.html#missing-variables"><i class="fa fa-check"></i><b>13.2.1</b> Missing Variables</a></li>
+<li class="chapter" data-level="13.2.2" data-path="S13-models.html"><a href="S13-models.html#unnecessary-variables"><i class="fa fa-check"></i><b>13.2.2</b> Unnecessary Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#assessing-models"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
 <ul>
@@ -285,10 +295,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-vector Product</a></li>
 <li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-matrix Product</a></li>
 <li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#rank"><i class="fa fa-check"></i><b>A.2.4</b> Rank</a></li>
-<li class="chapter" data-level="A.2.5" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-inverse"><i class="fa fa-check"></i><b>A.2.5</b> Matrix Inverse</a></li>
-<li class="chapter" data-level="A.2.6" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#orthogonal-matrices"><i class="fa fa-check"></i><b>A.2.6</b> Orthogonal Matrices</a></li>
-<li class="chapter" data-level="A.2.7" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.7</b> Positive Definite Matrices</a></li>
-<li class="chapter" data-level="A.2.8" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#idempotent"><i class="fa fa-check"></i><b>A.2.8</b> Idempotent Matrices</a></li>
+<li class="chapter" data-level="A.2.5" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#trace"><i class="fa fa-check"></i><b>A.2.5</b> Trace</a></li>
+<li class="chapter" data-level="A.2.6" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-inverse"><i class="fa fa-check"></i><b>A.2.6</b> Matrix Inverse</a></li>
+<li class="chapter" data-level="A.2.7" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#orthogonal-matrices"><i class="fa fa-check"></i><b>A.2.7</b> Orthogonal Matrices</a></li>
+<li class="chapter" data-level="A.2.8" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.8</b> Positive Definite Matrices</a></li>
+<li class="chapter" data-level="A.2.9" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#idempotent"><i class="fa fa-check"></i><b>A.2.9</b> Idempotent Matrices</a></li>
 </ul></li>
 <li class="chapter" data-level="A.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#eigenvalues"><i class="fa fa-check"></i><b>A.3</b> Eigenvalues</a></li>
 </ul></li>
@@ -492,7 +503,7 @@ becomes
   = \mathrm{SS}_\mathrm{reg} + \mathrm{SS}_\mathrm{res}.
 \end{equation*}\]</span></p>
 <div class="definition">
-<p><span id="def:unlabeled-div-30" class="definition"><strong>Definition 8.1  </strong></span>The <strong>coefficient of multiple determination</strong> is defined to be
+<p><span id="def:R-squared" class="definition"><strong>Definition 8.1  </strong></span>The <strong>coefficient of multiple determination</strong> is defined to be
 <span class="math display">\[\begin{equation*}
   R^2
   := 1 - \frac{\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2}
@@ -510,7 +521,7 @@ always have <span class="math inline">\(R^2 \in [0, 1]\)</span>. A large value o
 the residuals are small, compared to the sample variance of the <span class="math inline">\(y_i\)</span>
 and thus often indicates good model fit.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-31" class="example"><strong>Example 8.2  </strong></span>We can easily compute the <span class="math inline">\(R^2\)</span> value for the <code>stackloss</code> dataset
+<p><span id="exm:unlabeled-div-30" class="example"><strong>Example 8.2  </strong></span>We can easily compute the <span class="math inline">\(R^2\)</span> value for the <code>stackloss</code> dataset
 manually:</p>
 <div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="S08-diagnostics.html#cb126-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
 <span id="cb126-2"><a href="S08-diagnostics.html#cb126-2" aria-hidden="true" tabindex="-1"></a>R.squared <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">var</span>(<span class="fu">resid</span>(m)) <span class="sc">/</span> <span class="fu">var</span>(stackloss<span class="sc">$</span>stack.loss)</span>
@@ -545,7 +556,7 @@ input variable is added to the model. Thus, the <span class="math inline">\(R^2\
 to compare model fit for models with different numbers of variables. An
 attempt to compensate for this effect is the adjusted <span class="math inline">\(R^2\)</span> value:</p>
 <div class="definition">
-<p><span id="def:unlabeled-div-32" class="definition"><strong>Definition 8.2  </strong></span>The <strong>adjusted <span class="math inline">\(R^2\)</span> value</strong> is given by
+<p><span id="def:adjusted-R-squared" class="definition"><strong>Definition 8.2  </strong></span>The <strong>adjusted <span class="math inline">\(R^2\)</span> value</strong> is given by
 <span class="math display">\[\begin{equation*}
   R^2_\mathrm{adj}
   := 1 - \frac{\frac{1}{n-p-1}\mathrm{s}_{\hat\varepsilon}^2}{\frac{1}{n-1}\mathrm{s}_y^2}
@@ -555,7 +566,7 @@ attempt to compensate for this effect is the adjusted <span class="math inline">
 <p>The value <span class="math inline">\(R^2_\mathrm{adj}\)</span> is always smaller than the <span class="math inline">\(R^2\)</span> value, and
 <span class="math inline">\(R^2_\mathrm{adj}\)</span> can be (slightly) negative.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-33" class="example"><strong>Example 8.3  </strong></span>The adjusted <span class="math inline">\(R^2\)</span> value for the stackloss dataset
+<p><span id="exm:unlabeled-div-31" class="example"><strong>Example 8.3  </strong></span>The adjusted <span class="math inline">\(R^2\)</span> value for the stackloss dataset
 can be found as follows:</p>
 <div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="S08-diagnostics.html#cb130-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(stackloss)</span>
 <span id="cb130-2"><a href="S08-diagnostics.html#cb130-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(stackloss) <span class="sc">-</span> <span class="dv">1</span></span>
@@ -566,7 +577,7 @@ can be found as follows:</p>
 <code>summary(m)</code>, listed as <code>Adjusted R-squared</code>.</p>
 </div>
 <div class="example">
-<p><span id="exm:unlabeled-div-34" class="example"><strong>Example 8.4  </strong></span>As suggested in example <a href="S08-diagnostics.html#exm:stackloss-plot">8.1</a>, we may want to
+<p><span id="exm:unlabeled-div-32" class="example"><strong>Example 8.4  </strong></span>As suggested in example <a href="S08-diagnostics.html#exm:stackloss-plot">8.1</a>, we may want to
 include a new quadratic term in the stackloss dataset:</p>
 <div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="S08-diagnostics.html#cb132-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> . <span class="sc">+</span> <span class="fu">I</span>(Water.Temp<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> stackloss)</span>
 <span id="cb132-2"><a href="S08-diagnostics.html#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>

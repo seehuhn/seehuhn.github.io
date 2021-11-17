@@ -161,6 +161,7 @@
 \newcommand{\rank}{\mathop{\mathrm{rank}}}
 \newcommand{\se}{\mathop{\mathrm{se}}}
 \newcommand{\stdev}{\mathop{\mathrm{stdev}}}
+\newcommand{\tr}{\mathop{\mathrm{tr}}}
 \newcommand{\Var}{\mathop{\mathrm{Var}}}
 \newcommand{\xfrac}[2]{\frac{\,#1\,}{\,#2\,}}
 
@@ -4795,7 +4796,7 @@ becomes
 \end{equation*}
 
 \begin{definition}
-The \textbf{coefficient of multiple determination} is defined to be
+\protect\hypertarget{def:R-squared}{}\label{def:R-squared}The \textbf{coefficient of multiple determination} is defined to be
 \begin{equation*}
   R^2
   := 1 - \frac{\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2}
@@ -4875,7 +4876,7 @@ to compare model fit for models with different numbers of variables. An
 attempt to compensate for this effect is the adjusted \(R^2\) value:
 
 \begin{definition}
-The \textbf{adjusted \(R^2\) value} is given by
+\protect\hypertarget{def:adjusted-R-squared}{}\label{def:adjusted-R-squared}The \textbf{adjusted \(R^2\) value} is given by
 \begin{equation*}
   R^2_\mathrm{adj}
   := 1 - \frac{\frac{1}{n-p-1}\mathrm{s}_{\hat\varepsilon}^2}{\frac{1}{n-1}\mathrm{s}_y^2}
@@ -5093,18 +5094,18 @@ This completes the proof.
 We can also find the change in estimated error variance, when samples
 are omitted from the estimate. The estimated variance in the modified model
 is
-\begin{equation*}
+\begin{align*}
   \hat\sigma_{(I)}^2
-  := \frac{1}{n-m-p-1} \sum_{i\notin I} \Bigl( y_i - (X\hat\beta^{(I)})_i \Bigr)^2
-  = \frac{1}{n-m-p-1} \Bigl\| y_{(I)} - X_{(I)} \hat\beta^{(I)} \Bigr\|^2
-\end{equation*}
+  &:= \frac{1}{n-m-p-1} \sum_{i\notin I} \Bigl( y_i - (X\hat\beta^{(I)})_i \Bigr)^2 \\
+  &= \frac{1}{n-m-p-1} \Bigl\| y_{(I)} - X_{(I)} \hat\beta^{(I)} \Bigr\|^2
+\end{align*}
 where \(m = |I|\) so that \(n-m\) is the number of observations used
 in the estimate. We want to compare this quantity to the original estimate
-\begin{equation*}
+\begin{align*}
   \hat\sigma^2
-  := \frac{1}{n-p-1} \sum_{i=1}^n \Bigl( y_i - (X\hat\beta)_i \Bigr)^2
-  = \frac{1}{n-p-1} \Bigl\| y - X \hat\beta \Bigr\|^2.
-\end{equation*}
+  &= \frac{1}{n-p-1} \sum_{i=1}^n \Bigl( y_i - (X\hat\beta)_i \Bigr)^2 \\
+  &= \frac{1}{n-p-1} \Bigl\| y - X \hat\beta \Bigr\|^2.
+\end{align*}
 Here we used again the Euclidean norm as a shorthand for the sum of squares
 used in these estimates. The following lemma shows how the residual sum
 of squares decreases when the observations \(I\) are omitted from the
@@ -7118,12 +7119,12 @@ It is an easy exercise to show that this can equivalently be written as
 Using the formulas for the variance and bias from above, we
 can find an formula for \(\mathop{\mathrm{MSE}}\nolimits(\hat\beta^{(\lambda)}_j)\),
 but the result is hard to interpret. Instead of considering these analytical
-expressions, we illustrate the mean squared error using a numerical
+expressions, we illustrate the MSE using a numerical
 example.
 
 \begin{example}
 Continuing from example~\ref{exm:knorkel} above, we can determine
-the mean squared error for every value of~\(\lambda\). Here we
+the MSE for every value of~\(\lambda\). Here we
 use the fact that this is simulated data where we know the true
 values of \(\beta\) and~\(\sigma^2\).
 
@@ -7165,8 +7166,8 @@ For the covariance matrix we get the following:
 \end{Highlighting}
 \end{Shaded}
 
-Now we repeat these calculations in a loop, to plot the mean squared
-error as a function of~\(\lambda\):
+Now we repeat these calculations in a loop, to plot the MSE
+as a function of~\(\lambda\):
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -7357,6 +7358,441 @@ and ridge regression estimates.
 
 \clearpage
 
+\hypertarget{S13-models}{%
+\section{Model selection}\label{S13-models}}
+
+The aim of linear regression is to find a model with the following
+properties:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The model gives good predictions \(\hat y\).
+\item
+  The model is easy to interpret.
+\item
+  The modelling assumptions are satisfied.
+\end{enumerate}
+
+These three aims can sometimes contradict: models with fewer parameters
+are often easier to interpret, whereas good predictions sometimes require
+a large number of parameters. Some trade-off
+between these constraints must be made. In this section we discuss how
+to choose the inputs for a model in a systematic way.
+
+\hypertarget{candidates-models}{%
+\subsection{Candidates Models}\label{candidates-models}}
+
+Here we assume that we are given data with input variables \(x_1, \ldots, x_p\).
+The standard model which we have discussed so far adds an intercept to these
+inputs, so that there are \(p+1\) model parameters in total. We can modify
+this model in various ways:
+
+\begin{itemize}
+\item
+  When we discussed hypothesis tests, we allowed for the possibility that
+  some inputs do not influence the output. A reasonable approach would
+  be to fit a model with these inputs omitted. Since each input
+  may either be included in or excluded from the model, independent of
+  the others, and similarly the intercept may be included or not,
+  there are \(2^{p+1}\) possible models to consider.
+\item
+  In the section about \protect\hyperlink{S11-improving}{Improving the Model Fit} we have seen that
+  sometimes it is useful to transform input variables before using them
+  in the model. This can either happen individually, \emph{e.g.}~\(x_2' = \log x_2\), or collectively, \emph{e.g.}~\(x^\ast = x_1 x_2\). The number of
+  models we may obtain in this way is unlimited.
+\end{itemize}
+
+If we want to compare these candidate models in a systematic way,
+we need to use efficient methods for comparison, since a often a large
+number of models needs to be considered.
+
+\hypertarget{misspecified-models}{%
+\subsection{Misspecified Models}\label{misspecified-models}}
+
+The model is said to be \textbf{misspecified}, if the data we are using
+comes from a different model than the one we use to estimate
+the coefficients.
+
+\hypertarget{missing-variables}{%
+\subsubsection{Missing Variables}\label{missing-variables}}
+
+Assume that the data comes from the model
+\begin{equation*}
+  Y = \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon,
+\end{equation*}
+(we can include the intercept as \(x_1 = 1\) if needed),
+but we are only using the first \(q\) variables \(x_1, \ldots, x_q\),
+where \(q < p\), to estimate the coefficients. Then the least squares
+estimate of \(\beta = (\beta_1, \ldots, \beta_q)\) is given by
+\begin{equation*}
+  \hat\beta
+  = (X^\top X)^{-1} X^\top y
+\end{equation*}
+where \(X \in \mathbb{R}^{n\times q}\),
+and our estimate for the error variance \(\sigma^2\) is
+\begin{equation*}
+  \hat\sigma^2
+  = \frac{1}{n-q} y^\top (I - H) y,
+\end{equation*}
+where \(H = X (X^\top X)^{-1} X^\top\) is the hat matrix computed
+without using \(x_{q+1}, \ldots, x_p\).
+
+If we write \(\tilde X \in \mathbb{R}^{n\times (p-q)}\) for the matrix with columns
+\(x_{q+1}, \ldots, x_p\) and \(\tilde\beta = (\beta_{q+1}, \ldots, \beta_p) \in \mathbb{R}^{p-q}\), then the full model can be written as
+\begin{equation*}
+  Y
+  = X \beta + \tilde X \tilde\beta + \varepsilon
+\end{equation*}
+and we get
+\begin{align*}
+  \hat\beta
+  &= (X^\top X)^{-1} X^\top Y \\
+  &= (X^\top X)^{-1} X^\top (X \beta + \tilde X \tilde\beta + \varepsilon) \\
+  &= (X^\top X)^{-1} X^\top X \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon\\
+  &= \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon.
+\end{align*}
+Thus, we have
+\begin{equation*}
+  \mathbb{E}(\hat\beta)
+  = \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta
+\end{equation*}
+and
+\begin{equation*}
+  \mathop{\mathrm{bias}}(\hat\beta)
+  = (X^\top X)^{-1} X^\top \tilde X \tilde\beta.
+\end{equation*}
+This shows that now the estimate is biased in general. There are two
+special cases when omitting variables does not introduce a bias:
+The first is when all of the omitted coefficients equal zero, \emph{i.e.}~when
+we have \(\tilde\beta = 0\). The second case is when the omitted inputs are
+orthogonal to the included inputs, since then we have \(X^\top \tilde X = 0\).
+
+Using the formula for \(\hat\beta\) we find
+\begin{align*}
+  \mathop{\mathrm{Cov}}( \hat\beta )
+  &= \mathop{\mathrm{Cov}}\Bigl( \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon\Bigr) \\
+  &= \mathop{\mathrm{Cov}}\Bigl( (X^\top X)^{-1} X^\top \varepsilon\Bigr) \\
+  &= \sigma^2 (X^\top X)^{-1} X^\top I X (X^\top X)^{-1} \\
+  &= \sigma^2 (X^\top X)^{-1}.
+\end{align*}
+Similar to our derivation in the section \protect\hyperlink{var-est-bias}{Estimating the Error Variance}
+one can show that
+\begin{equation*}
+  \mathbb{E}\bigl( \hat\sigma^2 \bigr)
+  = \sigma^2 + \frac{\tilde\beta^\top \tilde X^\top (I - H) \tilde X \tilde \beta}{n-q}.
+\end{equation*}
+This shows that the estimate of the error variance is in general also biased.
+
+This shows that our estimates can become biased if some of the inputs
+are missing from our model. As in the previous section, it may happen
+that the MSE of the parameter estimates in the reduced model
+is smaller than the MSE in the correct model; this is the case if the
+variance of the estimates decreases enough to compensate for the
+introduced bias.
+
+\hypertarget{unnecessary-variables}{%
+\subsubsection{Unnecessary Variables}\label{unnecessary-variables}}
+
+If the data comes from a model with fewer inputs than the ones we are using,
+the model is not ``misspecified'' in the strict sense. It is just the case that
+some of the true \(\beta_j\) exactly equal zero. In this case, our previous
+results show that the least squares estimate is unbiased.
+
+Including additional variables into a model still can cause problems:
+One can show that each unnecessary variable added increases the variance of the
+estimates \(\hat\beta_j\). Instead of giving a proof of this fact,
+we illustrate the effect using a numerical example.
+
+\begin{example}
+Here we consider the \texttt{stackloss} data set with an added column of
+noise. We have see that
+\begin{equation*}
+  \mathop{\mathrm{Var}}( \hat\beta_j )
+  = \sigma^2 \bigl( X^\top X \bigr)^{-1}_{jj}.
+\end{equation*}
+While we don't know the true value of \(\sigma^2\), we can determine
+the relative change in variance when adding a column, since this process
+does not change \(\sigma^2\) and thus \(\sigma^2\) will cancel when we
+determine the relative change in variance.
+
+We first compute the diagonal elements of \(\bigl( X^\top X \bigr)^{-1}\)
+for the original dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X1 }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\NormalTok{d1 }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(}\FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X1) }\SpecialCharTok{\%*\%}\NormalTok{ X1))}
+\NormalTok{d1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#  (Intercept)     Air.Flow   Water.Temp   Acid.Conc. }
+\NormalTok{\# 13.452726695  0.001728874  0.012875424  0.002322167}
+\end{Highlighting}
+\end{Shaded}
+
+Now we add a column of noise and re-compute the values:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20211115}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(X1)}
+\NormalTok{X2 }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(X1, }\FunctionTok{rnorm}\NormalTok{(n))}
+\NormalTok{d2 }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(}\FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X2) }\SpecialCharTok{\%*\%}\NormalTok{ X2))}
+\NormalTok{d2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#  (Intercept)     Air.Flow   Water.Temp   Acid.Conc.              }
+\NormalTok{\# 14.397515774  0.001730570  0.015195467  0.002796487  0.064828744}
+\end{Highlighting}
+\end{Shaded}
+
+Finally, we determine the change in variance in percent:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{round}\NormalTok{(}\DecValTok{100} \SpecialCharTok{*}\NormalTok{ (d2[}\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ d1) }\SpecialCharTok{/}\NormalTok{ d1, }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# (Intercept)    Air.Flow  Water.Temp  Acid.Conc. }
+\NormalTok{\#       7.023       0.098      18.019      20.426}
+\end{Highlighting}
+\end{Shaded}
+
+We see that the variances of the \(\hat\beta_j\) increased by up to \(20\%\)
+when we added the unnecessary input.
+\end{example}
+
+The example illustrates that it is important to keep the model as small
+as possible.
+
+\hypertarget{assessing-models}{%
+\subsection{Assessing Models}\label{assessing-models}}
+
+A variety of criteria is used in practice to select variables to include
+in a regression model.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  The \protect\hyperlink{def:R-squared}{coefficient of multiple determination}, \(R^2\), can be used
+  to compare models. ``Good'' models have large \(R^2\).
+  If comparisons are made between models with different
+  numbers of inputs then the \protect\hyperlink{def:adjusted-R-squared}{adjusted \(R^2\)-value},
+  \(R^2_\mathrm{adj}\), must be used.
+\item
+  The estimate for the error variance,
+  \begin{equation*}
+   \hat\sigma^2 = \frac{1}{n - q} \sum_{i=1}^n (y_i - \hat y_i)^2
+    \end{equation*}
+  can be used, where \(q\) is the number of columns of the design matrix.
+  (For the full model with an intercept we have \(q = p+1\).)
+  ``Good'' models have small \(\hat\sigma^2\). Since
+  \begin{align*}
+   R^2_\mathrm{adj}
+   &= 1 - \frac{\frac{1}{n-q}\mathrm{s}_{\hat\varepsilon}^2}{\frac{1}{n-1}\mathrm{s}_y^2} \\
+   &= 1 - \frac{\frac{n-1}{n-q}\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2} \\
+   &= 1 - \frac{\frac{1}{n-q} \sum_{i=1}^n (y_i - \hat y_i)^2}{\mathrm{s}_y^2} \\
+   &= 1 - \frac{\hat\sigma^2}{\mathrm{s}_y^2},
+    \end{align*}
+  where \(\mathrm{s}_{\hat\varepsilon}^2\) and \(\mathrm{s}_y^2\) are the sample variances
+  as before, minimising \(\hat\sigma^2\) is equivalent to
+  maximising \(R^2_\mathrm{adj}\). Thus, this criterion is equivalent to
+  the first one.
+\item
+  The \textbf{Prediction Error Sum of Squares (PRESS)} compares each
+  output \(y_i\) to the fitted value \(\hat y^{(i)}_i\) for observation i,
+  computed without using sample~\(i\):
+  \begin{equation*}
+    \mathrm{PRESS}
+    := \sum_{i=1}^n \bigl( y_i - \hat y^{(i)}_i \bigr)^2.
+  \end{equation*}
+  In the comparison, \(\hat y^{(i)}_i\) is used instead of \(\hat y_i\)
+  so that in models with too many parameters, overfitting does not
+  result in overoptimistic estimates.
+  ``Good'' models have small PRESS. The following lemma helps to compute
+  PRESS without having to fit \(n\) separate models.
+
+  \begin{lemma}
+  We have
+  \begin{equation*}
+    \mathrm{PRESS}
+    = \sum_{i=1}^n \Bigl( \frac{\hat\varepsilon_i}{1 - h_{ii}} \Bigr)^2,
+  \end{equation*}
+  where \(h_{ii}\) denotes the diagonal elements of the hat matrix~\(H\).
+  \end{lemma}
+
+  \begin{proof}
+  From equation~\eqref{eq:dbeta-i} we know how the estimated regression
+  coefficients change, when observation \(i\) is deleted from the model:
+  \begin{equation*}
+    \hat\beta^{(i)} - \hat\beta
+    = - (X^\top X)^{-1} x_i \frac{\hat\varepsilon_i}{1 - h_{ii}}.
+  \end{equation*}
+  Thus we have
+  \begin{align*}
+    \hat y^{(i)}_i - \hat y_i
+    &= \bigl( X \hat\beta^{(i)} - X \hat\beta \bigr)_i \\
+    &= - \bigl( X (X^\top X)^{-1} x_i \frac{\hat\varepsilon_i}{1 - h_{ii}} \bigr)_i \\
+    &= - x_i^\top (X^\top X)^{-1} x_i \frac{\hat\varepsilon_i}{1 - h_{ii}} \\
+    &= - \frac{h_{ii}}{1 - h_{ii}} \hat\varepsilon_i.
+  \end{align*}
+  From this we get
+  \begin{align*}
+    y_i - \hat y^{(i)}_i
+    &= y_i - \hat y_i + \hat y_i - \hat y^{(i)}_i \\
+    &= \hat\varepsilon_i + \frac{h_{ii}}{1 - h_{ii}} \hat\varepsilon_i \\
+    &= \frac{1}{1 - h_{ii}} \hat\varepsilon_i.
+  \end{align*}
+  Substituting this expression into the definition of PRESS
+  completes the proof.
+  \end{proof}
+\item
+  We can consider
+  \begin{equation*}
+    C_q
+    := \frac{1}{\hat{\sigma}^2} \sum_{i=1}^n (y_i - \hat y_i)^2 - n + 2q.
+  \end{equation*}
+  The subscript \(q\) in \(C_q\) denotes the number of parameters in the model.
+  This quantity is called \textbf{Mallows' Cp} or sometimes
+  \textbf{Mallows' Ck}. ``Good'' models have \(C_q \approx q\).
+
+  The form of \(C_q\) is explained by the fact that it approximates the
+  quantity
+  \begin{equation*}
+    \Gamma_q
+    := \frac{1}{\sigma^2} \sum_{i=1}^n \mathop{\mathrm{MSE}}\nolimits(\hat y_i).
+  \end{equation*}
+  To see that \(C_q \approx \Gamma_q\) we first rewrite \(\Gamma_q\) as
+  \begin{align*}
+    \Gamma_q
+    &= \sum_{i=1}^n \Bigl( \mathop{\mathrm{Var}}(\hat y_i) + \mathop{\mathrm{bias}}(\hat y_i)^2 \Bigr) \\
+    &= \frac{1}{\sigma^2} \sum_{i=1}^n \mathop{\mathrm{bias}}(\hat y_i)^2 + \frac{1}{\sigma^2} \sum_{i=1}^n \mathop{\mathrm{Var}}(\hat y_i).
+  \end{align*}
+  Since \(\hat y = HY \sim \mathcal{N}(HX\beta, \sigma^2 HIH^\top) = \mathcal{N}(X\beta, \sigma^2 H)\) we have \(\mathop{\mathrm{Var}}(\hat y_i) = \sigma^2 h_{ii}\) were \(h_{ii}\) are
+  the diagonal elements of the hat matrix. Furthermore, using the trace
+  operator (see appendix~\ref{trace}) we find
+  \begin{align*}
+    \sum_{i=1}^n h_{ii}
+    &= \mathop{\mathrm{tr}}(H) \\
+    &= \mathop{\mathrm{tr}}\bigl(X (X^\top X)^{-1} X^\top \bigr) \\
+    &= \mathop{\mathrm{tr}}\bigl((X^\top X)^{-1} X^\top X \bigr) \\
+    &= \mathop{\mathrm{tr}}(I) \\
+    &= q,
+  \end{align*}
+  and thus
+  \begin{equation}
+    \Gamma_q
+    = \frac{1}{\sigma^2} \sum_{i=1}^n \mathop{\mathrm{bias}}(\hat y_i)^2 + q.  \label{eq:Gamma-q}
+  \end{equation}
+  This shows that for a model where the \(\hat y_i\) are unbiased,
+  we have \(\Gamma_q = q\), and if there is a bias we have \(\Gamma_q > q\).
+  We now show that \(C_q \approx \Gamma_q\).
+
+  We also have \(\hat y = \mathop{\mathrm{bias}}(\hat y) + HY\) and thus
+  \begin{equation*}
+    Y - \hat y
+    = (I - H)Y - \mathop{\mathrm{bias}}(\hat y)
+    = (I - H) \varepsilon- \mathop{\mathrm{bias}}(\hat y).
+  \end{equation*}
+  Using this relation, one can show that
+  \begin{align*}
+    \mathbb{E}\Bigl( \sum_{i=1}^n (y_i - \hat y_i)^2 \Bigr)
+    &= (Y - \hat y)^\top (Y - \hat y) \\
+    &= \dots \\
+    &= \sum_{i=1}^n \mathop{\mathrm{bias}}(\hat y_i)^2 + (n-q) \sigma^2.
+  \end{align*}
+  Substituting this result into the formula for \(\Gamma_q\) we get
+  \begin{align*}
+    \Gamma_q
+    &= \frac{1}{\sigma^2} \mathbb{E}\Bigl( \sum_{i=1}^n (y_i - \hat y_i)^2 \Bigr)
+        - (n-q)
+        + q \\
+    &\approx \frac{1}{\sigma^2} \sum_{i=1}^n (y_i - \hat y_i)^2 - n + 2q \\
+    &\approx \frac{1}{\hat\sigma^2} \sum_{i=1}^n (y_i - \hat y_i)^2 - n + 2q \\
+    &= C_q.
+  \end{align*}
+
+  A plot of \(C_q\) \emph{vs.}~\(q\) will show adequate models as points
+  close to the line \(C_q=q\). Points far from the line are not recommended,
+  and, of those which lie close to the line, we generally prefer smaller
+  models. The method relies on having a good estimate of~\(\sigma^2\).
+\item
+  \textbf{Akaike's Information Criterion (AIC)} is defined as
+  \begin{equation*}
+    \mathrm{AIC}
+    = 2q - 2 \log(\hat L),
+  \end{equation*}
+  where \(q\) is the number of parameters in the model, and \(\hat L\)
+  is the maximum of the likelihood function when these \(q\) parameters
+  are chosen optimally. ``Good'' models have small AIC.
+
+  Since we assume \(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\), i.i.d. and
+  we have \(\varepsilon_i = y_i - x_i^\top\beta\), the likelihood function
+  for our model is
+  \begin{align*}
+    L(\beta, \sigma^2; X, y)
+    &= \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}} \exp\Bigl( - \frac{(y_i - x_i^\top\beta)^2}{2\sigma^2} \Bigr) \\
+    &= \frac{1}{(2\pi\sigma^2)^{n/2}} \exp\Bigl( - \sum_{i=1}^n \frac{(y_i - x_i^\top\beta)^2}{2\sigma^2} \Bigr).
+  \end{align*}
+  Taking logarithms we get
+  \begin{align*}
+    \log L(\beta, \sigma^2; X, y)
+    &= -\frac{n}{2} \log(2\pi\sigma^2) - \sum_{i=1}^n \frac{(y_i - x_i^\top\beta)^2}{2\sigma^2} \\
+    &= -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} r(\beta),
+  \end{align*}
+  where \(r(\beta)\) is the residual sum of squares, as introduced
+  in the section about \protect\hyperlink{S02-multiple}{Least Squares Estimates}. To compute the AIC
+  we need to maximise this expression. The values of \(\beta\) and \(\sigma^2\)
+  where the maximum is taken are called the \textbf{maximum likelihood estimate (MLE)}
+  for \(\beta\) and \(\sigma^2\). From lemma~\ref{lem:multiple-LSQ} we know
+  that for fixed \(\sigma^2\), \(L\) takes its maximum when \(\beta\) equals the
+  least squares estimate \(\hat\beta\). Taking derivatives we can then
+  find the optimal value of \(\sigma^2\). The result is
+  \begin{equation*}
+    \hat\sigma^2_\mathrm{MLE}
+    = \frac1n r(\hat\beta)
+    = \frac{1}{n} \sum_{i=1}^n (y_i - x_i^\top \hat\beta)^2
+    = \frac{n-q}{n} \hat\sigma^2.
+  \end{equation*}
+  Thus we get
+  \begin{align*}
+    \mathrm{AIC}
+    &= 2q + n \log(2\pi\hat\sigma^2_\mathrm{MLE}) + \frac{1}{\hat\sigma^2_\mathrm{MLE}} r(\hat\beta) \\
+    &= 2q + n \log\bigl( 2\pi r(\hat\beta) / n \bigr) + n \\
+    &= 2q + n \log\bigl( \|\hat\varepsilon\|^2 \bigr) + n + n \log( 2\pi / n )
+  \end{align*}
+\end{enumerate}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We have discussed how different models can be considered by omitting
+  existing variables or by adding non-linear functions of the inputs
+  as new variables.
+\item
+  We have seen that removing too many variables can introduce a bias.
+\item
+  We have seen that adding too many variables can increase the variance
+  of the estimate.
+\item
+  We have considered different criteria for choosing the ``best'' model.
+\end{itemize}
+
+\clearpage
+
 \hypertarget{appendix-appendices}{%
 \appendix}
 
@@ -7509,6 +7945,29 @@ independent columns of \(A\), or the largest number of linearly
 independent rows of \(A\). Thus, for \(A \in \mathbb{R}^{m \times n}\) we
 always have \(\mathop{\mathrm{rank}}(A) \leq \min(m, n)\). The matrix \(A\)
 is said to have ``full rank'' if \(\mathop{\mathrm{rank}}(A) = \min(m, n)\).
+
+\hypertarget{trace}{%
+\subsubsection{Trace}\label{trace}}
+
+\begin{definition}
+The \textbf{trace} of a matrix \(A \in \mathbb{R}^{n\times n}\) is given by
+\begin{equation*}
+  \mathop{\mathrm{tr}}(A) = \sum_{i=1}^n a_ii.
+\end{equation*}
+\end{definition}
+
+Properties:
+
+\begin{itemize}
+\item
+  \(\mathop{\mathrm{tr}}(A+B) = \mathop{\mathrm{tr}}(A) + \mathop{\mathrm{tr}}(B)\)
+\item
+  \(\mathop{\mathrm{tr}}(A^\top) = \mathop{\mathrm{tr}}(A)\)
+\item
+  \(\mathop{\mathrm{tr}}(ABC) = \mathop{\mathrm{tr}}(BCA) = \mathop{\mathrm{tr}}(CAB)\). The individual matrices \(A, B, C\) don't
+  need to be square for this relation to hold, but the relation only holds for
+  cyclic permutations as shown. In general \(\mathop{\mathrm{tr}}(ABC) \neq \mathop{\mathrm{tr}}(ACB)\).
+\end{itemize}
 
 \hypertarget{matrix-inverse}{%
 \subsubsection{Matrix Inverse}\label{matrix-inverse}}
