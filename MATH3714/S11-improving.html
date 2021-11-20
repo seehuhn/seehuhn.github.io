@@ -261,7 +261,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="11.1" data-path="S11-improving.html"><a href="S11-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>11.1</b> Linearising the Mean</a></li>
 <li class="chapter" data-level="11.2" data-path="S11-improving.html"><a href="S11-improving.html#stabilising-the-variance"><i class="fa fa-check"></i><b>11.2</b> Stabilising the Variance</a></li>
-<li class="chapter" data-level="11.3" data-path="S11-improving.html"><a href="S11-improving.html#the-power-transform"><i class="fa fa-check"></i><b>11.3</b> The Power Transform</a></li>
+<li class="chapter" data-level="11.3" data-path="S11-improving.html"><a href="S11-improving.html#power-transform"><i class="fa fa-check"></i><b>11.3</b> The Power Transform</a></li>
 <li class="chapter" data-level="11.4" data-path="S11-improving.html"><a href="S11-improving.html#orthogonal-inputs"><i class="fa fa-check"></i><b>11.4</b> Orthogonal Inputs</a></li>
 </ul></li>
 <li class="chapter" data-level="12" data-path="S12-ridge.html"><a href="S12-ridge.html"><i class="fa fa-check"></i><b>12</b> Ridge Regression</a>
@@ -283,7 +283,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.1" data-path="S13-models.html"><a href="S13-models.html#missing-variables"><i class="fa fa-check"></i><b>13.2.1</b> Missing Variables</a></li>
 <li class="chapter" data-level="13.2.2" data-path="S13-models.html"><a href="S13-models.html#unnecessary-variables"><i class="fa fa-check"></i><b>13.2.2</b> Unnecessary Variables</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#assessing-models"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
+<li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#criteria"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Methods for Model Selection</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="S14-methods.html"><a href="S14-methods.html#exhaustive-search"><i class="fa fa-check"></i><b>14.1</b> Exhaustive Search</a></li>
+<li class="chapter" data-level="14.2" data-path="S14-methods.html"><a href="S14-methods.html#search-algorithm"><i class="fa fa-check"></i><b>14.2</b> Search Algorithm</a></li>
+<li class="chapter" data-level="14.3" data-path="S14-methods.html"><a href="S14-methods.html#other-methods"><i class="fa fa-check"></i><b>14.3</b> Other Methods</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-forward-selection"><i class="fa fa-check"></i><b>14.3.1</b> Stepwise Forward Selection</a></li>
+<li class="chapter" data-level="14.3.2" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-backward-selection"><i class="fa fa-check"></i><b>14.3.2</b> Stepwise Backward Selection</a></li>
+<li class="chapter" data-level="14.3.3" data-path="S14-methods.html"><a href="S14-methods.html#hybrid-methods"><i class="fa fa-check"></i><b>14.3.3</b> Hybrid Methods</a></li>
+</ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
@@ -409,7 +420,7 @@ analysis. A common reason for the violation of this assumption is for the
 response variable <span class="math inline">\(y\)</span> to follow a distribution in which the variance depends
 on <span class="math inline">\(y\)</span> or <span class="math inline">\(\mathbb{E}(y)\)</span> and thus on <span class="math inline">\(x\)</span>.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-42" class="example"><strong>Example 11.1  </strong></span>The error in our model
+<p><span id="exm:unlabeled-div-41" class="example"><strong>Example 11.1  </strong></span>The error in our model
 <span class="math display">\[\begin{equation*}
   Y
   = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
@@ -472,7 +483,7 @@ affect the mean and we need to check the model fit for the transformed data, to
 see whether the transformed data can still reasonably be described by a linear
 model.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-43" class="example"><strong>Example 11.2  </strong></span>The last transformation in the table above corresponds to the case of binomial
+<p><span id="exm:unlabeled-div-42" class="example"><strong>Example 11.2  </strong></span>The last transformation in the table above corresponds to the case of binomial
 sampling: If <span class="math inline">\(x = p\)</span> and <span class="math inline">\(Y \sim B(n, p) / n\)</span> then we have <span class="math inline">\(\mathbb{E}(Y) = n p / n = x\)</span> and a linear model may be appropriate. But we also have <span class="math inline">\(\mathop{\mathrm{Var}}(Y) = p (1 - p) / n \propto \mathbb{E}(Y) \bigl( 1- \mathbb{E}(Y) \bigr)\)</span>, so the assumption of
 constant variance is violated.</p>
 <p>We try to apply the transformation suggested in the table. The
@@ -540,7 +551,7 @@ Thus we can try transformations like <span class="math inline">\(y&#39; = \log(y
 <p>The spread of residuals now looks somewhat more reasonable.</p>
 </div>
 </div>
-<div id="the-power-transform" class="section level2" number="11.3">
+<div id="power-transform" class="section level2" number="11.3">
 <h2><span class="header-section-number">11.3</span> The Power Transform</h2>
 <div class="videowrap">
 <div class="videowrapper">
@@ -601,7 +612,7 @@ interpret the model, it is usually better to select a “simple” <span class="
 <em>e.g.</em> <span class="math inline">\(\lambda=0.5\)</span> rather than using the
 “optimal” value <span class="math inline">\(\lambda_\mathrm{min}\)</span>.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-44" class="example"><strong>Example 11.4  </strong></span>Continuing from example <a href="S11-improving.html#exm:electric">11.3</a> above, we can try a power
+<p><span id="exm:unlabeled-div-43" class="example"><strong>Example 11.4  </strong></span>Continuing from example <a href="S11-improving.html#exm:electric">11.3</a> above, we can try a power
 transform for the data. We start by plotting <span class="math inline">\(r(\lambda)\)</span> as a function
 of <span class="math inline">\(\lambda\)</span>, together with the cutoff suggested by equation <a href="S11-improving.html#eq:power-cutoff">(11.1)</a>:</p>
 <div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="S11-improving.html#cb176-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> d<span class="sc">$</span>V1</span>
@@ -665,7 +676,7 @@ space <span class="math inline">\(X\)</span>. In these cases, there are advantag
 which are orthogonal, thus avoiding or reducing problems caused by
 collinearity.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-45" class="example"><strong>Example 11.5  </strong></span>Suppose we have observations <span class="math inline">\((x_i, y_i)\)</span> for
+<p><span id="exm:unlabeled-div-44" class="example"><strong>Example 11.5  </strong></span>Suppose we have observations <span class="math inline">\((x_i, y_i)\)</span> for
 <span class="math inline">\(i\in \{1, \ldots, n\}\)</span> and we want to fit a polynomial model of the form
 <span class="math display">\[\begin{equation*}
   Y_i
@@ -766,7 +777,7 @@ coefficients. Since <span class="math inline">\(X^\top X\)</span> is diagonal, t
 estimates <span class="math inline">\(\hat\beta_j\)</span> for <span class="math inline">\(j\in \{0, \ldots, p\}\)</span> (but the change will affect
 <span class="math inline">\(\sigma^2\)</span>).</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-46" class="example"><strong>Example 11.6  </strong></span>In R we can create specific orthogonal entries for polynomial regression using
+<p><span id="exm:unlabeled-div-45" class="example"><strong>Example 11.6  </strong></span>In R we can create specific orthogonal entries for polynomial regression using
 the command <code>poly(x, p)</code>. The output of this function is a matrix
 with elements <span class="math inline">\(\psi_j(x_i)\)</span> for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span> (omitting the intercept)
 and <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>. Continuing from the example above we find</p>
@@ -786,7 +797,7 @@ of the design matrix:</p>
 problems with multicollinearity.</p>
 </div>
 <div class="example">
-<p><span id="exm:unlabeled-div-47" class="example"><strong>Example 11.7  </strong></span>To illustrate the use of <code>poly()</code> for fitting a polynomial model to
+<p><span id="exm:unlabeled-div-46" class="example"><strong>Example 11.7  </strong></span>To illustrate the use of <code>poly()</code> for fitting a polynomial model to
 real data, we use the built-in <code>cars</code> dataset in R. This dataset
 contains historic data (from the 1920s) about the speed of cars (in mph) and
 the distances taken to stop (in ft). We first fit a second order polynomial

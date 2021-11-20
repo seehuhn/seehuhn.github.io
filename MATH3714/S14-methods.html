@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 14 Methods for Model Selection | MATH3714 Linear Regression and Robustness</title>
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 14 Methods for Model Selection | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 14 Methods for Model Selection | MATH3714 Linear Regression and Robustness" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="S13-models.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH3714 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
+<ul>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#teams"><i class="fa fa-check"></i>Discussion Board</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
+<li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
+<li class="chapter" data-level="2.2" data-path="S02-multiple.html"><a href="S02-multiple.html#the-normal-equations"><i class="fa fa-check"></i><b>2.2</b> The Normal Equations</a></li>
+<li class="chapter" data-level="2.3" data-path="S02-multiple.html"><a href="S02-multiple.html#fitted-values"><i class="fa fa-check"></i><b>2.3</b> Fitted Values</a></li>
+<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.4</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html"><i class="fa fa-check"></i>Interlude: Linear Regression in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-fitting"><i class="fa fa-check"></i>Fitting a Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-model"><i class="fa fa-check"></i>Understanding the Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-predict"><i class="fa fa-check"></i>Making Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
+<li class="chapter" data-level="3" data-path="S03-cov.html"><a href="S03-cov.html"><i class="fa fa-check"></i><b>3</b> Random Vectors and Covariance</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="S03-cov.html"><a href="S03-cov.html#expectation"><i class="fa fa-check"></i><b>3.1</b> Expectation</a></li>
+<li class="chapter" data-level="3.2" data-path="S03-cov.html"><a href="S03-cov.html#sec:covariance"><i class="fa fa-check"></i><b>3.2</b> Covariance Matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="S03-cov.html"><a href="S03-cov.html#the-multivariate-normal-distribution"><i class="fa fa-check"></i><b>3.3</b> The Multivariate Normal Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="S04-model.html"><a href="S04-model.html"><i class="fa fa-check"></i><b>4</b> Properties of the Least Squares Estimate</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="S04-model.html"><a href="S04-model.html#mean-and-covariance"><i class="fa fa-check"></i><b>4.1</b> Mean and Covariance</a></li>
+<li class="chapter" data-level="4.2" data-path="S04-model.html"><a href="S04-model.html#hat-matrix"><i class="fa fa-check"></i><b>4.2</b> Properties of the Hat Matrix</a></li>
+<li class="chapter" data-level="4.3" data-path="S04-model.html"><a href="S04-model.html#Cochran"><i class="fa fa-check"></i><b>4.3</b> Cochran’s theorem</a></li>
+<li class="chapter" data-level="4.4" data-path="S04-model.html"><a href="S04-model.html#var-est-bias"><i class="fa fa-check"></i><b>4.4</b> Estimating the Error Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="S05-single.html"><a href="S05-single.html"><i class="fa fa-check"></i><b>5</b> Uncertainty for Individual Regression Coefficients</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="S05-single.html"><a href="S05-single.html#measuring-the-estimation-error"><i class="fa fa-check"></i><b>5.1</b> Measuring the Estimation Error</a></li>
+<li class="chapter" data-level="5.2" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals"><i class="fa fa-check"></i><b>5.2</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="5.3" data-path="S05-single.html"><a href="S05-single.html#hypthesis-tests"><i class="fa fa-check"></i><b>5.3</b> Hypthesis Tests</a></li>
+<li class="chapter" data-level="5.4" data-path="S05-single.html"><a href="S05-single.html#r-experiments"><i class="fa fa-check"></i><b>5.4</b> R Experiments</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="S05-single.html"><a href="S05-single.html#fitting-the-model"><i class="fa fa-check"></i><b>5.4.1</b> Fitting the model</a></li>
+<li class="chapter" data-level="5.4.2" data-path="S05-single.html"><a href="S05-single.html#estimating-the-variance-of-the-error"><i class="fa fa-check"></i><b>5.4.2</b> Estimating the Variance of the Error</a></li>
+<li class="chapter" data-level="5.4.3" data-path="S05-single.html"><a href="S05-single.html#estimating-the-standard-errors"><i class="fa fa-check"></i><b>5.4.3</b> Estimating the Standard Errors</a></li>
+<li class="chapter" data-level="5.4.4" data-path="S05-single.html"><a href="S05-single.html#hypothesis-tests"><i class="fa fa-check"></i><b>5.4.4</b> Hypothesis tests</a></li>
+<li class="chapter" data-level="5.4.5" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals-1"><i class="fa fa-check"></i><b>5.4.5</b> Confidence Intervals</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html"><i class="fa fa-check"></i><b>6</b> Estimating Coefficients Simultaneously</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-dist"><i class="fa fa-check"></i><b>6.1</b> Linear Combinations of Coefficients</a></li>
+<li class="chapter" data-level="6.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-CI"><i class="fa fa-check"></i><b>6.2</b> Confidence Regions</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#result"><i class="fa fa-check"></i><b>6.2.1</b> Result</a></li>
+<li class="chapter" data-level="6.2.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#numerical-experiments"><i class="fa fa-check"></i><b>6.2.2</b> Numerical Experiments</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-test"><i class="fa fa-check"></i><b>6.3</b> Hypothesis Tests</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html"><i class="fa fa-check"></i>Interlude: Loading Data into R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-csv-files"><i class="fa fa-check"></i>Importing CSV Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-microsoft-excel-files"><i class="fa fa-check"></i>Importing Microsoft Excel Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#checking-the-imported-data"><i class="fa fa-check"></i>Checking the Imported Data</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#common-problems"><i class="fa fa-check"></i>Common Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="S07-examples.html"><a href="S07-examples.html"><i class="fa fa-check"></i><b>7</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="S07-examples.html"><a href="S07-examples.html#simple-confidence-interval"><i class="fa fa-check"></i><b>7.1</b> Simple Confidence Interval</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles"><i class="fa fa-check"></i><b>7.1.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.1.2" data-path="S07-examples.html"><a href="S07-examples.html#from-the-lm-output"><i class="fa fa-check"></i><b>7.1.2</b> From the <code>lm()</code> Output</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="S07-examples.html"><a href="S07-examples.html#confidence-intervals-for-the-mean"><i class="fa fa-check"></i><b>7.2</b> Confidence Intervals for the Mean</a></li>
+<li class="chapter" data-level="7.3" data-path="S07-examples.html"><a href="S07-examples.html#testing-a-single-coefficient"><i class="fa fa-check"></i><b>7.3</b> Testing a Single Coefficient</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-1"><i class="fa fa-check"></i><b>7.3.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.3.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-i"><i class="fa fa-check"></i><b>7.3.2</b> Using the <code>lm()</code> Output, I</a></li>
+<li class="chapter" data-level="7.3.3" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-ii"><i class="fa fa-check"></i><b>7.3.3</b> Using the <code>lm()</code> Output, II</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="S07-examples.html"><a href="S07-examples.html#testing-multiple-coefficents"><i class="fa fa-check"></i><b>7.4</b> Testing Multiple Coefficents</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-2"><i class="fa fa-check"></i><b>7.4.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.4.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output"><i class="fa fa-check"></i><b>7.4.2</b> Using the <code>lm()</code> output</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P02.html"><a href="P02.html"><i class="fa fa-check"></i>Problem Sheet 2</a></li>
+<li class="chapter" data-level="8" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html"><i class="fa fa-check"></i><b>8</b> Regression Diagnostics</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#plots"><i class="fa fa-check"></i><b>8.1</b> Diagnostic Plots</a></li>
+<li class="chapter" data-level="8.2" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#R-squared"><i class="fa fa-check"></i><b>8.2</b> The Coefficient of Multiple Determination</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="S09-influence.html"><a href="S09-influence.html"><i class="fa fa-check"></i><b>9</b> The Influence of Observations</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting-observations"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#cooks-distance"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="S10-multicoll.html"><a href="S10-multicoll.html"><i class="fa fa-check"></i><b>10</b> Multicollinearity</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="S10-multicoll.html"><a href="S10-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>10.1</b> Consequences of Multicollinearity</a></li>
+<li class="chapter" data-level="10.2" data-path="S10-multicoll.html"><a href="S10-multicoll.html#detecting-multicollinearity"><i class="fa fa-check"></i><b>10.2</b> Detecting Multicollinearity</a></li>
+<li class="chapter" data-level="10.3" data-path="S10-multicoll.html"><a href="S10-multicoll.html#mitigations"><i class="fa fa-check"></i><b>10.3</b> Mitigations</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
+<li class="chapter" data-level="11" data-path="S11-improving.html"><a href="S11-improving.html"><i class="fa fa-check"></i><b>11</b> Improving the Model Fit</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="S11-improving.html"><a href="S11-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>11.1</b> Linearising the Mean</a></li>
+<li class="chapter" data-level="11.2" data-path="S11-improving.html"><a href="S11-improving.html#stabilising-the-variance"><i class="fa fa-check"></i><b>11.2</b> Stabilising the Variance</a></li>
+<li class="chapter" data-level="11.3" data-path="S11-improving.html"><a href="S11-improving.html#power-transform"><i class="fa fa-check"></i><b>11.3</b> The Power Transform</a></li>
+<li class="chapter" data-level="11.4" data-path="S11-improving.html"><a href="S11-improving.html#orthogonal-inputs"><i class="fa fa-check"></i><b>11.4</b> Orthogonal Inputs</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="S12-ridge.html"><a href="S12-ridge.html"><i class="fa fa-check"></i><b>12</b> Ridge Regression</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="S12-ridge.html"><a href="S12-ridge.html#definition-the-estimator"><i class="fa fa-check"></i><b>12.1</b> Definition the Estimator</a></li>
+<li class="chapter" data-level="12.2" data-path="S12-ridge.html"><a href="S12-ridge.html#properties-of-the-estimate"><i class="fa fa-check"></i><b>12.2</b> Properties of the Estimate</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="S12-ridge.html"><a href="S12-ridge.html#bias"><i class="fa fa-check"></i><b>12.2.1</b> Bias</a></li>
+<li class="chapter" data-level="12.2.2" data-path="S12-ridge.html"><a href="S12-ridge.html#variance"><i class="fa fa-check"></i><b>12.2.2</b> Variance</a></li>
+<li class="chapter" data-level="12.2.3" data-path="S12-ridge.html"><a href="S12-ridge.html#mean-squared-error"><i class="fa fa-check"></i><b>12.2.3</b> Mean Squared Error</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="S12-ridge.html"><a href="S12-ridge.html#standardisation"><i class="fa fa-check"></i><b>12.3</b> Standardisation</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="S13-models.html"><a href="S13-models.html"><i class="fa fa-check"></i><b>13</b> Model selection</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="S13-models.html"><a href="S13-models.html#candidates-models"><i class="fa fa-check"></i><b>13.1</b> Candidates Models</a></li>
+<li class="chapter" data-level="13.2" data-path="S13-models.html"><a href="S13-models.html#misspecified-models"><i class="fa fa-check"></i><b>13.2</b> Misspecified Models</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="S13-models.html"><a href="S13-models.html#missing-variables"><i class="fa fa-check"></i><b>13.2.1</b> Missing Variables</a></li>
+<li class="chapter" data-level="13.2.2" data-path="S13-models.html"><a href="S13-models.html#unnecessary-variables"><i class="fa fa-check"></i><b>13.2.2</b> Unnecessary Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#criteria"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Methods for Model Selection</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="S14-methods.html"><a href="S14-methods.html#exhaustive-search"><i class="fa fa-check"></i><b>14.1</b> Exhaustive Search</a></li>
+<li class="chapter" data-level="14.2" data-path="S14-methods.html"><a href="S14-methods.html#search-algorithm"><i class="fa fa-check"></i><b>14.2</b> Search Algorithm</a></li>
+<li class="chapter" data-level="14.3" data-path="S14-methods.html"><a href="S14-methods.html#other-methods"><i class="fa fa-check"></i><b>14.3</b> Other Methods</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-forward-selection"><i class="fa fa-check"></i><b>14.3.1</b> Stepwise Forward Selection</a></li>
+<li class="chapter" data-level="14.3.2" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-backward-selection"><i class="fa fa-check"></i><b>14.3.2</b> Stepwise Backward Selection</a></li>
+<li class="chapter" data-level="14.3.3" data-path="S14-methods.html"><a href="S14-methods.html#hybrid-methods"><i class="fa fa-check"></i><b>14.3.3</b> Hybrid Methods</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#vectors"><i class="fa fa-check"></i><b>A.1</b> Vectors</a></li>
+<li class="chapter" data-level="A.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-rules"><i class="fa fa-check"></i><b>A.2</b> Matrices</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#transpose"><i class="fa fa-check"></i><b>A.2.1</b> Transpose</a></li>
+<li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-vector Product</a></li>
+<li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-matrix Product</a></li>
+<li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#rank"><i class="fa fa-check"></i><b>A.2.4</b> Rank</a></li>
+<li class="chapter" data-level="A.2.5" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#trace"><i class="fa fa-check"></i><b>A.2.5</b> Trace</a></li>
+<li class="chapter" data-level="A.2.6" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-inverse"><i class="fa fa-check"></i><b>A.2.6</b> Matrix Inverse</a></li>
+<li class="chapter" data-level="A.2.7" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#orthogonal-matrices"><i class="fa fa-check"></i><b>A.2.7</b> Orthogonal Matrices</a></li>
+<li class="chapter" data-level="A.2.8" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.8</b> Positive Definite Matrices</a></li>
+<li class="chapter" data-level="A.2.9" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#idempotent"><i class="fa fa-check"></i><b>A.2.9</b> Idempotent Matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#eigenvalues"><i class="fa fa-check"></i><b>A.3</b> Eigenvalues</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="Sx2-probability.html"><a href="Sx2-probability.html"><i class="fa fa-check"></i><b>B</b> Probability Reminders</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="Sx2-probability.html"><a href="Sx2-probability.html#independence"><i class="fa fa-check"></i><b>B.1</b> Independence</a></li>
+<li class="chapter" data-level="B.2" data-path="Sx2-probability.html"><a href="Sx2-probability.html#chi-square"><i class="fa fa-check"></i><b>B.2</b> The Chi-Squared Distribution</a></li>
+<li class="chapter" data-level="B.3" data-path="Sx2-probability.html"><a href="Sx2-probability.html#t"><i class="fa fa-check"></i><b>B.3</b> The t-distribution</a></li>
+</ul></li>
+<li class="divider"></li>
+<li class="chapter"><span><b>THE END</b></span></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH3714 Linear Regression and Robustness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="S14-methods" class="section level1" number="14">
+<h1><span class="header-section-number">Section 14</span> Methods for Model Selection</h1>
+<p>For a model with <span class="math inline">\(p\)</span> input variables, there are
+<span class="math inline">\(2^p\)</span> different choices for which variables to include in the
+model (or <span class="math inline">\(2^{p+1}\)</span>, if we also have to decide whether to include the intercept).
+This value increases quickly with <span class="math inline">\(p\)</span>: for <span class="math inline">\(p = 10\)</span> we
+have <span class="math inline">\(1024\)</span> models to consider, for <span class="math inline">\(p = 20\)</span> there are <span class="math inline">\(1048576\)</span> possible
+models, and for large <span class="math inline">\(p\)</span> it becomes infeasible to simply try all possible
+models to find the best one. In this section we consider algorithms
+for finding a good selection inputs when <span class="math inline">\(p\)</span> is large.</p>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pOWYr9RiZWU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<div id="exhaustive-search" class="section level2" number="14.1">
+<h2><span class="header-section-number">14.1</span> Exhaustive Search</h2>
+<p>Efficient algorithms are available to find the best model out of the
+<span class="math inline">\(2^p\)</span> possible models for small to moderate <span class="math inline">\(p\)</span>. Here we present
+a method which can often find the model with the largest <span class="math inline">\(R^2_\mathrm{adj}\)</span>
+without having to fit all <span class="math inline">\(2^p\)</span> models. We consider the least squares
+estimate throughout.</p>
+<p>We can characterise each possible model by the set <span class="math inline">\(J \subseteq \{1, \ldots p\}\)</span> of variables included in the model. The model includes variable <span class="math inline">\(x_j\)</span>, if
+and only if <span class="math inline">\(j \in J\)</span>. Here we assume that the intercept is always included,
+so that <span class="math inline">\(J=\emptyset\)</span> corresponds to the model <span class="math inline">\(Y = \beta_0 + \varepsilon\)</span>.</p>
+<p>The method described in this section is based on the following three observations:</p>
+<ul>
+<li><p>In order to <em>maximise</em> <span class="math inline">\(R^2_\mathrm{adj}\)</span>, we can equivalently also
+find the <span class="math inline">\(J\)</span> which <em>minimises</em>
+<span class="math display">\[\begin{equation*}
+  \hat\sigma^2(J)
+    := \frac{1}{n - |J| - 1} \sum_{i=1}^n (y_i - \hat y_i)^2,
+\end{equation*}\]</span>
+where <span class="math inline">\(|J|\)</span> is the number of variables in <span class="math inline">\(J\)</span> and the
+<span class="math inline">\(\hat y_i\)</span> are the fitted values for the model with inputs <span class="math inline">\(j \in J\)</span>.
+We have seen that these criteria are equivalent in section <a href="S13-models.html#criteria">13.3</a>.</p></li>
+<li><p>For <span class="math inline">\(J \subseteq \{1, \ldots p\}\)</span>, define
+<span class="math display">\[\begin{equation*}
+  r(J)
+    := \sum_{i=1}^n (y_i - \hat y_i)^2
+\end{equation*}\]</span>
+where <span class="math inline">\(\hat y_i\)</span> are the fitted values for the model corresponding to <span class="math inline">\(J\)</span>.
+This gives the residual sum of squares for each model. The we have
+<span class="math display">\[\begin{align*}
+  \min_J \hat\sigma^2(J)
+    &amp;= \min_J \frac{1}{n - |J|} \sum_{i=1}^n (y_i - \hat y_i)^2 \\
+    &amp;= \min_{q \in \{0, 1, \ldots, p\}} \min_{J, |J|=q} \frac{1}{n - q} r(J) \\
+    &amp;= \min_{q \in \{0, 1, \ldots, p\}} \frac{1}{n - q} \min_{J, |J|=q} r(J).
+\end{align*}\]</span>
+This means that we can first minimise the residual sum of squares
+for each fixed number <span class="math inline">\(q\)</span> of inputs, and then find the <span class="math inline">\(q\)</span>
+which gives the best <span class="math inline">\(\hat\sigma^2\)</span> in a second step.</p></li>
+<li><p>Adding a variables never increases the residual sum of squares.
+Thus we have <span class="math inline">\(r(J) \leq r(K)\)</span> whenever <span class="math inline">\(J \supseteq K\)</span>.
+We can use this result to exclude certain models without having to fit them.</p></li>
+</ul>
+</div>
+<div id="search-algorithm" class="section level2" number="14.2">
+<h2><span class="header-section-number">14.2</span> Search Algorithm</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/B0vNhThH8Dc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>To find the model with optimal adjusted R-squared value, we perform the
+following steps. The algorithm is based on the ideas explained in the previous
+section.</p>
+<ol style="list-style-type: upper-alpha">
+<li><p>Let <span class="math inline">\(\varphi_j\)</span> denote the residual sum of squares for the model containing
+all variables except <span class="math inline">\(x_j\)</span>:
+<span class="math display">\[\begin{equation*}
+      \varphi_j := r\bigl( \{ 1, \ldots, p \} \setminus \{ j \} \bigr).
+  \end{equation*}\]</span>
+Suppose that the <span class="math inline">\(x_j\)</span> are ordered so that
+<span class="math display">\[\begin{equation*}
+      \varphi_1 \geq \varphi_2 \geq \cdots \geq \varphi_p.
+  \end{equation*}\]</span>
+Any model <span class="math inline">\(J\)</span> with <span class="math inline">\(j \notin J\)</span> has <span class="math inline">\(r(J) \geq \varphi_j\)</span>.</p></li>
+<li><p>Compute <span class="math inline">\(\min_{J, |J|=0} r(J) = r(\emptyset)\)</span>. This is the residual
+sum of squares of the model which consists only of the intercept.</p></li>
+<li><p>For each <span class="math inline">\(q := 1, \ldots, p-2\)</span>:</p>
+<ol style="list-style-type: decimal">
+<li><p>Let
+<span class="math display">\[\begin{equation*}
+     r := r\bigl( \{1, \ldots, q\} \bigr).
+ \end{equation*}\]</span>
+This is the only model with <span class="math inline">\(q\)</span> inputs where the first
+excluded variable has index <span class="math inline">\(k = q+1\)</span>.
+If <span class="math inline">\(r \leq \varphi_{k-1} = \varphi_q\)</span>, we know from step A that
+<span class="math inline">\(J = \{1, \ldots, q\}\)</span> is the best
+model with <span class="math inline">\(q\)</span> inputs, since any other model will exclude
+one of the <span class="math inline">\(x_j\)</span> with <span class="math inline">\(j \leq q\)</span>.
+In this case we have found
+<span class="math display">\[\begin{equation*}
+   \min_{J, |J|=q} r(J)
+   = r.
+ \end{equation*}\]</span>
+and we continue step B by trying the next value of <span class="math inline">\(q\)</span>.
+If <span class="math inline">\(r &gt; \varphi_{k-1}\)</span>, no decision can be taken at this point and we
+continue with step 2.</p></li>
+<li><p>For <span class="math inline">\(j \in \{q+1, \ldots, p\}\)</span> let
+<span class="math display">\[\begin{equation*}
+     r_j := r\bigl( \{1, \ldots, q-1\} \cup \{j\} \bigr).
+ \end{equation*}\]</span>
+These are all models with <span class="math inline">\(q\)</span> inputs where the first excluded
+variable has index <span class="math inline">\(k = q\)</span>.
+If <span class="math inline">\(\min(r, r_1, \ldots, r_q) \leq \varphi_{k-1} = \varphi_{q-1}\)</span>, then we know
+from step A that the <span class="math inline">\(J\)</span> corresponing to the minimum is the best model
+with <span class="math inline">\(q\)</span> inputs. In this case we continue step B by trying the next
+value of <span class="math inline">\(q\)</span>. Otherwise we proceed to step 3.</p></li>
+<li><p>Similarly to the previous step, we consider all models with <span class="math inline">\(q\)</span>
+variables where the first excluded variable has index <span class="math inline">\(k = q-1\)</span>.
+If the best RSS amonst these and the previously considered
+models is less than or equal to <span class="math inline">\(\varphi_{k-1}\)</span> we are done
+and consider the next <span class="math inline">\(q\)</span>. Otherwise we decrease <span class="math inline">\(k\)</span> until we reach
+<span class="math inline">\(k = 1\)</span>. At this point we have considered all models with <span class="math inline">\(q\)</span>
+variables and have found <span class="math inline">\(\min_{J, |J|=q} r(J)\)</span>.</p></li>
+</ol></li>
+<li><p>Compute <span class="math inline">\(\min_{J, |J|=p-1} r(J) = \min_{j \in \{1, \ldots, p\}} \varphi_j\)</span>.</p></li>
+<li><p>Compute <span class="math inline">\(\min_{J, |J|=p} r(J) = r\bigl( \{1, \ldots, p\} \bigr)\)</span>.</p></li>
+<li><p>Find the <span class="math inline">\(q \in \{0, \ldots, p\}\)</span> for which <span class="math inline">\(\min_{J, |J|=q} r(J) / (n-q-1)\)</span>
+is smallest. Output the model which has minimal RSS for this <span class="math inline">\(q\)</span>.</p></li>
+</ol>
+<p>This algorithm finds the model with the maximal <span class="math inline">\(R^2_\mathrm{adj}\)</span>.
+Often, large savings are achieved by the early exits in step C.
+Only in the worst case, when all of the comparisons with <span class="math inline">\(\varphi_j\)</span> in step
+C fail, this algorithms needs to fit all <span class="math inline">\(2^p\)</span> models.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-52" class="example"><strong>Example 14.1  </strong></span>To demonstrate the steps of the algorithm, we implement the method
+“by hand”. We use the QSAR dataset, which we have already seen
+in section <a href="S07-examples.html#S07-examples">7</a>:</p>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="S14-methods.html#cb219-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity</span></span>
+<span id="cb219-2"><a href="S14-methods.html#cb219-2" aria-hidden="true" tabindex="-1"></a>qsar <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/qsar_aquatic_toxicity.csv&quot;</span>,</span>
+<span id="cb219-3"><a href="S14-methods.html#cb219-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb219-4"><a href="S14-methods.html#cb219-4" aria-hidden="true" tabindex="-1"></a>fields <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb219-5"><a href="S14-methods.html#cb219-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;TPSA&quot;</span>,</span>
+<span id="cb219-6"><a href="S14-methods.html#cb219-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;SAacc&quot;</span>,</span>
+<span id="cb219-7"><a href="S14-methods.html#cb219-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;H050&quot;</span>,</span>
+<span id="cb219-8"><a href="S14-methods.html#cb219-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;MLOGP&quot;</span>,</span>
+<span id="cb219-9"><a href="S14-methods.html#cb219-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;RDCHI&quot;</span>,</span>
+<span id="cb219-10"><a href="S14-methods.html#cb219-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;GATS1p&quot;</span>,</span>
+<span id="cb219-11"><a href="S14-methods.html#cb219-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;nN&quot;</span>,</span>
+<span id="cb219-12"><a href="S14-methods.html#cb219-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;C040&quot;</span>,</span>
+<span id="cb219-13"><a href="S14-methods.html#cb219-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;LC50&quot;</span></span>
+<span id="cb219-14"><a href="S14-methods.html#cb219-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb219-15"><a href="S14-methods.html#cb219-15" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(qsar) <span class="ot">&lt;-</span> fields</span></code></pre></div>
+<p>To make it easy to add/remove columns automatically, we first construct
+the design matrix, remove columns as needed, and then use the resulting
+matrix in the call to <code>lm()</code> (instead of specifying the terms to include
+by name).</p>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="S14-methods.html#cb220-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar)</span>
+<span id="cb220-2"><a href="S14-methods.html#cb220-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, <span class="sc">-</span><span class="dv">1</span>] <span class="co"># remove the intercept, since lm() will re-add it later</span></span>
+<span id="cb220-3"><a href="S14-methods.html#cb220-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb220-4"><a href="S14-methods.html#cb220-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
+<span id="cb220-5"><a href="S14-methods.html#cb220-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb220-6"><a href="S14-methods.html#cb220-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> qsar<span class="sc">$</span>LC50</span>
+<span id="cb220-7"><a href="S14-methods.html#cb220-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb220-8"><a href="S14-methods.html#cb220-8" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X) <span class="co"># full model</span></span>
+<span id="cb220-9"><a href="S14-methods.html#cb220-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<pre class="rOutput"><code>
+Call:
+lm(formula = y ~ X)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.4934 -0.7579 -0.1120  0.5829  4.9778 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.698887   0.244554  11.036  &lt; 2e-16 ***
+XTPSA        0.027201   0.002661  10.220  &lt; 2e-16 ***
+XSAacc      -0.015081   0.002091  -7.211 1.90e-12 ***
+XH050        0.040619   0.059787   0.679 0.497186    
+XMLOGP       0.446108   0.063296   7.048 5.60e-12 ***
+XRDCHI       0.513928   0.135565   3.791 0.000167 ***
+XGATS1p     -0.571313   0.153882  -3.713 0.000227 ***
+XnN         -0.224751   0.048301  -4.653 4.12e-06 ***
+XC040        0.003194   0.077972   0.041 0.967340    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 1.203 on 537 degrees of freedom
+Multiple R-squared:  0.4861,    Adjusted R-squared:  0.4785 
+F-statistic:  63.5 on 8 and 537 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Comparing the output to what we have seen in section <a href="S07-examples.html#S07-examples">7</a>
+shows that the new method of calling <code>lm()</code> gives the same results
+as before. Now we follow the steps of the algorithm.</p>
+<p><strong>A.</strong> The values <span class="math inline">\(\varphi_1, \ldots, \varphi_p\)</span> can be computed as follows:</p>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="S14-methods.html#cb222-1" aria-hidden="true" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p) <span class="co"># pre-allocate an empty vector</span></span>
+<span id="cb222-2"><a href="S14-methods.html#cb222-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) {</span>
+<span id="cb222-3"><a href="S14-methods.html#cb222-3" aria-hidden="true" tabindex="-1"></a>    idx <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span>p)[<span class="sc">-</span>j] <span class="co"># all variables except x[j]</span></span>
+<span id="cb222-4"><a href="S14-methods.html#cb222-4" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[,idx])</span>
+<span id="cb222-5"><a href="S14-methods.html#cb222-5" aria-hidden="true" tabindex="-1"></a>    phi[j] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb222-6"><a href="S14-methods.html#cb222-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb222-7"><a href="S14-methods.html#cb222-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb222-8"><a href="S14-methods.html#cb222-8" aria-hidden="true" tabindex="-1"></a><span class="co"># change the order of columns in X, so that the phi_j are decreasing</span></span>
+<span id="cb222-9"><a href="S14-methods.html#cb222-9" aria-hidden="true" tabindex="-1"></a>jj <span class="ot">&lt;-</span> <span class="fu">order</span>(phi, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb222-10"><a href="S14-methods.html#cb222-10" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, jj]</span>
+<span id="cb222-11"><a href="S14-methods.html#cb222-11" aria-hidden="true" tabindex="-1"></a>phi <span class="ot">&lt;-</span> phi[jj]</span>
+<span id="cb222-12"><a href="S14-methods.html#cb222-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(phi, <span class="at">xlab =</span> <span class="st">&quot;j&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(varphi[j]))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/exhaustiveA-1.png" width="672" /></p>
+<p>The plot shows the residual sum of squares for the model with input <span class="math inline">\(x_j\)</span>
+omitted, for <span class="math inline">\(j\)</span> ranging from 1 to 8.</p>
+<p><strong>B.</strong> Next, we compute the residual
+sum of squares of the model which consists only of the intercept.
+This is the case <span class="math inline">\(q = 0\)</span>.</p>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="S14-methods.html#cb223-1" aria-hidden="true" tabindex="-1"></a>all.q <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span>p</span>
+<span id="cb223-2"><a href="S14-methods.html#cb223-2" aria-hidden="true" tabindex="-1"></a>best.rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># For storing the best RSS for q = 0, ..., p,</span></span>
+<span id="cb223-3"><a href="S14-methods.html#cb223-3" aria-hidden="true" tabindex="-1"></a>best.model <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, p <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># and the corresponding models.</span></span>
+<span id="cb223-4"><a href="S14-methods.html#cb223-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb223-5"><a href="S14-methods.html#cb223-5" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span>)</span>
+<span id="cb223-6"><a href="S14-methods.html#cb223-6" aria-hidden="true" tabindex="-1"></a>best.rss[<span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb223-7"><a href="S14-methods.html#cb223-7" aria-hidden="true" tabindex="-1"></a>best.model[[<span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">integer</span>(<span class="dv">0</span>) <span class="co"># a vector of length 0 (no columns)</span></span>
+<span id="cb223-8"><a href="S14-methods.html#cb223-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb223-9"><a href="S14-methods.html#cb223-9" aria-hidden="true" tabindex="-1"></a>count <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># number of models fitted so far</span></span></code></pre></div>
+<p><strong>C.</strong> Now we consider <span class="math inline">\(q \in \{1, \ldots, p-2\}\)</span>. The algorithm groups
+these cases by the position <span class="math inline">\(k\)</span> of the first column omitted in the model,
+starting with <span class="math inline">\(k = q+1\)</span> and then decreasing <span class="math inline">\(k\)</span> in each step.
+We use the function <code>combn</code> from the <code>sets</code> package
+to get all possible choices of
+<span class="math inline">\(q - k + 1\)</span> columns out of <span class="math inline">\(\{k+1, \ldots, p\}\)</span>.</p>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="S14-methods.html#cb224-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sets) <span class="co"># this defines &quot;combn()&quot;</span></span>
+<span id="cb224-2"><a href="S14-methods.html#cb224-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(p<span class="dv">-2</span>)) {</span>
+<span id="cb224-3"><a href="S14-methods.html#cb224-3" aria-hidden="true" tabindex="-1"></a>    best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="cn">Inf</span></span>
+<span id="cb224-4"><a href="S14-methods.html#cb224-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb224-5"><a href="S14-methods.html#cb224-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Consider all sets of q columns, ...</span></span>
+<span id="cb224-6"><a href="S14-methods.html#cb224-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (k <span class="cf">in</span> (q<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="dv">1</span>) {</span>
+<span id="cb224-7"><a href="S14-methods.html#cb224-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ... where the first omitted column is k.</span></span>
+<span id="cb224-8"><a href="S14-methods.html#cb224-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb224-9"><a href="S14-methods.html#cb224-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We have to include 1, ..., k-1, and ...</span></span>
+<span id="cb224-10"><a href="S14-methods.html#cb224-10" aria-hidden="true" tabindex="-1"></a>        a <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(k<span class="dv">-1</span>)</span>
+<span id="cb224-11"><a href="S14-methods.html#cb224-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb224-12"><a href="S14-methods.html#cb224-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ... for the remaining q - (k-1) inputs, we try all</span></span>
+<span id="cb224-13"><a href="S14-methods.html#cb224-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># possible combinations.</span></span>
+<span id="cb224-14"><a href="S14-methods.html#cb224-14" aria-hidden="true" tabindex="-1"></a>        bb <span class="ot">&lt;-</span> <span class="fu">combn</span>((k<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>p, q <span class="sc">-</span> k <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb224-15"><a href="S14-methods.html#cb224-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (l <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">ncol</span>(bb))) {</span>
+<span id="cb224-16"><a href="S14-methods.html#cb224-16" aria-hidden="true" tabindex="-1"></a>            b <span class="ot">&lt;-</span> bb[, l]</span>
+<span id="cb224-17"><a href="S14-methods.html#cb224-17" aria-hidden="true" tabindex="-1"></a>            included <span class="ot">&lt;-</span> <span class="fu">c</span>(a, b)</span>
+<span id="cb224-18"><a href="S14-methods.html#cb224-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb224-19"><a href="S14-methods.html#cb224-19" aria-hidden="true" tabindex="-1"></a>            m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[, included])</span>
+<span id="cb224-20"><a href="S14-methods.html#cb224-20" aria-hidden="true" tabindex="-1"></a>            count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb224-21"><a href="S14-methods.html#cb224-21" aria-hidden="true" tabindex="-1"></a>            rss <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb224-22"><a href="S14-methods.html#cb224-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb224-23"><a href="S14-methods.html#cb224-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (rss <span class="sc">&lt;</span> best.rss[q <span class="sc">+</span> <span class="dv">1</span>]) {</span>
+<span id="cb224-24"><a href="S14-methods.html#cb224-24" aria-hidden="true" tabindex="-1"></a>                best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> rss</span>
+<span id="cb224-25"><a href="S14-methods.html#cb224-25" aria-hidden="true" tabindex="-1"></a>                best.model[[q <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> included</span>
+<span id="cb224-26"><a href="S14-methods.html#cb224-26" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb224-27"><a href="S14-methods.html#cb224-27" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb224-28"><a href="S14-methods.html#cb224-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb224-29"><a href="S14-methods.html#cb224-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (k <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> best.rss[q] <span class="sc">&lt;=</span> phi[k<span class="dv">-1</span>]) {</span>
+<span id="cb224-30"><a href="S14-methods.html#cb224-30" aria-hidden="true" tabindex="-1"></a>            <span class="co"># If we reach this point, we know that we found the best</span></span>
+<span id="cb224-31"><a href="S14-methods.html#cb224-31" aria-hidden="true" tabindex="-1"></a>            <span class="co"># arrangement and we can exit the loop over k early.</span></span>
+<span id="cb224-32"><a href="S14-methods.html#cb224-32" aria-hidden="true" tabindex="-1"></a>            <span class="co"># This is what makes the algorithm efficient.</span></span>
+<span id="cb224-33"><a href="S14-methods.html#cb224-33" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb224-34"><a href="S14-methods.html#cb224-34" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb224-35"><a href="S14-methods.html#cb224-35" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb224-36"><a href="S14-methods.html#cb224-36" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><strong>D.</strong> We already fitted all models with <span class="math inline">\(p-1\)</span> inputs, when we computed <code>phi</code>.
+Since we sorted the models, the best of these models is last in the list.
+This covers the case <span class="math inline">\(q = p - 1\)</span>.</p>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="S14-methods.html#cb225-1" aria-hidden="true" tabindex="-1"></a>best.rss[(p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">min</span>(phi)</span>
+<span id="cb225-2"><a href="S14-methods.html#cb225-2" aria-hidden="true" tabindex="-1"></a>omitted <span class="ot">&lt;-</span> jj[<span class="fu">length</span>(jj)]</span>
+<span id="cb225-3"><a href="S14-methods.html#cb225-3" aria-hidden="true" tabindex="-1"></a>best.model[[(p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span>p)[<span class="sc">-</span>omitted]</span>
+<span id="cb225-4"><a href="S14-methods.html#cb225-4" aria-hidden="true" tabindex="-1"></a>count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="fu">length</span>(phi)</span></code></pre></div>
+<p><strong>E.</strong> Finally, for <span class="math inline">\(q = p\)</span> we fit the full model:</p>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="S14-methods.html#cb226-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X)</span>
+<span id="cb226-2"><a href="S14-methods.html#cb226-2" aria-hidden="true" tabindex="-1"></a>best.rss[p <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb226-3"><a href="S14-methods.html#cb226-3" aria-hidden="true" tabindex="-1"></a>best.model[[p <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>p</span>
+<span id="cb226-4"><a href="S14-methods.html#cb226-4" aria-hidden="true" tabindex="-1"></a>count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div>
+<p><strong>F.</strong> Now we can find the model with the best <span class="math inline">\(R^2_\mathrm{adj}\)</span>:</p>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="S14-methods.html#cb227-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(all.q, best.rss <span class="sc">/</span> (n <span class="sc">-</span> all.q <span class="sc">-</span> <span class="dv">1</span>),</span>
+<span id="cb227-2"><a href="S14-methods.html#cb227-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;q&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residual variance&quot;</span>)</span>
+<span id="cb227-3"><a href="S14-methods.html#cb227-3" aria-hidden="true" tabindex="-1"></a>best.q <span class="ot">&lt;-</span> <span class="fu">which.min</span>(best.rss <span class="sc">/</span> (n <span class="sc">-</span> all.q <span class="sc">-</span> q))</span>
+<span id="cb227-4"><a href="S14-methods.html#cb227-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.q)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/exhaustiveB-1.png" width="672" /></p>
+<p>We see that the model with <span class="math inline">\(q = 7\)</span> variables has the the
+lowest <span class="math inline">\(\hat\sigma^2\)</span> and thus the highest <span class="math inline">\(R^2_\mathrm{adj}\)</span>.
+The values for <span class="math inline">\(q = 6\)</span> and <span class="math inline">\(q = 8\)</span> are very close to
+optimal. The best model uses the following variables:</p>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="S14-methods.html#cb228-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(X)[best.model[[<span class="dv">7</span> <span class="sc">+</span> <span class="dv">1</span>]]]</span></code></pre></div>
+<pre class="rOutput"><code>[1] &quot;TPSA&quot;   &quot;SAacc&quot;  &quot;MLOGP&quot;  &quot;nN&quot;     &quot;RDCHI&quot;  &quot;GATS1p&quot; &quot;H050&quot;  </code></pre>
+<p>We can fit the optimal model from the original data:</p>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="S14-methods.html#cb230-1" aria-hidden="true" tabindex="-1"></a>m.best <span class="ot">&lt;-</span> <span class="fu">lm</span>(LC50 <span class="sc">~</span> TPSA <span class="sc">+</span> SAacc <span class="sc">+</span> MLOGP <span class="sc">+</span> nN <span class="sc">+</span> RDCHI <span class="sc">+</span> GATS1p <span class="sc">+</span> H050,</span>
+<span id="cb230-2"><a href="S14-methods.html#cb230-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> qsar)</span>
+<span id="cb230-3"><a href="S14-methods.html#cb230-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m.best)</span></code></pre></div>
+<pre class="rOutput"><code>
+Call:
+lm(formula = LC50 ~ TPSA + SAacc + MLOGP + nN + RDCHI + GATS1p + 
+    H050, data = qsar)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.4951 -0.7585 -0.1125  0.5838  4.9769 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.698271   0.243863  11.065  &lt; 2e-16 ***
+TPSA         0.027193   0.002651  10.256  &lt; 2e-16 ***
+SAacc       -0.015056   0.002001  -7.523 2.26e-13 ***
+MLOGP        0.445763   0.062674   7.112 3.65e-12 ***
+nN          -0.224511   0.047900  -4.687 3.52e-06 ***
+RDCHI        0.514866   0.133492   3.857 0.000129 ***
+GATS1p      -0.571629   0.153546  -3.723 0.000218 ***
+H050         0.039811   0.056388   0.706 0.480485    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 1.201 on 538 degrees of freedom
+Multiple R-squared:  0.4861,    Adjusted R-squared:  0.4795 
+F-statistic: 72.71 on 7 and 538 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>This shows that <span class="math inline">\(R^2_\mathrm{adj}\)</span> has indeed marginally inproved,
+from <span class="math inline">\(0.4785\)</span> to <span class="math inline">\(0.4795\)</span></p>
+<p>To conclude, we check that the complicated algorithm indeed saved some work:</p>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="S14-methods.html#cb232-1" aria-hidden="true" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">^</span>p</span>
+<span id="cb232-2"><a href="S14-methods.html#cb232-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(count,</span>
+<span id="cb232-3"><a href="S14-methods.html#cb232-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot; models fitted (&quot;</span>, <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> count <span class="sc">/</span> total,<span class="dv">1</span> ), <span class="st">&quot;%)</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb232-4"><a href="S14-methods.html#cb232-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<pre class="rOutput"><code>88 models fitted (34.4%)</code></pre>
+<p>This shows that we only needed to fit 88 of the 256 models under consideration.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-53" class="example"><strong>Example 14.2  </strong></span>We can perform the analysis from the previous example automatically,
+using the function <code>regsubsets()</code> from the <code>leaps</code> package:</p>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="S14-methods.html#cb234-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaps)</span>
+<span id="cb234-2"><a href="S14-methods.html#cb234-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar,</span>
+<span id="cb234-3"><a href="S14-methods.html#cb234-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;exhaustive&quot;</span>)</span>
+<span id="cb234-4"><a href="S14-methods.html#cb234-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<pre class="rOutput"><code>Subset selection object
+Call: regsubsets.formula(LC50 ~ ., data = qsar, method = &quot;exhaustive&quot;)
+8 Variables  (and intercept)
+       Forced in Forced out
+TPSA       FALSE      FALSE
+SAacc      FALSE      FALSE
+H050       FALSE      FALSE
+MLOGP      FALSE      FALSE
+RDCHI      FALSE      FALSE
+GATS1p     FALSE      FALSE
+nN         FALSE      FALSE
+C040       FALSE      FALSE
+1 subsets of each size up to 8
+Selection Algorithm: exhaustive
+         TPSA SAacc H050 MLOGP RDCHI GATS1p nN  C040
+1  ( 1 ) &quot; &quot;  &quot; &quot;   &quot; &quot;  &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot; &quot; &quot; 
+2  ( 1 ) &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot; &quot; &quot; 
+3  ( 1 ) &quot;*&quot;  &quot;*&quot;   &quot; &quot;  &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot; &quot; &quot; 
+4  ( 1 ) &quot;*&quot;  &quot;*&quot;   &quot; &quot;  &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot;*&quot; &quot; &quot; 
+5  ( 1 ) &quot;*&quot;  &quot;*&quot;   &quot; &quot;  &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot; &quot; &quot; 
+6  ( 1 ) &quot;*&quot;  &quot;*&quot;   &quot; &quot;  &quot;*&quot;   &quot;*&quot;   &quot;*&quot;    &quot;*&quot; &quot; &quot; 
+7  ( 1 ) &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;   &quot;*&quot;    &quot;*&quot; &quot; &quot; 
+8  ( 1 ) &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;   &quot;*&quot;    &quot;*&quot; &quot;*&quot; </code></pre>
+<p>This shows the best model of each size. The only step left is
+to decide which <span class="math inline">\(q\)</span> to use. This choice depends on the cost-complexity
+tradeoff. Here we consider <span class="math inline">\(R^2_\mathrm{adj}\)</span> again:</p>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="S14-methods.html#cb236-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(m)<span class="sc">$</span>adjr2, <span class="dv">4</span>)</span></code></pre></div>
+<pre class="rOutput"><code>[1] 0.2855 0.3860 0.4441 0.4588 0.4666 0.4799 0.4795 0.4785</code></pre>
+<p>This gives the <span class="math inline">\(R^2_\mathrm{adj}\)</span> for the optimal model of each size
+again. At the end of the list we recognise the values <code>0.4795</code> and
+<code>0.4785</code> from our previous analysis.</p>
+</div>
+</div>
+<div id="other-methods" class="section level2" number="14.3">
+<h2><span class="header-section-number">14.3</span> Other Methods</h2>
+<p>There are other, approximate methods available which can be used
+when the number <span class="math inline">\(p\)</span> of model parameters is too large for an exhaustives
+search.</p>
+<div id="stepwise-forward-selection" class="section level3" number="14.3.1">
+<h3><span class="header-section-number">14.3.1</span> Stepwise Forward Selection</h3>
+<p>Here the idea is to start with a minimal model, and then add variables one by
+one, until no further (large enough) improvements can be achieved.</p>
+<p>Start with only intercept term: <span class="math inline">\(y=\beta_0 + \varepsilon\)</span>, then
+consider each of <span class="math inline">\(p\)</span> models:
+<span class="math display">\[\begin{equation*}
+  y
+  = \beta_0 + \beta_j x_j + \varepsilon,
+\end{equation*}\]</span>
+for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>.</p>
+<p>Choose the model with the smallest residual sum of squares, provided that the
+“significance of the fitted model” achieves a specified threshold. The process
+continues by adding more variables, one at a time, until either</p>
+<ul>
+<li>All variables are in the model.</li>
+<li>The significance level can not be achieved by any variable not in the model.</li>
+</ul>
+<p>The “significance of the model” can be examined by considering a
+<span class="math inline">\(t\)</span>-test as in lemma <a href="S05-single.html#lem:t-test">5.4</a>.</p>
+</div>
+<div id="stepwise-backward-selection" class="section level3" number="14.3.2">
+<h3><span class="header-section-number">14.3.2</span> Stepwise Backward Selection</h3>
+<p>Here the idea is to start with the full model, and to remove variables
+one by one until no good enough candidates for removal are left.</p>
+<p>In each step we consider the test statistic <span class="math inline">\(|T_j|\)</span> for the tests
+<span class="math display">\[\begin{equation*}
+  H_0\colon \beta_j = 0
+  \quad\mbox{\textit{vs.}}\quad
+  H_1\colon \beta_j \neq 0
+\end{equation*}\]</span>
+for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>, again as in lemma <a href="S05-single.html#lem:t-test">5.4</a>.
+The method selects <span class="math inline">\(x_j\)</span> corresponding to the smallest <span class="math inline">\(|T_j|\)</span>.
+If this is below a given threshold, then remove <span class="math inline">\(x_j\)</span> and re-fit the model.
+Repeat until either:</p>
+<ul>
+<li>No variables are left in the model.</li>
+<li>The smallest <span class="math inline">\(|T_j|\)</span> is above the threshold.</li>
+</ul>
+</div>
+<div id="hybrid-methods" class="section level3" number="14.3.3">
+<h3><span class="header-section-number">14.3.3</span> Hybrid Methods</h3>
+<p>Either start with a full model or just intercept. At each stage consider:</p>
+<ul>
+<li>removing least significant variable already in the model,</li>
+<li>adding most significant variable not currently in the model,</li>
+</ul>
+<p>with significance levels set to avoid a cyclical behaviour.</p>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>We discussed different algorithms to perform model selection in practice.</li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="S13-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH3714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

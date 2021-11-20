@@ -261,7 +261,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="11.1" data-path="S11-improving.html"><a href="S11-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>11.1</b> Linearising the Mean</a></li>
 <li class="chapter" data-level="11.2" data-path="S11-improving.html"><a href="S11-improving.html#stabilising-the-variance"><i class="fa fa-check"></i><b>11.2</b> Stabilising the Variance</a></li>
-<li class="chapter" data-level="11.3" data-path="S11-improving.html"><a href="S11-improving.html#the-power-transform"><i class="fa fa-check"></i><b>11.3</b> The Power Transform</a></li>
+<li class="chapter" data-level="11.3" data-path="S11-improving.html"><a href="S11-improving.html#power-transform"><i class="fa fa-check"></i><b>11.3</b> The Power Transform</a></li>
 <li class="chapter" data-level="11.4" data-path="S11-improving.html"><a href="S11-improving.html#orthogonal-inputs"><i class="fa fa-check"></i><b>11.4</b> Orthogonal Inputs</a></li>
 </ul></li>
 <li class="chapter" data-level="12" data-path="S12-ridge.html"><a href="S12-ridge.html"><i class="fa fa-check"></i><b>12</b> Ridge Regression</a>
@@ -283,7 +283,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.1" data-path="S13-models.html"><a href="S13-models.html#missing-variables"><i class="fa fa-check"></i><b>13.2.1</b> Missing Variables</a></li>
 <li class="chapter" data-level="13.2.2" data-path="S13-models.html"><a href="S13-models.html#unnecessary-variables"><i class="fa fa-check"></i><b>13.2.2</b> Unnecessary Variables</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#assessing-models"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
+<li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#criteria"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Methods for Model Selection</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="S14-methods.html"><a href="S14-methods.html#exhaustive-search"><i class="fa fa-check"></i><b>14.1</b> Exhaustive Search</a></li>
+<li class="chapter" data-level="14.2" data-path="S14-methods.html"><a href="S14-methods.html#search-algorithm"><i class="fa fa-check"></i><b>14.2</b> Search Algorithm</a></li>
+<li class="chapter" data-level="14.3" data-path="S14-methods.html"><a href="S14-methods.html#other-methods"><i class="fa fa-check"></i><b>14.3</b> Other Methods</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-forward-selection"><i class="fa fa-check"></i><b>14.3.1</b> Stepwise Forward Selection</a></li>
+<li class="chapter" data-level="14.3.2" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-backward-selection"><i class="fa fa-check"></i><b>14.3.2</b> Stepwise Backward Selection</a></li>
+<li class="chapter" data-level="14.3.3" data-path="S14-methods.html"><a href="S14-methods.html#hybrid-methods"><i class="fa fa-check"></i><b>14.3.3</b> Hybrid Methods</a></li>
+</ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
@@ -523,7 +534,10 @@ As a result we get
 \end{align*}\]</span>
 (This is <a href="https://en.wikipedia.org/wiki/Pythagorean_theorem">Pythagoras’ theorem</a> in <span class="math inline">\(\mathbb{R}^n\)</span>.)
 Since <span class="math inline">\(\hat y = Hy\)</span> and <span class="math inline">\(\hat\varepsilon= (I - H)y\)</span>, we can apply this idea to the
-vector <span class="math inline">\(y\)</span> of observations to get <span class="math inline">\(\|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2\)</span>.</p>
+vector <span class="math inline">\(y\)</span> of observations to get
+<span class="math display" id="eq:eps-y-orth">\[\begin{equation}
+  \|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2.  \tag{4.5}
+\end{equation}\]</span></p>
 <p>We note without proof that geometrically, <span class="math inline">\(H\)</span> can be interpreted as the
 orthogonal projection onto the subspace of <span class="math inline">\(\mathbb{R}^n\)</span> which is spanned by
 the columns of <span class="math inline">\(X\)</span>. This subspace contains the possible output vectors
@@ -642,7 +656,7 @@ We will see that an unbiased estimator for <span class="math inline">\(\sigma^2\
 given by
 <span class="math display" id="eq:hat-sigma-squared">\[\begin{equation}
   \hat\sigma^2
-  := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \tag{4.5}
+  := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \tag{4.6}
 \end{equation}\]</span>
 where <span class="math inline">\(\hat y_i\)</span> are the fitted values from equation <a href="S02-multiple.html#eq:fitted-values">(2.5)</a>.
 As for the one-dimensional case in <a href="S01-simple.html#eq:reg-sigma-est">(1.4)</a>, the estimate
@@ -675,7 +689,7 @@ the sum equal zero.</p>
 <span class="math display" id="eq:sigma-hat-chi-squared">\[\begin{equation}
   \frac{1}{\sigma^2} (n - p - 1) \hat\sigma^2
   = \frac{1}{\sigma^2} \varepsilon^\top (I-H) \varepsilon
-  \sim \chi^2(n - p - 1).  \tag{4.6}
+  \sim \chi^2(n - p - 1).  \tag{4.7}
 \end{equation}\]</span>
 Since the expectation of a <span class="math inline">\(\chi^2(\nu)\)</span> distribution equals <span class="math inline">\(\nu\)</span>
 (see appendix <a href="Sx2-probability.html#chi-square">B.2</a>), we find

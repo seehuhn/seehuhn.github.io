@@ -261,7 +261,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="11.1" data-path="S11-improving.html"><a href="S11-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>11.1</b> Linearising the Mean</a></li>
 <li class="chapter" data-level="11.2" data-path="S11-improving.html"><a href="S11-improving.html#stabilising-the-variance"><i class="fa fa-check"></i><b>11.2</b> Stabilising the Variance</a></li>
-<li class="chapter" data-level="11.3" data-path="S11-improving.html"><a href="S11-improving.html#the-power-transform"><i class="fa fa-check"></i><b>11.3</b> The Power Transform</a></li>
+<li class="chapter" data-level="11.3" data-path="S11-improving.html"><a href="S11-improving.html#power-transform"><i class="fa fa-check"></i><b>11.3</b> The Power Transform</a></li>
 <li class="chapter" data-level="11.4" data-path="S11-improving.html"><a href="S11-improving.html#orthogonal-inputs"><i class="fa fa-check"></i><b>11.4</b> Orthogonal Inputs</a></li>
 </ul></li>
 <li class="chapter" data-level="12" data-path="S12-ridge.html"><a href="S12-ridge.html"><i class="fa fa-check"></i><b>12</b> Ridge Regression</a>
@@ -283,7 +283,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.1" data-path="S13-models.html"><a href="S13-models.html#missing-variables"><i class="fa fa-check"></i><b>13.2.1</b> Missing Variables</a></li>
 <li class="chapter" data-level="13.2.2" data-path="S13-models.html"><a href="S13-models.html#unnecessary-variables"><i class="fa fa-check"></i><b>13.2.2</b> Unnecessary Variables</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#assessing-models"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
+<li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#criteria"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Methods for Model Selection</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="S14-methods.html"><a href="S14-methods.html#exhaustive-search"><i class="fa fa-check"></i><b>14.1</b> Exhaustive Search</a></li>
+<li class="chapter" data-level="14.2" data-path="S14-methods.html"><a href="S14-methods.html#search-algorithm"><i class="fa fa-check"></i><b>14.2</b> Search Algorithm</a></li>
+<li class="chapter" data-level="14.3" data-path="S14-methods.html"><a href="S14-methods.html#other-methods"><i class="fa fa-check"></i><b>14.3</b> Other Methods</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-forward-selection"><i class="fa fa-check"></i><b>14.3.1</b> Stepwise Forward Selection</a></li>
+<li class="chapter" data-level="14.3.2" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-backward-selection"><i class="fa fa-check"></i><b>14.3.2</b> Stepwise Backward Selection</a></li>
+<li class="chapter" data-level="14.3.3" data-path="S14-methods.html"><a href="S14-methods.html#hybrid-methods"><i class="fa fa-check"></i><b>14.3.3</b> Hybrid Methods</a></li>
+</ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
@@ -332,7 +343,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="S10-multicoll" class="section level1" number="10">
 <h1><span class="header-section-number">Section 10</span> Multicollinearity</h1>
 <div class="definition">
-<p><span id="def:unlabeled-div-39" class="definition"><strong>Definition 10.1  </strong></span>In linear regression, <strong>Multicollinearity</strong> denotes the situation
+<p><span id="def:unlabeled-div-38" class="definition"><strong>Definition 10.1  </strong></span>In linear regression, <strong>Multicollinearity</strong> denotes the situation
 when the columns of the design matrix <span class="math inline">\(X\)</span> are (approximately) linearly
 dependent.</p>
 </div>
@@ -353,7 +364,7 @@ invertible. If the columns of <span class="math inline">\(X\)</span> are linearl
 longer invertible and the least squares estimate is no longer uniquely
 defined.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-40" class="example"><strong>Example 10.1  </strong></span>Consider the following data:</p>
+<p><span id="exm:unlabeled-div-39" class="example"><strong>Example 10.1  </strong></span>Consider the following data:</p>
 <table>
 <thead>
 <tr class="header">
@@ -464,7 +475,7 @@ a pair scatter plot of the inputs <span class="math inline">\(x_i\)</span>, mult
 more than two columns can be harder to notice. The condition number of
 <span class="math inline">\(X\)</span> is a quantitative measure of how close <span class="math inline">\(X\)</span> is to multicollinearity.</p>
 <div class="definition">
-<p><span id="def:unlabeled-div-41" class="definition"><strong>Definition 10.2  </strong></span>The <strong>condition number</strong> of <span class="math inline">\(X\)</span> is defined to be
+<p><span id="def:unlabeled-div-40" class="definition"><strong>Definition 10.2  </strong></span>The <strong>condition number</strong> of <span class="math inline">\(X\)</span> is defined to be
 <span class="math display">\[\begin{equation*}
   \kappa(X)
   = \frac{\sigma_\mathrm{max}(X)}{\sigma_\mathrm{min}(X)},
