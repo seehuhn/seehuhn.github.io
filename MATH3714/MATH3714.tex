@@ -7636,7 +7636,7 @@ in a regression model.
   PRESS without having to fit \(n\) separate models.
 
   \begin{lemma}
-  We have
+  \protect\hypertarget{lem:PRESS}{}\label{lem:PRESS}We have
   \begin{equation*}
     \mathrm{PRESS}
     = \sum_{i=1}^n \Bigl( \frac{\hat\varepsilon_i}{1 - h_{ii}} \Bigr)^2,
@@ -7802,6 +7802,318 @@ in a regression model.
 \item
   We have considered different criteria for choosing the ``best'' model.
 \end{itemize}
+
+\clearpage
+
+\hypertarget{P04}{%
+\section*{Problem Sheet 4}\label{P04}}
+\addcontentsline{toc}{section}{Problem Sheet 4}
+
+\excludecomment{myanswers}
+
+You should attempt all these questions and write up your solutions in advance
+of your workshop in week~9 where the answers will be discussed.
+
+\textbf{13} Consider the data set \texttt{pressure}, built into~R, which
+describes the vapour pressure~\(P\) of mercury as a function of
+temperature~\(T\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  For given \(T_0\), explain how a model of the form
+  \(P = \beta_0 + T \beta_1 + \max(0, T-T_0) \beta_2 + \varepsilon\) can be
+  fitted to the data.
+\end{enumerate}
+
+\begin{myanswers}
+
+We can fit a model with an intercept and two inputs,
+\(T\) and \(\max(0, T-T_0)\). In R we can use the following
+commands to fit such a model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{T0 }\OtherTok{\textless{}{-}}\NormalTok{ the.given.value }\CommentTok{\# substitute the value of T0 here}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(pressure }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, temperature}\SpecialCharTok{{-}}\NormalTok{T0)),}
+        \AttributeTok{data =}\NormalTok{ pressure)}
+\end{Highlighting}
+\end{Shaded}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Why might a model of this form make sense for the given data?
+\end{enumerate}
+
+\begin{myanswers}
+Such a model may make sense, because the slope of the
+samples increases faster than linear as the temperature~\(T\)
+increases. The term \(\max(0, T-T_0)\) is zero for small~\(T\),
+but adds an additional slope once \(T\) exceeds the cutoff
+temperature~\(T_0\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  What is a good value of \(T_0\) for this data set?
+\end{enumerate}
+
+\begin{myanswers}
+\(T_0\) should be placed at the end of the ``flat'' part
+of the plot, where the pressure starts increasing more
+quickly. A quick experiment shows that the best \(R^2\)
+value is achieved for \(T_0 \approx 273\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{T0 }\OtherTok{\textless{}{-}} \DecValTok{273}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(pressure }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, temperature }\SpecialCharTok{{-}}\NormalTok{ T0)),}
+        \AttributeTok{data=}\NormalTok{pressure)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = pressure \textasciitilde{} temperature + I(pmax(0, temperature {-} }
+\NormalTok{\#     T0)), data = pressure)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}53.125 {-}17.553  {-}6.308  13.017  55.839 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#                               Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept)                  {-}17.62933   14.63735  {-}1.204   0.2459    }
+\NormalTok{\# temperature                    0.25472    0.08774   2.903   0.0104 *  }
+\NormalTok{\# I(pmax(0, temperature {-} T0))   7.77118    0.38024  20.437 6.85e{-}13 ***}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 29.86 on 16 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.9843,  Adjusted R{-}squared:  0.9823 }
+\NormalTok{\# F{-}statistic: 501.3 on 2 and 16 DF,  p{-}value: 3.705e{-}15}
+\end{Highlighting}
+\end{Shaded}
+
+To get a better understanding of how the extra term
+\(\max(0, T-T_0)\) improves model fit, we plot the data
+together with the fitted model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(pressure)}
+\NormalTok{T.plot }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{360}\NormalTok{, }\AttributeTok{l=}\DecValTok{100}\NormalTok{)}
+\NormalTok{p.plot }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(m, }\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{temperature=}\NormalTok{T.plot))}
+\FunctionTok{lines}\NormalTok{(T.plot, p.plot)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P04Q13c-1.pdf}
+
+As expected, for \(T > 273 = T_0\), the slope of the
+fitted line increases, leading to greatly improved
+model fit. (An alternative, and probably superior approach would
+be to transform the data and try to fit a straight line to the
+transformed data instead.)
+
+\end{myanswers}
+
+\textbf{14} Where possible, rewrite the following regression models in linear form.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  \(y = \beta_0 \beta_1^x\)
+\end{enumerate}
+
+\begin{myanswers}
+We can take logarithms:
+\begin{equation*}
+  \log(y)
+  = \log(\beta_0) + x \log(\beta_1)
+  =: \beta_0' + x \beta_1'.
+\end{equation*}
+Notice that writing \(\log(y) = \beta_0' + x \beta_1' + \varepsilon\)
+implies \(y = \beta_0 \beta_1^x \exp(\varepsilon)\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  \(y = \beta_0 + \beta_1 \sin(x_1) + \beta_2 \exp(x_2)\)
+\end{enumerate}
+
+\begin{myanswers}
+We can simply set \(x_1' = \sin(x_1)\) and \(x_2' = \exp(x_2)\).
+This transformation does not affect the error term.
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  \(y = \frac{x}{\beta_0 + \beta_1 x}\)
+\end{enumerate}
+
+\begin{myanswers}
+We can write
+\begin{equation*}
+  \frac1y
+  = \frac{\beta_0 + \beta_1 x}{x}
+  = \beta_0 \frac1x + \beta_1.
+\end{equation*}
+Thus we can use \(x' = 1/x\), \(y' = 1/y\), \(\beta_0' = \beta_1\) and
+\(\beta_1' = \beta_0\). This transformation affects the noise, too,
+so some care is needed.
+
+\end{myanswers}
+
+\textbf{15} Consider the dataset from
+
+\begin{itemize}
+\tightlist
+\item
+  \url{http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P04Q14.csv}
+\end{itemize}
+
+The dataset contains samples \((x_{i,1}, x_{i,2}, y_i)\). We want to
+find a model for \(y\) as a function of \(x_1\) and~\(x_2\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Fit a linear model to the data and produce a residual plot.
+  Based on the plot, discuss how well the model fits the data.
+\end{enumerate}
+
+\begin{myanswers}
+We can fit the model as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data from http://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2021/MATH3714/P04Q14.csv}
+\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/P04Q14.csv"}\NormalTok{)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P04Q14a-1.pdf}
+
+The mean of the residuals does not form a straight line, so the
+dependency of \(y\) on the \(x_i\) seems to be nonlinear. Also, the variance
+of the residuals decreases as \(\hat y\) increases. Model fit is not good
+and a transformation of the data may be useful.
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Apply a Power Transform to the model, as described in
+  section~\ref{power-transform} of the notes. Explain your choice of \(\lambda\).
+\end{enumerate}
+
+\begin{myanswers}
+To choose the exponent \(\lambda\), we plot the residual sum of squares
+as a function of \(\lambda\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gm }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(}\FunctionTok{mean}\NormalTok{(}\FunctionTok{log}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{y)))}
+\NormalTok{lambda }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{101}\NormalTok{)}
+\NormalTok{rss }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(lambda))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(lambda)) \{}
+\NormalTok{    li }\OtherTok{\textless{}{-}}\NormalTok{ lambda[i]}
+\NormalTok{    y.prime }\OtherTok{\textless{}{-}}\NormalTok{ (d}\SpecialCharTok{$}\NormalTok{y}\SpecialCharTok{\^{}}\NormalTok{li }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (li }\SpecialCharTok{*}\NormalTok{ gm}\SpecialCharTok{\^{}}\NormalTok{(li}\DecValTok{{-}1}\NormalTok{))}
+\NormalTok{    mi }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{data =}\NormalTok{ d)}
+\NormalTok{    rss[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{resid}\NormalTok{(mi)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{\}}
+\FunctionTok{plot}\NormalTok{(lambda, rss, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{)}
+
+\NormalTok{cutoff }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(rss) }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.971}\NormalTok{, }\DecValTok{51}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/} \DecValTok{51}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =}\NormalTok{ cutoff)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P04Q14b-1.pdf}
+
+The horizonal line in this plot indicates the cutoff suggested by the
+rule of thumb in~\eqref{eq:power-cutoff}. Of the values of \(\lambda\)
+where \texttt{rss} is below the cutoff, \(\lambda = 4\) seems the most ``simple'',
+so we try this value here.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y.prime }\OtherTok{\textless{}{-}}\NormalTok{ d}\SpecialCharTok{$}\NormalTok{y }\SpecialCharTok{\^{}} \DecValTok{4}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P04Q14c-1.pdf}
+
+Now the residual plot looks perfect!
+
+\end{myanswers}
+
+\textbf{16} The Prediction Error Sum of Squares (PRESS) is defined as
+\begin{equation*}
+  \mathrm{PRESS}
+  = \sum_{i=1}^n \bigl( y_i - \hat y^{(i)}_i \bigr)^2.
+\end{equation*}
+Using lemma~\ref{lem:PRESS}, or otherwise, determine the PRESS
+value for the \texttt{stackloss} dataset built into R (using \texttt{stack.loss}
+as the response variable).
+
+\begin{myanswers}
+
+We can use the formula
+\begin{equation*}
+  \mathrm{PRESS}
+  = \sum_{i=1}^n \Bigl( \frac{\hat\varepsilon_i}{1 - h_{ii}} \Bigr)^2
+\end{equation*}
+from the lemma. Implementation in R is straightforward.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m)}
+\NormalTok{H }\OtherTok{\textless{}{-}}\NormalTok{ X }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X, }\FunctionTok{t}\NormalTok{(X))}
+\NormalTok{hii }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(H)}
+\FunctionTok{sum}\NormalTok{((}\FunctionTok{resid}\NormalTok{(m)}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ hii))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# [1] 291.8689}
+\end{Highlighting}
+\end{Shaded}
+
+\end{myanswers}
 
 \clearpage
 

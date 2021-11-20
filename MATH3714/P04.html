@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>About MATH3714 | MATH3714 Linear Regression and Robustness</title>
+  <title>Problem Sheet 4 | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="About MATH3714 | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Problem Sheet 4 | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="About MATH3714 | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Problem Sheet 4 | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="S01-simple.html"/>
+<link rel="prev" href="S13-models.html"/>
+<link rel="next" href="S14-methods.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -341,107 +341,246 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="S00-about" class="section level1 unnumbered">
-<h1>About MATH3714</h1>
-<p>This module is <strong>MATH3714 Linear Regression and Robustness</strong>. The
-module manager and lecturer is Dr Jochen Voss, and my email address is
-<a href="mailto:J.Voss@leeds.ac.uk" class="email">J.Voss@leeds.ac.uk</a>.</p>
-<div id="notes" class="section level2 unnumbered">
-<h2>Notes and videos</h2>
-<p>The main way I expect you to learn the material for this course is by
-reading these notes and by watching the accompanying videos. I will
-release two sections of notes each week, for a total of 22 sections.</p>
-<p>Reading mathematics is a slow process. Each section roughly
-corresponds to one traditional lecture, which would have taken 50
-minutes. If you find yourself regularly getting through sections in
-much less than an hour, you’re probably not reading carefully enough
-through each sentence of explanation and each line of mathematics,
-including understanding the motivation as well as checking the
-accuracy.</p>
-<p>It is possible (but not recommended) to learn the material by only
-reading the notes and not watching the videos. It is not possible to
-learn the material by only watching the videos and not reading the
-notes.</p>
-<p>Since we will all be relying heavily on these notes, I’m even more
-keen than usual to hear about errors mathematical, typographical or
-otherwise. Please, please <a href="mailto:J.Voss@leeds.ac.uk">email me</a> if
-think you may have found any.</p>
+<div id="P04" class="section level1 unnumbered">
+<h1>Problem Sheet 4</h1>
+<style>
+.fold-btn {
+  float: right;
+  margin: -12px 0 0 0;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function() {
+  $folds = $(".myanswers");
+  $folds.wrapInner("<div class=\"fold-blck\">"); // wrap a div container around content
+  $folds.prepend("<button class=\"fold-btn\">Show solution</button>");  // add a button
+  $(".fold-blck").toggle();  // fold all blocks
+  $(".fold-btn").on("click", function() {  // add onClick event
+    $(this).text($(this).text() === "Hide solution" ? "Show solution" : "Hide solution");  // if the text equals "Fold", change it to "Unfold"or else to "Fold"
+    $(this).next(".fold-blck").toggle("linear");  // "swing" is the default easing function. This can be further customized in its speed or the overall animation itself.
+  })
+});
+</script>
+<style>.myanswers { display: none !important; }</style>
+<div class="mysummary">
+<p>You should attempt all these questions and write up your solutions in advance
+of your workshop in week 9 where the answers will be discussed.</p>
 </div>
-<div id="lectures" class="section level2 unnumbered">
-<h2>Lectures</h2>
-<p>There will be one online synchronous “lecture” session each week, on
-Mondays at 2-3pm, with me, run through Microsoft Teams. These will
-not be “lectures” in the traditional sense of the term, but will be an
-opportunity to re-emphasise material you have already learned from
-notes and videos, to give extra examples, and to answer common student
-questions, with some degree of interactivity.</p>
-<p>I will assume you have completed all the work for the previous week by
-the time of the lecture, but I will not assume you’ve started the work
-for that week itself.</p>
-<p>I am very keen to hear about things you’d like to go through in the
-lectures; please <a href="mailto:J.Voss@leeds.ac.uk">email me</a> with your
-suggestions.</p>
+<div class="myq">
+<p><strong>13</strong> Consider the data set <code>pressure</code>, built into R, which
+describes the vapour pressure <span class="math inline">\(P\)</span> of mercury as a function of
+temperature <span class="math inline">\(T\)</span>.</p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>For given <span class="math inline">\(T_0\)</span>, explain how a model of the form
+<span class="math inline">\(P = \beta_0 + T \beta_1 + \max(0, T-T_0) \beta_2 + \varepsilon\)</span> can be
+fitted to the data.</li>
+</ol>
+<div class="myanswers">
+<p>We can fit a model with an intercept and two inputs,
+<span class="math inline">\(T\)</span> and <span class="math inline">\(\max(0, T-T_0)\)</span>. In R we can use the following
+commands to fit such a model:</p>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="P04.html#cb219-1" aria-hidden="true" tabindex="-1"></a>T0 <span class="ot">&lt;-</span> the.given.value <span class="co"># substitute the value of T0 here</span></span>
+<span id="cb219-2"><a href="P04.html#cb219-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(pressure <span class="sc">~</span> temperature <span class="sc">+</span> <span class="fu">I</span>(<span class="fu">pmax</span>(<span class="dv">0</span>, temperature<span class="sc">-</span>T0)),</span>
+<span id="cb219-3"><a href="P04.html#cb219-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> pressure)</span></code></pre></div>
 </div>
-<div id="workshops" class="section level2 unnumbered">
-<h2>Workshops and Problem Sheets</h2>
-<p>There will be 5 problem sheets, corresponding to workshops in weeks 2,
-4, 6, 8 and 10. The main goal of the workshops will be to go over
-your answers to the problems sheets.</p>
-<p>My recommended approach to problem sheets and workshops is the following:</p>
-<ul>
-<li>Work through the problem sheet before the workshop, spending plenty
-of time on it, and making multiple efforts at questions you get
-stuck on. I recommend spending <em>at least three hours</em> on each
-problem sheet, in more than one block. Collaboration is encouraged
-when working through the problems, but I recommend writing up your
-work on your own.</li>
-<li>Take advantage of the workshops to ask for help or clarification on
-questions you weren’t able to complete.</li>
-<li>After the workshop, attempt again the questions you were previously stuck on.</li>
-<li>If you’re still unable to complete a question after this second
-round of attempts, <em>then</em> consult the solutions.</li>
-</ul>
 </div>
-<div id="teams" class="section level2 unnumbered">
-<h2>Discussion Board</h2>
-<p>I have set up <a href="https://teams.microsoft.com/l/team/19%3aopeKURHGjduA41CDtQUkmDjoPalh-zWDGuKhTk9zYq41%40thread.tacv2/conversations?groupId=bde4675f-2c0d-4efd-9762-748cca83f4c4&amp;tenantId=bdeaeda8-c81d-45ce-863e-5232a535b7cb">a Microsoft
-Team</a>
-for the course. I propose to use the “Discussion” channel there as a
-discussion board. This is a good place to post questions about
-material from the course, and — even better! — to help answer your
-colleagues’ questions. The idea is that you all as a group should help
-each other out. I will visit a couple of times a week to clarify if
-everybody is stumped by a question, or if there is disagreement.</p>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Why might a model of this form make sense for the given data?</li>
+</ol>
+<div class="myanswers">
+<p>Such a model may make sense, because the slope of the
+samples increases faster than linear as the temperature <span class="math inline">\(T\)</span>
+increases. The term <span class="math inline">\(\max(0, T-T_0)\)</span> is zero for small <span class="math inline">\(T\)</span>,
+but adds an additional slope once <span class="math inline">\(T\)</span> exceeds the cutoff
+temperature <span class="math inline">\(T_0\)</span>.</p>
 </div>
-<div id="software" class="section level2 unnumbered">
-<h2>Software</h2>
-<p>For the module we will use the statistical computing package R. This
-program is free software, and you can find the program and
-documentation at the <a href="https://www.r-project.org/">R project homepage</a>.
-In particular, R will be used in the (assessed) practial.</p>
-<p>My recommendation would be to install the <a href="https://www.rstudio.com/">RStudio
-environment</a>, which includes R, on your own
-computer and use this for your work. (Choose the open source
-version, “RStudio Desktop”, on the download page.) Alternatively you
-can use RStudio or plain R on the university computers.</p>
 </div>
-<div id="assessments" class="section level2 unnumbered">
-<h2>Assessments</h2>
-<p>Your final mark for the module will be based on a computer practical
-(20%) and a final exam (80%). For the practical (I believe it will
-take place in week 10) you will need to solve some problem using R and
-the methods you learned in the course and to present your results in a
-short report.</p>
+<div class="subq">
+<ol start="3" style="list-style-type: lower-alpha">
+<li>What is a good value of <span class="math inline">\(T_0\)</span> for this data set?</li>
+</ol>
+<div class="myanswers">
+<p><span class="math inline">\(T_0\)</span> should be placed at the end of the “flat” part
+of the plot, where the pressure starts increasing more
+quickly. A quick experiment shows that the best <span class="math inline">\(R^2\)</span>
+value is achieved for <span class="math inline">\(T_0 \approx 273\)</span>:</p>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="P04.html#cb220-1" aria-hidden="true" tabindex="-1"></a>T0 <span class="ot">&lt;-</span> <span class="dv">273</span></span>
+<span id="cb220-2"><a href="P04.html#cb220-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(pressure <span class="sc">~</span> temperature <span class="sc">+</span> <span class="fu">I</span>(<span class="fu">pmax</span>(<span class="dv">0</span>, temperature <span class="sc">-</span> T0)),</span>
+<span id="cb220-3"><a href="P04.html#cb220-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>pressure)</span>
+<span id="cb220-4"><a href="P04.html#cb220-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<pre class="rOutput"><code>
+Call:
+lm(formula = pressure ~ temperature + I(pmax(0, temperature - 
+    T0)), data = pressure)
 
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-53.125 -17.553  -6.308  13.017  55.839 
+
+Coefficients:
+                              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                  -17.62933   14.63735  -1.204   0.2459    
+temperature                    0.25472    0.08774   2.903   0.0104 *  
+I(pmax(0, temperature - T0))   7.77118    0.38024  20.437 6.85e-13 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 29.86 on 16 degrees of freedom
+Multiple R-squared:  0.9843,    Adjusted R-squared:  0.9823 
+F-statistic: 501.3 on 2 and 16 DF,  p-value: 3.705e-15</code></pre>
+<p>To get a better understanding of how the extra term
+<span class="math inline">\(\max(0, T-T_0)\)</span> improves model fit, we plot the data
+together with the fitted model:</p>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="P04.html#cb222-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pressure)</span>
+<span id="cb222-2"><a href="P04.html#cb222-2" aria-hidden="true" tabindex="-1"></a>T.plot <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">360</span>, <span class="at">l=</span><span class="dv">100</span>)</span>
+<span id="cb222-3"><a href="P04.html#cb222-3" aria-hidden="true" tabindex="-1"></a>p.plot <span class="ot">&lt;-</span> <span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">temperature=</span>T.plot))</span>
+<span id="cb222-4"><a href="P04.html#cb222-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(T.plot, p.plot)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/P04Q13c-1.png" width="672" /></p>
+<p>As expected, for <span class="math inline">\(T &gt; 273 = T_0\)</span>, the slope of the
+fitted line increases, leading to greatly improved
+model fit. (An alternative, and probably superior approach would
+be to transform the data and try to fit a straight line to the
+transformed data instead.)</p>
 </div>
+</div>
+</div>
+<div class="myq">
+<p><strong>14</strong> Where possible, rewrite the following regression models in linear form.</p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li><span class="math inline">\(y = \beta_0 \beta_1^x\)</span></li>
+</ol>
+<div class="myanswers">
+<p>We can take logarithms:
+<span class="math display">\[\begin{equation*}
+  \log(y)
+  = \log(\beta_0) + x \log(\beta_1)
+  =: \beta_0&#39; + x \beta_1&#39;.
+\end{equation*}\]</span>
+Notice that writing <span class="math inline">\(\log(y) = \beta_0&#39; + x \beta_1&#39; + \varepsilon\)</span>
+implies <span class="math inline">\(y = \beta_0 \beta_1^x \exp(\varepsilon)\)</span>.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li><span class="math inline">\(y = \beta_0 + \beta_1 \sin(x_1) + \beta_2 \exp(x_2)\)</span></li>
+</ol>
+<div class="myanswers">
+<p>We can simply set <span class="math inline">\(x_1&#39; = \sin(x_1)\)</span> and <span class="math inline">\(x_2&#39; = \exp(x_2)\)</span>.
+This transformation does not affect the error term.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="3" style="list-style-type: lower-alpha">
+<li><span class="math inline">\(y = \frac{x}{\beta_0 + \beta_1 x}\)</span></li>
+</ol>
+<div class="myanswers">
+<p>We can write
+<span class="math display">\[\begin{equation*}
+  \frac1y
+  = \frac{\beta_0 + \beta_1 x}{x}
+  = \beta_0 \frac1x + \beta_1.
+\end{equation*}\]</span>
+Thus we can use <span class="math inline">\(x&#39; = 1/x\)</span>, <span class="math inline">\(y&#39; = 1/y\)</span>, <span class="math inline">\(\beta_0&#39; = \beta_1\)</span> and
+<span class="math inline">\(\beta_1&#39; = \beta_0\)</span>. This transformation affects the noise, too,
+so some care is needed.</p>
+</div>
+</div>
+</div>
+<div class="myq">
+<p><strong>15</strong> Consider the dataset from</p>
+<ul>
+<li><a href="http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P04Q14.csv">http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P04Q14.csv</a></li>
+</ul>
+<p>The dataset contains samples <span class="math inline">\((x_{i,1}, x_{i,2}, y_i)\)</span>. We want to
+find a model for <span class="math inline">\(y\)</span> as a function of <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>.</p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Fit a linear model to the data and produce a residual plot.
+Based on the plot, discuss how well the model fits the data.</li>
+</ol>
+<div class="myanswers">
+<p>We can fit the model as follows:</p>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="P04.html#cb223-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P04Q14.csv</span></span>
+<span id="cb223-2"><a href="P04.html#cb223-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/P04Q14.csv&quot;</span>)</span>
+<span id="cb223-3"><a href="P04.html#cb223-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
+<span id="cb223-4"><a href="P04.html#cb223-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/P04Q14a-1.png" width="672" /></p>
+<p>The mean of the residuals does not form a straight line, so the
+dependency of <span class="math inline">\(y\)</span> on the <span class="math inline">\(x_i\)</span> seems to be nonlinear. Also, the variance
+of the residuals decreases as <span class="math inline">\(\hat y\)</span> increases. Model fit is not good
+and a transformation of the data may be useful.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Apply a Power Transform to the model, as described in
+section <a href="S11-improving.html#power-transform">11.3</a> of the notes. Explain your choice of <span class="math inline">\(\lambda\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>To choose the exponent <span class="math inline">\(\lambda\)</span>, we plot the residual sum of squares
+as a function of <span class="math inline">\(\lambda\)</span>.</p>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="P04.html#cb224-1" aria-hidden="true" tabindex="-1"></a>gm <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(d<span class="sc">$</span>y)))</span>
+<span id="cb224-2"><a href="P04.html#cb224-2" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">101</span>)</span>
+<span id="cb224-3"><a href="P04.html#cb224-3" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(lambda))</span>
+<span id="cb224-4"><a href="P04.html#cb224-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(lambda)) {</span>
+<span id="cb224-5"><a href="P04.html#cb224-5" aria-hidden="true" tabindex="-1"></a>    li <span class="ot">&lt;-</span> lambda[i]</span>
+<span id="cb224-6"><a href="P04.html#cb224-6" aria-hidden="true" tabindex="-1"></a>    y.prime <span class="ot">&lt;-</span> (d<span class="sc">$</span>y<span class="sc">^</span>li <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (li <span class="sc">*</span> gm<span class="sc">^</span>(li<span class="dv">-1</span>))</span>
+<span id="cb224-7"><a href="P04.html#cb224-7" aria-hidden="true" tabindex="-1"></a>    mi <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
+<span id="cb224-8"><a href="P04.html#cb224-8" aria-hidden="true" tabindex="-1"></a>    rss[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(mi)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb224-9"><a href="P04.html#cb224-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb224-10"><a href="P04.html#cb224-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lambda, rss, <span class="at">type=</span><span class="st">&quot;l&quot;</span>)</span>
+<span id="cb224-11"><a href="P04.html#cb224-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb224-12"><a href="P04.html#cb224-12" aria-hidden="true" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">min</span>(rss) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.971</span>, <span class="dv">51</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="dv">51</span>)</span>
+<span id="cb224-13"><a href="P04.html#cb224-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> cutoff)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/P04Q14b-1.png" width="672" /></p>
+<p>The horizonal line in this plot indicates the cutoff suggested by the
+rule of thumb in <a href="S11-improving.html#eq:power-cutoff">(11.1)</a>. Of the values of <span class="math inline">\(\lambda\)</span>
+where <code>rss</code> is below the cutoff, <span class="math inline">\(\lambda = 4\)</span> seems the most “simple”,
+so we try this value here.</p>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="P04.html#cb225-1" aria-hidden="true" tabindex="-1"></a>y.prime <span class="ot">&lt;-</span> d<span class="sc">$</span>y <span class="sc">^</span> <span class="dv">4</span></span>
+<span id="cb225-2"><a href="P04.html#cb225-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
+<span id="cb225-3"><a href="P04.html#cb225-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/P04Q14c-1.png" width="672" /></p>
+<p>Now the residual plot looks perfect!</p>
+</div>
+</div>
+</div>
+<div class="myq">
+<p><strong>16</strong> The Prediction Error Sum of Squares (PRESS) is defined as
+<span class="math display">\[\begin{equation*}
+  \mathrm{PRESS}
+  = \sum_{i=1}^n \bigl( y_i - \hat y^{(i)}_i \bigr)^2.
+\end{equation*}\]</span>
+Using lemma <a href="S13-models.html#lem:PRESS">13.1</a>, or otherwise, determine the PRESS
+value for the <code>stackloss</code> dataset built into R (using <code>stack.loss</code>
+as the response variable).</p>
+<div class="myanswers">
+<p>We can use the formula
+<span class="math display">\[\begin{equation*}
+  \mathrm{PRESS}
+  = \sum_{i=1}^n \Bigl( \frac{\hat\varepsilon_i}{1 - h_{ii}} \Bigr)^2
+\end{equation*}\]</span>
+from the lemma. Implementation in R is straightforward.</p>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="P04.html#cb226-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb226-2"><a href="P04.html#cb226-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb226-3"><a href="P04.html#cb226-3" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
+<span id="cb226-4"><a href="P04.html#cb226-4" aria-hidden="true" tabindex="-1"></a>hii <span class="ot">&lt;-</span> <span class="fu">diag</span>(H)</span>
+<span id="cb226-5"><a href="P04.html#cb226-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((<span class="fu">resid</span>(m)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">-</span> hii))<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre class="rOutput"><code>[1] 291.8689</code></pre>
+</div>
+</div>
+
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="S01-simple.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S13-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="S14-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
