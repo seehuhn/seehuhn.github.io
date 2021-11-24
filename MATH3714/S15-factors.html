@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness</title>
+  <title>Section 15 Factors | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Section 15 Factors | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Section 15 Factors | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="P01.html"/>
-<link rel="next" href="S04-model.html"/>
+<link rel="prev" href="S14-methods.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -346,383 +346,326 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="S03-cov" class="section level1" number="3">
-<h1><span class="header-section-number">Section 3</span> Random Vectors and Covariance</h1>
-<p>Like in the one-dimensional case, we can build a <strong>statistical model</strong>
-for the data where we assume that the errors are random. More
-precisely we will assume
-<span class="math display">\[\begin{equation}
-  Y_i
-  = \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i
-\end{equation}\]</span>
-for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, where <span class="math inline">\(\varepsilon_1, \ldots, \varepsilon_n\)</span>
-are now independent and identically distributed (i.i.d.)
-random variables with <span class="math inline">\(\mathbb{E}(\varepsilon_i) = 0\)</span> and
-<span class="math inline">\(\mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\)</span>.
-As in <a href="S02-multiple.html#eq:lmmodel">(2.2)</a>, the statistical model can be written in vector
-form as
-<span class="math display" id="eq:lmstat0">\[\begin{equation}
-  Y = X \beta + \varepsilon.  \tag{3.1}
-\end{equation}\]</span>
-This is a vector-valued equation which contains two “random vectors”, <span class="math inline">\(Y\)</span>
-and <span class="math inline">\(\varepsilon\)</span>.</p>
-<p>A <strong>random vector</strong> is a vector <span class="math inline">\(Z = (Z_1, \ldots, Z_n)\)</span>
-where each component <span class="math inline">\(Z_i\)</span> is a random variable.</p>
-<div id="expectation" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Expectation</h2>
+<div id="S15-factors" class="section level1" number="15">
+<h1><span class="header-section-number">Section 15</span> Factors</h1>
+<p>In this section we will learn how to fit linear models when some or all
+of the inputs are categorical. Such inputs are sometimes called “factors”.
+These can be
+binary (<em>e.g.</em> sex recorded as male/female)
+or ordered (<em>e.g.</em> quality recorded as poor/medium/good)
+or unordered (<em>e.g.</em> marital status recorded as single/married/divorced/widowed).</p>
+<div id="indicator-variables" class="section level2" number="15.1">
+<h2><span class="header-section-number">15.1</span> Indicator Variables</h2>
 <div class="videowrap">
 <div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bHbq8AFxRzo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/i-u4See3QZs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </div>
 </div>
-<p>The expectation of a random vector is taken for each component separately.
-This is formalised in the following definition.</p>
-<div class="definition">
-<p><span id="def:unlabeled-div-3" class="definition"><strong>Definition 3.1  </strong></span>Let <span class="math inline">\(Z = (Z_1, \ldots, Z_n) \in \mathbb{R}^n\)</span> be a random vector.
-Then the expectation of <span class="math inline">\(Z\)</span> is the (non-random) vector
+<p>Our aim here is to include categorical input variables within the
+usual regression model
 <span class="math display">\[\begin{equation*}
-    \mathbb{E}(X)
-    = \begin{pmatrix}
-      \mathbb{E}(Z_1) \\ \vdots \\ \mathbb{E}(Z_n)
-    \end{pmatrix}
-    \in \mathbb{R}^n.
-  \end{equation*}\]</span></p>
-</div>
-<p>The same convention is sometimes used for random matrices <span class="math inline">\(M\)</span>,
-as <span class="math inline">\(\mathbb{E}(M)_{ij} = \mathbb{E}(M_{ij})\)</span>.</p>
-<div class="example">
-<p><span id="exm:unlabeled-div-4" class="example"><strong>Example 3.1  </strong></span>The random vector <span class="math inline">\(\varepsilon\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(\varepsilon)_i = \mathbb{E}(\varepsilon_i) = 0
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> and thus <span class="math inline">\(\mathbb{E}(\varepsilon) = 0 \in \mathbb{R}^n\)</span>,
-where <span class="math inline">\(0\)</span> here denotes the zero-vector <span class="math inline">\((0, \ldots, 0) \in \mathbb{R}^n\)</span>.</p>
-</div>
-<p>Since the expectation of a random vector is defined in term of the
-usual expectation, most rules we know for expectations still hold.
-For example, if <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span> are two random vectors, we have
-<span class="math inline">\(\mathbb{E}(Y+Z) = \mathbb{E}(Y) + \mathbb{E}(Z)\)</span>.</p>
-<div class="example">
-<p><span id="exm:E-of-Y" class="example"><strong>Example 3.2  </strong></span>The random vector <span class="math inline">\(Y\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(Y)_i
-    = \mathbb{E}(Y_i)
-    = \mathbb{E}\bigl( (X\beta)_i + \varepsilon_i \bigr)
-    = (X\beta)_i + \mathbb{E}(\varepsilon_i)
-    = (X\beta)_i
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> and thus <span class="math inline">\(\mathbb{E}(Y) = X\beta \in \mathbb{R}^n\)</span>.
-We often will write the above derivation in vector form
-as
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(Y)
-    = \mathbb{E}(X\beta + \varepsilon)
-    = X\beta + \mathbb{E}(\varepsilon)
-    = X\beta.
-  \end{equation*}\]</span></p>
-</div>
-<div class="example">
-<p><span id="exm:unlabeled-div-5" class="example"><strong>Example 3.3  </strong></span>If <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span> is a matrix and <span class="math inline">\(Z \in \mathbb{R}^n\)</span> is a random
-vector, then we find the expectation of <span class="math inline">\(AZ\in\mathbb{R}^m\)</span> as
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(AZ)_i
-    = \mathbb{E}(AZ_i)
-    = \mathbb{E}\bigl( \sum_{j=1}^n a_{ij} Z_j \bigr)
-    = \sum_{j=1}^n \mathbb{E}\bigl( a_{ij} Z_j \bigr)
-    = \sum_{j=1}^n a_{ij} \mathbb{E}(Z_j)
-    = \sum_{j=1}^n a_{ij} \mathbb{E}(Z)_j
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, m\}\)</span> and thus we have <span class="math inline">\(\mathbb{E}(AZ) = A \mathbb{E}(Z)\)</span>.</p>
-</div>
-</div>
-<div id="sec:covariance" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Covariance Matrix</h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/NJGqepkU2Yk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>The variance of random variables is replaced with the concept of
-a “covariance matrix” for random vectors.</p>
-<div class="definition">
-<p><span id="def:unlabeled-div-6" class="definition"><strong>Definition 3.2  </strong></span>Let <span class="math inline">\(Z = (Z_1, \ldots, Z_n) \in \mathbb{R}^n\)</span> be a random vector.
-Then the covariance matrix of <span class="math inline">\(Z\)</span> is the matrix <span class="math inline">\(\mathop{\mathrm{Cov}}(Z) \in \mathbb{R}^{n\times n}\)</span>
-given by
-<span class="math display">\[\begin{equation*}
-    \mathop{\mathrm{Cov}}(Z)_{ij}
-    = \mathop{\mathrm{Cov}}(Z_i, Z_j),
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i, j \in \{1, \ldots, n\}\)</span>,
-where <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j)\)</span> denotes the usual covariance between random
-variables.</p>
-</div>
-<p>We collect some basic properties of covariance matrices here. Most of these
-arguments use concepts and rules from linear algebra, as summarised in
-section <a href="Sx1-matrices.html#Sx1-matrices">A</a> in the appendix.</p>
-<ul>
-<li><p>Since <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j) = \mathop{\mathrm{Cov}}(Z_j, Z_i)\)</span>, covariance matrices are
-symmetric.</p></li>
-<li><p>The diagonal elements of <span class="math inline">\(\mathop{\mathrm{Cov}}(Z)\)</span> are
-<span class="math display" id="eq:Cov-diag-elem">\[\begin{equation}
-  \mathop{\mathrm{Cov}}(Z)_{ii}
-  = \mathop{\mathrm{Cov}}(Z_i, Z_i)
-  = \mathop{\mathrm{Var}}(Z_i).  \tag{3.2}
-\end{equation}\]</span></p></li>
-<li><p>If the elements <span class="math inline">\(Z_i\)</span> of <span class="math inline">\(Z\)</span> are (statistically) independent,
-we have <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j) = 0\)</span> and thus <span class="math inline">\(\mathop{\mathrm{Cov}}(Z)_{ij} = 0\)</span>
-for <span class="math inline">\(i \neq j\)</span>. If <span class="math inline">\(Z\)</span> is a vector of independent random variables,
-the covariance matrix of <span class="math inline">\(Z\)</span> is diagonal.</p></li>
-<li><p>Let <span class="math inline">\(\mu = \mathbb{E}(Z) \in \mathbb{R}^n\)</span>. If we interpret <span class="math inline">\(\mu\)</span> as a column vector,
-then <span class="math inline">\(M = (Z - \mu) (Z - \mu)^\top\)</span> is an <span class="math inline">\(n\times n\)</span> matrix and we have
-<span class="math display">\[\begin{equation*}
-  M_{ij}
-  = \bigl( (Z - \mu) (Z - \mu)^\top \bigr)_{ij}
-  = (Z - \mu)_i (Z - \mu)_j.
-\end{equation*}\]</span>
-Taking expectations gives <span class="math inline">\(\mathbb{E}(M_{ij}) = E\bigl( (Z - \mu)_i (Z - \mu)_j \bigr) = \mathop{\mathrm{Cov}}(Z_i, Z_j)\)</span> and thus we can write
-<span class="math display" id="eq:cov-prod">\[\begin{equation}
-  \mathop{\mathrm{Cov}}(Z)
-  = \mathbb{E}\bigl( (Z - \mu) (Z - \mu)^\top \bigr).  \tag{3.3}
-\end{equation}\]</span></p></li>
-<li><p>Covariance matrices are positive semi-definite. To see this, let
-<span class="math inline">\(C = \mathop{\mathrm{Cov}}(Z)\)</span> and <span class="math inline">\(u \in\mathbb{R}^n\)</span> be a vector. We have to show that
-<span class="math inline">\(u^\top C u \geq 0\)</span>. Writing <span class="math inline">\(\bar Z := Z - \mathbb{E}(Z)\)</span> as an abbreviation,
-we get
-<span class="math display">\[\begin{align*}
-  u^\top C u
-  &amp;= u^\top \mathbb{E}\bigl( \bar Z \bar Z^\top \bigr) u \\
-  &amp;= \mathbb{E}\bigl( u^\top \bar Z \bar Z^\top u \bigr) \\
-  &amp;= \mathbb{E}\bigl( (\bar Z^\top u)^\top \bar Z^\top u \bigr) \\
-  &amp;= \mathbb{E}\bigl( \|\bar Z^\top u\|^2 \bigr),
-\end{align*}\]</span>
-where <span class="math inline">\(\|\bar Z^\top u\|\)</span> denotes the Euclidean length of the
-vector <span class="math inline">\(\bar Z^\top u\)</span>. Since <span class="math inline">\(\|\bar Z^\top u\|^2 \geq 0\)</span>
-we find <span class="math inline">\(u^\top C u \geq 0\)</span>. This shows that the covariance matrix <span class="math inline">\(C\)</span>
-is positive semi-definite. (Note that, nevertheless,
-individual <em>elements</em> of the matrix <span class="math inline">\(C\)</span> can be negative numbers.)</p></li>
-</ul>
-<div class="example">
-<p><span id="exm:unlabeled-div-7" class="example"><strong>Example 3.4  </strong></span>The random vector <span class="math inline">\(\varepsilon\)</span> in equation <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has <span class="math inline">\(\mathbb{E}(\varepsilon) = 0\)</span>.
-We have
-<span class="math inline">\(\mathop{\mathrm{Cov}}(\varepsilon)_{ii} = \mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\)</span> for all <span class="math inline">\(i\in\{1, \ldots, n\}\)</span>.
-Since we assumed the <span class="math inline">\(\varepsilon_i\)</span> to be independent, the covariance matrix is
-diagonal and we find
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I,
-\end{equation*}\]</span>
-where <span class="math inline">\(I\)</span> is the <span class="math inline">\(n\times n\)</span> identity matrix.</p>
-</div>
-<p>An important results about covariance matrices is given in the following
-lemma, which describes how the covariance matrix changes under affine
-transformations.</p>
-<div class="lemma">
-<p><span id="lem:Cov-is-quadratic" class="lemma"><strong>Lemma 3.1  </strong></span>Let <span class="math inline">\(Z\in\mathbb{R}^n\)</span> be a random vector, <span class="math inline">\(A\in\mathbb{R}^{m\times n}\)</span> a matrix
-and <span class="math inline">\(b\in\mathbb{R}^m\)</span> a vector. Then
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{Cov}}(AZ+b)
-  = A \mathop{\mathrm{Cov}}(Z) A^\top.
+  y
+  = X\beta + \varepsilon.
 \end{equation*}\]</span></p>
-</div>
-<div class="proof">
-<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>As in equation <a href="S03-cov.html#eq:cov-prod">(3.3)</a>, we can write <span class="math inline">\(\mathop{\mathrm{Cov}}(AZ+b)\)</span>
-as
+<p>Assume that <span class="math inline">\(x_j \in \{a_1, \ldots, a_k\}\)</span> is a factor which has <span class="math inline">\(k\)</span> possible
+values. The possible values of the factor, <span class="math inline">\(a_1, \ldots, a_k\)</span> are also called
+the <strong>levels</strong> of the factor. The easiest way to include a factor in a
+regression model is via <strong>indicator variables</strong>. For this we represent <span class="math inline">\(x_j\)</span>
+using <span class="math inline">\(k-1\)</span> columns in the design matrix, say <span class="math inline">\(\tilde x_1, \ldots, \tilde x_{k-1}\)</span>, where
 <span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{Cov}}(AZ+b)
-  = \mathbb{E}\bigl( (AZ + b - \mu) (AZ + b - \mu)^\top \bigr),
-\end{equation*}\]</span>
-where <span class="math inline">\(\mu = \mathbb{E}(AZ + b) = \mathbb{E}(AZ) + b\)</span>. Thus,
-<span class="math inline">\(AZ + b - \mu = AZ - \mathbb{E}(AZ)\)</span> and we find
-<span class="math display">\[\begin{align*}
-  \mathop{\mathrm{Cov}}(AZ+b)
-  &amp;= \mathbb{E}\bigl( (AZ - \mathbb{E}(AZ)) (AZ - \mathbb{E}(AZ))^\top \bigr) \\
-  &amp;= \mathop{\mathrm{Cov}}(AZ).
-\end{align*}\]</span>
-This shows that the covariance matrix ignores non-random shifts.</p>
-<p>Furthermore, we have <span class="math inline">\(AZ - \mathbb{E}(AZ) = AZ - A\mathbb{E}(Z) = A\bigl(Z - \mathbb{E}(Z)\bigr)\)</span>.
-Using equation <a href="S03-cov.html#eq:cov-prod">(3.3)</a> again, we find
-<span class="math display">\[\begin{align*}
-  \mathop{\mathrm{Cov}}(AZ)
-  &amp;= \mathbb{E}\Bigl( \bigl(AZ - \mathbb{E}(AZ)\bigr) \bigl(AZ - \mathbb{E}(AZ)\bigr)^\top \Bigr) \\
-  &amp;= \mathbb{E}\Bigl( A \bigl(Z - \mathbb{E}(Z)\bigr) \bigl(Z - \mathbb{E}(Z)\bigr)^\top A^\top \Bigr) \\
-  &amp;= A \mathbb{E}\Bigl( \bigl(Z - \mathbb{E}(Z)\bigr) \bigl(Z - \mathbb{E}(Z)\bigr)^\top \Bigr) A^\top \\
-  &amp;= A \mathop{\mathrm{Cov}}(Z) A^\top.
-\end{align*}\]</span>
-This completes the proof.</p>
-</div>
-</div>
-<div id="the-multivariate-normal-distribution" class="section level2" number="3.3">
-<h2><span class="header-section-number">3.3</span> The Multivariate Normal Distribution</h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bgBrgPL77W8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>Since we assume that the random errors <span class="math inline">\(\varepsilon_i\)</span> are normally
-distributed, we will need to understand how vectors of normal distributed
-random variables behave.</p>
-<div class="definition">
-<p><span id="def:unlabeled-div-9" class="definition"><strong>Definition 3.3  </strong></span>A random vector <span class="math inline">\(Z\in\mathbb{R}^n\)</span> follows a <strong>multivariate normal distribution</strong>,
-if <span class="math inline">\(u^\top Z\)</span> is normally distributed or constant for every
-vector <span class="math inline">\(u\in\mathbb{R}^n\)</span>.</p>
-</div>
-<p>This definition is takes its slightly surprising form to avoid
-some boundary cases which I will discuss in an example, below.
-To understand the
-definition, a good start is to consider the cases where <span class="math inline">\(u\)</span>
-is one of the standard basis vectors, say <span class="math inline">\(u_i = 1\)</span> and <span class="math inline">\(u_j = 0\)</span>
-for all <span class="math inline">\(j\neq i\)</span>. In this case we have
-<span class="math display">\[\begin{equation*}
-  u^\top Z
-  = \sum_{k=1}^n u_k Z_k
-  = Z_i.
-\end{equation*}\]</span>
-Thus, if <span class="math inline">\(Z\)</span> follows a multivariate normal distribution, each of the
-components <span class="math inline">\(Z_i\)</span> is normally distributed. Example <a href="S03-cov.html#exm:not-normal">3.8</a>,
-below, shows that the converse is not true.</p>
-<p>One can show that a multivariate normal distribution is completely determined
-by the mean <span class="math inline">\(\mu = \mathbb{E}(Z)\)</span> and the covariance <span class="math inline">\(\Sigma = \mathop{\mathrm{Cov}}(Z)\)</span>. The
-distribution of such a <span class="math inline">\(Z\)</span> is denoted by <span class="math inline">\(\mathcal{N}(\mu, \Sigma)\)</span>. Also, for every
-<span class="math inline">\(\mu\in\mathbb{R}^n\)</span> and every positive semi-definite matrix <span class="math inline">\(\Sigma\in\mathbb{R}^{n\times n}\)</span>
-there is a random vector <span class="math inline">\(Z\)</span> which follows a multivariate normal distribution
-with this mean and covariance.</p>
-<div class="example">
-<p><span id="exm:unlabeled-div-10" class="example"><strong>Example 3.5  </strong></span>Consider the vector <span class="math inline">\(\varepsilon\)</span> from the model <a href="S03-cov.html#eq:lmstat0">(3.1)</a>.
-This vector has components <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span> and by
-assumption, the componens <span class="math inline">\(\varepsilon_i\)</span> are independent.
-For <span class="math inline">\(u\in\mathbb{R}^n\)</span> we have
-<span class="math display">\[\begin{equation*}
-  u^\top \varepsilon
-  = \sum_{i=1}^n u_i \varepsilon_i.
-\end{equation*}\]</span>
-Since this is a sum of independent, one-dimensional, normally distributed
-random variables, <span class="math inline">\(u^\top \varepsilon\)</span> is also normally distribution, for
-every <span class="math inline">\(u\)</span>. (The independence of the <span class="math inline">\(\varepsilon_i\)</span> is important in this
-argument.) Thus, <span class="math inline">\(\varepsilon\)</span> is a normally distributed random vector.
-We have already seen <span class="math inline">\(\mathbb{E}(\varepsilon) = 0\)</span> and <span class="math inline">\(\mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I\)</span>,
-and thus <span class="math inline">\(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\)</span>.</p>
-</div>
-<p>Without proof we state here some properties of the multivariate normal
-distribution:</p>
-<ul>
-<li><p>If <span class="math inline">\(Z \sim \mathcal{N}(\mu, \Sigma)\)</span> and <span class="math inline">\(a \in \mathbb{R}^n\)</span>, then
-<span class="math inline">\(Z + a \sim \mathcal{N}(\mu + a, \Sigma)\)</span>.</p></li>
-<li><p>If <span class="math inline">\(Z \sim \mathcal{N}(\mu, \Sigma)\)</span> and <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span>, then
-<span class="math inline">\(AZ \sim \mathcal{N}(A\mu, A\Sigma A^\top)\)</span>.</p></li>
-<li><p>If <span class="math inline">\(Z_1 \sim \mathcal{N}(\mu_1, \Sigma_1)\)</span> and <span class="math inline">\(Z_2 \sim \mathcal{N}(\mu_2, \Sigma_2)\)</span>
-are independent, then
-<span class="math inline">\(Z_1 + Z_2 \sim \mathcal{N}(\mu_1 + \mu_2, \Sigma_1 + \Sigma_2)\)</span>.</p></li>
-</ul>
-<div class="example">
-<p><span id="exm:unlabeled-div-11" class="example"><strong>Example 3.6  </strong></span>Let <span class="math inline">\(Z = (Z_1, Z_2)\)</span> where <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span> are independently standard
-normal distributed. Let
-<span class="math display">\[\begin{equation*}
-  A := \begin{pmatrix}
-    2 &amp; -1 \\
-    2 &amp; 1
-  \end{pmatrix}
-  \qquad \mbox{and} \qquad
-  b := \begin{pmatrix}
-    3 \\ 4
-  \end{pmatrix}.
-\end{equation*}\]</span>
-Then <span class="math inline">\(AZ + b \sim \mathcal{N}(b, \Sigma)\)</span> where
-<span class="math display">\[\begin{equation*}
-  \Sigma
-  = A \mathop{\mathrm{Cov}}(Z) A^\top
-  = \begin{pmatrix}
-      2 &amp; -1 \\
-      2 &amp; 1
-    \end{pmatrix}
-    \begin{pmatrix}
-      1 &amp; 0 \\
-      0 &amp; 1
-    \end{pmatrix}
-    \begin{pmatrix}
-      2 &amp; 2 \\
-      -1 &amp; 1
-    \end{pmatrix}
-  = \begin{pmatrix}
-      5 &amp; 3 \\
-      3 &amp; 5
-    \end{pmatrix}
-\end{equation*}\]</span></p>
-<p>We can use R to plot a sample of this two-dimensional normal distribution.
-(The grey cross indicates the mean.)</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="S03-cov.html#cb40-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">500</span></span>
-<span id="cb40-2"><a href="S03-cov.html#cb40-2" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">rnorm</span>(N), <span class="fu">rnorm</span>(N))</span>
-<span id="cb40-3"><a href="S03-cov.html#cb40-3" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">2</span>, <span class="dv">2</span>)</span>
-<span id="cb40-4"><a href="S03-cov.html#cb40-4" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)</span>
-<span id="cb40-5"><a href="S03-cov.html#cb40-5" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> A <span class="sc">%*%</span> Z <span class="sc">+</span> b</span>
-<span id="cb40-6"><a href="S03-cov.html#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(V[<span class="dv">1</span>,], V[<span class="dv">2</span>,], <span class="at">asp =</span> <span class="dv">1</span>, <span class="at">cex =</span> .<span class="dv">5</span>,</span>
-<span id="cb40-7"><a href="S03-cov.html#cb40-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(V[<span class="dv">1</span>]),</span>
-<span id="cb40-8"><a href="S03-cov.html#cb40-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(V[<span class="dv">2</span>]))</span>
-<span id="cb40-9"><a href="S03-cov.html#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span>
-<span id="cb40-10"><a href="S03-cov.html#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/MVN-plot-1.png" width="672" /></p>
-</div>
-<div class="example">
-<p><span id="exm:unlabeled-div-12" class="example"><strong>Example 3.7  </strong></span>The random vector <span class="math inline">\(Y\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> satisfies <span class="math inline">\(Y = X \beta + \varepsilon\)</span>
-and since <span class="math inline">\(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\)</span> we have
-<span class="math inline">\(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\)</span>.</p>
-</div>
-<div class="example">
-<p><span id="exm:not-normal" class="example"><strong>Example 3.8  </strong></span>Let <span class="math inline">\(Y \sim \mathcal{N}(0, 1)\)</span> be a random variable. Define a random vector
-<span class="math inline">\(Z = (Z_1, Z_2)\)</span> as <span class="math inline">\(Z_1 = Y\)</span> and
-<span class="math display">\[\begin{equation*}
-  Z_2 = \begin{cases}
-    Y &amp; \mbox{if $|Y|&lt;1$, and}\\
-    -Y &amp; \mbox{otherwise.}
+  \tilde x_{\ell i}
+  = \begin{cases}
+    1 &amp; \mbox{if $x_{ji} = a_\ell$ and} \\
+    0 &amp; \mbox{otherwise,}
   \end{cases}
 \end{equation*}\]</span>
-Clearly <span class="math inline">\(Z_1\)</span> is standard normally distributed.
-Since <span class="math inline">\(\mathcal{N}(0,1)\)</span> is symmetric, both <span class="math inline">\(Y\)</span> and <span class="math inline">\(-Y\)</span> are standard normally
-distributed and it follows that <span class="math inline">\(Z_2\)</span> is also standard normally distributed.
-Nevertheless, the random vector <span class="math inline">\(Z\)</span> does not follow a multivariate
-normal distribution. Instead of giving a proof of this fact,
-we illustrate this here using an R experiment. We start by verifying
-that <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span> are normally distributed.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="S03-cov.html#cb41-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb41-2"><a href="S03-cov.html#cb41-2" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N)</span>
-<span id="cb41-3"><a href="S03-cov.html#cb41-3" aria-hidden="true" tabindex="-1"></a>Z1 <span class="ot">&lt;-</span> Y</span>
-<span id="cb41-4"><a href="S03-cov.html#cb41-4" aria-hidden="true" tabindex="-1"></a>Z2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">abs</span>(Y)<span class="sc">&lt;</span><span class="dv">1</span>, Y, <span class="sc">-</span>Y)</span>
-<span id="cb41-5"><a href="S03-cov.html#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-6"><a href="S03-cov.html#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb41-7"><a href="S03-cov.html#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(Z1, <span class="at">main=</span><span class="cn">NULL</span>, <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">1</span>]))</span>
-<span id="cb41-8"><a href="S03-cov.html#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(Z2, <span class="at">main=</span><span class="cn">NULL</span>, <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">2</span>]))</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/not-a-normal-hist-1.png" width="672" /></p>
-<p>The histograms make it plausible that the components are indeed normally
-distributed. Now we use a scatter plot to show the joint distribution
-of <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span>:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="S03-cov.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Z1, Z2, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">asp=</span><span class="dv">1</span>,</span>
-<span id="cb42-2"><a href="S03-cov.html#cb42-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">1</span>]),</span>
-<span id="cb42-3"><a href="S03-cov.html#cb42-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="fu">expression</span>(Z[<span class="dv">1</span>]))</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/not-a-normal-scatter-1.png" width="672" /></p>
-<p>This plot looks peculiar! Most people would not call this a normal distribution
-and the formal definition of a multivariate normal distribution is made to
-exclude cases like this.</p>
+for all <span class="math inline">\(\ell \in \{1, \ldots, k-1\}\)</span> and <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.
+Using this convention, <span class="math inline">\(x_{ji} = k\)</span> is represented by setting
+<span class="math inline">\(\tilde x_{1,i} = \cdots = \tilde x_{k-1,i} = 0\)</span>. The value <span class="math inline">\(a_k\)</span>
+which is not represented as a separate column is called the
+<strong>reference level</strong>. The regression coefficients corresponding to the
+columns <span class="math inline">\(\tilde x_1, \ldots, \tilde x_{k-1}\)</span> can be interpreted
+as the effect of level <span class="math inline">\(a_\ell\)</span>, relative to the effect
+of level <span class="math inline">\(a_k\)</span>. Since the indicator is constant <span class="math inline">\(1\)</span> for all samples
+corresponding to a given factor, regression coefficients representing factors
+lead to changes of the intercept, rather than of slopes.</p>
+<p>We are using only <span class="math inline">\(k-1\)</span> columns to represent a factor
+with <span class="math inline">\(k\)</span> levels in order to avoid collinearity. If we would use <span class="math inline">\(k\)</span> columns,
+defined as above, we would get
+<span class="math display">\[\begin{equation*}
+  \sum_{\ell=1}^k \tilde x_{\ell i}
+  = \mathbf{1},
+\end{equation*}\]</span>
+and in a model with an intercept we would have exact collinearity of
+the corresponding columns in the design matrix <span class="math inline">\(X\)</span>.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-52" class="example"><strong>Example 15.1  </strong></span>Consider a dataset consisting of a numerical input variable
+and a binary factor for gender (<code>female</code>, <code>male</code>).
+Assume we are given data
+<span class="math inline">\((1, \mathrm{male})\)</span>, <span class="math inline">\((2, \mathrm{female})\)</span>, <span class="math inline">\((3, \mathrm{female})\)</span>.
+Then we can encode this data using the following design matrix:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">intercept</th>
+<th align="center"><span class="math inline">\(x_1\)</span></th>
+<th align="center"><span class="math inline">\(1_\mathrm{\{female\}}(x_2)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In R there is a dedicated type <code>factor</code> for categorical variables.
+If factors appear in the input of linear regression problem, the
+function <code>lm()</code> will automatically create the indicator variables
+for us.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-53" class="example"><strong>Example 15.2  </strong></span>Here we simulated data which could describe the effect of some
+medical treatment.
+In the simulated data we have two groups, one which has been “treated”
+and a control group. There is a “value” which decreases with age,
+and is lower for the group which has been treated (the intercept is 10
+instead of 12).</p>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="S15-factors.html#cb247-1" aria-hidden="true" tabindex="-1"></a>age1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">18</span>, <span class="dv">40</span>)</span>
+<span id="cb247-2"><a href="S15-factors.html#cb247-2" aria-hidden="true" tabindex="-1"></a>group1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb247-3"><a href="S15-factors.html#cb247-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">value=</span><span class="dv">10</span> <span class="sc">-</span> <span class="fl">0.2</span> <span class="sc">*</span> age1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd=</span><span class="fl">0.5</span>),</span>
+<span id="cb247-4"><a href="S15-factors.html#cb247-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">age=</span>age1,</span>
+<span id="cb247-5"><a href="S15-factors.html#cb247-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">treated=</span><span class="st">&quot;yes&quot;</span>)</span>
+<span id="cb247-6"><a href="S15-factors.html#cb247-6" aria-hidden="true" tabindex="-1"></a>age2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">18</span>, <span class="dv">80</span>)</span>
+<span id="cb247-7"><a href="S15-factors.html#cb247-7" aria-hidden="true" tabindex="-1"></a>group2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb247-8"><a href="S15-factors.html#cb247-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">value=</span><span class="dv">12</span> <span class="sc">-</span> <span class="fl">0.2</span> <span class="sc">*</span> age2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd=</span><span class="fl">0.5</span>),</span>
+<span id="cb247-9"><a href="S15-factors.html#cb247-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">age=</span>age2,</span>
+<span id="cb247-10"><a href="S15-factors.html#cb247-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">treated=</span><span class="st">&quot;no&quot;</span>)</span>
+<span id="cb247-11"><a href="S15-factors.html#cb247-11" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(group1, group2)</span>
+<span id="cb247-12"><a href="S15-factors.html#cb247-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb247-13"><a href="S15-factors.html#cb247-13" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>treated <span class="ot">&lt;-</span> <span class="fu">factor</span>(data<span class="sc">$</span>treated, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;no&quot;</span>, <span class="st">&quot;yes&quot;</span>))</span></code></pre></div>
+<p>The last line of the code tells R explicitely that the <code>treated</code> column
+represents a factor with levels “no” and “yes”. Internally, this column will
+now be represented by numbers 1 (for “no”) and 2 (for “yes”), but this numeric representation
+is mostly hidden from the user. Now we fit a regression model:</p>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="S15-factors.html#cb248-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(value <span class="sc">~</span> ., <span class="at">data =</span> data)</span>
+<span id="cb248-2"><a href="S15-factors.html#cb248-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<pre class="rOutput"><code>
+Call:
+lm(formula = value ~ ., data = data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.76041 -0.22188  0.04535  0.23802  1.29250 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 11.525306   0.282369   40.82  &lt; 2e-16 ***
+age         -0.189367   0.005557  -34.08  &lt; 2e-16 ***
+treatedyes  -1.845246   0.180890  -10.20 1.68e-13 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.5452 on 47 degrees of freedom
+Multiple R-squared:  0.9635,    Adjusted R-squared:  0.962 
+F-statistic: 620.5 on 2 and 47 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>We see that R used “no” as the reference factor, here. The
+regression coefficient <code>treatedyes</code> gives the relative change
+of the “yes”, compared to “no”. The true value is
+the difference of the means: <span class="math inline">\(10 - 12 = -2\)</span>, and the estimated
+value <code>-1.89</code> is reasonably close to this. The fitted values
+for this model are
+<span class="math display">\[\begin{equation*}
+  \hat y
+  = \begin{cases}
+    \beta_0 + \beta_1 x_1 &amp; \mbox{if not treated, and} \\
+    (\beta_0 + \beta_2) + \beta_1 x_1 &amp; \mbox{if treated}.
+  \end{cases}
+\end{equation*}\]</span></p>
+<p>To get a better
+idea of the model fit, we plot the data together with
+separate regression lines for “yes” (red) and “no” (black):</p>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="S15-factors.html#cb250-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb250-2"><a href="S15-factors.html#cb250-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(value <span class="sc">~</span> age, <span class="at">data =</span> data,</span>
+<span id="cb250-3"><a href="S15-factors.html#cb250-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">ifelse</span>(treated <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>))</span>
+<span id="cb250-4"><a href="S15-factors.html#cb250-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb250-5"><a href="S15-factors.html#cb250-5" aria-hidden="true" tabindex="-1"></a><span class="co"># regression line for the reference level `treatment == &quot;no&quot;`</span></span>
+<span id="cb250-6"><a href="S15-factors.html#cb250-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>])</span>
+<span id="cb250-7"><a href="S15-factors.html#cb250-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb250-8"><a href="S15-factors.html#cb250-8" aria-hidden="true" tabindex="-1"></a><span class="co"># regression line for the level `treatment = &quot;yes&quot;`:</span></span>
+<span id="cb250-9"><a href="S15-factors.html#cb250-9" aria-hidden="true" tabindex="-1"></a><span class="co"># here we need to add the coefficient for `treatedyes`</span></span>
+<span id="cb250-10"><a href="S15-factors.html#cb250-10" aria-hidden="true" tabindex="-1"></a><span class="co"># to the intercept</span></span>
+<span id="cb250-11"><a href="S15-factors.html#cb250-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(m)[<span class="dv">3</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>], <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb250-12"><a href="S15-factors.html#cb250-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb250-13"><a href="S15-factors.html#cb250-13" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;no&quot;</span>, <span class="st">&quot;yes&quot;</span>),</span>
+<span id="cb250-14"><a href="S15-factors.html#cb250-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb250-15"><a href="S15-factors.html#cb250-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb250-16"><a href="S15-factors.html#cb250-16" aria-hidden="true" tabindex="-1"></a><span class="co"># also show a boxplot for comparison</span></span>
+<span id="cb250-17"><a href="S15-factors.html#cb250-17" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(value <span class="sc">~</span> treated, <span class="at">data =</span> data,</span>
+<span id="cb250-18"><a href="S15-factors.html#cb250-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">border =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/factors-1.png" width="672" /></p>
+<p>We can see that the two regression lines, corresponding to the two levels
+are parallel. They have the same slope but different intercepts.</p>
+<p>The last command shows a boxplot of <code>value</code> for comparison.
+The boxplot does not allow to conclude that the treatment had an effect,
+whereas the linear model, which accounts for age, shows the effect
+of the treatment as a difference in intercepts. The <code>***</code>
+in the <code>treatedyes</code> row of the <code>summary(m)</code> output shows that the
+difference in intercepts is statistically significant.</p>
+</div>
+</div>
+<div id="interactions" class="section level2" number="15.2">
+<h2><span class="header-section-number">15.2</span> Interactions</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xdmC1RhuUvU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>In some situations, the strength of the dependency of the response <span class="math inline">\(y\)</span> to an
+input <span class="math inline">\(x_1\)</span> might depend on another input, say <span class="math inline">\(x_2\)</span>. The simplest such
+situation would be, if the coefficient <span class="math inline">\(\beta_1\)</span>, corresponding on <span class="math inline">\(x_1\)</span> is
+itself proportional to <span class="math inline">\(x_2\)</span>, say <span class="math inline">\(\beta_1 = \gamma x_2\)</span>. In this case we have
+<span class="math inline">\(y = \cdots + \beta_1 x_1 = \cdots + \gamma x_1 x_2\)</span>. Traditionally, inputs
+added to a model which are the product of two or more of the original inputs
+are called <strong>interactions</strong>. As a general rule, an interaction is only included
+if the “main effects” are also included in the model, so in any variable
+selection procedure, we would not drop <span class="math inline">\(x_1\)</span> or <span class="math inline">\(x_2\)</span> if <span class="math inline">\(x_1 x_2\)</span> is still in
+the model. An exception to this is when one can directly interpret the
+interaction term without the main effect.</p>
+<p>In R, interactions (<em>i.e.</em> products of inputs) are represented by the
+symbol <code>:</code> and <code>*</code> can be used to include two variables together with their
+product. Note also, that if a variable is known to be a factor, and it is
+included as an interaction term, then R will make sure to only remove the
+interaction term in a backward variable selection procedure whilst the main
+effects are also included.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-54" class="example"><strong>Example 15.3  </strong></span>Consider the following toy dataset:</p>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="S15-factors.html#cb251-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb251-2"><a href="S15-factors.html#cb251-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span></span></code></pre></div>
+<p>In <code>lm()</code> and related functions we can write <code>x1:x2</code> as a shorthand
+for <code>I(x1*x2)</code>:</p>
+<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="S15-factors.html#cb252-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> x1 <span class="sc">+</span> x1<span class="sc">:</span>x2)</span></code></pre></div>
+<pre class="rOutput"><code>  (Intercept) x1 x1:x2
+1           1  2     2
+2           1  2     4
+3           1  2     6
+attr(,&quot;assign&quot;)
+[1] 0 1 2</code></pre>
+<p>We can write <code>x1*x2</code> as a shorthand for <code>x1 + x2 + x1:x2</code>:</p>
+<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="S15-factors.html#cb254-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> x1<span class="sc">*</span>x2)</span></code></pre></div>
+<pre class="rOutput"><code>  (Intercept) x1 x2 x1:x2
+1           1  2  1     2
+2           1  2  2     4
+3           1  2  3     6
+attr(,&quot;assign&quot;)
+[1] 0 1 2 3</code></pre>
+</div>
+<p>Interactions also work for factors. In this case, products with all of
+the corresponding indicator variables are added to the model. while
+the base effect of factor variables is to have different intercepts for
+the different groups, using interactions with a factor allows to have
+different slopes for the different groups.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-55" class="example"><strong>Example 15.4  </strong></span>The classical example of an interaction is to consider how the
+yield <span class="math inline">\(y\)</span> of a crop is related to temperature <span class="math inline">\(x_1\)</span> and rainfall <span class="math inline">\(x_2\)</span>.
+All these variables are continuous, but we might categorize rainfall as “wet”
+and “dry”. Then a simplistic view could be that, for high rainfall, the yield
+will be positively correlated with temperature, whereas for low rainfall the
+correlation may be slightly negative, because in hot weather, plants need more
+water, and if it is very hot and dry, the plants may even die.</p>
+<p>We generate a toy dataset in R to represent such a situation:</p>
+<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb256-1"><a href="S15-factors.html#cb256-1" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">15</span>, <span class="dv">35</span>)</span>
+<span id="cb256-2"><a href="S15-factors.html#cb256-2" aria-hidden="true" tabindex="-1"></a>wet <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb256-3"><a href="S15-factors.html#cb256-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">yield=</span><span class="dv">40</span> <span class="sc">+</span> <span class="dv">7</span><span class="sc">*</span>T <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd =</span> <span class="dv">10</span>),</span>
+<span id="cb256-4"><a href="S15-factors.html#cb256-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">temperature=</span>T,</span>
+<span id="cb256-5"><a href="S15-factors.html#cb256-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">rainfall=</span><span class="st">&quot;high&quot;</span>)</span>
+<span id="cb256-6"><a href="S15-factors.html#cb256-6" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">15</span>, <span class="dv">35</span>)</span>
+<span id="cb256-7"><a href="S15-factors.html#cb256-7" aria-hidden="true" tabindex="-1"></a>dry <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb256-8"><a href="S15-factors.html#cb256-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">yield=</span><span class="dv">120</span> <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>T <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd =</span> <span class="dv">10</span>),</span>
+<span id="cb256-9"><a href="S15-factors.html#cb256-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">temperature=</span>T,</span>
+<span id="cb256-10"><a href="S15-factors.html#cb256-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">rainfall=</span><span class="st">&quot;low&quot;</span>)</span>
+<span id="cb256-11"><a href="S15-factors.html#cb256-11" aria-hidden="true" tabindex="-1"></a>crops <span class="ot">&lt;-</span> <span class="fu">rbind</span>(wet, dry)</span>
+<span id="cb256-12"><a href="S15-factors.html#cb256-12" aria-hidden="true" tabindex="-1"></a>crops<span class="sc">$</span>rainfall <span class="ot">&lt;-</span> <span class="fu">factor</span>(crops<span class="sc">$</span>rainfall, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;low&quot;</span>, <span class="st">&quot;high&quot;</span>))</span></code></pre></div>
+<p>Now we fit a model, including <code>temperature</code>, <code>rainfall</code> and
+an interaction term:</p>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="S15-factors.html#cb257-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(yield <span class="sc">~</span> temperature<span class="sc">*</span>rainfall, <span class="at">data =</span> crops)</span>
+<span id="cb257-2"><a href="S15-factors.html#cb257-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<pre class="rOutput"><code>
+Call:
+lm(formula = yield ~ temperature * rainfall, data = crops)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-22.8996  -6.3555   0.0346   5.9355  25.0553 
+
+Coefficients:
+                         Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)              114.2722     9.0929  12.567  &lt; 2e-16 ***
+temperature               -1.8873     0.3617  -5.219 4.21e-06 ***
+rainfallhigh             -71.5892    13.0342  -5.492 1.66e-06 ***
+temperature:rainfallhigh   8.7043     0.5299  16.428  &lt; 2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 10.42 on 46 degrees of freedom
+Multiple R-squared:  0.9814,    Adjusted R-squared:  0.9802 
+F-statistic: 810.2 on 3 and 46 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>The fitted values for this model are
+<span class="math display">\[\begin{equation*}
+  \hat y
+  = \begin{cases}
+    \beta_0 + \beta_1 x_1 &amp; \mbox{for low rainfall, and} \\
+    (\beta_0 + \beta_2) + (\beta_1 + \beta_3) x_1 &amp; \mbox{for high rainfall}.
+  \end{cases}
+\end{equation*}\]</span>
+Finally, we can generate a plot of the data together
+with the two regression lines.</p>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="S15-factors.html#cb259-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(yield <span class="sc">~</span> temperature, <span class="at">data=</span>crops,</span>
+<span id="cb259-2"><a href="S15-factors.html#cb259-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">ifelse</span>(rainfall <span class="sc">==</span> <span class="st">&quot;low&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>))</span>
+<span id="cb259-3"><a href="S15-factors.html#cb259-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>])</span>
+<span id="cb259-4"><a href="S15-factors.html#cb259-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(m)[<span class="dv">3</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>] <span class="sc">+</span> <span class="fu">coef</span>(m)[<span class="dv">4</span>],</span>
+<span id="cb259-5"><a href="S15-factors.html#cb259-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb259-6"><a href="S15-factors.html#cb259-6" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;dry&quot;</span>, <span class="st">&quot;wet&quot;</span>),</span>
+<span id="cb259-7"><a href="S15-factors.html#cb259-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">pch =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/interactions-1.png" width="672" /></p>
+<p>As expected, the two lines have different intercepts and different slopes.</p>
 </div>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>We learned the rules for computing the expectation of a random vector.</li>
-<li>The covariance matrix of random vectors plays the role of the
-variance for numeric random variables.</li>
-<li>We learned about the definition of the multivariate normal distribution.</li>
+<li>Indicator variables can be used to represent categorical inputs
+in linear regression models.</li>
+<li>The levels of a factor correspond to different intercepts for
+the regression line.</li>
+<li>If interaction terms are used, the levels also affect the slope.</li>
 </ul>
 </div>
 
 </div>
 </div>
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="P01.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="S04-model.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S14-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

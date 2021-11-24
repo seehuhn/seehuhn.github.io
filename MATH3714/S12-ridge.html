@@ -297,6 +297,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.3.3" data-path="S14-methods.html"><a href="S14-methods.html#hybrid-methods"><i class="fa fa-check"></i><b>14.3.3</b> Hybrid Methods</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="15" data-path="S15-factors.html"><a href="S15-factors.html"><i class="fa fa-check"></i><b>15</b> Factors</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="S15-factors.html"><a href="S15-factors.html#indicator-variables"><i class="fa fa-check"></i><b>15.1</b> Indicator Variables</a></li>
+<li class="chapter" data-level="15.2" data-path="S15-factors.html"><a href="S15-factors.html#interactions"><i class="fa fa-check"></i><b>15.2</b> Interactions</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
 <ul>
@@ -343,6 +348,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="S12-ridge" class="section level1" number="12">
 <h1><span class="header-section-number">Section 12</span> Ridge Regression</h1>
+<!--
+TODO(voss):
+- investigate the direction from which \hat\beta^{(\lambda)} -> \hat\beta
+-->
 <p>In cases where <span class="math inline">\(X\)</span> shows approximate multicollinearity, the parameter estimates
 <span class="math inline">\(\hat\beta\)</span> have coefficients with large variance. In case of exact
 multicollinearity, <span class="math inline">\(\hat\beta\)</span> is no longer uniquely defined, and the minimum
@@ -468,14 +477,14 @@ as before, we have
   &amp;= (X^\top X + \lambda I)^{-1} X^\top Y \\
   &amp;= (X^\top X + \lambda I)^{-1} X^\top (X \beta + \varepsilon) \\
   &amp;= (X^\top X + \lambda I)^{-1} (X^\top X + \lambda I) \beta \\
-    &amp;\hskip2cm - (X^\top X + \lambda I)^{-1} X^\top X \lambda I \beta \\
-    &amp;\hskip2cm + (X^\top X + \lambda I)^{-1} X^\top \varepsilon
+    &amp;\hskip15mm - (X^\top X + \lambda I)^{-1} \lambda I \beta \\
+    &amp;\hskip15mm + (X^\top X + \lambda I)^{-1} X^\top \varepsilon
 \end{align*}\]</span>
 and simplifying the first term on the right-hand side we get
 <span class="math display" id="eq:ridge-def">\[\begin{equation}
   \hat\beta^{(\lambda)}
   = \beta
-    - \lambda (X^\top X + \lambda I)^{-1} X^\top X \beta
+    - \lambda (X^\top X + \lambda I)^{-1} \beta
     + (X^\top X + \lambda I)^{-1} X^\top \varepsilon.   \tag{12.2}
 \end{equation}\]</span></p>
 <div id="bias" class="section level3" number="12.2.1">
@@ -483,25 +492,16 @@ and simplifying the first term on the right-hand side we get
 <p>Using the formula for <span class="math inline">\(\hat\beta^{(\lambda)}\)</span> we get
 <span class="math display">\[\begin{equation*}
   \mathbb{E}\bigl( \hat\beta^{(\lambda)} \bigr)
-  = \beta - \lambda (X^\top X + \lambda I)^{-1} X^\top X \beta + 0
+  = \beta - \lambda (X^\top X + \lambda I)^{-1} \beta + 0
 \end{equation*}\]</span>
 and thus
 <span class="math display">\[\begin{equation*}
   \mathop{\mathrm{bias}}\bigl( \hat\beta^{(\lambda)} \bigr)
-  = - \lambda (X^\top X + \lambda I)^{-1} X^\top X \beta.
+  = - \lambda (X^\top X + \lambda I)^{-1} \beta.
 \end{equation*}\]</span>
 Since this term in general is non-zero, we see that <span class="math inline">\(\hat\beta^{(\lambda)}\)</span>
 is a biased estimate. The amount of bias depends on the unknown, true
 coefficient vector <span class="math inline">\(\beta\)</span>.</p>
-<p>If <span class="math inline">\(X^\top X\)</span> is invertible, we have for small <span class="math inline">\(\lambda\)</span> that
-<span class="math inline">\((X^\top X + \lambda I)^{-1} X^\top X \approx I\)</span> and thus
-<span class="math display">\[\begin{equation*}
-  \mathbb{E}\bigl( \hat\beta^{(\lambda)} \bigr)
-  \approx \beta - \lambda \beta
-  = (1-\lambda) \beta.
-\end{equation*}\]</span>
-In this sense we can see that the effect of <span class="math inline">\(\lambda\)</span> is to “shrink”
-the estimate <span class="math inline">\(\hat\beta\)</span>.</p>
 </div>
 <div id="variance" class="section level3" number="12.2.2">
 <h3><span class="header-section-number">12.2.2</span> Variance</h3>

@@ -818,7 +818,8 @@ as well as the matrix
   \end{pmatrix}
   \in \mathbb{R}^{n\times (1+p)}.
 \end{equation*}
-The matrix \(X\) is often called the \textbf{design matrix}.
+The parameters \(\beta_i\) are called the \textbf{regression coefficients} and
+the matrix \(X\) is called the \textbf{design matrix}.
 
 Using this notation, the model~\eqref{eq:lmdata} can be written
 as
@@ -2120,7 +2121,8 @@ precisely we have
 \begin{equation}
   Y = X \beta + \varepsilon.  \label{eq:lmstats}
 \end{equation}
-for all \(i \in \{1, 2, \ldots, n\}\), where \(\varepsilon_1, \ldots, \varepsilon_n\)
+where \(\varepsilon= (\varepsilon_1, \ldots, \varepsilon_n)\) is a random error.
+The individual errors \(\varepsilon_1, \ldots, \varepsilon_n\)
 are now assumed to be i.i.d.~random variables with \(\mathbb{E}(\varepsilon_i) = 0\) and
 \(\mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\).
 
@@ -2129,8 +2131,9 @@ are now assumed to be i.i.d.~random variables with \(\mathbb{E}(\varepsilon_i) =
   Again, we assume that the \(x\)-values are fixed and known. The only
   random quantities in the model are \(\varepsilon_i\) and \(Y_i\).
 \item
-  The parameters in this model are now \(\beta = (\beta_0, \beta_1, \cdots, \beta_p) \in \mathbb{R}^{p+1}\) and \(\sigma^2\). The parameters \(\beta_j\) are often
-  called the regression coefficients.
+  The parameters in this model are now the regression coefficients
+  \(\beta = (\beta_0, \beta_1, \cdots, \beta_p) \in \mathbb{R}^{p+1}\) and
+  the error variance~\(\sigma^2\).
 \end{itemize}
 
 The usual approach in statistics to quantify how well an estimator works
@@ -7049,14 +7052,14 @@ as before, we have
   &= (X^\top X + \lambda I)^{-1} X^\top Y \\
   &= (X^\top X + \lambda I)^{-1} X^\top (X \beta + \varepsilon) \\
   &= (X^\top X + \lambda I)^{-1} (X^\top X + \lambda I) \beta \\
-    &\hskip2cm - (X^\top X + \lambda I)^{-1} X^\top X \lambda I \beta \\
-    &\hskip2cm + (X^\top X + \lambda I)^{-1} X^\top \varepsilon
+    &\hskip15mm - (X^\top X + \lambda I)^{-1} \lambda I \beta \\
+    &\hskip15mm + (X^\top X + \lambda I)^{-1} X^\top \varepsilon
 \end{align*}
 and simplifying the first term on the right-hand side we get
 \begin{equation}
   \hat\beta^{(\lambda)}
   = \beta
-    - \lambda (X^\top X + \lambda I)^{-1} X^\top X \beta
+    - \lambda (X^\top X + \lambda I)^{-1} \beta
     + (X^\top X + \lambda I)^{-1} X^\top \varepsilon.   \label{eq:ridge-def}
 \end{equation}
 
@@ -7066,26 +7069,16 @@ and simplifying the first term on the right-hand side we get
 Using the formula for \(\hat\beta^{(\lambda)}\) we get
 \begin{equation*}
   \mathbb{E}\bigl( \hat\beta^{(\lambda)} \bigr)
-  = \beta - \lambda (X^\top X + \lambda I)^{-1} X^\top X \beta + 0
+  = \beta - \lambda (X^\top X + \lambda I)^{-1} \beta + 0
 \end{equation*}
 and thus
 \begin{equation*}
   \mathop{\mathrm{bias}}\bigl( \hat\beta^{(\lambda)} \bigr)
-  = - \lambda (X^\top X + \lambda I)^{-1} X^\top X \beta.
+  = - \lambda (X^\top X + \lambda I)^{-1} \beta.
 \end{equation*}
 Since this term in general is non-zero, we see that \(\hat\beta^{(\lambda)}\)
 is a biased estimate. The amount of bias depends on the unknown, true
 coefficient vector~\(\beta\).
-
-If \(X^\top X\) is invertible, we have for small \(\lambda\) that
-\((X^\top X + \lambda I)^{-1} X^\top X \approx I\) and thus
-\begin{equation*}
-  \mathbb{E}\bigl( \hat\beta^{(\lambda)} \bigr)
-  \approx \beta - \lambda \beta
-  = (1-\lambda) \beta.
-\end{equation*}
-In this sense we can see that the effect of \(\lambda\) is to ``shrink''
-the estimate~\(\hat\beta\).
 
 \hypertarget{variance}{%
 \subsubsection{Variance}\label{variance}}
@@ -8688,6 +8681,388 @@ with significance levels set to avoid a cyclical behaviour.
 \tightlist
 \item
   We discussed different algorithms to perform model selection in practice.
+\end{itemize}
+
+\clearpage
+
+\hypertarget{S15-factors}{%
+\section{Factors}\label{S15-factors}}
+
+In this section we will learn how to fit linear models when some or all
+of the inputs are categorical. Such inputs are sometimes called ``factors''.
+These can be
+binary (\emph{e.g.}~sex recorded as male/female)
+or ordered (\emph{e.g.}~quality recorded as poor/medium/good)
+or unordered (\emph{e.g.}~marital status recorded as single/married/divorced/widowed).
+
+\hypertarget{indicator-variables}{%
+\subsection{Indicator Variables}\label{indicator-variables}}
+
+Our aim here is to include categorical input variables within the
+usual regression model
+\begin{equation*}
+  y
+  = X\beta + \varepsilon.
+\end{equation*}
+
+Assume that \(x_j \in \{a_1, \ldots, a_k\}\) is a factor which has \(k\) possible
+values. The possible values of the factor, \(a_1, \ldots, a_k\) are also called
+the \textbf{levels} of the factor. The easiest way to include a factor in a
+regression model is via \textbf{indicator variables}. For this we represent \(x_j\)
+using \(k-1\) columns in the design matrix, say \(\tilde x_1, \ldots, \tilde x_{k-1}\), where
+\begin{equation*}
+  \tilde x_{\ell i}
+  = \begin{cases}
+    1 & \mbox{if $x_{ji} = a_\ell$ and} \\
+    0 & \mbox{otherwise,}
+  \end{cases}
+\end{equation*}
+for all \(\ell \in \{1, \ldots, k-1\}\) and \(i \in \{1, \ldots, n\}\).
+Using this convention, \(x_{ji} = k\) is represented by setting
+\(\tilde x_{1,i} = \cdots = \tilde x_{k-1,i} = 0\). The value \(a_k\)
+which is not represented as a separate column is called the
+\textbf{reference level}. The regression coefficients corresponding to the
+columns \(\tilde x_1, \ldots, \tilde x_{k-1}\) can be interpreted
+as the effect of level \(a_\ell\), relative to the effect
+of level \(a_k\). Since the indicator is constant \(1\) for all samples
+corresponding to a given factor, regression coefficients representing factors
+lead to changes of the intercept, rather than of slopes.
+
+We are using only \(k-1\) columns to represent a factor
+with \(k\) levels in order to avoid collinearity. If we would use \(k\) columns,
+defined as above, we would get
+\begin{equation*}
+  \sum_{\ell=1}^k \tilde x_{\ell i}
+  = \mathbf{1},
+\end{equation*}
+and in a model with an intercept we would have exact collinearity of
+the corresponding columns in the design matrix~\(X\).
+
+\begin{example}
+
+Consider a dataset consisting of a numerical input variable
+and a binary factor for gender (\texttt{female}, \texttt{male}).
+Assume we are given data
+\((1, \mathrm{male})\), \((2, \mathrm{female})\), \((3, \mathrm{female})\).
+Then we can encode this data using the following design matrix:
+
+\begin{longtable}[]{@{}ccc@{}}
+\toprule
+intercept & \(x_1\) & \(1_\mathrm{\{female\}}(x_2)\) \\
+\midrule
+\endhead
+1 & 1 & 0 \\
+1 & 2 & 1 \\
+1 & 3 & 1 \\
+\bottomrule
+\end{longtable}
+
+\end{example}
+
+In R there is a dedicated type \texttt{factor} for categorical variables.
+If factors appear in the input of linear regression problem, the
+function \texttt{lm()} will automatically create the indicator variables
+for us.
+
+\begin{example}
+Here we simulated data which could describe the effect of some
+medical treatment.
+In the simulated data we have two groups, one which has been ``treated''
+and a control group. There is a ``value'' which decreases with age,
+and is lower for the group which has been treated (the intercept is 10
+instead of 12).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{age1 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{18}\NormalTok{, }\DecValTok{40}\NormalTok{)}
+\NormalTok{group1 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{value=}\DecValTok{10} \SpecialCharTok{{-}} \FloatTok{0.2} \SpecialCharTok{*}\NormalTok{ age1 }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd=}\FloatTok{0.5}\NormalTok{),}
+    \AttributeTok{age=}\NormalTok{age1,}
+    \AttributeTok{treated=}\StringTok{"yes"}\NormalTok{)}
+\NormalTok{age2 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{18}\NormalTok{, }\DecValTok{80}\NormalTok{)}
+\NormalTok{group2 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{value=}\DecValTok{12} \SpecialCharTok{{-}} \FloatTok{0.2} \SpecialCharTok{*}\NormalTok{ age2 }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd=}\FloatTok{0.5}\NormalTok{),}
+    \AttributeTok{age=}\NormalTok{age2,}
+    \AttributeTok{treated=}\StringTok{"no"}\NormalTok{)}
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(group1, group2)}
+
+\NormalTok{data}\SpecialCharTok{$}\NormalTok{treated }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{treated, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"no"}\NormalTok{, }\StringTok{"yes"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+The last line of the code tells R explicitely that the \texttt{treated} column
+represents a factor with levels ``no'' and ``yes''. Internally, this column will
+now be represented by numbers 1 (for ``no'') and 2 (for ``yes''), but this numeric representation
+is mostly hidden from the user. Now we fit a regression model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(value }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ data)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = value \textasciitilde{} ., data = data)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#      Min       1Q   Median       3Q      Max }
+\NormalTok{\# {-}1.76041 {-}0.22188  0.04535  0.23802  1.29250 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept) 11.525306   0.282369   40.82  \textless{} 2e{-}16 ***}
+\NormalTok{\# age         {-}0.189367   0.005557  {-}34.08  \textless{} 2e{-}16 ***}
+\NormalTok{\# treatedyes  {-}1.845246   0.180890  {-}10.20 1.68e{-}13 ***}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 0.5452 on 47 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.9635,  Adjusted R{-}squared:  0.962 }
+\NormalTok{\# F{-}statistic: 620.5 on 2 and 47 DF,  p{-}value: \textless{} 2.2e{-}16}
+\end{Highlighting}
+\end{Shaded}
+
+We see that R used ``no'' as the reference factor, here. The
+regression coefficient \texttt{treatedyes} gives the relative change
+of the ``yes'', compared to ``no''. The true value is
+the difference of the means: \(10 - 12 = -2\), and the estimated
+value \texttt{-1.89} is reasonably close to this. The fitted values
+for this model are
+\begin{equation*}
+  \hat y
+  = \begin{cases}
+    \beta_0 + \beta_1 x_1 & \mbox{if not treated, and} \\
+    (\beta_0 + \beta_2) + \beta_1 x_1 & \mbox{if treated}.
+  \end{cases}
+\end{equation*}
+
+To get a better
+idea of the model fit, we plot the data together with
+separate regression lines for ``yes'' (red) and ``no'' (black):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(value }\SpecialCharTok{\textasciitilde{}}\NormalTok{ age, }\AttributeTok{data =}\NormalTok{ data,}
+     \AttributeTok{col =} \FunctionTok{ifelse}\NormalTok{(treated }\SpecialCharTok{==} \StringTok{"yes"}\NormalTok{, }\StringTok{"red"}\NormalTok{, }\StringTok{"black"}\NormalTok{))}
+
+\CommentTok{\# regression line for the reference level \textasciigrave{}treatment == "no"\textasciigrave{}}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{])}
+
+\CommentTok{\# regression line for the level \textasciigrave{}treatment = "yes"\textasciigrave{}:}
+\CommentTok{\# here we need to add the coefficient for \textasciigrave{}treatedyes\textasciigrave{}}
+\CommentTok{\# to the intercept}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{3}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{], }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+
+\FunctionTok{legend}\NormalTok{(}\StringTok{"bottomleft"}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\StringTok{"no"}\NormalTok{, }\StringTok{"yes"}\NormalTok{),}
+       \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{), }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\CommentTok{\# also show a boxplot for comparison}
+\FunctionTok{boxplot}\NormalTok{(value }\SpecialCharTok{\textasciitilde{}}\NormalTok{ treated, }\AttributeTok{data =}\NormalTok{ data,}
+        \AttributeTok{border =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/factors-1.pdf}
+
+We can see that the two regression lines, corresponding to the two levels
+are parallel. They have the same slope but different intercepts.
+
+The last command shows a boxplot of \texttt{value} for comparison.
+The boxplot does not allow to conclude that the treatment had an effect,
+whereas the linear model, which accounts for age, shows the effect
+of the treatment as a difference in intercepts. The \texttt{***}
+in the \texttt{treatedyes} row of the \texttt{summary(m)} output shows that the
+difference in intercepts is statistically significant.
+\end{example}
+
+\hypertarget{interactions}{%
+\subsection{Interactions}\label{interactions}}
+
+In some situations, the strength of the dependency of the response \(y\) to an
+input \(x_1\) might depend on another input, say \(x_2\). The simplest such
+situation would be, if the coefficient \(\beta_1\), corresponding on \(x_1\) is
+itself proportional to \(x_2\), say \(\beta_1 = \gamma x_2\). In this case we have
+\(y = \cdots + \beta_1 x_1 = \cdots + \gamma x_1 x_2\). Traditionally, inputs
+added to a model which are the product of two or more of the original inputs
+are called \textbf{interactions}. As a general rule, an interaction is only included
+if the ``main effects'' are also included in the model, so in any variable
+selection procedure, we would not drop \(x_1\) or \(x_2\) if \(x_1 x_2\) is still in
+the model. An exception to this is when one can directly interpret the
+interaction term without the main effect.
+
+In R, interactions (\emph{i.e.}~products of inputs) are represented by the
+symbol~\texttt{:} and \texttt{*} can be used to include two variables together with their
+product. Note also, that if a variable is known to be a factor, and it is
+included as an interaction term, then R will make sure to only remove the
+interaction term in a backward variable selection procedure whilst the main
+effects are also included.
+
+\begin{example}
+
+Consider the following toy dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x1 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\NormalTok{x2 }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{3}
+\end{Highlighting}
+\end{Shaded}
+
+In \texttt{lm()} and related functions we can write \texttt{x1:x2} as a shorthand
+for \texttt{I(x1*x2)}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x1}\SpecialCharTok{:}\NormalTok{x2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#   (Intercept) x1 x1:x2}
+\NormalTok{\# 1           1  2     2}
+\NormalTok{\# 2           1  2     4}
+\NormalTok{\# 3           1  2     6}
+\NormalTok{\# attr(,"assign")}
+\NormalTok{\# [1] 0 1 2}
+\end{Highlighting}
+\end{Shaded}
+
+We can write \texttt{x1*x2} as a shorthand for \texttt{x1\ +\ x2\ +\ x1:x2}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1}\SpecialCharTok{*}\NormalTok{x2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#   (Intercept) x1 x2 x1:x2}
+\NormalTok{\# 1           1  2  1     2}
+\NormalTok{\# 2           1  2  2     4}
+\NormalTok{\# 3           1  2  3     6}
+\NormalTok{\# attr(,"assign")}
+\NormalTok{\# [1] 0 1 2 3}
+\end{Highlighting}
+\end{Shaded}
+
+\end{example}
+
+Interactions also work for factors. In this case, products with all of
+the corresponding indicator variables are added to the model. while
+the base effect of factor variables is to have different intercepts for
+the different groups, using interactions with a factor allows to have
+different slopes for the different groups.
+
+\begin{example}
+The classical example of an interaction is to consider how the
+yield~\(y\) of a crop is related to temperature~\(x_1\) and rainfall~\(x_2\).
+All these variables are continuous, but we might categorize rainfall as ``wet''
+and ``dry''. Then a simplistic view could be that, for high rainfall, the yield
+will be positively correlated with temperature, whereas for low rainfall the
+correlation may be slightly negative, because in hot weather, plants need more
+water, and if it is very hot and dry, the plants may even die.
+
+We generate a toy dataset in R to represent such a situation:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{T }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{35}\NormalTok{)}
+\NormalTok{wet }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{yield=}\DecValTok{40} \SpecialCharTok{+} \DecValTok{7}\SpecialCharTok{*}\NormalTok{T }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd =} \DecValTok{10}\NormalTok{),}
+    \AttributeTok{temperature=}\NormalTok{T,}
+    \AttributeTok{rainfall=}\StringTok{"high"}\NormalTok{)}
+\NormalTok{T }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{35}\NormalTok{)}
+\NormalTok{dry }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{yield=}\DecValTok{120} \SpecialCharTok{{-}} \DecValTok{2}\SpecialCharTok{*}\NormalTok{T }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd =} \DecValTok{10}\NormalTok{),}
+    \AttributeTok{temperature=}\NormalTok{T,}
+    \AttributeTok{rainfall=}\StringTok{"low"}\NormalTok{)}
+\NormalTok{crops }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(wet, dry)}
+\NormalTok{crops}\SpecialCharTok{$}\NormalTok{rainfall }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(crops}\SpecialCharTok{$}\NormalTok{rainfall, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"low"}\NormalTok{, }\StringTok{"high"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+Now we fit a model, including \texttt{temperature}, \texttt{rainfall} and
+an interaction term:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(yield }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature}\SpecialCharTok{*}\NormalTok{rainfall, }\AttributeTok{data =}\NormalTok{ crops)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = yield \textasciitilde{} temperature * rainfall, data = crops)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#      Min       1Q   Median       3Q      Max }
+\NormalTok{\# {-}22.8996  {-}6.3555   0.0346   5.9355  25.0553 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#                          Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept)              114.2722     9.0929  12.567  \textless{} 2e{-}16 ***}
+\NormalTok{\# temperature               {-}1.8873     0.3617  {-}5.219 4.21e{-}06 ***}
+\NormalTok{\# rainfallhigh             {-}71.5892    13.0342  {-}5.492 1.66e{-}06 ***}
+\NormalTok{\# temperature:rainfallhigh   8.7043     0.5299  16.428  \textless{} 2e{-}16 ***}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 10.42 on 46 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.9814,  Adjusted R{-}squared:  0.9802 }
+\NormalTok{\# F{-}statistic: 810.2 on 3 and 46 DF,  p{-}value: \textless{} 2.2e{-}16}
+\end{Highlighting}
+\end{Shaded}
+
+The fitted values for this model are
+\begin{equation*}
+  \hat y
+  = \begin{cases}
+    \beta_0 + \beta_1 x_1 & \mbox{for low rainfall, and} \\
+    (\beta_0 + \beta_2) + (\beta_1 + \beta_3) x_1 & \mbox{for high rainfall}.
+  \end{cases}
+\end{equation*}
+Finally, we can generate a plot of the data together
+with the two regression lines.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(yield }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature, }\AttributeTok{data=}\NormalTok{crops,}
+     \AttributeTok{col =} \FunctionTok{ifelse}\NormalTok{(rainfall }\SpecialCharTok{==} \StringTok{"low"}\NormalTok{, }\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{))}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{])}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{3}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{4}\NormalTok{],}
+       \AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\StringTok{"dry"}\NormalTok{, }\StringTok{"wet"}\NormalTok{),}
+       \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{), }\AttributeTok{pch =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/interactions-1.pdf}
+
+As expected, the two lines have different intercepts and different slopes.
+\end{example}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  Indicator variables can be used to represent categorical inputs
+  in linear regression models.
+\item
+  The levels of a factor correspond to different intercepts for
+  the regression line.
+\item
+  If interaction terms are used, the levels also affect the slope.
 \end{itemize}
 
 \clearpage
