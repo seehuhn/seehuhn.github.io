@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Problem Sheet 4 | MATH3714 Linear Regression and Robustness</title>
+  <title>Practical | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Problem Sheet 4 | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Practical | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Problem Sheet 4 | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Practical | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="S13-models.html"/>
-<link rel="next" href="S14-methods.html"/>
+<link rel="prev" href="S15-factors.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -352,246 +352,118 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="P04" class="section level1 unnumbered">
-<h1>Problem Sheet 4</h1>
-<style>
-.fold-btn {
-  float: right;
-  margin: -12px 0 0 0;
-}
-</style>
-<script type="text/javascript">
-$(document).ready(function() {
-  $folds = $(".myanswers");
-  $folds.wrapInner("<div class=\"fold-blck\">"); // wrap a div container around content
-  $folds.prepend("<button class=\"fold-btn\">Show solution</button>");  // add a button
-  $(".fold-blck").toggle();  // fold all blocks
-  $(".fold-btn").on("click", function() {  // add onClick event
-    $(this).text($(this).text() === "Hide solution" ? "Show solution" : "Hide solution");  // if the text equals "Fold", change it to "Unfold"or else to "Fold"
-    $(this).next(".fold-blck").toggle("linear");  // "swing" is the default easing function. This can be further customized in its speed or the overall animation itself.
-  })
-});
-</script>
-<style>.myanswers { display: none !important; }</style>
-<div class="mysummary">
-<p>You should attempt all these questions and write up your solutions in advance
-of your workshop in week 9 where the answers will be discussed.</p>
-</div>
-<div class="myq">
-<p><strong>13</strong> Consider the data set <code>pressure</code>, built into R, which
-describes the vapour pressure <span class="math inline">\(P\)</span> of mercury as a function of
-temperature <span class="math inline">\(T\)</span>.</p>
-<div class="subq">
-<ol style="list-style-type: lower-alpha">
-<li>For given <span class="math inline">\(T_0\)</span>, explain how a model of the form
-<span class="math inline">\(P = \beta_0 + T \beta_1 + \max(0, T-T_0) \beta_2 + \varepsilon\)</span> can be
-fitted to the data.</li>
-</ol>
-<div class="myanswers">
-<p>We can fit a model with an intercept and two inputs,
-<span class="math inline">\(T\)</span> and <span class="math inline">\(\max(0, T-T_0)\)</span>. In R we can use the following
-commands to fit such a model:</p>
-<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="P04.html#cb219-1" aria-hidden="true" tabindex="-1"></a>T0 <span class="ot">&lt;-</span> the.given.value <span class="co"># substitute the value of T0 here</span></span>
-<span id="cb219-2"><a href="P04.html#cb219-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(pressure <span class="sc">~</span> temperature <span class="sc">+</span> <span class="fu">I</span>(<span class="fu">pmax</span>(<span class="dv">0</span>, temperature<span class="sc">-</span>T0)),</span>
-<span id="cb219-3"><a href="P04.html#cb219-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> pressure)</span></code></pre></div>
-</div>
-</div>
-<div class="subq">
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Why might a model of this form make sense for the given data?</li>
-</ol>
-<div class="myanswers">
-<p>Such a model may make sense, because the slope of the
-samples increases faster than linear as the temperature <span class="math inline">\(T\)</span>
-increases. The term <span class="math inline">\(\max(0, T-T_0)\)</span> is zero for small <span class="math inline">\(T\)</span>,
-but adds an additional slope once <span class="math inline">\(T\)</span> exceeds the cutoff
-temperature <span class="math inline">\(T_0\)</span>.</p>
-</div>
-</div>
-<div class="subq">
-<ol start="3" style="list-style-type: lower-alpha">
-<li>What is a good value of <span class="math inline">\(T_0\)</span> for this data set?</li>
-</ol>
-<div class="myanswers">
-<p><span class="math inline">\(T_0\)</span> should be placed at the end of the “flat” part
-of the plot, where the pressure starts increasing more
-quickly. A quick experiment shows that the best <span class="math inline">\(R^2\)</span>
-value is achieved for <span class="math inline">\(T_0 \approx 273\)</span>:</p>
-<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="P04.html#cb220-1" aria-hidden="true" tabindex="-1"></a>T0 <span class="ot">&lt;-</span> <span class="dv">273</span></span>
-<span id="cb220-2"><a href="P04.html#cb220-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(pressure <span class="sc">~</span> temperature <span class="sc">+</span> <span class="fu">I</span>(<span class="fu">pmax</span>(<span class="dv">0</span>, temperature <span class="sc">-</span> T0)),</span>
-<span id="cb220-3"><a href="P04.html#cb220-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>pressure)</span>
-<span id="cb220-4"><a href="P04.html#cb220-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
-<pre class="rOutput"><code>
-Call:
-lm(formula = pressure ~ temperature + I(pmax(0, temperature - 
-    T0)), data = pressure)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--53.125 -17.553  -6.308  13.017  55.839 
-
-Coefficients:
-                              Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)                  -17.62933   14.63735  -1.204   0.2459    
-temperature                    0.25472    0.08774   2.903   0.0104 *  
-I(pmax(0, temperature - T0))   7.77118    0.38024  20.437 6.85e-13 ***
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-
-Residual standard error: 29.86 on 16 degrees of freedom
-Multiple R-squared:  0.9843,    Adjusted R-squared:  0.9823 
-F-statistic: 501.3 on 2 and 16 DF,  p-value: 3.705e-15</code></pre>
-<p>To get a better understanding of how the extra term
-<span class="math inline">\(\max(0, T-T_0)\)</span> improves model fit, we plot the data
-together with the fitted model:</p>
-<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="P04.html#cb222-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pressure)</span>
-<span id="cb222-2"><a href="P04.html#cb222-2" aria-hidden="true" tabindex="-1"></a>T.plot <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">360</span>, <span class="at">l=</span><span class="dv">100</span>)</span>
-<span id="cb222-3"><a href="P04.html#cb222-3" aria-hidden="true" tabindex="-1"></a>p.plot <span class="ot">&lt;-</span> <span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">temperature=</span>T.plot))</span>
-<span id="cb222-4"><a href="P04.html#cb222-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(T.plot, p.plot)</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/P04Q13c-1.png" width="672" /></p>
-<p>As expected, for <span class="math inline">\(T &gt; 273 = T_0\)</span>, the slope of the
-fitted line increases, leading to greatly improved
-model fit. (An alternative, and probably superior approach would
-be to transform the data and try to fit a straight line to the
-transformed data instead.)</p>
-</div>
-</div>
-</div>
-<div class="myq">
-<p><strong>14</strong> Where possible, rewrite the following regression models in linear form.</p>
-<div class="subq">
-<ol style="list-style-type: lower-alpha">
-<li><span class="math inline">\(y = \beta_0 \beta_1^x\)</span></li>
-</ol>
-<div class="myanswers">
-<p>We can take logarithms:
-<span class="math display">\[\begin{equation*}
-  \log(y)
-  = \log(\beta_0) + x \log(\beta_1)
-  =: \beta_0&#39; + x \beta_1&#39;.
-\end{equation*}\]</span>
-Notice that writing <span class="math inline">\(\log(y) = \beta_0&#39; + x \beta_1&#39; + \varepsilon\)</span>
-implies <span class="math inline">\(y = \beta_0 \beta_1^x \exp(\varepsilon)\)</span>.</p>
-</div>
-</div>
-<div class="subq">
-<ol start="2" style="list-style-type: lower-alpha">
-<li><span class="math inline">\(y = \beta_0 + \beta_1 \sin(x_1) + \beta_2 \exp(x_2)\)</span></li>
-</ol>
-<div class="myanswers">
-<p>We can simply set <span class="math inline">\(x_1&#39; = \sin(x_1)\)</span> and <span class="math inline">\(x_2&#39; = \exp(x_2)\)</span>.
-This transformation does not affect the error term.</p>
-</div>
-</div>
-<div class="subq">
-<ol start="3" style="list-style-type: lower-alpha">
-<li><span class="math inline">\(y = \frac{x}{\beta_0 + \beta_1 x}\)</span></li>
-</ol>
-<div class="myanswers">
-<p>We can write
-<span class="math display">\[\begin{equation*}
-  \frac1y
-  = \frac{\beta_0 + \beta_1 x}{x}
-  = \beta_0 \frac1x + \beta_1.
-\end{equation*}\]</span>
-Thus we can use <span class="math inline">\(x&#39; = 1/x\)</span>, <span class="math inline">\(y&#39; = 1/y\)</span>, <span class="math inline">\(\beta_0&#39; = \beta_1\)</span> and
-<span class="math inline">\(\beta_1&#39; = \beta_0\)</span>. This transformation affects the noise, too,
-so some care is needed.</p>
-</div>
-</div>
-</div>
-<div class="myq">
-<p><strong>15</strong> Consider the dataset from</p>
+<div id="practical" class="section level1 unnumbered">
+<h1>Practical</h1>
 <ul>
-<li><a href="http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P04Q14.csv">http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P04Q14.csv</a></li>
+<li>The MATH3714 and MATH5714M modules are assessed by an examination (80%)
+and a practical (20%). This is the practical, worth 20% of your final
+module mark.</li>
+<li>You must hand in your solution
+by <strong>Thursday, 9th December 2021, 5pm</strong>, via Gradescope.</li>
+<li>Reports must be typeset (not handwritten) and should be no more than 10 pages in length
+(but can be shorter).</li>
+<li>Within reason you may talk to your friends about this piece of work,
+but you should not send R code (or output) to each other.
+Your report must be only your own work.</li>
 </ul>
-<p>The dataset contains samples <span class="math inline">\((x_{i,1}, x_{i,2}, y_i)\)</span>. We want to
-find a model for <span class="math inline">\(y\)</span> as a function of <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>.</p>
-<div class="subq">
-<ol style="list-style-type: lower-alpha">
-<li>Fit a linear model to the data and produce a residual plot.
-Based on the plot, discuss how well the model fits the data.</li>
-</ol>
-<div class="myanswers">
-<p>We can fit the model as follows:</p>
-<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="P04.html#cb223-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P04Q14.csv</span></span>
-<span id="cb223-2"><a href="P04.html#cb223-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/P04Q14.csv&quot;</span>)</span>
-<span id="cb223-3"><a href="P04.html#cb223-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
-<span id="cb223-4"><a href="P04.html#cb223-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m))</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/P04Q14a-1.png" width="672" /></p>
-<p>The mean of the residuals does not form a straight line, so the
-dependency of <span class="math inline">\(y\)</span> on the <span class="math inline">\(x_i\)</span> seems to be nonlinear. Also, the variance
-of the residuals decreases as <span class="math inline">\(\hat y\)</span> increases. Model fit is not good
-and a transformation of the data may be useful.</p>
+<div id="dataset" class="section level2 unnumbered">
+<h2>Dataset</h2>
+<p>In this practical we are interesting in factors which influence
+the life expectancy at birth. We consider the following dataset:</p>
+<ul>
+<li><a href="https://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/practical.csv" class="uri">https://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/practical.csv</a></li>
+</ul>
+<p>You can read the data into R using the following command:</p>
+<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb260-1"><a href="practical.html#cb260-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/practical.csv&quot;</span>,</span>
+<span id="cb260-2"><a href="practical.html#cb260-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>The dataset contain the following variables:</p>
+<ul>
+<li><code>country</code>: country</li>
+<li><code>region</code>: geographic region the country is in</li>
+<li><code>sub.region</code>: geographic sub-region the country is in</li>
+<li><code>year</code>: year the data refers to</li>
+<li><code>gdp.per.capita</code>: Per capita GDP at current prices (USD)</li>
+<li><code>health.spending</code>: Per capita government expenditure on health at average exchange rate (USD,
+only until 2010)</li>
+<li><code>hiv</code>: Prevalence of HIV among adults aged 15 to 49 (%)</li>
+<li><code>alcohol</code>: Alcohol, recorded per capita (15+) consumption (in litres of pure alcohol)</li>
+<li><code>tobacco</code>: Prevalence of current tobacco use among adults aged <span class="math inline">\(\geq 15\)</span> years</li>
+<li><code>pop.size</code>: population size, for the given country and year (thousands)</li>
+<li><code>pop.density</code>: Population per square kilometre, for the given country and year (thousands)</li>
+<li><code>life.expectancy</code>: Life expectancy at birth (years). This is the variable we are interested in.</li>
+</ul>
 </div>
+<div id="tasks" class="section level2 unnumbered">
+<h2>Tasks</h2>
+<p>The aim of this practical is to fit an appropriate model to these data, which
+predicts the life expectancy <code>life.expectancy</code> from the other variables.</p>
+<p>This practical is deliberately open-ended, with little guidance on how to proceed.</p>
+<p><strong>Task 1.</strong> We start by considering <code>life.expectancy</code> as a function
+of <code>gdp.per.capita</code> only.</p>
+<ul>
+<li><p>Using appropriate transformations of the data, find a linear model which can
+describe the relationship between <code>life.expectancy</code> (response) and
+<code>gdp.per.capita</code> (input).</p></li>
+<li><p>Using appropriate diagnostics, confirm that your model is acceptable.
+In your answer, you only need to describe your final model, and <em>one</em> other
+model which you have examined, but deemed less appropriate.</p></li>
+<li><p>Using your model obtain a 95% confidence interval for the mean (expected)
+life expectancy at birth, for a country with a per capita GDP of 4000 USD.</p></li>
+</ul>
+<p><strong>Task 2.</strong> Now we also consider the remaining variables in the dataset.</p>
+<ul>
+<li><p>With due consideration to</p>
+<ul>
+<li>transformations (where, and if, necessary)</li>
+<li>appropriate choice of variables</li>
+<li>model selection</li>
+<li>model checking</li>
+<li>variable selection</li>
+<li>missing data</li>
+<li><em>etc.</em></li>
+</ul>
+<p>obtain a model which is able to predict <code>life.expectancy</code> from some or all
+of the other variables.</p></li>
+<li><p>Justify your choice by comparing at least two “competing” models.
+The comparison should take note of at
+least (a) model selection criteria, (b) diagnostics, and (c) interpretability.</p></li>
+<li><p>Interpret the parameters in your preferred model.</p></li>
+</ul>
+<p>There is no single right or wrong answer to this practical.
+The important thing is that you justify your approach.</p>
 </div>
-<div class="subq">
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Apply a Power Transform to the model, as described in
-section <a href="S11-improving.html#power-transform">11.3</a> of the notes. Explain your choice of <span class="math inline">\(\lambda\)</span>.</li>
-</ol>
-<div class="myanswers">
-<p>To choose the exponent <span class="math inline">\(\lambda\)</span>, we plot the residual sum of squares
-as a function of <span class="math inline">\(\lambda\)</span>.</p>
-<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="P04.html#cb224-1" aria-hidden="true" tabindex="-1"></a>gm <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(d<span class="sc">$</span>y)))</span>
-<span id="cb224-2"><a href="P04.html#cb224-2" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">101</span>)</span>
-<span id="cb224-3"><a href="P04.html#cb224-3" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(lambda))</span>
-<span id="cb224-4"><a href="P04.html#cb224-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(lambda)) {</span>
-<span id="cb224-5"><a href="P04.html#cb224-5" aria-hidden="true" tabindex="-1"></a>    li <span class="ot">&lt;-</span> lambda[i]</span>
-<span id="cb224-6"><a href="P04.html#cb224-6" aria-hidden="true" tabindex="-1"></a>    y.prime <span class="ot">&lt;-</span> (d<span class="sc">$</span>y<span class="sc">^</span>li <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (li <span class="sc">*</span> gm<span class="sc">^</span>(li<span class="dv">-1</span>))</span>
-<span id="cb224-7"><a href="P04.html#cb224-7" aria-hidden="true" tabindex="-1"></a>    mi <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
-<span id="cb224-8"><a href="P04.html#cb224-8" aria-hidden="true" tabindex="-1"></a>    rss[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(mi)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb224-9"><a href="P04.html#cb224-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb224-10"><a href="P04.html#cb224-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lambda, rss, <span class="at">type=</span><span class="st">&quot;l&quot;</span>)</span>
-<span id="cb224-11"><a href="P04.html#cb224-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb224-12"><a href="P04.html#cb224-12" aria-hidden="true" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">min</span>(rss) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.971</span>, <span class="dv">51</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="dv">51</span>)</span>
-<span id="cb224-13"><a href="P04.html#cb224-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> cutoff)</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/P04Q14b-1.png" width="672" /></p>
-<p>The horizonal line in this plot indicates the cutoff suggested by the
-rule of thumb in <a href="S11-improving.html#eq:power-cutoff">(11.1)</a>. Of the values of <span class="math inline">\(\lambda\)</span>
-where <code>rss</code> is below the cutoff, <span class="math inline">\(\lambda = 4\)</span> seems the most “simple”,
-so we try this value here.</p>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="P04.html#cb225-1" aria-hidden="true" tabindex="-1"></a>y.prime <span class="ot">&lt;-</span> d<span class="sc">$</span>y <span class="sc">^</span> <span class="dv">4</span></span>
-<span id="cb225-2"><a href="P04.html#cb225-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
-<span id="cb225-3"><a href="P04.html#cb225-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m))</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/P04Q14c-1.png" width="672" /></p>
-<p>Now the residual plot looks perfect!</p>
-</div>
-</div>
-</div>
-<div class="myq">
-<p><strong>16</strong> The Prediction Error Sum of Squares (PRESS) is defined as
-<span class="math display">\[\begin{equation*}
-  \mathrm{PRESS}
-  = \sum_{i=1}^n \bigl( y_i - \hat y^{(i)}_i \bigr)^2.
-\end{equation*}\]</span>
-Using lemma <a href="S13-models.html#lem:PRESS">13.1</a>, or otherwise, determine the PRESS
-value for the <code>stackloss</code> dataset built into R (using <code>stack.loss</code>
-as the response variable).</p>
-<div class="myanswers">
-<p>We can use the formula
-<span class="math display">\[\begin{equation*}
-  \mathrm{PRESS}
-  = \sum_{i=1}^n \Bigl( \frac{\hat\varepsilon_i}{1 - h_{ii}} \Bigr)^2
-\end{equation*}\]</span>
-from the lemma. Implementation in R is straightforward.</p>
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="P04.html#cb226-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
-<span id="cb226-2"><a href="P04.html#cb226-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
-<span id="cb226-3"><a href="P04.html#cb226-3" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
-<span id="cb226-4"><a href="P04.html#cb226-4" aria-hidden="true" tabindex="-1"></a>hii <span class="ot">&lt;-</span> <span class="fu">diag</span>(H)</span>
-<span id="cb226-5"><a href="P04.html#cb226-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((<span class="fu">resid</span>(m)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">-</span> hii))<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre class="rOutput"><code>[1] 291.8689</code></pre>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<p>The data were collected from the following sources.</p>
+<ul>
+<li><a href="https://www.who.int/data/gho/data/indicators/indicator-details/GHO/life-expectancy-at-birth-(years)" class="uri">https://www.who.int/data/gho/data/indicators/indicator-details/GHO/life-expectancy-at-birth-(years)</a>
+<code>country</code>, <code>year</code>, <code>lift.expectancy</code></li>
+<li><a href="https://population.un.org/wpp/Download/Standard/CSV/" class="uri">https://population.un.org/wpp/Download/Standard/CSV/</a>
+<code>country</code>, <code>year</code>, <code>pop.size</code>, <code>pop.density</code>, <code>region</code>, <code>sub.region</code></li>
+<li><a href="https://data.un.org/Data.aspx?d=SNAAMA&amp;f=grID%3A101%3BcurrID%3AUSD%3BpcFlag%3A1" class="uri">https://data.un.org/Data.aspx?d=SNAAMA&amp;f=grID%3A101%3BcurrID%3AUSD%3BpcFlag%3A1</a>
+<code>country</code>, <code>year</code>, <code>gdp.per.capita</code></li>
+<li><a href="http://data.un.org/Data.aspx?d=WHO&amp;f=MEASURE_CODE%3aWHS7_104" class="uri">http://data.un.org/Data.aspx?d=WHO&amp;f=MEASURE_CODE%3aWHS7_104</a>
+<code>country</code>, <code>year</code>, <code>health.spending</code></li>
+<li><a href="https://www.who.int/data/gho/data/indicators/indicator-details/GHO/alcohol-recorded-per-capita-(15-)-consumption-(in-litres-of-pure-alcohol)" class="uri">https://www.who.int/data/gho/data/indicators/indicator-details/GHO/alcohol-recorded-per-capita-(15-)-consumption-(in-litres-of-pure-alcohol)</a>
+<code>country</code>, <code>year</code>, <code>alcohol</code></li>
+<li><a href="https://www.who.int/data/gho/data/indicators/indicator-details/GHO/age-standardized-prevalence-of-current-tobacco-smoking-among-persons-aged-15-years-and-older" class="uri">https://www.who.int/data/gho/data/indicators/indicator-details/GHO/age-standardized-prevalence-of-current-tobacco-smoking-among-persons-aged-15-years-and-older</a>
+<code>country</code>, <code>year</code>, <code>tobacco</code></li>
+<li><a href="https://www.who.int/data/gho/data/indicators/indicator-details/GHO/prevalence-of-hiv-among-adults-aged-15-to-49-(-)" class="uri">https://www.who.int/data/gho/data/indicators/indicator-details/GHO/prevalence-of-hiv-among-adults-aged-15-to-49-(-)</a>
+<code>country</code>, <code>year</code>, <code>hiv</code></li>
+</ul>
+
 </div>
 </div>
 
-</div>
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="S13-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="S14-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S15-factors.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
