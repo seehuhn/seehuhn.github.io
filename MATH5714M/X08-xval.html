@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>MATH5714 Linear Regression, Robustness and Smoothing</title>
+  <title>Section 8 Cross-validation | MATH5714 Linear Regression, Robustness and Smoothing</title>
   <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta property="og:title" content="Section 8 Cross-validation | MATH5714 Linear Regression, Robustness and Smoothing" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://seehuhn.github.io/MATH5714/" />
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta name="twitter:title" content="Section 8 Cross-validation | MATH5714 Linear Regression, Robustness and Smoothing" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2021/22" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="X07-nearest.html"/>
 
-<link rel="next" href="X01-KDE.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -238,45 +238,216 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">MATH5714 Linear Regression, Robustness and Smoothing</h1>
-<p class="author"><em><a href="mailto:J.Voss@leeds.ac.uk">Jochen Voss</a></em></p>
-<p class="date"><em>University of Leeds, Semester 1, 2021–22</em></p>
+<div id="X08-xval" class="section level1" number="8">
+<h1><span class="header-section-number">Section 8</span> Cross-validation</h1>
+<!--
+TODO:
+- The use of \mathrm{CV}(h) seems quite subtle.
+  Is \sum_{i=1}^n \hat f_h^{(i)}(x_i) really better than \sum_{i=1}^n \hat f_h(x_i)?
+-->
+<p>In this section we will discuss methods for chosing the bandwidth <span class="math inline">\(h\)</span>
+for kernel-based methods, and the size <span class="math inline">\(k\)</span> of the neighbourhood used
+in <span class="math inline">\(k\)</span>-nearest neighbour regression. The methods we will use here
+are based on cross-validation.</p>
+<p>The idea of cross-validation is to measure goodness of fit by comparing each
+sample <span class="math inline">\(y_i\)</span> to a fitted value <span class="math inline">\(\tilde y_i\)</span>, where the fitted values <span class="math inline">\(\tilde y_i\)</span> are computed from a subset of the data which excludes <span class="math inline">\(x_i\)</span>. There are
+different ways to implement this idea:</p>
+<ul>
+<li><p>In <strong>leave-one-out cross-validation</strong>, a separate model is fitted
+for each <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>, leaving out just the sample <span class="math inline">\((x_i, y_i)\)</span>
+for this model. This method can be computationally
+expensive for large <span class="math inline">\(n\)</span>, since <span class="math inline">\(n\)</span> models need to be fitted to the data.</p></li>
+<li><p>In <strong><em>k</em>-fold cross-validation</strong>, the data is partitioned into
+<span class="math inline">\(k\)</span> subsamples of approximately equal size. Only <span class="math inline">\(k\)</span> models are fitted,
+each one leaving out the data from one subsample. Then for every <span class="math inline">\(i\)</span>
+there is exactly one model which does not use <span class="math inline">\((x_i, y_i)\)</span>, and
+to compute the fitted value for <span class="math inline">\((x_i, y_i)\)</span>, we use this model.
+Since fewer data are used to fit each model, this method gives less
+accurate results than leave-one-out cross-validation.
+For this method to work, it is important that the subsamples
+are independent of each other.</p></li>
+</ul>
+<p>The idea behind cross-validation is that we always compare <span class="math inline">\(y_i\)</span> to
+a fitted value which was computed without using any information about
+the true value of <span class="math inline">\(y_i\)</span>. This way, a method cannot achive a misleadingly
+good fit by overfitting the data.</p>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/R6_k8N_wNe4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
 </div>
-<div id="home" class="section level1 unnumbered">
-<h1>Preface</h1>
-<p>From previous modules we know how to fit a regression line through
-points <span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n) \in\mathbb{R}^2\)</span>. The underlying model
-here is described by the equation
+</div>
+<div id="regression" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Regression</h2>
+<p>In linear regression, we find the regression line by minimising
+the residual sum of squares. One could be tempted to try the same
+approach here and to find the “best” <span class="math inline">\(h\)</span> by minimising
 <span class="math display">\[\begin{equation*}
-  y_i
-  = \alpha + \beta x_i + \varepsilon_i
+  r(h)
+  := \sum_{i=1}^n \bigl( y_i - \hat m_h(x_i) \bigr)^2.
 \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, and the aim is to find values for
-the intercept <span class="math inline">\(\alpha\)</span> and the slope <span class="math inline">\(\beta\)</span> such that the residuals
-<span class="math inline">\(\varepsilon_i\)</span> are as small as possible. This procedure,
-linear regression, and its extensions are discussed in the <a href="https://seehuhn.github.io/MATH3714/">level 3
-component of the module</a>.</p>
-<p>In the level 5 component of this module, we will discuss “smoothing”
-which is a technique which can be used when linear models are no longer
-appropriate for the data. An example of such a situation is illustrated
-in figure <a href="index.html#fig:accel">0.1</a>.</p>
-
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:accel"></span>
-<img src="MATH5714M_files/figure-html/accel-1.png" alt="An illustration of a dataset where a linear (straight line) model is not appropriate. The data represents a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets (the mcycle dataset from the MASS R package)." width="672" />
-<p class="caption">
-Figure 0.1: An illustration of a dataset where a linear (straight line) model is not appropriate. The data represents a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets (the <code>mcycle</code> dataset from the <code>MASS</code> R package).
-</p>
+Unfortunately, this approach does not work: for <span class="math inline">\(h \downarrow 0\)</span>
+we have <span class="math inline">\(\hat m_h(x_i) \to y_i\)</span> and thus <span class="math inline">\(r(h) \to 0\)</span>. For this reason,
+minimising <span class="math inline">\(r(h)\)</span> always finds <span class="math inline">\(h=0\)</span> as the optimal value of <span class="math inline">\(h\)</span>.
+To solve the problem we use leave-one-out cross validation and minimise
+<span class="math display">\[\begin{equation*}
+  r_\mathrm{LOO}(h)
+  := \sum_{i=1}^n \bigl( y_i - \hat m^{(i)}_h(x_i) \bigr)^2
+\end{equation*}\]</span>
+instead,
+where <span class="math inline">\(m^{(i)}\)</span> is the kernel regression estimate computed without using
+sample <span class="math inline">\(i\)</span>:
+<span class="math display">\[\begin{equation*}
+  \hat m_h^{(i)}(x)
+  = \frac{\sum_{j \;\mid\; j\neq i} K_h(x - x_j)y_j}{\sum_{j \;\mid\; j\neq i}K_h(x - x_j)}
+\end{equation*}\]</span>
+for the Nadaraya-Watson Estimator and similarly for local polynomial
+regression.</p>
+<p>A similar approach can be used to find the optimal <span class="math inline">\(k\)</span> for
+a <span class="math inline">\(k\)</span>-nearest neighbour estimate.</p>
+</div>
+<div id="kernel-density-estimation-1" class="section level2" number="8.2">
+<h2><span class="header-section-number">8.2</span> Kernel Density Estimation</h2>
+<p>When using kernel density estimation in practice, we need to choose the
+bandwidth <span class="math inline">\(h\)</span>. One idea for finding a good <span class="math inline">\(h\)</span> is by using
+maximum likelihood estimation: We could try to
+choose <span class="math inline">\(h\)</span> to maximize the likelihood
+<span class="math display">\[\begin{equation*}
+  L(h;x_1, \ldots, x_n)
+  = \prod_{i=1}^n \hat f_h(x_i),
+\end{equation*}\]</span>
+but this gives the solution <span class="math inline">\(h=0\)</span>. So, instead we maximize the
+leave-one-out estimate of the log likelihood, which is given by
+<span class="math display">\[\begin{equation*}
+  L_\mathrm{LOO}(h;x_1, \ldots, x_n)
+  = \prod_{i=1}^n \hat f^{(i)}_h(x_i).
+\end{equation*}\]</span>
+This technique is known as <strong>maximum likelihood cross-validation</strong>.
+When this method is used in practice, it is advantageous to minimise
+<span class="math display">\[\begin{align*}
+  \mathcal{L}_\mathrm{LOO}(h;x_1, \ldots, x_n)
+  &amp;:= \log\Bigl( L_\mathrm{LOO}(h;x_1, \ldots, x_n) \Bigr) \\
+  &amp;= \log\Bigl( \prod_{i=1}^n \hat f^{(i)}_h(x_i) \Bigr) \\
+  &amp;= \sum_{i=1}^n \log\bigl( \hat f^{(i)}_h(x_i) \bigr)
+\end{align*}\]</span>
+instead of <span class="math inline">\(L_\mathrm{LOO}\)</span>, since the product in the definition
+of the likelihood can be strongly affected by numerical errors.</p>
+<p>An alternative method to find a good <span class="math inline">\(h\)</span> considers the
+integrated mean squared error (IMSE) as a measure for the error.
+This is the same quantity we also used to derive our theoretical results:
+<span class="math display">\[\begin{equation*}
+  \mathrm{IMSE}\bigl( \hat f_h \bigr)
+  = \int_{-\infty}^\infty \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr) \,dx.
+\end{equation*}\]</span>
+Unfortunately, the <span class="math inline">\(h\)</span> which minimises this expression depends
+on properties of <span class="math inline">\(h\)</span> and in section <a href="X04-practice.html#bwsel">4.3</a> we were only
+able to find a heuristic “plug-in” estimate to approximate the best <span class="math inline">\(h\)</span>.
+The following lemma shows how a variant of leave-one-out cross-validation
+can be used to estimate the optimal <span class="math inline">\(h\)</span> from data.</p>
+<div class="lemma">
+<p><span id="lem:unlabeled-div-13" class="lemma"><strong>Lemma 8.1  </strong></span>Let <span class="math inline">\(\hat h_h\)</span> be the kernel density estimate with bandwidth <span class="math inline">\(h\)</span>
+and let
+<span class="math display">\[\begin{equation*}
+  e(h)
+  := \int \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) dx - 2 \int \mathbb{E}\bigl( \hat f_h(x) \bigr) f(x) dx.
+\end{equation*}\]</span>
+Then the following statements hold.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>We have
+<span class="math inline">\(\mathrm{IMSE}\bigl( \hat f_h \bigr) = e(h) + \mathrm{const}\)</span>,
+where <span class="math inline">\(\mathrm{const}\)</span> stands for a term which does not depend on <span class="math inline">\(h\)</span>.</p></li>
+<li><p>Let <span class="math inline">\(f_h^{(i)}\)</span> be the kernel density estimate computed from the data
+with sample <span class="math inline">\(i\)</span> omitted.
+Then
+<span class="math display">\[\begin{equation*}
+  \mathrm{CV}(h) := \int \hat f_h(x)^2 dx - \frac{2}{n}\sum_{i=1}^n \hat f_h^{(i)}(x_i)
+\end{equation*}\]</span>
+is an (approximately) unbiased estimator for <span class="math inline">\(e(h)\)</span>.</p></li>
+</ol>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-14" class="proof"><em>Proof</em>. </span>For the first statement can be shown by expanding the square in the
+definition of the (I)MSE:
+<span class="math display">\[\begin{align*}
+  \mathrm{IMSE}\bigl( \hat f_h \bigr)
+  &amp;= \int_{-\infty}^\infty \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr) \,dx \\
+  &amp;= \int_{-\infty}^\infty \mathbb{E}\Bigl( \bigl( \hat f_h(x) - f(x) \bigr)^2 \Bigr) \,dx \\
+  &amp;= \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f_h(x)^2 - 2 \hat f(x) f(x)  + f(x)^2 \Bigr) \,dx \\
+  &amp;= \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f_h(x)^2 \Bigr) \,dx
+         - 2 \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f(x) f(x) \Bigr) \,dx \\
+      &amp;\hskip5cm
+         + \int_{-\infty}^\infty \mathbb{E}\Bigl( f(x)^2 \Bigr) \,dx \\
+  &amp;= \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f_h(x)^2 \Bigr) \,dx
+         - 2 \int_{-\infty}^\infty \mathbb{E}\bigl( \hat f(x) \bigr) f(x) \,dx \\
+      &amp;\hskip5cm
+         + \int_{-\infty}^\infty f(x)^2 \,dx,
+\end{align*}\]</span>
+where we used the fact that <span class="math inline">\(f(x)\)</span> is not random.
+Since the last term does not depend on <span class="math inline">\(h\)</span>, the first claim is proved.</p>
+<p>For the second statement we need to consider the kernel density estimates
+computed from random data <span class="math inline">\(X_1, \ldots, X_n \sim f\)</span>, i.i.d. We have to show
+that
+<span class="math display">\[\begin{equation*}
+  \mathbb{E}\bigl( \mathrm{CV}(h) \bigr)
+  = e(h)
+  = \int \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) dx - 2 \int \mathbb{E}\bigl( \hat f_h(x) \bigr) f(x) dx.
+\end{equation*}\]</span>
+For the first term in the definition of <span class="math inline">\(\mathrm{CV}\)</span> we get
+<span class="math display">\[\begin{equation*}
+  \mathbb{E}\Bigl( \int \hat f_h(x)^2 dx \Bigr)
+  = \int \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) dx,
+\end{equation*}\]</span>
+where we used Fubini’s theorem to exchange the expectation with the integral.
+For the second term we have
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n \hat f_h^{(i)}(X_i) \Bigr)
+  &amp;= \frac{1}{n} \sum_{i=1}^n \mathbb{E}\Bigl( \hat f_h^{(i)}(X_i) \Bigr) \\
+  &amp;= \mathbb{E}\Bigl( \hat f_h^{(1)}(X_1) \Bigr),
+\end{align*}\]</span>
+since the <span class="math inline">\(X_i\)</span> are independent and identically distributed.
+Since the estimator <span class="math inline">\(f_h^{(1)}\)</span> is computed from <span class="math inline">\(X_2, \ldots, X_n\)</span>,
+which are independent of <span class="math inline">\(X_1\)</span>, we can evaluate the expecation on
+the right-hand side by first computing <span class="math inline">\(\mathbb{E}\Bigl( \hat f_h^{(1)}(x) \Bigr)\)</span>
+as a function of <span class="math inline">\(x\)</span>, then using <span class="math inline">\(X_1\)</span> in place of <span class="math inline">\(x\)</span>, and computing
+the expecation over <span class="math inline">\(X_1\)</span> afterwards. This gives
+<span class="math display">\[\begin{align*}
+  \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n \hat f_h^{(i)}(X_i) \Bigr)
+  &amp;= \mathbb{E}\Bigl( \mathbb{E}\bigl( \hat f_h^{(1)}(X_1) \bigm| X_1 \bigr) \Bigr) \\
+  &amp;= \int \mathbb{E}\bigl( \hat f_h^{(1)}(x) \bigr) \, f(x) \, dx,
+\end{align*}\]</span>
+since <span class="math inline">\(X_1 \sim f\)</span>. Finally, since <span class="math inline">\(\hat f_h^{(1)}\)</span> and <span class="math inline">\(\hat f_h\)</span>
+only differ in the sample size, by using <span class="math inline">\(n-1\)</span> and <span class="math inline">\(n\)</span> samples respectively,
+we have
+<span class="math display">\[\begin{equation*}
+  \mathbb{E}\bigl( \hat f_h^{(1)}(x) \bigr)
+  \approx \mathbb{E}\bigl( \hat f_h(x) \bigr).
+\end{equation*}\]</span>
+Combining these equations completes the proof.</p>
+</div>
+<p>Using the result from the lemma we see that we can choose <span class="math inline">\(h\)</span>
+to minimise <span class="math inline">\(\mathrm{CV}(h)\)</span> in order to get a candidate for the
+bandwidth <span class="math inline">\(h\)</span>. This procedure is known as
+<strong>integrated squared error cross-validation</strong>.</p>
+<p>These two approaches differ slightly in the optimal <span class="math inline">\(h\)</span>, but the first one is
+easier to implement as there is no integration involved.</p>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>Cross-validation can be used to avoid overfitting the data when we choose <span class="math inline">\(h\)</span>.</li>
+<li>We have seen how to estimate <span class="math inline">\(h\)</span> for kernel-based methods,
+and <span class="math inline">\(k\)</span> for <span class="math inline">\(k\)</span>-NN regression estimates.</li>
+</ul>
 </div>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
+<a href="X07-nearest.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="X01-KDE.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

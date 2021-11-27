@@ -1304,8 +1304,8 @@ is indeed optimal amongst all kernels. Since the difference in error
 for the kernels listed abive is only a few percent, any of these kernels
 would be a reasonable choice.
 
-\hypertarget{bandwidth-selection}{%
-\subsection{Bandwidth Selection}\label{bandwidth-selection}}
+\hypertarget{bwsel}{%
+\subsection{Bandwidth Selection}\label{bwsel}}
 
 Our formulas for the optimal bandwidth contain the terms
 \(f(x)^2 |f''(x)|\) for fixed \(x\) and \(R(f'')\) for the integrated error.
@@ -1332,12 +1332,12 @@ and
       \exp\bigl( - (x-\mu)^2 / 2\sigma^2 \bigr)
 \end{equation*}
 Patiently integrating the square of this function gives
-\begin{align*}
+\begin{equation*}
   R(f'')
   = \int_{-\infty}^\infty f''(x)^2 \,dx
   = \cdots
   = \frac{3}{8\sigma^5\sqrt{\pi}}.
-\end{align*}
+\end{equation*}
 This can be used as a simple ``plug-in rule'' with \(\sigma\) estimated by the
 sample standard deviation.
 
@@ -2415,6 +2415,223 @@ The estimated mean curve looks reasonable.
         0 & \mbox{otherwise,}
       \end{cases}
   \end{equation*} this method coincides with the \(k\)-NN estimator.
+\end{itemize}
+
+\clearpage
+
+\hypertarget{X08-xval}{%
+\section{Cross-validation}\label{X08-xval}}
+
+In this section we will discuss methods for chosing the bandwidth~\(h\)
+for kernel-based methods, and the size \(k\) of the neighbourhood used
+in \(k\)-nearest neighbour regression. The methods we will use here
+are based on cross-validation.
+
+The idea of cross-validation is to measure goodness of fit by comparing each
+sample \(y_i\) to a fitted value \(\tilde y_i\), where the fitted values \(\tilde y_i\) are computed from a subset of the data which excludes \(x_i\). There are
+different ways to implement this idea:
+
+\begin{itemize}
+\item
+  In \textbf{leave-one-out cross-validation}, a separate model is fitted
+  for each \(i \in \{1, \ldots, n\}\), leaving out just the sample \((x_i, y_i)\)
+  for this model. This method can be computationally
+  expensive for large \(n\), since \(n\) models need to be fitted to the data.
+\item
+  In \textbf{\emph{k}-fold cross-validation}, the data is partitioned into
+  \(k\) subsamples of approximately equal size. Only \(k\) models are fitted,
+  each one leaving out the data from one subsample. Then for every \(i\)
+  there is exactly one model which does not use \((x_i, y_i)\), and
+  to compute the fitted value for \((x_i, y_i)\), we use this model.
+  Since fewer data are used to fit each model, this method gives less
+  accurate results than leave-one-out cross-validation.
+  For this method to work, it is important that the subsamples
+  are independent of each other.
+\end{itemize}
+
+The idea behind cross-validation is that we always compare \(y_i\) to
+a fitted value which was computed without using any information about
+the true value of \(y_i\). This way, a method cannot achive a misleadingly
+good fit by overfitting the data.
+
+\hypertarget{regression}{%
+\subsection{Regression}\label{regression}}
+
+In linear regression, we find the regression line by minimising
+the residual sum of squares. One could be tempted to try the same
+approach here and to find the ``best'' \(h\) by minimising
+\begin{equation*}
+  r(h)
+  := \sum_{i=1}^n \bigl( y_i - \hat m_h(x_i) \bigr)^2.
+\end{equation*}
+Unfortunately, this approach does not work: for \(h \downarrow 0\)
+we have \(\hat m_h(x_i) \to y_i\) and thus \(r(h) \to 0\). For this reason,
+minimising \(r(h)\) always finds \(h=0\) as the optimal value of~\(h\).
+To solve the problem we use leave-one-out cross validation and minimise
+\begin{equation*}
+  r_\mathrm{LOO}(h)
+  := \sum_{i=1}^n \bigl( y_i - \hat m^{(i)}_h(x_i) \bigr)^2
+\end{equation*}
+instead,
+where \(m^{(i)}\) is the kernel regression estimate computed without using
+sample~\(i\):
+\begin{equation*}
+  \hat m_h^{(i)}(x)
+  = \frac{\sum_{j \;\mid\; j\neq i} K_h(x - x_j)y_j}{\sum_{j \;\mid\; j\neq i}K_h(x - x_j)}
+\end{equation*}
+for the Nadaraya-Watson Estimator and similarly for local polynomial
+regression.
+
+A similar approach can be used to find the optimal \(k\) for
+a \(k\)-nearest neighbour estimate.
+
+\hypertarget{kernel-density-estimation-1}{%
+\subsection{Kernel Density Estimation}\label{kernel-density-estimation-1}}
+
+When using kernel density estimation in practice, we need to choose the
+bandwidth~\(h\). One idea for finding a good \(h\) is by using
+maximum likelihood estimation: We could try to
+choose \(h\) to maximize the likelihood
+\begin{equation*}
+  L(h;x_1, \ldots, x_n)
+  = \prod_{i=1}^n \hat f_h(x_i),
+\end{equation*}
+but this gives the solution \(h=0\). So, instead we maximize the
+leave-one-out estimate of the log likelihood, which is given by
+\begin{equation*}
+  L_\mathrm{LOO}(h;x_1, \ldots, x_n)
+  = \prod_{i=1}^n \hat f^{(i)}_h(x_i).
+\end{equation*}
+This technique is known as \textbf{maximum likelihood cross-validation}.
+When this method is used in practice, it is advantageous to minimise
+\begin{align*}
+  \mathcal{L}_\mathrm{LOO}(h;x_1, \ldots, x_n)
+  &:= \log\Bigl( L_\mathrm{LOO}(h;x_1, \ldots, x_n) \Bigr) \\
+  &= \log\Bigl( \prod_{i=1}^n \hat f^{(i)}_h(x_i) \Bigr) \\
+  &= \sum_{i=1}^n \log\bigl( \hat f^{(i)}_h(x_i) \bigr)
+\end{align*}
+instead of \(L_\mathrm{LOO}\), since the product in the definition
+of the likelihood can be strongly affected by numerical errors.
+
+An alternative method to find a good \(h\) considers the
+integrated mean squared error (IMSE) as a measure for the error.
+This is the same quantity we also used to derive our theoretical results:
+\begin{equation*}
+  \mathrm{IMSE}\bigl( \hat f_h \bigr)
+  = \int_{-\infty}^\infty \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr) \,dx.
+\end{equation*}
+Unfortunately, the \(h\) which minimises this expression depends
+on properties of \(h\) and in section~\ref{bwsel} we were only
+able to find a heuristic ``plug-in'' estimate to approximate the best~\(h\).
+The following lemma shows how a variant of leave-one-out cross-validation
+can be used to estimate the optimal~\(h\) from data.
+
+\begin{lemma}
+
+Let \(\hat h_h\) be the kernel density estimate with bandwidth~\(h\)
+and let
+\begin{equation*}
+  e(h)
+  := \int \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) dx - 2 \int \mathbb{E}\bigl( \hat f_h(x) \bigr) f(x) dx.
+\end{equation*}
+Then the following statements hold.
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\item
+  We have
+  \(\mathrm{IMSE}\bigl( \hat f_h \bigr) = e(h) + \mathrm{const}\),
+  where \(\mathrm{const}\) stands for a term which does not depend on \(h\).
+\item
+  Let \(f_h^{(i)}\) be the kernel density estimate computed from the data
+  with sample \(i\) omitted.
+  Then
+  \begin{equation*}
+    \mathrm{CV}(h) := \int \hat f_h(x)^2 dx - \frac{2}{n}\sum_{i=1}^n \hat f_h^{(i)}(x_i)
+  \end{equation*}
+  is an (approximately) unbiased estimator for~\(e(h)\).
+\end{enumerate}
+
+\end{lemma}
+
+\begin{proof}
+For the first statement can be shown by expanding the square in the
+definition of the (I)MSE:
+\begin{align*}
+  \mathrm{IMSE}\bigl( \hat f_h \bigr)
+  &= \int_{-\infty}^\infty \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr) \,dx \\
+  &= \int_{-\infty}^\infty \mathbb{E}\Bigl( \bigl( \hat f_h(x) - f(x) \bigr)^2 \Bigr) \,dx \\
+  &= \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f_h(x)^2 - 2 \hat f(x) f(x)  + f(x)^2 \Bigr) \,dx \\
+  &= \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f_h(x)^2 \Bigr) \,dx
+         - 2 \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f(x) f(x) \Bigr) \,dx \\
+      &\hskip5cm
+         + \int_{-\infty}^\infty \mathbb{E}\Bigl( f(x)^2 \Bigr) \,dx \\
+  &= \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f_h(x)^2 \Bigr) \,dx
+         - 2 \int_{-\infty}^\infty \mathbb{E}\bigl( \hat f(x) \bigr) f(x) \,dx \\
+      &\hskip5cm
+         + \int_{-\infty}^\infty f(x)^2 \,dx,
+\end{align*}
+where we used the fact that \(f(x)\) is not random.
+Since the last term does not depend on \(h\), the first claim is proved.
+
+For the second statement we need to consider the kernel density estimates
+computed from random data \(X_1, \ldots, X_n \sim f\), i.i.d. We have to show
+that
+\begin{equation*}
+  \mathbb{E}\bigl( \mathrm{CV}(h) \bigr)
+  = e(h)
+  = \int \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) dx - 2 \int \mathbb{E}\bigl( \hat f_h(x) \bigr) f(x) dx.
+\end{equation*}
+For the first term in the definition of \(\mathrm{CV}\) we get
+\begin{equation*}
+  \mathbb{E}\Bigl( \int \hat f_h(x)^2 dx \Bigr)
+  = \int \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) dx,
+\end{equation*}
+where we used Fubini's theorem to exchange the expectation with the integral.
+For the second term we have
+\begin{align*}
+  \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n \hat f_h^{(i)}(X_i) \Bigr)
+  &= \frac{1}{n} \sum_{i=1}^n \mathbb{E}\Bigl( \hat f_h^{(i)}(X_i) \Bigr) \\
+  &= \mathbb{E}\Bigl( \hat f_h^{(1)}(X_1) \Bigr),
+\end{align*}
+since the \(X_i\) are independent and identically distributed.
+Since the estimator \(f_h^{(1)}\) is computed from \(X_2, \ldots, X_n\),
+which are independent of \(X_1\), we can evaluate the expecation on
+the right-hand side by first computing \(\mathbb{E}\Bigl( \hat f_h^{(1)}(x) \Bigr)\)
+as a function of \(x\), then using \(X_1\) in place of \(x\), and computing
+the expecation over \(X_1\) afterwards. This gives
+\begin{align*}
+  \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n \hat f_h^{(i)}(X_i) \Bigr)
+  &= \mathbb{E}\Bigl( \mathbb{E}\bigl( \hat f_h^{(1)}(X_1) \bigm| X_1 \bigr) \Bigr) \\
+  &= \int \mathbb{E}\bigl( \hat f_h^{(1)}(x) \bigr) \, f(x) \, dx,
+\end{align*}
+since \(X_1 \sim f\). Finally, since \(\hat f_h^{(1)}\) and \(\hat f_h\)
+only differ in the sample size, by using \(n-1\) and \(n\) samples respectively,
+we have
+\begin{equation*}
+  \mathbb{E}\bigl( \hat f_h^{(1)}(x) \bigr)
+  \approx \mathbb{E}\bigl( \hat f_h(x) \bigr).
+\end{equation*}
+Combining these equations completes the proof.
+\end{proof}
+
+Using the result from the lemma we see that we can choose \(h\)
+to minimise \(\mathrm{CV}(h)\) in order to get a candidate for the
+bandwidth \(h\). This procedure is known as
+\textbf{integrated squared error cross-validation}.
+
+These two approaches differ slightly in the optimal \(h\), but the first one is
+easier to implement as there is no integration involved.
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  Cross-validation can be used to avoid overfitting the data when we choose~\(h\).
+\item
+  We have seen how to estimate \(h\) for kernel-based methods,
+  and \(k\) for \(k\)-NN regression estimates.
 \end{itemize}
 
 \clearpage
