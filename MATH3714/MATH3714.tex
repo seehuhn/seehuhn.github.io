@@ -7511,8 +7511,8 @@ estimates \(\hat\beta_j\). Instead of giving a proof of this fact,
 we illustrate the effect using a numerical example.
 
 \begin{example}
-Here we consider the \texttt{stackloss} data set with an added column of
-noise. We have see that
+Here we consider the \texttt{stackloss} dataset with an added column of
+noise. We have seen that
 \begin{equation*}
   \mathop{\mathrm{Var}}( \hat\beta_j )
   = \sigma^2 \bigl( X^\top X \bigr)^{-1}_{jj}.
@@ -7807,7 +7807,7 @@ in a regression model.
 You should attempt all these questions and write up your solutions in advance
 of your workshop in week~9 where the answers will be discussed.
 
-\textbf{13} Consider the data set \texttt{pressure}, built into~R, which
+\textbf{13} Consider the dataset \texttt{pressure}, built into~R, which
 describes the vapour pressure~\(P\) of mercury as a function of
 temperature~\(T\).
 
@@ -7858,7 +7858,7 @@ temperature~\(T_0\).
 \setcounter{enumi}{2}
 \tightlist
 \item
-  What is a good value of \(T_0\) for this data set?
+  What is a good value of \(T_0\) for this dataset?
 \end{enumerate}
 
 \begin{myanswers}
@@ -9234,6 +9234,486 @@ The data were collected from the following sources.
 \item
   \url{https://www.who.int/data/gho/data/indicators/indicator-details/GHO/prevalence-of-hiv-among-adults-aged-15-to-49-(-)}
   \texttt{country}, \texttt{year}, \texttt{hiv}
+\end{itemize}
+
+\clearpage
+
+\hypertarget{S16-examples}{%
+\section{Examples}\label{S16-examples}}
+
+In this section we illustrate the results of the previous sections
+with the help of an example.
+
+\hypertarget{interactions-example}{%
+\subsection{Use of Interaction Terms in Modelling}\label{interactions-example}}
+
+\begin{example}
+Researchers in Food Science studied how big people's mouths tend to be.
+It transpires that mouth volume is related to more easily measured quantities
+like height and weight. Here we have data which gives
+the mouth volume (in cubic centimetres), age, sex (female = 0, male = 1),
+height (in metres) and weight (in kilos) for 61 volunteers.
+The first few samples are as shown:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2021/MATH3714/mouth{-}volume.txt}
+\NormalTok{dd }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}\StringTok{"data/mouth{-}volume.txt"}\NormalTok{, }\AttributeTok{header =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(dd)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#   Mouth\_Volume Age Sex Height  Weight}
+\NormalTok{\# 1       56.659  29   1  1.730  70.455}
+\NormalTok{\# 2       47.938  24   0  1.632  60.000}
+\NormalTok{\# 3       60.995  45   0  1.727 102.273}
+\NormalTok{\# 4       68.917  23   0  1.641  78.636}
+\NormalTok{\# 5       60.956  27   0  1.600  57.273}
+\NormalTok{\# 6       76.204  23   1  1.746  66.818}
+\end{Highlighting}
+\end{Shaded}
+
+Normally it is important to check that categorical variables are correctly
+recognised as factors, when importing data into R. As an exception,
+the fact that \texttt{sex} is stored as an integer variable (instead of a factor)
+here does not matter, since the default factor coding would be identical
+to the coding in the present data.
+
+Our aim is to fit a model which describes mouth volume in terms of the
+other variables. We start by fitting a basic model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{summary}\NormalTok{(m1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} ., data = dd)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}33.242 {-}10.721  {-}3.223   8.800  43.218 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#             Estimate Std. Error t value Pr(\textgreater{}|t|)  }
+\NormalTok{\# (Intercept)   0.9882    45.2736   0.022   0.9827  }
+\NormalTok{\# Age           0.3617     0.2607   1.387   0.1709  }
+\NormalTok{\# Sex           5.5030     5.9385   0.927   0.3581  }
+\NormalTok{\# Height       15.8980    29.1952   0.545   0.5882  }
+\NormalTok{\# Weight        0.2640     0.1400   1.885   0.0646 .}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 15.04 on 56 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.2588,  Adjusted R{-}squared:  0.2059 }
+\NormalTok{\# F{-}statistic: 4.888 on 4 and 56 DF,  p{-}value: 0.001882}
+\end{Highlighting}
+\end{Shaded}
+
+Model fit seems poor, so we try to include all pairwise interaction
+terms:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{summary}\NormalTok{(m2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} .\^{}2, data = dd)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}35.528  {-}8.168  {-}1.995   6.704  44.136 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#                 Estimate Std. Error t value Pr(\textgreater{}|t|)}
+\NormalTok{\# (Intercept)    2.875e+02  2.337e+02   1.230    0.225}
+\NormalTok{\# Age           {-}8.370e+00  6.352e+00  {-}1.318    0.194}
+\NormalTok{\# Sex           {-}9.318e+01  1.325e+02  {-}0.703    0.485}
+\NormalTok{\# Height        {-}1.540e+02  1.505e+02  {-}1.023    0.311}
+\NormalTok{\# Weight         5.889e{-}01  2.713e+00   0.217    0.829}
+\NormalTok{\# Age:Sex       {-}9.023e{-}01  1.035e+00  {-}0.872    0.388}
+\NormalTok{\# Age:Height     5.374e+00  4.062e+00   1.323    0.192}
+\NormalTok{\# Age:Weight    {-}1.754e{-}03  2.027e{-}02  {-}0.087    0.931}
+\NormalTok{\# Sex:Height     5.989e+01  7.536e+01   0.795    0.431}
+\NormalTok{\# Sex:Weight     3.110e{-}01  4.177e{-}01   0.744    0.460}
+\NormalTok{\# Height:Weight {-}2.680e{-}01  1.755e+00  {-}0.153    0.879}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 15.22 on 50 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.3219,  Adjusted R{-}squared:  0.1863 }
+\NormalTok{\# F{-}statistic: 2.374 on 10 and 50 DF,  p{-}value: 0.0218}
+\end{Highlighting}
+\end{Shaded}
+
+None of the interaction terms look useful when used in combination.
+We try to select a subset of variables to get a better fit:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(leaps)}
+\NormalTok{r3 }\OtherTok{\textless{}{-}} \FunctionTok{regsubsets}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{data =}\NormalTok{ dd, }\AttributeTok{nvmax =} \DecValTok{10}\NormalTok{)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(r3)}
+\NormalTok{s}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# Subset selection object}
+\NormalTok{\# Call: regsubsets.formula(Mouth\_Volume \textasciitilde{} .\^{}2, data = dd, nvmax = 10)}
+\NormalTok{\# 10 Variables  (and intercept)}
+\NormalTok{\#               Forced in Forced out}
+\NormalTok{\# Age               FALSE      FALSE}
+\NormalTok{\# Sex               FALSE      FALSE}
+\NormalTok{\# Height            FALSE      FALSE}
+\NormalTok{\# Weight            FALSE      FALSE}
+\NormalTok{\# Age:Sex           FALSE      FALSE}
+\NormalTok{\# Age:Height        FALSE      FALSE}
+\NormalTok{\# Age:Weight        FALSE      FALSE}
+\NormalTok{\# Sex:Height        FALSE      FALSE}
+\NormalTok{\# Sex:Weight        FALSE      FALSE}
+\NormalTok{\# Height:Weight     FALSE      FALSE}
+\NormalTok{\# 1 subsets of each size up to 10}
+\NormalTok{\# Selection Algorithm: exhaustive}
+\NormalTok{\#           Age Sex Height Weight Age:Sex Age:Height Age:Weight Sex:Height}
+\NormalTok{\# 1  ( 1 )  " " " " " "    " "    " "     " "        " "        " "       }
+\NormalTok{\# 2  ( 1 )  " " " " " "    " "    " "     " "        "*"        " "       }
+\NormalTok{\# 3  ( 1 )  " " "*" " "    " "    " "     " "        "*"        "*"       }
+\NormalTok{\# 4  ( 1 )  " " "*" " "    " "    " "     " "        "*"        "*"       }
+\NormalTok{\# 5  ( 1 )  "*" " " "*"    " "    "*"     "*"        " "        " "       }
+\NormalTok{\# 6  ( 1 )  "*" " " "*"    " "    "*"     "*"        " "        "*"       }
+\NormalTok{\# 7  ( 1 )  "*" "*" "*"    " "    "*"     "*"        " "        "*"       }
+\NormalTok{\# 8  ( 1 )  "*" "*" "*"    "*"    "*"     "*"        " "        "*"       }
+\NormalTok{\# 9  ( 1 )  "*" "*" "*"    "*"    "*"     "*"        " "        "*"       }
+\NormalTok{\# 10  ( 1 ) "*" "*" "*"    "*"    "*"     "*"        "*"        "*"       }
+\NormalTok{\#           Sex:Weight Height:Weight}
+\NormalTok{\# 1  ( 1 )  " "        "*"          }
+\NormalTok{\# 2  ( 1 )  "*"        " "          }
+\NormalTok{\# 3  ( 1 )  " "        " "          }
+\NormalTok{\# 4  ( 1 )  "*"        " "          }
+\NormalTok{\# 5  ( 1 )  "*"        " "          }
+\NormalTok{\# 6  ( 1 )  "*"        " "          }
+\NormalTok{\# 7  ( 1 )  "*"        " "          }
+\NormalTok{\# 8  ( 1 )  "*"        " "          }
+\NormalTok{\# 9  ( 1 )  "*"        "*"          }
+\NormalTok{\# 10  ( 1 ) "*"        "*"}
+\end{Highlighting}
+\end{Shaded}
+
+The table shows the optimal model for every number of variables,
+for \(p\) ranging from \(1\) to~\(10\). To choose the number of variables
+we can use the adjusted \(R^2\)-value:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s}\SpecialCharTok{$}\NormalTok{which[}\FunctionTok{which.max}\NormalTok{(s}\SpecialCharTok{$}\NormalTok{adjr2),]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#   (Intercept)           Age           Sex        Height        Weight }
+\NormalTok{\#          TRUE          TRUE         FALSE          TRUE         FALSE }
+\NormalTok{\#       Age:Sex    Age:Height    Age:Weight    Sex:Height    Sex:Weight }
+\NormalTok{\#          TRUE          TRUE         FALSE         FALSE          TRUE }
+\NormalTok{\# Height:Weight }
+\NormalTok{\#         FALSE}
+\end{Highlighting}
+\end{Shaded}
+
+The optimal model consists of the five variables listed. For further
+examination, we fit the corresponding model using \texttt{lm()}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume}
+         \SpecialCharTok{\textasciitilde{}}\NormalTok{ Age }\SpecialCharTok{+}\NormalTok{ Height }\SpecialCharTok{+}\NormalTok{ Age}\SpecialCharTok{:}\NormalTok{Sex }\SpecialCharTok{+}\NormalTok{ Age}\SpecialCharTok{:}\NormalTok{Height }\SpecialCharTok{+}\NormalTok{ Sex}\SpecialCharTok{:}\NormalTok{Weight,}
+         \AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{summary}\NormalTok{(m3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} Age + Height + Age:Sex + Age:Height + }
+\NormalTok{\#     Sex:Weight, data = dd)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}36.590  {-}9.577  {-}1.545   7.728  42.779 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)  }
+\NormalTok{\# (Intercept)  265.6236   122.3362   2.171   0.0342 *}
+\NormalTok{\# Age           {-}8.4905     4.0559  {-}2.093   0.0409 *}
+\NormalTok{\# Height      {-}134.0835    72.8589  {-}1.840   0.0711 .}
+\NormalTok{\# Age:Sex       {-}0.8633     0.4944  {-}1.746   0.0864 .}
+\NormalTok{\# Age:Height     5.3644     2.4047   2.231   0.0298 *}
+\NormalTok{\# Sex:Weight     0.4059     0.1659   2.446   0.0177 *}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 14.65 on 55 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.3096,  Adjusted R{-}squared:  0.2468 }
+\NormalTok{\# F{-}statistic: 4.932 on 5 and 55 DF,  p{-}value: 0.0008437}
+\end{Highlighting}
+\end{Shaded}
+
+This looks much better: now most variables are significantly different from
+zero and the adjusted \(R^2\) value has (slightly) improved. Nevertheless,
+the structure of the model seems hard to explain and the model seems
+difficult to interpret. For comparison, we consider the second-best
+model, with \(p=2\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m4 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Age}\SpecialCharTok{:}\NormalTok{Weight }\SpecialCharTok{+}\NormalTok{ Sex}\SpecialCharTok{:}\NormalTok{Weight, }\AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{summary}\NormalTok{(m4)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} Age:Weight + Sex:Weight, data = dd)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}34.161 {-}10.206  {-}3.738   9.087  43.747 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept) 43.678187   4.788206   9.122 8.35e{-}13 ***}
+\NormalTok{\# Age:Weight   0.005554   0.002372   2.342   0.0226 *  }
+\NormalTok{\# Weight:Sex   0.127360   0.048640   2.618   0.0113 *  }
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 14.72 on 58 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.2651,  Adjusted R{-}squared:  0.2398 }
+\NormalTok{\# F{-}statistic: 10.46 on 2 and 58 DF,  p{-}value: 0.000132}
+\end{Highlighting}
+\end{Shaded}
+
+The adjusted \(R^2\)-value of this model is only slightly reduced,
+and all regression coefficients are significantly
+different from zero.
+
+\begin{equation*}
+  \textrm{mouth volume}
+  = 43.68
+    + \begin{cases}
+      0.0056 \, \mathrm{age} \times \mathrm{weight}
+          & \mbox{for females} \\
+      (0.0056 \, \mathrm{age} + 0.1274) \, \mathrm{weight}
+          & \mbox{for males.}
+  \end{cases}
+\end{equation*}
+
+This model is still not trivial to interpret, but it does show
+that mouth volume increases with weight and age, and that the
+dependency on weight is stronger for males.
+\end{example}
+
+\hypertarget{codings}{%
+\subsection{Alternative Factor Codings}\label{codings}}
+
+The above coding of factors using indicator variables is the default procedure
+in R. There are other choices of coding. It transpires that any mapping to
+vectors which (together with the intercept, if present) span a \(k\) dimensional
+space, will work for a factor with \(k\) levels. The choice of coding will not
+affect fitted values and the goodness of fit, but it will affect the estimates
+\(\hat\beta\), so the coding needs to be known before any interpretation of the
+parameters.
+
+Differnt choices of factor codings are built into R. Here we illustrate some
+of these choices using a factor which represents week days:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{days }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"Mon"}\NormalTok{, }\StringTok{"Tue"}\NormalTok{, }\StringTok{"Wed"}\NormalTok{, }\StringTok{"Thu"}\NormalTok{, }\StringTok{"Fri"}\NormalTok{, }\StringTok{"Sat"}\NormalTok{, }\StringTok{"Sun"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  \textbf{Indicator variables.} This is the default coding:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{contr.treatment}\NormalTok{(days)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#     Tue Wed Thu Fri Sat Sun}
+\NormalTok{\# Mon   0   0   0   0   0   0}
+\NormalTok{\# Tue   1   0   0   0   0   0}
+\NormalTok{\# Wed   0   1   0   0   0   0}
+\NormalTok{\# Thu   0   0   1   0   0   0}
+\NormalTok{\# Fri   0   0   0   1   0   0}
+\NormalTok{\# Sat   0   0   0   0   1   0}
+\NormalTok{\# Sun   0   0   0   0   0   1}
+\end{Highlighting}
+\end{Shaded}
+
+  The seven rows correspond to the weekdays, the six columns show how each
+  weekday is encoded. The regression coefficients can be interpreted as the
+  change of intercept relative to the reference level (in this case Monday).
+\item
+  \textbf{Deviation coding} uses ``sum to zero'' contrasts:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{contr.sum}\NormalTok{(days)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#     [,1] [,2] [,3] [,4] [,5] [,6]}
+\NormalTok{\# Mon    1    0    0    0    0    0}
+\NormalTok{\# Tue    0    1    0    0    0    0}
+\NormalTok{\# Wed    0    0    1    0    0    0}
+\NormalTok{\# Thu    0    0    0    1    0    0}
+\NormalTok{\# Fri    0    0    0    0    1    0}
+\NormalTok{\# Sat    0    0    0    0    0    1}
+\NormalTok{\# Sun   {-}1   {-}1   {-}1   {-}1   {-}1   {-}1}
+\end{Highlighting}
+\end{Shaded}
+
+  This constrasts each level with the final level. For example,
+  \(\hat\beta_1\) is the amount the intercept is increased for Mondays
+  and decreased for Sundays. This coding can sometimes reduce collinearity
+  in the design matrix.
+\item
+  \textbf{Helmert coding} contrasts the second level with the first, the third with
+  the average of the first two, and so on:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{contr.helmert}\NormalTok{(days)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#     [,1] [,2] [,3] [,4] [,5] [,6]}
+\NormalTok{\# Mon   {-}1   {-}1   {-}1   {-}1   {-}1   {-}1}
+\NormalTok{\# Tue    1   {-}1   {-}1   {-}1   {-}1   {-}1}
+\NormalTok{\# Wed    0    2   {-}1   {-}1   {-}1   {-}1}
+\NormalTok{\# Thu    0    0    3   {-}1   {-}1   {-}1}
+\NormalTok{\# Fri    0    0    0    4   {-}1   {-}1}
+\NormalTok{\# Sat    0    0    0    0    5   {-}1}
+\NormalTok{\# Sun    0    0    0    0    0    6}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+We can set the coding for each factor separately, using the
+optional \texttt{contrasts.arg} argument to \texttt{lm()} and \texttt{model.matrix()}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20211127}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{20}
+
+\NormalTok{x1 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n)}
+
+\NormalTok{day.names }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Mon"}\NormalTok{, }\StringTok{"Tue"}\NormalTok{, }\StringTok{"Wed"}\NormalTok{, }\StringTok{"Thu"}\NormalTok{, }\StringTok{"Fri"}\NormalTok{, }\StringTok{"Sat"}\NormalTok{, }\StringTok{"Sun"}\NormalTok{)}
+\NormalTok{x2 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(day.names, }\AttributeTok{size =}\NormalTok{ n, }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{)}
+\CommentTok{\# Explicitly specify the levels, in case a day is missing}
+\CommentTok{\# from the sample and to fix the order of days:}
+\NormalTok{x2 }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(x2, }\AttributeTok{levels =}\NormalTok{ day.names)}
+
+\NormalTok{dd }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(x1, x2)}
+
+\NormalTok{X1 }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{head}\NormalTok{(X1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#   (Intercept)         x1 x2Tue x2Wed x2Thu x2Fri x2Sat x2Sun}
+\NormalTok{\# 1           1 0.41745367     1     0     0     0     0     0}
+\NormalTok{\# 2           1 0.88671893     0     0     1     0     0     0}
+\NormalTok{\# 3           1 0.41924327     0     0     1     0     0     0}
+\NormalTok{\# 4           1 0.31986826     0     0     0     0     0     1}
+\NormalTok{\# 5           1 0.27863787     0     0     0     0     0     0}
+\NormalTok{\# 6           1 0.03346104     0     1     0     0     0     0}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kappa}\NormalTok{(X1, }\AttributeTok{exact =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# [1] 10.37243}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X2 }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ dd,}
+                   \AttributeTok{contrasts.arg =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x2 =}\NormalTok{ contr.sum))}
+\FunctionTok{head}\NormalTok{(X2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#   (Intercept)         x1 x21 x22 x23 x24 x25 x26}
+\NormalTok{\# 1           1 0.41745367   0   1   0   0   0   0}
+\NormalTok{\# 2           1 0.88671893   0   0   0   1   0   0}
+\NormalTok{\# 3           1 0.41924327   0   0   0   1   0   0}
+\NormalTok{\# 4           1 0.31986826  {-}1  {-}1  {-}1  {-}1  {-}1  {-}1}
+\NormalTok{\# 5           1 0.27863787   1   0   0   0   0   0}
+\NormalTok{\# 6           1 0.03346104   0   0   1   0   0   0}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kappa}\NormalTok{(X2, }\AttributeTok{exact =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# [1] 6.677298}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We have seen how interaction terms can be used to improve model
+  fit.
+\item
+  We have seen how different factor codings can be used in R.
 \end{itemize}
 
 \clearpage
