@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 17 Robust Regression | MATH3714 Linear Regression and Robustness</title>
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 17 Robust Regression | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 17 Robust Regression | MATH3714 Linear Regression and Robustness" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="S16-examples.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH3714 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
+<ul>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#teams"><i class="fa fa-check"></i>Discussion Board</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
+<li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
+<li class="chapter" data-level="2.2" data-path="S02-multiple.html"><a href="S02-multiple.html#the-normal-equations"><i class="fa fa-check"></i><b>2.2</b> The Normal Equations</a></li>
+<li class="chapter" data-level="2.3" data-path="S02-multiple.html"><a href="S02-multiple.html#fitted-values"><i class="fa fa-check"></i><b>2.3</b> Fitted Values</a></li>
+<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.4</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html"><i class="fa fa-check"></i>Interlude: Linear Regression in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-fitting"><i class="fa fa-check"></i>Fitting a Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-model"><i class="fa fa-check"></i>Understanding the Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-predict"><i class="fa fa-check"></i>Making Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
+<li class="chapter" data-level="3" data-path="S03-cov.html"><a href="S03-cov.html"><i class="fa fa-check"></i><b>3</b> Random Vectors and Covariance</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="S03-cov.html"><a href="S03-cov.html#expectation"><i class="fa fa-check"></i><b>3.1</b> Expectation</a></li>
+<li class="chapter" data-level="3.2" data-path="S03-cov.html"><a href="S03-cov.html#sec:covariance"><i class="fa fa-check"></i><b>3.2</b> Covariance Matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="S03-cov.html"><a href="S03-cov.html#the-multivariate-normal-distribution"><i class="fa fa-check"></i><b>3.3</b> The Multivariate Normal Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="S04-model.html"><a href="S04-model.html"><i class="fa fa-check"></i><b>4</b> Properties of the Least Squares Estimate</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="S04-model.html"><a href="S04-model.html#mean-and-covariance"><i class="fa fa-check"></i><b>4.1</b> Mean and Covariance</a></li>
+<li class="chapter" data-level="4.2" data-path="S04-model.html"><a href="S04-model.html#hat-matrix"><i class="fa fa-check"></i><b>4.2</b> Properties of the Hat Matrix</a></li>
+<li class="chapter" data-level="4.3" data-path="S04-model.html"><a href="S04-model.html#Cochran"><i class="fa fa-check"></i><b>4.3</b> Cochran’s theorem</a></li>
+<li class="chapter" data-level="4.4" data-path="S04-model.html"><a href="S04-model.html#var-est-bias"><i class="fa fa-check"></i><b>4.4</b> Estimating the Error Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="S05-single.html"><a href="S05-single.html"><i class="fa fa-check"></i><b>5</b> Uncertainty for Individual Regression Coefficients</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="S05-single.html"><a href="S05-single.html#measuring-the-estimation-error"><i class="fa fa-check"></i><b>5.1</b> Measuring the Estimation Error</a></li>
+<li class="chapter" data-level="5.2" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals"><i class="fa fa-check"></i><b>5.2</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="5.3" data-path="S05-single.html"><a href="S05-single.html#hypthesis-tests"><i class="fa fa-check"></i><b>5.3</b> Hypthesis Tests</a></li>
+<li class="chapter" data-level="5.4" data-path="S05-single.html"><a href="S05-single.html#r-experiments"><i class="fa fa-check"></i><b>5.4</b> R Experiments</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="S05-single.html"><a href="S05-single.html#fitting-the-model"><i class="fa fa-check"></i><b>5.4.1</b> Fitting the model</a></li>
+<li class="chapter" data-level="5.4.2" data-path="S05-single.html"><a href="S05-single.html#estimating-the-variance-of-the-error"><i class="fa fa-check"></i><b>5.4.2</b> Estimating the Variance of the Error</a></li>
+<li class="chapter" data-level="5.4.3" data-path="S05-single.html"><a href="S05-single.html#estimating-the-standard-errors"><i class="fa fa-check"></i><b>5.4.3</b> Estimating the Standard Errors</a></li>
+<li class="chapter" data-level="5.4.4" data-path="S05-single.html"><a href="S05-single.html#hypothesis-tests"><i class="fa fa-check"></i><b>5.4.4</b> Hypothesis tests</a></li>
+<li class="chapter" data-level="5.4.5" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals-1"><i class="fa fa-check"></i><b>5.4.5</b> Confidence Intervals</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html"><i class="fa fa-check"></i><b>6</b> Estimating Coefficients Simultaneously</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-dist"><i class="fa fa-check"></i><b>6.1</b> Linear Combinations of Coefficients</a></li>
+<li class="chapter" data-level="6.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-CI"><i class="fa fa-check"></i><b>6.2</b> Confidence Regions</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#result"><i class="fa fa-check"></i><b>6.2.1</b> Result</a></li>
+<li class="chapter" data-level="6.2.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#numerical-experiments"><i class="fa fa-check"></i><b>6.2.2</b> Numerical Experiments</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-test"><i class="fa fa-check"></i><b>6.3</b> Hypothesis Tests</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html"><i class="fa fa-check"></i>Interlude: Loading Data into R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-csv-files"><i class="fa fa-check"></i>Importing CSV Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-microsoft-excel-files"><i class="fa fa-check"></i>Importing Microsoft Excel Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#checking-the-imported-data"><i class="fa fa-check"></i>Checking the Imported Data</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#common-problems"><i class="fa fa-check"></i>Common Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="S07-examples.html"><a href="S07-examples.html"><i class="fa fa-check"></i><b>7</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="S07-examples.html"><a href="S07-examples.html#simple-confidence-interval"><i class="fa fa-check"></i><b>7.1</b> Simple Confidence Interval</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles"><i class="fa fa-check"></i><b>7.1.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.1.2" data-path="S07-examples.html"><a href="S07-examples.html#from-the-lm-output"><i class="fa fa-check"></i><b>7.1.2</b> From the <code>lm()</code> Output</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="S07-examples.html"><a href="S07-examples.html#confidence-intervals-for-the-mean"><i class="fa fa-check"></i><b>7.2</b> Confidence Intervals for the Mean</a></li>
+<li class="chapter" data-level="7.3" data-path="S07-examples.html"><a href="S07-examples.html#testing-a-single-coefficient"><i class="fa fa-check"></i><b>7.3</b> Testing a Single Coefficient</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-1"><i class="fa fa-check"></i><b>7.3.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.3.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-i"><i class="fa fa-check"></i><b>7.3.2</b> Using the <code>lm()</code> Output, I</a></li>
+<li class="chapter" data-level="7.3.3" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-ii"><i class="fa fa-check"></i><b>7.3.3</b> Using the <code>lm()</code> Output, II</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="S07-examples.html"><a href="S07-examples.html#testing-multiple-coefficents"><i class="fa fa-check"></i><b>7.4</b> Testing Multiple Coefficents</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-2"><i class="fa fa-check"></i><b>7.4.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.4.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output"><i class="fa fa-check"></i><b>7.4.2</b> Using the <code>lm()</code> output</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P02.html"><a href="P02.html"><i class="fa fa-check"></i>Problem Sheet 2</a></li>
+<li class="chapter" data-level="8" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html"><i class="fa fa-check"></i><b>8</b> Regression Diagnostics</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#plots"><i class="fa fa-check"></i><b>8.1</b> Diagnostic Plots</a></li>
+<li class="chapter" data-level="8.2" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#R-squared"><i class="fa fa-check"></i><b>8.2</b> The Coefficient of Multiple Determination</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="S09-influence.html"><a href="S09-influence.html"><i class="fa fa-check"></i><b>9</b> The Influence of Observations</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#influence"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="S10-multicoll.html"><a href="S10-multicoll.html"><i class="fa fa-check"></i><b>10</b> Multicollinearity</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="S10-multicoll.html"><a href="S10-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>10.1</b> Consequences of Multicollinearity</a></li>
+<li class="chapter" data-level="10.2" data-path="S10-multicoll.html"><a href="S10-multicoll.html#detecting-multicollinearity"><i class="fa fa-check"></i><b>10.2</b> Detecting Multicollinearity</a></li>
+<li class="chapter" data-level="10.3" data-path="S10-multicoll.html"><a href="S10-multicoll.html#mitigations"><i class="fa fa-check"></i><b>10.3</b> Mitigations</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
+<li class="chapter" data-level="11" data-path="S11-improving.html"><a href="S11-improving.html"><i class="fa fa-check"></i><b>11</b> Improving the Model Fit</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="S11-improving.html"><a href="S11-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>11.1</b> Linearising the Mean</a></li>
+<li class="chapter" data-level="11.2" data-path="S11-improving.html"><a href="S11-improving.html#stabilising-the-variance"><i class="fa fa-check"></i><b>11.2</b> Stabilising the Variance</a></li>
+<li class="chapter" data-level="11.3" data-path="S11-improving.html"><a href="S11-improving.html#power-transform"><i class="fa fa-check"></i><b>11.3</b> The Power Transform</a></li>
+<li class="chapter" data-level="11.4" data-path="S11-improving.html"><a href="S11-improving.html#orthogonal-inputs"><i class="fa fa-check"></i><b>11.4</b> Orthogonal Inputs</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="S12-ridge.html"><a href="S12-ridge.html"><i class="fa fa-check"></i><b>12</b> Ridge Regression</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="S12-ridge.html"><a href="S12-ridge.html#definition-the-estimator"><i class="fa fa-check"></i><b>12.1</b> Definition the Estimator</a></li>
+<li class="chapter" data-level="12.2" data-path="S12-ridge.html"><a href="S12-ridge.html#properties-of-the-estimate"><i class="fa fa-check"></i><b>12.2</b> Properties of the Estimate</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="S12-ridge.html"><a href="S12-ridge.html#bias"><i class="fa fa-check"></i><b>12.2.1</b> Bias</a></li>
+<li class="chapter" data-level="12.2.2" data-path="S12-ridge.html"><a href="S12-ridge.html#variance"><i class="fa fa-check"></i><b>12.2.2</b> Variance</a></li>
+<li class="chapter" data-level="12.2.3" data-path="S12-ridge.html"><a href="S12-ridge.html#mean-squared-error"><i class="fa fa-check"></i><b>12.2.3</b> Mean Squared Error</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="S12-ridge.html"><a href="S12-ridge.html#standardisation"><i class="fa fa-check"></i><b>12.3</b> Standardisation</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="S13-models.html"><a href="S13-models.html"><i class="fa fa-check"></i><b>13</b> Model selection</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="S13-models.html"><a href="S13-models.html#candidates-models"><i class="fa fa-check"></i><b>13.1</b> Candidates Models</a></li>
+<li class="chapter" data-level="13.2" data-path="S13-models.html"><a href="S13-models.html#misspecified-models"><i class="fa fa-check"></i><b>13.2</b> Misspecified Models</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="S13-models.html"><a href="S13-models.html#missing-variables"><i class="fa fa-check"></i><b>13.2.1</b> Missing Variables</a></li>
+<li class="chapter" data-level="13.2.2" data-path="S13-models.html"><a href="S13-models.html#unnecessary-variables"><i class="fa fa-check"></i><b>13.2.2</b> Unnecessary Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#criteria"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
+<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Methods for Model Selection</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="S14-methods.html"><a href="S14-methods.html#exhaustive-search"><i class="fa fa-check"></i><b>14.1</b> Exhaustive Search</a></li>
+<li class="chapter" data-level="14.2" data-path="S14-methods.html"><a href="S14-methods.html#search-algorithm"><i class="fa fa-check"></i><b>14.2</b> Search Algorithm</a></li>
+<li class="chapter" data-level="14.3" data-path="S14-methods.html"><a href="S14-methods.html#other-methods"><i class="fa fa-check"></i><b>14.3</b> Other Methods</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-forward-selection"><i class="fa fa-check"></i><b>14.3.1</b> Stepwise Forward Selection</a></li>
+<li class="chapter" data-level="14.3.2" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-backward-selection"><i class="fa fa-check"></i><b>14.3.2</b> Stepwise Backward Selection</a></li>
+<li class="chapter" data-level="14.3.3" data-path="S14-methods.html"><a href="S14-methods.html#hybrid-methods"><i class="fa fa-check"></i><b>14.3.3</b> Hybrid Methods</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="S15-factors.html"><a href="S15-factors.html"><i class="fa fa-check"></i><b>15</b> Factors</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="S15-factors.html"><a href="S15-factors.html#indicator-variables"><i class="fa fa-check"></i><b>15.1</b> Indicator Variables</a></li>
+<li class="chapter" data-level="15.2" data-path="S15-factors.html"><a href="S15-factors.html#interactions"><i class="fa fa-check"></i><b>15.2</b> Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
+<ul>
+<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
+<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
+<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#references"><i class="fa fa-check"></i>References</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="S16-examples.html"><a href="S16-examples.html"><i class="fa fa-check"></i><b>16</b> Examples</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="S16-examples.html"><a href="S16-examples.html#interactions-example"><i class="fa fa-check"></i><b>16.1</b> Use of Interaction Terms in Modelling</a></li>
+<li class="chapter" data-level="16.2" data-path="S16-examples.html"><a href="S16-examples.html#codings"><i class="fa fa-check"></i><b>16.2</b> Alternative Factor Codings</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="S17-robust.html"><a href="S17-robust.html"><i class="fa fa-check"></i><b>17</b> Robust Regression</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="S17-robust.html"><a href="S17-robust.html#outliers"><i class="fa fa-check"></i><b>17.1</b> Outliers</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="S17-robust.html"><a href="S17-robust.html#leverage"><i class="fa fa-check"></i><b>17.1.1</b> Leverage</a></li>
+<li class="chapter" data-level="17.1.2" data-path="S17-robust.html"><a href="S17-robust.html#studentised-residuals"><i class="fa fa-check"></i><b>17.1.2</b> Studentised Residuals</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="S17-robust.html"><a href="S17-robust.html#breakdown-points"><i class="fa fa-check"></i><b>17.2</b> Breakdown points</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#vectors"><i class="fa fa-check"></i><b>A.1</b> Vectors</a></li>
+<li class="chapter" data-level="A.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-rules"><i class="fa fa-check"></i><b>A.2</b> Matrices</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#transpose"><i class="fa fa-check"></i><b>A.2.1</b> Transpose</a></li>
+<li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-vector Product</a></li>
+<li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-matrix Product</a></li>
+<li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#rank"><i class="fa fa-check"></i><b>A.2.4</b> Rank</a></li>
+<li class="chapter" data-level="A.2.5" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#trace"><i class="fa fa-check"></i><b>A.2.5</b> Trace</a></li>
+<li class="chapter" data-level="A.2.6" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-inverse"><i class="fa fa-check"></i><b>A.2.6</b> Matrix Inverse</a></li>
+<li class="chapter" data-level="A.2.7" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#orthogonal-matrices"><i class="fa fa-check"></i><b>A.2.7</b> Orthogonal Matrices</a></li>
+<li class="chapter" data-level="A.2.8" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.8</b> Positive Definite Matrices</a></li>
+<li class="chapter" data-level="A.2.9" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#idempotent"><i class="fa fa-check"></i><b>A.2.9</b> Idempotent Matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#eigenvalues"><i class="fa fa-check"></i><b>A.3</b> Eigenvalues</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="Sx2-probability.html"><a href="Sx2-probability.html"><i class="fa fa-check"></i><b>B</b> Probability Reminders</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="Sx2-probability.html"><a href="Sx2-probability.html#independence"><i class="fa fa-check"></i><b>B.1</b> Independence</a></li>
+<li class="chapter" data-level="B.2" data-path="Sx2-probability.html"><a href="Sx2-probability.html#chi-square"><i class="fa fa-check"></i><b>B.2</b> The Chi-Squared Distribution</a></li>
+<li class="chapter" data-level="B.3" data-path="Sx2-probability.html"><a href="Sx2-probability.html#t"><i class="fa fa-check"></i><b>B.3</b> The t-distribution</a></li>
+</ul></li>
+<li class="divider"></li>
+<li class="chapter"><span><b>THE END</b></span></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH3714 Linear Regression and Robustness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="S17-robust" class="section level1" number="17">
+<h1><span class="header-section-number">Section 17</span> Robust Regression</h1>
+<p>The overall aim of this part of the module is to find regression
+estimators which work well in the presence of outliers.</p>
+<div id="outliers" class="section level2" number="17.1">
+<h2><span class="header-section-number">17.1</span> Outliers</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/AqoGoKKf3s8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>As before, we consider the model
+<span class="math display">\[\begin{equation*}
+  y_i
+  = x_i^\top \beta + \varepsilon_i,
+\end{equation*}\]</span>
+and we try to estimate <span class="math inline">\(\beta\)</span> from given data <span class="math inline">\((x_i, y_i)\)</span> for
+<span class="math inline">\(i\in \{1, \ldots, n\}\)</span>.</p>
+<p>An <strong>outlier</strong> is a sample <span class="math inline">\((x_i, y_i)\)</span> that differs significantly
+from the majority of observations. The deviation can be either in the
+<span class="math inline">\(x\)</span>-direction, or the <span class="math inline">\(y\)</span>-direction, or both. Outliers can either
+occur by chance, or can be caused by errors in the recording or processing
+of the data. In this subsection we will discuss different ways to detect
+outliers.</p>
+<div id="leverage" class="section level3" number="17.1.1">
+<h3><span class="header-section-number">17.1.1</span> Leverage</h3>
+<div class="definition">
+<p><span id="def:unlabeled-div-57" class="definition"><strong>Definition 17.1  </strong></span>The <strong>leverage</strong> of the input <span class="math inline">\(x_i\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  h_{ii}
+  = x_i^\top (X^\top X)^{-1} x_i,
+\end{equation*}\]</span>
+where <span class="math inline">\(X\)</span> is the design matrix.</p>
+</div>
+<p>Since <span class="math inline">\(x_i\)</span> is the <span class="math inline">\(i\)</span>th row of <span class="math inline">\(X\)</span>, the leverage <span class="math inline">\(h_{ii}\)</span> equals the <span class="math inline">\(i\)</span>th
+diagonal element of the hat matrix <span class="math inline">\(H = X (X^\top X)^{-1} X\)</span>.</p>
+<div class="lemma">
+<p><span id="lem:unlabeled-div-58" class="lemma"><strong>Lemma 17.1  </strong></span>The derivative of the fitted value <span class="math inline">\(\hat y_i\)</span> with respect to the
+response <span class="math inline">\(y_i\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  \frac{\partial}{\partial y_i} \hat y_i
+  = h_{ii}
+\end{equation*}\]</span>
+for all <span class="math inline">\(i\in \{1, \ldots, n\}\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-59" class="proof"><em>Proof</em>. </span>We have
+<span class="math display">\[\begin{equation*}
+  \hat y_i
+  = (H y)_i
+  = \sum_{j=1}^n h_{ij} y_j.
+\end{equation*}\]</span>
+Taking derivatives with respect to <span class="math inline">\(y_i\)</span> completes the proof.</p>
+</div>
+<p>The leverage of <span class="math inline">\(x_i\)</span> describes the <em>potential</em> for <span class="math inline">\(y_i\)</span> to affect the fitted
+line or hyperplane. If <span class="math inline">\(h_{ii}\)</span> is large, changing of <span class="math inline">\(y_i\)</span> has a large effect
+on the fitted values. This is in contrast to the influence of a sample, which
+describes <em>actual</em> effect on the regression line: in the section about <a href="S09-influence.html#influence">Cook’s
+Distance</a>, we considered a sample to be “influential”, if the regression
+estimates with and without the sample in question were very different.</p>
+<p>Since we have <span class="math inline">\(\sum_{i=1}^n h_{ii} = p+1\)</span>,
+the average value of the leverage over all samples is <span class="math inline">\((p+1) / n\)</span>.
+Using a more careful argument,
+one can show that <span class="math inline">\(h_i \in [1/n, 1]\)</span> for every <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-60" class="example"><strong>Example 17.1  </strong></span>We use simulated data to illustrate the effect of outliers and
+the difference between leverage and influence.</p>
+<div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb290-1"><a href="S17-robust.html#cb290-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211130</span>)</span>
+<span id="cb290-2"><a href="S17-robust.html#cb290-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb290-3"><a href="S17-robust.html#cb290-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb290-4"><a href="S17-robust.html#cb290-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="at">length.out =</span> n<span class="sc">+</span><span class="dv">1</span>)[<span class="sc">-</span>(n<span class="sc">/</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)]</span>
+<span id="cb290-5"><a href="S17-robust.html#cb290-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.4</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.3</span>)</span>
+<span id="cb290-6"><a href="S17-robust.html#cb290-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb290-7"><a href="S17-robust.html#cb290-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb290-8"><a href="S17-robust.html#cb290-8" aria-hidden="true" tabindex="-1"></a><span class="co"># we try four different extra samples, one after another:</span></span>
+<span id="cb290-9"><a href="S17-robust.html#cb290-9" aria-hidden="true" tabindex="-1"></a>x.extra <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="fl">9.5</span>, <span class="fl">2.5</span>, <span class="fl">9.5</span>)</span>
+<span id="cb290-10"><a href="S17-robust.html#cb290-10" aria-hidden="true" tabindex="-1"></a>y.extra <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">2.3</span>, <span class="fl">5.4</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="fl">0.5</span>)</span>
+<span id="cb290-11"><a href="S17-robust.html#cb290-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb290-12"><a href="S17-robust.html#cb290-12" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="co"># We want a 2x2 grid of plots,</span></span>
+<span id="cb290-13"><a href="S17-robust.html#cb290-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="co"># using smaller margins, and</span></span>
+<span id="cb290-14"><a href="S17-robust.html#cb290-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="co"># we move the labels closer to the axes.</span></span>
+<span id="cb290-15"><a href="S17-robust.html#cb290-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) {</span>
+<span id="cb290-16"><a href="S17-robust.html#cb290-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot</span>(x, y, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="fl">5.5</span>))</span>
+<span id="cb290-17"><a href="S17-robust.html#cb290-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abline</span>(m)</span>
+<span id="cb290-18"><a href="S17-robust.html#cb290-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb290-19"><a href="S17-robust.html#cb290-19" aria-hidden="true" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">c</span>(y, y.extra[i]) <span class="sc">~</span> <span class="fu">c</span>(x, x.extra[i]))</span>
+<span id="cb290-20"><a href="S17-robust.html#cb290-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abline</span>(m2, <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">lty=</span><span class="st">&quot;dashed&quot;</span>)</span>
+<span id="cb290-21"><a href="S17-robust.html#cb290-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">points</span>(x.extra[i], y.extra[i], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span>
+<span id="cb290-22"><a href="S17-robust.html#cb290-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/leverage-1.png" width="672" /></p>
+<p>The black circles in all four panels are the same, and the black, solid line is
+the regression line fitted to these points. The filled, red circle is
+different between the panels and the red, dashed line is the regression line
+fitted after this point has been added to the data. In the top-left panel
+there is no outlier. In the top-right panel, the red circle is an <span class="math inline">\(x\)</span>-space
+outlier. The point has high leverage (since the red lines in the top-right and
+bottom-right panels are very different from each other), but low influence
+(since the red line is close to the black line). The bottom-left panel shows a
+<span class="math inline">\(y\)</span>-space outlier. The red circle has low leverage (since the red line is
+similar to the top-left panel) and low influence (since the red line is close
+to the black line), but a large residual. Finally, the bottom-right
+panel shows an <span class="math inline">\(x\)</span>-space outlier with high leverage and high influence.</p>
+</div>
+</div>
+<div id="studentised-residuals" class="section level3" number="17.1.2">
+<h3><span class="header-section-number">17.1.2</span> Studentised Residuals</h3>
+<p>Sometimes, <span class="math inline">\(y\)</span>-space outliers can be detected by having particularly
+large residuals. We have
+<span class="math display">\[\begin{equation*}
+  \hat\varepsilon
+  = (I - H) Y
+  = (I - H) (X\beta + \varepsilon)
+  = (I - H) \varepsilon,
+\end{equation*}\]</span>
+where we used equation <a href="S04-model.html#eq:XIH">(4.4)</a> for the last equality sign.
+Thus we have
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Cov}}(\hat\varepsilon)
+  = \mathop{\mathrm{Cov}}\bigl( (I - H) \varepsilon\bigr)
+  = (I - H) \sigma^2 I (I - H)^\top
+  = \sigma^2 (I - H).
+\end{equation*}\]</span>
+Considering the diagonal elements of the covariance matrix, we find
+<span class="math inline">\(\mathop{\mathrm{Var}}(\hat\varepsilon_i) = \sigma^2 (1 - h_{ii})\)</span>, where <span class="math inline">\(h_{ii}\)</span> is the <span class="math inline">\(i\)</span>th
+diagonal element of the hat matrix <span class="math inline">\(H\)</span>. This motivates the following
+definition.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-61" class="definition"><strong>Definition 17.2  </strong></span>The <strong>studentised residuals</strong> are given by
+<span class="math display">\[\begin{equation*}
+  r_i
+  := \frac{\hat\varepsilon_i}{\sqrt{\hat\sigma^2 (1-h_{ii})}}.
+\end{equation*}\]</span></p>
+</div>
+<div class="lemma">
+<p><span id="lem:unlabeled-div-62" class="lemma"><strong>Lemma 17.2  </strong></span>We have <span class="math inline">\(r_i \sim t(n-p-1)\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-63" class="proof"><em>Proof</em>. </span>We have
+<span class="math display">\[\begin{align*}
+  r_i
+  &amp;= \frac{\hat\varepsilon_i}{\sqrt{\hat\sigma^2 (1-h_{ii})}} \\
+  &amp;= \frac{\hat\varepsilon_i / \sqrt{\sigma^2(1-h_{ii})}}{\sqrt{\frac{(n - p - 1)\hat\sigma^2}{\sigma^2}/(n-p-1)}}.
+\end{align*}\]</span>
+The numerator is standard normally distributed.
+From equation <a href="S04-model.html#eq:sigma-hat-chi-squared">(4.7)</a> we know that
+<span class="math inline">\((n - p - 1)\hat\sigma^2 / \sigma^2 \sim \chi^2(n - p - 1)\)</span>. Thus
+we find <span class="math inline">\(r_i \sim t(n-p-1)\)</span>, by the definition of the <span class="math inline">\(t\)</span>-distribution.</p>
+</div>
+<p>Samples where the studentised residuals are large, compared to quantiles
+of the <span class="math inline">\(t(n-p-1)\)</span>-distribution, might be <span class="math inline">\(y\)</span>-space outliers.</p>
+<p>With the help of lemma <a href="S09-influence.html#lem:Cook-D-alt">9.4</a> we can express Cook’s
+distance as a function of studentised residuals and leverage. We get
+<span class="math display">\[\begin{align*}
+  D_i
+  &amp;= \frac{\hat\varepsilon_i^2}{(p+1)\hat\sigma^2} \cdot \frac{h_{ii}}{(1-h_{ii})^2} \\
+  &amp;= r_i^2 \frac{h_{ii}}{(p+1)(1-h_{ii})}.
+\end{align*}\]</span>
+If we denote samples with <span class="math inline">\(D_i \geq 1\)</span> as influential, we can express the
+condition for influential samples as
+<span class="math display">\[\begin{equation*}
+  r_i^2 \geq (p+1) \frac{1-h_{ii}}{h_{ii}}.
+\end{equation*}\]</span></p>
+<div class="example">
+<p><span id="exm:unlabeled-div-64" class="example"><strong>Example 17.2  </strong></span>Continuing from the previous example, we can plot studentised residuals
+against leverage. As in section <a href="S09-influence.html#deleting">9.1</a>, we can use the
+function <code>influence()</code> to easily obtain the diagonal elements of the
+hat matrix.</p>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb291-1"><a href="S17-robust.html#cb291-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="co"># We want a 2x2 grid of plots,</span></span>
+<span id="cb291-2"><a href="S17-robust.html#cb291-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="co"># using smaller margins, and</span></span>
+<span id="cb291-3"><a href="S17-robust.html#cb291-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="co"># we move the labels closer to the axes.</span></span>
+<span id="cb291-4"><a href="S17-robust.html#cb291-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) {</span>
+<span id="cb291-5"><a href="S17-robust.html#cb291-5" aria-hidden="true" tabindex="-1"></a>    xx <span class="ot">&lt;-</span> <span class="fu">c</span>(x, x.extra[i])</span>
+<span id="cb291-6"><a href="S17-robust.html#cb291-6" aria-hidden="true" tabindex="-1"></a>    yy <span class="ot">&lt;-</span> <span class="fu">c</span>(y, y.extra[i])</span>
+<span id="cb291-7"><a href="S17-robust.html#cb291-7" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">length</span>(xx)</span>
+<span id="cb291-8"><a href="S17-robust.html#cb291-8" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb291-9"><a href="S17-robust.html#cb291-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb291-10"><a href="S17-robust.html#cb291-10" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">lm</span>(yy <span class="sc">~</span> xx)</span>
+<span id="cb291-11"><a href="S17-robust.html#cb291-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb291-12"><a href="S17-robust.html#cb291-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get the leverage</span></span>
+<span id="cb291-13"><a href="S17-robust.html#cb291-13" aria-hidden="true" tabindex="-1"></a>    hii <span class="ot">&lt;-</span> <span class="fu">influence</span>(m)<span class="sc">$</span>hat</span>
+<span id="cb291-14"><a href="S17-robust.html#cb291-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb291-15"><a href="S17-robust.html#cb291-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get the studentized residuals</span></span>
+<span id="cb291-16"><a href="S17-robust.html#cb291-16" aria-hidden="true" tabindex="-1"></a>    sigma.hat <span class="ot">&lt;-</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma</span>
+<span id="cb291-17"><a href="S17-robust.html#cb291-17" aria-hidden="true" tabindex="-1"></a>    ri <span class="ot">&lt;-</span> <span class="fu">resid</span>(m) <span class="sc">/</span> sigma.hat <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> hii)</span>
+<span id="cb291-18"><a href="S17-robust.html#cb291-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb291-19"><a href="S17-robust.html#cb291-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot</span>(hii, ri, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span>n, <span class="dv">1</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>,<span class="dv">3</span>),</span>
+<span id="cb291-20"><a href="S17-robust.html#cb291-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;leverage&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;studentised resid.&quot;</span>)</span>
+<span id="cb291-21"><a href="S17-robust.html#cb291-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb291-22"><a href="S17-robust.html#cb291-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plot a 95% interval for the residuals</span></span>
+<span id="cb291-23"><a href="S17-robust.html#cb291-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abline</span>(<span class="at">h =</span> <span class="sc">+</span><span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb291-24"><a href="S17-robust.html#cb291-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abline</span>(<span class="at">h =</span> <span class="sc">-</span><span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb291-25"><a href="S17-robust.html#cb291-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb291-26"><a href="S17-robust.html#cb291-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># also plot the line where D_i = 1</span></span>
+<span id="cb291-27"><a href="S17-robust.html#cb291-27" aria-hidden="true" tabindex="-1"></a>    h <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">/</span>n, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb291-28"><a href="S17-robust.html#cb291-28" aria-hidden="true" tabindex="-1"></a>    r.infl <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((p<span class="sc">+</span><span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>h) <span class="sc">/</span> h)</span>
+<span id="cb291-29"><a href="S17-robust.html#cb291-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(h, r.infl, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb291-30"><a href="S17-robust.html#cb291-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines</span>(h, <span class="sc">-</span>r.infl, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb291-31"><a href="S17-robust.html#cb291-31" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/reslev-1.png" width="672" /></p>
+<p>If the model is correct, <span class="math inline">\(95\%\)</span> of the samples should lie in the
+band formed by the two horizontal lines. In the bottom-left panel we can
+recognise a <span class="math inline">\(y\)</span>-space outlier by the fact that it is outside the band.
+In the two right-hand panels we can recognise the <span class="math inline">\(x\)</span>-space outlier
+by the fact that it has much larger leverage than the other samples.
+Finally, samples which are to the right of the curved, red line
+correspond the “influential” observations.</p>
+</div>
+</div>
+</div>
+<div id="breakdown-points" class="section level2" number="17.2">
+<h2><span class="header-section-number">17.2</span> Breakdown points</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HkrUicYp16k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>In the example we have seen that changing a single observation can
+have a large effect on the regression line found by least squares
+regression. Using the formula
+<span class="math display">\[\begin{equation*}
+  \hat\beta
+  = (X^\top X)^{-1} X^\top y,
+\end{equation*}\]</span>
+it is easy to see that it is enough to change a single sample,
+letting <span class="math inline">\(y_i \to\infty\)</span>, to get <span class="math inline">\(\|\hat\beta\| \to \infty\)</span>.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-65" class="definition"><strong>Definition 17.3  </strong></span>The <strong>finite sample breakdown point</strong> of an estimator <span class="math inline">\(\hat\theta\)</span>
+is the smalles fraction of samples such that
+<span class="math inline">\(\|\hat\theta\| \to \infty\)</span> can be achieved by only changing this
+fraction of samples. Mathematically, this can be expressed as follows:
+Let <span class="math inline">\(z = \bigl( (x_1, y_1), \ldots, (x_n, y_n) \bigr)\)</span> and consider
+all <span class="math inline">\(z&#39;\)</span> such that the set <span class="math inline">\(\bigl\{ i \bigm| z_i \neq z&#39;_i \bigr\}\)</span> has
+at most <span class="math inline">\(m\)</span> elements. Then the finite sample breakdown point
+is given by
+<span class="math display">\[\begin{equation*}
+  \varepsilon_n(\hat\theta)
+  := \frac1n \min \bigl\{ m \bigm| \sup_{z&#39;} \|\hat\theta(z&#39;)\| = \infty \bigr\}.
+\end{equation*}\]</span>
+The (asymptotic) <strong>breakdown point</strong> of <span class="math inline">\(\hat\theta\)</span> is given
+by
+<span class="math display">\[\begin{equation*}
+  \varepsilon(\hat\theta)
+  := \lim_{n\to\infty} \varepsilon_n(\hat\theta).
+\end{equation*}\]</span></p>
+</div>
+<p>Clearly we have <span class="math inline">\(\varepsilon_n(\hat\theta) \in [0, 1]\)</span> for all <span class="math inline">\(n\)</span>
+and thus <span class="math inline">\(\varepsilon(\hat\theta) \in [0, 1]\)</span>.
+Robust estimators have <span class="math inline">\(\varepsilon(\hat\theta) &gt; 0\)</span>.
+Using the argument above, we see that <span class="math inline">\(\varepsilon_n(\hat\beta) = 1/n \to 0\)</span>
+as <span class="math inline">\(n\to \infty\)</span>. Thus, the least squares estimate is not robust.</p>
+<!--
+References:
+- https://search.r-project.org/CRAN/refmans/ACSWR/html/resistant_line.html
+- https://stackoverflow.com/questions/3224731/john-tukey-median-median-or-resistant-line-statistical-test-for-r-and-line
+- https://www.jstor.org/stable/2288572
+  The Resistant Line and Related Regression Methods, Iain M. Johnstone and Paul F. Velleman (1985)
+- Velleman, P.F., and Hoaglin, D.C. (2004). ABC of Exploratory Data Analysis. Duxbury Press, Boston.
+-->
+<div class="example">
+<p><span id="exm:unlabeled-div-66" class="example"><strong>Example 17.3  </strong></span>For illustration we show a very simple version of a robust estimator
+for the regression line in simple linear regression. The estimate
+is called a <strong>resistant line</strong> or <strong>Tukey line</strong>. Assume we are
+given data <span class="math inline">\((x_i, y_i)\)</span> for <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>. We start by sorting
+the <span class="math inline">\(x_i\)</span> in increasing order: <span class="math inline">\(x_{(1)} \leq \cdots \leq x_{(n)}\)</span>.
+Then we define <span class="math inline">\(x_\mathrm{L}\)</span>, <span class="math inline">\(x_\mathrm{M}\)</span> and <span class="math inline">\(x_\mathrm{R}\)</span>
+as the median of the lower, middle and upper third of the <span class="math inline">\(x_{(i)}\)</span>,
+and <span class="math inline">\(y_\mathrm{L}\)</span>, <span class="math inline">\(y_\mathrm{M}\)</span> and <span class="math inline">\(y_\mathrm{R}\)</span> as the median
+of the corresponding <span class="math inline">\(y\)</span> values, respectively. Finally, set
+<span class="math display">\[\begin{equation*}
+  \hat\beta_1
+  = \frac{y_\mathrm{R} - y_\mathrm{L}}{x_\mathrm{R} - x_\mathrm{L}}
+\end{equation*}\]</span>
+as an estimate of the slope, and
+<span class="math display">\[\begin{equation*}
+  \hat\beta_0
+  = \frac{y_\mathrm{L} + y_\mathrm{M} + y_\mathrm{R}}{3}
+      - \hat\beta_1 \frac{x_\mathrm{L} + x_\mathrm{M} + x_\mathrm{R}}{3}.
+\end{equation*}\]</span></p>
+<p>We can easily implement this method in R. To demonstrate this,
+we use simulated data with artificial outliers:</p>
+<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="S17-robust.html#cb292-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211129</span>)</span>
+<span id="cb292-2"><a href="S17-robust.html#cb292-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">24</span></span>
+<span id="cb292-3"><a href="S17-robust.html#cb292-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb292-4"><a href="S17-robust.html#cb292-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb292-5"><a href="S17-robust.html#cb292-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb292-6"><a href="S17-robust.html#cb292-6" aria-hidden="true" tabindex="-1"></a>outlier <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
+<span id="cb292-7"><a href="S17-robust.html#cb292-7" aria-hidden="true" tabindex="-1"></a>y[outlier] <span class="ot">&lt;-</span> y[outlier] <span class="sc">+</span> <span class="dv">15</span></span></code></pre></div>
+<p>Sort start by sorting the data in order of increasing <span class="math inline">\(x\)</span>-values:</p>
+<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="S17-robust.html#cb293-1" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">order</span>(x)</span>
+<span id="cb293-2"><a href="S17-robust.html#cb293-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> x[idx]</span>
+<span id="cb293-3"><a href="S17-robust.html#cb293-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> y[idx]</span></code></pre></div>
+<p>No we can compute the resistant line:</p>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="S17-robust.html#cb294-1" aria-hidden="true" tabindex="-1"></a>xL <span class="ot">&lt;-</span> <span class="fu">median</span>(x[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>])</span>
+<span id="cb294-2"><a href="S17-robust.html#cb294-2" aria-hidden="true" tabindex="-1"></a>xM <span class="ot">&lt;-</span> <span class="fu">median</span>(x[<span class="dv">9</span><span class="sc">:</span><span class="dv">16</span>])</span>
+<span id="cb294-3"><a href="S17-robust.html#cb294-3" aria-hidden="true" tabindex="-1"></a>xR <span class="ot">&lt;-</span> <span class="fu">median</span>(x[<span class="dv">17</span><span class="sc">:</span><span class="dv">24</span>])</span>
+<span id="cb294-4"><a href="S17-robust.html#cb294-4" aria-hidden="true" tabindex="-1"></a>yL <span class="ot">&lt;-</span> <span class="fu">median</span>(y[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>])</span>
+<span id="cb294-5"><a href="S17-robust.html#cb294-5" aria-hidden="true" tabindex="-1"></a>yM <span class="ot">&lt;-</span> <span class="fu">median</span>(y[<span class="dv">9</span><span class="sc">:</span><span class="dv">16</span>])</span>
+<span id="cb294-6"><a href="S17-robust.html#cb294-6" aria-hidden="true" tabindex="-1"></a>yR <span class="ot">&lt;-</span> <span class="fu">median</span>(y[<span class="dv">17</span><span class="sc">:</span><span class="dv">24</span>])</span>
+<span id="cb294-7"><a href="S17-robust.html#cb294-7" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> (yR <span class="sc">-</span> yL) <span class="sc">/</span> (xR <span class="sc">-</span> xL)</span>
+<span id="cb294-8"><a href="S17-robust.html#cb294-8" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> (yL <span class="sc">+</span> yM <span class="sc">+</span> yR) <span class="sc">/</span> <span class="dv">3</span> <span class="sc">-</span> beta1 <span class="sc">*</span> (xL <span class="sc">+</span> xM <span class="sc">+</span> xR) <span class="sc">/</span> <span class="dv">3</span></span></code></pre></div>
+<p>Finally, we plot the result.</p>
+<div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="S17-robust.html#cb295-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">col =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each=</span><span class="dv">8</span>))</span>
+<span id="cb295-2"><a href="S17-robust.html#cb295-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(beta0, beta1, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb295-3"><a href="S17-robust.html#cb295-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> xL, <span class="at">col =</span> <span class="dv">1</span>)</span>
+<span id="cb295-4"><a href="S17-robust.html#cb295-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> xM, <span class="at">col =</span> <span class="dv">2</span>)</span>
+<span id="cb295-5"><a href="S17-robust.html#cb295-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> xR, <span class="at">col =</span> <span class="dv">3</span>)</span>
+<span id="cb295-6"><a href="S17-robust.html#cb295-6" aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(<span class="fu">c</span>(x[<span class="dv">1</span>], x[<span class="dv">9</span>], x[<span class="dv">17</span>]), <span class="fu">c</span>(yL, yM, yR), <span class="fu">c</span>(x[<span class="dv">8</span>], x[<span class="dv">16</span>], x[<span class="dv">24</span>]),</span>
+<span id="cb295-7"><a href="S17-robust.html#cb295-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/resistant-1.png" width="672" /></p>
+<p>The horizontal and vertical line segments in the plot give the medians
+used in the computation. The blue, sloped line is the resistant line.
+One can see that the line closely follows the bulk of the samples
+and that it is not affected by the five outliers.</p>
+<p>A variant of this method is implemented by the R function <code>line()</code>.</p>
+</div>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>Leverage can be used to detect <span class="math inline">\(x\)</span>-space outliers.</li>
+<li>Studentised residuals can be used to detect <span class="math inline">\(y\)</span>-space outliers.</li>
+<li>The breakdown point of an estimator is a measure for how robust
+the method is to outliers.</li>
+</ul>
+</div>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="S16-examples.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH3714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

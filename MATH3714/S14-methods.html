@@ -247,8 +247,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="9" data-path="S09-influence.html"><a href="S09-influence.html"><i class="fa fa-check"></i><b>9</b> The Influence of Observations</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting-observations"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
-<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#cooks-distance"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
+<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#influence"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="S10-multicoll.html"><a href="S10-multicoll.html"><i class="fa fa-check"></i><b>10</b> Multicollinearity</a>
 <ul>
@@ -312,6 +312,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="16.1" data-path="S16-examples.html"><a href="S16-examples.html#interactions-example"><i class="fa fa-check"></i><b>16.1</b> Use of Interaction Terms in Modelling</a></li>
 <li class="chapter" data-level="16.2" data-path="S16-examples.html"><a href="S16-examples.html#codings"><i class="fa fa-check"></i><b>16.2</b> Alternative Factor Codings</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="S17-robust.html"><a href="S17-robust.html"><i class="fa fa-check"></i><b>17</b> Robust Regression</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="S17-robust.html"><a href="S17-robust.html#outliers"><i class="fa fa-check"></i><b>17.1</b> Outliers</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="S17-robust.html"><a href="S17-robust.html#leverage"><i class="fa fa-check"></i><b>17.1.1</b> Leverage</a></li>
+<li class="chapter" data-level="17.1.2" data-path="S17-robust.html"><a href="S17-robust.html#studentised-residuals"><i class="fa fa-check"></i><b>17.1.2</b> Studentised Residuals</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="S17-robust.html"><a href="S17-robust.html#breakdown-points"><i class="fa fa-check"></i><b>17.2</b> Breakdown points</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
@@ -407,9 +416,9 @@ where <span class="math inline">\(\hat y_i\)</span> are the fitted values for th
 This gives the residual sum of squares for each model. The we have
 <span class="math display">\[\begin{align*}
   \min_J \hat\sigma^2(J)
-    &amp;= \min_J \frac{1}{n - |J|} \sum_{i=1}^n (y_i - \hat y_i)^2 \\
-    &amp;= \min_{q \in \{0, 1, \ldots, p\}} \min_{J, |J|=q} \frac{1}{n - q} r(J) \\
-    &amp;= \min_{q \in \{0, 1, \ldots, p\}} \frac{1}{n - q} \min_{J, |J|=q} r(J).
+    &amp;= \min_J \frac{1}{n - |J| - 1} \sum_{i=1}^n (y_i - \hat y_i)^2 \\
+    &amp;= \min_{q \in \{0, 1, \ldots, p\}} \min_{J, |J|=q} \frac{1}{n - q - 1} r(J) \\
+    &amp;= \min_{q \in \{0, 1, \ldots, p\}} \frac{1}{n - q - 1} \min_{J, |J|=q} r(J).
 \end{align*}\]</span>
 This means that we can first minimise the residual sum of squares
 for each fixed number <span class="math inline">\(q\)</span> of inputs, and then find the <span class="math inline">\(q\)</span>
@@ -756,7 +765,7 @@ one by one until no good enough candidates for removal are left.</p>
 <p>In each step we consider the test statistic <span class="math inline">\(|T_j|\)</span> for the tests
 <span class="math display">\[\begin{equation*}
   H_0\colon \beta_j = 0
-  \quad\mbox{\textit{vs.}}\quad
+  \quad \textit{vs.} \quad
   H_1\colon \beta_j \neq 0
 \end{equation*}\]</span>
 for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>, again as in lemma <a href="S05-single.html#lem:t-test">5.4</a>.

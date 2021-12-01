@@ -30,7 +30,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="S16-examples.html"/>
+<link rel="prev" href="S17-robust.html"/>
 <link rel="next" href="Sx2-probability.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -247,8 +247,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="9" data-path="S09-influence.html"><a href="S09-influence.html"><i class="fa fa-check"></i><b>9</b> The Influence of Observations</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting-observations"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
-<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#cooks-distance"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
+<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#influence"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="S10-multicoll.html"><a href="S10-multicoll.html"><i class="fa fa-check"></i><b>10</b> Multicollinearity</a>
 <ul>
@@ -313,6 +313,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="16.1" data-path="S16-examples.html"><a href="S16-examples.html#interactions-example"><i class="fa fa-check"></i><b>16.1</b> Use of Interaction Terms in Modelling</a></li>
 <li class="chapter" data-level="16.2" data-path="S16-examples.html"><a href="S16-examples.html#codings"><i class="fa fa-check"></i><b>16.2</b> Alternative Factor Codings</a></li>
 </ul></li>
+<li class="chapter" data-level="17" data-path="S17-robust.html"><a href="S17-robust.html"><i class="fa fa-check"></i><b>17</b> Robust Regression</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="S17-robust.html"><a href="S17-robust.html#outliers"><i class="fa fa-check"></i><b>17.1</b> Outliers</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="S17-robust.html"><a href="S17-robust.html#leverage"><i class="fa fa-check"></i><b>17.1.1</b> Leverage</a></li>
+<li class="chapter" data-level="17.1.2" data-path="S17-robust.html"><a href="S17-robust.html#studentised-residuals"><i class="fa fa-check"></i><b>17.1.2</b> Studentised Residuals</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="S17-robust.html"><a href="S17-robust.html#breakdown-points"><i class="fa fa-check"></i><b>17.2</b> Breakdown points</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
 <ul>
@@ -357,9 +366,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="Sx1-matrices" class="section level1" number="17">
+<div id="Sx1-matrices" class="section level1" number="18">
 <h1><span class="header-section-number">A</span> Linear Algebra Reminders</h1>
-<div id="vectors" class="section level2" number="17.1">
+<div id="vectors" class="section level2" number="18.1">
 <h2><span class="header-section-number">A.1</span> Vectors</h2>
 <p>We write <span class="math inline">\(v \in \mathbb{R}^d\)</span> if <span class="math inline">\(v = (v_1, \ldots, v_d)\)</span> for numbers
 <span class="math inline">\(v_1, \ldots, v_d \in\mathbb{R}\)</span>. We say that <span class="math inline">\(v\)</span> is a <span class="math inline">\(d\)</span>-dimensional vector,
@@ -390,7 +399,7 @@ if <span class="math inline">\(v_i^\top v_j = 0\)</span> for all <span class="ma
 <strong>orthonormal</strong>, if they are orthogonal and satisfy <span class="math inline">\(\|v_i\| = 1\)</span>
 for all <span class="math inline">\(i\)</span>.</p>
 </div>
-<div id="matrix-rules" class="section level2" number="17.2">
+<div id="matrix-rules" class="section level2" number="18.2">
 <h2><span class="header-section-number">A.2</span> Matrices</h2>
 <p>We write <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span> if
 <span class="math display">\[\begin{equation*}
@@ -404,7 +413,7 @@ for all <span class="math inline">\(i\)</span>.</p>
 \end{equation*}\]</span>
 where <span class="math inline">\(a_{i,j}\)</span>, sometimes also written as <span class="math inline">\(a_{ij}\)</span> are numbers
 for <span class="math inline">\(i \in \{1, \ldots, m\}\)</span> and <span class="math inline">\(j \in \{1, \ldots, n\}\)</span>.</p>
-<div id="transpose" class="section level3" number="17.2.1">
+<div id="transpose" class="section level3" number="18.2.1">
 <h3><span class="header-section-number">A.2.1</span> Transpose</h3>
 <p>If <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span>, then the <strong>transpose</strong> of <span class="math inline">\(A\)</span> is the matrix
 <span class="math inline">\(A^\top \in \mathbb{R}^{n\times m}\)</span>, with <span class="math inline">\((A^\top)_{ij} = a_{ji}\)</span> for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> and <span class="math inline">\(j \in \{1, \ldots, m\}\)</span>. Graphically,
@@ -418,10 +427,10 @@ this can be written as
   \end{pmatrix},
 \end{equation*}\]</span></p>
 <div class="definition">
-<p><span id="def:unlabeled-div-57" class="definition"><strong>Definition A.1  </strong></span>A matrix <span class="math inline">\(A\)</span> is called <strong>symmetric</strong>, if <span class="math inline">\(A^\top = A\)</span>.</p>
+<p><span id="def:unlabeled-div-67" class="definition"><strong>Definition A.1  </strong></span>A matrix <span class="math inline">\(A\)</span> is called <strong>symmetric</strong>, if <span class="math inline">\(A^\top = A\)</span>.</p>
 </div>
 </div>
-<div id="matrix-vector-product" class="section level3" number="17.2.2">
+<div id="matrix-vector-product" class="section level3" number="18.2.2">
 <h3><span class="header-section-number">A.2.2</span> Matrix-vector Product</h3>
 <p>If <span class="math inline">\(A \in \mathbb{R}^{m \times n}\)</span> and <span class="math inline">\(v \in \mathbb{R}^n\)</span>, then
 <span class="math inline">\(Av \in \mathbb{R}^m\)</span> is the vector with
@@ -442,7 +451,7 @@ for all <span class="math inline">\(j \in \{1, \ldots, n\}\)</span>. Going one s
 notation also motivates the expression <span class="math inline">\(u^\top v\)</span> in
 equation <a href="Sx1-matrices.html#eq:inner-product">(A.1)</a>.</p>
 </div>
-<div id="matrix-matrix-product" class="section level3" number="17.2.3">
+<div id="matrix-matrix-product" class="section level3" number="18.2.3">
 <h3><span class="header-section-number">A.2.3</span> Matrix-matrix Product</h3>
 <p>If <span class="math inline">\(A \in \mathbb{R}^{\ell \times m}\)</span> and <span class="math inline">\(B \in \mathbb{R}^{m\times n}\)</span>, then
 <span class="math inline">\(AB \in \mathbb{R}^{\ell \times n}\)</span> is the matrix with
@@ -470,10 +479,10 @@ we have
 \end{equation}\]</span></p></li>
 </ul>
 </div>
-<div id="rank" class="section level3" number="17.2.4">
+<div id="rank" class="section level3" number="18.2.4">
 <h3><span class="header-section-number">A.2.4</span> Rank</h3>
 <div class="definition">
-<p><span id="def:unlabeled-div-58" class="definition"><strong>Definition A.2  </strong></span>The <strong>rank</strong> of a matrix <span class="math inline">\(A \in \mathbb{R}^{m \times n}\)</span> is the dimension of the
+<p><span id="def:unlabeled-div-68" class="definition"><strong>Definition A.2  </strong></span>The <strong>rank</strong> of a matrix <span class="math inline">\(A \in \mathbb{R}^{m \times n}\)</span> is the dimension of the
 image space of <span class="math inline">\(A\)</span>:
 <span class="math display">\[\begin{equation*}
   \mathop{\mathrm{rank}}(A)
@@ -486,10 +495,10 @@ independent rows of <span class="math inline">\(A\)</span>. Thus, for <span clas
 always have <span class="math inline">\(\mathop{\mathrm{rank}}(A) \leq \min(m, n)\)</span>. The matrix <span class="math inline">\(A\)</span>
 is said to have “full rank” if <span class="math inline">\(\mathop{\mathrm{rank}}(A) = \min(m, n)\)</span>.</p>
 </div>
-<div id="trace" class="section level3" number="17.2.5">
+<div id="trace" class="section level3" number="18.2.5">
 <h3><span class="header-section-number">A.2.5</span> Trace</h3>
 <div class="definition">
-<p><span id="def:unlabeled-div-59" class="definition"><strong>Definition A.3  </strong></span>The <strong>trace</strong> of a matrix <span class="math inline">\(A \in \mathbb{R}^{n\times n}\)</span> is given by
+<p><span id="def:unlabeled-div-69" class="definition"><strong>Definition A.3  </strong></span>The <strong>trace</strong> of a matrix <span class="math inline">\(A \in \mathbb{R}^{n\times n}\)</span> is given by
 <span class="math display">\[\begin{equation*}
   \mathop{\mathrm{tr}}(A) = \sum_{i=1}^n a_ii.
 \end{equation*}\]</span></p>
@@ -503,7 +512,7 @@ need to be square for this relation to hold, but the relation only holds for
 cyclic permutations as shown. In general <span class="math inline">\(\mathop{\mathrm{tr}}(ABC) \neq \mathop{\mathrm{tr}}(ACB)\)</span>.</p></li>
 </ul>
 </div>
-<div id="matrix-inverse" class="section level3" number="17.2.6">
+<div id="matrix-inverse" class="section level3" number="18.2.6">
 <h3><span class="header-section-number">A.2.6</span> Matrix Inverse</h3>
 <p>If <span class="math inline">\(A\)</span> is a square matrix and if there is a matrix <span class="math inline">\(B\)</span> such that
 <span class="math inline">\(AB = I\)</span>, then <span class="math inline">\(A\)</span> is called <strong>invertible</strong> and the matrix <span class="math inline">\(B\)</span> is
@@ -528,10 +537,10 @@ Since the inverse is unique, <span class="math inline">\((A^{-1})^\top = A^{-1}\
 </ol>
 </div>
 </div>
-<div id="orthogonal-matrices" class="section level3" number="17.2.7">
+<div id="orthogonal-matrices" class="section level3" number="18.2.7">
 <h3><span class="header-section-number">A.2.7</span> Orthogonal Matrices</h3>
 <div class="definition">
-<p><span id="def:unlabeled-div-60" class="definition"><strong>Definition A.4  </strong></span>A matrix <span class="math inline">\(U\)</span> is called <strong>orthogonal</strong>, if <span class="math inline">\(U^\top U = I = U U^\top\)</span>.</p>
+<p><span id="def:unlabeled-div-70" class="definition"><strong>Definition A.4  </strong></span>A matrix <span class="math inline">\(U\)</span> is called <strong>orthogonal</strong>, if <span class="math inline">\(U^\top U = I = U U^\top\)</span>.</p>
 </div>
 <p>Some important properties of orthogonal matrices:</p>
 <ul>
@@ -542,10 +551,10 @@ Thus, multiplying a vector <span class="math inline">\(x\)</span> by an orthogon
 not change its length.</p></li>
 </ul>
 </div>
-<div id="positive-definite" class="section level3" number="17.2.8">
+<div id="positive-definite" class="section level3" number="18.2.8">
 <h3><span class="header-section-number">A.2.8</span> Positive Definite Matrices</h3>
 <div class="definition">
-<p><span id="def:unlabeled-div-61" class="definition"><strong>Definition A.5  </strong></span>A symmetric matrix <span class="math inline">\(A \in \mathbb{R}^{n\times n}\)</span> is called <strong>positive definite</strong>, if
+<p><span id="def:unlabeled-div-71" class="definition"><strong>Definition A.5  </strong></span>A symmetric matrix <span class="math inline">\(A \in \mathbb{R}^{n\times n}\)</span> is called <strong>positive definite</strong>, if
 <span class="math display">\[\begin{equation*}
   x^\top A x &gt; 0
 \end{equation*}\]</span>
@@ -557,17 +566,17 @@ for all <span class="math inline">\(x \in \mathbb{R}^n\)</span> with <span class
 for all <span class="math inline">\(x \in \mathbb{R}^n\)</span>.</p>
 </div>
 </div>
-<div id="idempotent" class="section level3" number="17.2.9">
+<div id="idempotent" class="section level3" number="18.2.9">
 <h3><span class="header-section-number">A.2.9</span> Idempotent Matrices</h3>
 <div class="definition">
-<p><span id="def:unlabeled-div-62" class="definition"><strong>Definition A.6  </strong></span>The matrix <span class="math inline">\(A\)</span> is <strong>idempotent</strong>, if <span class="math inline">\(A^2 = A\)</span>.</p>
+<p><span id="def:unlabeled-div-72" class="definition"><strong>Definition A.6  </strong></span>The matrix <span class="math inline">\(A\)</span> is <strong>idempotent</strong>, if <span class="math inline">\(A^2 = A\)</span>.</p>
 </div>
 </div>
 </div>
-<div id="eigenvalues" class="section level2" number="17.3">
+<div id="eigenvalues" class="section level2" number="18.3">
 <h2><span class="header-section-number">A.3</span> Eigenvalues</h2>
 <div class="definition">
-<p><span id="def:unlabeled-div-63" class="definition"><strong>Definition A.7  </strong></span>Let <span class="math inline">\(A \in\mathbb{R}^{n\times n}\)</span> be a square matrix and <span class="math inline">\(\lambda\in R\)</span>.
+<p><span id="def:unlabeled-div-73" class="definition"><strong>Definition A.7  </strong></span>Let <span class="math inline">\(A \in\mathbb{R}^{n\times n}\)</span> be a square matrix and <span class="math inline">\(\lambda\in R\)</span>.
 The number <span class="math inline">\(\lambda\)</span> is called an <strong>eigenvalue</strong> of <span class="math inline">\(A\)</span>, if there
 exists a vector <span class="math inline">\(v \neq 0\)</span> such that <span class="math inline">\(A x = \lambda x\)</span>. Any
 such vector <span class="math inline">\(x\)</span> is called an <strong>eigenvector</strong> of <span class="math inline">\(A\)</span> with eigenvalue <span class="math inline">\(\lambda\)</span>.</p>
@@ -595,7 +604,7 @@ are corresponding eigenvectors.</p>
           </div>
         </div>
       </div>
-<a href="S16-examples.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="S17-robust.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="Sx2-probability.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

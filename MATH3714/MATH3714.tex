@@ -152,6 +152,7 @@
 \newcommand{\cor}{\mathop{\mathrm{cor}}}
 \newcommand{\Cov}{\mathop{\mathrm{Cov}}}
 \newcommand{\CN}{\mathcal{N}}
+\renewcommand{\d}{\partial}
 \newcommand{\ds}{\displaystyle}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\eps}{\varepsilon}
@@ -993,7 +994,7 @@ Finally, we can estimate the errors using the residuals
   = y - H y
   = (I - H) y,  \label{eq:fitted-errors}
 \end{equation}
-where \(I\) is the \((p+1)\times (p+1)\) identity matrix.
+where \(I\) is the \(n\times n\) identity matrix.
 
 \hypertarget{example}{%
 \subsection{Example}\label{example}}
@@ -4549,7 +4550,7 @@ Thus, the confidence interval is \(\bigl[ -0.605, 0.301 \bigr]\).
 \begin{itemize}
 \tightlist
 \item
-  \url{https://www1.maths.leeds.ac.uk/~voss/data/20211020.csv}
+  {[}\url{https://www1.maths.leeds.ac.uk/~voss/data/20211020.csv}{]}(\url{https://www1.maths.leeds.ac.uk/~voss/data/20211020.csv})
 \end{itemize}
 
 contains pairs of \((x, y)\) values. Fit the following models to the data:
@@ -4976,8 +4977,8 @@ In this section we consider the influence which individual samples have on
 the estimate. Samples with a large influence may be outliers, and are
 worth checking for validity.
 
-\hypertarget{deleting-observations}{%
-\subsection{Deleting Observations}\label{deleting-observations}}
+\hypertarget{deleting}{%
+\subsection{Deleting Observations}\label{deleting}}
 
 The most direct way to check for the influence of an observation
 is to compute the parameter estimate \(\hat\beta\) both with and without
@@ -5275,8 +5276,8 @@ as \texttt{\$hat}, the vectors \(\hat\beta^{(i)} - \hat\beta\) for each \(i\)
 as \texttt{\$coefficients}, the standard deviations \(\hat\sigma_{(i)}\)
 for each \(i\) as \texttt{\$sigma}, and the residuals \(\hat\varepsilon_i\) as~\texttt{\$wt.res}.
 
-\hypertarget{cooks-distance}{%
-\subsection{Cook's Distance}\label{cooks-distance}}
+\hypertarget{influence}{%
+\subsection{Cook's Distance}\label{influence}}
 
 In the section about \protect\hyperlink{S06-simultaneous}{Estimating Coefficients Simultaneously} we learned
 how to measure distances of estimated parameter vectors: To compare
@@ -5306,7 +5307,7 @@ considered ``large''.
 \end{equation*}
 \end{definition}
 
-We will consider observation \(i\) to be ``influential'' if \(D_i\) is large.
+We will consider observation \(i\) to be \textbf{influential} if \(D_i\) is large.
 Since this ``lives on the scale'' of an \(F_{p+1, n-p-1}\)-distribution,
 we should compare \(D_i\) to typical values of such a distribution. For
 example, we could consider the median. Here is a sample of median values
@@ -5401,8 +5402,8 @@ The black line in the plot is the regression line using all data,
 the red line is the regression line fitted using only the left-most
 six points and leaving out the ``outlier'' at \(x=5\). The difference
 between the two lines makes it clear that the point at \(x=5\) has a
-large effect on the estimated regression line. The easiest way
-to compute the \(D\)-values seems to be the second formula from
+large effect on the estimated regression line. An easy way
+to compute the \(D\)-values is the second formula from
 lemma~\ref{lem:Cook-D-alt}:
 
 \begin{Shaded}
@@ -5854,7 +5855,7 @@ These data are also available in machine-readable form at
 \begin{itemize}
 \tightlist
 \item
-  \url{http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P03Q09.csv}
+  {[}\url{http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P03Q09.csv}{]}(\url{http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P03Q09.csv})
 \end{itemize}
 
 Using these data:
@@ -7985,7 +7986,7 @@ so some care is needed.
 \begin{itemize}
 \tightlist
 \item
-  \url{http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P04Q14.csv}
+  {[}\url{http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P04Q14.csv}{]}(\url{http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P04Q14.csv})
 \end{itemize}
 
 The dataset contains samples \((x_{i,1}, x_{i,2}, y_i)\). We want to
@@ -8158,9 +8159,9 @@ The method described in this section is based on the following three observation
   This gives the residual sum of squares for each model. The we have
   \begin{align*}
     \min_J \hat\sigma^2(J)
-      &= \min_J \frac{1}{n - |J|} \sum_{i=1}^n (y_i - \hat y_i)^2 \\
-      &= \min_{q \in \{0, 1, \ldots, p\}} \min_{J, |J|=q} \frac{1}{n - q} r(J) \\
-      &= \min_{q \in \{0, 1, \ldots, p\}} \frac{1}{n - q} \min_{J, |J|=q} r(J).
+      &= \min_J \frac{1}{n - |J| - 1} \sum_{i=1}^n (y_i - \hat y_i)^2 \\
+      &= \min_{q \in \{0, 1, \ldots, p\}} \min_{J, |J|=q} \frac{1}{n - q - 1} r(J) \\
+      &= \min_{q \in \{0, 1, \ldots, p\}} \frac{1}{n - q - 1} \min_{J, |J|=q} r(J).
   \end{align*}
   This means that we can first minimise the residual sum of squares
   for each fixed number \(q\) of inputs, and then find the \(q\)
@@ -8644,7 +8645,7 @@ one by one until no good enough candidates for removal are left.
 In each step we consider the test statistic \(|T_j|\) for the tests
 \begin{equation*}
   H_0\colon \beta_j = 0
-  \quad\mbox{\textit{vs.}}\quad
+  \quad \textit{vs.} \quad
   H_1\colon \beta_j \neq 0
 \end{equation*}
 for \(j \in \{1, \ldots, p\}\), again as in lemma~\ref{lem:t-test}.
@@ -9714,6 +9715,382 @@ optional \texttt{contrasts.arg} argument to \texttt{lm()} and \texttt{model.matr
   fit.
 \item
   We have seen how different factor codings can be used in R.
+\end{itemize}
+
+\clearpage
+
+\hypertarget{S17-robust}{%
+\section{Robust Regression}\label{S17-robust}}
+
+The overall aim of this part of the module is to find regression
+estimators which work well in the presence of outliers.
+
+\hypertarget{outliers}{%
+\subsection{Outliers}\label{outliers}}
+
+As before, we consider the model
+\begin{equation*}
+  y_i
+  = x_i^\top \beta + \varepsilon_i,
+\end{equation*}
+and we try to estimate \(\beta\) from given data \((x_i, y_i)\) for
+\(i\in \{1, \ldots, n\}\).
+
+An \textbf{outlier} is a sample \((x_i, y_i)\) that differs significantly
+from the majority of observations. The deviation can be either in the
+\(x\)-direction, or the \(y\)-direction, or both. Outliers can either
+occur by chance, or can be caused by errors in the recording or processing
+of the data. In this subsection we will discuss different ways to detect
+outliers.
+
+\hypertarget{leverage}{%
+\subsubsection{Leverage}\label{leverage}}
+
+\begin{definition}
+The \textbf{leverage} of the input \(x_i\) is given by
+\begin{equation*}
+  h_{ii}
+  = x_i^\top (X^\top X)^{-1} x_i,
+\end{equation*}
+where \(X\) is the design matrix.
+\end{definition}
+
+Since \(x_i\) is the \(i\)th row of \(X\), the leverage \(h_{ii}\) equals the \(i\)th
+diagonal element of the hat matrix \(H = X (X^\top X)^{-1} X\).
+
+\begin{lemma}
+The derivative of the fitted value \(\hat y_i\) with respect to the
+response \(y_i\) is given by
+\begin{equation*}
+  \frac{\partial}{\partial y_i} \hat y_i
+  = h_{ii}
+\end{equation*}
+for all \(i\in \{1, \ldots, n\}\).
+\end{lemma}
+
+\begin{proof}
+We have
+\begin{equation*}
+  \hat y_i
+  = (H y)_i
+  = \sum_{j=1}^n h_{ij} y_j.
+\end{equation*}
+Taking derivatives with respect to \(y_i\) completes the proof.
+\end{proof}
+
+The leverage of \(x_i\) describes the \emph{potential} for \(y_i\) to affect the fitted
+line or hyperplane. If \(h_{ii}\) is large, changing of \(y_i\) has a large effect
+on the fitted values. This is in contrast to the influence of a sample, which
+describes \emph{actual} effect on the regression line: in the section about \protect\hyperlink{influence}{Cook's
+Distance}, we considered a sample to be ``influential'', if the regression
+estimates with and without the sample in question were very different.
+
+Since we have \(\sum_{i=1}^n h_{ii} = p+1\),
+the average value of the leverage over all samples is \((p+1) / n\).
+Using a more careful argument,
+one can show that \(h_i \in [1/n, 1]\) for every \(i \in \{1, \ldots, n\}\).
+
+\begin{example}
+We use simulated data to illustrate the effect of outliers and
+the difference between leverage and influence.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20211130}\NormalTok{)}
+
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{12}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{, }\AttributeTok{length.out =}\NormalTok{ n}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)[}\SpecialCharTok{{-}}\NormalTok{(n}\SpecialCharTok{/}\DecValTok{2}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)]}
+\NormalTok{y }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{+} \FloatTok{0.4} \SpecialCharTok{*}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n, }\AttributeTok{sd =} \FloatTok{0.3}\NormalTok{)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+
+\CommentTok{\# we try four different extra samples, one after another:}
+\NormalTok{x.extra }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{2.5}\NormalTok{, }\FloatTok{9.5}\NormalTok{, }\FloatTok{2.5}\NormalTok{, }\FloatTok{9.5}\NormalTok{)}
+\NormalTok{y.extra }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{2.3}\NormalTok{, }\FloatTok{5.4}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{)}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{), }\CommentTok{\# We want a 2x2 grid of plots,}
+    \AttributeTok{mai =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.7}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{), }\CommentTok{\# using smaller margins, and}
+    \AttributeTok{mgp =} \FunctionTok{c}\NormalTok{(}\FloatTok{2.5}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\CommentTok{\# we move the labels closer to the axes.}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{) \{}
+    \FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{xlim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{), }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{5.5}\NormalTok{))}
+    \FunctionTok{abline}\NormalTok{(m)}
+
+\NormalTok{    m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{c}\NormalTok{(y, y.extra[i]) }\SpecialCharTok{\textasciitilde{}} \FunctionTok{c}\NormalTok{(x, x.extra[i]))}
+    \FunctionTok{abline}\NormalTok{(m2, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{, }\AttributeTok{lty=}\StringTok{"dashed"}\NormalTok{)}
+    \FunctionTok{points}\NormalTok{(x.extra[i], y.extra[i], }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{16}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/leverage-1.pdf}
+
+The black circles in all four panels are the same, and the black, solid line is
+the regression line fitted to these points. The filled, red circle is
+different between the panels and the red, dashed line is the regression line
+fitted after this point has been added to the data. In the top-left panel
+there is no outlier. In the top-right panel, the red circle is an \(x\)-space
+outlier. The point has high leverage (since the red lines in the top-right and
+bottom-right panels are very different from each other), but low influence
+(since the red line is close to the black line). The bottom-left panel shows a
+\(y\)-space outlier. The red circle has low leverage (since the red line is
+similar to the top-left panel) and low influence (since the red line is close
+to the black line), but a large residual. Finally, the bottom-right
+panel shows an \(x\)-space outlier with high leverage and high influence.
+\end{example}
+
+\hypertarget{studentised-residuals}{%
+\subsubsection{Studentised Residuals}\label{studentised-residuals}}
+
+Sometimes, \(y\)-space outliers can be detected by having particularly
+large residuals. We have
+\begin{equation*}
+  \hat\varepsilon
+  = (I - H) Y
+  = (I - H) (X\beta + \varepsilon)
+  = (I - H) \varepsilon,
+\end{equation*}
+where we used equation~\eqref{eq:XIH} for the last equality sign.
+Thus we have
+\begin{equation*}
+  \mathop{\mathrm{Cov}}(\hat\varepsilon)
+  = \mathop{\mathrm{Cov}}\bigl( (I - H) \varepsilon\bigr)
+  = (I - H) \sigma^2 I (I - H)^\top
+  = \sigma^2 (I - H).
+\end{equation*}
+Considering the diagonal elements of the covariance matrix, we find
+\(\mathop{\mathrm{Var}}(\hat\varepsilon_i) = \sigma^2 (1 - h_{ii})\), where \(h_{ii}\) is the \(i\)th
+diagonal element of the hat matrix~\(H\). This motivates the following
+definition.
+
+\begin{definition}
+The \textbf{studentised residuals} are given by
+\begin{equation*}
+  r_i
+  := \frac{\hat\varepsilon_i}{\sqrt{\hat\sigma^2 (1-h_{ii})}}.
+\end{equation*}
+\end{definition}
+
+\begin{lemma}
+We have \(r_i \sim t(n-p-1)\).
+\end{lemma}
+
+\begin{proof}
+We have
+\begin{align*}
+  r_i
+  &= \frac{\hat\varepsilon_i}{\sqrt{\hat\sigma^2 (1-h_{ii})}} \\
+  &= \frac{\hat\varepsilon_i / \sqrt{\sigma^2(1-h_{ii})}}{\sqrt{\frac{(n - p - 1)\hat\sigma^2}{\sigma^2}/(n-p-1)}}.
+\end{align*}
+The numerator is standard normally distributed.
+From equation~\eqref{eq:sigma-hat-chi-squared} we know that
+\((n - p - 1)\hat\sigma^2 / \sigma^2 \sim \chi^2(n - p - 1)\). Thus
+we find \(r_i \sim t(n-p-1)\), by the definition of the \(t\)-distribution.
+\end{proof}
+
+Samples where the studentised residuals are large, compared to quantiles
+of the \(t(n-p-1)\)-distribution, might be \(y\)-space outliers.
+
+With the help of lemma~\ref{lem:Cook-D-alt} we can express Cook's
+distance as a function of studentised residuals and leverage. We get
+\begin{align*}
+  D_i
+  &= \frac{\hat\varepsilon_i^2}{(p+1)\hat\sigma^2} \cdot \frac{h_{ii}}{(1-h_{ii})^2} \\
+  &= r_i^2 \frac{h_{ii}}{(p+1)(1-h_{ii})}.
+\end{align*}
+If we denote samples with \(D_i \geq 1\) as influential, we can express the
+condition for influential samples as
+\begin{equation*}
+  r_i^2 \geq (p+1) \frac{1-h_{ii}}{h_{ii}}.
+\end{equation*}
+
+\begin{example}
+Continuing from the previous example, we can plot studentised residuals
+against leverage. As in section~\ref{deleting}, we can use the
+function \texttt{influence()} to easily obtain the diagonal elements of the
+hat matrix.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{), }\CommentTok{\# We want a 2x2 grid of plots,}
+    \AttributeTok{mai =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.7}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{), }\CommentTok{\# using smaller margins, and}
+    \AttributeTok{mgp =} \FunctionTok{c}\NormalTok{(}\FloatTok{2.5}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\CommentTok{\# we move the labels closer to the axes.}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{) \{}
+\NormalTok{    xx }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(x, x.extra[i])}
+\NormalTok{    yy }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(y, y.extra[i])}
+\NormalTok{    n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(xx)}
+\NormalTok{    p }\OtherTok{\textless{}{-}} \DecValTok{1}
+
+\NormalTok{    m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(yy }\SpecialCharTok{\textasciitilde{}}\NormalTok{ xx)}
+
+    \CommentTok{\# get the leverage}
+\NormalTok{    hii }\OtherTok{\textless{}{-}} \FunctionTok{influence}\NormalTok{(m)}\SpecialCharTok{$}\NormalTok{hat}
+
+    \CommentTok{\# get the studentized residuals}
+\NormalTok{    sigma.hat }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(m)}\SpecialCharTok{$}\NormalTok{sigma}
+\NormalTok{    ri }\OtherTok{\textless{}{-}} \FunctionTok{resid}\NormalTok{(m) }\SpecialCharTok{/}\NormalTok{ sigma.hat }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ hii)}
+
+    \FunctionTok{plot}\NormalTok{(hii, ri, }\AttributeTok{xlim=}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{n, }\DecValTok{1}\NormalTok{), }\AttributeTok{ylim=}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{,}\DecValTok{3}\NormalTok{),}
+         \AttributeTok{xlab =} \StringTok{"leverage"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"studentised resid."}\NormalTok{)}
+
+    \CommentTok{\# plot a 95\% interval for the residuals}
+    \FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \SpecialCharTok{+}\FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{))}
+    \FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \SpecialCharTok{{-}}\FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{))}
+
+    \CommentTok{\# also plot the line where D\_i = 1}
+\NormalTok{    h }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{n, }\DecValTok{1}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)}
+\NormalTok{    r.infl }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{((p}\SpecialCharTok{+}\DecValTok{1}\NormalTok{) }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{h) }\SpecialCharTok{/}\NormalTok{ h)}
+    \FunctionTok{lines}\NormalTok{(h, r.infl, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+    \FunctionTok{lines}\NormalTok{(h, }\SpecialCharTok{{-}}\NormalTok{r.infl, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/reslev-1.pdf}
+
+If the model is correct, \(95\%\) of the samples should lie in the
+band formed by the two horizontal lines. In the bottom-left panel we can
+recognise a \(y\)-space outlier by the fact that it is outside the band.
+In the two right-hand panels we can recognise the \(x\)-space outlier
+by the fact that it has much larger leverage than the other samples.
+Finally, samples which are to the right of the curved, red line
+correspond the ``influential'' observations.
+\end{example}
+
+\hypertarget{breakdown-points}{%
+\subsection{Breakdown points}\label{breakdown-points}}
+
+In the example we have seen that changing a single observation can
+have a large effect on the regression line found by least squares
+regression. Using the formula
+\begin{equation*}
+  \hat\beta
+  = (X^\top X)^{-1} X^\top y,
+\end{equation*}
+it is easy to see that it is enough to change a single sample,
+letting \(y_i \to\infty\), to get \(\|\hat\beta\| \to \infty\).
+
+\begin{definition}
+The \textbf{finite sample breakdown point} of an estimator \(\hat\theta\)
+is the smalles fraction of samples such that
+\(\|\hat\theta\| \to \infty\) can be achieved by only changing this
+fraction of samples. Mathematically, this can be expressed as follows:
+Let \(z = \bigl( (x_1, y_1), \ldots, (x_n, y_n) \bigr)\) and consider
+all \(z'\) such that the set \(\bigl\{ i \bigm| z_i \neq z'_i \bigr\}\) has
+at most \(m\) elements. Then the finite sample breakdown point
+is given by
+\begin{equation*}
+  \varepsilon_n(\hat\theta)
+  := \frac1n \min \bigl\{ m \bigm| \sup_{z'} \|\hat\theta(z')\| = \infty \bigr\}.
+\end{equation*}
+The (asymptotic) \textbf{breakdown point} of \(\hat\theta\) is given
+by
+\begin{equation*}
+  \varepsilon(\hat\theta)
+  := \lim_{n\to\infty} \varepsilon_n(\hat\theta).
+\end{equation*}
+\end{definition}
+
+Clearly we have \(\varepsilon_n(\hat\theta) \in [0, 1]\) for all \(n\)
+and thus \(\varepsilon(\hat\theta) \in [0, 1]\).
+Robust estimators have \(\varepsilon(\hat\theta) > 0\).
+Using the argument above, we see that \(\varepsilon_n(\hat\beta) = 1/n \to 0\)
+as \(n\to \infty\). Thus, the least squares estimate is not robust.
+
+\begin{example}
+For illustration we show a very simple version of a robust estimator
+for the regression line in simple linear regression. The estimate
+is called a \textbf{resistant line} or \textbf{Tukey line}. Assume we are
+given data \((x_i, y_i)\) for \(i \in \{1, \ldots, n\}\). We start by sorting
+the \(x_i\) in increasing order: \(x_{(1)} \leq \cdots \leq x_{(n)}\).
+Then we define \(x_\mathrm{L}\), \(x_\mathrm{M}\) and \(x_\mathrm{R}\)
+as the median of the lower, middle and upper third of the \(x_{(i)}\),
+and \(y_\mathrm{L}\), \(y_\mathrm{M}\) and \(y_\mathrm{R}\) as the median
+of the corresponding \(y\) values, respectively. Finally, set
+\begin{equation*}
+  \hat\beta_1
+  = \frac{y_\mathrm{R} - y_\mathrm{L}}{x_\mathrm{R} - x_\mathrm{L}}
+\end{equation*}
+as an estimate of the slope, and
+\begin{equation*}
+  \hat\beta_0
+  = \frac{y_\mathrm{L} + y_\mathrm{M} + y_\mathrm{R}}{3}
+      - \hat\beta_1 \frac{x_\mathrm{L} + x_\mathrm{M} + x_\mathrm{R}}{3}.
+\end{equation*}
+
+We can easily implement this method in R. To demonstrate this,
+we use simulated data with artificial outliers:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20211129}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{24}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n)}
+
+\NormalTok{outlier }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{5}
+\NormalTok{y[outlier] }\OtherTok{\textless{}{-}}\NormalTok{ y[outlier] }\SpecialCharTok{+} \DecValTok{15}
+\end{Highlighting}
+\end{Shaded}
+
+Sort start by sorting the data in order of increasing \(x\)-values:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idx }\OtherTok{\textless{}{-}} \FunctionTok{order}\NormalTok{(x)}
+\NormalTok{x }\OtherTok{\textless{}{-}}\NormalTok{ x[idx]}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ y[idx]}
+\end{Highlighting}
+\end{Shaded}
+
+No we can compute the resistant line:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xL }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(x[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{8}\NormalTok{])}
+\NormalTok{xM }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(x[}\DecValTok{9}\SpecialCharTok{:}\DecValTok{16}\NormalTok{])}
+\NormalTok{xR }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(x[}\DecValTok{17}\SpecialCharTok{:}\DecValTok{24}\NormalTok{])}
+\NormalTok{yL }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(y[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{8}\NormalTok{])}
+\NormalTok{yM }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(y[}\DecValTok{9}\SpecialCharTok{:}\DecValTok{16}\NormalTok{])}
+\NormalTok{yR }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(y[}\DecValTok{17}\SpecialCharTok{:}\DecValTok{24}\NormalTok{])}
+\NormalTok{beta1 }\OtherTok{\textless{}{-}}\NormalTok{ (yR }\SpecialCharTok{{-}}\NormalTok{ yL) }\SpecialCharTok{/}\NormalTok{ (xR }\SpecialCharTok{{-}}\NormalTok{ xL)}
+\NormalTok{beta0 }\OtherTok{\textless{}{-}}\NormalTok{ (yL }\SpecialCharTok{+}\NormalTok{ yM }\SpecialCharTok{+}\NormalTok{ yR) }\SpecialCharTok{/} \DecValTok{3} \SpecialCharTok{{-}}\NormalTok{ beta1 }\SpecialCharTok{*}\NormalTok{ (xL }\SpecialCharTok{+}\NormalTok{ xM }\SpecialCharTok{+}\NormalTok{ xR) }\SpecialCharTok{/} \DecValTok{3}
+\end{Highlighting}
+\end{Shaded}
+
+Finally, we plot the result.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{col =} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{, }\AttributeTok{each=}\DecValTok{8}\NormalTok{))}
+\FunctionTok{abline}\NormalTok{(beta0, beta1, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =}\NormalTok{ xL, }\AttributeTok{col =} \DecValTok{1}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =}\NormalTok{ xM, }\AttributeTok{col =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =}\NormalTok{ xR, }\AttributeTok{col =} \DecValTok{3}\NormalTok{)}
+\FunctionTok{segments}\NormalTok{(}\FunctionTok{c}\NormalTok{(x[}\DecValTok{1}\NormalTok{], x[}\DecValTok{9}\NormalTok{], x[}\DecValTok{17}\NormalTok{]), }\FunctionTok{c}\NormalTok{(yL, yM, yR), }\FunctionTok{c}\NormalTok{(x[}\DecValTok{8}\NormalTok{], x[}\DecValTok{16}\NormalTok{], x[}\DecValTok{24}\NormalTok{]),}
+         \AttributeTok{col =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/resistant-1.pdf}
+
+The horizontal and vertical line segments in the plot give the medians
+used in the computation. The blue, sloped line is the resistant line.
+One can see that the line closely follows the bulk of the samples
+and that it is not affected by the five outliers.
+
+A variant of this method is implemented by the R function~\texttt{line()}.
+\end{example}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  Leverage can be used to detect \(x\)-space outliers.
+\item
+  Studentised residuals can be used to detect \(y\)-space outliers.
+\item
+  The breakdown point of an estimator is a measure for how robust
+  the method is to outliers.
 \end{itemize}
 
 \clearpage

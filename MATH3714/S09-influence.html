@@ -247,8 +247,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="9" data-path="S09-influence.html"><a href="S09-influence.html"><i class="fa fa-check"></i><b>9</b> The Influence of Observations</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting-observations"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
-<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#cooks-distance"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
+<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#influence"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="S10-multicoll.html"><a href="S10-multicoll.html"><i class="fa fa-check"></i><b>10</b> Multicollinearity</a>
 <ul>
@@ -313,6 +313,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="16.1" data-path="S16-examples.html"><a href="S16-examples.html#interactions-example"><i class="fa fa-check"></i><b>16.1</b> Use of Interaction Terms in Modelling</a></li>
 <li class="chapter" data-level="16.2" data-path="S16-examples.html"><a href="S16-examples.html#codings"><i class="fa fa-check"></i><b>16.2</b> Alternative Factor Codings</a></li>
 </ul></li>
+<li class="chapter" data-level="17" data-path="S17-robust.html"><a href="S17-robust.html"><i class="fa fa-check"></i><b>17</b> Robust Regression</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="S17-robust.html"><a href="S17-robust.html#outliers"><i class="fa fa-check"></i><b>17.1</b> Outliers</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="S17-robust.html"><a href="S17-robust.html#leverage"><i class="fa fa-check"></i><b>17.1.1</b> Leverage</a></li>
+<li class="chapter" data-level="17.1.2" data-path="S17-robust.html"><a href="S17-robust.html#studentised-residuals"><i class="fa fa-check"></i><b>17.1.2</b> Studentised Residuals</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="S17-robust.html"><a href="S17-robust.html#breakdown-points"><i class="fa fa-check"></i><b>17.2</b> Breakdown points</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
 <ul>
@@ -362,7 +371,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In this section we consider the influence which individual samples have on
 the estimate. Samples with a large influence may be outliers, and are
 worth checking for validity.</p>
-<div id="deleting-observations" class="section level2" number="9.1">
+<div id="deleting" class="section level2" number="9.1">
 <h2><span class="header-section-number">9.1</span> Deleting Observations</h2>
 <div class="videowrap">
 <div class="videowrapper">
@@ -593,7 +602,7 @@ as <code>$hat</code>, the vectors <span class="math inline">\(\hat\beta^{(i)} - 
 as <code>$coefficients</code>, the standard deviations <span class="math inline">\(\hat\sigma_{(i)}\)</span>
 for each <span class="math inline">\(i\)</span> as <code>$sigma</code>, and the residuals <span class="math inline">\(\hat\varepsilon_i\)</span> as <code>$wt.res</code>.</p>
 </div>
-<div id="cooks-distance" class="section level2" number="9.2">
+<div id="influence" class="section level2" number="9.2">
 <h2><span class="header-section-number">9.2</span> Cook’s Distance</h2>
 <div class="videowrap">
 <div class="videowrapper">
@@ -627,7 +636,7 @@ considered “large”.</p>
   = \frac{(\hat\beta^{(i)} - \hat\beta)^\top X^\top X (\hat\beta^{(i)} - \hat\beta)}{(p+1)\hat\sigma^2}.
 \end{equation*}\]</span></p>
 </div>
-<p>We will consider observation <span class="math inline">\(i\)</span> to be “influential” if <span class="math inline">\(D_i\)</span> is large.
+<p>We will consider observation <span class="math inline">\(i\)</span> to be <strong>influential</strong> if <span class="math inline">\(D_i\)</span> is large.
 Since this “lives on the scale” of an <span class="math inline">\(F_{p+1, n-p-1}\)</span>-distribution,
 we should compare <span class="math inline">\(D_i\)</span> to typical values of such a distribution. For
 example, we could consider the median. Here is a sample of median values
@@ -700,8 +709,8 @@ simulated data. We include an <span class="math inline">\(x\)</span>-space outli
 the red line is the regression line fitted using only the left-most
 six points and leaving out the “outlier” at <span class="math inline">\(x=5\)</span>. The difference
 between the two lines makes it clear that the point at <span class="math inline">\(x=5\)</span> has a
-large effect on the estimated regression line. The easiest way
-to compute the <span class="math inline">\(D\)</span>-values seems to be the second formula from
+large effect on the estimated regression line. An easy way
+to compute the <span class="math inline">\(D\)</span>-values is the second formula from
 lemma <a href="S09-influence.html#lem:Cook-D-alt">9.4</a>:</p>
 <div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="S09-influence.html#cb147-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
 <span id="cb147-2"><a href="S09-influence.html#cb147-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
