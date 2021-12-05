@@ -156,11 +156,13 @@
 \newcommand{\ds}{\displaystyle}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\eps}{\varepsilon}
+\newcommand{\median}{\mathop{\mathrm{median}}}
 \newcommand{\MSE}{\mathop{\mathrm{MSE}}\nolimits}
 \renewcommand{\phi}{\varphi}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\rank}{\mathop{\mathrm{rank}}}
 \newcommand{\se}{\mathop{\mathrm{se}}}
+\newcommand{\sign}{\mathop{\mathrm{sign}}}
 \newcommand{\stdev}{\mathop{\mathrm{stdev}}}
 \newcommand{\tr}{\mathop{\mathrm{tr}}}
 \newcommand{\Var}{\mathop{\mathrm{Var}}}
@@ -4336,9 +4338,9 @@ the following random variables?
 \item
   \(X^2 + Y + Z\),
 \item
-  \(\displaystyle \frac{\sqrt{2}X}{\sqrt{Y}}\),
+  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}}\),
 \item
-  \(\displaystyle \frac{2X^2}{Y}\), and
+  \(\displaystyle\frac{2X^2}{Y}\), and
 \item
   \(1.5\, Y/Z\).
 \end{itemize}
@@ -4361,9 +4363,9 @@ then \((V_1/d_1)/(V_2/d_2) \sim F(d_1, d_2)\). Using these rules:
 \item
   \(X^2 + Y + Z \sim \chi^2(1+2+3) = \chi^2(6)\),
 \item
-  \(\displaystyle \frac{\sqrt{2}X}{\sqrt{Y}} = \frac{X}{\sqrt{Y/2}} \sim t(2)\),
+  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}} = \frac{X}{\sqrt{Y/2}} \sim t(2)\),
 \item
-  \(\displaystyle \frac{2X^2}{Y} = \frac{X^2/1}{Y/2} \sim F(1,2)\),
+  \(\displaystyle\frac{2X^2}{Y} = \frac{X^2/1}{Y/2} \sim F(1,2)\),
 \item
   \(\displaystyle 1.5\, Y/Z = \frac{Y/2}{Z/3} \sim F(2, 3)\).
 \end{itemize}
@@ -7803,8 +7805,6 @@ in a regression model.
 \section*{Problem Sheet 4}\label{P04}}
 \addcontentsline{toc}{section}{Problem Sheet 4}
 
-\excludecomment{myanswers}
-
 You should attempt all these questions and write up your solutions in advance
 of your workshop in week~9 where the answers will be discussed.
 
@@ -10091,6 +10091,489 @@ A variant of this method is implemented by the R function~\texttt{line()}.
 \item
   The breakdown point of an estimator is a measure for how robust
   the method is to outliers.
+\end{itemize}
+
+\clearpage
+
+\hypertarget{S18-m-est}{%
+\section{M-Estimators}\label{S18-m-est}}
+
+In this section we introduce a class of estimators which can be robust to
+\(y\)-space outliers.
+
+\hypertarget{definition}{%
+\subsection{Definition}\label{definition}}
+
+\begin{definition}
+An \textbf{M-estimator} for the regression coefficients~\(\beta\) is a method
+which computes the estimator \(\hat\beta\) as
+\begin{equation*}
+  \hat\beta
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r(\varepsilon)
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r(y - X\beta),
+\end{equation*}
+where \(r\) is given by
+\begin{equation*}
+  r(\varepsilon)
+  = \sum_{i=1}^n \rho(\varepsilon_i)
+\end{equation*}
+and \(\rho\colon \mathbb{R}\to \mathbb{R}\) is a symmetric, continuous function with
+a unique minimum at~\(0\). The function \(\rho\) is called the
+\textbf{objective function} of the M-estimator.
+\end{definition}
+
+This is a generalisation of the least squares estimator, where the least
+squares estimator corresponds to the case \(\rho(\varepsilon) = \varepsilon^2\).
+
+For most functions \(\rho\) there is no closed-form expression for
+the estimate \(\hat\beta\), but numerical minimisation can be used to find
+numerical values for \(\hat\beta\). In R, the \href{https://rdrr.io/r/stats/optim.html}{function \texttt{optim()}}
+can be used for this purpose.
+
+\begin{example}
+The M-estimator with \(\rho(u) = |u|\) is called the
+\textbf{least absolute values} (LAV) estimator. Since \(\rho\) grows
+slower than \(u^2\) as \(|u| \to\infty\), this estimator is more resistant
+to \(y\)-space outliers than least squares regression is. On the other hand,
+for \(x\)-space outliers which are sufficiently far away from the bulk of the
+data, the LAV line will pass exactly through the corresponding point
+\((x_i, y_i)\), so the LAV estimator is more susceptible to \(x\)-space outliers
+than least squares regression is, and the breakdown point is still \(1/n\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{202111202}\NormalTok{)}
+
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{12}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{, }\AttributeTok{length.out =}\NormalTok{ n}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)[}\SpecialCharTok{{-}}\NormalTok{(n}\SpecialCharTok{/}\DecValTok{2}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)]}
+\NormalTok{y }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{+} \FloatTok{0.4} \SpecialCharTok{*}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n, }\AttributeTok{sd =} \FloatTok{0.3}\NormalTok{)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+
+\CommentTok{\# we try four different extra samples, one after another:}
+\NormalTok{x.extra }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\FloatTok{2.5}\NormalTok{, }\DecValTok{20}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{4}\NormalTok{)}
+\NormalTok{y.extra }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{)}
+
+\NormalTok{lav }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(par, x, y) \{}
+\NormalTok{  beta0 }\OtherTok{\textless{}{-}}\NormalTok{ par[}\DecValTok{1}\NormalTok{]}
+\NormalTok{  beta1 }\OtherTok{\textless{}{-}}\NormalTok{ par[}\DecValTok{2}\NormalTok{]}
+  \FunctionTok{sum}\NormalTok{(}\FunctionTok{abs}\NormalTok{(y }\SpecialCharTok{{-}}\NormalTok{ beta0 }\SpecialCharTok{{-}}\NormalTok{ beta1}\SpecialCharTok{*}\NormalTok{x))}
+\NormalTok{\}}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{), }\CommentTok{\# We want a 2x2 grid of plots,}
+    \AttributeTok{mai =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.7}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{), }\CommentTok{\# using smaller margins, and}
+    \AttributeTok{mgp =} \FunctionTok{c}\NormalTok{(}\FloatTok{2.5}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\CommentTok{\# we move the labels closer to the axes.}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{) \{}
+  \FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{xlim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{21}\NormalTok{), }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{))}
+  \FunctionTok{abline}\NormalTok{(m)}
+
+\NormalTok{  o }\OtherTok{\textless{}{-}} \FunctionTok{optim}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{), lav, }\ConstantTok{NULL}\NormalTok{, }\FunctionTok{c}\NormalTok{(x, x.extra[i]), }\FunctionTok{c}\NormalTok{(y, y.extra[i]))}
+  \FunctionTok{abline}\NormalTok{(o}\SpecialCharTok{$}\NormalTok{par[}\DecValTok{1}\NormalTok{], o}\SpecialCharTok{$}\NormalTok{par[}\DecValTok{2}\NormalTok{], }\AttributeTok{col=}\StringTok{"red"}\NormalTok{, }\AttributeTok{lty=}\StringTok{"dashed"}\NormalTok{)}
+  \FunctionTok{points}\NormalTok{(x.extra[i], y.extra[i], }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{16}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/lav-estimator-1.pdf}
+\end{example}
+
+Define \(s(\beta) = r(y - X\beta)\). Then we have
+\begin{equation}
+  \hat\beta
+  = \mathop{\mathrm{arg\,min}}\limits_\beta s(\beta).  \label{eq:m-est-min}
+\end{equation}
+Some care is neede since the function \(s\) may have more than one
+local minimum, and even the global minimum may not be uniquely
+defined.
+
+\begin{lemma}
+Assume that \(\rho\) is convex. Then \(s\) is convex.
+\end{lemma}
+
+\begin{proof}
+Here we use the property that a function \(f\colon \mathbb{R}^{p+1} \to \mathbb{R}\) is convex,
+if and only if
+\begin{equation*}
+  f\bigl( \lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr)
+  \leq \lambda f\bigl( \beta^{(1)} \bigr) + (1 - \lambda) f\bigl( \beta^{(2)} \bigr)
+\end{equation*}
+for all \(\beta^{(1)}, \beta^{(2)}\in \mathbb{R}^{p+1}\) and all \(\lambda \in [0, 1]\).
+Since \(\rho\) is convex, we find
+\begin{align*}
+  \hskip1cm&\hskip-1cm
+  s\bigl( \lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr) \\
+  &= r\Bigl( y - X \bigl(\lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr) \Bigr) \\
+  &= r\Bigl( \lambda \bigl( y - X \beta^{(1)} \bigr)
+    + (1 - \lambda) \bigl( y - X \beta^{(2)} \bigr) \Bigr) \\
+  &= \sum_{i=1}^n \rho \Bigl( \lambda \bigl( y - X \beta^{(1)} \bigr)_i
+    + (1 - \lambda) \bigl( y - X \beta^{(2)} \bigr)_i \Bigr) \\
+  &\leq \sum_{i=1}^n \Bigl( \lambda \rho \bigl( y - X \beta^{(1)} \bigr)_i
+    + (1 - \lambda) \rho \bigl( y - X \beta^{(2)} \bigr)_i \Bigr) \\
+  &= \lambda r\bigl( y - X \beta^{(1)} \bigr)
+    + (1 - \lambda) r\bigl( y - X \beta^{(2)} \bigr) \\
+  &= \lambda s\bigl( \beta^{(1)} \bigr) + (1 - \lambda) s\bigl( \beta^{(2)} \bigr).
+\end{align*}
+Thus \(s\) is convex and the proof is complete.
+\end{proof}
+
+This shows that the problem of finding \(\hat\beta\) is better behaved when
+\(\rho\) is convex. For example, in this case, every local minimum of \(s\) is
+also a global minimum and the set of all minima is a convex set.
+
+M-estimates in general are not scale-invariant, \emph{i.e.}~if \(y\) is measured
+in different units, the regression line changes. A scale-invariant, robust
+estimator is given by
+\begin{equation*}
+  \hat\beta
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r\Bigl( \frac{\varepsilon}{\hat\sigma} \Bigr)
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r\Bigl( \frac{y - X\beta}{\hat\sigma} \Bigr),
+\end{equation*}
+where \(\hat \sigma\) is a robust estimator of the residual standard deviation,
+for example the \textbf{median absolute deviation} (MAD) given by
+\begin{equation*}
+  \hat\sigma
+  = \mathop{\mathrm{median}}\bigl| \hat\varepsilon_i - \mathop{\mathrm{median}}(\hat\varepsilon_i) \bigr|.
+\end{equation*}
+
+\hypertarget{iterative-methods}{%
+\subsection{Iterative Methods}\label{iterative-methods}}
+
+If \(\rho\) is differentiable, say \(\rho' = \psi\), then gradient-based methods
+can be used to find the minimum in equation~\eqref{eq:m-est-min}. The basis of
+this approach is the following lemma.
+
+\begin{lemma}
+If \(\rho' = \psi\), then the M-estimate satisfies
+\begin{equation}
+  \sum_{i=1}^n \psi\bigl( (y - X\hat\beta)_i \bigr)
+    \begin{pmatrix}
+      1 \\ x_{i1} \\ \vdots \\ x_{ip}
+    \end{pmatrix}
+  = 0 \in \mathbb{R}^{p+1}.  \label{eq:psi-root}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Since \(\hat\beta\) minimises the function \(r\), we have
+\begin{align*}
+  0
+  &= \left. \frac{\partial}{\partial\beta_j} r\bigl( y - X\beta \bigr) \right|_{\beta=\hat\beta} \\
+  &= \left. \frac{\partial}{\partial\beta_j} \sum_{i=1}^n \rho\bigl( (y - X\beta)_i \bigr) \right|_{\beta=\hat\beta} \\
+  &= \left. \sum_{i=1}^n \psi\bigl( (y - X\beta)_i \bigr) \frac{\partial}{\partial\beta_j} \bigl( y - X\beta \bigr)_i \right|_{\beta=\hat\beta} \\
+  &= \left. \sum_{i=1}^n \psi\bigl( (y - X\beta)_i \bigr) (-x_{ij}) \right|_{\beta=\hat\beta} \\
+  &= - \sum_{i=1}^n \psi\bigl( (y - X\hat\beta)_i \bigr) x_{ij}.
+\end{align*}
+where we use the convention \(x_{i0} = 1\). This completes the proof.
+\end{proof}
+
+With the result of the lemma, we have turned the problem of finding
+\(\hat\beta\) into the problem of finding the roots of a non-linear
+function. To solve this problem, we can for example use one
+of the generic root finding algorithms, for example
+\href{https://en.wikipedia.org/wiki/Newton\%27s_method}{Newton's method}.
+
+In the context of M-estimates, a more specialised method is often used in the
+literature. For this method we define weights
+\begin{equation}
+  w_i
+  := \frac{\psi\bigl( (y - X\hat\beta)_i \bigr)}{(y - X\hat\beta)_i}
+                                \label{eq:psi-weights}
+\end{equation}
+and write \(W\) for the diagonal matrix which has \(w_1, \ldots, w_n\)
+on the diagonal. Using this notation, we can rewrite
+condition~\eqref{eq:psi-root} as
+\begin{equation*}
+  X^\top W (y - X\hat\beta)
+  = 0
+\end{equation*}
+and solving for \(\hat\beta\) gives
+\begin{equation}
+  \hat\beta
+  = (X^\top W X)^{-1} X^\top W y. \label{eq:irwls}
+\end{equation}
+This equation looks very similar to our formula for the least squares
+estimate, the only change being the presence of the matrix~\(W\).
+One can check that the value \(\hat\beta\) computed in this way
+also represents the solution of the weighted least-squares problem
+\begin{equation*}
+  \hat\beta
+  = \mathop{\mathrm{arg\,min}}\limits_\beta \sum_{i=1}^n w_i \bigl( y_i - \beta_0 - \beta_1 x_{i1} - \cdots - \beta_p x_{ip} \bigr)^2.
+\end{equation*}
+
+While equation~\eqref{eq:irwls} looks like the solution of a linear problem at
+first glance, the weight matrix \(W\) depends on \(\hat\beta\) and this equation
+still represents a non-linear equation for~\(\hat\beta\).
+
+The \textbf{iteratively re-weighted least squares} method is an iterative method
+for solving equation~\eqref{eq:irwls}. Starting from an initial guess \(\hat\beta^{(0)}\)
+for \(\hat\beta\), \emph{e.g.} the least squares estimate or the zero vector,
+the method repeats the following steps for \(k = 0, 1, 2, \ldots\):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Using equation~\eqref{eq:psi-weights}, compute the weight
+  matrix \(W^{(k)}\) corresponding to \(\hat\beta^{(k)}\).
+\item
+  Compute \(\displaystyle\hat\beta^{(k+1)} = (X^\top W^{(k)} X)^{-1} X^\top W^{(k)} y\).
+\end{enumerate}
+
+The algorithm finishes either after a fixed number of steps, or when the values
+of \(\hat\beta^{(k)}\) don't change much between steps any more, or when the
+``residual'' \(X^\top W (y - X\hat\beta)\) is ``small enough''.
+
+\hypertarget{objective-functions}{%
+\subsection{Objective Functions}\label{objective-functions}}
+
+In this section we will discuss different choices of the objective
+function~\(\rho\), together with the derivative \(\psi\) and
+the weight function \(w(\varepsilon) = \psi(\varepsilon) / \varepsilon\).
+
+\hypertarget{least-squares-method}{%
+\subsubsection{Least Squares Method}\label{least-squares-method}}
+
+Here we can write
+\begin{equation*}
+  \rho(\varepsilon)
+  = \varepsilon^2 / 2.
+\end{equation*}
+The factor \(1/2\), which we omitted before, does not change the estimate. We
+include the factor here to give \(\psi\) a simpler form and to make comparison
+to the following examples easier. The derivative of \(\rho\) is given by
+\begin{equation*}
+  \psi(\varepsilon)
+  = \varepsilon
+\end{equation*}
+
+The following R code can be used to plot \(\psi\) and the weight
+function~\(w\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{eps }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{201}\NormalTok{)}
+\NormalTok{psi }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(eps) eps}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{),}
+    \AttributeTok{mai =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.7}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{),}
+    \AttributeTok{mgp =} \FunctionTok{c}\NormalTok{(}\FloatTok{1.7}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(eps, }\FunctionTok{psi}\NormalTok{(eps), }\AttributeTok{type=}\StringTok{"l"}\NormalTok{,}
+     \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(epsilon), }\AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{psi}\NormalTok{(epsilon)))}
+\FunctionTok{plot}\NormalTok{(eps, }\FunctionTok{psi}\NormalTok{(eps) }\SpecialCharTok{/}\NormalTok{ eps, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{, }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+     \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(epsilon),}
+     \AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{psi}\NormalTok{(epsilon)}\SpecialCharTok{/}\NormalTok{epsilon))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/psi-lsq-1.pdf}
+
+The right-hand plot shows that weight of observations does not depend
+on their magnitude. This property is what makes the least squares estimate
+susceptible to outliers.
+
+\hypertarget{least-absolute-values}{%
+\subsubsection{Least Absolute Values}\label{least-absolute-values}}
+
+Here we have
+\begin{equation*}
+  \rho(\varepsilon)
+  = |\varepsilon|.
+\end{equation*}
+The derivative of this function is
+\begin{align*}
+  \psi(\varepsilon)
+  &= \begin{cases}
+    -1 & \mbox{if } \varepsilon< 0, \\
+    +1 & \mbox{if } \varepsilon> 0
+  \end{cases} \\
+  &= \mathop{\mathrm{sign}}(\varepsilon)
+\end{align*}
+and the weight function is
+\begin{equation*}
+  w(\varepsilon)
+  = \frac{\mathop{\mathrm{sign}}(\varepsilon)}{\varepsilon}
+  = \frac{1}{|\varepsilon|}.
+\end{equation*}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{psi }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(eps) }\FunctionTok{sign}\NormalTok{(eps)}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{),}
+    \AttributeTok{mai =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.7}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{),}
+    \AttributeTok{mgp =} \FunctionTok{c}\NormalTok{(}\FloatTok{1.7}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(eps, }\FunctionTok{psi}\NormalTok{(eps), }\AttributeTok{type=}\StringTok{"l"}\NormalTok{,}
+     \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(epsilon), }\AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{psi}\NormalTok{(epsilon)))}
+\FunctionTok{plot}\NormalTok{(eps, }\FunctionTok{psi}\NormalTok{(eps) }\SpecialCharTok{/}\NormalTok{ eps, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{, }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+     \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(epsilon),}
+     \AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{psi}\NormalTok{(epsilon)}\SpecialCharTok{/}\NormalTok{epsilon))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/psi-abs-1.pdf}
+
+\hypertarget{hubers-t-function}{%
+\subsubsection{\texorpdfstring{Huber's \(t\)-function}{Huber's t-function}}\label{hubers-t-function}}
+
+This method uses the following objective function:
+\begin{equation*}
+  \rho(\varepsilon)
+  = \begin{cases}
+    \frac12 \varepsilon^2 & \mbox{if } |\varepsilon|\leq t \\
+    t|\varepsilon| - \frac12 t^2 & \mbox{if } |\varepsilon| > t
+  \end{cases}
+\end{equation*}
+The parameter \(t > 0\) can be used to tune the method. The influence function
+\(\psi\) is given by
+\begin{equation*}
+\psi(\varepsilon)
+= \begin{cases}
+\varepsilon& \mbox{if } |\varepsilon|\leq t \\
+t \mathop{\mathrm{sign}}(\varepsilon) & \mbox{if } |\varepsilon| > t.
+\end{cases}
+\end{equation*}
+
+A plot of \(\psi\) and \(\psi(\varepsilon) / \varepsilon\) shows that for this method
+the weight of observations where the residuals satisfy \(|\varepsilon_i| \leq t\)
+is the same as for least squares, but larger residuals get lower weights,
+leading to a more robust estimator.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{psi }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(eps) }\FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(eps) }\SpecialCharTok{\textless{}=}\NormalTok{ t, eps, t }\SpecialCharTok{*} \FunctionTok{sign}\NormalTok{(eps))}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{),}
+    \AttributeTok{mai =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.7}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{),}
+    \AttributeTok{mgp =} \FunctionTok{c}\NormalTok{(}\FloatTok{1.7}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(eps, }\FunctionTok{psi}\NormalTok{(eps), }\AttributeTok{type=}\StringTok{"l"}\NormalTok{,}
+     \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(epsilon), }\AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{psi}\NormalTok{(epsilon)))}
+\FunctionTok{plot}\NormalTok{(eps, }\FunctionTok{psi}\NormalTok{(eps) }\SpecialCharTok{/}\NormalTok{ eps, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{, }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+     \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(epsilon),}
+     \AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{psi}\NormalTok{(epsilon)}\SpecialCharTok{/}\NormalTok{epsilon))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/psi-huber-1.pdf}
+
+\hypertarget{hampels-method}{%
+\subsubsection{Hampel's Method}\label{hampels-method}}
+
+Here we have tuning parameters \(0 < a < b < c\), and the objective function
+is
+\begin{equation*}
+\rho(\varepsilon)
+= \begin{cases}
+\frac{1}{2}\varepsilon^2& \mbox{ if } |\varepsilon|\le a\\
+a |\varepsilon|-\frac{1}{2} a^2 & \mbox{ if } a \le |\varepsilon| <b\\
+a \frac{(|\varepsilon|-c)^2}{2(b-c)}+\frac{1}{2}a(b+c-a) & \mbox{ if } b \le |\varepsilon| \le c\\
+\frac{a(b+c-a)}{2} & \mbox{ otherwise,}
+\end{cases}
+\end{equation*}
+with derivative
+\begin{equation*}
+\psi(\varepsilon)
+= \begin{cases}
+\varepsilon& \mbox{if } |\varepsilon|\leq a, \\
+a \mathop{\mathrm{sign}}(\varepsilon) & \mbox{if } a < |\varepsilon| \leq b, \\
+a \frac{\varepsilon- c \mathop{\mathrm{sign}}(\varepsilon)}{b - c} & \mbox{if } b < |\varepsilon| \leq c, \\
+0 & \mbox{if } c < |\varepsilon|.
+\end{cases}
+\end{equation*}
+Since these formulas are tedious to understand, we consider plots
+of \(\psi\) and \(\psi(\varepsilon) / \varepsilon\) again:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OtherTok{\textless{}{-}} \FloatTok{0.5}
+\NormalTok{b }\OtherTok{\textless{}{-}} \FloatTok{1.5}
+\NormalTok{c }\OtherTok{\textless{}{-}} \FloatTok{2.5}
+\NormalTok{psi }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(eps) \{}
+    \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(eps) }\SpecialCharTok{\textless{}=}\NormalTok{ a, eps,}
+           \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(eps) }\SpecialCharTok{\textless{}=}\NormalTok{ b, a }\SpecialCharTok{*} \FunctionTok{sign}\NormalTok{(eps),}
+                  \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(eps) }\SpecialCharTok{\textless{}=}\NormalTok{ c,}
+\NormalTok{                         a }\SpecialCharTok{*}\NormalTok{ (eps }\SpecialCharTok{{-}}\NormalTok{ c}\SpecialCharTok{*}\FunctionTok{sign}\NormalTok{(eps)) }\SpecialCharTok{/}\NormalTok{ (b }\SpecialCharTok{{-}}\NormalTok{ c),}
+                         \DecValTok{0}\NormalTok{)))}
+\NormalTok{\}}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{),}
+    \AttributeTok{mai =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.7}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{),}
+    \AttributeTok{mgp =} \FunctionTok{c}\NormalTok{(}\FloatTok{1.7}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(eps, }\FunctionTok{psi}\NormalTok{(eps), }\AttributeTok{type=}\StringTok{"l"}\NormalTok{,}
+     \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(epsilon), }\AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{psi}\NormalTok{(epsilon)))}
+\FunctionTok{plot}\NormalTok{(eps, }\FunctionTok{psi}\NormalTok{(eps) }\SpecialCharTok{/}\NormalTok{ eps, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{, }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+     \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(epsilon),}
+     \AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{psi}\NormalTok{(epsilon)}\SpecialCharTok{/}\NormalTok{epsilon))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/psi-hampel-1.pdf}
+
+We see that small residuals, with \(|\varepsilon_i| \leq a\) get the same weight
+as for least squares regression, and the weight for larger residuals
+is gradually reduced. Residuals with \(|\varepsilon_i| > c\) have weight \(0\)
+and do not affect the location of the regression line at all.
+
+We see that \(\psi\) is not increasing and therefore \(\rho\) is not convex.
+A consequence of this fact is that the function~\(s\) may have
+several local minima and care must be used when choosing the starting
+point of iterative minimisation methods.
+
+\hypertarget{tukeys-bisquare-method}{%
+\subsubsection{Tukey's Bisquare Method}\label{tukeys-bisquare-method}}
+
+Here we have only one tuning parameter, \(a > 0\), and the objective
+function is
+\begin{equation*}
+\rho(\varepsilon)
+= \begin{cases}
+\frac{a^2}{6} \Bigl( 1 - \bigl( 1 - (\varepsilon/a)^2 \bigr)^3 \Bigr)
+              & \mbox{if } |\varepsilon| \leq a \\
+\frac{a^2}{6} & \mbox{if } |\varepsilon| > a
+\end{cases}
+\end{equation*}
+with derivative
+\begin{equation*}
+\psi(\varepsilon)
+= \begin{cases}
+\varepsilon\bigl( 1 - (\varepsilon/a)^2 \bigr)^2
+      & \mbox{if } |\varepsilon| \leq a \\
+    0 & \mbox{if } |\varepsilon| > a.
+\end{cases}
+\end{equation*}
+The plots show that this is a simplified variant of Hampel's
+estimator:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OtherTok{\textless{}{-}} \FloatTok{2.5}
+\NormalTok{eps }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{201}\NormalTok{)}
+\NormalTok{psi }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(eps) \{}
+    \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(eps) }\SpecialCharTok{\textless{}=}\NormalTok{ a,}
+\NormalTok{           eps }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ (eps }\SpecialCharTok{/}\NormalTok{ a)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{,}
+           \DecValTok{0}\NormalTok{)}
+\NormalTok{\}}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{),}
+    \AttributeTok{mai =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.7}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{),}
+    \AttributeTok{mgp =} \FunctionTok{c}\NormalTok{(}\FloatTok{1.7}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(eps, }\FunctionTok{psi}\NormalTok{(eps), }\AttributeTok{type=}\StringTok{"l"}\NormalTok{,}
+     \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(epsilon), }\AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{psi}\NormalTok{(epsilon)))}
+\FunctionTok{plot}\NormalTok{(eps, }\FunctionTok{psi}\NormalTok{(eps) }\SpecialCharTok{/}\NormalTok{ eps, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{, }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+     \AttributeTok{xlab =} \FunctionTok{expression}\NormalTok{(epsilon),}
+     \AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{psi}\NormalTok{(epsilon)}\SpecialCharTok{/}\NormalTok{epsilon))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/psi-tukey-1.pdf}
+
+Again, \(\rho\) is not convex and care is needed when computing
+the estimate~\(\hat\beta\).
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We introduced the M-estimator as a robust method for estimating regression coefficients.
+\item
+  We discussed the iteratively re-weighted least squares method for computing M-estimates.
+\item
+  We discussed different choices for the objective function of an M-estimator.
 \end{itemize}
 
 \clearpage

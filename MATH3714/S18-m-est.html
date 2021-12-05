@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 18 M-Estimators | MATH3714 Linear Regression and Robustness</title>
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 18 M-Estimators | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 18 M-Estimators | MATH3714 Linear Regression and Robustness" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="S17-robust.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH3714 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
+<ul>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#teams"><i class="fa fa-check"></i>Discussion Board</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
+<li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
+<li class="chapter" data-level="2.2" data-path="S02-multiple.html"><a href="S02-multiple.html#the-normal-equations"><i class="fa fa-check"></i><b>2.2</b> The Normal Equations</a></li>
+<li class="chapter" data-level="2.3" data-path="S02-multiple.html"><a href="S02-multiple.html#fitted-values"><i class="fa fa-check"></i><b>2.3</b> Fitted Values</a></li>
+<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.4</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html"><i class="fa fa-check"></i>Interlude: Linear Regression in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-fitting"><i class="fa fa-check"></i>Fitting a Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-model"><i class="fa fa-check"></i>Understanding the Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-predict"><i class="fa fa-check"></i>Making Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
+<li class="chapter" data-level="3" data-path="S03-cov.html"><a href="S03-cov.html"><i class="fa fa-check"></i><b>3</b> Random Vectors and Covariance</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="S03-cov.html"><a href="S03-cov.html#expectation"><i class="fa fa-check"></i><b>3.1</b> Expectation</a></li>
+<li class="chapter" data-level="3.2" data-path="S03-cov.html"><a href="S03-cov.html#sec:covariance"><i class="fa fa-check"></i><b>3.2</b> Covariance Matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="S03-cov.html"><a href="S03-cov.html#the-multivariate-normal-distribution"><i class="fa fa-check"></i><b>3.3</b> The Multivariate Normal Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="S04-model.html"><a href="S04-model.html"><i class="fa fa-check"></i><b>4</b> Properties of the Least Squares Estimate</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="S04-model.html"><a href="S04-model.html#mean-and-covariance"><i class="fa fa-check"></i><b>4.1</b> Mean and Covariance</a></li>
+<li class="chapter" data-level="4.2" data-path="S04-model.html"><a href="S04-model.html#hat-matrix"><i class="fa fa-check"></i><b>4.2</b> Properties of the Hat Matrix</a></li>
+<li class="chapter" data-level="4.3" data-path="S04-model.html"><a href="S04-model.html#Cochran"><i class="fa fa-check"></i><b>4.3</b> Cochran’s theorem</a></li>
+<li class="chapter" data-level="4.4" data-path="S04-model.html"><a href="S04-model.html#var-est-bias"><i class="fa fa-check"></i><b>4.4</b> Estimating the Error Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="S05-single.html"><a href="S05-single.html"><i class="fa fa-check"></i><b>5</b> Uncertainty for Individual Regression Coefficients</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="S05-single.html"><a href="S05-single.html#measuring-the-estimation-error"><i class="fa fa-check"></i><b>5.1</b> Measuring the Estimation Error</a></li>
+<li class="chapter" data-level="5.2" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals"><i class="fa fa-check"></i><b>5.2</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="5.3" data-path="S05-single.html"><a href="S05-single.html#hypthesis-tests"><i class="fa fa-check"></i><b>5.3</b> Hypthesis Tests</a></li>
+<li class="chapter" data-level="5.4" data-path="S05-single.html"><a href="S05-single.html#r-experiments"><i class="fa fa-check"></i><b>5.4</b> R Experiments</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="S05-single.html"><a href="S05-single.html#fitting-the-model"><i class="fa fa-check"></i><b>5.4.1</b> Fitting the model</a></li>
+<li class="chapter" data-level="5.4.2" data-path="S05-single.html"><a href="S05-single.html#estimating-the-variance-of-the-error"><i class="fa fa-check"></i><b>5.4.2</b> Estimating the Variance of the Error</a></li>
+<li class="chapter" data-level="5.4.3" data-path="S05-single.html"><a href="S05-single.html#estimating-the-standard-errors"><i class="fa fa-check"></i><b>5.4.3</b> Estimating the Standard Errors</a></li>
+<li class="chapter" data-level="5.4.4" data-path="S05-single.html"><a href="S05-single.html#hypothesis-tests"><i class="fa fa-check"></i><b>5.4.4</b> Hypothesis tests</a></li>
+<li class="chapter" data-level="5.4.5" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals-1"><i class="fa fa-check"></i><b>5.4.5</b> Confidence Intervals</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html"><i class="fa fa-check"></i><b>6</b> Estimating Coefficients Simultaneously</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-dist"><i class="fa fa-check"></i><b>6.1</b> Linear Combinations of Coefficients</a></li>
+<li class="chapter" data-level="6.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-CI"><i class="fa fa-check"></i><b>6.2</b> Confidence Regions</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#result"><i class="fa fa-check"></i><b>6.2.1</b> Result</a></li>
+<li class="chapter" data-level="6.2.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#numerical-experiments"><i class="fa fa-check"></i><b>6.2.2</b> Numerical Experiments</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-test"><i class="fa fa-check"></i><b>6.3</b> Hypothesis Tests</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html"><i class="fa fa-check"></i>Interlude: Loading Data into R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-csv-files"><i class="fa fa-check"></i>Importing CSV Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-microsoft-excel-files"><i class="fa fa-check"></i>Importing Microsoft Excel Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#checking-the-imported-data"><i class="fa fa-check"></i>Checking the Imported Data</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#common-problems"><i class="fa fa-check"></i>Common Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="S07-examples.html"><a href="S07-examples.html"><i class="fa fa-check"></i><b>7</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="S07-examples.html"><a href="S07-examples.html#simple-confidence-interval"><i class="fa fa-check"></i><b>7.1</b> Simple Confidence Interval</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles"><i class="fa fa-check"></i><b>7.1.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.1.2" data-path="S07-examples.html"><a href="S07-examples.html#from-the-lm-output"><i class="fa fa-check"></i><b>7.1.2</b> From the <code>lm()</code> Output</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="S07-examples.html"><a href="S07-examples.html#confidence-intervals-for-the-mean"><i class="fa fa-check"></i><b>7.2</b> Confidence Intervals for the Mean</a></li>
+<li class="chapter" data-level="7.3" data-path="S07-examples.html"><a href="S07-examples.html#testing-a-single-coefficient"><i class="fa fa-check"></i><b>7.3</b> Testing a Single Coefficient</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-1"><i class="fa fa-check"></i><b>7.3.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.3.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-i"><i class="fa fa-check"></i><b>7.3.2</b> Using the <code>lm()</code> Output, I</a></li>
+<li class="chapter" data-level="7.3.3" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-ii"><i class="fa fa-check"></i><b>7.3.3</b> Using the <code>lm()</code> Output, II</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="S07-examples.html"><a href="S07-examples.html#testing-multiple-coefficents"><i class="fa fa-check"></i><b>7.4</b> Testing Multiple Coefficents</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-2"><i class="fa fa-check"></i><b>7.4.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.4.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output"><i class="fa fa-check"></i><b>7.4.2</b> Using the <code>lm()</code> output</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P02.html"><a href="P02.html"><i class="fa fa-check"></i>Problem Sheet 2</a></li>
+<li class="chapter" data-level="8" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html"><i class="fa fa-check"></i><b>8</b> Regression Diagnostics</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#plots"><i class="fa fa-check"></i><b>8.1</b> Diagnostic Plots</a></li>
+<li class="chapter" data-level="8.2" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#R-squared"><i class="fa fa-check"></i><b>8.2</b> The Coefficient of Multiple Determination</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="S09-influence.html"><a href="S09-influence.html"><i class="fa fa-check"></i><b>9</b> The Influence of Observations</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-influence.html"><a href="S09-influence.html#influence"><i class="fa fa-check"></i><b>9.2</b> Cook’s Distance</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="S10-multicoll.html"><a href="S10-multicoll.html"><i class="fa fa-check"></i><b>10</b> Multicollinearity</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="S10-multicoll.html"><a href="S10-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>10.1</b> Consequences of Multicollinearity</a></li>
+<li class="chapter" data-level="10.2" data-path="S10-multicoll.html"><a href="S10-multicoll.html#detecting-multicollinearity"><i class="fa fa-check"></i><b>10.2</b> Detecting Multicollinearity</a></li>
+<li class="chapter" data-level="10.3" data-path="S10-multicoll.html"><a href="S10-multicoll.html#mitigations"><i class="fa fa-check"></i><b>10.3</b> Mitigations</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
+<li class="chapter" data-level="11" data-path="S11-improving.html"><a href="S11-improving.html"><i class="fa fa-check"></i><b>11</b> Improving the Model Fit</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="S11-improving.html"><a href="S11-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>11.1</b> Linearising the Mean</a></li>
+<li class="chapter" data-level="11.2" data-path="S11-improving.html"><a href="S11-improving.html#stabilising-the-variance"><i class="fa fa-check"></i><b>11.2</b> Stabilising the Variance</a></li>
+<li class="chapter" data-level="11.3" data-path="S11-improving.html"><a href="S11-improving.html#power-transform"><i class="fa fa-check"></i><b>11.3</b> The Power Transform</a></li>
+<li class="chapter" data-level="11.4" data-path="S11-improving.html"><a href="S11-improving.html#orthogonal-inputs"><i class="fa fa-check"></i><b>11.4</b> Orthogonal Inputs</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="S12-ridge.html"><a href="S12-ridge.html"><i class="fa fa-check"></i><b>12</b> Ridge Regression</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="S12-ridge.html"><a href="S12-ridge.html#definition-the-estimator"><i class="fa fa-check"></i><b>12.1</b> Definition the Estimator</a></li>
+<li class="chapter" data-level="12.2" data-path="S12-ridge.html"><a href="S12-ridge.html#properties-of-the-estimate"><i class="fa fa-check"></i><b>12.2</b> Properties of the Estimate</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="S12-ridge.html"><a href="S12-ridge.html#bias"><i class="fa fa-check"></i><b>12.2.1</b> Bias</a></li>
+<li class="chapter" data-level="12.2.2" data-path="S12-ridge.html"><a href="S12-ridge.html#variance"><i class="fa fa-check"></i><b>12.2.2</b> Variance</a></li>
+<li class="chapter" data-level="12.2.3" data-path="S12-ridge.html"><a href="S12-ridge.html#mean-squared-error"><i class="fa fa-check"></i><b>12.2.3</b> Mean Squared Error</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="S12-ridge.html"><a href="S12-ridge.html#standardisation"><i class="fa fa-check"></i><b>12.3</b> Standardisation</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="S13-models.html"><a href="S13-models.html"><i class="fa fa-check"></i><b>13</b> Model selection</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="S13-models.html"><a href="S13-models.html#candidates-models"><i class="fa fa-check"></i><b>13.1</b> Candidates Models</a></li>
+<li class="chapter" data-level="13.2" data-path="S13-models.html"><a href="S13-models.html#misspecified-models"><i class="fa fa-check"></i><b>13.2</b> Misspecified Models</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="S13-models.html"><a href="S13-models.html#missing-variables"><i class="fa fa-check"></i><b>13.2.1</b> Missing Variables</a></li>
+<li class="chapter" data-level="13.2.2" data-path="S13-models.html"><a href="S13-models.html#unnecessary-variables"><i class="fa fa-check"></i><b>13.2.2</b> Unnecessary Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#criteria"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
+<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Methods for Model Selection</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="S14-methods.html"><a href="S14-methods.html#exhaustive-search"><i class="fa fa-check"></i><b>14.1</b> Exhaustive Search</a></li>
+<li class="chapter" data-level="14.2" data-path="S14-methods.html"><a href="S14-methods.html#search-algorithm"><i class="fa fa-check"></i><b>14.2</b> Search Algorithm</a></li>
+<li class="chapter" data-level="14.3" data-path="S14-methods.html"><a href="S14-methods.html#other-methods"><i class="fa fa-check"></i><b>14.3</b> Other Methods</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-forward-selection"><i class="fa fa-check"></i><b>14.3.1</b> Stepwise Forward Selection</a></li>
+<li class="chapter" data-level="14.3.2" data-path="S14-methods.html"><a href="S14-methods.html#stepwise-backward-selection"><i class="fa fa-check"></i><b>14.3.2</b> Stepwise Backward Selection</a></li>
+<li class="chapter" data-level="14.3.3" data-path="S14-methods.html"><a href="S14-methods.html#hybrid-methods"><i class="fa fa-check"></i><b>14.3.3</b> Hybrid Methods</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="S15-factors.html"><a href="S15-factors.html"><i class="fa fa-check"></i><b>15</b> Factors</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="S15-factors.html"><a href="S15-factors.html#indicator-variables"><i class="fa fa-check"></i><b>15.1</b> Indicator Variables</a></li>
+<li class="chapter" data-level="15.2" data-path="S15-factors.html"><a href="S15-factors.html#interactions"><i class="fa fa-check"></i><b>15.2</b> Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
+<ul>
+<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
+<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
+<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#references"><i class="fa fa-check"></i>References</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="S16-examples.html"><a href="S16-examples.html"><i class="fa fa-check"></i><b>16</b> Examples</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="S16-examples.html"><a href="S16-examples.html#interactions-example"><i class="fa fa-check"></i><b>16.1</b> Use of Interaction Terms in Modelling</a></li>
+<li class="chapter" data-level="16.2" data-path="S16-examples.html"><a href="S16-examples.html#codings"><i class="fa fa-check"></i><b>16.2</b> Alternative Factor Codings</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="S17-robust.html"><a href="S17-robust.html"><i class="fa fa-check"></i><b>17</b> Robust Regression</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="S17-robust.html"><a href="S17-robust.html#outliers"><i class="fa fa-check"></i><b>17.1</b> Outliers</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="S17-robust.html"><a href="S17-robust.html#leverage"><i class="fa fa-check"></i><b>17.1.1</b> Leverage</a></li>
+<li class="chapter" data-level="17.1.2" data-path="S17-robust.html"><a href="S17-robust.html#studentised-residuals"><i class="fa fa-check"></i><b>17.1.2</b> Studentised Residuals</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="S17-robust.html"><a href="S17-robust.html#breakdown-points"><i class="fa fa-check"></i><b>17.2</b> Breakdown points</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="S18-m-est.html"><a href="S18-m-est.html"><i class="fa fa-check"></i><b>18</b> M-Estimators</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="S18-m-est.html"><a href="S18-m-est.html#definition"><i class="fa fa-check"></i><b>18.1</b> Definition</a></li>
+<li class="chapter" data-level="18.2" data-path="S18-m-est.html"><a href="S18-m-est.html#iterative-methods"><i class="fa fa-check"></i><b>18.2</b> Iterative Methods</a></li>
+<li class="chapter" data-level="18.3" data-path="S18-m-est.html"><a href="S18-m-est.html#objective-functions"><i class="fa fa-check"></i><b>18.3</b> Objective Functions</a>
+<ul>
+<li class="chapter" data-level="18.3.1" data-path="S18-m-est.html"><a href="S18-m-est.html#least-squares-method"><i class="fa fa-check"></i><b>18.3.1</b> Least Squares Method</a></li>
+<li class="chapter" data-level="18.3.2" data-path="S18-m-est.html"><a href="S18-m-est.html#least-absolute-values"><i class="fa fa-check"></i><b>18.3.2</b> Least Absolute Values</a></li>
+<li class="chapter" data-level="18.3.3" data-path="S18-m-est.html"><a href="S18-m-est.html#hubers-t-function"><i class="fa fa-check"></i><b>18.3.3</b> Huber’s <span class="math inline">\(t\)</span>-function</a></li>
+<li class="chapter" data-level="18.3.4" data-path="S18-m-est.html"><a href="S18-m-est.html#hampels-method"><i class="fa fa-check"></i><b>18.3.4</b> Hampel’s Method</a></li>
+<li class="chapter" data-level="18.3.5" data-path="S18-m-est.html"><a href="S18-m-est.html#tukeys-bisquare-method"><i class="fa fa-check"></i><b>18.3.5</b> Tukey’s Bisquare Method</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#vectors"><i class="fa fa-check"></i><b>A.1</b> Vectors</a></li>
+<li class="chapter" data-level="A.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-rules"><i class="fa fa-check"></i><b>A.2</b> Matrices</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#transpose"><i class="fa fa-check"></i><b>A.2.1</b> Transpose</a></li>
+<li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-vector Product</a></li>
+<li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-matrix Product</a></li>
+<li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#rank"><i class="fa fa-check"></i><b>A.2.4</b> Rank</a></li>
+<li class="chapter" data-level="A.2.5" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#trace"><i class="fa fa-check"></i><b>A.2.5</b> Trace</a></li>
+<li class="chapter" data-level="A.2.6" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-inverse"><i class="fa fa-check"></i><b>A.2.6</b> Matrix Inverse</a></li>
+<li class="chapter" data-level="A.2.7" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#orthogonal-matrices"><i class="fa fa-check"></i><b>A.2.7</b> Orthogonal Matrices</a></li>
+<li class="chapter" data-level="A.2.8" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.8</b> Positive Definite Matrices</a></li>
+<li class="chapter" data-level="A.2.9" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#idempotent"><i class="fa fa-check"></i><b>A.2.9</b> Idempotent Matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#eigenvalues"><i class="fa fa-check"></i><b>A.3</b> Eigenvalues</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="Sx2-probability.html"><a href="Sx2-probability.html"><i class="fa fa-check"></i><b>B</b> Probability Reminders</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="Sx2-probability.html"><a href="Sx2-probability.html#independence"><i class="fa fa-check"></i><b>B.1</b> Independence</a></li>
+<li class="chapter" data-level="B.2" data-path="Sx2-probability.html"><a href="Sx2-probability.html#chi-square"><i class="fa fa-check"></i><b>B.2</b> The Chi-Squared Distribution</a></li>
+<li class="chapter" data-level="B.3" data-path="Sx2-probability.html"><a href="Sx2-probability.html#t"><i class="fa fa-check"></i><b>B.3</b> The t-distribution</a></li>
+</ul></li>
+<li class="divider"></li>
+<li class="chapter"><span><b>THE END</b></span></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH3714 Linear Regression and Robustness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="S18-m-est" class="section level1" number="18">
+<h1><span class="header-section-number">Section 18</span> M-Estimators</h1>
+<p>In this section we introduce a class of estimators which can be robust to
+<span class="math inline">\(y\)</span>-space outliers.</p>
+<div id="definition" class="section level2" number="18.1">
+<h2><span class="header-section-number">18.1</span> Definition</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ZQqFz83Kgq8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<div class="definition">
+<p><span id="def:unlabeled-div-67" class="definition"><strong>Definition 18.1  </strong></span>An <strong>M-estimator</strong> for the regression coefficients <span class="math inline">\(\beta\)</span> is a method
+which computes the estimator <span class="math inline">\(\hat\beta\)</span> as
+<span class="math display">\[\begin{equation*}
+  \hat\beta
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r(\varepsilon)
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r(y - X\beta),
+\end{equation*}\]</span>
+where <span class="math inline">\(r\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  r(\varepsilon)
+  = \sum_{i=1}^n \rho(\varepsilon_i)
+\end{equation*}\]</span>
+and <span class="math inline">\(\rho\colon \mathbb{R}\to \mathbb{R}\)</span> is a symmetric, continuous function with
+a unique minimum at <span class="math inline">\(0\)</span>. The function <span class="math inline">\(\rho\)</span> is called the
+<strong>objective function</strong> of the M-estimator.</p>
+</div>
+<p>This is a generalisation of the least squares estimator, where the least
+squares estimator corresponds to the case <span class="math inline">\(\rho(\varepsilon) = \varepsilon^2\)</span>.</p>
+<p>For most functions <span class="math inline">\(\rho\)</span> there is no closed-form expression for
+the estimate <span class="math inline">\(\hat\beta\)</span>, but numerical minimisation can be used to find
+numerical values for <span class="math inline">\(\hat\beta\)</span>. In R, the <a href="https://rdrr.io/r/stats/optim.html">function <code>optim()</code></a>
+can be used for this purpose.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-68" class="example"><strong>Example 18.1  </strong></span>The M-estimator with <span class="math inline">\(\rho(u) = |u|\)</span> is called the
+<strong>least absolute values</strong> (LAV) estimator. Since <span class="math inline">\(\rho\)</span> grows
+slower than <span class="math inline">\(u^2\)</span> as <span class="math inline">\(|u| \to\infty\)</span>, this estimator is more resistant
+to <span class="math inline">\(y\)</span>-space outliers than least squares regression is. On the other hand,
+for <span class="math inline">\(x\)</span>-space outliers which are sufficiently far away from the bulk of the
+data, the LAV line will pass exactly through the corresponding point
+<span class="math inline">\((x_i, y_i)\)</span>, so the LAV estimator is more susceptible to <span class="math inline">\(x\)</span>-space outliers
+than least squares regression is, and the breakdown point is still <span class="math inline">\(1/n\)</span>.</p>
+<div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb296-1"><a href="S18-m-est.html#cb296-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">202111202</span>)</span>
+<span id="cb296-2"><a href="S18-m-est.html#cb296-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb296-3"><a href="S18-m-est.html#cb296-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb296-4"><a href="S18-m-est.html#cb296-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="at">length.out =</span> n<span class="sc">+</span><span class="dv">1</span>)[<span class="sc">-</span>(n<span class="sc">/</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)]</span>
+<span id="cb296-5"><a href="S18-m-est.html#cb296-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.4</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.3</span>)</span>
+<span id="cb296-6"><a href="S18-m-est.html#cb296-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb296-7"><a href="S18-m-est.html#cb296-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb296-8"><a href="S18-m-est.html#cb296-8" aria-hidden="true" tabindex="-1"></a><span class="co"># we try four different extra samples, one after another:</span></span>
+<span id="cb296-9"><a href="S18-m-est.html#cb296-9" aria-hidden="true" tabindex="-1"></a>x.extra <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">2.5</span>, <span class="dv">20</span>, <span class="at">length.out =</span> <span class="dv">4</span>)</span>
+<span id="cb296-10"><a href="S18-m-est.html#cb296-10" aria-hidden="true" tabindex="-1"></a>y.extra <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb296-11"><a href="S18-m-est.html#cb296-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb296-12"><a href="S18-m-est.html#cb296-12" aria-hidden="true" tabindex="-1"></a>lav <span class="ot">&lt;-</span> <span class="cf">function</span>(par, x, y) {</span>
+<span id="cb296-13"><a href="S18-m-est.html#cb296-13" aria-hidden="true" tabindex="-1"></a>  beta0 <span class="ot">&lt;-</span> par[<span class="dv">1</span>]</span>
+<span id="cb296-14"><a href="S18-m-est.html#cb296-14" aria-hidden="true" tabindex="-1"></a>  beta1 <span class="ot">&lt;-</span> par[<span class="dv">2</span>]</span>
+<span id="cb296-15"><a href="S18-m-est.html#cb296-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">abs</span>(y <span class="sc">-</span> beta0 <span class="sc">-</span> beta1<span class="sc">*</span>x))</span>
+<span id="cb296-16"><a href="S18-m-est.html#cb296-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb296-17"><a href="S18-m-est.html#cb296-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb296-18"><a href="S18-m-est.html#cb296-18" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="co"># We want a 2x2 grid of plots,</span></span>
+<span id="cb296-19"><a href="S18-m-est.html#cb296-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="co"># using smaller margins, and</span></span>
+<span id="cb296-20"><a href="S18-m-est.html#cb296-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="co"># we move the labels closer to the axes.</span></span>
+<span id="cb296-21"><a href="S18-m-est.html#cb296-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) {</span>
+<span id="cb296-22"><a href="S18-m-est.html#cb296-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(x, y, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">21</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">5</span>))</span>
+<span id="cb296-23"><a href="S18-m-est.html#cb296-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(m)</span>
+<span id="cb296-24"><a href="S18-m-est.html#cb296-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb296-25"><a href="S18-m-est.html#cb296-25" aria-hidden="true" tabindex="-1"></a>  o <span class="ot">&lt;-</span> <span class="fu">optim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), lav, <span class="cn">NULL</span>, <span class="fu">c</span>(x, x.extra[i]), <span class="fu">c</span>(y, y.extra[i]))</span>
+<span id="cb296-26"><a href="S18-m-est.html#cb296-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(o<span class="sc">$</span>par[<span class="dv">1</span>], o<span class="sc">$</span>par[<span class="dv">2</span>], <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">lty=</span><span class="st">&quot;dashed&quot;</span>)</span>
+<span id="cb296-27"><a href="S18-m-est.html#cb296-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(x.extra[i], y.extra[i], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span>
+<span id="cb296-28"><a href="S18-m-est.html#cb296-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/lav-estimator-1.png" width="672" /></p>
+</div>
+<p>Define <span class="math inline">\(s(\beta) = r(y - X\beta)\)</span>. Then we have
+<span class="math display" id="eq:m-est-min">\[\begin{equation}
+  \hat\beta
+  = \mathop{\mathrm{arg\,min}}\limits_\beta s(\beta).  \tag{18.1}
+\end{equation}\]</span>
+Some care is neede since the function <span class="math inline">\(s\)</span> may have more than one
+local minimum, and even the global minimum may not be uniquely
+defined.</p>
+<div class="lemma">
+<p><span id="lem:unlabeled-div-69" class="lemma"><strong>Lemma 18.1  </strong></span>Assume that <span class="math inline">\(\rho\)</span> is convex. Then <span class="math inline">\(s\)</span> is convex.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-70" class="proof"><em>Proof</em>. </span>Here we use the property that a function <span class="math inline">\(f\colon \mathbb{R}^{p+1} \to \mathbb{R}\)</span> is convex,
+if and only if
+<span class="math display">\[\begin{equation*}
+  f\bigl( \lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr)
+  \leq \lambda f\bigl( \beta^{(1)} \bigr) + (1 - \lambda) f\bigl( \beta^{(2)} \bigr)
+\end{equation*}\]</span>
+for all <span class="math inline">\(\beta^{(1)}, \beta^{(2)}\in \mathbb{R}^{p+1}\)</span> and all <span class="math inline">\(\lambda \in [0, 1]\)</span>.
+Since <span class="math inline">\(\rho\)</span> is convex, we find
+<span class="math display">\[\begin{align*}
+  \hskip1cm&amp;\hskip-1cm
+  s\bigl( \lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr) \\
+  &amp;= r\Bigl( y - X \bigl(\lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr) \Bigr) \\
+  &amp;= r\Bigl( \lambda \bigl( y - X \beta^{(1)} \bigr)
+    + (1 - \lambda) \bigl( y - X \beta^{(2)} \bigr) \Bigr) \\
+  &amp;= \sum_{i=1}^n \rho \Bigl( \lambda \bigl( y - X \beta^{(1)} \bigr)_i
+    + (1 - \lambda) \bigl( y - X \beta^{(2)} \bigr)_i \Bigr) \\
+  &amp;\leq \sum_{i=1}^n \Bigl( \lambda \rho \bigl( y - X \beta^{(1)} \bigr)_i
+    + (1 - \lambda) \rho \bigl( y - X \beta^{(2)} \bigr)_i \Bigr) \\
+  &amp;= \lambda r\bigl( y - X \beta^{(1)} \bigr)
+    + (1 - \lambda) r\bigl( y - X \beta^{(2)} \bigr) \\
+  &amp;= \lambda s\bigl( \beta^{(1)} \bigr) + (1 - \lambda) s\bigl( \beta^{(2)} \bigr).
+\end{align*}\]</span>
+Thus <span class="math inline">\(s\)</span> is convex and the proof is complete.</p>
+</div>
+<p>This shows that the problem of finding <span class="math inline">\(\hat\beta\)</span> is better behaved when
+<span class="math inline">\(\rho\)</span> is convex. For example, in this case, every local minimum of <span class="math inline">\(s\)</span> is
+also a global minimum and the set of all minima is a convex set.</p>
+<p>M-estimates in general are not scale-invariant, <em>i.e.</em> if <span class="math inline">\(y\)</span> is measured
+in different units, the regression line changes. A scale-invariant, robust
+estimator is given by
+<span class="math display">\[\begin{equation*}
+  \hat\beta
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r\Bigl( \frac{\varepsilon}{\hat\sigma} \Bigr)
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r\Bigl( \frac{y - X\beta}{\hat\sigma} \Bigr),
+\end{equation*}\]</span>
+where <span class="math inline">\(\hat \sigma\)</span> is a robust estimator of the residual standard deviation,
+for example the <strong>median absolute deviation</strong> (MAD) given by
+<span class="math display">\[\begin{equation*}
+  \hat\sigma
+  = \mathop{\mathrm{median}}\bigl| \hat\varepsilon_i - \mathop{\mathrm{median}}(\hat\varepsilon_i) \bigr|.
+\end{equation*}\]</span></p>
+</div>
+<div id="iterative-methods" class="section level2" number="18.2">
+<h2><span class="header-section-number">18.2</span> Iterative Methods</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CaSF8IVyNbo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>If <span class="math inline">\(\rho\)</span> is differentiable, say <span class="math inline">\(\rho&#39; = \psi\)</span>, then gradient-based methods
+can be used to find the minimum in equation <a href="S18-m-est.html#eq:m-est-min">(18.1)</a>. The basis of
+this approach is the following lemma.</p>
+<div class="lemma">
+<p><span id="lem:unlabeled-div-71" class="lemma"><strong>Lemma 18.2  </strong></span>If <span class="math inline">\(\rho&#39; = \psi\)</span>, then the M-estimate satisfies
+<span class="math display" id="eq:psi-root">\[\begin{equation}
+  \sum_{i=1}^n \psi\bigl( (y - X\hat\beta)_i \bigr)
+    \begin{pmatrix}
+      1 \\ x_{i1} \\ \vdots \\ x_{ip}
+    \end{pmatrix}
+  = 0 \in \mathbb{R}^{p+1}.  \tag{18.2}
+\end{equation}\]</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-72" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(\hat\beta\)</span> minimises the function <span class="math inline">\(r\)</span>, we have
+<span class="math display">\[\begin{align*}
+  0
+  &amp;= \left. \frac{\partial}{\partial\beta_j} r\bigl( y - X\beta \bigr) \right|_{\beta=\hat\beta} \\
+  &amp;= \left. \frac{\partial}{\partial\beta_j} \sum_{i=1}^n \rho\bigl( (y - X\beta)_i \bigr) \right|_{\beta=\hat\beta} \\
+  &amp;= \left. \sum_{i=1}^n \psi\bigl( (y - X\beta)_i \bigr) \frac{\partial}{\partial\beta_j} \bigl( y - X\beta \bigr)_i \right|_{\beta=\hat\beta} \\
+  &amp;= \left. \sum_{i=1}^n \psi\bigl( (y - X\beta)_i \bigr) (-x_{ij}) \right|_{\beta=\hat\beta} \\
+  &amp;= - \sum_{i=1}^n \psi\bigl( (y - X\hat\beta)_i \bigr) x_{ij}.
+\end{align*}\]</span>
+where we use the convention <span class="math inline">\(x_{i0} = 1\)</span>. This completes the proof.</p>
+</div>
+<p>With the result of the lemma, we have turned the problem of finding
+<span class="math inline">\(\hat\beta\)</span> into the problem of finding the roots of a non-linear
+function. To solve this problem, we can for example use one
+of the generic root finding algorithms, for example
+<a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a>.</p>
+<p>In the context of M-estimates, a more specialised method is often used in the
+literature. For this method we define weights
+<span class="math display" id="eq:psi-weights">\[\begin{equation}
+  w_i
+  := \frac{\psi\bigl( (y - X\hat\beta)_i \bigr)}{(y - X\hat\beta)_i}
+                                \tag{18.3}
+\end{equation}\]</span>
+and write <span class="math inline">\(W\)</span> for the diagonal matrix which has <span class="math inline">\(w_1, \ldots, w_n\)</span>
+on the diagonal. Using this notation, we can rewrite
+condition <a href="S18-m-est.html#eq:psi-root">(18.2)</a> as
+<span class="math display">\[\begin{equation*}
+  X^\top W (y - X\hat\beta)
+  = 0
+\end{equation*}\]</span>
+and solving for <span class="math inline">\(\hat\beta\)</span> gives
+<span class="math display" id="eq:irwls">\[\begin{equation}
+  \hat\beta
+  = (X^\top W X)^{-1} X^\top W y. \tag{18.4}
+\end{equation}\]</span>
+This equation looks very similar to our formula for the least squares
+estimate, the only change being the presence of the matrix <span class="math inline">\(W\)</span>.
+One can check that the value <span class="math inline">\(\hat\beta\)</span> computed in this way
+also represents the solution of the weighted least-squares problem
+<span class="math display">\[\begin{equation*}
+  \hat\beta
+  = \mathop{\mathrm{arg\,min}}\limits_\beta \sum_{i=1}^n w_i \bigl( y_i - \beta_0 - \beta_1 x_{i1} - \cdots - \beta_p x_{ip} \bigr)^2.
+\end{equation*}\]</span></p>
+<p>While equation <a href="S18-m-est.html#eq:irwls">(18.4)</a> looks like the solution of a linear problem at
+first glance, the weight matrix <span class="math inline">\(W\)</span> depends on <span class="math inline">\(\hat\beta\)</span> and this equation
+still represents a non-linear equation for <span class="math inline">\(\hat\beta\)</span>.</p>
+<p>The <strong>iteratively re-weighted least squares</strong> method is an iterative method
+for solving equation <a href="S18-m-est.html#eq:irwls">(18.4)</a>. Starting from an initial guess <span class="math inline">\(\hat\beta^{(0)}\)</span>
+for <span class="math inline">\(\hat\beta\)</span>, <em>e.g.</em> the least squares estimate or the zero vector,
+the method repeats the following steps for <span class="math inline">\(k = 0, 1, 2, \ldots\)</span>:</p>
+<ol style="list-style-type: decimal">
+<li><p>Using equation <a href="S18-m-est.html#eq:psi-weights">(18.3)</a>, compute the weight
+matrix <span class="math inline">\(W^{(k)}\)</span> corresponding to <span class="math inline">\(\hat\beta^{(k)}\)</span>.</p></li>
+<li><p>Compute <span class="math inline">\(\displaystyle\hat\beta^{(k+1)} = (X^\top W^{(k)} X)^{-1} X^\top W^{(k)} y\)</span>.</p></li>
+</ol>
+<p>The algorithm finishes either after a fixed number of steps, or when the values
+of <span class="math inline">\(\hat\beta^{(k)}\)</span> don’t change much between steps any more, or when the
+“residual” <span class="math inline">\(X^\top W (y - X\hat\beta)\)</span> is “small enough”.</p>
+</div>
+<div id="objective-functions" class="section level2" number="18.3">
+<h2><span class="header-section-number">18.3</span> Objective Functions</h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/rybE1VO00_A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>In this section we will discuss different choices of the objective
+function <span class="math inline">\(\rho\)</span>, together with the derivative <span class="math inline">\(\psi\)</span> and
+the weight function <span class="math inline">\(w(\varepsilon) = \psi(\varepsilon) / \varepsilon\)</span>.</p>
+<div id="least-squares-method" class="section level3" number="18.3.1">
+<h3><span class="header-section-number">18.3.1</span> Least Squares Method</h3>
+<p>Here we can write
+<span class="math display">\[\begin{equation*}
+  \rho(\varepsilon)
+  = \varepsilon^2 / 2.
+\end{equation*}\]</span>
+The factor <span class="math inline">\(1/2\)</span>, which we omitted before, does not change the estimate. We
+include the factor here to give <span class="math inline">\(\psi\)</span> a simpler form and to make comparison
+to the following examples easier. The derivative of <span class="math inline">\(\rho\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  \psi(\varepsilon)
+  = \varepsilon
+\end{equation*}\]</span></p>
+<p>The following R code can be used to plot <span class="math inline">\(\psi\)</span> and the weight
+function <span class="math inline">\(w\)</span>:</p>
+<div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb297-1"><a href="S18-m-est.html#cb297-1" aria-hidden="true" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="at">length.out =</span> <span class="dv">201</span>)</span>
+<span id="cb297-2"><a href="S18-m-est.html#cb297-2" aria-hidden="true" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) eps</span>
+<span id="cb297-3"><a href="S18-m-est.html#cb297-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb297-4"><a href="S18-m-est.html#cb297-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb297-5"><a href="S18-m-est.html#cb297-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
+<span id="cb297-6"><a href="S18-m-est.html#cb297-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb297-7"><a href="S18-m-est.html#cb297-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
+<span id="cb297-8"><a href="S18-m-est.html#cb297-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb297-9"><a href="S18-m-est.html#cb297-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
+<span id="cb297-10"><a href="S18-m-est.html#cb297-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/psi-lsq-1.png" width="672" /></p>
+<p>The right-hand plot shows that weight of observations does not depend
+on their magnitude. This property is what makes the least squares estimate
+susceptible to outliers.</p>
+</div>
+<div id="least-absolute-values" class="section level3" number="18.3.2">
+<h3><span class="header-section-number">18.3.2</span> Least Absolute Values</h3>
+<p>Here we have
+<span class="math display">\[\begin{equation*}
+  \rho(\varepsilon)
+  = |\varepsilon|.
+\end{equation*}\]</span>
+The derivative of this function is
+<span class="math display">\[\begin{align*}
+  \psi(\varepsilon)
+  &amp;= \begin{cases}
+    -1 &amp; \mbox{if } \varepsilon&lt; 0, \\
+    +1 &amp; \mbox{if } \varepsilon&gt; 0
+  \end{cases} \\
+  &amp;= \mathop{\mathrm{sign}}(\varepsilon)
+\end{align*}\]</span>
+and the weight function is
+<span class="math display">\[\begin{equation*}
+  w(\varepsilon)
+  = \frac{\mathop{\mathrm{sign}}(\varepsilon)}{\varepsilon}
+  = \frac{1}{|\varepsilon|}.
+\end{equation*}\]</span></p>
+<div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb298-1"><a href="S18-m-est.html#cb298-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb298-2"><a href="S18-m-est.html#cb298-2" aria-hidden="true" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) <span class="fu">sign</span>(eps)</span>
+<span id="cb298-3"><a href="S18-m-est.html#cb298-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb298-4"><a href="S18-m-est.html#cb298-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb298-5"><a href="S18-m-est.html#cb298-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
+<span id="cb298-6"><a href="S18-m-est.html#cb298-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb298-7"><a href="S18-m-est.html#cb298-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
+<span id="cb298-8"><a href="S18-m-est.html#cb298-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb298-9"><a href="S18-m-est.html#cb298-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
+<span id="cb298-10"><a href="S18-m-est.html#cb298-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/psi-abs-1.png" width="672" /></p>
+</div>
+<div id="hubers-t-function" class="section level3" number="18.3.3">
+<h3><span class="header-section-number">18.3.3</span> Huber’s <span class="math inline">\(t\)</span>-function</h3>
+<p>This method uses the following objective function:
+<span class="math display">\[\begin{equation*}
+  \rho(\varepsilon)
+  = \begin{cases}
+    \frac12 \varepsilon^2 &amp; \mbox{if } |\varepsilon|\leq t \\
+    t|\varepsilon| - \frac12 t^2 &amp; \mbox{if } |\varepsilon| &gt; t
+  \end{cases}
+\end{equation*}\]</span>
+The parameter <span class="math inline">\(t &gt; 0\)</span> can be used to tune the method. The influence function
+<span class="math inline">\(\psi\)</span> is given by
+<span class="math display">\[\begin{equation*}
+\psi(\varepsilon)
+= \begin{cases}
+\varepsilon&amp; \mbox{if } |\varepsilon|\leq t \\
+t \mathop{\mathrm{sign}}(\varepsilon) &amp; \mbox{if } |\varepsilon| &gt; t.
+\end{cases}
+\end{equation*}\]</span></p>
+<p>A plot of <span class="math inline">\(\psi\)</span> and <span class="math inline">\(\psi(\varepsilon) / \varepsilon\)</span> shows that for this method
+the weight of observations where the residuals satisfy <span class="math inline">\(|\varepsilon_i| \leq t\)</span>
+is the same as for least squares, but larger residuals get lower weights,
+leading to a more robust estimator.</p>
+<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb299-1"><a href="S18-m-est.html#cb299-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb299-2"><a href="S18-m-est.html#cb299-2" aria-hidden="true" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> t, eps, t <span class="sc">*</span> <span class="fu">sign</span>(eps))</span>
+<span id="cb299-3"><a href="S18-m-est.html#cb299-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb299-4"><a href="S18-m-est.html#cb299-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb299-5"><a href="S18-m-est.html#cb299-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
+<span id="cb299-6"><a href="S18-m-est.html#cb299-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb299-7"><a href="S18-m-est.html#cb299-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
+<span id="cb299-8"><a href="S18-m-est.html#cb299-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb299-9"><a href="S18-m-est.html#cb299-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
+<span id="cb299-10"><a href="S18-m-est.html#cb299-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/psi-huber-1.png" width="672" /></p>
+</div>
+<div id="hampels-method" class="section level3" number="18.3.4">
+<h3><span class="header-section-number">18.3.4</span> Hampel’s Method</h3>
+<p>Here we have tuning parameters <span class="math inline">\(0 &lt; a &lt; b &lt; c\)</span>, and the objective function
+is
+<span class="math display">\[\begin{equation*}
+\rho(\varepsilon)
+= \begin{cases}
+\frac{1}{2}\varepsilon^2&amp; \mbox{ if } |\varepsilon|\le a\\
+a |\varepsilon|-\frac{1}{2} a^2 &amp; \mbox{ if } a \le |\varepsilon| &lt;b\\
+a \frac{(|\varepsilon|-c)^2}{2(b-c)}+\frac{1}{2}a(b+c-a) &amp; \mbox{ if } b \le |\varepsilon| \le c\\
+\frac{a(b+c-a)}{2} &amp; \mbox{ otherwise,}
+\end{cases}
+\end{equation*}\]</span>
+with derivative
+<span class="math display">\[\begin{equation*}
+\psi(\varepsilon)
+= \begin{cases}
+\varepsilon&amp; \mbox{if } |\varepsilon|\leq a, \\
+a \mathop{\mathrm{sign}}(\varepsilon) &amp; \mbox{if } a &lt; |\varepsilon| \leq b, \\
+a \frac{\varepsilon- c \mathop{\mathrm{sign}}(\varepsilon)}{b - c} &amp; \mbox{if } b &lt; |\varepsilon| \leq c, \\
+0 &amp; \mbox{if } c &lt; |\varepsilon|.
+\end{cases}
+\end{equation*}\]</span>
+Since these formulas are tedious to understand, we consider plots
+of <span class="math inline">\(\psi\)</span> and <span class="math inline">\(\psi(\varepsilon) / \varepsilon\)</span> again:</p>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="S18-m-est.html#cb300-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb300-2"><a href="S18-m-est.html#cb300-2" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fl">1.5</span></span>
+<span id="cb300-3"><a href="S18-m-est.html#cb300-3" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fl">2.5</span></span>
+<span id="cb300-4"><a href="S18-m-est.html#cb300-4" aria-hidden="true" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) {</span>
+<span id="cb300-5"><a href="S18-m-est.html#cb300-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> a, eps,</span>
+<span id="cb300-6"><a href="S18-m-est.html#cb300-6" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> b, a <span class="sc">*</span> <span class="fu">sign</span>(eps),</span>
+<span id="cb300-7"><a href="S18-m-est.html#cb300-7" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> c,</span>
+<span id="cb300-8"><a href="S18-m-est.html#cb300-8" aria-hidden="true" tabindex="-1"></a>                         a <span class="sc">*</span> (eps <span class="sc">-</span> c<span class="sc">*</span><span class="fu">sign</span>(eps)) <span class="sc">/</span> (b <span class="sc">-</span> c),</span>
+<span id="cb300-9"><a href="S18-m-est.html#cb300-9" aria-hidden="true" tabindex="-1"></a>                         <span class="dv">0</span>)))</span>
+<span id="cb300-10"><a href="S18-m-est.html#cb300-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb300-11"><a href="S18-m-est.html#cb300-11" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb300-12"><a href="S18-m-est.html#cb300-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb300-13"><a href="S18-m-est.html#cb300-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
+<span id="cb300-14"><a href="S18-m-est.html#cb300-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb300-15"><a href="S18-m-est.html#cb300-15" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
+<span id="cb300-16"><a href="S18-m-est.html#cb300-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb300-17"><a href="S18-m-est.html#cb300-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
+<span id="cb300-18"><a href="S18-m-est.html#cb300-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/psi-hampel-1.png" width="672" /></p>
+<p>We see that small residuals, with <span class="math inline">\(|\varepsilon_i| \leq a\)</span> get the same weight
+as for least squares regression, and the weight for larger residuals
+is gradually reduced. Residuals with <span class="math inline">\(|\varepsilon_i| &gt; c\)</span> have weight <span class="math inline">\(0\)</span>
+and do not affect the location of the regression line at all.</p>
+<p>We see that <span class="math inline">\(\psi\)</span> is not increasing and therefore <span class="math inline">\(\rho\)</span> is not convex.
+A consequence of this fact is that the function <span class="math inline">\(s\)</span> may have
+several local minima and care must be used when choosing the starting
+point of iterative minimisation methods.</p>
+</div>
+<div id="tukeys-bisquare-method" class="section level3" number="18.3.5">
+<h3><span class="header-section-number">18.3.5</span> Tukey’s Bisquare Method</h3>
+<p>Here we have only one tuning parameter, <span class="math inline">\(a &gt; 0\)</span>, and the objective
+function is
+<span class="math display">\[\begin{equation*}
+\rho(\varepsilon)
+= \begin{cases}
+\frac{a^2}{6} \Bigl( 1 - \bigl( 1 - (\varepsilon/a)^2 \bigr)^3 \Bigr)
+              &amp; \mbox{if } |\varepsilon| \leq a \\
+\frac{a^2}{6} &amp; \mbox{if } |\varepsilon| &gt; a
+\end{cases}
+\end{equation*}\]</span>
+with derivative
+<span class="math display">\[\begin{equation*}
+\psi(\varepsilon)
+= \begin{cases}
+\varepsilon\bigl( 1 - (\varepsilon/a)^2 \bigr)^2
+      &amp; \mbox{if } |\varepsilon| \leq a \\
+    0 &amp; \mbox{if } |\varepsilon| &gt; a.
+\end{cases}
+\end{equation*}\]</span>
+The plots show that this is a simplified variant of Hampel’s
+estimator:</p>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="S18-m-est.html#cb301-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fl">2.5</span></span>
+<span id="cb301-2"><a href="S18-m-est.html#cb301-2" aria-hidden="true" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="at">length.out =</span> <span class="dv">201</span>)</span>
+<span id="cb301-3"><a href="S18-m-est.html#cb301-3" aria-hidden="true" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) {</span>
+<span id="cb301-4"><a href="S18-m-est.html#cb301-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> a,</span>
+<span id="cb301-5"><a href="S18-m-est.html#cb301-5" aria-hidden="true" tabindex="-1"></a>           eps <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> (eps <span class="sc">/</span> a)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb301-6"><a href="S18-m-est.html#cb301-6" aria-hidden="true" tabindex="-1"></a>           <span class="dv">0</span>)</span>
+<span id="cb301-7"><a href="S18-m-est.html#cb301-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb301-8"><a href="S18-m-est.html#cb301-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb301-9"><a href="S18-m-est.html#cb301-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb301-10"><a href="S18-m-est.html#cb301-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
+<span id="cb301-11"><a href="S18-m-est.html#cb301-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb301-12"><a href="S18-m-est.html#cb301-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
+<span id="cb301-13"><a href="S18-m-est.html#cb301-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb301-14"><a href="S18-m-est.html#cb301-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
+<span id="cb301-15"><a href="S18-m-est.html#cb301-15" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/psi-tukey-1.png" width="672" /></p>
+<p>Again, <span class="math inline">\(\rho\)</span> is not convex and care is needed when computing
+the estimate <span class="math inline">\(\hat\beta\)</span>.</p>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>We introduced the M-estimator as a robust method for estimating regression coefficients.</li>
+<li>We discussed the iteratively re-weighted least squares method for computing M-estimates.</li>
+<li>We discussed different choices for the objective function of an M-estimator.</li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="S17-robust.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH3714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
