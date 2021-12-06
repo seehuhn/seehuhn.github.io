@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 9 The Influence of Observations | MATH3714 Linear Regression and Robustness</title>
+  <title>Problem Sheet 5 | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 9 The Influence of Observations | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Problem Sheet 5 | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 9 The Influence of Observations | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Problem Sheet 5 | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="S08-diagnostics.html"/>
-<link rel="next" href="S10-multicoll.html"/>
+<link rel="prev" href="S17-robust.html"/>
+<link rel="next" href="S18-m-est.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -380,404 +380,277 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="S09-influence" class="section level1" number="9">
-<h1><span class="header-section-number">Section 9</span> The Influence of Observations</h1>
-<p>In this section we consider the influence which individual samples have on
-the estimate. Samples with a large influence may be outliers, and are
-worth checking for validity.</p>
-<div id="deleting" class="section level2" number="9.1">
-<h2><span class="header-section-number">9.1</span> Deleting Observations</h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/U5pgFVxZwvw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
+<div id="P05" class="section level1 unnumbered">
+<h1>Problem Sheet 5</h1>
+<style>
+.fold-btn {
+  float: right;
+  margin: -12px 0 0 0;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function() {
+  $folds = $(".myanswers");
+  $folds.wrapInner("<div class=\"fold-blck\">"); // wrap a div container around content
+  $folds.prepend("<button class=\"fold-btn\">Show solution</button>");  // add a button
+  $(".fold-blck").toggle();  // fold all blocks
+  $(".fold-btn").on("click", function() {  // add onClick event
+    $(this).text($(this).text() === "Hide solution" ? "Show solution" : "Hide solution");
+    $(this).next(".fold-blck").toggle("linear");  // "swing" is the default easing function. This can be further customized in its speed or the overall animation itself.
+  })
+});
+</script>
+<style>.myanswers { display: none !important; }</style>
+<div class="mysummary">
+<p>You should attempt all these questions and write up your solutions in advance
+of your workshop in week 11 where the answers will be discussed.</p>
+</div>
+<div class="myq">
+<p><strong>17.</strong> Consider the dataset at</p>
+<ul>
+<li><a href="http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P05Q17.csv" class="uri">http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P05Q17.csv</a></li>
+</ul>
+<p>which contains samples from variables <span class="math inline">\(x_1, x_2, y \in \mathbb{R}\)</span> and
+<span class="math inline">\(x_3 \in \{\mathrm{R}, \mathrm{G}, \mathrm{B}\}\)</span>.</p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Load the data into R.</li>
+</ol>
+<div class="myanswers">
+<p>We can load the data into R as follows:</p>
+<div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb296-1"><a href="P05.html#cb296-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/</span></span>
+<span id="cb296-2"><a href="P05.html#cb296-2" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/P05Q17.csv&quot;</span>)</span>
+<span id="cb296-3"><a href="P05.html#cb296-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the order of levels:</span></span>
+<span id="cb296-4"><a href="P05.html#cb296-4" aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>x3 <span class="ot">&lt;-</span> <span class="fu">factor</span>(dd<span class="sc">$</span>x3, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;R&quot;</span>, <span class="st">&quot;G&quot;</span>, <span class="st">&quot;B&quot;</span>))</span>
+<span id="cb296-5"><a href="P05.html#cb296-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dd)</span></code></pre></div>
+<pre class="rOutput"><code>         x1         x2 x3        y
+1  1.940066 -0.7755552  B 2.709368
+2 -1.214413  0.4842872  R 1.254138
+3  1.940301  3.1189902  B 3.228220
+4  4.599154  3.5881714  B 5.541995
+5  3.891628 -4.4026497  B 4.018021
+6  2.615079 -0.9916691  R 0.449100</code></pre>
 </div>
 </div>
-<p>The most direct way to check for the influence of an observation
-is to compute the parameter estimate <span class="math inline">\(\hat\beta\)</span> both with and without
-the observation in question, and to see how much the two results differ.</p>
-<div class="definition">
-<p><span id="def:unlabeled-div-32" class="definition"><strong>Definition 9.1  </strong></span>For <span class="math inline">\(I \subset \{1, \ldots, n\}\)</span> we write <span class="math inline">\(\hat\beta^{(I)}\)</span> for the estimate
-where all observations <span class="math inline">\(i\in I\)</span> have been removed. As a shorthand we write
-<span class="math inline">\(\hat\beta^{(i)}\)</span> instead of <span class="math inline">\(\hat\beta^{(\{i\})}\)</span> for the case where only
-a single observation has been removed.</p>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Fit a simple linear model to describe <span class="math inline">\(y\)</span> as a function of <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>
+and <span class="math inline">\(x_3\)</span>, taking into account that <span class="math inline">\(x_3\)</span> is a categorical variable.
+Show that the behaviour of the residuals depends on the levels of <span class="math inline">\(x_3\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>To fit a simple linear model:</p>
+<div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb298-1"><a href="P05.html#cb298-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
+<span id="cb298-2"><a href="P05.html#cb298-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<pre class="rOutput"><code>
+Call:
+lm(formula = y ~ ., data = dd)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.7641 -1.0211  0.0354  0.6991  3.7245 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  0.91712    0.37429   2.450   0.0182 *  
+x1           0.51294    0.07220   7.105 7.13e-09 ***
+x2           0.53629    0.08328   6.440 6.93e-08 ***
+x3G          0.10016    0.57361   0.175   0.8622    
+x3B         -0.25865    0.51595  -0.501   0.6186    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 1.54 on 45 degrees of freedom
+Multiple R-squared:  0.7044,    Adjusted R-squared:  0.6781 
+F-statistic:  26.8 on 4 and 45 DF,  p-value: 2.082e-11</code></pre>
+<p>In a residual plot we can colour-code the residuals by the level of <span class="math inline">\(x_3\)</span>:</p>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="P05.html#cb300-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m),</span>
+<span id="cb300-2"><a href="P05.html#cb300-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">as.numeric</span>(dd<span class="sc">$</span>x3) <span class="sc">+</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="fu">as.numeric</span>(dd<span class="sc">$</span>x3) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb300-3"><a href="P05.html#cb300-3" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="at">legend =</span> <span class="fu">levels</span>(dd<span class="sc">$</span>x3), <span class="at">col=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">pch =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/P05Q17-1.png" width="672" /></p>
+<p>This shows that that the residuals for level <code>G</code> are much smaller
+than for the other levels.</p>
 </div>
-<p>This approach is very different from what we used in the
-section about <a href="S06-simultaneous.html#S06-simultaneous">Estimating Coefficients Simultaneously</a>. There, we selected a
-subset of regression coefficients, corresponding to columns in the design
-matrix <span class="math inline">\(X\)</span>, whereas here we are considering a subset of the observations,
-corresponding to rows of <span class="math inline">\(X\)</span>.</p>
-<p>Using the formula for the least squares estimate, we know that
-<span class="math display" id="eq:hat-beta-I1">\[\begin{equation}
-  \hat\beta^{(I)}
-  = (X_{(I)}^\top X_{(I)})^{-1} X_{(I)}^\top y,  \tag{9.1}
-\end{equation}\]</span>
-where now <span class="math inline">\(X_{(I)}\)</span> is <span class="math inline">\(X\)</span> with all rows <span class="math inline">\(i\in I\)</span> removed. (We write the
-“<span class="math inline">\((I)\)</span>” as a subscript, to make space for the transpose sign.) Our first aim
-is to find an explicit formula for the difference between <span class="math inline">\(\hat\beta\)</span> and
-<span class="math inline">\(\hat\beta^{(I)}\)</span>.</p>
-<p>We have
+</div>
+<div class="subq">
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Find an improved model, which includes some of the interaction
+terms between <span class="math inline">\(x_3\)</span> and the other variables. For each level of <span class="math inline">\(x_3\)</span>,
+write the mathematical equation for the fitted model mean of your
+chosen model.</li>
+</ol>
+<div class="myanswers">
+<p>We can start by trying all interaction terms:</p>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="P05.html#cb301-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd)</span>
+<span id="cb301-2"><a href="P05.html#cb301-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
+<pre class="rOutput"><code>
+Call:
+lm(formula = y ~ .^2, data = dd)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.139522 -0.058383 -0.002396  0.037826  0.227631 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  1.0129619  0.0216220  46.849   &lt;2e-16 ***
+x1           0.1017179  0.0069591  14.617   &lt;2e-16 ***
+x2           0.8860760  0.0073076 121.254   &lt;2e-16 ***
+x3G         -0.0287990  0.0334521  -0.861    0.394    
+x3B          0.0082008  0.0300303   0.273    0.786    
+x1:x2       -0.0007807  0.0016391  -0.476    0.636    
+x1:x3G       0.4025315  0.0125449  32.087   &lt;2e-16 ***
+x1:x3B       0.8029663  0.0088744  90.481   &lt;2e-16 ***
+x2:x3G      -0.3936519  0.0131191 -30.006   &lt;2e-16 ***
+x2:x3B      -0.7841714  0.0105136 -74.586   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.08068 on 40 degrees of freedom
+Multiple R-squared:  0.9993,    Adjusted R-squared:  0.9991 
+F-statistic:  6160 on 9 and 40 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Many of the interaction terms are significantly
+different from zero and the adjusted <span class="math inline">\(R^2\)</span>-value has
+dramatically increased. A good choice of model seems
+to be <code>y ~ x1 + x2 + x1:x3 + x2:x3</code></p>
+<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="P05.html#cb303-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x1<span class="sc">:</span>x3 <span class="sc">+</span> x2<span class="sc">:</span>x3, <span class="at">data =</span> dd)</span>
+<span id="cb303-2"><a href="P05.html#cb303-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code></pre></div>
+<pre class="rOutput"><code>
+Call:
+lm(formula = y ~ x1 + x2 + x1:x3 + x2:x3, data = dd)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.136497 -0.053054 -0.003199  0.040097  0.241331 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  1.006764   0.012370   81.39   &lt;2e-16 ***
+x1           0.101630   0.006318   16.09   &lt;2e-16 ***
+x2           0.886702   0.006935  127.86   &lt;2e-16 ***
+x1:x3G       0.404014   0.012109   33.37   &lt;2e-16 ***
+x1:x3B       0.803071   0.008462   94.91   &lt;2e-16 ***
+x2:x3G      -0.392663   0.012882  -30.48   &lt;2e-16 ***
+x2:x3B      -0.783259   0.009569  -81.85   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.08005 on 43 degrees of freedom
+Multiple R-squared:  0.9992,    Adjusted R-squared:  0.9991 
+F-statistic:  9383 on 6 and 43 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>The fitted model mean for <span class="math inline">\(x_3 = \mathrm{R}\)</span> is
+<span class="math display">\[\begin{equation*}
+  y
+  \approx 1.007 + 0.102 x_1 + 0.887 x_2.
+\end{equation*}\]</span>
+For <span class="math inline">\(x_3 = \mathrm{G}\)</span> we get
 <span class="math display">\[\begin{align*}
-  (X_{(I)}^\top y)_k
-  &amp;= \sum_{j \notin I} X_{jk} y_j \\
-  &amp;= \sum_{j=1}^n X_{jk} y_j - \sum_{j\in I} X_{jk} y_j
+  y
+  &amp;\approx 1.007 + (0.102 + 0.404) x_1 + (0.887 - 0.393) x_2 \\
+  &amp;= 1.007 + 0.506 x_1 + 0.494 x_2
 \end{align*}\]</span>
-for all <span class="math inline">\(k \in \{0, \ldots, p\}\)</span>, and thus
-<span class="math display" id="eq:X-I-top-y">\[\begin{equation}
-  X_{(I)}^\top y
-  = X^\top y - X_I^\top y_I,  \tag{9.2}
-\end{equation}\]</span>
-where <span class="math inline">\(X_I\)</span> stands for the matrix which only contains the rows <span class="math inline">\(i\in I\)</span> of the
-matrix <span class="math inline">\(X\)</span>, and <span class="math inline">\(y_I = (y_i)_{i\in I}\)</span>. Before we substitute this result into
-equation <a href="S09-influence.html#eq:hat-beta-I1">(9.1)</a>, we first consider how we can write the the
-inverse <span class="math inline">\((X_{(I)}^\top X_{(I)})^{-1}\)</span> in terms of <span class="math inline">\((X^\top X)^{-1}\)</span>.</p>
-<div class="lemma">
-<p><span id="lem:low-rank-inverse" class="lemma"><strong>Lemma 9.1  </strong></span>Let <span class="math inline">\(A \in \mathbb{R}^{(p+1)\times (p+1)}\)</span> and let <span class="math inline">\(U, V \in \mathbb{R}^{m \times (p+1)}\)</span>.
-Then
-<span class="math display">\[\begin{equation*}
-  (A - U^\top V)^{-1}
-  = A^{-1} + A^{-1} U^\top (I - V A^{-1} U^\top)^{-1} V A^{-1}.
-\end{equation*}\]</span></p>
-</div>
-<div class="proof">
-<p><span id="unlabeled-div-33" class="proof"><em>Proof</em>. </span>This statement is proved by multiplying the equation with <span class="math inline">\(A - U^\top V\)</span>.
-Expanding all brackets and using the relation <span class="math inline">\(A A^{-1} = I\)</span>, we find
-<span class="math display">\[\begin{equation*}
-  \bigl( A - U^\top V \bigr)
-    \bigl( A^{-1} + A^{-1} U^\top (I - V A^{-1} U^\top)^{-1} V A^{-1} \bigr)
-  = \cdots
-  = I.
-\end{equation*}\]</span>
-This shows that we have indeed found the inverse of <span class="math inline">\(A - U^\top V\)</span>.</p>
-</div>
-<p>Using this result, we can now derive a formula for the change in <span class="math inline">\(\hat\beta\)</span>
-when some observations are omitted.</p>
-<div class="lemma">
-<p><span id="lem:hat-beta-I" class="lemma"><strong>Lemma 9.2  </strong></span>We have
-<span class="math display">\[\begin{equation*}
-  \hat\beta^{(I)} - \hat\beta
-  = - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} \hat\varepsilon_I,
-\end{equation*}\]</span>
-where <span class="math inline">\(H_{II} := X_I (X^\top X)^{-1} X_I^\top = (h_{ij})_{i,j\in I}\)</span> is the
-matrix which contains the elements of the hat matrix <span class="math inline">\(H\)</span> where both row and
-column are in <span class="math inline">\(I\)</span>, and <span class="math inline">\(\hat\varepsilon_I = (\hat\varepsilon_i)_{i\in I} = (y_i - \hat y_i)_{i\in I}\)</span> is the vector of residuals at the omitted samples.</p>
-</div>
-<p>The vector <span class="math inline">\(\hat\varepsilon_I\)</span> consists of a subset of the original
-residuals, computed using the original <span class="math inline">\(\hat y\)</span> and <span class="math inline">\(\hat\beta\)</span>. It does not
-refer to the modified estimate <span class="math inline">\(\hat\beta^{(I)}\)</span> which was computing with some
-observations omitted. Similarly, <span class="math inline">\(H_{II}\)</span> is a submatrix of the original
-hat matrix.</p>
-<div class="proof">
-<p><span id="unlabeled-div-34" class="proof"><em>Proof</em>. </span>Similar to <a href="S09-influence.html#eq:X-I-top-y">(9.2)</a>, we
-<span class="math display">\[\begin{equation*}
-  (X_{(I)}^\top X_{(I)})_{ik}
-  = \sum_{j\notin I} X_{ji} X_{jk}
-  = \sum_{j=1}^n X_{ji} X_{jk} - \sum_{j\in I} X_{ji} X_{jk}
-\end{equation*}\]</span>
-and thus
-<span class="math display">\[\begin{equation*}
-  X_{(I)}^\top X_{(I)}
-  = X^\top X - X_I^\top X_I.
-\end{equation*}\]</span>
-Now we can use the lemma with <span class="math inline">\(U = V = X_I\)</span> to get
+Finally, for <span class="math inline">\(x_3 = \mathrm{B}\)</span> we find
 <span class="math display">\[\begin{align*}
-  (X_{(I)}^\top X_{(I)})^{-1}
-  &amp;= (X^\top X)^{-1} + (X^\top X)^{-1} X_I^\top (I - X_I (X^\top X)^{-1} X_I^\top)^{-1} X_I (X^\top X)^{-1} \\
-  &amp;= (X^\top X)^{-1} + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I (X^\top X)^{-1}.
+  y
+  &amp;\approx 1.007 + (0.102 + 0.803) x_1 + (0.887 - 0.783) x_2 \\
+  &amp;= 1.007 + 0.905 x_1 + 0.104 x_2.
 \end{align*}\]</span></p>
-<p>Using equations <a href="S09-influence.html#eq:hat-beta-I1">(9.1)</a> and <a href="S09-influence.html#eq:X-I-top-y">(9.2)</a> and
-lemma <a href="S09-influence.html#lem:low-rank-inverse">9.1</a> we get
-<span class="math display">\[\begin{align*}
-  \hat\beta^{(I)}
-  &amp;= (X_{(I)}^\top X_{(I)})^{-1} X_{(I)}^\top y \\
-  &amp;= (X_{(I)}^\top X_{(I)})^{-1} (X^\top y - X_I^\top y_I) \\
-  &amp;= \Bigl( (X^\top X)^{-1} + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I (X^\top X)^{-1} \Bigr) (X^\top y - X_I^\top y_I) \\
-  &amp;= (X^\top X)^{-1} X^\top y \\
-    &amp;\hskip1cm + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I \hat\beta \\
-    &amp;\hskip1cm - (X^\top X)^{-1} X_I^\top y_I \\
-    &amp;\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I (X^\top X)^{-1} X_I^\top y_I \\
-  &amp;= \hat\beta
-               + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I \hat\beta \\
-    &amp;\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} (I - H_{II}) y_I \\
-    &amp;\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} H_{II} y_I \\
-  &amp;= \hat\beta
-               + (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} X_I \hat\beta \\
-    &amp;\hskip1cm - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} y_I \\
-  &amp;= \hat\beta - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} \bigl( y_I -  X_I \hat\beta \bigr) \\
-  &amp;= \hat\beta - (X^\top X)^{-1} X_I^\top (I - H_{II})^{-1} \hat\varepsilon_I.
-\end{align*}\]</span>
-This completes the proof.</p>
 </div>
-<p>We can also find the change in estimated error variance, when samples
-are omitted from the estimate. The estimated variance in the modified model
-is
-<span class="math display">\[\begin{align*}
-  \hat\sigma_{(I)}^2
-  &amp;:= \frac{1}{n-m-p-1} \sum_{i\notin I} \Bigl( y_i - (X\hat\beta^{(I)})_i \Bigr)^2 \\
-  &amp;= \frac{1}{n-m-p-1} \Bigl\| y_{(I)} - X_{(I)} \hat\beta^{(I)} \Bigr\|^2
-\end{align*}\]</span>
-where <span class="math inline">\(m = |I|\)</span> so that <span class="math inline">\(n-m\)</span> is the number of observations used
-in the estimate. We want to compare this quantity to the original estimate
-<span class="math display">\[\begin{align*}
-  \hat\sigma^2
-  &amp;= \frac{1}{n-p-1} \sum_{i=1}^n \Bigl( y_i - (X\hat\beta)_i \Bigr)^2 \\
-  &amp;= \frac{1}{n-p-1} \Bigl\| y - X \hat\beta \Bigr\|^2.
-\end{align*}\]</span>
-Here we used again the Euclidean norm as a shorthand for the sum of squares
-used in these estimates. The following lemma shows how the residual sum
-of squares decreases when the observations <span class="math inline">\(I\)</span> are omitted from the
-estimate.</p>
-<div class="lemma">
-<p><span id="lem:sigma-I" class="lemma"><strong>Lemma 9.3  </strong></span>We have
+</div>
+</div>
+<div class="myq">
+<p><strong>18.</strong>
+Consider the dataset at</p>
+<ul>
+<li><a href="http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P05Q18.csv" class="uri">http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P05Q18.csv</a></li>
+</ul>
+<p>Identify the <span class="math inline">\(x\)</span>-space outlier in this dataset.</p>
+<div class="myanswers">
+<p>We start by loading the data into R:</p>
+<div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb305-1"><a href="P05.html#cb305-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;http://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P05Q18.csv&quot;</span>)</span>
+<span id="cb305-2"><a href="P05.html#cb305-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(X)</span></code></pre></div>
+<pre class="rOutput"><code>            x1          x2         x3         x4
+1 -1.359560124  0.66310168  2.5866758 -1.7229394
+2  0.624644511 -0.01925607 -0.1692926 -0.5092775
+3  0.957938698 -0.54734504 -0.9680673  0.6074693
+4  0.733255177 -0.37217623 -0.6027061  0.2751777
+5  0.355021570 -0.58332351  0.2386221 -0.1934059
+6  0.002907357 -0.69562237  0.5365051  0.3047116</code></pre>
+<p>To identify the outlier, we compute the leverage of each sample.</p>
+<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="P05.html#cb307-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(X)</span>
+<span id="cb307-2"><a href="P05.html#cb307-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
+<span id="cb307-3"><a href="P05.html#cb307-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diag</span>(H))</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/P05Q18a-1.png" width="672" /></p>
+<p>The plot shows that one sample has a much larger leverage than
+the other samples.</p>
+<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb308-1"><a href="P05.html#cb308-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which.max</span>(<span class="fu">diag</span>(H))</span></code></pre></div>
+<pre class="rOutput"><code>[1] 96</code></pre>
+<p>Thus, the <span class="math inline">\(x\)</span>-space outlier is in row 96 of the matrix <span class="math inline">\(X\)</span>.</p>
+<p>Note that the outlier does not look special on a pair scatter plot:</p>
+<div class="sourceCode" id="cb310"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb310-1"><a href="P05.html#cb310-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(X, <span class="at">col =</span> (<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(X) <span class="sc">==</span> <span class="dv">96</span>) <span class="sc">+</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/P05Q18b-1.png" width="672" /></p>
+</div>
+</div>
+<div class="myq">
+<p><strong>19.</strong>
+The sample median is a robust estimator of the mean.
+Determine the breakdown point.</p>
+<div class="myanswers">
+<p>The median can be obtained by arranging the samples in increasing
+order and inspecting the middle element (for odd <span class="math inline">\(n\)</span>) or
+the middle two elements (for even <span class="math inline">\(n\)</span>) in this list.
+Let <span class="math inline">\(x_{(1)}, \ldots, x_{(n)}\)</span> be the samples arranged in increasing order.</p>
+<p>For odd <span class="math inline">\(n\)</span>: The median equals <span class="math inline">\(x_{(k)}\)</span> where <span class="math inline">\(k = (n+1) / 2\)</span>.
+In order to move the median to infinity, we have
+to move <span class="math inline">\(x_{(k)}, x_{(k+1)}, \ldots, x_{(n)}\)</span> to infinity.
+These are <span class="math inline">\((n+1) / 2\)</span> values in total and thus the breakdown point
+is <span class="math inline">\((n+1) / 2n\)</span>.</p>
+<p>For even <span class="math inline">\(n\)</span>: The median equals <span class="math inline">\((x_{(k)} + x_{(k+1)})/2\)</span> where <span class="math inline">\(k = n / 2\)</span>.
+In order to move the median to infinity, we have
+to move <span class="math inline">\(x_{(k+1)}, x_{(k+2)}, \ldots, x_{(n)}\)</span> to infinity.
+These are <span class="math inline">\(n / 2\)</span> values in total and thus the breakdown point
+is <span class="math inline">\(1/2\)</span>.</p>
+</div>
+</div>
+<div class="myq">
+<p><strong>20.</strong>
+Determine the breakdown point for the resistant line from
+example <a href="S17-robust.html#exm:resistant-line">17.3</a>.</p>
+<div class="myanswers">
+<p>The regression coefficients in the example are computed
+as
 <span class="math display">\[\begin{equation*}
-  \| y_{(I)} - X_{(I)} \hat\beta^{(I)} \|^2 - \| y - \hat y \|^2
-  = - \hat\varepsilon_I^\top (I - H_{II})^{-1} \hat\varepsilon_I.
-\end{equation*}\]</span></p>
-</div>
-<p>The proof of this lemma is similar to the proof of lemma <a href="S09-influence.html#lem:hat-beta-I">9.2</a>,
-but we omit the tedious calculations here.</p>
-<div class="example">
-<p><span id="exm:unlabeled-div-35" class="example"><strong>Example 9.1  </strong></span>To illustrate the results of this subsection, we give a numerical example.
-In the example we consider the <code>stackloss</code> dataset, and study what happens
-when the first two observations are omitted:</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="S09-influence.html#cb134-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
-<span id="cb134-2"><a href="S09-influence.html#cb134-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),])</span>
-<span id="cb134-3"><a href="S09-influence.html#cb134-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m2) <span class="sc">-</span> <span class="fu">coef</span>(m1)</span></code></pre></div>
-<pre class="rOutput"><code>(Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
- 0.86331016 -0.03780761 -0.02706305  0.02124533 </code></pre>
-<p>Using the result of lemma <a href="S09-influence.html#lem:hat-beta-I">9.2</a>, we can get the difference
-between the two estimates without using the model <code>m2</code>:</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="S09-influence.html#cb136-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m1)</span>
-<span id="cb136-2"><a href="S09-influence.html#cb136-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
-<span id="cb136-3"><a href="S09-influence.html#cb136-3" aria-hidden="true" tabindex="-1"></a>XI <span class="ot">&lt;-</span> X[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,]</span>
-<span id="cb136-4"><a href="S09-influence.html#cb136-4" aria-hidden="true" tabindex="-1"></a>hII <span class="ot">&lt;-</span> H[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb136-5"><a href="S09-influence.html#cb136-5" aria-hidden="true" tabindex="-1"></a>hat.epsI <span class="ot">&lt;-</span> <span class="fu">resid</span>(m1)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb136-6"><a href="S09-influence.html#cb136-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb136-7"><a href="S09-influence.html#cb136-7" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">as.vector</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X) <span class="sc">%*%</span> <span class="fu">t</span>(XI) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">diag</span>(<span class="dv">2</span>) <span class="sc">-</span> hII, hat.epsI))</span></code></pre></div>
-<pre class="rOutput"><code>[1]  0.86331016 -0.03780761 -0.02706305  0.02124533</code></pre>
-<p>This is the same result as we obtained above. (I used <code>as.vector()</code> to
-convert the result from a <span class="math inline">\(4\times 1\)</span> matrix into a vector.)</p>
-<p>Similarly, we can compare the residual sum of squares:
-A direct comparison gives</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="S09-influence.html#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(m2)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m1)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
-<pre class="rOutput"><code>[1] -15.41758</code></pre>
-<p>Using the result of lemma <a href="S09-influence.html#lem:sigma-I">9.3</a>, we get the same result
-without requiring <code>m2</code>:</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="S09-influence.html#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">t</span>(hat.epsI) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">diag</span>(<span class="dv">2</span>) <span class="sc">-</span> hII, hat.epsI)</span></code></pre></div>
-<pre class="rOutput"><code>          [,1]
-[1,] -15.41758</code></pre>
-<p>Again, the results using both methods agree.</p>
-</div>
-<p>In the special case of <span class="math inline">\(m = 1\)</span>, where <span class="math inline">\(I = \{i\}\)</span> for some
-<span class="math inline">\(i \in \{1, \ldots, n\}\)</span>, our results simplify to
-<span class="math display" id="eq:dbeta-i">\[\begin{equation}
-  \hat\beta^{(i)} - \hat\beta
-    = - (X^\top X)^{-1} x_i \frac{\hat\varepsilon_i}{1 - h_{ii}} \tag{9.3}
-\end{equation}\]</span>
+  \hat\beta_1
+  = \frac{y_\mathrm{R} - y_\mathrm{L}}{x_\mathrm{R} - x_\mathrm{L}}
+\end{equation*}\]</span>
 and
 <span class="math display">\[\begin{equation*}
-  \| y_{(i)} - x_i^\top \hat\beta^{(i)} \|^2 - \| y - \hat y \|^2
-    = - \frac{\hat\varepsilon_i^2}{1 - h_{ii}},
+  \hat\beta_0
+  = \frac{y_\mathrm{L} + y_\mathrm{M} + y_\mathrm{R}}{3}
+      - \hat\beta_1 \frac{x_\mathrm{L} + x_\mathrm{M} + x_\mathrm{R}}{3},
 \end{equation*}\]</span>
-where <span class="math inline">\(x_i \in \mathbb{R}^{p+1}\)</span> is the <span class="math inline">\(i\)</span>th row of <span class="math inline">\(X\)</span> as a vector,
-<span class="math inline">\(\hat\varepsilon_i\)</span> is the usual <span class="math inline">\(i\)</span>th residual,
-and <span class="math inline">\(h_{ii}\)</span> is the <span class="math inline">\(i\)</span>th diagonal element of the hat matrix.
-Using the correct prefactors the second result gives
-<span class="math display">\[\begin{equation*}
-  (n-p-2) \hat\sigma_{(i)}^2
-    = (n-p-1)\hat\sigma^2 - \frac{\hat\varepsilon_i^2}{1 - h_{ii}}.
-\end{equation*}\]</span></p>
-<p>We can find numerical values for these quantities using
-the function <code>influence()</code>:</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="S09-influence.html#cb142-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">10</span>)</span>
-<span id="cb142-2"><a href="S09-influence.html#cb142-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>)</span>
-<span id="cb142-3"><a href="S09-influence.html#cb142-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> stackloss)</span>
-<span id="cb142-4"><a href="S09-influence.html#cb142-4" aria-hidden="true" tabindex="-1"></a><span class="fu">influence</span>(m)</span></code></pre></div>
-<pre class="rOutput"><code>$hat
-   1    2    3    4 
-0.43 0.33 0.27 0.97 
-
-$coefficients
-  (Intercept)            x
-1  0.01719298 -0.002105263
-2 -0.19582090  0.019104478
-3  0.15369863 -0.009315068
-4  0.30666667 -0.160000000
-
-$sigma
-        1         2         3         4 
-0.4682929 0.2591605 0.2482818 0.4082483 
-
-$wt.res
-    1     2     3     4 
- 0.02 -0.32  0.34 -0.04 </code></pre>
-<p>The output lists the diagonal elements <span class="math inline">\(h_{ii}\)</span> of the hat matrix
-as <code>$hat</code>, the vectors <span class="math inline">\(\hat\beta^{(i)} - \hat\beta\)</span> for each <span class="math inline">\(i\)</span>
-as <code>$coefficients</code>, the standard deviations <span class="math inline">\(\hat\sigma_{(i)}\)</span>
-for each <span class="math inline">\(i\)</span> as <code>$sigma</code>, and the residuals <span class="math inline">\(\hat\varepsilon_i\)</span> as <code>$wt.res</code>.</p>
+where
+<span class="math inline">\(x_\mathrm{L}\)</span>, <span class="math inline">\(x_\mathrm{M}\)</span> and <span class="math inline">\(x_\mathrm{R}\)</span>
+are the medians of the lower, middle and upper third of the <span class="math inline">\(x_{(i)}\)</span>,
+and <span class="math inline">\(y_\mathrm{L}\)</span>, <span class="math inline">\(y_\mathrm{M}\)</span> and <span class="math inline">\(y_\mathrm{R}\)</span> are the medians
+of the corresponding <span class="math inline">\(y\)</span> values, respectively.</p>
+<p>To move either of the estimated regression coefficients to infinity,
+we need to move one of <span class="math inline">\(x_\mathrm{L}\)</span>, <span class="math inline">\(x_\mathrm{M}\)</span>, <span class="math inline">\(x_\mathrm{R}\)</span>,
+<span class="math inline">\(y_\mathrm{L}\)</span>, <span class="math inline">\(y_\mathrm{M}\)</span>, or <span class="math inline">\(y_\mathrm{R}\)</span> to infinity.
+From the previous question we know that this requires to modify
+half of the corresponing third of the data, so the breakdown point
+of the method is <span class="math inline">\(1/2 cdot 1/3 = 1/6\)</span>.</p>
 </div>
-<div id="influence" class="section level2" number="9.2">
-<h2><span class="header-section-number">9.2</span> Cook’s Distance</h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/JNorvZHp0kQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>In the section about <a href="S06-simultaneous.html#S06-simultaneous">Estimating Coefficients Simultaneously</a> we learned
-how to measure distances of estimated parameter vectors: To compare
-<span class="math inline">\(K\hat\beta\)</span> to a vector <span class="math inline">\(K\beta\)</span> we used the norm
-<span class="math display">\[\begin{equation*}
-  \bigl\| K\hat\beta - K\beta \bigr\|_{K(X^\top X)^{-1}K^\top}^2
-  = (K\hat\beta - K\beta)^\top \bigl(K(X^\top X)^{-1}K^\top\bigr)^{-1} (K\hat\beta - K\beta).
-\end{equation*}\]</span>
-If we consider the full parameter vector, we can use <span class="math inline">\(K = I\)</span> to get
-<span class="math display">\[\begin{equation*}
-  \bigl\| \hat\beta - \beta \bigr\|_{(X^\top X)^{-1}}^2
-  = (\hat\beta - \beta)^\top X^\top X (\hat\beta - \beta).
-\end{equation*}\]</span>
-From lemma <a href="S06-simultaneous.html#lem:F-dist">6.1</a> we know that
-<span class="math display">\[\begin{equation*}
-  F = \frac{\bigl\| \hat\beta - \beta \bigr\|_{(X^\top X)^{-1}}^2}{(p+1)\hat\sigma^2}
-\end{equation*}\]</span>
-follows an <span class="math inline">\(F_{p+1, n-p-1}\)</span>-distribution. We can use this measure to
-quantify when the difference <span class="math inline">\(\hat\beta^{(i)} - \hat\beta\)</span> should be
-considered “large”.</p>
-<div class="definition">
-<p><span id="def:Cook-D" class="definition"><strong>Definition 9.2  </strong></span><strong>Cook’s distance</strong> for observation <span class="math inline">\(i\)</span> is defined as
-<span class="math display">\[\begin{equation*}
-  D_i
-  = \frac{(\hat\beta^{(i)} - \hat\beta)^\top X^\top X (\hat\beta^{(i)} - \hat\beta)}{(p+1)\hat\sigma^2}.
-\end{equation*}\]</span></p>
-</div>
-<p>We will consider observation <span class="math inline">\(i\)</span> to be <strong>influential</strong> if <span class="math inline">\(D_i\)</span> is large.
-Since this “lives on the scale” of an <span class="math inline">\(F_{p+1, n-p-1}\)</span>-distribution,
-we should compare <span class="math inline">\(D_i\)</span> to typical values of such a distribution. For
-example, we could consider the median. Here is a sample of median values
-for different <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span>:</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="S09-influence.html#cb144-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">100</span>)</span>
-<span id="cb144-2"><a href="S09-influence.html#cb144-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>)</span>
-<span id="cb144-3"><a href="S09-influence.html#cb144-3" aria-hidden="true" tabindex="-1"></a>xx <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">n =</span> n, <span class="at">p =</span> p)</span>
-<span id="cb144-4"><a href="S09-influence.html#cb144-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(xx, <span class="at">median =</span> <span class="fu">qf</span>(<span class="fl">0.5</span>, xx<span class="sc">$</span>p <span class="sc">+</span> <span class="dv">1</span>, xx<span class="sc">$</span>n <span class="sc">-</span> xx<span class="sc">$</span>p <span class="sc">-</span> <span class="dv">1</span>))</span></code></pre></div>
-<pre class="rOutput"><code>    n p    median
-1  10 1 0.7568285
-2  30 1 0.7105929
-3 100 1 0.6980730
-4  10 3 0.9419133
-5  30 3 0.8614530
-6 100 3 0.8451308
-7  10 5 1.0616689
-8  30 5 0.9168687
-9 100 5 0.8977754</code></pre>
-<p>In practice, some authors suggest that an observation is “influential”
-if <span class="math inline">\(D_i &gt; 1\)</span>, instead of using an exact quantile of the <span class="math inline">\(F\)</span>-distribution.</p>
-<p>The following lemma provides two additional ways to compute Cook’s
-distance.</p>
-<div class="lemma">
-<p><span id="lem:Cook-D-alt" class="lemma"><strong>Lemma 9.4  </strong></span>We have
-<span class="math display">\[\begin{align*}
-  D_i
-  &amp;= \frac{(\hat y^{(i)} - \hat y)^\top (\hat y^{(i)} - \hat y)}{(p+1)\hat\sigma^2} \\
-  &amp;= \frac{\hat\varepsilon_i^2}{(p+1)\hat\sigma^2} \cdot \frac{h_{ii}}{(1-h_{ii})^2}.
-\end{align*}\]</span>
-where <span class="math inline">\(\hat y^{(i)} := X \hat\beta^{(i)}\)</span> is the fitted value which is
-predicted for observation <span class="math inline">\(i\)</span> when this observation is not used to fit the
-model, <span class="math inline">\(\hat\varepsilon_i\)</span> are the usual residuals, and <span class="math inline">\(h_{ii}\)</span> are the
-diagonal elements of the hat matrix.</p>
-</div>
-<div class="proof">
-<p><span id="unlabeled-div-36" class="proof"><em>Proof</em>. </span>We have <span class="math inline">\(\hat y^{(i)} - \hat y = X \hat\beta^{(i)} - X \hat\beta\)</span> and thus
-<span class="math display">\[\begin{equation*}
-  (\hat y^{(i)} - \hat y)^\top (\hat y^{(i)} - \hat y)
-  = (\hat\beta^{(i)} - \hat\beta)^\top X^\top X (\hat\beta^{(i)} - \hat\beta).
-\end{equation*}\]</span>
-This proves the first equality. From equation <a href="S09-influence.html#eq:dbeta-i">(9.3)</a> we know
-<span class="math display">\[\begin{equation*}
-  \hat\beta^{(i)} - \hat\beta
-    = - (X^\top X)^{-1} x_i \frac{\hat\varepsilon_i}{1 - h_{ii}}
-\end{equation*}\]</span>
-and thus we find
-<span class="math display">\[\begin{align*}
-  (\hat\beta^{(i)} - \hat\beta)^\top X^\top X (\hat\beta^{(i)} - \hat\beta)
-  &amp;= \frac{\hat\varepsilon_i^2}{(1 - h_{ii})^2} x_i^\top (X^\top X)^{-1} X^\top X (X^\top X)^{-1} x_i \\
-  &amp;= \frac{\hat\varepsilon_i^2}{(1 - h_{ii})^2} x_i^\top (X^\top X)^{-1} x_i \\
-  &amp;= \frac{\hat\varepsilon_i^2}{(1 - h_{ii})^2} h_{ii}
-\end{align*}\]</span>
-and dividing by <span class="math inline">\((p+1)\hat\sigma^2\)</span> completes the proof.</p>
-</div>
-<div class="example">
-<p><span id="exm:unlabeled-div-37" class="example"><strong>Example 9.2  </strong></span>To illustrate how Cook’s <span class="math inline">\(D\)</span> is computed, we use a small dataset with
-simulated data. We include an <span class="math inline">\(x\)</span>-space outlier:</p>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="S09-influence.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211026</span>)</span>
-<span id="cb146-2"><a href="S09-influence.html#cb146-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">6</span>))</span>
-<span id="cb146-3"><a href="S09-influence.html#cb146-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> <span class="fu">rnorm</span>(<span class="dv">7</span>)</span>
-<span id="cb146-4"><a href="S09-influence.html#cb146-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y)</span>
-<span id="cb146-5"><a href="S09-influence.html#cb146-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb146-6"><a href="S09-influence.html#cb146-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
-<span id="cb146-7"><a href="S09-influence.html#cb146-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m)</span>
-<span id="cb146-8"><a href="S09-influence.html#cb146-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb146-9"><a href="S09-influence.html#cb146-9" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">~</span> x[<span class="sc">-</span><span class="dv">1</span>])</span>
-<span id="cb146-10"><a href="S09-influence.html#cb146-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m2, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/influence-1.png" width="672" /></p>
-<p>The black line in the plot is the regression line using all data,
-the red line is the regression line fitted using only the left-most
-six points and leaving out the “outlier” at <span class="math inline">\(x=5\)</span>. The difference
-between the two lines makes it clear that the point at <span class="math inline">\(x=5\)</span> has a
-large effect on the estimated regression line. An easy way
-to compute the <span class="math inline">\(D\)</span>-values is the second formula from
-lemma <a href="S09-influence.html#lem:Cook-D-alt">9.4</a>:</p>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="S09-influence.html#cb147-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
-<span id="cb147-2"><a href="S09-influence.html#cb147-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
-<span id="cb147-3"><a href="S09-influence.html#cb147-3" aria-hidden="true" tabindex="-1"></a>hii <span class="ot">&lt;-</span> <span class="fu">diag</span>(H)</span>
-<span id="cb147-4"><a href="S09-influence.html#cb147-4" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> hii <span class="sc">/</span> <span class="dv">2</span> <span class="sc">/</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> hii)<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb147-5"><a href="S09-influence.html#cb147-5" aria-hidden="true" tabindex="-1"></a>D</span></code></pre></div>
-<pre class="rOutput"><code>          1           2           3           4           5           6 
-6.456405260 0.035318182 0.002129694 0.042504418 0.268374731 0.040765842 
-          7 
-0.162580015 </code></pre>
-<p>The results show as expected a very large value for the first observation,
-<span class="math inline">\(D_1 = 6.456\)</span>, and small values for the remaining <span class="math inline">\(D_i\)</span>.
-We can also find Cook’s <span class="math inline">\(D\)</span>-values in the output of the
-<code>influence.measures()</code> function:</p>
-<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="S09-influence.html#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">influence.measures</span>(m)</span></code></pre></div>
-<pre class="rOutput"><code>Influence measures of
-     lm(formula = y ~ x) :
-
-   dfb.1_   dfb.x   dffit  cov.r  cook.d   hat inf
-1 -0.7475  3.1083  3.3670 39.046 6.45641 0.967   *
-2 -0.2441  0.1415 -0.2441  1.791 0.03532 0.215    
-3  0.0583 -0.0296  0.0585  1.920 0.00213 0.192    
-4  0.2674 -0.1142  0.2720  1.596 0.04250 0.173    
-5  0.9536 -0.3189  0.9959  0.348 0.26837 0.159    
-6 -0.2461  0.0560 -0.2681  1.512 0.04077 0.149    
-7 -0.5620  0.0577 -0.6512  0.687 0.16258 0.144    </code></pre>
-<p>The table also shows the diagonal elements of the hat matrix, in the
-column <code>hat</code>, and some additional measures which we will not discuss here.
-A star in the last column, titled <code>inf</code>, marks influential observations.
-The star is placed if <em>any</em> of the measures shown in the table is significantly
-large.</p>
-</div>
-<div class="mysummary">
-<p><strong>Summary</strong></p>
-<ul>
-<li>We can measure the influence of an observation by the amount
-the estimated parameters change when the observation is deleted.</li>
-<li>We learned how to determine the amount of change without
-having to fit <span class="math inline">\(n\)</span> additional models.</li>
-<li>Cook’s distance provides a numerical measure for the influence of each
-observation.</li>
-</ul>
 </div>
 
-</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="S08-diagnostics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="S10-multicoll.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S17-robust.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="S18-m-est.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
