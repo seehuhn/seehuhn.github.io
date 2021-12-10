@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="P05.html"/>
-<link rel="next" href="Sx1-matrices.html"/>
+<link rel="next" href="S19-efficiency.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -320,7 +320,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="17.1.1" data-path="S17-robust.html"><a href="S17-robust.html#leverage"><i class="fa fa-check"></i><b>17.1.1</b> Leverage</a></li>
 <li class="chapter" data-level="17.1.2" data-path="S17-robust.html"><a href="S17-robust.html#studentised-residuals"><i class="fa fa-check"></i><b>17.1.2</b> Studentised Residuals</a></li>
 </ul></li>
-<li class="chapter" data-level="17.2" data-path="S17-robust.html"><a href="S17-robust.html#breakdown-points"><i class="fa fa-check"></i><b>17.2</b> Breakdown points</a></li>
+<li class="chapter" data-level="17.2" data-path="S17-robust.html"><a href="S17-robust.html#breakdown-points"><i class="fa fa-check"></i><b>17.2</b> Breakdown Points</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P05.html"><a href="P05.html"><i class="fa fa-check"></i>Problem Sheet 5</a></li>
 <li class="chapter" data-level="18" data-path="S18-m-est.html"><a href="S18-m-est.html"><i class="fa fa-check"></i><b>18</b> M-Estimators</a>
@@ -331,9 +331,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="18.3.1" data-path="S18-m-est.html"><a href="S18-m-est.html#least-squares-method"><i class="fa fa-check"></i><b>18.3.1</b> Least Squares Method</a></li>
 <li class="chapter" data-level="18.3.2" data-path="S18-m-est.html"><a href="S18-m-est.html#least-absolute-values"><i class="fa fa-check"></i><b>18.3.2</b> Least Absolute Values</a></li>
-<li class="chapter" data-level="18.3.3" data-path="S18-m-est.html"><a href="S18-m-est.html#hubers-t-function"><i class="fa fa-check"></i><b>18.3.3</b> Huber’s <span class="math inline">\(t\)</span>-function</a></li>
+<li class="chapter" data-level="18.3.3" data-path="S18-m-est.html"><a href="S18-m-est.html#Huber"><i class="fa fa-check"></i><b>18.3.3</b> Huber’s <span class="math inline">\(t\)</span>-function</a></li>
 <li class="chapter" data-level="18.3.4" data-path="S18-m-est.html"><a href="S18-m-est.html#hampels-method"><i class="fa fa-check"></i><b>18.3.4</b> Hampel’s Method</a></li>
 <li class="chapter" data-level="18.3.5" data-path="S18-m-est.html"><a href="S18-m-est.html#tukeys-bisquare-method"><i class="fa fa-check"></i><b>18.3.5</b> Tukey’s Bisquare Method</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="S19-efficiency.html"><a href="S19-efficiency.html"><i class="fa fa-check"></i><b>19</b> Efficiency of Robust Estimators</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="S19-efficiency.html"><a href="S19-efficiency.html#efficiency"><i class="fa fa-check"></i><b>19.1</b> Efficiency</a></li>
+<li class="chapter" data-level="19.2" data-path="S19-efficiency.html"><a href="S19-efficiency.html#robust-estimators"><i class="fa fa-check"></i><b>19.2</b> Robust estimators</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="S19-efficiency.html"><a href="S19-efficiency.html#least-median-of-squares"><i class="fa fa-check"></i><b>19.2.1</b> Least Median of Squares</a></li>
+<li class="chapter" data-level="19.2.2" data-path="S19-efficiency.html"><a href="S19-efficiency.html#least-trimmed-squares"><i class="fa fa-check"></i><b>19.2.2</b> Least Trimmed Squares</a></li>
 </ul></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
@@ -382,6 +391,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="S18-m-est" class="section level1" number="18">
 <h1><span class="header-section-number">Section 18</span> M-Estimators</h1>
+<!--
+TODO:
+- look up Peter Huber (1964)
+-->
 <p>In this section we introduce a class of estimators which can be robust to
 <span class="math inline">\(y\)</span>-space outliers.</p>
 <div id="definition" class="section level2" number="18.1">
@@ -416,7 +429,7 @@ the estimate <span class="math inline">\(\hat\beta\)</span>, but numerical minim
 numerical values for <span class="math inline">\(\hat\beta\)</span>. In R, the <a href="https://rdrr.io/r/stats/optim.html">function <code>optim()</code></a>
 can be used for this purpose.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-67" class="example"><strong>Example 18.1  </strong></span>The M-estimator with <span class="math inline">\(\rho(u) = |u|\)</span> is called the
+<p><span id="exm:LAV" class="example"><strong>Example 18.1  </strong></span>The M-estimator with <span class="math inline">\(\rho(u) = |u|\)</span> is called the
 <strong>least absolute values</strong> (LAV) estimator. Since <span class="math inline">\(\rho\)</span> grows
 slower than <span class="math inline">\(u^2\)</span> as <span class="math inline">\(|u| \to\infty\)</span>, this estimator is more resistant
 to <span class="math inline">\(y\)</span>-space outliers than least squares regression is. On the other hand,
@@ -463,10 +476,10 @@ Some care is neede since the function <span class="math inline">\(s\)</span> may
 local minimum, and even the global minimum may not be uniquely
 defined.</p>
 <div class="lemma">
-<p><span id="lem:unlabeled-div-68" class="lemma"><strong>Lemma 18.1  </strong></span>Assume that <span class="math inline">\(\rho\)</span> is convex. Then <span class="math inline">\(s\)</span> is convex.</p>
+<p><span id="lem:unlabeled-div-67" class="lemma"><strong>Lemma 18.1  </strong></span>Assume that <span class="math inline">\(\rho\)</span> is convex. Then <span class="math inline">\(s\)</span> is convex.</p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-69" class="proof"><em>Proof</em>. </span>Here we use the property that a function <span class="math inline">\(f\colon \mathbb{R}^{p+1} \to \mathbb{R}\)</span> is convex,
+<p><span id="unlabeled-div-68" class="proof"><em>Proof</em>. </span>Here we use the property that a function <span class="math inline">\(f\colon \mathbb{R}^{p+1} \to \mathbb{R}\)</span> is convex,
 if and only if
 <span class="math display">\[\begin{equation*}
   f\bigl( \lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr)
@@ -520,7 +533,7 @@ for example the <strong>median absolute deviation</strong> (MAD) given by
 can be used to find the minimum in equation <a href="S18-m-est.html#eq:m-est-min">(18.1)</a>. The basis of
 this approach is the following lemma.</p>
 <div class="lemma">
-<p><span id="lem:unlabeled-div-70" class="lemma"><strong>Lemma 18.2  </strong></span>If <span class="math inline">\(\rho&#39; = \psi\)</span>, then the M-estimate satisfies
+<p><span id="lem:unlabeled-div-69" class="lemma"><strong>Lemma 18.2  </strong></span>If <span class="math inline">\(\rho&#39; = \psi\)</span>, then the M-estimate satisfies
 <span class="math display" id="eq:psi-root">\[\begin{equation}
   \sum_{i=1}^n \psi\bigl( (y - X\hat\beta)_i \bigr)
     \begin{pmatrix}
@@ -530,7 +543,7 @@ this approach is the following lemma.</p>
 \end{equation}\]</span></p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-71" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(\hat\beta\)</span> minimises the function <span class="math inline">\(r\)</span>, we have
+<p><span id="unlabeled-div-70" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(\hat\beta\)</span> minimises the function <span class="math inline">\(r\)</span>, we have
 <span class="math display">\[\begin{align*}
   0
   &amp;= \left. \frac{\partial}{\partial\beta_j} r\bigl( y - X\beta \bigr) \right|_{\beta=\hat\beta} \\
@@ -665,7 +678,7 @@ and the weight function is
 <span id="cb313-10"><a href="S18-m-est.html#cb313-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/psi-abs-1.png" width="672" /></p>
 </div>
-<div id="hubers-t-function" class="section level3" number="18.3.3">
+<div id="Huber" class="section level3" number="18.3.3">
 <h3><span class="header-section-number">18.3.3</span> Huber’s <span class="math inline">\(t\)</span>-function</h3>
 <p>This method uses the following objective function:
 <span class="math display">\[\begin{equation*}
@@ -748,31 +761,31 @@ of <span class="math inline">\(\psi\)</span> and <span class="math inline">\(\ps
 as for least squares regression, and the weight for larger residuals
 is gradually reduced. Residuals with <span class="math inline">\(|\varepsilon_i| &gt; c\)</span> have weight <span class="math inline">\(0\)</span>
 and do not affect the location of the regression line at all.</p>
-<p>We see that <span class="math inline">\(\psi\)</span> is not increasing and therefore <span class="math inline">\(\rho\)</span> is not convex.
-A consequence of this fact is that the function <span class="math inline">\(s\)</span> may have
-several local minima and care must be used when choosing the starting
-point of iterative minimisation methods.</p>
+<p>We see that <span class="math inline">\(\psi\)</span> is not increasing and therefore <span class="math inline">\(\rho\)</span> is not convex. A
+consequence of this fact is that the function <span class="math inline">\(s\)</span> may have several local minima
+and care must be used when choosing the starting point of iterative
+minimisation methods.</p>
 </div>
 <div id="tukeys-bisquare-method" class="section level3" number="18.3.5">
 <h3><span class="header-section-number">18.3.5</span> Tukey’s Bisquare Method</h3>
 <p>Here we have only one tuning parameter, <span class="math inline">\(a &gt; 0\)</span>, and the objective
 function is
 <span class="math display">\[\begin{equation*}
-\rho(\varepsilon)
-= \begin{cases}
-\frac{a^2}{6} \Bigl( 1 - \bigl( 1 - (\varepsilon/a)^2 \bigr)^3 \Bigr)
-              &amp; \mbox{if } |\varepsilon| \leq a \\
-\frac{a^2}{6} &amp; \mbox{if } |\varepsilon| &gt; a
-\end{cases}
+  \rho(\varepsilon)
+  = \begin{cases}
+  \frac{a^2}{6} \Bigl( 1 - \bigl( 1 - (\varepsilon/a)^2 \bigr)^3 \Bigr)
+                &amp; \mbox{if } |\varepsilon| \leq a \\
+  \frac{a^2}{6} &amp; \mbox{if } |\varepsilon| &gt; a
+  \end{cases}
 \end{equation*}\]</span>
 with derivative
 <span class="math display">\[\begin{equation*}
-\psi(\varepsilon)
-= \begin{cases}
-\varepsilon\bigl( 1 - (\varepsilon/a)^2 \bigr)^2
-      &amp; \mbox{if } |\varepsilon| \leq a \\
-    0 &amp; \mbox{if } |\varepsilon| &gt; a.
-\end{cases}
+  \psi(\varepsilon)
+  = \begin{cases}
+  \varepsilon\bigl( 1 - (\varepsilon/a)^2 \bigr)^2
+        &amp; \mbox{if } |\varepsilon| \leq a \\
+      0 &amp; \mbox{if } |\varepsilon| &gt; a.
+  \end{cases}
 \end{equation*}\]</span>
 The plots show that this is a simplified variant of Hampel’s
 estimator:</p>
@@ -803,19 +816,23 @@ the estimate <span class="math inline">\(\hat\beta\)</span>.</p>
 </ul>
 </div>
 
+<!--
+TODO(voss):
+- the breakdown point for LTS is wrong:
+  I can include p  good points into a malicious regression hyperplane,
+  and still control the slope.  And I don't even need to control all of
+  the coefficients of the slope ...
+-->
 </div>
 </div>
 </div>
-
-
-
             </section>
 
           </div>
         </div>
       </div>
 <a href="P05.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S19-efficiency.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

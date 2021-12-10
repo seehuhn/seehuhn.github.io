@@ -8451,27 +8451,27 @@ This covers the case \(q = p - 1\).
 \begin{Highlighting}[]
 \FunctionTok{plot}\NormalTok{(all.q, best.rss }\SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{{-}}\NormalTok{ all.q }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{),}
      \AttributeTok{xlab =} \StringTok{"q"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residual variance"}\NormalTok{)}
-\NormalTok{best.q }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(best.rss }\SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{{-}}\NormalTok{ all.q }\SpecialCharTok{{-}}\NormalTok{ q))}
+\NormalTok{best.q }\OtherTok{\textless{}{-}}\NormalTok{ all.q[}\FunctionTok{which.min}\NormalTok{(best.rss }\SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{{-}}\NormalTok{ all.q }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{))]}
 \FunctionTok{abline}\NormalTok{(}\AttributeTok{v =}\NormalTok{ best.q)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{MATH3714_files/figure-latex/exhaustiveB-1.pdf}
 
-We see that the model with \(q = 7\) variables has the the
+We see that the model with \(q = 6\) variables has the the
 lowest \(\hat\sigma^2\) and thus the highest \(R^2_\mathrm{adj}\).
-The values for \(q = 6\) and \(q = 8\) are very close to
+The values for \(q = 7\) and \(q = 8\) are very close to
 optimal. The best model uses the following variables:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{colnames}\NormalTok{(X)[best.model[[}\DecValTok{7} \SpecialCharTok{+} \DecValTok{1}\NormalTok{]]]}
+\FunctionTok{colnames}\NormalTok{(X)[best.model[[}\DecValTok{6} \SpecialCharTok{+} \DecValTok{1}\NormalTok{]]]}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] "TPSA"   "SAacc"  "MLOGP"  "nN"     "RDCHI"  "GATS1p" "H050"}
+\NormalTok{\# [1] "TPSA"   "SAacc"  "MLOGP"  "nN"     "RDCHI"  "GATS1p"}
 \end{Highlighting}
 \end{Shaded}
 
@@ -8479,7 +8479,7 @@ We can fit the optimal model from the original data:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{m.best }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(LC50 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ TPSA }\SpecialCharTok{+}\NormalTok{ SAacc }\SpecialCharTok{+}\NormalTok{ MLOGP }\SpecialCharTok{+}\NormalTok{ nN }\SpecialCharTok{+}\NormalTok{ RDCHI }\SpecialCharTok{+}\NormalTok{ GATS1p }\SpecialCharTok{+}\NormalTok{ H050,}
+\NormalTok{m.best }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(LC50 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ TPSA }\SpecialCharTok{+}\NormalTok{ SAacc }\SpecialCharTok{+}\NormalTok{ MLOGP }\SpecialCharTok{+}\NormalTok{ nN }\SpecialCharTok{+}\NormalTok{ RDCHI }\SpecialCharTok{+}\NormalTok{ GATS1p,}
              \AttributeTok{data =}\NormalTok{ qsar)}
 \FunctionTok{summary}\NormalTok{(m.best)}
 \end{Highlighting}
@@ -8489,34 +8489,33 @@ We can fit the optimal model from the original data:
 \begin{Highlighting}[]
 \NormalTok{\# }
 \NormalTok{\# Call:}
-\NormalTok{\# lm(formula = LC50 \textasciitilde{} TPSA + SAacc + MLOGP + nN + RDCHI + GATS1p + }
-\NormalTok{\#     H050, data = qsar)}
+\NormalTok{\# lm(formula = LC50 \textasciitilde{} TPSA + SAacc + MLOGP + nN + RDCHI + GATS1p, }
+\NormalTok{\#     data = qsar)}
 \NormalTok{\# }
 \NormalTok{\# Residuals:}
 \NormalTok{\#     Min      1Q  Median      3Q     Max }
-\NormalTok{\# {-}4.4951 {-}0.7585 {-}0.1125  0.5838  4.9769 }
+\NormalTok{\# {-}4.4986 {-}0.7668 {-}0.1165  0.5529  4.9758 }
 \NormalTok{\# }
 \NormalTok{\# Coefficients:}
 \NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)    }
-\NormalTok{\# (Intercept)  2.698271   0.243863  11.065  \textless{} 2e{-}16 ***}
-\NormalTok{\# TPSA         0.027193   0.002651  10.256  \textless{} 2e{-}16 ***}
-\NormalTok{\# SAacc       {-}0.015056   0.002001  {-}7.523 2.26e{-}13 ***}
-\NormalTok{\# MLOGP        0.445763   0.062674   7.112 3.65e{-}12 ***}
-\NormalTok{\# nN          {-}0.224511   0.047900  {-}4.687 3.52e{-}06 ***}
-\NormalTok{\# RDCHI        0.514866   0.133492   3.857 0.000129 ***}
-\NormalTok{\# GATS1p      {-}0.571629   0.153546  {-}3.723 0.000218 ***}
-\NormalTok{\# H050         0.039811   0.056388   0.706 0.480485    }
+\NormalTok{\# (Intercept)  2.758246   0.228483  12.072  \textless{} 2e{-}16 ***}
+\NormalTok{\# TPSA         0.026858   0.002608  10.300  \textless{} 2e{-}16 ***}
+\NormalTok{\# SAacc       {-}0.014267   0.001660  {-}8.596  \textless{} 2e{-}16 ***}
+\NormalTok{\# MLOGP        0.434578   0.060611   7.170 2.49e{-}12 ***}
+\NormalTok{\# nN          {-}0.218445   0.047101  {-}4.638 4.43e{-}06 ***}
+\NormalTok{\# RDCHI        0.514758   0.133430   3.858 0.000128 ***}
+\NormalTok{\# GATS1p      {-}0.602971   0.146920  {-}4.104 4.69e{-}05 ***}
 \NormalTok{\# {-}{-}{-}}
 \NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
 \NormalTok{\# }
-\NormalTok{\# Residual standard error: 1.201 on 538 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.4861,  Adjusted R{-}squared:  0.4795 }
-\NormalTok{\# F{-}statistic: 72.71 on 7 and 538 DF,  p{-}value: \textless{} 2.2e{-}16}
+\NormalTok{\# Residual standard error: 1.201 on 539 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.4857,  Adjusted R{-}squared:  0.4799 }
+\NormalTok{\# F{-}statistic: 84.82 on 6 and 539 DF,  p{-}value: \textless{} 2.2e{-}16}
 \end{Highlighting}
 \end{Shaded}
 
-This shows that \(R^2_\mathrm{adj}\) has indeed marginally inproved,
-from \(0.4785\) to \(0.4795\)
+This shows that \(R^2_\mathrm{adj}\) has indeed marginally improved,
+from \(0.4785\) to \(0.4799\)
 
 To conclude, we check that the complicated algorithm indeed saved some work:
 
@@ -8524,7 +8523,7 @@ To conclude, we check that the complicated algorithm indeed saved some work:
 \begin{Highlighting}[]
 \NormalTok{total }\OtherTok{\textless{}{-}} \DecValTok{2}\SpecialCharTok{\^{}}\NormalTok{p}
 \FunctionTok{cat}\NormalTok{(count,}
-    \StringTok{" models fitted ("}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\DecValTok{100} \SpecialCharTok{*}\NormalTok{ count }\SpecialCharTok{/}\NormalTok{ total,}\DecValTok{1}\NormalTok{ ), }\StringTok{"\%)}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{,}
+    \StringTok{" models fitted ("}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\DecValTok{100} \SpecialCharTok{*}\NormalTok{ count }\SpecialCharTok{/}\NormalTok{ total, }\DecValTok{1}\NormalTok{), }\StringTok{"\%)}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{,}
     \AttributeTok{sep =} \StringTok{""}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -8596,7 +8595,7 @@ tradeoff. Here we consider \(R^2_\mathrm{adj}\) again:
 \end{Shaded}
 
 This gives the \(R^2_\mathrm{adj}\) for the optimal model of each size
-again. At the end of the list we recognise the values \texttt{0.4795} and
+again. At the end of the list we recognise the values \texttt{0.4799} and
 \texttt{0.4785} from our previous analysis.
 \end{example}
 
@@ -9956,7 +9955,7 @@ correspond the ``influential'' observations.
 \end{example}
 
 \hypertarget{breakdown-points}{%
-\subsection{Breakdown points}\label{breakdown-points}}
+\subsection{Breakdown Points}\label{breakdown-points}}
 
 In the example we have seen that changing a single observation can
 have a large effect on the regression line found by least squares
@@ -10494,7 +10493,7 @@ numerical values for \(\hat\beta\). In R, the \href{https://rdrr.io/r/stats/opti
 can be used for this purpose.
 
 \begin{example}
-The M-estimator with \(\rho(u) = |u|\) is called the
+\protect\hypertarget{exm:LAV}{}\label{exm:LAV}The M-estimator with \(\rho(u) = |u|\) is called the
 \textbf{least absolute values} (LAV) estimator. Since \(\rho\) grows
 slower than \(u^2\) as \(|u| \to\infty\), this estimator is more resistant
 to \(y\)-space outliers than least squares regression is. On the other hand,
@@ -10772,8 +10771,8 @@ and the weight function is
 
 \includegraphics{MATH3714_files/figure-latex/psi-abs-1.pdf}
 
-\hypertarget{hubers-t-function}{%
-\subsubsection{\texorpdfstring{Huber's \(t\)-function}{Huber's t-function}}\label{hubers-t-function}}
+\hypertarget{Huber}{%
+\subsubsection{\texorpdfstring{Huber's \(t\)-function}{Huber's t-function}}\label{Huber}}
 
 This method uses the following objective function:
 \begin{equation*}
@@ -10872,10 +10871,10 @@ as for least squares regression, and the weight for larger residuals
 is gradually reduced. Residuals with \(|\varepsilon_i| > c\) have weight \(0\)
 and do not affect the location of the regression line at all.
 
-We see that \(\psi\) is not increasing and therefore \(\rho\) is not convex.
-A consequence of this fact is that the function~\(s\) may have
-several local minima and care must be used when choosing the starting
-point of iterative minimisation methods.
+We see that \(\psi\) is not increasing and therefore \(\rho\) is not convex. A
+consequence of this fact is that the function~\(s\) may have several local minima
+and care must be used when choosing the starting point of iterative
+minimisation methods.
 
 \hypertarget{tukeys-bisquare-method}{%
 \subsubsection{Tukey's Bisquare Method}\label{tukeys-bisquare-method}}
@@ -10883,21 +10882,21 @@ point of iterative minimisation methods.
 Here we have only one tuning parameter, \(a > 0\), and the objective
 function is
 \begin{equation*}
-\rho(\varepsilon)
-= \begin{cases}
-\frac{a^2}{6} \Bigl( 1 - \bigl( 1 - (\varepsilon/a)^2 \bigr)^3 \Bigr)
-              & \mbox{if } |\varepsilon| \leq a \\
-\frac{a^2}{6} & \mbox{if } |\varepsilon| > a
-\end{cases}
+  \rho(\varepsilon)
+  = \begin{cases}
+  \frac{a^2}{6} \Bigl( 1 - \bigl( 1 - (\varepsilon/a)^2 \bigr)^3 \Bigr)
+                & \mbox{if } |\varepsilon| \leq a \\
+  \frac{a^2}{6} & \mbox{if } |\varepsilon| > a
+  \end{cases}
 \end{equation*}
 with derivative
 \begin{equation*}
-\psi(\varepsilon)
-= \begin{cases}
-\varepsilon\bigl( 1 - (\varepsilon/a)^2 \bigr)^2
-      & \mbox{if } |\varepsilon| \leq a \\
-    0 & \mbox{if } |\varepsilon| > a.
-\end{cases}
+  \psi(\varepsilon)
+  = \begin{cases}
+  \varepsilon\bigl( 1 - (\varepsilon/a)^2 \bigr)^2
+        & \mbox{if } |\varepsilon| \leq a \\
+      0 & \mbox{if } |\varepsilon| > a.
+  \end{cases}
 \end{equation*}
 The plots show that this is a simplified variant of Hampel's
 estimator:
@@ -10937,6 +10936,256 @@ the estimate~\(\hat\beta\).
   We discussed the iteratively re-weighted least squares method for computing M-estimates.
 \item
   We discussed different choices for the objective function of an M-estimator.
+\end{itemize}
+
+\clearpage
+
+\hypertarget{S19-efficiency}{%
+\section{Efficiency of Robust Estimators}\label{S19-efficiency}}
+
+In theoretical statistics, \textbf{efficiency} is a measure of quality of an
+estimator. A more efficient estimator achieves smaller estimation error
+for a given number of samples. Here we give an informal introduction
+to the topic of efficiency and discuss the efficiency of different
+methods for linear regression.
+
+\hypertarget{efficiency}{%
+\subsection{Efficiency}\label{efficiency}}
+
+In the section about the \protect\hyperlink{mean-squared-error}{Mean Squared Error} we have seen that
+\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat\theta \bigr)
+  = \mathop{\mathrm{Var}}\bigl( \hat\theta \bigr) + \mathop{\mathrm{bias}}\bigl( \hat\theta \bigr)^2
+\end{equation*}
+can be used as a measure for the estimation error of an estimator \(\hat\theta\),
+and if the estimator is unbiased, this expression simplifies to
+\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat\theta \bigr)
+  = \mathop{\mathrm{Var}}\bigl( \hat\theta \bigr).
+\end{equation*}
+Thus, ``good'' estimators will have small variance.
+Instead of considering the full definition from theoretical statistics
+(which requires the concept of Fisher information), here we simply consider
+\begin{equation*}
+  \mathrm{efficiency}(\hat\theta)
+  = \frac{1}{\mathop{\mathrm{Var}}(\hat\theta)}
+\end{equation*}
+as a measure for the efficiency of an estimator. We will use this measure
+of efficiency to compare different estimators.
+
+\begin{example}
+Both the sample mean and the sample median can be used as estimators
+for the population mean. Here we show that the median has lower efficiency
+than the mean.
+
+Suppose \(X_1,\ldots, X_n\) are i.i.d.~with CDF \(F(x)\), \emph{i.e.}
+\(P(X_i \leq x) = F(x)\). As before, let \(X_{(1)} \leq \cdots \leq X_{(n)}\) be the samples arranged in order of increasing value.
+Then the distribution of \(X_{(k)}\) has CDF
+\begin{equation*}
+  P(X_{(k)} \leq x)
+  = \sum_{i=k}^n {n\choose i} F(x)^i \bigl(1-F(x)\bigr)^{n-i},
+\end{equation*}
+since \(X_{(k)} \leq x\) requires at least \(k\) out of \(n\) samples to be
+less than or equal to~\(x\).
+If we differentiate this (using product rule and chain rule) we get
+the density of \(X_{(k)}\):
+\begin{align*}
+  f_{(k)}(x)
+  &= \frac{d}{dx} P(X_{(k)} \leq x) \\
+  &= \cdots \\
+  &= f(x)\frac{n!}{(n-k)! (k-1)!} F(x)^{k-1}\bigl(1-F(x)\bigr)^{n-k}.
+\end{align*}
+
+For simplicity we assume that \(n\) is odd, say \(n = 2m+1\). In this case the
+median is \(X_\mathrm{median} = X_{(m+1)}\). Thus, the density of the median is
+\begin{align*}
+  f_\mathrm{median}(x)
+  &= f_{(m+1)}(x) \\
+  &= f(x)\frac{n!}{(n-m-1)! m!} F(x)^m\bigl(1-F(x)\bigr)^{n-m-1} \\
+  &= f(x)\frac{n!}{m! m!} F(x)^m\bigl(1-F(x)\bigr)^m.
+\end{align*}
+This density can be used to understand the behaviour of the median.
+
+Now assume that \(X_1, \ldots, X_n \sim \mathcal{N}(\mu, \sigma^2)\), \emph{i.e.}
+the density is
+\begin{equation*}
+  f(x)
+  = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\Bigl( - \frac{(x-\mu)^2}{2\sigma^2} \Bigr)
+\end{equation*}
+and the CDF is
+\begin{equation*}
+  F(x) = \Phi\Bigl( \frac{x - \mu}{\sigma} \Bigr),
+\end{equation*}
+where \(\Phi\) is the CDF of the standard normal distribution. In this case
+we know that
+\begin{equation*}
+  \mathop{\mathrm{Var}}\bigl( \overline X \bigr)
+  = \frac{\sigma^2}{n}.
+\end{equation*}
+For comparison, we can use the density of \(X_\mathrm{median}\) to show
+(in a series of complicated steps) that
+\begin{equation*}
+  \mathop{\mathrm{Var}}\bigl( X_\mathrm{median} \bigr)
+  \sim \frac{\pi}{2} \frac{\sigma^2}{n},
+\end{equation*}
+as \(n\to\infty\). Thus, for large \(n\), the relative efficiency
+of the median compared to the mean is
+\begin{align*}
+  \frac{\mathrm{efficiency}(X_\mathrm{median})}{\mathrm{efficiency}(\overline{X})}
+  &= \frac{\mathop{\mathrm{Var}}\bigl( \overline X \bigr)}{\mathop{\mathrm{Var}}\bigl( X_\mathrm{median} \bigr)}
+      = \frac{\frac{\sigma^2}{n}}{\frac{\pi}{2} \frac{\sigma^2}{n}} \\
+  &= \frac{2}{\pi}
+      = 0.637.
+\end{align*}
+Thus, the sample median is a less efficient estimator for the mean than
+the sample mean is.
+\end{example}
+
+The situation in the example carries over to linear regression: more robust
+estimators tend to be less efficient, and there is a trade-off between
+robustness and efficiency. Without proof, here we list some examples of this
+principle:
+
+\begin{itemize}
+\item
+  One can show that usually the variance of the ordinary least squares
+  estimator decreases proportionally to \(1 / n\), and thus the efficiency of
+  the least squares estimator increases proportionally to \(n\).
+\item
+  The value \(t\) in \protect\hyperlink{Huber}{Huber's method} can be used to control
+  the balance between robustness and efficiency. As \(t\to\infty\),
+  the method converges to least squares regression and becomes
+  less robust, but at the same time efficiency increases.
+  Huber suggests the value \(t = 1.345\sigma\) and showed that for this
+  choice the method is \(95\%\) efficient for large~\(n\), compared
+  to least squares regression.
+\item
+  Similarly, the parameter \(a\) in \protect\hyperlink{tukeys-bisquare-method}{Tukey's Bisquare Method} controls
+  the trade-off between robustness and efficiency, with smaller \(a\) leading
+  to a more robust method. In the literature it is suggested that
+  \(a = 4.685 \sigma\) leads to \(95\%\) efficiency for large~\(n\), compared to
+  least squares regression.
+\item
+  The efficiency of the \protect\hyperlink{LAV}{least absolute values estimator} can be shown
+  to be~\(64\%\).
+\end{itemize}
+
+\hypertarget{robust-estimators}{%
+\subsection{Robust estimators}\label{robust-estimators}}
+
+Since the M-estimator only addresses \(y\)-space outliers, the breakdown point
+of M-estimation is still~\(1/n\). We now consider two estimators which have a
+higher breakdown point, but lower efficiency.
+
+\hypertarget{least-median-of-squares}{%
+\subsubsection{Least Median of Squares}\label{least-median-of-squares}}
+
+Rather than minimise the sum of the residual sum of squares (or a weighted
+version of it), this estimator minimises the median of squared residuals. The
+estimate is given by
+\begin{equation*}
+  \hat\beta^\mathrm{(LMS)}
+  := \mathop{\mathrm{arg\,min}}\limits_\beta \mathop{\mathrm{median}}_{i\in\{1,\ldots,n\}} \bigl( y_i- x_i^T \beta \bigr)^2,
+\end{equation*}
+where \(x_1, \ldots, x_n\) are the rows of the design matrix~\(X\).
+This is very robust with respect to outliers, both in \(x\)-direction and
+\(y\)-directions: Since the median is used instead of the sum, up to half
+of the squared residuals can increase to infinity while the estimate stays
+bounded. Thus the asymptotic breakdown point of the method is \(1/2\).
+
+The least median of squares method has poor asymptotic efficiency \(n^{2/3}\).
+In the limit, the relative efficiency compared to ordinary least squares is
+\begin{equation*}
+  \frac{\mathrm{efficiency}(\hat\beta^\mathrm{(LMS)})}{\mathrm{efficiency}(\hat\beta^\mathrm{(OLS)})}
+  \propto \frac{n^{2/3}}{n}
+  \longrightarrow 0
+\end{equation*}
+as \(n\to\infty\).
+
+In R, the LMS estimate can be computed using the function
+\texttt{lqs(...,\ method\ =\ "lms")} function from the \texttt{MASS} library.
+
+\begin{example}
+The following code computes an LMS regression estimate. We
+introduce artifical outliers by shifting \(30\%\) of the data
+to the bottom right. These artificial outliers are represented
+by the red circles in the plot.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(}\StringTok{"MASS"}\NormalTok{) }\CommentTok{\# for lqs()}
+
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20211207}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{50}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{)}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n)}
+
+\CommentTok{\# add 30\% outliers}
+\NormalTok{n.ol }\OtherTok{\textless{}{-}} \FunctionTok{floor}\NormalTok{(}\FloatTok{0.3}\SpecialCharTok{*}\NormalTok{n)}
+\NormalTok{idx }\OtherTok{\textless{}{-}} \FunctionTok{sample.int}\NormalTok{(n, n.ol)}
+\NormalTok{x[idx] }\OtherTok{\textless{}{-}}\NormalTok{ x[idx] }\SpecialCharTok{+} \DecValTok{15}
+\NormalTok{y[idx] }\OtherTok{\textless{}{-}}\NormalTok{ y[idx] }\SpecialCharTok{{-}} \DecValTok{10}
+
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lqs}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{x, }\AttributeTok{method=}\StringTok{"lms"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{col =} \FunctionTok{ifelse}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n }\SpecialCharTok{\%in\%}\NormalTok{ idx, }\StringTok{"red"}\NormalTok{, }\StringTok{"black"}\NormalTok{))}
+\FunctionTok{abline}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/lms-1.pdf}
+\end{example}
+
+\hypertarget{least-trimmed-squares}{%
+\subsubsection{Least Trimmed Squares}\label{least-trimmed-squares}}
+
+This takes as its objective function the sum of \(h\) smallest squared residuals
+and was proposed as a remedy to the low asymptotic efficiency of LMS. The least
+trimmed squares estimator \(\hat\beta^\mathrm{(LTS)}\) is defined as
+\begin{equation*}
+  \hat\beta^\mathrm{(LTS)}
+  := \mathop{\mathrm{arg\,min}}\limits_\beta \sum_{i=1}^k r_{[i]}^2(\beta),
+\end{equation*}
+where \(r_{[i]}^2(\beta)\) represents the \(i\)th smallest value amongst
+\(r_i(\beta)^2 = \bigl( y_i- x_i^T\beta \bigr)^2\).
+
+The value \(k\) controls the trade-off between robustness and efficiency and the
+value must satisfy \(n/2 < k \leq n\). For a given \(k\) the method can tolerate
+\(n-k\) outliers. The bounday case \(k=n\) corresponds to the ordinary least
+squares method. The breakdown point of the method is \((n - k +1)/n\).
+
+Computing the LTS estimate is a non-trivial problem, which involves fitting the
+least-squares estimate to a carefully chosen subset of the samples. In R, the
+LTS estimate can be computed using the function \texttt{lqs(...,\ method\ =\ "lts")}
+function from the \texttt{MASS} library.
+
+\begin{example}
+The following code computes an LTS regression estimate. The
+data is the same as in the previous example.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lqs}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{x, }\AttributeTok{method =} \StringTok{"lts"}\NormalTok{, }\AttributeTok{quantile =} \FunctionTok{floor}\NormalTok{(n}\SpecialCharTok{/}\DecValTok{2}\NormalTok{)}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{col =} \FunctionTok{ifelse}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n }\SpecialCharTok{\%in\%}\NormalTok{ idx, }\StringTok{"red"}\NormalTok{, }\StringTok{"black"}\NormalTok{))}
+\FunctionTok{abline}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/lts-1.pdf}
+\end{example}
+
+One can show that LTS has an efficiency of approximately \(0.08\)
+compared to ordinary least squares regression.
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  In this section we have informally discussed the efficiency of different estimators.
+\item
+  We have introduced the Least Median of Squares estimator.
+\item
+  We have introduced the Least Trimmed Squares estimator.
 \end{itemize}
 
 \clearpage

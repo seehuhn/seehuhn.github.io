@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Interlude: Loading Data into R | MATH3714 Linear Regression and Robustness</title>
+  <title>Section 19 Efficiency of Robust Estimators | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Interlude: Loading Data into R | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Section 19 Efficiency of Robust Estimators | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Interlude: Loading Data into R | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Section 19 Efficiency of Robust Estimators | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="S06-simultaneous.html"/>
-<link rel="next" href="S07-examples.html"/>
+<link rel="prev" href="S18-m-est.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -389,219 +389,233 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="I02-read.csv" class="section level1 unnumbered">
-<h1>Interlude: Loading Data into R</h1>
-<p>Before we can analyse data using R, we have to “import” the data
-into R. How exactly this is done depends on how the data is stored,
-and more specifically on which file format is used. Here we consider
-two commonly used formats: comma-separated values (<code>.csv</code>)
-and Microsoft Excel files (<code>.xls</code> or <code>.xlsx</code>).</p>
-<div id="importing-csv-files" class="section level2 unnumbered">
-<h2>Importing CSV Files</h2>
-<p>The <code>read.csv()</code> command can be used to import <code>.csv</code> files
-into R: if we use the command</p>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="I02-read.html#cb75-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;file.csv&quot;</span>)</span></code></pre></div>
-<p>then the contents of the file <code>file.csv</code> will be stored in the variable <code>x</code>.
-Optional arguments to <code>read.csv()</code> can be used to specify whether or not the
-file includes column names, and allow to deal with variations of how the data
-may be stored in the file. Some of these are explained below.</p>
-<p>The most important things to
-know about the function <code>read.csv()</code> are:</p>
-<ul>
-<li><p>The filename can either denote a file on the local computer, or
-a file available for download from the internet. If you want R to read the
-file directly from the internet, replace the file name with the web address
-(starting with <code>http://</code> or <code>https://</code>).</p></li>
-<li><p>If the input file is on the local computer, you may
-need to change R’s current directory to the directory where the file is
-stored before calling <code>read.csv()</code>. In RStudio you can use the menu
-“Session &gt; Set Working Directory &gt; Choose Directory …” to do this. If you
-are not sure what the filename for a given input file is, you can use the
-command <code>file.choose()</code> in place of the file name, to choose a file
-interactively.</p></li>
-<li><p>By default, R uses the first row of the <code>.csv</code> file to set
-the column names of the data frame and assumes that the actual data
-starts in row 2 of the <code>.csv</code> file. If the file does not
-contain column names, you can use the <code>header=FALSE</code> option
-with <code>read.csv()</code> to tell R that the column names are not
-included in the data:</p>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="I02-read.html#cb76-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;file.csv&quot;</span>, <span class="at">header=</span><span class="cn">FALSE</span>)</span></code></pre></div>
-<p>You can see whether this option is needed by opening the file in
-Excel and looking whether the first row contains headers or not.
-Alternatively you can inspect the column names and the contents of
-the first data row in R to see whether everything looks right after
-importing the data.</p></li>
-<li><p>R uses a special data type called <code>Factor</code> to represent categorical
-data. If the <code>.csv</code> file contains such data, the option
-<code>stringsAsFactors=TRUE</code> can be used to automatically convert
-text to factors. (This option used to be the default for R versions
-before 4.0.0.)</p></li>
-<li><p>Sometimes, the columns in a <code>.csv</code> file are separated not
-by a comma, but using a semicolon instead. In this case you
-need to use the option <code>sep=";"</code> when you import the data:</p>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="I02-read.html#cb77-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;file.csv&quot;</span>, <span class="at">sep=</span><span class="st">&quot;;&quot;</span>)</span></code></pre></div></li>
-<li><p>Missing values should be represented by empty cells in the <code>.csv</code>
-file and are represented as special <code>NA</code> values in the data frame.
-If the <code>.csv</code> file uses a different encoding for missing values,
-the <code>na.strings</code> option can be used to tell <code>read.csv()</code>
-which cell values should be interpreted as missing values. For example,
-<code>read.csv("file.csv", na.strings=c("", "-"))</code> can be used for a file
-where missing values are indicated by either empty cells or cells
-containing a hyphen.</p></li>
-</ul>
-<p>Further details about the function <code>read.csv()</code> can be found using the
-<a href="https://rdrr.io/r/utils/read.table.html">command <code>help(read.csv)</code></a> in R.</p>
+<div id="S19-efficiency" class="section level1" number="19">
+<h1><span class="header-section-number">Section 19</span> Efficiency of Robust Estimators</h1>
+<p>In theoretical statistics, <strong>efficiency</strong> is a measure of quality of an
+estimator. A more efficient estimator achieves smaller estimation error
+for a given number of samples. Here we give an informal introduction
+to the topic of efficiency and discuss the efficiency of different
+methods for linear regression.</p>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ilV2djzOFsA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<div id="efficiency" class="section level2" number="19.1">
+<h2><span class="header-section-number">19.1</span> Efficiency</h2>
+<p>In the section about the <a href="S12-ridge.html#mean-squared-error">Mean Squared Error</a> we have seen that
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat\theta \bigr)
+  = \mathop{\mathrm{Var}}\bigl( \hat\theta \bigr) + \mathop{\mathrm{bias}}\bigl( \hat\theta \bigr)^2
+\end{equation*}\]</span>
+can be used as a measure for the estimation error of an estimator <span class="math inline">\(\hat\theta\)</span>,
+and if the estimator is unbiased, this expression simplifies to
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat\theta \bigr)
+  = \mathop{\mathrm{Var}}\bigl( \hat\theta \bigr).
+\end{equation*}\]</span>
+Thus, “good” estimators will have small variance.
+Instead of considering the full definition from theoretical statistics
+(which requires the concept of Fisher information), here we simply consider
+<span class="math display">\[\begin{equation*}
+  \mathrm{efficiency}(\hat\theta)
+  = \frac{1}{\mathop{\mathrm{Var}}(\hat\theta)}
+\end{equation*}\]</span>
+as a measure for the efficiency of an estimator. We will use this measure
+of efficiency to compare different estimators.</p>
 <div class="example">
-<p><span id="exm:l1-poll-import" class="example"><strong>Example 6.2  </strong></span>In the 2016 version of the MATH1712 module, I performed a small questionnaire
-in the first lecture. The following R command can be used to load the data
-from the questionnaire into R</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="I02-read.html#cb78-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;http://www1.maths.leeds.ac.uk/~voss/rintro/Q2016.csv&quot;</span>)</span></code></pre></div>
-<p>The variable <code>x</code> now contains the questionnaire results.
-Instead of
-directly downloading the data from the internet into R, you can
-alternatively first download the data using a web browser, and then
-import the data directly from your computer:</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="I02-read.html#cb79-1" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;Q2016.csv&quot;</span>)</span></code></pre></div>
-<p>Both approaches give the same result.</p>
+<p><span id="exm:unlabeled-div-71" class="example"><strong>Example 19.1  </strong></span>Both the sample mean and the sample median can be used as estimators
+for the population mean. Here we show that the median has lower efficiency
+than the mean.</p>
+<p>Suppose <span class="math inline">\(X_1,\ldots, X_n\)</span> are i.i.d. with CDF <span class="math inline">\(F(x)\)</span>, <em>i.e.</em>
+<span class="math inline">\(P(X_i \leq x) = F(x)\)</span>. As before, let <span class="math inline">\(X_{(1)} \leq \cdots \leq X_{(n)}\)</span> be the samples arranged in order of increasing value.
+Then the distribution of <span class="math inline">\(X_{(k)}\)</span> has CDF
+<span class="math display">\[\begin{equation*}
+  P(X_{(k)} \leq x)
+  = \sum_{i=k}^n {n\choose i} F(x)^i \bigl(1-F(x)\bigr)^{n-i},
+\end{equation*}\]</span>
+since <span class="math inline">\(X_{(k)} \leq x\)</span> requires at least <span class="math inline">\(k\)</span> out of <span class="math inline">\(n\)</span> samples to be
+less than or equal to <span class="math inline">\(x\)</span>.
+If we differentiate this (using product rule and chain rule) we get
+the density of <span class="math inline">\(X_{(k)}\)</span>:
+<span class="math display">\[\begin{align*}
+  f_{(k)}(x)
+  &amp;= \frac{d}{dx} P(X_{(k)} \leq x) \\
+  &amp;= \cdots \\
+  &amp;= f(x)\frac{n!}{(n-k)! (k-1)!} F(x)^{k-1}\bigl(1-F(x)\bigr)^{n-k}.
+\end{align*}\]</span></p>
+<p>For simplicity we assume that <span class="math inline">\(n\)</span> is odd, say <span class="math inline">\(n = 2m+1\)</span>. In this case the
+median is <span class="math inline">\(X_\mathrm{median} = X_{(m+1)}\)</span>. Thus, the density of the median is
+<span class="math display">\[\begin{align*}
+  f_\mathrm{median}(x)
+  &amp;= f_{(m+1)}(x) \\
+  &amp;= f(x)\frac{n!}{(n-m-1)! m!} F(x)^m\bigl(1-F(x)\bigr)^{n-m-1} \\
+  &amp;= f(x)\frac{n!}{m! m!} F(x)^m\bigl(1-F(x)\bigr)^m.
+\end{align*}\]</span>
+This density can be used to understand the behaviour of the median.</p>
+<p>Now assume that <span class="math inline">\(X_1, \ldots, X_n \sim \mathcal{N}(\mu, \sigma^2)\)</span>, <em>i.e.</em>
+the density is
+<span class="math display">\[\begin{equation*}
+  f(x)
+  = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\Bigl( - \frac{(x-\mu)^2}{2\sigma^2} \Bigr)
+\end{equation*}\]</span>
+and the CDF is
+<span class="math display">\[\begin{equation*}
+  F(x) = \Phi\Bigl( \frac{x - \mu}{\sigma} \Bigr),
+\end{equation*}\]</span>
+where <span class="math inline">\(\Phi\)</span> is the CDF of the standard normal distribution. In this case
+we know that
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Var}}\bigl( \overline X \bigr)
+  = \frac{\sigma^2}{n}.
+\end{equation*}\]</span>
+For comparison, we can use the density of <span class="math inline">\(X_\mathrm{median}\)</span> to show
+(in a series of complicated steps) that
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Var}}\bigl( X_\mathrm{median} \bigr)
+  \sim \frac{\pi}{2} \frac{\sigma^2}{n},
+\end{equation*}\]</span>
+as <span class="math inline">\(n\to\infty\)</span>. Thus, for large <span class="math inline">\(n\)</span>, the relative efficiency
+of the median compared to the mean is
+<span class="math display">\[\begin{align*}
+  \frac{\mathrm{efficiency}(X_\mathrm{median})}{\mathrm{efficiency}(\overline{X})}
+  &amp;= \frac{\mathop{\mathrm{Var}}\bigl( \overline X \bigr)}{\mathop{\mathrm{Var}}\bigl( X_\mathrm{median} \bigr)}
+      = \frac{\frac{\sigma^2}{n}}{\frac{\pi}{2} \frac{\sigma^2}{n}} \\
+  &amp;= \frac{2}{\pi}
+      = 0.637.
+\end{align*}\]</span>
+Thus, the sample median is a less efficient estimator for the mean than
+the sample mean is.</p>
 </div>
-</div>
-<div id="importing-microsoft-excel-files" class="section level2 unnumbered">
-<h2>Importing Microsoft Excel Files</h2>
-<p>The easiest way to import Excel files into R is to first convert these
-files to <code>.csv</code> format. To do this:</p>
+<p>The situation in the example carries over to linear regression: more robust
+estimators tend to be less efficient, and there is a trade-off between
+robustness and efficiency. Without proof, here we list some examples of this
+principle:</p>
 <ul>
-<li><p>Open the file with the data in Excel.</p></li>
-<li><p>Open a new, empty file (choosing “Blank workbook” in Excel).</p></li>
-<li><p>Copy and paste the relevant cells into the empty file. It is
-important to just copy the required data and to leave out any
-explanatory text and and empty rows/columns. The data must form a
-tidy rectangle, with one sample per row and one variate per
-column. Optionally, you can put column headers into the first row.</p></li>
-<li><p>Save the new file in <code>.csv</code> format
-in a folder where you will find it again.</p></li>
-<li><p>Read the resulting <code>.csv</code> into R as explained above.</p></li>
+<li><p>One can show that usually the variance of the ordinary least squares
+estimator decreases proportionally to <span class="math inline">\(1 / n\)</span>, and thus the efficiency of
+the least squares estimator increases proportionally to <span class="math inline">\(n\)</span>.</p></li>
+<li><p>The value <span class="math inline">\(t\)</span> in <a href="S18-m-est.html#Huber">Huber’s method</a> can be used to control
+the balance between robustness and efficiency. As <span class="math inline">\(t\to\infty\)</span>,
+the method converges to least squares regression and becomes
+less robust, but at the same time efficiency increases.
+Huber suggests the value <span class="math inline">\(t = 1.345\sigma\)</span> and showed that for this
+choice the method is <span class="math inline">\(95\%\)</span> efficient for large <span class="math inline">\(n\)</span>, compared
+to least squares regression.</p></li>
+<li><p>Similarly, the parameter <span class="math inline">\(a\)</span> in <a href="S18-m-est.html#tukeys-bisquare-method">Tukey’s Bisquare Method</a> controls
+the trade-off between robustness and efficiency, with smaller <span class="math inline">\(a\)</span> leading
+to a more robust method. In the literature it is suggested that
+<span class="math inline">\(a = 4.685 \sigma\)</span> leads to <span class="math inline">\(95\%\)</span> efficiency for large <span class="math inline">\(n\)</span>, compared to
+least squares regression.</p></li>
+<li><p>The efficiency of the <a href="#LAV">least absolute values estimator</a> can be shown
+to be <span class="math inline">\(64\%\)</span>.</p></li>
 </ul>
-<p>Alternatively, you can try the <code>read_excel()</code> function from the <code>readxl</code>
-package. (You may need to install this R package first.) You can learn how to
-use this function at
-<a href="https://readxl.tidyverse.org/">https://readxl.tidyverse.org/</a> or using the
-<a href="https://rdrr.io/cran/readxl/man/read_excel.html">command <code>help(read_excel)</code></a>.
-Note that these functions return a <a href="https://tibble.tidyverse.org/">“tibble”</a>
-instead of a data frame, so some additional knowledge is required to use the
-result.</p>
 </div>
-<div id="checking-the-imported-data" class="section level2 unnumbered">
-<h2>Checking the Imported Data</h2>
-<p>The following commands can be used to get a quick overview over the data:</p>
-<ul>
-<li><p><code>dim(x)</code> gives the number of rows and columns of the data
-frame. Similarly, <code>nrow(x)</code> shows the number of rows
-and <code>ncol(x)</code> shows the number of columns in the data frame.</p></li>
-<li><p><code>str(x)</code> shows the structure of any R object. This command
-is often an excellent way to understand the nature of any problems
-one may encounter while importing data into R.</p></li>
-<li><p><code>summary(x)</code> prints, for each variate, the values of
-various summary statistics. For variates with numeric values,
-these are the minimum, first quartile, median, mean, third quartile,
-maximum, and the number of missing values. For attribute data
-this gives the counts for each observed value.</p></li>
-<li><p><code>head(x)</code> shows the first few rows of the data.</p></li>
-</ul>
-<p>Every time you import a dataset into R, you should use some
-of these commands to check that everything went well.
-In case you discover problems, you should either fix the data file
-(<em>e.g.</em> using Microsoft Excel) or by using the correct options
-for the <code>read.csv()</code> command.</p>
+<div id="robust-estimators" class="section level2" number="19.2">
+<h2><span class="header-section-number">19.2</span> Robust estimators</h2>
+<p>Since the M-estimator only addresses <span class="math inline">\(y\)</span>-space outliers, the breakdown point
+of M-estimation is still <span class="math inline">\(1/n\)</span>. We now consider two estimators which have a
+higher breakdown point, but lower efficiency.</p>
+<div id="least-median-of-squares" class="section level3" number="19.2.1">
+<h3><span class="header-section-number">19.2.1</span> Least Median of Squares</h3>
+<p>Rather than minimise the sum of the residual sum of squares (or a weighted
+version of it), this estimator minimises the median of squared residuals. The
+estimate is given by
+<span class="math display">\[\begin{equation*}
+  \hat\beta^\mathrm{(LMS)}
+  := \mathop{\mathrm{arg\,min}}\limits_\beta \mathop{\mathrm{median}}_{i\in\{1,\ldots,n\}} \bigl( y_i- x_i^T \beta \bigr)^2,
+\end{equation*}\]</span>
+where <span class="math inline">\(x_1, \ldots, x_n\)</span> are the rows of the design matrix <span class="math inline">\(X\)</span>.
+This is very robust with respect to outliers, both in <span class="math inline">\(x\)</span>-direction and
+<span class="math inline">\(y\)</span>-directions: Since the median is used instead of the sum, up to half
+of the squared residuals can increase to infinity while the estimate stays
+bounded. Thus the asymptotic breakdown point of the method is <span class="math inline">\(1/2\)</span>.</p>
+<p>The least median of squares method has poor asymptotic efficiency <span class="math inline">\(n^{2/3}\)</span>.
+In the limit, the relative efficiency compared to ordinary least squares is
+<span class="math display">\[\begin{equation*}
+  \frac{\mathrm{efficiency}(\hat\beta^\mathrm{(LMS)})}{\mathrm{efficiency}(\hat\beta^\mathrm{(OLS)})}
+  \propto \frac{n^{2/3}}{n}
+  \longrightarrow 0
+\end{equation*}\]</span>
+as <span class="math inline">\(n\to\infty\)</span>.</p>
+<p>In R, the LMS estimate can be computed using the function
+<code>lqs(..., method = "lms")</code> function from the <code>MASS</code> library.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-27" class="example"><strong>Example 6.3  </strong></span>Continuing with the dataset from example above, we can try the following
-commands: We first check that the data has plausible dimensions:</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="I02-read.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(x)</span></code></pre></div>
-<pre class="rOutput"><code>[1] 220   5</code></pre>
-<p>This tells us that the data has <span class="math inline">\(n=220\)</span> rows and <span class="math inline">\(p=5\)</span> columns, as expected.
-Next, we get some details about the five columns of the data frame:</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="I02-read.html#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(x)</span></code></pre></div>
-<pre class="rOutput"><code>&#39;data.frame&#39;:   220 obs. of  5 variables:
- $ gender     : chr  &quot;M&quot; &quot;M&quot; &quot;M&quot; &quot;M&quot; ...
- $ height     : num  180 183 183 182 164 ...
- $ handedness : chr  &quot;R&quot; &quot;R&quot; &quot;R&quot; &quot;R&quot; ...
- $ travel.time: int  20 25 20 12 5 20 15 10 11 7 ...
- $ R.skills   : chr  &quot;basic&quot; &quot;basic&quot; &quot;basic&quot; &quot;basic&quot; ...</code></pre>
-<p>This shows, for each column, the name, the “data type” and the
-first few values. The “data type” is a good indicator to detect
-problems; it should read <code>int</code> for integer valued numeric data,
-<code>num</code> for all other numeric data, and <code>Factor</code> for
-attribute data. For attribute data, the range of observed values is
-also shown. For our dataset, we see that the fields <code>$gender</code>,
-<code>$handedness</code> and <code>$R.skills</code> are represented as text data (type <code>chr</code>)
-instead of categorical data. To fix this, we re-import the data
-using the <code>stringsAsFactors=TRUE</code> option:</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="I02-read.html#cb84-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/Q2016.csv&quot;</span>, <span class="at">stringsAsFactors=</span><span class="cn">TRUE</span>)</span>
-<span id="cb84-2"><a href="I02-read.html#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(x)</span></code></pre></div>
-<pre class="rOutput"><code>&#39;data.frame&#39;:   220 obs. of  5 variables:
- $ gender     : Factor w/ 2 levels &quot;F&quot;,&quot;M&quot;: 2 2 2 2 1 1 1 1 1 2 ...
- $ height     : num  180 183 183 182 164 ...
- $ handedness : Factor w/ 3 levels &quot;L&quot;,&quot;R&quot;,&quot;both&quot;: 2 2 2 2 2 2 2 2 2 2 ...
- $ travel.time: int  20 25 20 12 5 20 15 10 11 7 ...
- $ R.skills   : Factor w/ 4 levels &quot;basic&quot;,&quot;good&quot;,..: 1 1 1 1 1 1 1 3 1 1 ...</code></pre>
-<p>Now the output is as expected, and the correct “levels” are shown
-for the categorical variables.</p>
-<p>Finally, we can print summary statistics for all columns:</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="I02-read.html#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(x)</span></code></pre></div>
-<pre class="rOutput"><code> gender      height      handedness  travel.time       R.skills  
- F:102   Min.   :147.0   L   : 18   Min.   :  0.00   basic :157  
- M:118   1st Qu.:167.0   R   :201   1st Qu.:  5.00   good  :  4  
-         Median :175.0   both:  1   Median : 15.00   medium: 28  
-         Mean   :173.7              Mean   : 19.15   none  : 31  
-         3rd Qu.:180.3              3rd Qu.: 25.00               
-         Max.   :195.6              Max.   :150.00               
-         NA&#39;s   :23                                              </code></pre>
-<p>None of these commands showed any remaining problems, so we are now ready
-to use the data.</p>
+<p><span id="exm:unlabeled-div-72" class="example"><strong>Example 19.2  </strong></span>The following code computes an LMS regression estimate. We
+introduce artifical outliers by shifting <span class="math inline">\(30\%\)</span> of the data
+to the bottom right. These artificial outliers are represented
+by the red circles in the plot.</p>
+<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="S19-efficiency.html#cb317-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;MASS&quot;</span>) <span class="co"># for lqs()</span></span>
+<span id="cb317-2"><a href="S19-efficiency.html#cb317-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb317-3"><a href="S19-efficiency.html#cb317-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211207</span>)</span>
+<span id="cb317-4"><a href="S19-efficiency.html#cb317-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb317-5"><a href="S19-efficiency.html#cb317-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb317-6"><a href="S19-efficiency.html#cb317-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb317-7"><a href="S19-efficiency.html#cb317-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb317-8"><a href="S19-efficiency.html#cb317-8" aria-hidden="true" tabindex="-1"></a><span class="co"># add 30% outliers</span></span>
+<span id="cb317-9"><a href="S19-efficiency.html#cb317-9" aria-hidden="true" tabindex="-1"></a>n.ol <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fl">0.3</span><span class="sc">*</span>n)</span>
+<span id="cb317-10"><a href="S19-efficiency.html#cb317-10" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">sample.int</span>(n, n.ol)</span>
+<span id="cb317-11"><a href="S19-efficiency.html#cb317-11" aria-hidden="true" tabindex="-1"></a>x[idx] <span class="ot">&lt;-</span> x[idx] <span class="sc">+</span> <span class="dv">15</span></span>
+<span id="cb317-12"><a href="S19-efficiency.html#cb317-12" aria-hidden="true" tabindex="-1"></a>y[idx] <span class="ot">&lt;-</span> y[idx] <span class="sc">-</span> <span class="dv">10</span></span>
+<span id="cb317-13"><a href="S19-efficiency.html#cb317-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb317-14"><a href="S19-efficiency.html#cb317-14" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lqs</span>(y<span class="sc">~</span>x, <span class="at">method=</span><span class="st">&quot;lms&quot;</span>)</span>
+<span id="cb317-15"><a href="S19-efficiency.html#cb317-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">col =</span> <span class="fu">ifelse</span>(<span class="dv">1</span><span class="sc">:</span>n <span class="sc">%in%</span> idx, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>))</span>
+<span id="cb317-16"><a href="S19-efficiency.html#cb317-16" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/lms-1.png" width="672" /></p>
 </div>
 </div>
-<div id="common-problems" class="section level2 unnumbered">
-<h2>Common Problems</h2>
-<p>There are many things which can go wrong when importing data. Some commonly
-encountered problems are the following:</p>
+<div id="least-trimmed-squares" class="section level3" number="19.2.2">
+<h3><span class="header-section-number">19.2.2</span> Least Trimmed Squares</h3>
+<p>This takes as its objective function the sum of <span class="math inline">\(h\)</span> smallest squared residuals
+and was proposed as a remedy to the low asymptotic efficiency of LMS. The least
+trimmed squares estimator <span class="math inline">\(\hat\beta^\mathrm{(LTS)}\)</span> is defined as
+<span class="math display">\[\begin{equation*}
+  \hat\beta^\mathrm{(LTS)}
+  := \mathop{\mathrm{arg\,min}}\limits_\beta \sum_{i=1}^k r_{[i]}^2(\beta),
+\end{equation*}\]</span>
+where <span class="math inline">\(r_{[i]}^2(\beta)\)</span> represents the <span class="math inline">\(i\)</span>th smallest value amongst
+<span class="math inline">\(r_i(\beta)^2 = \bigl( y_i- x_i^T\beta \bigr)^2\)</span>.</p>
+<p>The value <span class="math inline">\(k\)</span> controls the trade-off between robustness and efficiency and the
+value must satisfy <span class="math inline">\(n/2 &lt; k \leq n\)</span>. For a given <span class="math inline">\(k\)</span> the method can tolerate
+<span class="math inline">\(n-k\)</span> outliers. The bounday case <span class="math inline">\(k=n\)</span> corresponds to the ordinary least
+squares method. The breakdown point of the method is <span class="math inline">\((n - k +1)/n\)</span>.</p>
+<p>Computing the LTS estimate is a non-trivial problem, which involves fitting the
+least-squares estimate to a carefully chosen subset of the samples. In R, the
+LTS estimate can be computed using the function <code>lqs(..., method = "lts")</code>
+function from the <code>MASS</code> library.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-73" class="example"><strong>Example 19.3  </strong></span>The following code computes an LTS regression estimate. The
+data is the same as in the previous example.</p>
+<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="S19-efficiency.html#cb318-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lqs</span>(y<span class="sc">~</span>x, <span class="at">method =</span> <span class="st">&quot;lts&quot;</span>, <span class="at">quantile =</span> <span class="fu">floor</span>(n<span class="sc">/</span><span class="dv">2</span>)<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb318-2"><a href="S19-efficiency.html#cb318-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">col =</span> <span class="fu">ifelse</span>(<span class="dv">1</span><span class="sc">:</span>n <span class="sc">%in%</span> idx, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>))</span>
+<span id="cb318-3"><a href="S19-efficiency.html#cb318-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/lts-1.png" width="672" /></p>
+</div>
+<p>One can show that LTS has an efficiency of approximately <span class="math inline">\(0.08\)</span>
+compared to ordinary least squares regression.</p>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
 <ul>
-<li><p>If the data file contains no line with headers, but the
-<code>header=FALSE</code> option for <code>read.csv()</code> has been omitted,
-the first row of data will be used in place of the column names.
-This can, for example, be seen in the <code>str()</code> output. The
-solution to this problem is to correctly use the
-<code>header=FALSE</code> option.</p></li>
-<li><p>If the data in a <code>.csv</code> file is not separated by commas but
-by some other character like a semicolon, R will be unable to
-separate the columns. When this is the case, the imported data will
-appear to only have one column, where each entry shows as some
-garbled version of the data for the whole row. The solution to this
-problem is to use the <code>sep=...</code> option.</p></li>
-<li><p>If attribute values are encoded inconsistently, <em>e.g.</em> if
-a mix of <code>m</code> and <code>M</code> is used to encode the gender
-“male”, this will be visible in the <code>str()</code> output. One
-solution to this problem is to fix the <code>.csv</code> file using
-Microsoft Excel, before trying to import it into R again.</p></li>
-<li><p>If a numeric column in the input file contains one or more
-entries which are neither numbers nor empty, R will interpret the
-whole column as attribute data. This problem can be detected in the
-<code>str()</code> output, when a numeric column is listed as having data
-type <code>Factor</code>. One solution to this problem is to use
-Microsoft Excel to remove or fix the offending entry from the file.</p></li>
+<li>In this section we have informally discussed the efficiency of different estimators.</li>
+<li>We have introduced the Least Median of Squares estimator.</li>
+<li>We have introduced the Least Trimmed Squares estimator.</li>
 </ul>
+</div>
 
-<!--
-TODO:
-- add a summary at the end
--->
 </div>
 </div>
+</div>
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="S06-simultaneous.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="S07-examples.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S18-m-est.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
