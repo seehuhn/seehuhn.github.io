@@ -325,13 +325,13 @@ no longer resemble the shape of~\(f\). This
 \begin{figure}
 \centering
 \includegraphics{MATH5714M_files/figure-latex/broken-hist-1.pdf}
-\caption{\label{fig:broken-hist}This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes.}
+\caption{\label{fig:broken-hist}This figure demonstrates the consequences of choosing a way too small bucket size.}
 \end{figure}
 
 Finally, even if reasonable bucket sizes are chosen, the result can
 depend quite strongly on the exact locations of these buckets. To illustrate
 this effect, we consider a
-(dataset about the annual amount of snow){[}\url{https://teaching.seehuhn.de/data/buffalo/}{]}
+\href{https://teaching.seehuhn.de/data/buffalo/}{dataset about the annual amount of snow}
 falling in Buffalo, New York for different years. Figures \ref{fig:buffalo1}
 and~\ref{fig:buffalo2} show that same data in two different ways,
 allowing to come to different conclusions about the distribution.
@@ -2155,7 +2155,9 @@ estimator.
 \addcontentsline{toc}{subsubsection}{\(p = 1\)}
 
 For \(p=1\) the polynomial is a straight line, allowing to model the
-value as well as the slope of the mean line. This sometimes gives
+value as well as the slope of the mean line. The resulting estimator
+is called the \emph{local linear estimator}.
+This sometimes gives
 a better fit than the Nadaraya-Watson estimator, for example at the boundaries
 of the domain.
 
@@ -2527,6 +2529,7 @@ The following lemma shows how a variant of leave-one-out cross-validation
 can be used to estimate the optimal~\(h\) from data.
 
 \begin{lemma}
+\protect\hypertarget{lem:KDE-XV}{}\label{lem:KDE-XV}
 
 Let \(\hat h_h\) be the kernel density estimate with bandwidth~\(h\)
 and let
@@ -2547,7 +2550,8 @@ Then the following statements hold.
   with sample \(i\) omitted.
   Then
   \begin{equation*}
-    \mathrm{CV}(h) := \int \hat f_h(x)^2 dx - \frac{2}{n}\sum_{i=1}^n \hat f_h^{(i)}(x_i)
+    \mathrm{CV}(h)
+    := \int \hat f_h(x)^2 dx - \frac{2}{n}\sum_{i=1}^n \hat f_h^{(i)}(x_i)
   \end{equation*}
   is an (approximately) unbiased estimator for~\(e(h)\).
 \end{enumerate}
@@ -2633,6 +2637,417 @@ easier to implement as there is no integration involved.
   We have seen how to estimate \(h\) for kernel-based methods,
   and \(k\) for \(k\)-NN regression estimates.
 \end{itemize}
+
+\clearpage
+
+\hypertarget{X09-examples}{%
+\section{Examples}\label{X09-examples}}
+
+To conclude these notes, we give three examples where we use
+cross-validation to choose the tuning parameter in kernel
+density estimation, kernel regression, and k-nearest neighbour
+regression.
+
+\hypertarget{kernel-density-estimation-2}{%
+\subsection{Kernel Density Estimation}\label{kernel-density-estimation-2}}
+
+Here we show how to find a good bandwidth for Kernel Density Estimation,
+by using cross-validation. From lemma~\ref{lem:KDE-XV} we know that
+we can choose the \(h\) which minimises
+\begin{equation}
+  \mathrm{CV}(h)
+  = \int \hat f_h(x)^2 dx - \frac{2}{n}\sum_{i=1}^n \hat f_h^{(i)}(x_i)
+  =: A - B.  \label{eq:CVh}
+\end{equation}
+
+We will consider the
+\href{https://teaching.seehuhn.de/data/buffalo/}{snow fall dataset}
+again:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data from https://teaching.seehuhn.de/data/buffalo/}
+\NormalTok{buffalo }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/buffalo.csv"}\NormalTok{)}
+\NormalTok{x }\OtherTok{\textless{}{-}}\NormalTok{ buffalo}\SpecialCharTok{$}\NormalTok{snowfall}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+In order to speed up the computation of the \(f_h^{(i)}\), we implement
+the kernel density estimate ``by hand''. Thus, instead of using the built-in
+function \texttt{density}, we use the formula
+\begin{equation*}
+  \hat f_h(x)
+  = \frac{1}{n} \sum_{i=1}^n K_h(x - x_i).
+\end{equation*}
+from definition~\ref{def:KDE}.
+
+We use a number of ``tricks'' in the R code:
+
+\begin{itemize}
+\tightlist
+\item
+  For numerically computing the integral of \(\hat f_h^2\) in term~\(A\)
+  we evaluate \(\hat f_h\) on a grid of \(x\)-values,
+  say \(\tilde x_1, \ldots, \tilde x_m\).
+\item
+  When computing \(\hat f_h(\tilde x_j)\)
+  we need to compute all pair differences \(\tilde x_j - x_i\). In R, this can
+  efficiently be done using the command \texttt{outer(x,\ x.tilde,\ "-")},
+  which returns the pair differences as an \(n \times m\) matrix.
+\item
+  Here we use a Gaussian kernel, so that \(K_h\) can be evaluated using
+  \texttt{dnorm(...,\ sd\ =\ h)} in R. This function can be applied to the
+  matrix of pair differences; the result is a matrix \texttt{K} where row~\(i\),
+  column~\(j\) stores the value \(K_h(\tilde x_j - x_i)\).
+\item
+  The kernel density estimate \(\hat f_h\) now corresponds to the
+  column means of the matrix \texttt{K}. In R, these can be efficiently computed
+  using the command \texttt{colMeans()}.
+\item
+  Term \(A\) in equation~\eqref{eq:CVh} can now be approximate by
+  the sum of the \(\hat f_h(\tilde x_j)\), multiplied by the distance
+  between the grid points:
+  \begin{equation*}
+    A
+    = \int \hat f_h(x)^2 \,dx
+    \approx \sum_{j=1}^m \hat f_h(\tilde x_j)^2  \, \Delta \tilde x.
+  \end{equation*}
+\item
+  To compute term \(B\) in equation~\eqref{eq:CVh}, we can use
+  the formula
+  \begin{align*}
+    \sum_{j=1}^n \hat f_h^{(j)}(x_j)
+    &= \sum_{j=1}^n \frac{1}{n-1} \sum_{i\neq j} K_h(x_j - x_i) \\
+    &= \frac{1}{n-1} \sum_{i,j=1 \atop i\neq j}^n K_h(x_j - x_i).
+  \end{align*}
+  Here we can use \texttt{outer()} again, and then implement the condition
+  \(i\neq j\) by setting the matrix elements corresponding to \(i=j\)
+  equal to 0 before taking the sum.
+\end{itemize}
+
+Using these ideas, we can implement the function \(\mathrm{cv}(h)\)
+in R as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cv.h }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(h) \{}
+\NormalTok{    x.min }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(x) }\SpecialCharTok{{-}} \DecValTok{3}\SpecialCharTok{*}\NormalTok{h}
+\NormalTok{    x.max }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(x) }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{*}\NormalTok{h}
+\NormalTok{    m }\OtherTok{\textless{}{-}} \DecValTok{1000}
+\NormalTok{    dx }\OtherTok{\textless{}{-}}\NormalTok{ (x.max }\SpecialCharTok{{-}}\NormalTok{ x.min) }\SpecialCharTok{/}\NormalTok{ (m }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{    x.tilde }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(x.min, x.max, }\AttributeTok{length.out =}\NormalTok{ m)}
+
+\NormalTok{    K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(}\FunctionTok{outer}\NormalTok{(x, x.tilde, }\StringTok{"{-}"}\NormalTok{), }\AttributeTok{sd =}\NormalTok{ h)}
+\NormalTok{    f.hat }\OtherTok{\textless{}{-}} \FunctionTok{colMeans}\NormalTok{(K)}
+\NormalTok{    A }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(f.hat}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ dx)}
+
+\NormalTok{    K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(}\FunctionTok{outer}\NormalTok{(x, x, }\StringTok{"{-}"}\NormalTok{), }\AttributeTok{sd =}\NormalTok{ h)}
+    \FunctionTok{diag}\NormalTok{(K) }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{    B }\OtherTok{\textless{}{-}} \DecValTok{2} \SpecialCharTok{*} \FunctionTok{sum}\NormalTok{(K) }\SpecialCharTok{/}\NormalTok{ (n}\DecValTok{{-}1}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ n}
+
+    \FunctionTok{return}\NormalTok{(A }\SpecialCharTok{{-}}\NormalTok{ B)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+Finally, we evaluate the function \texttt{cv.h()} on a grid of \(h\)-values
+to find a good value of~\(h\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{h }\OtherTok{\textless{}{-}} \DecValTok{10}\SpecialCharTok{\^{}}\FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{41}\NormalTok{)}
+\NormalTok{cv }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(h))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(h)) \{}
+\NormalTok{    cv[i] }\OtherTok{\textless{}{-}} \FunctionTok{cv.h}\NormalTok{(h[i])}
+\NormalTok{\}}
+\FunctionTok{plot}\NormalTok{(h, cv, }\AttributeTok{log=}\StringTok{"x"}\NormalTok{, }\AttributeTok{type =} \StringTok{"l"}\NormalTok{)}
+
+\NormalTok{best.h }\OtherTok{\textless{}{-}}\NormalTok{ h[}\FunctionTok{which.min}\NormalTok{(cv)]}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =}\NormalTok{ best.h)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH5714M_files/figure-latex/cv-KDE-1.pdf}
+
+The optimal bandwidth is \(h = 12.59\).
+The kernel density estimate using this \(h\) is shown in the following figure.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x.min }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(x) }\SpecialCharTok{{-}} \DecValTok{3}\SpecialCharTok{*}\NormalTok{best.h}
+\NormalTok{x.max }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(x) }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{*}\NormalTok{best.h}
+\NormalTok{m }\OtherTok{\textless{}{-}} \DecValTok{100}
+\NormalTok{x.tilde }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(x.min, x.max, }\AttributeTok{length.out =}\NormalTok{ m)}
+
+\NormalTok{K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(}\FunctionTok{outer}\NormalTok{(x, x.tilde, }\StringTok{"{-}"}\NormalTok{), }\AttributeTok{sd =}\NormalTok{ best.h)}
+\NormalTok{f.hat }\OtherTok{\textless{}{-}} \FunctionTok{colMeans}\NormalTok{(K)}
+
+\FunctionTok{plot}\NormalTok{(x.tilde, f.hat, }\AttributeTok{type =} \StringTok{"l"}\NormalTok{,}
+     \AttributeTok{xlab =} \StringTok{"snowfall [in]"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"density"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH5714M_files/figure-latex/cv-KDE-best-1.pdf}
+
+\hypertarget{kernel-regression}{%
+\subsection{Kernel Regression}\label{kernel-regression}}
+
+To illustrate cross-validation for the different smoothing methods,
+we use the \texttt{faithful} dataset again.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}}\NormalTok{ faithful}\SpecialCharTok{$}\NormalTok{eruptions}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ faithful}\SpecialCharTok{$}\NormalTok{waiting}
+\end{Highlighting}
+\end{Shaded}
+
+We compare the methods using the leave-one-out mean squared error
+\begin{equation*}
+  r(h)
+  = \frac1n \sum_{i=1}^n \bigl( y_i - \hat m^{(i)}(x_i) \bigr)^2.
+\end{equation*}
+
+We start by considering the Nadaraya-Watson estimator.
+Here we have to compute
+\begin{equation*}
+  \hat m^{(i)}_h(x_i)
+  = \frac{\sum_{j=1, j\neq i}^n K_h(x_i - x_j) y_j}{\sum_{j=1, j\neq i}^n K_h(x_i - x_j)}
+\end{equation*}
+for all \(i\in\{1, \ldots, n\}\).
+To evaluate this expression in R, we use the same ideas as before:
+
+\begin{itemize}
+\tightlist
+\item
+  We use \texttt{outer(x,\ x,\ "-")} to compute all pair differences \(x_i - x_j\).
+\item
+  We use \texttt{dnorm(...,\ sd\ =\ h)} to compute \(K_h\).
+\item
+  We can obtain the leave-one-out estimate by setting the diagonal
+  of \(K\) to zero.
+\end{itemize}
+
+One new idea is needed to compute the products \(K_h(x_i - x_j) y_j\)
+in an efficient way:
+
+\begin{itemize}
+\tightlist
+\item
+  If we ``multiply'' a matrix \texttt{K} to a vector \texttt{y} using \texttt{*} (instead of using
+  \texttt{\%*\%} for the usual matrix vector multiplication), the product is
+  performed element-wise. If \texttt{y} has as many elements as \texttt{K} has rows,
+  then the results is the matrix \((k_{ij}y_i)_{i,j}\), \emph{i.e.} each row
+  of \texttt{K} is multiplied with the corresponding element of~\texttt{y}.
+\end{itemize}
+
+Combining these ideas, we get the following function
+to compute the leave-one-out estimate for the mean squared error of
+the Nadaraya-Watson estimator:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{r.NW }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(h) \{}
+\NormalTok{    K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(}\FunctionTok{outer}\NormalTok{(x, x, }\StringTok{"{-}"}\NormalTok{), }\AttributeTok{sd =}\NormalTok{ h)}
+
+    \CommentTok{\# compute a leave{-}one{-}out estimate}
+    \FunctionTok{diag}\NormalTok{(K) }\OtherTok{\textless{}{-}} \DecValTok{0}
+
+\NormalTok{    m.hat }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(K}\SpecialCharTok{*}\NormalTok{y) }\SpecialCharTok{/} \FunctionTok{colSums}\NormalTok{(K)}
+    \FunctionTok{mean}\NormalTok{((m.hat }\SpecialCharTok{{-}}\NormalTok{ y)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+We will also consider local linear smoothing, \emph{i.e.} local polynomial
+smoothing where the degree \(p\) of the polynomials is \(p=1\).
+As we have seen in the section about \protect\hyperlink{polynomial-regression-with-weights}{Polynomial Regression with Weights},
+the local linear estimator can be computed as
+\begin{equation*}
+  \hat m_h(x)
+  = e_0^\top (X^\top W X)^{-1} X^\top W y,
+\end{equation*}
+where \(X\) and \(W\) are defined as in equations \eqref{eq:X-local}
+and~\eqref{eq:W-diagonal}.
+Here we use the ``linear'' case (\(p=1\)) instead of the polynomial case (\(p\geq 1\)).
+For this case it is easy to check that we have
+\begin{equation*}
+  X^\top W X
+  = \begin{pmatrix}
+        \sum_j K_h(x-x_j)     & \sum_j K_h(x-x_j) x_j   \\
+        \sum_j K_h(x-x_j) x_j & \sum_j K_h(x-x_j) x_j^2
+    \end{pmatrix}
+\end{equation*}
+and
+\begin{equation*}
+  X^\top W y
+  = \begin{pmatrix}
+        \sum_j K_h(x-x_j) y_j     \\
+        \sum_j K_h(x-x_j) x_j y_j
+    \end{pmatrix}.
+\end{equation*}
+Using the formula
+\begin{equation*}
+  \begin{pmatrix}
+    a & b \\
+    c & d
+  \end{pmatrix}^{-1}
+  = \frac{1}{ad-bc} \begin{pmatrix}
+    d & -b \\
+    -c & a
+  \end{pmatrix}
+\end{equation*}
+for the inverse of a general \(2\times 2\)-matrix, we find
+\begin{equation*}
+  \hat m_h(x)
+  = \frac{T_1 T_2 - T_3 T_4}{B_1 B_2 - B_3^2},
+\end{equation*}
+where
+\begin{align*}
+  T_1 &= \sum_{j=1}^n K_h(x-x_j) y_j       , \\
+  T_2 &= \sum_{j=1}^n K_h(x-x_j) x_j(x_j-x), \\
+  T_3 &= \sum_{j=1}^n K_h(x-x_j) x_j y_j   , \\
+  T_4 &= \sum_{j=1}^n K_h(x-x_j) (x_j-x)   , \\
+  B_1 &= \sum_{j=1}^n K_h(x-x_j)           , \\
+  B_2 &= \sum_{j=1}^n K_h(x-x_j) x_j^2     , \\
+  B_3 &= \sum_{j=1}^n K_h(x-x_j) x_j       .
+\end{align*}
+As before, for a leave-one-out estimate we need to compute these sums over all
+\(j\neq i\). Since each of the seven terms listed above contains the term
+\(K_h(x-x_j)\) inside the sum, we can achieve this by setting the corresponing
+elements of the matrix \texttt{K} to zero.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{r.LL }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(h) \{}
+\NormalTok{    dx }\OtherTok{\textless{}{-}} \FunctionTok{outer}\NormalTok{(x, x, }\StringTok{"{-}"}\NormalTok{)}
+\NormalTok{    K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(dx, }\AttributeTok{sd =}\NormalTok{ h)}
+
+    \CommentTok{\# compute a leave{-}one{-}out estimate}
+    \FunctionTok{diag}\NormalTok{(K) }\OtherTok{\textless{}{-}} \DecValTok{0}
+
+\NormalTok{    T1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(y}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{    T2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{dx}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{    T3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{y}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{    T4 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(dx}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{    B1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(K)}
+\NormalTok{    B2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{    B3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{    m.hat }\OtherTok{\textless{}{-}}\NormalTok{ (T1}\SpecialCharTok{*}\NormalTok{T2 }\SpecialCharTok{{-}}\NormalTok{ T3}\SpecialCharTok{*}\NormalTok{T4) }\SpecialCharTok{/}\NormalTok{ (B1}\SpecialCharTok{*}\NormalTok{B2 }\SpecialCharTok{{-}}\NormalTok{ B3}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+
+    \FunctionTok{mean}\NormalTok{((m.hat }\SpecialCharTok{{-}}\NormalTok{ y)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+Now we evaluate the function \texttt{r.NW()} and \texttt{r.LL()} on a grid of \(h\)-values
+to find the optimal \(h\) for each method.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{h }\OtherTok{\textless{}{-}} \DecValTok{10}\SpecialCharTok{\^{}}\FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{1.4}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{61}\NormalTok{)}
+\NormalTok{mse.nw }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(h))}
+\NormalTok{mse.ll }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(h))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(h)) \{}
+\NormalTok{    mse.nw[i] }\OtherTok{\textless{}{-}} \FunctionTok{r.NW}\NormalTok{(h[i])}
+\NormalTok{    mse.ll[i] }\OtherTok{\textless{}{-}} \FunctionTok{r.LL}\NormalTok{(h[i])}
+\NormalTok{\}}
+\FunctionTok{plot}\NormalTok{(h, mse.nw, }\AttributeTok{log=}\StringTok{"x"}\NormalTok{, }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }\AttributeTok{ylim =} \FunctionTok{range}\NormalTok{(mse.nw, mse.ll),}
+     \AttributeTok{ylab =} \StringTok{"leave{-}one{-}out MSE"}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(h, mse.ll, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+
+\NormalTok{best.h.NW }\OtherTok{\textless{}{-}}\NormalTok{ h[}\FunctionTok{which.min}\NormalTok{(mse.nw)]}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =}\NormalTok{ best.h.NW)}
+\NormalTok{best.h.LL }\OtherTok{\textless{}{-}}\NormalTok{ h[}\FunctionTok{which.min}\NormalTok{(mse.ll)]}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =}\NormalTok{ best.h.LL, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH5714M_files/figure-latex/cv-loclin-1.pdf}
+
+As expected, the optimal bandwidth for local linear regression is
+larger than for the Nadaraya Watson estimator.
+
+\hypertarget{k-nearest-neighbour-regression}{%
+\subsection{\texorpdfstring{\emph{k}-Nearest Neighbour Regression}{k-Nearest Neighbour Regression}}\label{k-nearest-neighbour-regression}}
+
+To conclude this section we use leave-one-out cross-validation to determine the
+optimal \(k\) for \(k\)-nearest neighbour regression. Here it seems difficult to
+make any savings, so we resort to simply fitting \(n\) different models in the
+naive way. For this reason, the code in this section is much slower to
+run than the code in the previous sections.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{k }\OtherTok{\textless{}{-}} \DecValTok{10}\SpecialCharTok{:}\DecValTok{70}
+\NormalTok{mse.knn }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(k))}
+\ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(k)) \{}
+\NormalTok{    y.pred }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(x))}
+    \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(x)) \{}
+\NormalTok{        m }\OtherTok{\textless{}{-}} \FunctionTok{knn.reg}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x[}\SpecialCharTok{{-}}\NormalTok{i]),}
+                     \AttributeTok{y =}\NormalTok{ y[}\SpecialCharTok{{-}}\NormalTok{i],}
+                     \AttributeTok{test =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x[i]),}
+                     \AttributeTok{k =}\NormalTok{ k[j])}
+\NormalTok{        y.pred[i] }\OtherTok{\textless{}{-}}\NormalTok{ m}\SpecialCharTok{$}\NormalTok{pred}
+\NormalTok{    \}}
+\NormalTok{    mse.knn[j] }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{((y }\SpecialCharTok{{-}}\NormalTok{ y.pred)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{\}}
+\FunctionTok{plot}\NormalTok{(k, mse.knn, }\AttributeTok{type =} \StringTok{"l"}\NormalTok{,}
+     \AttributeTok{ylab =} \StringTok{"leave{-}one{-}out MSE"}\NormalTok{)}
+\NormalTok{best.k }\OtherTok{\textless{}{-}}\NormalTok{ k[}\FunctionTok{which.min}\NormalTok{(mse.knn)]}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =}\NormalTok{ best.k)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH5714M_files/figure-latex/cv-knn-1.pdf}
+
+We note the that leave-one-out mean squared error for kNN is smaller
+than it is for Nadaraya-Watson or local linear regression. Given
+the structure of the data, with different regions having very different
+densities of \(x\)-values, it makes sense that a method which choses
+the bandwidth ``adaptively'' performs better.
+
+To conclude, we show the optimal regression curves for the three smoothing
+methods together in one plot.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x.tilde }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\FloatTok{1.5}\NormalTok{, }\FloatTok{5.5}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{501}\NormalTok{)}
+
+\NormalTok{K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(}\FunctionTok{outer}\NormalTok{(x, x.tilde, }\StringTok{"{-}"}\NormalTok{), }\AttributeTok{sd =}\NormalTok{ best.h.NW)}
+\NormalTok{m.NW }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(K}\SpecialCharTok{*}\NormalTok{y) }\SpecialCharTok{/} \FunctionTok{colSums}\NormalTok{(K)}
+
+\NormalTok{dx }\OtherTok{\textless{}{-}} \FunctionTok{outer}\NormalTok{(x, x.tilde, }\StringTok{"{-}"}\NormalTok{)}
+\NormalTok{K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(dx, }\AttributeTok{sd =}\NormalTok{ best.h.LL)}
+\NormalTok{T1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(y}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{T2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{dx}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{T3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{y}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{T4 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(dx}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{B1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(K)}
+\NormalTok{B2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{B3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{m.LL }\OtherTok{\textless{}{-}}\NormalTok{ (T1}\SpecialCharTok{*}\NormalTok{T2 }\SpecialCharTok{{-}}\NormalTok{ T3}\SpecialCharTok{*}\NormalTok{T4) }\SpecialCharTok{/}\NormalTok{ (B1}\SpecialCharTok{*}\NormalTok{B2 }\SpecialCharTok{{-}}\NormalTok{ B3}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{knn.reg}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(x),}
+             \AttributeTok{y =}\NormalTok{ y[}\SpecialCharTok{{-}}\NormalTok{i],}
+             \AttributeTok{test =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x=}\NormalTok{x.tilde),}
+             \AttributeTok{k =}\NormalTok{ best.k)}
+\NormalTok{m.kNN }\OtherTok{\textless{}{-}}\NormalTok{ m}\SpecialCharTok{$}\NormalTok{pred}
+
+\NormalTok{colours }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"\#2C9CDA"}\NormalTok{, }\StringTok{"\#811631"}\NormalTok{, }\StringTok{"\#E0CA1D"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{xlim =} \FunctionTok{range}\NormalTok{(x.tilde), }\AttributeTok{cex =}\NormalTok{ .}\DecValTok{5}\NormalTok{,}
+     \AttributeTok{xlab =} \StringTok{"eruption time [mins]"}\NormalTok{,}
+     \AttributeTok{ylab =} \StringTok{"time to next eruption [mins]"}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(x.tilde, m.NW, }\AttributeTok{col =}\NormalTok{ colours[}\DecValTok{1}\NormalTok{])}
+\FunctionTok{lines}\NormalTok{(x.tilde, m.LL, }\AttributeTok{col =}\NormalTok{ colours[}\DecValTok{2}\NormalTok{])}
+\FunctionTok{lines}\NormalTok{(x.tilde, m.kNN, }\AttributeTok{col =}\NormalTok{ colours[}\DecValTok{3}\NormalTok{])}
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{"NW"}\NormalTok{, }\StringTok{"LL"}\NormalTok{, }\StringTok{"kNN"}\NormalTok{), }\AttributeTok{col =}\NormalTok{ colours,}
+       \AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH5714M_files/figure-latex/xv-summary-1.pdf}
 
 \clearpage
 
