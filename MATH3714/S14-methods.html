@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 14 Methods for Model Selection | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 14 Methods for Model Selection | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="https://seehuhn.github.io/MATH3714/" />
   
   <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2021/22" />
   
@@ -32,7 +31,6 @@
   
 <link rel="prev" href="P04.html"/>
 <link rel="next" href="S15-factors.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -50,8 +48,9 @@
 
 
 
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
 <script>
@@ -389,8 +388,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="S14-methods" class="section level1" number="14">
-<h1><span class="header-section-number">Section 14</span> Methods for Model Selection</h1>
+<div id="S14-methods" class="section level1 hasAnchor" number="14">
+<h1><span class="header-section-number">Section 14</span> Methods for Model Selection<a href="S14-methods.html#S14-methods" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <!--
 TODO:
 * explain the `nvmax` argument to `regsubsets()`
@@ -409,8 +408,8 @@ for finding a good selection inputs when <span class="math inline">\(p\)</span> 
 </iframe>
 </div>
 </div>
-<div id="exhaustive-search" class="section level2" number="14.1">
-<h2><span class="header-section-number">14.1</span> Exhaustive Search</h2>
+<div id="exhaustive-search" class="section level2 hasAnchor" number="14.1">
+<h2><span class="header-section-number">14.1</span> Exhaustive Search<a href="S14-methods.html#exhaustive-search" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Efficient algorithms are available to find the best model out of the
 <span class="math inline">\(2^p\)</span> possible models for small to moderate <span class="math inline">\(p\)</span>. Here we present
 a method which can often find the model with the largest <span class="math inline">\(R^2_\mathrm{adj}\)</span>
@@ -451,8 +450,8 @@ Thus we have <span class="math inline">\(r(J) \leq r(K)\)</span> whenever <span 
 We can use this result to exclude certain models without having to fit them.</p></li>
 </ul>
 </div>
-<div id="search-algorithm" class="section level2" number="14.2">
-<h2><span class="header-section-number">14.2</span> Search Algorithm</h2>
+<div id="search-algorithm" class="section level2 hasAnchor" number="14.2">
+<h2><span class="header-section-number">14.2</span> Search Algorithm<a href="S14-methods.html#search-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/B0vNhThH8Dc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
@@ -480,7 +479,7 @@ sum of squares of the model which consists only of the intercept.</p></li>
 <li><p>Let
 <span class="math display">\[\begin{equation*}
      r := r\bigl( \{1, \ldots, q\} \bigr).
- \end{equation*}\]</span>
+\end{equation*}\]</span>
 This is the only model with <span class="math inline">\(q\)</span> inputs where the first
 excluded variable has index <span class="math inline">\(k = q+1\)</span>.
 If <span class="math inline">\(r \leq \varphi_{k-1} = \varphi_q\)</span>, we know from step A that
@@ -491,14 +490,14 @@ In this case we have found
 <span class="math display">\[\begin{equation*}
    \min_{J, |J|=q} r(J)
    = r.
- \end{equation*}\]</span>
+\end{equation*}\]</span>
 and we continue step B by trying the next value of <span class="math inline">\(q\)</span>.
 If <span class="math inline">\(r &gt; \varphi_{k-1}\)</span>, no decision can be taken at this point and we
 continue with step 2.</p></li>
 <li><p>For <span class="math inline">\(j \in \{q+1, \ldots, p\}\)</span> let
 <span class="math display">\[\begin{equation*}
      r_j := r\bigl( \{1, \ldots, q-1\} \cup \{j\} \bigr).
- \end{equation*}\]</span>
+\end{equation*}\]</span>
 These are all models with <span class="math inline">\(q\)</span> inputs where the first excluded
 variable has index <span class="math inline">\(k = q\)</span>.
 If <span class="math inline">\(\min(r, r_1, \ldots, r_q) \leq \varphi_{k-1} = \varphi_{q-1}\)</span>, then we know
@@ -754,13 +753,13 @@ again. At the end of the list we recognise the values <code>0.4799</code> and
 <code>0.4785</code> from our previous analysis.</p>
 </div>
 </div>
-<div id="other-methods" class="section level2" number="14.3">
-<h2><span class="header-section-number">14.3</span> Other Methods</h2>
+<div id="other-methods" class="section level2 hasAnchor" number="14.3">
+<h2><span class="header-section-number">14.3</span> Other Methods<a href="S14-methods.html#other-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>There are other, approximate methods available which can be used
 when the number <span class="math inline">\(p\)</span> of model parameters is too large for an exhaustives
 search.</p>
-<div id="stepwise-forward-selection" class="section level3" number="14.3.1">
-<h3><span class="header-section-number">14.3.1</span> Stepwise Forward Selection</h3>
+<div id="stepwise-forward-selection" class="section level3 hasAnchor" number="14.3.1">
+<h3><span class="header-section-number">14.3.1</span> Stepwise Forward Selection<a href="S14-methods.html#stepwise-forward-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Here the idea is to start with a minimal model, and then add variables one by
 one, until no further (large enough) improvements can be achieved.</p>
 <p>Start with only intercept term: <span class="math inline">\(y=\beta_0 + \varepsilon\)</span>, then
@@ -780,8 +779,8 @@ continues by adding more variables, one at a time, until either</p>
 <p>The “significance of the model” can be examined by considering a
 <span class="math inline">\(t\)</span>-test as in lemma <a href="S05-single.html#lem:t-test">5.4</a>.</p>
 </div>
-<div id="stepwise-backward-selection" class="section level3" number="14.3.2">
-<h3><span class="header-section-number">14.3.2</span> Stepwise Backward Selection</h3>
+<div id="stepwise-backward-selection" class="section level3 hasAnchor" number="14.3.2">
+<h3><span class="header-section-number">14.3.2</span> Stepwise Backward Selection<a href="S14-methods.html#stepwise-backward-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Here the idea is to start with the full model, and to remove variables
 one by one until no good enough candidates for removal are left.</p>
 <p>In each step we consider the test statistic <span class="math inline">\(|T_j|\)</span> for the tests
@@ -799,8 +798,8 @@ Repeat until either:</p>
 <li>The smallest <span class="math inline">\(|T_j|\)</span> is above the threshold.</li>
 </ul>
 </div>
-<div id="hybrid-methods" class="section level3" number="14.3.3">
-<h3><span class="header-section-number">14.3.3</span> Hybrid Methods</h3>
+<div id="hybrid-methods" class="section level3 hasAnchor" number="14.3.3">
+<h3><span class="header-section-number">14.3.3</span> Hybrid Methods<a href="S14-methods.html#hybrid-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Either start with a full model or just intercept. At each stage consider:</p>
 <ul>
 <li>removing least significant variable already in the model,</li>
