@@ -150,7 +150,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
 <li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
 <li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#teams"><i class="fa fa-check"></i>Discussion Board</a></li>
 <li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
 <li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
 </ul></li>
@@ -408,44 +407,41 @@ the intercept <span class="math inline">\(\alpha\)</span> and the slope <span cl
 linear regression, is illustrated in figure <a href="index.html#fig:scatter-plot">0.1</a>.</p>
 
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:scatter-plot"></span>
-<img src="MATH3714_files/figure-html/scatter-plot-1.png" alt="An illustration of linear regression. Each of the black circles in the plot stands for one paired sample \((x_i, y_i)\). The regression line \(x \mapsto \alpha + \beta x\), with intercept \(\alpha\) and slope \(\beta\), aims to predict the value of \(y\) using the observed value \(x\). For the marked sample \((x_i, y_i)\), the predicted \(y\)-value is \(\hat y\)." width="672" />
+<img src="MATH3714_files/figure-html/scatter-plot-1.png" alt="An illustration of linear regression. Each of the black circles in the plot stands for one paired sample \((x_i, y_i)\). The regression line \(x \mapsto \alpha + \beta x\), with intercept \(\alpha\) and slope \(\beta\), aims to predict the value of \(y\) using the observed value \(x\). For the marked sample \((x_i, y_i)\), the predicted \(y\)-value is \(\hat y_i\)." width="672" />
 <p class="caption">
-Figure 0.1: An illustration of linear regression. Each of the black circles in the plot stands for one paired sample <span class="math inline">\((x_i, y_i)\)</span>. The regression line <span class="math inline">\(x \mapsto \alpha + \beta x\)</span>, with intercept <span class="math inline">\(\alpha\)</span> and slope <span class="math inline">\(\beta\)</span>, aims to predict the value of <span class="math inline">\(y\)</span> using the observed value <span class="math inline">\(x\)</span>. For the marked sample <span class="math inline">\((x_i, y_i)\)</span>, the predicted <span class="math inline">\(y\)</span>-value is <span class="math inline">\(\hat y\)</span>.
+Figure 0.1: An illustration of linear regression. Each of the black circles in the plot stands for one paired sample <span class="math inline">\((x_i, y_i)\)</span>. The regression line <span class="math inline">\(x \mapsto \alpha + \beta x\)</span>, with intercept <span class="math inline">\(\alpha\)</span> and slope <span class="math inline">\(\beta\)</span>, aims to predict the value of <span class="math inline">\(y\)</span> using the observed value <span class="math inline">\(x\)</span>. For the marked sample <span class="math inline">\((x_i, y_i)\)</span>, the predicted <span class="math inline">\(y\)</span>-value is <span class="math inline">\(\hat y_i\)</span>.
 </p>
 </div>
-<p>In this situation, the variable <span class="math inline">\(x\)</span> is called a <strong>input</strong>, feature, or
-sometimes the explanatory variable or the “independent variable”.
-The variable <span class="math inline">\(y\)</span> is called <strong>response</strong> or output, or sometimes the
-“dependent variable”, and <span class="math inline">\(\varepsilon\)</span> is called the <strong>residual</strong> or error.</p>
-<p>Extending the situation of simple linear regression, in this module
+<p>The variables <span class="math inline">\(x_i\)</span> are called <strong>input</strong>, “features”, or
+sometimes also “explanatory variables” or “independent variables”.
+The variables <span class="math inline">\(y_i\)</span> are called <strong>output</strong> or “response”, or sometimes the
+“dependent variables”. The values <span class="math inline">\(\varepsilon_i\)</span> are called the <strong>residuals</strong> or errors.</p>
+<p>Extending the situation of simple linear regression, here
 we will consider multiple linear regression, where the response <span class="math inline">\(y\)</span>
 is allowed to depend on several input variables. The corresponding
 model is now
 <span class="math display">\[\begin{equation*}
   y_i = \alpha + \beta_1 x_{i1} + \cdots + \beta_p x_{ip} + \varepsilon_i
 \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, 2, \ldots, p\}\)</span>, where <span class="math inline">\(n\)</span> is still the number
+for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, where <span class="math inline">\(n\)</span> is still the number
 of observations, and <span class="math inline">\(p\)</span> is now the number of inputs we observe for
-each sample.</p>
-<p>Note that for multiple linear regression, we still consider a
+each sample.
+Note that for multiple linear regression, we still consider a
 single response for each sample, only the number of inputs has been
-increased. One way to deal with situations where there is more than
-one output would be to fit separate models for each output.</p>
+increased.</p>
 <p>We will discuss multiple linear regression in much detail; our discussion
-will be guided by three different aims of linear regression:</p>
+will answer questions like the following:</p>
 <ol style="list-style-type: decimal">
-<li>Prediction: given a not previously observed value <span class="math inline">\(x\)</span>, try to predict
-the corresponding <span class="math inline">\(y\)</span>.</li>
-<li>In cases were the residuals <span class="math inline">\(\varepsilon_i\)</span> correspond to unwanted noise,
-the fitted values <span class="math inline">\(\hat y_i = \alpha + \beta x_i\)</span> can be considered
-to be de-noised versions of the observed values <span class="math inline">\(y_i\)</span>.</li>
+<li>Prediction: given a new input <span class="math inline">\(x\)</span>, how can we predict
+the corresponding output <span class="math inline">\(y\)</span>? To address this question
+we need to learn how to estimate the coefficients <span class="math inline">\(\alpha, \beta_1, \ldots, \beta_p\)</span>.</li>
 <li>By studying a fitted regression model, sometimes better understanding
 of the data can be achieved. For example, one could ask whether
-all of the <span class="math inline">\(p\)</span> input variables carry information about the response <span class="math inline">\(y\)</span>.</li>
+all of the <span class="math inline">\(p\)</span> input variables carry information about the response <span class="math inline">\(y\)</span>.
+We will use statistical hypothesis tests to answer such questions.</li>
+<li>How to assess model fit?</li>
+<li>How to deal with outliers in the data?</li>
 </ol>
-<p>We will address these aims by considering different questions, like
-how to estimate the coefficients <span class="math inline">\(\alpha, \beta_1, \ldots, \beta_p\)</span>,
-how to assess model fit, or how to deal with outliers in the data.</p>
 
 </div>
             </section>
