@@ -359,7 +359,7 @@ for the intercept and \(\beta_1\) for the slope.
 \subsection{Residual Sum of Squares}\label{residual-sum-of-squares}}
 
 In simple linear regression, the aim is to find a regression line \(y = \beta_0 + \beta_1 x\), such that the line is ``close'' to given data points
-\((x_1, y_1), \ldots, (x_n, y_n) \in\mathbb{R}^2\) for \(i \in \{1, 2, \ldots, n\}\). The ususal way to find \(alpha\) and \(\beta_1\), and thus the regression
+\((x_1, y_1), \ldots, (x_n, y_n) \in\mathbb{R}^2\) for \(i \in \{1, 2, \ldots, n\}\). The ususal way to find \(\beta_0\) and \(\beta_1\), and thus the regression
 line, is by minimising the \textbf{residual sum of squares}:
 \begin{equation}
   r(\beta_0, \beta_1)
@@ -521,7 +521,7 @@ introductory courses to statistics:
 \end{itemize}
 
 In this setup, we can consider the estimates \(\hat\beta_0\) and \(\hat\beta_1\)
-from the previous subsection as statistcal parameter estimates for the
+from the previous subsection as statistical parameter estimates for the
 model parameters \(\beta_0\) and~\(\beta_1\).
 
 In order to fit a linear model we also need to estimate the residual
@@ -725,7 +725,7 @@ of attributes, excluding \texttt{mpg}). The values \(y_1, \ldots, y_{32}\) are l
 in the first column of the table, the values \(x_{i,1}\) for \(i \in \{1, \ldots, 32\}\) are shown in the second column, and the values \(x_{i,10}\) are shown in
 the last column.
 
-In this dataset it is easy to make scatter plots which show how a single
+It is easy to make scatter plots which show how a single
 input affects the output. For example, we can show how the engine power
 affects fuel consumption:
 
@@ -752,7 +752,9 @@ this as
   y_i
   = \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i \label{eq:lmdata}
 \end{equation}
-where the residuals~\(\varepsilon_i\) are assumed to be ``small''.
+where the residuals~\(\varepsilon_i\) are assumed to be ``small''. Here, \(i\)
+ranges over all \(n\) samples, so \eqref{eq:lmdata} represents \(n\)
+simultaneous equations.
 
 The parameters \(\beta_j\) can be interpreted as the expected change in
 the response \(y\) per unit change in \(x_j\) when all other regressor
@@ -813,8 +815,7 @@ as
 where again \(X\beta\) is a matrix-vector multiplication which ``hides''
 the sums in equation~\eqref{eq:lmdata}, and \eqref{eq:lmmodel}
 is an equation of vectors of size~\(n\), which combines the \(n\)
-individual equations from \eqref{eq:lmdata} for the different
-values of~\(i\).
+individual equations from \eqref{eq:lmdata}.
 
 To simplify notation, we index the columns of \(X\) by \(0, 1, \ldots, p\) (instead of the more conventional \(1, \ldots, p+1\)), so that we
 can for example write
@@ -930,9 +931,10 @@ This happens for example, if two of the inputs are identical to
 each other (or, more generally, one input is linearly dependent
 on one or more other inputs).
 
-The condition that \(X^\top X\) must be invertible in multiple linear
-regression corresponds to the condition \(\mathrm{s}_x^2 > 0\) from
-lemma~\ref{lem:simple-LSQ} for simple linear regression.
+The condition that \(X^\top X\) must be invertible in
+lemma~\ref{lem:multiple-LSQ}
+corresponds to the condition \(\mathrm{s}_x^2 > 0\) in
+lemma~\ref{lem:simple-LSQ}.
 
 The value \(\hat\beta\) found in the lemma is called the \textbf{least squares
 estimator} for \(\beta\).
@@ -1079,7 +1081,7 @@ the same result as above:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] 5.329071e{-}13}
+\NormalTok{\# [1] 3.410605e{-}13}
 \end{Highlighting}
 \end{Shaded}
 
@@ -6607,7 +6609,7 @@ and \(\mathop{\mathrm{cor}}(x, x^2) \approx 1 - 9.74\times 10^{-9}\):
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] 1.31431e+24}
+\NormalTok{\# [1] 1.47006e+23}
 \end{Highlighting}
 \end{Shaded}
 
