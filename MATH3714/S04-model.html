@@ -493,18 +493,18 @@ This completes the proof.</p>
 </div>
 <p>The lemma implies that <span class="math inline">\(\mathbb{E}(\hat\beta) = \beta\)</span>, <em>i.e.</em> the estimator
 <span class="math inline">\(\hat\beta\)</span> is unbiased. Note that for this statement we only used <span class="math inline">\(\mathbb{E}(\varepsilon) = 0\)</span> to compute the expectation of <span class="math inline">\(\hat\beta\)</span>. Thus, the estimator will still
-be unbiases for correlated or for noise which is not normally distributed.</p>
+be unbiased for correlated noise or for noise which is not normally distributed.</p>
 <p>We have seen <a href="S03-cov.html#eq:Cov-diag-elem">earlier</a> that the diagonal elements
-of a covariance give the variances of the elements of the random vector.
+of a covariance matrix give the variances of the elements of the random vector.
 Setting <span class="math inline">\(C := (X^\top X)^{-1}\)</span> as a shorthand here, we find that the
 individual estimated coefficients <span class="math inline">\(\hat\beta_i\)</span> satisfy
 <span class="math display" id="eq:beta-hat-i">\[\begin{equation}
   \hat\beta_i
   \sim \mathcal{N}\bigl( \beta, \sigma^2 C_{ii} \bigr)  \tag{4.2}
 \end{equation}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.</p>
+for <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.</p>
 <p>These results about the (co-)variances of the estimator are not very
-useful in practice, because the error variance <span class="math inline">\(\sigma^2\)</span> is unknown.
+useful in practice, because the error variance <span class="math inline">\(\sigma^2\)</span> is usually unknown.
 To derive more useful results, we will consider how to estimate this
 variance.</p>
 </div>
@@ -585,11 +585,13 @@ As a result we get
   &amp;= (Hv)^\top Hv + 2 (Hv)^\top (I-H)v + \bigl((I-H)v\bigr)^\top (I-H)v \\
   &amp;= \| Hv \|^2 + \|(I-H)v \|^2
 \end{align*}\]</span>
+for any vector <span class="math inline">\(v \in \mathbb{R}^n\)</span>.
 (This is <a href="https://en.wikipedia.org/wiki/Pythagorean_theorem">Pythagoras’ theorem</a> in <span class="math inline">\(\mathbb{R}^n\)</span>.)
 Since <span class="math inline">\(\hat y = Hy\)</span> and <span class="math inline">\(\hat\varepsilon= (I - H)y\)</span>, we can apply this idea to the
-vector <span class="math inline">\(y\)</span> of observations to get
+vector <span class="math inline">\(v = y\)</span> to get
 <span class="math display" id="eq:eps-y-orth">\[\begin{equation}
-  \|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2.  \tag{4.5}
+  \|y\|^2
+  = \|\hat y\|^2 + \|\hat\varepsilon\|^2.  \tag{4.5}
 \end{equation}\]</span></p>
 <p>We note without proof that geometrically, <span class="math inline">\(H\)</span> can be interpreted as the
 orthogonal projection onto the subspace of <span class="math inline">\(\mathbb{R}^n\)</span> which is spanned by
@@ -619,7 +621,7 @@ turns into
 </div>
 </div>
 <p>Our main tool in this and the following section will be a simplified
-version of <a href="https://en.wikipedia.org/wiki/Cochran%27s_theorem">Cochran’s theorem</a>.</p>
+version of <a href="https://en.wikipedia.org/wiki/Cochran%27s_theorem">Cochran’s theorem</a>:</p>
 <div class="theorem">
 <p><span id="thm:Cochran" class="theorem"><strong>Theorem 4.1  </strong></span>The following statements are true:</p>
 <ol style="list-style-type: decimal">
@@ -714,7 +716,7 @@ given by
 where <span class="math inline">\(\hat y_i\)</span> are the fitted values from equation <a href="S02-multiple.html#eq:fitted-values">(2.5)</a>.
 As for the one-dimensional case in <a href="S01-simple.html#eq:reg-sigma-est">(1.4)</a>, the estimate
 does not have the prefactor <span class="math inline">\(1/n\)</span>, which one might naively expect,
-but the denomintor is decreased by one for each component of the
+but the denominator is decreased by one for each component of the
 vector <span class="math inline">\(\beta\)</span>. Using Cochran’s theorem, we can now show that the estimator
 <span class="math inline">\(\hat\sigma^2\)</span> is unbiased.</p>
 <p>We first note that
@@ -723,7 +725,7 @@ vector <span class="math inline">\(\beta\)</span>. Using Cochran’s theorem, w
   &amp;= (y - \hat y)^\top (y - \hat y) \\
   &amp;= (y - H y)^\top (y - H y) \\
   &amp;= y^\top (I - H)^\top (I - H) y \\
-  &amp;= y^\top (I - H) y
+  &amp;= y^\top (I - H) y.
 \end{align*}\]</span>
 To determine the bias, we need to use <span class="math inline">\(Y = X\beta + \varepsilon\)</span> in place of the
 data. This gives

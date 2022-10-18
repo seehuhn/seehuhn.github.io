@@ -2208,20 +2208,20 @@ This completes the proof.
 
 The lemma implies that \(\mathbb{E}(\hat\beta) = \beta\), \emph{i.e.}~the estimator
 \(\hat\beta\) is unbiased. Note that for this statement we only used \(\mathbb{E}(\varepsilon) = 0\) to compute the expectation of~\(\hat\beta\). Thus, the estimator will still
-be unbiases for correlated or for noise which is not normally distributed.
+be unbiased for correlated noise or for noise which is not normally distributed.
 
 We have seen \protect\hyperlink{eq:Cov-diag-elem}{earlier} that the diagonal elements
-of a covariance give the variances of the elements of the random vector.
+of a covariance matrix give the variances of the elements of the random vector.
 Setting \(C := (X^\top X)^{-1}\) as a shorthand here, we find that the
 individual estimated coefficients \(\hat\beta_i\) satisfy
 \begin{equation}
   \hat\beta_i
   \sim \mathcal{N}\bigl( \beta, \sigma^2 C_{ii} \bigr)  \label{eq:beta-hat-i}
 \end{equation}
-for all \(i \in \{1, \ldots, n\}\).
+for \(i \in \{1, \ldots, n\}\).
 
 These results about the (co-)variances of the estimator are not very
-useful in practice, because the error variance~\(\sigma^2\) is unknown.
+useful in practice, because the error variance~\(\sigma^2\) is usually unknown.
 To derive more useful results, we will consider how to estimate this
 variance.
 
@@ -2309,11 +2309,13 @@ As a result we get
   &= (Hv)^\top Hv + 2 (Hv)^\top (I-H)v + \bigl((I-H)v\bigr)^\top (I-H)v \\
   &= \| Hv \|^2 + \|(I-H)v \|^2
 \end{align*}
+for any vector \(v \in \mathbb{R}^n\).
 (This is \href{https://en.wikipedia.org/wiki/Pythagorean_theorem}{Pythagoras' theorem} in \(\mathbb{R}^n\).)
 Since \(\hat y = Hy\) and \(\hat\varepsilon= (I - H)y\), we can apply this idea to the
-vector \(y\) of observations to get
+vector \(v = y\) to get
 \begin{equation}
-  \|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2.  \label{eq:eps-y-orth}
+  \|y\|^2
+  = \|\hat y\|^2 + \|\hat\varepsilon\|^2.  \label{eq:eps-y-orth}
 \end{equation}
 
 We note without proof that geometrically, \(H\) can be interpreted as the
@@ -2346,7 +2348,7 @@ turns into
 \subsection{Cochran's theorem}\label{Cochran}}
 
 Our main tool in this and the following section will be a simplified
-version of \href{https://en.wikipedia.org/wiki/Cochran\%27s_theorem}{Cochran's theorem}.
+version of \href{https://en.wikipedia.org/wiki/Cochran\%27s_theorem}{Cochran's theorem}:
 
 \begin{theorem}
 \protect\hypertarget{thm:Cochran}{}\label{thm:Cochran}
@@ -2451,7 +2453,7 @@ given by
 where \(\hat y_i\) are the fitted values from equation~\eqref{eq:fitted-values}.
 As for the one-dimensional case in~\eqref{eq:reg-sigma-est}, the estimate
 does not have the prefactor \(1/n\), which one might naively expect,
-but the denomintor is decreased by one for each component of the
+but the denominator is decreased by one for each component of the
 vector~\(\beta\). Using Cochran's theorem, we can now show that the estimator
 \(\hat\sigma^2\) is unbiased.
 
@@ -2461,7 +2463,7 @@ We first note that
   &= (y - \hat y)^\top (y - \hat y) \\
   &= (y - H y)^\top (y - H y) \\
   &= y^\top (I - H)^\top (I - H) y \\
-  &= y^\top (I - H) y
+  &= y^\top (I - H) y.
 \end{align*}
 To determine the bias, we need to use \(Y = X\beta + \varepsilon\) in place of the
 data. This gives
