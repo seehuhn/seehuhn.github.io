@@ -217,6 +217,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#checking-the-imported-data"><i class="fa fa-check"></i>Checking the Imported Data</a></li>
 <li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#common-problems"><i class="fa fa-check"></i>Common Problems</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="P02.html"><a href="P02.html"><i class="fa fa-check"></i>Problem Sheet 2</a></li>
 <li class="chapter" data-level="7" data-path="S07-examples.html"><a href="S07-examples.html"><i class="fa fa-check"></i><b>7</b> Examples</a>
 <ul>
 <li class="chapter" data-level="7.1" data-path="S07-examples.html"><a href="S07-examples.html#simple-confidence-interval"><i class="fa fa-check"></i><b>7.1</b> Simple Confidence Interval</a>
@@ -237,7 +238,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.4.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output"><i class="fa fa-check"></i><b>7.4.2</b> Using the <code>lm()</code> output</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="P02.html"><a href="P02.html"><i class="fa fa-check"></i>Problem Sheet 2</a></li>
 <li class="chapter" data-level="8" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html"><i class="fa fa-check"></i><b>8</b> Regression Diagnostics</a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#plots"><i class="fa fa-check"></i><b>8.1</b> Diagnostic Plots</a></li>
@@ -413,7 +413,7 @@ know the value of <span class="math inline">\(\sigma^2\)</span>, so we have to e
 using the estimator
 <span class="math display">\[\begin{equation*}
   \hat\sigma^2
-  = \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2,
+  = \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2
 \end{equation*}\]</span>
 from equation <a href="S04-model.html#eq:hat-sigma-squared">(4.6)</a>. As a first application of
 Cochran’s theorem we showed in equation <a href="S04-model.html#eq:sigma-hat-chi-squared">(4.7)</a>
@@ -454,7 +454,7 @@ write <span class="math inline">\(\hat\sigma^2\)</span> as
   &amp;= (Y - \hat Y)^\top (Y - \hat Y) \\
   &amp;= (Y - H Y)^\top (Y - H Y) \\
   &amp;= Y^\top (I - H)^\top (I - H) Y \\
-  &amp;= \bigl\| (I - H) Y \|.
+  &amp;= \bigl\| (I - H) Y \|^2.
 \end{align*}\]</span>
 Since <span class="math inline">\(Y = X\beta + \varepsilon\)</span> and since we know <span class="math inline">\((I-H)X = 0\)</span> from
 equation <a href="S04-model.html#eq:XIH">(4.4)</a>, we find
@@ -478,7 +478,7 @@ While there are many ways to measure this distance, the <span class="math inline
 here has two main advantages:</p>
 <ul>
 <li><p>The value of <span class="math inline">\(T\)</span> can be computed from the given data, without
-any reference to unknown quantities.</p></li>
+any reference to unknown quantities (except for <span class="math inline">\(\beta_i\)</span>).</p></li>
 <li><p>Below, we will be able to find the distribution of <span class="math inline">\(T\)</span>. This will
 allow us to use <span class="math inline">\(T\)</span> to construct confidence intervals and statistical
 tests.</p></li>
@@ -567,7 +567,10 @@ derive a hypothesis test to test the hypothesis
 against the alternative
 <span class="math display">\[\begin{equation*}
   H_1\colon \beta_i \neq b.
-\end{equation*}\]</span></p>
+\end{equation*}\]</span>
+If we use <span class="math inline">\(b = 0\)</span> in the test, we can test whether <span class="math inline">\(\beta_i = 0\)</span>.
+If <span class="math inline">\(\beta_i = 0\)</span> is true, the corresponding input <span class="math inline">\(x_i\)</span> has no influence
+on the output.</p>
 <p>Here we redefine <span class="math inline">\(T\)</span> as
 <span class="math display" id="eq:single-test">\[\begin{equation}
   T
@@ -597,9 +600,6 @@ we know that <span class="math inline">\(T \sim t(n-p-1)\)</span>. Thus we have
 \end{align*}\]</span>
 This completes the proof.</p>
 </div>
-<p>If we use <span class="math inline">\(b = 0\)</span> in the test, we can test whether <span class="math inline">\(\beta_i = 0\)</span>.
-If <span class="math inline">\(\beta_i = 0\)</span> is true, the corresponding input <span class="math inline">\(x_i\)</span> has no influence
-on the output.</p>
 <p>As usual with statistical tests, one needs to be extremely careful when
 performing several tests on the same data. In particular, it would be
 unwise to test more than one component of <span class="math inline">\(\beta\)</span> using this procedure
@@ -668,7 +668,7 @@ bottom of the <code>summary(m)</code> output, above.</p>
 </div>
 <div id="estimating-the-standard-errors" class="section level3 hasAnchor" number="5.4.3">
 <h3><span class="header-section-number">5.4.3</span> Estimating the Standard Errors<a href="S05-single.html#estimating-the-standard-errors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>We can the standard errors, <em>i.e.</em> the standard deviations
+<p>We can estimate the standard errors, <em>i.e.</em> the standard deviations
 <span class="math inline">\(\mathop{\mathrm{stdev}}(\hat\beta)_i\)</span> as <span class="math inline">\(\sqrt{\hat\sigma^2 C_{ii}}\)</span>:</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="S05-single.html#cb51-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(hat.sigma2 <span class="sc">*</span> <span class="fu">diag</span>(C))</span>
 <span id="cb51-2"><a href="S05-single.html#cb51-2" aria-hidden="true" tabindex="-1"></a>se</span></code></pre></div>
@@ -718,10 +718,6 @@ function in R.</li>
 </ul>
 </div>
 
-<!--
-TODO:
-- add a summary at the end
--->
 </div>
 </div>
 </div>

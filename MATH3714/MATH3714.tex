@@ -2538,7 +2538,7 @@ know the value of \(\sigma^2\), so we have to estimate this from data,
 using the estimator
 \begin{equation*}
   \hat\sigma^2
-  = \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2,
+  = \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2
 \end{equation*}
 from equation~\eqref{eq:hat-sigma-squared}. As a first application of
 Cochran's theorem we showed in equation~\eqref{eq:sigma-hat-chi-squared}
@@ -2584,7 +2584,7 @@ write \(\hat\sigma^2\) as
   &= (Y - \hat Y)^\top (Y - \hat Y) \\
   &= (Y - H Y)^\top (Y - H Y) \\
   &= Y^\top (I - H)^\top (I - H) Y \\
-  &= \bigl\| (I - H) Y \|.
+  &= \bigl\| (I - H) Y \|^2.
 \end{align*}
 Since \(Y = X\beta + \varepsilon\) and since we know \((I-H)X = 0\) from
 equation~\eqref{eq:XIH}, we find
@@ -2612,7 +2612,7 @@ here has two main advantages:
 \begin{itemize}
 \item
   The value of \(T\) can be computed from the given data, without
-  any reference to unknown quantities.
+  any reference to unknown quantities (except for \(\beta_i\)).
 \item
   Below, we will be able to find the distribution of \(T\). This will
   allow us to use \(T\) to construct confidence intervals and statistical
@@ -2698,6 +2698,9 @@ against the alternative
 \begin{equation*}
   H_1\colon \beta_i \neq b.
 \end{equation*}
+If we use \(b = 0\) in the test, we can test whether \(\beta_i = 0\).
+If \(\beta_i = 0\) is true, the corresponding input \(x_i\) has no influence
+on the output.
 
 Here we redefine \(T\) as
 \begin{equation}
@@ -2730,10 +2733,6 @@ we know that \(T \sim t(n-p-1)\). Thus we have
 \end{align*}
 This completes the proof.
 \end{proof}
-
-If we use \(b = 0\) in the test, we can test whether \(\beta_i = 0\).
-If \(\beta_i = 0\) is true, the corresponding input \(x_i\) has no influence
-on the output.
 
 As usual with statistical tests, one needs to be extremely careful when
 performing several tests on the same data. In particular, it would be
@@ -2843,7 +2842,7 @@ bottom of the \texttt{summary(m)} output, above.
 \hypertarget{estimating-the-standard-errors}{%
 \subsubsection{Estimating the Standard Errors}\label{estimating-the-standard-errors}}
 
-We can the standard errors, \emph{i.e.}~the standard deviations
+We can estimate the standard errors, \emph{i.e.}~the standard deviations
 \(\mathop{\mathrm{stdev}}(\hat\beta)_i\) as \(\sqrt{\hat\sigma^2 C_{ii}}\):
 
 \begin{Shaded}
@@ -3476,6 +3475,23 @@ we know that \(F \sim F_{k, n-p-1}\). Thus we have
 This completes the proof.
 \end{proof}
 
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We have learned how to measure the distance between
+  a subset of coefficients and the corresponding estimates.
+\item
+  We have introduced the \(F\)-distribution.
+\item
+  We have learned how to compute confidence regions for subsets
+  of the regression coefficients.
+\item
+  We have learned how to perform hypothesis tests for subsets
+  of the regression coefficients.
+\end{itemize}
+
 \clearpage
 
 \hypertarget{I02-read.csv}{%
@@ -3789,8 +3805,295 @@ encountered problems are the following:
   whole column as attribute data. This problem can be detected in the
   \texttt{str()} output, when a numeric column is listed as having data
   type \texttt{Factor}. One solution to this problem is to use
-  Microsoft Excel to remove or fix the offending entry from the file.
+  Microsoft Excel to remove or fix the offending entry.
 \end{itemize}
+
+\clearpage
+
+\hypertarget{P02}{%
+\section*{Problem Sheet 2}\label{P02}}
+\addcontentsline{toc}{section}{Problem Sheet 2}
+
+\excludecomment{myanswers}
+
+You should attempt all these questions and write up your solutions in advance
+of your workshop in week~4 where the answers will be discussed.
+
+\textbf{5.} Assume that \(X \sim \mathcal{N}(0, 1)\), \(Y\sim \chi^2(2)\) and
+\(Z \sim \chi^2(3)\) are independent. What are the distributions of
+the following random variables?
+
+\begin{itemize}
+\item
+  \(X^2\),
+\item
+  \(X^2 + Y + Z\),
+\item
+  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}}\),
+\item
+  \(\displaystyle\frac{2X^2}{Y}\), and
+\item
+  \(1.5\, Y/Z\).
+\end{itemize}
+
+\begin{myanswers}
+
+The distributions involved in this question are the normal
+distribution, the \(\chi^2\)-dis-tri-bu-tion, the \(t\)-distribution
+and the \(F\)-distribution. The general rules are: (1) the sum of
+squares of \(d\) independent, standard normally distributed random
+variables follows a \(\chi^2(d)\)-distribution. (2) If
+\(Z\sim\mathcal{N}(0,1)\) and \(V \sim \chi^2(d)\) are independent, then
+\(Z / \sqrt{V / d} \sim t(d)\), and finally (3) If
+\(V_1\sim \chi^2(d_1)\) and \(V_2\sim \chi^2(d_2)\) are independent,
+then \((V_1/d_1)/(V_2/d_2) \sim F(d_1, d_2)\). Using these rules:
+
+\begin{itemize}
+\item
+  \(X^2 \sim \chi^2(1)\),
+\item
+  \(X^2 + Y + Z \sim \chi^2(1+2+3) = \chi^2(6)\),
+\item
+  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}} = \frac{X}{\sqrt{Y/2}} \sim t(2)\),
+\item
+  \(\displaystyle\frac{2X^2}{Y} = \frac{X^2/1}{Y/2} \sim F(1,2)\),
+\item
+  \(\displaystyle 1.5\, Y/Z = \frac{Y/2}{Z/3} \sim F(2, 3)\).
+\end{itemize}
+
+\end{myanswers}
+
+\textbf{6.} Let \(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\) and let \(X \sim \mathcal{N}(\mu, \sigma^2 I)\) be a normally-distributed random vector, where \(I\) is the
+\(n\times n\) identity matrix. Define \(A = \frac1n \mathbf{1} \mathbf{1}^\top \in \mathbb{R}^{n\times n}\).
+
+\begin{itemize}
+\item
+  Show that \((AX)_i = \bar X\) for all \(i \in \{1, \ldots, n\}\),
+  where \(\bar X = \frac1n \sum_{j=1}^n X_j\).
+\item
+  Show that \(A\) is symmetric.
+\item
+  Show that \(A\) is idempotent.
+\item
+  Use results from lectures to conclude that the random
+  variables \(AX\) and \(X^\top (I-A)X\) are independent.
+\item
+  Using the previous parts of the question, show that \(\bar X\)
+  and \(\frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2\) are independent.
+\end{itemize}
+
+\begin{myanswers}
+
+The matrix \(A = (a_{ij})\) has entries \(a_{ij} = 1/n\) for all
+\(i, j \in \{1, \ldots, n\}\). Using this observation, the statements
+of the first few questions follow easily:
+
+\begin{itemize}
+\item
+  We have
+  \begin{equation*}
+    (Ax)_i
+    = \sum_{j=1}^n a_{ij} x_j
+    = \sum_{j=1}^n \frac1n x_j
+    = \frac1n \sum_{j=1}^n x_j
+    = \bar x
+  \end{equation*}
+  for all \(i \in \{1, \ldots, n\}\).
+\item
+  We have
+  \begin{equation*}
+    a_{ij}
+    = \frac1n
+    = a_{ji}
+  \end{equation*}
+  for all \(i, j \in \{1, \ldots, n\}\) and thus \(A\) is symmetric.
+\item
+  We have
+  \(\mathbf{1}^\top \mathbf{1} = \sum_{i=1}^n 1 \cdot 1 = n\) and
+  thus
+  \begin{equation*}
+    A^2
+    = \bigl( \frac1n \mathbf{1} \mathbf{1}^\top \bigr)
+        \bigl( \frac1n \mathbf{1} \mathbf{1}^\top \bigr)
+    = \frac{1}{n^2} \mathbf{1}
+        \bigl(\mathbf{1}^\top\mathbf{1}\bigr) \mathbf{1}^\top
+    = \frac1n \mathbf{1} \mathbf{1}^\top
+    = A.
+  \end{equation*}
+  (Alternatively, we could use the fact that we know the entries
+  of~\(A\) and compute \(A^2\) explicitly.)
+\item
+  For the remaining statements we will use the fact that \(X\) is
+  normally distributed. We will repeatedly use the
+  result that if two random variables \(X\) and~\(Y\) are independent,
+  that then any function of \(X\) is independent of any function of
+  \(Y\).
+
+  In lectures we learned that, if \(A\) is symmetric and idempotent
+  and if \(\varepsilon\sim \mathcal{N}(0, I)\), then \(A\varepsilon\) and \((I-A)\varepsilon\) are
+  independent. Applying this result with
+  \(\varepsilon= (X - \mu \mathbf{1}) / \sigma\) we
+  find that \(AX = \sigma A\varepsilon+ \mu A \mathbf{1}\) and
+  \((I-A)X = \sigma (I-A)\varepsilon+ \mu (I-A)\mathbf{1}\)
+  are independent, since they are functions of \(A\varepsilon\) and \((I-A)\varepsilon\).
+
+  Since
+  \((I - A)^\top (I - A) = I^2 - I A - A I + A^2 = I - A - A + A = I - A\) we have
+  \begin{equation*}
+    X^\top (I-A)X
+    = X^\top (I - A)^\top (I-A)X
+    = \Bigl( (I-A)X \Bigr)^\top \Bigl( (I-A)X \Bigr).
+  \end{equation*}
+  Thus, \(X^\top (I-A)X\) is a function of \((I-A)X\) and as such is
+  also independent of \(AX\).
+\item
+  We have seen \((AX)_i = \bar X\) and thus
+  \(\bigl((I - A)X\bigr)_i = X_i - \bar X\). This gives
+  \begin{align*}
+    X^\top (I-A)X
+    &= \Bigl( (I-A)X \Bigr)^\top \Bigl( (I-A)X \Bigr) \\
+    &= \sum_{i=1}^n \Bigl( (I-A)X \Bigr)_i^2 \\
+    &= \sum_{i=1}^n (X_i - \bar X)^2
+  \end{align*}
+  Thus we can write the sample mean as \(\bar X = (AX)_i\), and the
+  sample variance as
+  \(\mathrm{s}_X^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2 = X^\top (I-A)X / (n-1)\), and if \(X\) is normally distributed the
+  two values \(\bar X\) and \(\mathrm{s}_X^2\) are independent.
+\end{itemize}
+
+\end{myanswers}
+
+\textbf{7.} Consider the following R commands:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data=}\NormalTok{stackloss)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = stack.loss \textasciitilde{} ., data = stackloss)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}7.2377 {-}1.7117 {-}0.4551  2.3614  5.6978 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#             Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept) {-}39.9197    11.8960  {-}3.356  0.00375 ** }
+\NormalTok{\# Air.Flow      0.7156     0.1349   5.307  5.8e{-}05 ***}
+\NormalTok{\# Water.Temp    1.2953     0.3680   3.520  0.00263 ** }
+\NormalTok{\# Acid.Conc.   {-}0.1521     0.1563  {-}0.973  0.34405    }
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 3.243 on 17 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.9136,  Adjusted R{-}squared:  0.8983 }
+\NormalTok{\# F{-}statistic:  59.9 on 3 and 17 DF,  p{-}value: 3.016e{-}09}
+\end{Highlighting}
+\end{Shaded}
+
+Either using this output, or using R to further inspect the built-in
+\texttt{stackloss} dataset, find a \(99\%\)-confidence interval for the
+parameter \(\beta_\mathtt{Acid.Conc.}\).
+
+\begin{myanswers}
+From lectures, we know that a confidence interval for a single
+coefficient~\(\beta_j\) is given by
+\begin{equation*}
+  [U, V]
+  = \Bigl[ \hat\beta_j - t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}},
+        \hat\beta_j + t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}} \Bigr],
+\end{equation*}
+where \(t_{n-p-1}\) is the \((1-\alpha/2)\)-quantile of the \(t\)-distribution,
+\(C_{jj} = (X^\top X)^{-1}_{jj}\), and \(X\) is the design matrix.
+
+We can read off the required values for computing the confidence
+interval from the output of \texttt{summary(m)}: the centre of the
+confidence interval can be found in the column \texttt{Estimate}, the
+standard error \(\sqrt{\widehat{\sigma^2} C_{jj}}\) is given in column
+\texttt{Std.\ Error}, and the value \(n-p-1\) for the \(t\)-quantile can be
+found as the \texttt{degrees\ of\ freedom} for the residual standard error,
+near the bottom of the output. Using these values, we can find a
+\(95\%\)-confidence interval for \texttt{Acid.Conc.} as
+follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{0.1521} \SpecialCharTok{{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.995}\NormalTok{, }\DecValTok{17}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.1563}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.1521} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.995}\NormalTok{, }\DecValTok{17}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.1563}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# [1] {-}0.6050934  0.3008934}
+\end{Highlighting}
+\end{Shaded}
+
+Thus, the confidence interval is \(\bigl[ -0.605, 0.301 \bigr]\).
+
+\end{myanswers}
+
+\textbf{8.} The file \texttt{20211020.csv} from
+
+\begin{itemize}
+\tightlist
+\item
+  \url{https://www1.maths.leeds.ac.uk/~voss/data/20211020.csv}
+\end{itemize}
+
+contains pairs of \((x, y)\) values. Fit the following models to the data:
+
+\begin{itemize}
+\item
+  \(y = \beta_0 + \beta_1 x + \varepsilon\)
+\item
+  \(y = \beta_0 + \beta_1 x + \beta_2 x^2 + \varepsilon\)
+\item
+  \(y = \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \varepsilon\)
+\end{itemize}
+
+For each model, create a ``residual plot'', \emph{i.e.} a scatter plot which
+has the fitted values on the horizontal axis and the residuals on the
+vertical axis. Comment on the resulting plots.
+
+\begin{myanswers}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/data/20211020.csv}
+\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/20211020.csv"}\NormalTok{)}
+
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P02Q08-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P02Q08-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m3), }\FunctionTok{resid}\NormalTok{(m3))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P02Q08-3.pdf}
+
+\end{myanswers}
 
 \clearpage
 
@@ -4271,8 +4574,8 @@ critical value is the \(1-\alpha\) quantile of this distribution:
 \NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(X)      }\CommentTok{\# 14}
 \NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{ncol}\NormalTok{(X) }\SpecialCharTok{{-}} \DecValTok{1}  \CommentTok{\# 4}
 \NormalTok{k }\OtherTok{\textless{}{-}} \DecValTok{4}
-\NormalTok{t }\OtherTok{\textless{}{-}} \FunctionTok{qf}\NormalTok{(}\FloatTok{0.95}\NormalTok{, k, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
-\NormalTok{t}
+\NormalTok{f }\OtherTok{\textless{}{-}} \FunctionTok{qf}\NormalTok{(}\FloatTok{0.95}\NormalTok{, k, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{f}
 \end{Highlighting}
 \end{Shaded}
 
@@ -4303,292 +4606,17 @@ significance level at which the test still rejects~\(H_0\).
 We see that \(H_0\) is rejected at significance level \(0.03891\),
 and thus also at \(\alpha=0.05\).
 
-\clearpage
-
-\hypertarget{P02}{%
-\section*{Problem Sheet 2}\label{P02}}
-\addcontentsline{toc}{section}{Problem Sheet 2}
-
-\excludecomment{myanswers}
-
-You should attempt all these questions and write up your solutions in advance
-of your workshop in week~4 where the answers will be discussed.
-
-\textbf{5.} Assume that \(X \sim \mathcal{N}(0, 1)\), \(Y\sim \chi^2(2)\) and
-\(Z \sim \chi^2(3)\) are independent. What are the distributions of
-the following random variables?
-
-\begin{itemize}
-\item
-  \(X^2\),
-\item
-  \(X^2 + Y + Z\),
-\item
-  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}}\),
-\item
-  \(\displaystyle\frac{2X^2}{Y}\), and
-\item
-  \(1.5\, Y/Z\).
-\end{itemize}
-
-\begin{myanswers}
-
-The distributions involved in this question are the normal
-distribution, the \(\chi^2\)-dis-tri-bu-tion, the \(t\)-distribution
-and the \(F\)-distribution. The general rules are: (1) the sum of
-squares of \(d\) independent, standard normally distributed random
-variables follows a \(\chi^2(d)\)-distribution. (2) If
-\(Z\sim\mathcal{N}(0,1)\) and \(V \sim \chi^2(d)\) are independent, then
-\(Z / \sqrt{V / d} \sim t(d)\), and finally (3) If
-\(V_1\sim \chi^2(d_1)\) and \(V_2\sim \chi^2(d_2)\) are independent,
-then \((V_1/d_1)/(V_2/d_2) \sim F(d_1, d_2)\). Using these rules:
-
-\begin{itemize}
-\item
-  \(X^2 \sim \chi^2(1)\),
-\item
-  \(X^2 + Y + Z \sim \chi^2(1+2+3) = \chi^2(6)\),
-\item
-  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}} = \frac{X}{\sqrt{Y/2}} \sim t(2)\),
-\item
-  \(\displaystyle\frac{2X^2}{Y} = \frac{X^2/1}{Y/2} \sim F(1,2)\),
-\item
-  \(\displaystyle 1.5\, Y/Z = \frac{Y/2}{Z/3} \sim F(2, 3)\).
-\end{itemize}
-
-\end{myanswers}
-
-\textbf{6.} Let \(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\) and let \(X \sim \mathcal{N}(\mu, \sigma^2 I)\) be a normally-distributed random vector, where \(I\) is the
-\(n\times n\) identity matrix. Define \(A = \frac1n \mathbf{1} \mathbf{1}^\top \in \mathbb{R}^{n\times n}\).
-
-\begin{itemize}
-\item
-  Show that \((AX)_i = \bar X\) for all \(i \in \{1, \ldots, n\}\),
-  where \(\bar X = \frac1n \sum_{j=1}^n X_j\).
-\item
-  Show that \(A\) is symmetric.
-\item
-  Show that \(A\) is idempotent.
-\item
-  Use results from lectures to conclude that the random
-  variables \(AX\) and \(X^\top (I-A)X\) are independent.
-\item
-  Using the previous parts of the question, show that \(\bar X\)
-  and \(\frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2\) are independent.
-\end{itemize}
-
-\begin{myanswers}
-
-The matrix \(A = (a_{ij})\) has entries \(a_{ij} = 1/n\) for all
-\(i, j \in \{1, \ldots, n\}\). Using this observation, the statements
-of the first few questions follow easily:
-
-\begin{itemize}
-\item
-  We have
-  \begin{equation*}
-    (Ax)_i
-    = \sum_{j=1}^n a_{ij} x_j
-    = \sum_{j=1}^n \frac1n x_j
-    = \frac1n \sum_{j=1}^n x_j
-    = \bar x
-  \end{equation*}
-  for all \(i \in \{1, \ldots, n\}\).
-\item
-  We have
-  \begin{equation*}
-    a_{ij}
-    = \frac1n
-    = a_{ji}
-  \end{equation*}
-  for all \(i, j \in \{1, \ldots, n\}\) and thus \(A\) is symmetric.
-\item
-  We have
-  \(\mathbf{1}^\top \mathbf{1} = \sum_{i=1}^n 1 \cdot 1 = n\) and
-  thus
-  \begin{equation*}
-    A^2
-    = \bigl( \frac1n \mathbf{1} \mathbf{1}^\top \bigr)
-        \bigl( \frac1n \mathbf{1} \mathbf{1}^\top \bigr)
-    = \frac{1}{n^2} \mathbf{1}
-        \bigl(\mathbf{1}^\top\mathbf{1}\bigr) \mathbf{1}^\top
-    = \frac1n \mathbf{1} \mathbf{1}^\top
-    = A.
-  \end{equation*}
-  (Alternatively, we could use the fact that we know the entries
-  of~\(A\) and compute \(A^2\) explicitly.)
-\item
-  For the remaining statements we will use the fact that \(X\) is
-  normally distributed. We will repeatedly use the
-  result that if two random variables \(X\) and~\(Y\) are independent,
-  that then any function of \(X\) is independent of any function of
-  \(Y\).
-
-  In lectures we learned that, if \(A\) is symmetric and idempotent
-  and if \(\varepsilon\sim \mathcal{N}(0, I)\), then \(A\varepsilon\) and \((I-A)\varepsilon\) are
-  independent. Applying this result with
-  \(\varepsilon= (X - \mu \mathbf{1}) / \sigma\) we
-  find that \(AX = \sigma A\varepsilon+ \mu A \mathbf{1}\) and
-  \((I-A)X = \sigma (I-A)\varepsilon+ \mu (I-A)\mathbf{1}\)
-  are independent, since they are functions of \(A\varepsilon\) and \((I-A)\varepsilon\).
-
-  Since
-  \((I - A)^\top (I - A) = I^2 - I A - A I + A^2 = I - A - A + A = I - A\) we have
-  \begin{equation*}
-    X^\top (I-A)X
-    = X^\top (I - A)^\top (I-A)X
-    = \Bigl( (I-A)X \Bigr)^\top \Bigl( (I-A)X \Bigr).
-  \end{equation*}
-  Thus, \(X^\top (I-A)X\) is a function of \((I-A)X\) and as such is
-  also independent of \(AX\).
-\item
-  We have seen \((AX)_i = \bar X\) and thus
-  \(\bigl((I - A)X\bigr)_i = X_i - \bar X\). This gives
-  \begin{align*}
-    X^\top (I-A)X
-    &= \Bigl( (I-A)X \Bigr)^\top \Bigl( (I-A)X \Bigr) \\
-    &= \sum_{i=1}^n \Bigl( (I-A)X \Bigr)_i^2 \\
-    &= \sum_{i=1}^n (X_i - \bar X)^2
-  \end{align*}
-  Thus we can write the sample mean as \(\bar X = (AX)_i\), and the
-  sample variance as
-  \(\mathrm{s}_X^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2 = X^\top (I-A)X / (n-1)\), and if \(X\) is normally distributed the
-  two values \(\bar X\) and \(\mathrm{s}_X^2\) are independent.
-\end{itemize}
-
-\end{myanswers}
-
-\textbf{7.} Consider the following R commands:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data=}\NormalTok{stackloss)}
-\FunctionTok{summary}\NormalTok{(m)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = stack.loss \textasciitilde{} ., data = stackloss)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#     Min      1Q  Median      3Q     Max }
-\NormalTok{\# {-}7.2377 {-}1.7117 {-}0.4551  2.3614  5.6978 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#             Estimate Std. Error t value Pr(\textgreater{}|t|)    }
-\NormalTok{\# (Intercept) {-}39.9197    11.8960  {-}3.356  0.00375 ** }
-\NormalTok{\# Air.Flow      0.7156     0.1349   5.307  5.8e{-}05 ***}
-\NormalTok{\# Water.Temp    1.2953     0.3680   3.520  0.00263 ** }
-\NormalTok{\# Acid.Conc.   {-}0.1521     0.1563  {-}0.973  0.34405    }
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 3.243 on 17 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.9136,  Adjusted R{-}squared:  0.8983 }
-\NormalTok{\# F{-}statistic:  59.9 on 3 and 17 DF,  p{-}value: 3.016e{-}09}
-\end{Highlighting}
-\end{Shaded}
-
-Either using this output, or using R to further inspect the built-in
-\texttt{stackloss} dataset, find a \(99\%\)-confidence interval for the
-parameter \(\beta_\mathtt{Acid.Conc.}\).
-
-\begin{myanswers}
-From lectures, we know that a confidence interval for a single
-coefficient~\(\beta_j\) is given by
-\begin{equation*}
-  [U, V]
-  = \Bigl[ \hat\beta_j - t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}},
-        \hat\beta_j + t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}} \Bigr],
-\end{equation*}
-where \(t_{n-p-1}\) is the \((1-\alpha/2)\)-quantile of the \(t\)-distribution,
-\(C_{jj} = (X^\top X)^{-1}_{jj}\), and \(X\) is the design matrix.
-
-We can read off the required values for computing the confidence
-interval from the output of \texttt{summary(m)}: the centre of the
-confidence interval can be found in the column \texttt{Estimate}, the
-standard error \(\sqrt{\widehat{\sigma^2} C_{jj}}\) is given in column
-\texttt{Std.\ Error}, and the value \(n-p-1\) for the \(t\)-quantile can be
-found as the \texttt{degrees\ of\ freedom} for the residual standard error,
-near the bottom of the output. Using these values, we can find a
-\(95\%\)-confidence interval for \texttt{Acid.Conc.} as
-follows:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{0.1521} \SpecialCharTok{{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.995}\NormalTok{, }\DecValTok{17}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.1563}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.1521} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.995}\NormalTok{, }\DecValTok{17}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.1563}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# [1] {-}0.6050934  0.3008934}
-\end{Highlighting}
-\end{Shaded}
-
-Thus, the confidence interval is \(\bigl[ -0.605, 0.301 \bigr]\).
-
-\end{myanswers}
-
-\textbf{8.} The file \texttt{20211020.csv} from
+\textbf{Summary}
 
 \begin{itemize}
 \tightlist
 \item
-  \url{https://www1.maths.leeds.ac.uk/~voss/data/20211020.csv}
+  We have illustrated the results of sections 5 and 5 with the help
+  of examples.
+\item
+  We have learned how to use the \texttt{lm()} output to compute confidence
+  intervals and to perform hypothesis tests.
 \end{itemize}
-
-contains pairs of \((x, y)\) values. Fit the following models to the data:
-
-\begin{itemize}
-\item
-  \(y = \beta_0 + \beta_1 x + \varepsilon\)
-\item
-  \(y = \beta_0 + \beta_1 x + \beta_2 x^2 + \varepsilon\)
-\item
-  \(y = \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \varepsilon\)
-\end{itemize}
-
-For each model, create a ``residual plot'', \emph{i.e.} a scatter plot which
-has the fitted values on the horizontal axis and the residuals on the
-vertical axis. Comment on the resulting plots.
-
-\begin{myanswers}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/data/20211020.csv}
-\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/20211020.csv"}\NormalTok{)}
-
-\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{data =}\NormalTok{ d)}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P02Q08-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d)}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P02Q08-2.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d)}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m3), }\FunctionTok{resid}\NormalTok{(m3))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P02Q08-3.pdf}
-
-\end{myanswers}
 
 \clearpage
 
