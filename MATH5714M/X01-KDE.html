@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="index.html"/>
-<link rel="next" href="X02-Bias.html"/>
+<link rel="next" href="I01-KDE.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -128,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </style>
 
 
-<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="jvstyle.css" type="text/css" />
 </head>
 
 <body>
@@ -160,6 +160,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.2.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernels"><i class="fa fa-check"></i><b>1.2.3</b> Kernels</a></li>
 </ul></li>
 <li class="chapter" data-level="1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation-in-r"><i class="fa fa-check"></i><b>1.3</b> Kernel Density Estimation in R</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I01-KDE.html"><a href="I01-KDE.html"><i class="fa fa-check"></i>Interlude: Kernel Density Estimation in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I01-KDE.html"><a href="I01-KDE.html#direct-implementation"><i class="fa fa-check"></i>Direct Implementation</a></li>
+<li class="chapter" data-level="" data-path="I01-KDE.html"><a href="I01-KDE.html#speed-improvements"><i class="fa fa-check"></i>Speed Improvements</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="X02-Bias.html"><a href="X02-Bias.html"><i class="fa fa-check"></i><b>2</b> The Bias of Kernel Density Estimates</a>
 <ul>
@@ -245,10 +250,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="X01-KDE" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">Section 1</span> Kernel Density Estimation<a href="X01-KDE.html#X01-KDE" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<!--
-TODO(voss): maybe also show how to compute KDE from scratch, using
-outer() and apply()?
--->
 <p>In this section we discuss the topic of “Kernel Density Estimation”.
 Here we suppose we are given data <span class="math inline">\(x_1,\ldots, x_n \in\mathbb{R}^d\)</span> from an
 unknown probability density, say <span class="math inline">\(f\)</span>. Our objective is to estimate
@@ -365,12 +366,12 @@ Figure 1.3: This figure demonstrates the consequences of choosing a too small bu
 <p>Finally, even if reasonable bucket sizes are chosen, the result can
 depend quite strongly on the exact locations of these buckets. To illustrate
 this effect, we consider a
-<a href="https://teaching.seehuhn.de/data/buffalo/">dataset about the annual amount of snow</a>
+<a href="https://www1.maths.leeds.ac.uk/~voss/data/buffalo/">dataset about the annual amount of snow</a>
 falling in Buffalo, New York for different years. Figures <a href="X01-KDE.html#fig:buffalo1">1.4</a>
 and <a href="X01-KDE.html#fig:buffalo2">1.5</a> show the same data in two different ways,
 allowing to come to different conclusions about the distribution.</p>
 
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="X01-KDE.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># downloaded from https://teaching.seehuhn.de/data/buffalo/</span></span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="X01-KDE.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># downloaded from https://www1.maths.leeds.ac.uk/~voss/data/buffalo/</span></span>
 <span id="cb3-2"><a href="X01-KDE.html#cb3-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/buffalo.csv&quot;</span>)</span>
 <span id="cb3-3"><a href="X01-KDE.html#cb3-3" aria-hidden="true" tabindex="-1"></a>snowfall <span class="ot">&lt;-</span> x<span class="sc">$</span>snowfall</span>
 <span id="cb3-4"><a href="X01-KDE.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(snowfall, <span class="at">probability =</span> <span class="cn">TRUE</span>,</span>
@@ -548,8 +549,8 @@ below. A more exhautive list can, for example, be found
 \end{equation*}\]</span></p>
 <p><img src="MATH5714M_files/figure-html/kUniform-1.png" width="172.8" /></p>
 </div>
-<div id="triangular-kernel" class="section level4 hasAnchor" number="1.2.3.2">
-<h4><span class="header-section-number">1.2.3.2</span> Triangular Kernel<a href="X01-KDE.html#triangular-kernel" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div id="triangular" class="section level4 hasAnchor" number="1.2.3.2">
+<h4><span class="header-section-number">1.2.3.2</span> Triangular Kernel<a href="X01-KDE.html#triangular" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p><span class="math display">\[\begin{equation*}
   K(x)
   = \begin{cases}
@@ -596,7 +597,7 @@ to the case where the probability distribution with density
 <span class="math inline">\(K_h\)</span> has variance 1.</p></li>
 <li><p><code>kernel = ...</code> can be used to choose the kernel.
 Choices incluse <code>"rectangular"</code> (the uniform kernel), <code>"triangular"</code>,
-<code>"epanechnikov"</code> and <code>"gaussian"</code>.</p></li>
+<code>"epanechnikov"</code> and <code>"gaussian"</code>. The default value is <code>"gaussian"</code>.</p></li>
 </ul>
 <p>Details about how to call <code>density()</code> can be found by using the
 <a href="https://rdrr.io/r/stats/density.html">command <code>help(density)</code></a> in R.</p>
@@ -613,21 +614,21 @@ about the kernel density estimate.</p>
 ##  $ data.name: chr &quot;snowfall&quot;
 ##  $ has.na   : logi FALSE
 ##  - attr(*, &quot;class&quot;)= chr &quot;density&quot;</code></pre>
-<p>The field <code>$x</code> and <code>$y</code> contain the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> coordinates, respectively,
+<p>The fields <code>$x</code> and <code>$y</code> contain the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> coordinates, respectively,
 of points on the <span class="math inline">\(x \mapsto \hat f_h(x)\)</span> curve, which approximates <span class="math inline">\(f\)</span>.
 The field <code>$bw</code> shows the numeric value for the bandwidth chosen by
 the heuristic. The returned object can also directly be used
 as an argument to <code>plot()</code> and <code>lines()</code>, to add the graph of <span class="math inline">\(\hat f_h\)</span>
-to a plot. The commands in figure <a href="X01-KDE.html#fig:snow-dens-col">1.7</a> show how the
-command <code>density()</code> can be used and illustrate the effect of the
-bandwidth parameter.</p>
+to a plot.</p>
+<p>The following code illustrates the use <code>density()</code> with different bandwidth
+bandwidth parameter. The result is shown in figure <a href="X01-KDE.html#fig:snow-dens-col">1.7</a>.</p>
 
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="X01-KDE.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
 <span id="cb8-2"><a href="X01-KDE.html#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="X01-KDE.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (bw <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">8</span>)) {</span>
 <span id="cb8-4"><a href="X01-KDE.html#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="fu">density</span>(snowfall, <span class="at">bw =</span> bw, <span class="at">kernel =</span> <span class="st">&quot;triangular&quot;</span>, <span class="at">n =</span> <span class="dv">1000</span>),</span>
 <span id="cb8-5"><a href="X01-KDE.html#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">200</span>),</span>
-<span id="cb8-6"><a href="X01-KDE.html#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.03</span>),</span>
+<span id="cb8-6"><a href="X01-KDE.html#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.025</span>),</span>
 <span id="cb8-7"><a href="X01-KDE.html#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="fu">paste</span>(<span class="st">&quot;bandwidth =&quot;</span>, bw),</span>
 <span id="cb8-8"><a href="X01-KDE.html#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="cn">NA</span>)</span>
 <span id="cb8-9"><a href="X01-KDE.html#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
@@ -655,7 +656,7 @@ Figure 1.7: This figure illustrates how the bandwidth of a kernel density estima
         </div>
       </div>
 <a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="X02-Bias.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="I01-KDE.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
