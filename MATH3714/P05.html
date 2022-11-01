@@ -424,11 +424,11 @@ of your workshop in week 11 where the answers will be discussed.</p>
 </ol>
 <div class="myanswers">
 <p>We can load the data into R as follows:</p>
-<div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb296-1"><a href="P05.html#cb296-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/</span></span>
-<span id="cb296-2"><a href="P05.html#cb296-2" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/P05Q17.csv&quot;</span>)</span>
-<span id="cb296-3"><a href="P05.html#cb296-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the order of levels:</span></span>
-<span id="cb296-4"><a href="P05.html#cb296-4" aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>x3 <span class="ot">&lt;-</span> <span class="fu">factor</span>(dd<span class="sc">$</span>x3, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;R&quot;</span>, <span class="st">&quot;G&quot;</span>, <span class="st">&quot;B&quot;</span>))</span>
-<span id="cb296-5"><a href="P05.html#cb296-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dd)</span></code></pre></div>
+<div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb297-1"><a href="P05.html#cb297-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/</span></span>
+<span id="cb297-2"><a href="P05.html#cb297-2" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/P05Q17.csv&quot;</span>)</span>
+<span id="cb297-3"><a href="P05.html#cb297-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the order of levels:</span></span>
+<span id="cb297-4"><a href="P05.html#cb297-4" aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>x3 <span class="ot">&lt;-</span> <span class="fu">factor</span>(dd<span class="sc">$</span>x3, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;R&quot;</span>, <span class="st">&quot;G&quot;</span>, <span class="st">&quot;B&quot;</span>))</span>
+<span id="cb297-5"><a href="P05.html#cb297-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dd)</span></code></pre></div>
 <pre class="rOutput"><code>         x1         x2 x3        y
 1  1.940066 -0.7755552  B 2.709368
 2 -1.214413  0.4842872  R 1.254138
@@ -446,8 +446,8 @@ Show that the behaviour of the residuals depends on the levels of <span class="m
 </ol>
 <div class="myanswers">
 <p>To fit a simple linear model:</p>
-<div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb298-1"><a href="P05.html#cb298-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
-<span id="cb298-2"><a href="P05.html#cb298-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb299-1"><a href="P05.html#cb299-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
+<span id="cb299-2"><a href="P05.html#cb299-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = y ~ ., data = dd)
@@ -470,9 +470,9 @@ Residual standard error: 1.54 on 45 degrees of freedom
 Multiple R-squared:  0.7044,    Adjusted R-squared:  0.6781 
 F-statistic:  26.8 on 4 and 45 DF,  p-value: 2.082e-11</code></pre>
 <p>In a residual plot we can colour-code the residuals by the level of <span class="math inline">\(x_3\)</span>:</p>
-<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="P05.html#cb300-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m),</span>
-<span id="cb300-2"><a href="P05.html#cb300-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">as.numeric</span>(dd<span class="sc">$</span>x3) <span class="sc">+</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="fu">as.numeric</span>(dd<span class="sc">$</span>x3) <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb300-3"><a href="P05.html#cb300-3" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="at">legend =</span> <span class="fu">levels</span>(dd<span class="sc">$</span>x3), <span class="at">col=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">pch =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="P05.html#cb301-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m),</span>
+<span id="cb301-2"><a href="P05.html#cb301-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">as.numeric</span>(dd<span class="sc">$</span>x3) <span class="sc">+</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="fu">as.numeric</span>(dd<span class="sc">$</span>x3) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb301-3"><a href="P05.html#cb301-3" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="at">legend =</span> <span class="fu">levels</span>(dd<span class="sc">$</span>x3), <span class="at">col=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">pch =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/P05Q17-1.png" width="672" /></p>
 <p>This shows that that the residuals for level <code>G</code> are much smaller
 than for the other levels.</p>
@@ -487,8 +487,8 @@ chosen model.</li>
 </ol>
 <div class="myanswers">
 <p>We can start by trying all interaction terms:</p>
-<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="P05.html#cb301-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd)</span>
-<span id="cb301-2"><a href="P05.html#cb301-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
+<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb302-1"><a href="P05.html#cb302-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd)</span>
+<span id="cb302-2"><a href="P05.html#cb302-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = y ~ .^2, data = dd)
@@ -519,8 +519,8 @@ F-statistic:  6160 on 9 and 40 DF,  p-value: &lt; 2.2e-16</code></pre>
 different from zero and the adjusted <span class="math inline">\(R^2\)</span>-value has
 dramatically increased. A good choice of model seems
 to be <code>y ~ x1 + x2 + x1:x3 + x2:x3</code></p>
-<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="P05.html#cb303-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x1<span class="sc">:</span>x3 <span class="sc">+</span> x2<span class="sc">:</span>x3, <span class="at">data =</span> dd)</span>
-<span id="cb303-2"><a href="P05.html#cb303-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code></pre></div>
+<div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb304-1"><a href="P05.html#cb304-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x1<span class="sc">:</span>x3 <span class="sc">+</span> x2<span class="sc">:</span>x3, <span class="at">data =</span> dd)</span>
+<span id="cb304-2"><a href="P05.html#cb304-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = y ~ x1 + x2 + x1:x3 + x2:x3, data = dd)
@@ -573,8 +573,8 @@ Consider the dataset at</p>
 <p>Identify the <span class="math inline">\(x\)</span>-space outlier in this dataset.</p>
 <div class="myanswers">
 <p>We start by loading the data into R:</p>
-<div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb305-1"><a href="P05.html#cb305-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P05Q18.csv&quot;</span>)</span>
-<span id="cb305-2"><a href="P05.html#cb305-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(X)</span></code></pre></div>
+<div class="sourceCode" id="cb306"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb306-1"><a href="P05.html#cb306-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://www1.maths.leeds.ac.uk/~voss/2021/MATH3714/P05Q18.csv&quot;</span>)</span>
+<span id="cb306-2"><a href="P05.html#cb306-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(X)</span></code></pre></div>
 <pre class="rOutput"><code>            x1          x2         x3         x4
 1 -1.359560124  0.66310168  2.5866758 -1.7229394
 2  0.624644511 -0.01925607 -0.1692926 -0.5092775
@@ -583,17 +583,17 @@ Consider the dataset at</p>
 5  0.355021570 -0.58332351  0.2386221 -0.1934059
 6  0.002907357 -0.69562237  0.5365051  0.3047116</code></pre>
 <p>To identify the outlier, we compute the leverage of each sample.</p>
-<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="P05.html#cb307-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(X)</span>
-<span id="cb307-2"><a href="P05.html#cb307-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
-<span id="cb307-3"><a href="P05.html#cb307-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diag</span>(H))</span></code></pre></div>
+<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb308-1"><a href="P05.html#cb308-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(X)</span>
+<span id="cb308-2"><a href="P05.html#cb308-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
+<span id="cb308-3"><a href="P05.html#cb308-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diag</span>(H))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/P05Q18a-1.png" width="672" /></p>
 <p>The plot shows that one sample has a much larger leverage than
 the other samples.</p>
-<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb308-1"><a href="P05.html#cb308-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which.max</span>(<span class="fu">diag</span>(H))</span></code></pre></div>
+<div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb309-1"><a href="P05.html#cb309-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which.max</span>(<span class="fu">diag</span>(H))</span></code></pre></div>
 <pre class="rOutput"><code>[1] 96</code></pre>
 <p>Thus, the <span class="math inline">\(x\)</span>-space outlier is in row 96 of the matrix <span class="math inline">\(X\)</span>.</p>
 <p>Note that the outlier does not look special on a pair scatter plot:</p>
-<div class="sourceCode" id="cb310"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb310-1"><a href="P05.html#cb310-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(X, <span class="at">col =</span> (<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(X) <span class="sc">==</span> <span class="dv">96</span>) <span class="sc">+</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="P05.html#cb311-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(X, <span class="at">col =</span> (<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(X) <span class="sc">==</span> <span class="dv">96</span>) <span class="sc">+</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/P05Q18b-1.png" width="672" /></p>
 </div>
 </div>

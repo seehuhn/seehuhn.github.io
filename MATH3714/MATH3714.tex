@@ -4665,6 +4665,7 @@ are used:
 \item
   A plot of \(\hat\varepsilon_i\) \emph{vs.} \(\hat y_i\). If the variance of the residuals
   seems to increase with \(\hat y\) then a transformation may be necessary.
+  This type of plot is often called a ``residual plot''.
 \item
   A plot of \(\hat\varepsilon_i\) \emph{vs.} any explanatory variables not
   used in the model. A relationship suggests that the variable should be
@@ -4687,7 +4688,8 @@ are used:
   A plot of \(x_j\) \emph{vs.} \(x_k\) for \(j\neq k\) can also be useful.
   If two or more regressors are highly correlated, we say that
   multicollinearity is present. When this occurs the least squares estimate
-  \(\hat\beta\) becomes numerically unstable.
+  \(\hat\beta\) becomes numerically unstable. (We will learn more about this
+  effect in chapter~\ref{S10-multicoll}.)
 \end{enumerate}
 
 \begin{example}
@@ -4707,6 +4709,26 @@ Clearly the stack loss increases with water temperature, but the
 relationship may not be linear. It may make sense to include
 the square of the water temperature as an additional input variable
 in the model.
+\end{example}
+
+\begin{example}
+\protect\hypertarget{exm:stackloss-resid}{}\label{exm:stackloss-resid}To produce a ``residual plot'', we first need to fit a model to the data.
+For the \texttt{stackloss} dataset this can be done as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m),}
+     \AttributeTok{xlab =} \StringTok{"fitted value"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residual"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/stackloss-resid-1.pdf}
+
+We can see that the residuals are clustered around zero as expected.
+Since there are no obvious patterns, the plot does not indicate any
+problems with model fit.
 \end{example}
 
 \hypertarget{R-squared}{%
@@ -4981,6 +5003,16 @@ As expected, the \(R^2\) value has increased here (from 0.9136 to 0.9334).
 Since the adjusted \(R^2\) value has also increased (from 0.8983 to 0.9167),
 the extended model may be better than the original model.
 \end{example}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  Diagnostic plots can help to discover problems with model fit.
+\item
+  The \(R^2\) value is a numerical measure of the goodness of fit of a model.
+\end{itemize}
 
 \clearpage
 

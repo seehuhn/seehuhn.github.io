@@ -392,8 +392,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!--
 TODO (voss):
 - this section could be longer
-- add a summary at the end
-- show a standard residual plot as an example
 - maybe merge with section 13.3?
 -->
 <p>The traditional principle of data analysis could be described by the following
@@ -429,7 +427,8 @@ relationship (in this plot, or the ones above) suggests a higher-order term,
 perhaps a quadratic in the explanatory variable, should be added to the
 model. Or possibly a transformation.</p></li>
 <li><p>A plot of <span class="math inline">\(\hat\varepsilon_i\)</span> <em>vs.</em> <span class="math inline">\(\hat y_i\)</span>. If the variance of the residuals
-seems to increase with <span class="math inline">\(\hat y\)</span> then a transformation may be necessary.</p></li>
+seems to increase with <span class="math inline">\(\hat y\)</span> then a transformation may be necessary.
+This type of plot is often called a “residual plot”.</p></li>
 <li><p>A plot of <span class="math inline">\(\hat\varepsilon_i\)</span> <em>vs.</em> any explanatory variables not
 used in the model. A relationship suggests that the variable should be
 included.</p></li>
@@ -448,7 +447,8 @@ time.</p></li>
 <li><p>A plot of <span class="math inline">\(x_j\)</span> <em>vs.</em> <span class="math inline">\(x_k\)</span> for <span class="math inline">\(j\neq k\)</span> can also be useful.
 If two or more regressors are highly correlated, we say that
 multicollinearity is present. When this occurs the least squares estimate
-<span class="math inline">\(\hat\beta\)</span> becomes numerically unstable.</p></li>
+<span class="math inline">\(\hat\beta\)</span> becomes numerically unstable. (We will learn more about this
+effect in chapter <a href="S10-multicoll.html#S10-multicoll">10</a>.)</p></li>
 </ol>
 <div class="example">
 <p><span id="exm:stackloss-plot" class="example"><strong>Example 8.1  </strong></span>An example for the first type of diagnostic plot would be to
@@ -460,6 +460,18 @@ plot <code>stack.loss</code> against <code>Water.Temp</code> for the <code>stack
 relationship may not be linear. It may make sense to include
 the square of the water temperature as an additional input variable
 in the model.</p>
+</div>
+<div class="example">
+<p><span id="exm:stackloss-resid" class="example"><strong>Example 8.2  </strong></span>To produce a “residual plot”, we first need to fit a model to the data.
+For the <code>stackloss</code> dataset this can be done as follows:</p>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="S08-diagnostics.html#cb126-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb126-2"><a href="S08-diagnostics.html#cb126-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m),</span>
+<span id="cb126-3"><a href="S08-diagnostics.html#cb126-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted value&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residual&quot;</span>)</span>
+<span id="cb126-4"><a href="S08-diagnostics.html#cb126-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/stackloss-resid-1.png" width="672" /></p>
+<p>We can see that the residuals are clustered around zero as expected.
+Since there are no obvious patterns, the plot does not indicate any
+problems with model fit.</p>
 </div>
 </div>
 <div id="R-squared" class="section level2 hasAnchor" number="8.2">
@@ -589,15 +601,15 @@ always have <span class="math inline">\(R^2 \in [0, 1]\)</span>. A large value o
 the residuals are small, compared to the sample variance of the <span class="math inline">\(y_i\)</span>
 and thus often indicates good model fit.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-29" class="example"><strong>Example 8.2  </strong></span>We can easily compute the <span class="math inline">\(R^2\)</span> value for the <code>stackloss</code> dataset
+<p><span id="exm:unlabeled-div-29" class="example"><strong>Example 8.3  </strong></span>We can easily compute the <span class="math inline">\(R^2\)</span> value for the <code>stackloss</code> dataset
 manually:</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="S08-diagnostics.html#cb126-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
-<span id="cb126-2"><a href="S08-diagnostics.html#cb126-2" aria-hidden="true" tabindex="-1"></a>R.squared <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">var</span>(<span class="fu">resid</span>(m)) <span class="sc">/</span> <span class="fu">var</span>(stackloss<span class="sc">$</span>stack.loss)</span>
-<span id="cb126-3"><a href="S08-diagnostics.html#cb126-3" aria-hidden="true" tabindex="-1"></a>R.squared</span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="S08-diagnostics.html#cb127-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb127-2"><a href="S08-diagnostics.html#cb127-2" aria-hidden="true" tabindex="-1"></a>R.squared <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">var</span>(<span class="fu">resid</span>(m)) <span class="sc">/</span> <span class="fu">var</span>(stackloss<span class="sc">$</span>stack.loss)</span>
+<span id="cb127-3"><a href="S08-diagnostics.html#cb127-3" aria-hidden="true" tabindex="-1"></a>R.squared</span></code></pre></div>
 <pre class="rOutput"><code>[1] 0.9135769</code></pre>
 <p>We can also find this value near the bottom of the output of
 <code>summary(m)</code>, listed as <code>Multiple R-squared</code>:</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="S08-diagnostics.html#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="S08-diagnostics.html#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = stack.loss ~ ., data = stackloss)
@@ -634,21 +646,21 @@ attempt to compensate for this effect is the adjusted <span class="math inline">
 <p>The value <span class="math inline">\(R^2_\mathrm{adj}\)</span> is always smaller than the <span class="math inline">\(R^2\)</span> value, and
 <span class="math inline">\(R^2_\mathrm{adj}\)</span> can be (slightly) negative.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-30" class="example"><strong>Example 8.3  </strong></span>The adjusted <span class="math inline">\(R^2\)</span> value for the stackloss dataset
+<p><span id="exm:unlabeled-div-30" class="example"><strong>Example 8.4  </strong></span>The adjusted <span class="math inline">\(R^2\)</span> value for the stackloss dataset
 can be found as follows:</p>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="S08-diagnostics.html#cb130-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(stackloss)</span>
-<span id="cb130-2"><a href="S08-diagnostics.html#cb130-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(stackloss) <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb130-3"><a href="S08-diagnostics.html#cb130-3" aria-hidden="true" tabindex="-1"></a>R.squared.adj <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> R.squared)</span>
-<span id="cb130-4"><a href="S08-diagnostics.html#cb130-4" aria-hidden="true" tabindex="-1"></a>R.squared.adj</span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="S08-diagnostics.html#cb131-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(stackloss)</span>
+<span id="cb131-2"><a href="S08-diagnostics.html#cb131-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(stackloss) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb131-3"><a href="S08-diagnostics.html#cb131-3" aria-hidden="true" tabindex="-1"></a>R.squared.adj <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> R.squared)</span>
+<span id="cb131-4"><a href="S08-diagnostics.html#cb131-4" aria-hidden="true" tabindex="-1"></a>R.squared.adj</span></code></pre></div>
 <pre class="rOutput"><code>[1] 0.8983258</code></pre>
 <p>We can also find this value near the bottom of the output of
 <code>summary(m)</code>, listed as <code>Adjusted R-squared</code>.</p>
 </div>
 <div class="example">
-<p><span id="exm:unlabeled-div-31" class="example"><strong>Example 8.4  </strong></span>As suggested in example <a href="S08-diagnostics.html#exm:stackloss-plot">8.1</a>, we may want to
+<p><span id="exm:unlabeled-div-31" class="example"><strong>Example 8.5  </strong></span>As suggested in example <a href="S08-diagnostics.html#exm:stackloss-plot">8.1</a>, we may want to
 include a new quadratic term in the stackloss dataset:</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="S08-diagnostics.html#cb132-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> . <span class="sc">+</span> <span class="fu">I</span>(Water.Temp<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> stackloss)</span>
-<span id="cb132-2"><a href="S08-diagnostics.html#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="S08-diagnostics.html#cb133-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> . <span class="sc">+</span> <span class="fu">I</span>(Water.Temp<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> stackloss)</span>
+<span id="cb133-2"><a href="S08-diagnostics.html#cb133-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = stack.loss ~ . + I(Water.Temp^2), data = stackloss)
@@ -673,6 +685,13 @@ F-statistic: 56.02 on 4 and 16 DF,  p-value: 3.293e-09</code></pre>
 <p>As expected, the <span class="math inline">\(R^2\)</span> value has increased here (from 0.9136 to 0.9334).
 Since the adjusted <span class="math inline">\(R^2\)</span> value has also increased (from 0.8983 to 0.9167),
 the extended model may be better than the original model.</p>
+</div>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>Diagnostic plots can help to discover problems with model fit.</li>
+<li>The <span class="math inline">\(R^2\)</span> value is a numerical measure of the goodness of fit of a model.</li>
+</ul>
 </div>
 
 </div>

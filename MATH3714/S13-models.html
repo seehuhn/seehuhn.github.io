@@ -543,21 +543,21 @@ does not change <span class="math inline">\(\sigma^2\)</span> and thus <span cla
 determine the relative change in variance.</p>
 <p>We first compute the diagonal elements of <span class="math inline">\(\bigl( X^\top X \bigr)^{-1}\)</span>
 for the original dataset:</p>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="S13-models.html#cb213-1" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
-<span id="cb213-2"><a href="S13-models.html#cb213-2" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X1) <span class="sc">%*%</span> X1))</span>
-<span id="cb213-3"><a href="S13-models.html#cb213-3" aria-hidden="true" tabindex="-1"></a>d1</span></code></pre></div>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="S13-models.html#cb214-1" aria-hidden="true" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb214-2"><a href="S13-models.html#cb214-2" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X1) <span class="sc">%*%</span> X1))</span>
+<span id="cb214-3"><a href="S13-models.html#cb214-3" aria-hidden="true" tabindex="-1"></a>d1</span></code></pre></div>
 <pre class="rOutput"><code> (Intercept)     Air.Flow   Water.Temp   Acid.Conc. 
 13.452726695  0.001728874  0.012875424  0.002322167 </code></pre>
 <p>Now we add a column of noise and re-compute the values:</p>
-<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="S13-models.html#cb215-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211115</span>)</span>
-<span id="cb215-2"><a href="S13-models.html#cb215-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X1)</span>
-<span id="cb215-3"><a href="S13-models.html#cb215-3" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X1, <span class="fu">rnorm</span>(n))</span>
-<span id="cb215-4"><a href="S13-models.html#cb215-4" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X2) <span class="sc">%*%</span> X2))</span>
-<span id="cb215-5"><a href="S13-models.html#cb215-5" aria-hidden="true" tabindex="-1"></a>d2</span></code></pre></div>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="S13-models.html#cb216-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211115</span>)</span>
+<span id="cb216-2"><a href="S13-models.html#cb216-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X1)</span>
+<span id="cb216-3"><a href="S13-models.html#cb216-3" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X1, <span class="fu">rnorm</span>(n))</span>
+<span id="cb216-4"><a href="S13-models.html#cb216-4" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X2) <span class="sc">%*%</span> X2))</span>
+<span id="cb216-5"><a href="S13-models.html#cb216-5" aria-hidden="true" tabindex="-1"></a>d2</span></code></pre></div>
 <pre class="rOutput"><code> (Intercept)     Air.Flow   Water.Temp   Acid.Conc.              
 14.397515774  0.001730570  0.015195467  0.002796487  0.064828744 </code></pre>
 <p>Finally, we determine the change in variance in percent:</p>
-<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="S13-models.html#cb217-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> (d2[<span class="sc">-</span><span class="dv">5</span>] <span class="sc">-</span> d1) <span class="sc">/</span> d1, <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="S13-models.html#cb218-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> (d2[<span class="sc">-</span><span class="dv">5</span>] <span class="sc">-</span> d1) <span class="sc">/</span> d1, <span class="dv">3</span>)</span></code></pre></div>
 <pre class="rOutput"><code>(Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
       7.023       0.098      18.019      20.426 </code></pre>
 <p>We see that the variances of the <span class="math inline">\(\hat\beta_j\)</span> increased by up to <span class="math inline">\(20\%\)</span>

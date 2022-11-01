@@ -547,30 +547,30 @@ but we omit the tedious calculations here.</p>
 <p><span id="exm:unlabeled-div-35" class="example"><strong>Example 9.1  </strong></span>To illustrate the results of this subsection, we give a numerical example.
 In the example we consider the <code>stackloss</code> dataset, and study what happens
 when the first two observations are omitted:</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="S09-influence.html#cb134-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
-<span id="cb134-2"><a href="S09-influence.html#cb134-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),])</span>
-<span id="cb134-3"><a href="S09-influence.html#cb134-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m2) <span class="sc">-</span> <span class="fu">coef</span>(m1)</span></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="S09-influence.html#cb135-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb135-2"><a href="S09-influence.html#cb135-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),])</span>
+<span id="cb135-3"><a href="S09-influence.html#cb135-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m2) <span class="sc">-</span> <span class="fu">coef</span>(m1)</span></code></pre></div>
 <pre class="rOutput"><code>(Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
  0.86331016 -0.03780761 -0.02706305  0.02124533 </code></pre>
 <p>Using the result of lemma <a href="S09-influence.html#lem:hat-beta-I">9.2</a>, we can get the difference
 between the two estimates without using the model <code>m2</code>:</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="S09-influence.html#cb136-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m1)</span>
-<span id="cb136-2"><a href="S09-influence.html#cb136-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
-<span id="cb136-3"><a href="S09-influence.html#cb136-3" aria-hidden="true" tabindex="-1"></a>XI <span class="ot">&lt;-</span> X[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,]</span>
-<span id="cb136-4"><a href="S09-influence.html#cb136-4" aria-hidden="true" tabindex="-1"></a>hII <span class="ot">&lt;-</span> H[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb136-5"><a href="S09-influence.html#cb136-5" aria-hidden="true" tabindex="-1"></a>hat.epsI <span class="ot">&lt;-</span> <span class="fu">resid</span>(m1)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb136-6"><a href="S09-influence.html#cb136-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb136-7"><a href="S09-influence.html#cb136-7" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">as.vector</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X) <span class="sc">%*%</span> <span class="fu">t</span>(XI) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">diag</span>(<span class="dv">2</span>) <span class="sc">-</span> hII, hat.epsI))</span></code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="S09-influence.html#cb137-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m1)</span>
+<span id="cb137-2"><a href="S09-influence.html#cb137-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
+<span id="cb137-3"><a href="S09-influence.html#cb137-3" aria-hidden="true" tabindex="-1"></a>XI <span class="ot">&lt;-</span> X[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,]</span>
+<span id="cb137-4"><a href="S09-influence.html#cb137-4" aria-hidden="true" tabindex="-1"></a>hII <span class="ot">&lt;-</span> H[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb137-5"><a href="S09-influence.html#cb137-5" aria-hidden="true" tabindex="-1"></a>hat.epsI <span class="ot">&lt;-</span> <span class="fu">resid</span>(m1)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb137-6"><a href="S09-influence.html#cb137-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-7"><a href="S09-influence.html#cb137-7" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">as.vector</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X) <span class="sc">%*%</span> <span class="fu">t</span>(XI) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">diag</span>(<span class="dv">2</span>) <span class="sc">-</span> hII, hat.epsI))</span></code></pre></div>
 <pre class="rOutput"><code>[1]  0.86331016 -0.03780761 -0.02706305  0.02124533</code></pre>
 <p>This is the same result as we obtained above. (I used <code>as.vector()</code> to
 convert the result from a <span class="math inline">\(4\times 1\)</span> matrix into a vector.)</p>
 <p>Similarly, we can compare the residual sum of squares:
 A direct comparison gives</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="S09-influence.html#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(m2)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m1)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="S09-influence.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(m2)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m1)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] -15.41758</code></pre>
 <p>Using the result of lemma <a href="S09-influence.html#lem:sigma-I">9.3</a>, we get the same result
 without requiring <code>m2</code>:</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="S09-influence.html#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">t</span>(hat.epsI) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">diag</span>(<span class="dv">2</span>) <span class="sc">-</span> hII, hat.epsI)</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="S09-influence.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">t</span>(hat.epsI) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">diag</span>(<span class="dv">2</span>) <span class="sc">-</span> hII, hat.epsI)</span></code></pre></div>
 <pre class="rOutput"><code>          [,1]
 [1,] -15.41758</code></pre>
 <p>Again, the results using both methods agree.</p>
@@ -596,10 +596,10 @@ Using the correct prefactors the second result gives
 \end{equation*}\]</span></p>
 <p>We can find numerical values for these quantities using
 the function <code>influence()</code>:</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="S09-influence.html#cb142-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">10</span>)</span>
-<span id="cb142-2"><a href="S09-influence.html#cb142-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>)</span>
-<span id="cb142-3"><a href="S09-influence.html#cb142-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> stackloss)</span>
-<span id="cb142-4"><a href="S09-influence.html#cb142-4" aria-hidden="true" tabindex="-1"></a><span class="fu">influence</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="S09-influence.html#cb143-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">10</span>)</span>
+<span id="cb143-2"><a href="S09-influence.html#cb143-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>)</span>
+<span id="cb143-3"><a href="S09-influence.html#cb143-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> stackloss)</span>
+<span id="cb143-4"><a href="S09-influence.html#cb143-4" aria-hidden="true" tabindex="-1"></a><span class="fu">influence</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>$hat
    1    2    3    4 
 0.43 0.33 0.27 0.97 
@@ -662,10 +662,10 @@ Since this “lives on the scale” of an <span class="math inline">\(F_{p+1, n-
 we should compare <span class="math inline">\(D_i\)</span> to typical values of such a distribution. For
 example, we could consider the median. Here is a sample of median values
 for different <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span>:</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="S09-influence.html#cb144-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">100</span>)</span>
-<span id="cb144-2"><a href="S09-influence.html#cb144-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>)</span>
-<span id="cb144-3"><a href="S09-influence.html#cb144-3" aria-hidden="true" tabindex="-1"></a>xx <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">n =</span> n, <span class="at">p =</span> p)</span>
-<span id="cb144-4"><a href="S09-influence.html#cb144-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(xx, <span class="at">median =</span> <span class="fu">qf</span>(<span class="fl">0.5</span>, xx<span class="sc">$</span>p <span class="sc">+</span> <span class="dv">1</span>, xx<span class="sc">$</span>n <span class="sc">-</span> xx<span class="sc">$</span>p <span class="sc">-</span> <span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="S09-influence.html#cb145-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">100</span>)</span>
+<span id="cb145-2"><a href="S09-influence.html#cb145-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>)</span>
+<span id="cb145-3"><a href="S09-influence.html#cb145-3" aria-hidden="true" tabindex="-1"></a>xx <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">n =</span> n, <span class="at">p =</span> p)</span>
+<span id="cb145-4"><a href="S09-influence.html#cb145-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(xx, <span class="at">median =</span> <span class="fu">qf</span>(<span class="fl">0.5</span>, xx<span class="sc">$</span>p <span class="sc">+</span> <span class="dv">1</span>, xx<span class="sc">$</span>n <span class="sc">-</span> xx<span class="sc">$</span>p <span class="sc">-</span> <span class="dv">1</span>))</span></code></pre></div>
 <pre class="rOutput"><code>    n p    median
 1  10 1 0.7568285
 2  30 1 0.7105929
@@ -715,16 +715,16 @@ and dividing by <span class="math inline">\((p+1)\hat\sigma^2\)</span> completes
 <div class="example">
 <p><span id="exm:unlabeled-div-37" class="example"><strong>Example 9.2  </strong></span>To illustrate how Cook’s <span class="math inline">\(D\)</span> is computed, we use a small dataset with
 simulated data. We include an <span class="math inline">\(x\)</span>-space outlier:</p>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="S09-influence.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211026</span>)</span>
-<span id="cb146-2"><a href="S09-influence.html#cb146-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">6</span>))</span>
-<span id="cb146-3"><a href="S09-influence.html#cb146-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> <span class="fu">rnorm</span>(<span class="dv">7</span>)</span>
-<span id="cb146-4"><a href="S09-influence.html#cb146-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y)</span>
-<span id="cb146-5"><a href="S09-influence.html#cb146-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb146-6"><a href="S09-influence.html#cb146-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
-<span id="cb146-7"><a href="S09-influence.html#cb146-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m)</span>
-<span id="cb146-8"><a href="S09-influence.html#cb146-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb146-9"><a href="S09-influence.html#cb146-9" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">~</span> x[<span class="sc">-</span><span class="dv">1</span>])</span>
-<span id="cb146-10"><a href="S09-influence.html#cb146-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m2, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="S09-influence.html#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211026</span>)</span>
+<span id="cb147-2"><a href="S09-influence.html#cb147-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">6</span>))</span>
+<span id="cb147-3"><a href="S09-influence.html#cb147-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> <span class="fu">rnorm</span>(<span class="dv">7</span>)</span>
+<span id="cb147-4"><a href="S09-influence.html#cb147-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y)</span>
+<span id="cb147-5"><a href="S09-influence.html#cb147-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb147-6"><a href="S09-influence.html#cb147-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb147-7"><a href="S09-influence.html#cb147-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m)</span>
+<span id="cb147-8"><a href="S09-influence.html#cb147-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb147-9"><a href="S09-influence.html#cb147-9" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">~</span> x[<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb147-10"><a href="S09-influence.html#cb147-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m2, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/influence-1.png" width="672" /></p>
 <p>The black line in the plot is the regression line using all data,
 the red line is the regression line fitted using only the left-most
@@ -733,11 +733,11 @@ between the two lines makes it clear that the point at <span class="math inline"
 large effect on the estimated regression line. An easy way
 to compute the <span class="math inline">\(D\)</span>-values is the second formula from
 lemma <a href="S09-influence.html#lem:Cook-D-alt">9.4</a>:</p>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="S09-influence.html#cb147-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
-<span id="cb147-2"><a href="S09-influence.html#cb147-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
-<span id="cb147-3"><a href="S09-influence.html#cb147-3" aria-hidden="true" tabindex="-1"></a>hii <span class="ot">&lt;-</span> <span class="fu">diag</span>(H)</span>
-<span id="cb147-4"><a href="S09-influence.html#cb147-4" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> hii <span class="sc">/</span> <span class="dv">2</span> <span class="sc">/</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> hii)<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb147-5"><a href="S09-influence.html#cb147-5" aria-hidden="true" tabindex="-1"></a>D</span></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="S09-influence.html#cb148-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb148-2"><a href="S09-influence.html#cb148-2" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
+<span id="cb148-3"><a href="S09-influence.html#cb148-3" aria-hidden="true" tabindex="-1"></a>hii <span class="ot">&lt;-</span> <span class="fu">diag</span>(H)</span>
+<span id="cb148-4"><a href="S09-influence.html#cb148-4" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> hii <span class="sc">/</span> <span class="dv">2</span> <span class="sc">/</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> hii)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb148-5"><a href="S09-influence.html#cb148-5" aria-hidden="true" tabindex="-1"></a>D</span></code></pre></div>
 <pre class="rOutput"><code>          1           2           3           4           5           6 
 6.456405260 0.035318182 0.002129694 0.042504418 0.268374731 0.040765842 
           7 
@@ -746,7 +746,7 @@ lemma <a href="S09-influence.html#lem:Cook-D-alt">9.4</a>:</p>
 <span class="math inline">\(D_1 = 6.456\)</span>, and small values for the remaining <span class="math inline">\(D_i\)</span>.
 We can also find Cook’s <span class="math inline">\(D\)</span>-values in the output of the
 <code>influence.measures()</code> function:</p>
-<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="S09-influence.html#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">influence.measures</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="S09-influence.html#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="fu">influence.measures</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>Influence measures of
      lm(formula = y ~ x) :
 
