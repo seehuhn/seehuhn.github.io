@@ -4667,10 +4667,6 @@ are used:
   seems to increase with \(\hat y\) then a transformation may be necessary.
   This type of plot is often called a ``residual plot''.
 \item
-  A plot of \(\hat\varepsilon_i\) \emph{vs.} any explanatory variables not
-  used in the model. A relationship suggests that the variable should be
-  included.
-\item
   A \href{https://en.wikipedia.org/wiki/Q\%E2\%80\%93Q_plot}{Q-Q plot}
   of the residuals can be used to assess whether the residuals are normally
   distributed. These plots plot quantiles of the data against quantiles
@@ -5046,22 +5042,23 @@ corresponding to rows of~\(X\).
 Using the formula for the least squares estimate, we know that
 \begin{equation}
   \hat\beta^{(I)}
-  = (X_{(I)}^\top X_{(I)})^{-1} X_{(I)}^\top y,  \label{eq:hat-beta-I1}
+  = (X_{(I)}^\top X_{(I)})^{-1} X_{(I)}^\top y_{(I)},  \label{eq:hat-beta-I1}
 \end{equation}
-where now \(X_{(I)}\) is \(X\) with all rows \(i\in I\) removed. (We write the
+where now \(y^{(I)}\) is \(y\) with all \(y_i\) for \(i\in I\) removed and
+\(X_{(I)}\) is \(X\) with all rows \(i\in I\) removed. (We write the
 ``\((I)\)'' as a subscript, to make space for the transpose sign.) Our first aim
 is to find an explicit formula for the difference between \(\hat\beta\) and
 \(\hat\beta^{(I)}\).
 
 We have
 \begin{align*}
-  (X_{(I)}^\top y)_k
+  (X_{(I)}^\top y_{(I)})_k
   &= \sum_{j \notin I} X_{jk} y_j \\
   &= \sum_{j=1}^n X_{jk} y_j - \sum_{j\in I} X_{jk} y_j
 \end{align*}
 for all \(k \in \{0, \ldots, p\}\), and thus
 \begin{equation}
-  X_{(I)}^\top y
+  X_{(I)}^\top y_{(I)}
   = X^\top y - X_I^\top y_I,  \label{eq:X-I-top-y}
 \end{equation}
 where \(X_I\) stands for the matrix which only contains the rows \(i\in I\) of~the
@@ -5106,7 +5103,7 @@ column are in \(I\), and \(\hat\varepsilon_I = (\hat\varepsilon_i)_{i\in I} = (y
 
 The vector \(\hat\varepsilon_I\) consists of a subset of the original
 residuals, computed using the original \(\hat y\) and \(\hat\beta\). It does not
-refer to the modified estimate \(\hat\beta^{(I)}\) which was computing with some
+refer to the modified estimate \(\hat\beta^{(I)}\) which was computed with some
 observations omitted. Similarly, \(H_{II}\) is a submatrix of the original
 hat matrix.
 
