@@ -409,8 +409,6 @@ TODO:
 
 * try to shorten this section
 * add videos
-* Hunt down the source which introduces/popularises Mallows' Cp
-  and cite this
 * I believe the variance of \hat\beta_j always increases when
 inputs are added.  Is this true?  Can we prove this?
 
@@ -659,72 +657,6 @@ From this we get
 Substituting this expression into the definition of PRESS
 completes the proof.</p>
 </div></li>
-<li><p>We can consider
-<span class="math display">\[\begin{equation*}
-  C_q
-  := \frac{1}{\hat{\sigma}^2} \sum_{i=1}^n (y_i - \hat y_i)^2 - n + 2q.
-\end{equation*}\]</span>
-The subscript <span class="math inline">\(q\)</span> in <span class="math inline">\(C_q\)</span> denotes the number of parameters in the model.
-This quantity is called <strong>Mallows’ Cp</strong> or sometimes
-<strong>Mallows’ Ck</strong>. “Good” models have <span class="math inline">\(C_q \approx q\)</span>.</p>
-<p>The form of <span class="math inline">\(C_q\)</span> is explained by the fact that it approximates the
-quantity
-<span class="math display">\[\begin{equation*}
-  \Gamma_q
-  := \frac{1}{\sigma^2} \sum_{i=1}^n \mathop{\mathrm{MSE}}\nolimits(\hat y_i).
-\end{equation*}\]</span>
-To see that <span class="math inline">\(C_q \approx \Gamma_q\)</span> we first rewrite <span class="math inline">\(\Gamma_q\)</span> as
-<span class="math display">\[\begin{align*}
-  \Gamma_q
-  &amp;= \sum_{i=1}^n \Bigl( \mathop{\mathrm{Var}}(\hat y_i) + \mathop{\mathrm{bias}}(\hat y_i)^2 \Bigr) \\
-  &amp;= \frac{1}{\sigma^2} \sum_{i=1}^n \mathop{\mathrm{bias}}(\hat y_i)^2 + \frac{1}{\sigma^2} \sum_{i=1}^n \mathop{\mathrm{Var}}(\hat y_i).
-\end{align*}\]</span>
-Since <span class="math inline">\(\hat y = HY \sim \mathcal{N}(HX\beta, \sigma^2 HIH^\top) = \mathcal{N}(X\beta, \sigma^2 H)\)</span> we have <span class="math inline">\(\mathop{\mathrm{Var}}(\hat y_i) = \sigma^2 h_{ii}\)</span> were <span class="math inline">\(h_{ii}\)</span> are
-the diagonal elements of the hat matrix. Furthermore, using the trace
-operator (see appendix <a href="Sx1-matrices.html#trace">A.2.5</a>) we find
-<span class="math display">\[\begin{align*}
-  \sum_{i=1}^n h_{ii}
-  &amp;= \mathop{\mathrm{tr}}(H) \\
-  &amp;= \mathop{\mathrm{tr}}\bigl(X (X^\top X)^{-1} X^\top \bigr) \\
-  &amp;= \mathop{\mathrm{tr}}\bigl((X^\top X)^{-1} X^\top X \bigr) \\
-  &amp;= \mathop{\mathrm{tr}}(I) \\
-  &amp;= q,
-\end{align*}\]</span>
-and thus
-<span class="math display" id="eq:Gamma-q">\[\begin{equation}
-  \Gamma_q
-  = \frac{1}{\sigma^2} \sum_{i=1}^n \mathop{\mathrm{bias}}(\hat y_i)^2 + q.  \tag{13.1}
-\end{equation}\]</span>
-This shows that for a model where the <span class="math inline">\(\hat y_i\)</span> are unbiased,
-we have <span class="math inline">\(\Gamma_q = q\)</span>, and if there is a bias we have <span class="math inline">\(\Gamma_q &gt; q\)</span>.
-We now show that <span class="math inline">\(C_q \approx \Gamma_q\)</span>.</p>
-<p>We also have <span class="math inline">\(\hat y = \mathop{\mathrm{bias}}(\hat y) + HY\)</span> and thus
-<span class="math display">\[\begin{equation*}
-  Y - \hat y
-  = (I - H)Y - \mathop{\mathrm{bias}}(\hat y)
-  = (I - H) \varepsilon- \mathop{\mathrm{bias}}(\hat y).
-\end{equation*}\]</span>
-Using this relation, one can show that
-<span class="math display">\[\begin{align*}
-  \mathbb{E}\Bigl( \sum_{i=1}^n (y_i - \hat y_i)^2 \Bigr)
-  &amp;= (Y - \hat y)^\top (Y - \hat y) \\
-  &amp;= \dots \\
-  &amp;= \sum_{i=1}^n \mathop{\mathrm{bias}}(\hat y_i)^2 + (n-q) \sigma^2.
-\end{align*}\]</span>
-Substituting this result into the formula for <span class="math inline">\(\Gamma_q\)</span> we get
-<span class="math display">\[\begin{align*}
-  \Gamma_q
-  &amp;= \frac{1}{\sigma^2} \mathbb{E}\Bigl( \sum_{i=1}^n (y_i - \hat y_i)^2 \Bigr)
-      - (n-q)
-      + q \\
-  &amp;\approx \frac{1}{\sigma^2} \sum_{i=1}^n (y_i - \hat y_i)^2 - n + 2q \\
-  &amp;\approx \frac{1}{\hat\sigma^2} \sum_{i=1}^n (y_i - \hat y_i)^2 - n + 2q \\
-  &amp;= C_q.
-\end{align*}\]</span></p>
-<p>A plot of <span class="math inline">\(C_q\)</span> <em>vs.</em> <span class="math inline">\(q\)</span> will show adequate models as points
-close to the line <span class="math inline">\(C_q=q\)</span>. Points far from the line are not recommended,
-and, of those which lie close to the line, we generally prefer smaller
-models. The method relies on having a good estimate of <span class="math inline">\(\sigma^2\)</span>.</p></li>
 <li><p><strong>Akaike’s Information Criterion (AIC)</strong> is defined as
 <span class="math display">\[\begin{equation*}
   \mathrm{AIC}
