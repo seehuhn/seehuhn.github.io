@@ -284,7 +284,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#criteria"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
-<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Methods for Model Selection</a>
+<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Automatic Model Selection</a>
 <ul>
 <li class="chapter" data-level="14.1" data-path="S14-methods.html"><a href="S14-methods.html#exhaustive-search"><i class="fa fa-check"></i><b>14.1</b> Exhaustive Search</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-methods.html"><a href="S14-methods.html#search-algorithm"><i class="fa fa-check"></i><b>14.2</b> Search Algorithm</a></li>
@@ -391,9 +391,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Section 15</span> Factors<a href="S15-factors.html#S15-factors" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <!--
 TODO:
+* Rearrange the sections in the following order:
+  - 8.1 diagnostics
+  - 11.1-11.3 + 13.1-13.2 how to improve models?
+  - 8.2 + 13.3 quantitative measures to compare model fit
+  - 14 automatic model selection
+
+  - 15 Factors
+  - 16 Factor Examples
+
+  - 10+11.4 multicollinearity
+  - 12 ridge regression
+
+  - 9 Influence
+  - 17 robust
+
 * Try to understand/justify what it conceptually means to have
   categorical inputs in a linear model.  Is it *clear* that this means
-  different intercepts?
+  different intercepts? -> no!  So say this explicitly.
 * Get to the bottom of why the dimension is k-1.
   In particular understand the case with more than one categorical
   variable, with and without intercept.
@@ -608,7 +623,8 @@ effects are also included.</p>
 <div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="S15-factors.html#cb252-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
 <span id="cb252-2"><a href="S15-factors.html#cb252-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span></span></code></pre></div>
 <p>In <code>lm()</code> and related functions we can write <code>x1:x2</code> as a shorthand
-for <code>I(x1*x2)</code>:</p>
+for <code>I(x1*x2)</code>. The column <code>x1:x2</code> in the R output corresponds
+to the mathematical expression <span class="math inline">\(x_1 x_2\)</span>.</p>
 <div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="S15-factors.html#cb253-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> x1 <span class="sc">+</span> x1<span class="sc">:</span>x2)</span></code></pre></div>
 <pre class="rOutput"><code>  (Intercept) x1 x1:x2
 1           1  2     2
@@ -616,7 +632,8 @@ for <code>I(x1*x2)</code>:</p>
 3           1  2     6
 attr(,&quot;assign&quot;)
 [1] 0 1 2</code></pre>
-<p>We can write <code>x1*x2</code> as a shorthand for <code>x1 + x2 + x1:x2</code>:</p>
+<p>We can write <code>x1*x2</code> as a shorthand for the model with the
+three terms <code>x1 + x2 + x1:x2</code>:</p>
 <div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="S15-factors.html#cb255-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> x1<span class="sc">*</span>x2)</span></code></pre></div>
 <pre class="rOutput"><code>  (Intercept) x1 x2 x1:x2
 1           1  2  1     2

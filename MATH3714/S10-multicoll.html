@@ -284,7 +284,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#criteria"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
-<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Methods for Model Selection</a>
+<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Automatic Model Selection</a>
 <ul>
 <li class="chapter" data-level="14.1" data-path="S14-methods.html"><a href="S14-methods.html#exhaustive-search"><i class="fa fa-check"></i><b>14.1</b> Exhaustive Search</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-methods.html"><a href="S14-methods.html#search-algorithm"><i class="fa fa-check"></i><b>14.2</b> Search Algorithm</a></li>
@@ -389,6 +389,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="S10-multicoll" class="section level1 hasAnchor" number="10">
 <h1><span class="header-section-number">Section 10</span> Multicollinearity<a href="S10-multicoll.html#S10-multicoll" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<!--
+TODO (voss):
+* Rearrange the sections in the following order:
+  - 8.1 diagnostics
+  - 11.1-11.3 + 13.1-13.2 how to improve models?
+  - 8.2 + 13.3 quantitative measures to compare model fit
+  - 14 automatic model selection
+
+  - 15 Factors
+  - 16 Factor Examples
+
+  - 10+11.4 multicollinearity
+  - 12 ridge regression
+
+  - 9 Influence
+  - 17 robust
+-->
 <div class="definition">
 <p><span id="def:unlabeled-div-38" class="definition"><strong>Definition 10.1  </strong></span>In linear regression, <strong>Multicollinearity</strong> denotes the situation
 when the columns of the design matrix <span class="math inline">\(X\)</span> are (approximately) linearly
@@ -545,7 +562,7 @@ where <code>m</code> is the object returned by <code>lm()</code>. If the optiona
 argument <code>exact = TRUE</code> is omitted, only an approximate result
 is returned (using a faster algorithm).</p>
 <div class="example">
-<p><span id="exm:multicollell" class="example"><strong>Example 10.3  </strong></span>Consider the following toy dataset:</p>
+<p><span id="exm:multcoll3" class="example"><strong>Example 10.3  </strong></span>Consider the following toy dataset:</p>
 <div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="S10-multicoll.html#cb154-1" aria-hidden="true" tabindex="-1"></a>data</span></code></pre></div>
 <pre class="rOutput"><code>       y   x.1    x.2    x.3    x.4
 1   7.37 4.182  0.078  0.008  1.043
@@ -570,7 +587,8 @@ a linear model and determine the condition number.</p>
 <span id="cb157-2"><a href="S10-multicoll.html#cb157-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 97.38214</code></pre>
 <p>Since the condition number is larger than 30, we can say that the
-data shows severe multicollinearity. To find out which variables
+data shows severe multicollinearity.</p>
+<p>To find out which variables
 are involved, we can use <a href="https://en.wikipedia.org/wiki/Singular_value_decomposition">singular value decomposition</a>.
 This allows to write <span class="math inline">\(X\)</span> as <span class="math inline">\(X = U D V^\top\)</span>, where <span class="math inline">\(D\in\mathbb{R}^{(p+1)\times(p+1)}\)</span>
 is a diagonal matrix and <span class="math inline">\(U\in\mathbb{R}^{n\times(p+1)}\)</span> and
@@ -622,15 +640,15 @@ indeed holds.</p>
 <p>There are various ways problems resulting from multicollinearity can
 be addressed:</p>
 <ul>
-<li><p>Sometimes columns are lineraly dependent, because a redundant input
+<li><p>Sometimes columns are linearly dependent, because a redundant input
 is present. Removing one of the input variables in a group
 of linearly dependent inputs can solve this problem.</p></li>
 <li><p>The inputs can be transformed by choosing new variables as functions
-of the original inputs. For example, in example <a href="S10-multicoll.html#exm:multicollell">10.3</a>
+of the original inputs. For example, in example <a href="S10-multicoll.html#exm:mulcollell">10.2</a>
 one could try the input variables <span class="math inline">\(\tilde x_1 = (x_1 + x_2) / 2\)</span> and
 <span class="math inline">\(\tilde x_2 = (x_1 - x_2) / 2\)</span>. The confidence ellipse shown above
 indicates that it should be possible to get good estimates for the
-coefficient for <span class="math inline">\(\tilde x_1\)</span>.</p></li>
+coefficient corresponding to <span class="math inline">\(\tilde x_1\)</span>.</p></li>
 <li><p>If <span class="math inline">\(n\)</span> is small, the problem may be resolved by getting more data.
 In particular, for <span class="math inline">\(n &lt; p+1\)</span>, we <em>always</em> have strict multicollinearity.</p></li>
 <li><p>Alternative estimation approaches may be used. The basic idea is to sacrifice the

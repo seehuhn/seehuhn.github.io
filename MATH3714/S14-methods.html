@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 14 Methods for Model Selection | MATH3714 Linear Regression and Robustness</title>
+  <title>Section 14 Automatic Model Selection | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 14 Methods for Model Selection | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Section 14 Automatic Model Selection | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 14 Methods for Model Selection | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Section 14 Automatic Model Selection | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
   
@@ -284,7 +284,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#criteria"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
-<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Methods for Model Selection</a>
+<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Automatic Model Selection</a>
 <ul>
 <li class="chapter" data-level="14.1" data-path="S14-methods.html"><a href="S14-methods.html#exhaustive-search"><i class="fa fa-check"></i><b>14.1</b> Exhaustive Search</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-methods.html"><a href="S14-methods.html#search-algorithm"><i class="fa fa-check"></i><b>14.2</b> Search Algorithm</a></li>
@@ -388,9 +388,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="S14-methods" class="section level1 hasAnchor" number="14">
-<h1><span class="header-section-number">Section 14</span> Methods for Model Selection<a href="S14-methods.html#S14-methods" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<h1><span class="header-section-number">Section 14</span> Automatic Model Selection<a href="S14-methods.html#S14-methods" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <!--
 TODO:
+* Rearrange the sections in the following order:
+  - 8.1 diagnostics
+  - 11.1-11.3 + 13.1-13.2 how to improve models?
+  - 8.2 + 13.3 quantitative measures to compare model fit
+  - 14 automatic model selection
+
+  - 15 Factors
+  - 16 Factor Examples
+
+  - 10+11.4 multicollinearity
+  - 12 ridge regression
+
+  - 9 Influence
+  - 17 robust
+
 * explain the `nvmax` argument to `regsubsets()`
 -->
 <p>For a model with <span class="math inline">\(p\)</span> input variables, there are
@@ -400,7 +415,7 @@ This value increases quickly with <span class="math inline">\(p\)</span>: for <s
 have <span class="math inline">\(1024\)</span> models to consider, for <span class="math inline">\(p = 20\)</span> there are <span class="math inline">\(1048576\)</span> possible
 models, and for large <span class="math inline">\(p\)</span> it becomes infeasible to simply try all possible
 models to find the best one. In this section we consider algorithms
-for finding a good selection inputs when <span class="math inline">\(p\)</span> is large.</p>
+for automatically finding a good selection inputs when <span class="math inline">\(p\)</span> is large.</p>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/pOWYr9RiZWU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>

@@ -1081,7 +1081,7 @@ the same result as above:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] 5.329071e{-}13}
+\NormalTok{\# [1] 3.410605e{-}13}
 \end{Highlighting}
 \end{Shaded}
 
@@ -4633,17 +4633,13 @@ steps
   Estimate any parameters specified by the model.
 \item
   Check that the model is adequate --- often by examining the discrepancy
-  between the observed data and that predicted (or fitted) by the model --- if
+  between the observed data and that predicted by the model --- if
   necessary go back a step with a refined/revised model.
 \item
   See if the model can be simplified; if necessary go to step 2.
-\item
-  Conclude (using the results as required).
 \end{enumerate}
 
-In (multiple) regression there are many checks which can be used in step 3.
-These can consider the model as a whole, or be very specific by examining each
-observation, and the effect it has on the model.
+Here we consider techniques for step 3, the checking of the model.
 
 \hypertarget{plots}{%
 \subsection{Diagnostic Plots}\label{plots}}
@@ -4658,22 +4654,22 @@ are used:
   variables \(x_j\) for \(j \in \{1, \ldots, p\}\).
 \item
   A scatter plot of \(\hat\varepsilon\) against each of the explanatory variables
-  \(x_j\) for \(j \in \{1, \ldots, p\}\). The presence of a curvilinear
-  relationship (in this plot, or the ones above) suggests a higher-order term,
-  perhaps a quadratic in the explanatory variable, should be added to the
-  model. Or possibly a transformation.
+  \(x_j\) for \(j \in \{1, \ldots, p\}\).
 \item
   A plot of \(\hat\varepsilon_i\) \emph{vs.} \(\hat y_i\). If the variance of the residuals
   seems to increase with \(\hat y\) then a transformation may be necessary.
-  This type of plot is often called a ``residual plot''.
+  This type of plot is often called a ``residual plot''. The presence of a curvilinear
+  relationship (in this plot, or the ones above) suggests a higher-order term,
+  perhaps a quadratic in the explanatory variable, should be added to the
+  model, or possibly a transformation should be applied to the response
+  variable.
 \item
   A \href{https://en.wikipedia.org/wiki/Q\%E2\%80\%93Q_plot}{Q-Q plot}
   of the residuals can be used to assess whether the residuals are normally
   distributed. These plots plot quantiles of the data against quantiles
   of a normal distribution. If the residual are normally distributed,
   the points in a Q-Q plot will approximately lie on a straight line.
-  (Most inference assumes that the errors are normally distributed, though
-  the least squares estimate for \(\hat\beta\) itself does not.) The R
+  The R
   command to produce Q-Q plots for the normal distribution is \texttt{qqnorm()}.
 \item
   Data are often collected in time order. Even if time is not an explanatory
@@ -4843,7 +4839,7 @@ becomes
 \end{equation*}
 
 \begin{definition}
-\protect\hypertarget{def:R-squared}{}\label{def:R-squared}The \textbf{coefficient of multiple determination} is defined to be
+\protect\hypertarget{def:R-squared}{}\label{def:R-squared}The \textbf{coefficient of multiple determination} is defined as
 \begin{equation*}
   R^2
   := 1 - \frac{\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2}
@@ -4860,7 +4856,7 @@ express \(R^2\) as
 \end{equation*}
 Since both numerator and denominator are positive, if is clear the \(R^2 \geq 0\). Similarly, from the definition it is clear that \(R^2 \leq 1\), so that we
 always have \(R^2 \in [0, 1]\). A large value of \(R^2\) indicates that
-the residuals are small, compared to the sample variance of the \(y_i\)
+the residuals are small compared to the sample variance of the \(y_i\),
 and thus often indicates good model fit.
 
 \begin{example}
@@ -5008,6 +5004,9 @@ the extended model may be better than the original model.
   Diagnostic plots can help to discover problems with model fit.
 \item
   The \(R^2\) value is a numerical measure of the goodness of fit of a model.
+\item
+  If models with different numbers of variables are compared,
+  \(R^2_\mathrm{adj}\) should be used instead of \(R^2\).
 \end{itemize}
 
 \clearpage
@@ -5683,7 +5682,7 @@ argument \texttt{exact\ =\ TRUE} is omitted, only an approximate result
 is returned (using a faster algorithm).
 
 \begin{example}
-\protect\hypertarget{exm:multicollell}{}\label{exm:multicollell}Consider the following toy dataset:
+\protect\hypertarget{exm:multcoll3}{}\label{exm:multcoll3}Consider the following toy dataset:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -5737,7 +5736,9 @@ a linear model and determine the condition number.
 \end{Shaded}
 
 Since the condition number is larger than 30, we can say that the
-data shows severe multicollinearity. To find out which variables
+data shows severe multicollinearity.
+
+To find out which variables
 are involved, we can use \href{https://en.wikipedia.org/wiki/Singular_value_decomposition}{singular value decomposition}.
 This allows to write \(X\) as \(X = U D V^\top\), where \(D\in\mathbb{R}^{(p+1)\times(p+1)}\)
 is a diagonal matrix and \(U\in\mathbb{R}^{n\times(p+1)}\) and
@@ -5826,16 +5827,16 @@ be addressed:
 
 \begin{itemize}
 \item
-  Sometimes columns are lineraly dependent, because a redundant input
+  Sometimes columns are linearly dependent, because a redundant input
   is present. Removing one of the input variables in a group
   of linearly dependent inputs can solve this problem.
 \item
   The inputs can be transformed by choosing new variables as functions
-  of the original inputs. For example, in example~\ref{exm:multicollell}
+  of the original inputs. For example, in example~\ref{exm:mulcollell}
   one could try the input variables \(\tilde x_1 = (x_1 + x_2) / 2\) and
   \(\tilde x_2 = (x_1 - x_2) / 2\). The confidence ellipse shown above
   indicates that it should be possible to get good estimates for the
-  coefficient for \(\tilde x_1\).
+  coefficient corresponding to~\(\tilde x_1\).
 \item
   If \(n\) is small, the problem may be resolved by getting more data.
   In particular, for \(n < p+1\), we \emph{always} have strict multicollinearity.
@@ -6202,7 +6203,7 @@ and \(U\in\mathbb{R}^{n\times(p+1)}\) and \(V\in\mathbb{R}^{(p+1)\times(p+1)}\) 
 Denote the diagonal elements of \(D\) by \(\sigma_0(X), \ldots, \sigma_p(X) \geq 0\),
 and the columns of \(V\) by \(v_0, \ldots, v_p\).
 Show that \(\| X v_k \| = \sigma_k(X)\).
-(We used this fact in example~\ref{exm:multicollell}.)
+(We used this fact in example~\ref{exm:multcoll3}.)
 
 \begin{myanswers}
 Using the singular value decomposition of \(X\), we find
@@ -6397,7 +6398,7 @@ data, for a simulated dataset:
 The plot shows that the variance has indeed improved, while linearity
 has suffered (an S-shaped curve is now visible). Neither model is perfect and
 whether the transformation
-is benenficial or not depends on the particular circumstances.
+is beneficial or not depends on the particular circumstances.
 \end{example}
 
 \begin{example}
@@ -6668,7 +6669,7 @@ and \(\mathop{\mathrm{cor}}(x, x^2) \approx 1 - 9.74\times 10^{-9}\):
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] 1.31431e+24}
+\NormalTok{\# [1] 1.47006e+23}
 \end{Highlighting}
 \end{Shaded}
 
@@ -8161,7 +8162,7 @@ from the lemma. Implementation in R is straightforward.
 \clearpage
 
 \hypertarget{S14-methods}{%
-\section{Methods for Model Selection}\label{S14-methods}}
+\section{Automatic Model Selection}\label{S14-methods}}
 
 For a model with \(p\) input variables, there are
 \(2^p\) different choices for which variables to include in the
@@ -8170,7 +8171,7 @@ This value increases quickly with \(p\): for \(p = 10\) we
 have \(1024\) models to consider, for \(p = 20\) there are \(1048576\) possible
 models, and for large \(p\) it becomes infeasible to simply try all possible
 models to find the best one. In this section we consider algorithms
-for finding a good selection inputs when \(p\) is large.
+for automatically finding a good selection inputs when \(p\) is large.
 
 \hypertarget{exhaustive-search}{%
 \subsection{Exhaustive Search}\label{exhaustive-search}}
@@ -8963,7 +8964,8 @@ Consider the following toy dataset:
 \end{Shaded}
 
 In \texttt{lm()} and related functions we can write \texttt{x1:x2} as a shorthand
-for \texttt{I(x1*x2)}:
+for \texttt{I(x1*x2)}. The column \texttt{x1:x2} in the R output corresponds
+to the mathematical expression \(x_1 x_2\).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8982,7 +8984,8 @@ for \texttt{I(x1*x2)}:
 \end{Highlighting}
 \end{Shaded}
 
-We can write \texttt{x1*x2} as a shorthand for \texttt{x1\ +\ x2\ +\ x1:x2}:
+We can write \texttt{x1*x2} as a shorthand for the model with the
+three terms \texttt{x1\ +\ x2\ +\ x1:x2}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -9366,8 +9369,10 @@ other variables. We start by fitting a basic model:
 \end{Highlighting}
 \end{Shaded}
 
-Model fit seems poor, so we try to include all pairwise interaction
-terms:
+Since no coefficient is significantly different from zero (at \(5\%\)-level),
+and since the \(R^2\) value is not close to\textasciitilde{}\(1\),
+model fit seems poor. To improve model fit, we try to include all
+pairwise interaction terms:
 
 \begin{Shaded}
 \begin{Highlighting}[]

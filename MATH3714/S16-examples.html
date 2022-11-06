@@ -284,7 +284,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#criteria"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
-<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Methods for Model Selection</a>
+<li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Automatic Model Selection</a>
 <ul>
 <li class="chapter" data-level="14.1" data-path="S14-methods.html"><a href="S14-methods.html#exhaustive-search"><i class="fa fa-check"></i><b>14.1</b> Exhaustive Search</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-methods.html"><a href="S14-methods.html#search-algorithm"><i class="fa fa-check"></i><b>14.2</b> Search Algorithm</a></li>
@@ -391,7 +391,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Section 16</span> Examples<a href="S16-examples.html#S16-examples" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <!--
 TODO (voss):
-- this section could be longer
+* Rearrange the sections in the following order:
+  - 8.1 diagnostics
+  - 11.1-11.3 + 13.1-13.2 how to improve models?
+  - 8.2 + 13.3 quantitative measures to compare model fit
+  - 14 automatic model selection
+
+  - 15 Factors
+  - 16 Factor Examples
+
+  - 10+11.4 multicollinearity
+  - 12 ridge regression
+
+  - 9 Influence
+  - 17 robust
+
+* this section could be longer
+* try to find a nice split between sections 15 and 16
+* maybe remove "alternative factor codings"?
 -->
 <p>In this section we illustrate the results of the previous sections
 with the help of an example.</p>
@@ -450,8 +467,10 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 Residual standard error: 15.04 on 56 degrees of freedom
 Multiple R-squared:  0.2588,    Adjusted R-squared:  0.2059 
 F-statistic: 4.888 on 4 and 56 DF,  p-value: 0.001882</code></pre>
-<p>Model fit seems poor, so we try to include all pairwise interaction
-terms:</p>
+<p>Since no coefficient is significantly different from zero (at <span class="math inline">\(5\%\)</span>-level),
+and since the <span class="math inline">\(R^2\)</span> value is not close to~<span class="math inline">\(1\)</span>,
+model fit seems poor. To improve model fit, we try to include all
+pairwise interaction terms:</p>
 <div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="S16-examples.html#cb266-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd)</span>
 <span id="cb266-2"><a href="S16-examples.html#cb266-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
 <pre class="rOutput"><code>
