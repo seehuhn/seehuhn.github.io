@@ -472,10 +472,9 @@ columns of <span class="math inline">\(X\)</span>, the inverse <span class="math
 can be computed, but there will be huge uncertainties in some of the stimated
 coefficients. We illustrate this effect using a numerical example.</p>
 <div class="example">
-<p><span id="exm:mulcollell" class="example"><strong>Example 10.2  </strong></span>Here we simulate data which has similar characteristics to the toy
-example above: we have two inputs, each of which equals the
-output with a small amount of noise added. We
-fit a model without the intercept, so that there are only two
+<p><span id="exm:mulcollell" class="example"><strong>Example 10.2  </strong></span>Here we simulate data which has similar characteristics to the toy example
+above: we have very similar two inputs, the sum of which nearly equals the
+output. We fit a model without the intercept, so that there are only two
 coefficients to estimate and plotting these is no problem.</p>
 <div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="S10-multicoll.html#cb152-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211101</span>)</span>
 <span id="cb152-2"><a href="S10-multicoll.html#cb152-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
@@ -512,11 +511,11 @@ is reduced.</p>
 <p>There are two, slightly different effects of multicollinearity:</p>
 <ol style="list-style-type: decimal">
 <li><p>In the case of exact multicollinearity, <span class="math inline">\(X^\top X\)</span> is not invertible.
-If the columns of <span class="math inline">\(X\)</span> are approximately linearly dependent, then
+If the columns of <span class="math inline">\(X\)</span> are approximately linearly dependent, then
 <span class="math inline">\((X^\top X)^{-1}\)</span> does exist, but small changes of <span class="math inline">\(X\)</span> lead to large changes
 of <span class="math inline">\((X^\top X)^{-1}\)</span> and numerical computation of the inverse is
 strongly affected by rounding errors.</p></li>
-<li><p>If the columns of <span class="math inline">\(X\)</span> are approximately linearly dependent,
+<li><p>If the columns of <span class="math inline">\(X\)</span> are approximately linearly dependent,
 the computed value of the estimator <span class="math inline">\(\hat\beta\)</span> is strongly affected
 by small changes to the system: the noise in the model strongly affects
 <span class="math inline">\(\hat\beta\)</span> (as demonstrated in example <a href="S10-multicoll.html#exm:mulcollell">10.2</a>, above),
@@ -615,7 +614,7 @@ We can find the condition number using these values:</p>
 <pre class="rOutput"><code>[1] 97.38214</code></pre>
 <p>This agrees with the value for <span class="math inline">\(\kappa(X)\)</span> we found above.</p>
 <p>Finally, the columns <span class="math inline">\(v_1, \ldots, v_{p+1}\)</span> of <code>s$v</code> are called the (right)
-singular vectors of <span class="math inline">\(X\)</span>. We can use these vectors to identify which variables
+singular vectors of <span class="math inline">\(X\)</span>. We can use these vectors to identify which variables
 are involved in multicollinearity: It is easy to show that <span class="math inline">\(\| X v_k \| = \sigma_k(X)\)</span>, so every “small” <span class="math inline">\(\sigma_k(X)\)</span> corresponds to a vector <span class="math inline">\(v_k\)</span>
 which describes an approximate linear dependency between the columns of <span class="math inline">\(X\)</span>.
 Looking at <span class="math inline">\(\sigma_4(X)\)</span> (the 5th element of <code>s$d</code>) we get</p>
@@ -651,7 +650,8 @@ one could try the input variables <span class="math inline">\(\tilde x_1 = (x_1 
 indicates that it should be possible to get good estimates for the
 coefficient corresponding to <span class="math inline">\(\tilde x_1\)</span>.</p></li>
 <li><p>If <span class="math inline">\(n\)</span> is small, the problem may be resolved by getting more data.
-In particular, for <span class="math inline">\(n &lt; p+1\)</span>, we <em>always</em> have strict multicollinearity.</p></li>
+In particular, for <span class="math inline">\(n &lt; p+1\)</span>, we <em>always</em> have strict multicollinearity,
+so in this case we definitely need more data.</p></li>
 <li><p>Alternative estimation approaches may be used. The basic idea is to sacrifice the
 requirement that <span class="math inline">\(\hat\beta\)</span> is unbiased, in exchange for a large variance
 reduction. In a later section we will discuss “ridge regression” as an
