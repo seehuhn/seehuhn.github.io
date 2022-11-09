@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>A Linear Algebra Reminders | MATH3714 Linear Regression and Robustness</title>
+  <title>Interlude: Understanding the lm() Output | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
   <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="A Linear Algebra Reminders | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Interlude: Understanding the lm() Output | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="A Linear Algebra Reminders | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Interlude: Understanding the lm() Output | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="S19-efficiency.html"/>
-<link rel="next" href="Sx2-probability.html"/>
+<link rel="prev" href="S08-diagnostics.html"/>
+<link rel="next" href="S09-influence.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -388,246 +388,67 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="Sx1-matrices" class="section level1 hasAnchor" number="20">
-<h1><span class="header-section-number">A</span> Linear Algebra Reminders<a href="Sx1-matrices.html#Sx1-matrices" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="vectors" class="section level2 hasAnchor" number="20.1">
-<h2><span class="header-section-number">A.1</span> Vectors<a href="Sx1-matrices.html#vectors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We write <span class="math inline">\(v \in \mathbb{R}^d\)</span> if <span class="math inline">\(v = (v_1, \ldots, v_d)\)</span> for numbers
-<span class="math inline">\(v_1, \ldots, v_d \in\mathbb{R}\)</span>. We say that <span class="math inline">\(v\)</span> is a <span class="math inline">\(d\)</span>-dimensional vector,
-and <span class="math inline">\(\mathbb{R}^d\)</span> is the <span class="math inline">\(d\)</span>-dimensional Euclidean space. Vectors are
-often graphically represented as “column vectors”:
-<span class="math display">\[\begin{equation*}
-  v = \begin{pmatrix}
-      v_1 \\ v_2 \\ \vdots \\ v_d
-  \end{pmatrix}.
-\end{equation*}\]</span></p>
-<p>If <span class="math inline">\(u,v\in\mathbb{R}^d\)</span> are two vectors, the <strong>inner product</strong> of <span class="math inline">\(u\)</span> and <span class="math inline">\(v\)</span>
-is given by
-<span class="math display" id="eq:inner-product">\[\begin{equation}
-  u^\top v
-  = \sum_{i=1}^d u_i v_i.  \tag{A.1}
-\end{equation}\]</span>
-Note that the two vectors must have the same length for the inner product
-to exist.</p>
-<p>Using this notation, the <strong>Euclidean length</strong> of a vector <span class="math inline">\(v\)</span>
-can be written as
-<span class="math display">\[\begin{equation*}
-  \|v\|
-  = \sqrt{\sum_{i=1}^d v_i^2}
-  = \sqrt{v^\top v}.
-\end{equation*}\]</span></p>
-<p>Vectors <span class="math inline">\(v_1, \ldots, v_n\)</span> are said to be <strong>orthogonal</strong>,
-if <span class="math inline">\(v_i^\top v_j = 0\)</span> for all <span class="math inline">\(i \neq j\)</span>. The vectors are said to be
-<strong>orthonormal</strong>, if they are orthogonal and satisfy <span class="math inline">\(\|v_i\| = 1\)</span>
-for all <span class="math inline">\(i\)</span>.</p>
-</div>
-<div id="matrix-rules" class="section level2 hasAnchor" number="20.2">
-<h2><span class="header-section-number">A.2</span> Matrices<a href="Sx1-matrices.html#matrix-rules" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We write <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span> if
-<span class="math display">\[\begin{equation*}
-  A
-  = \begin{pmatrix}
-    a_{1,1} &amp; \ldots  &amp; a_{1,n}\\
-    a_{2,1} &amp; \ldots  &amp; a_{2,n}\\
-    \vdots &amp; \ddots  &amp; \vdots\\
-    a_{m,1} &amp; \ldots  &amp; a_{m,n}
-  \end{pmatrix},
-\end{equation*}\]</span>
-where <span class="math inline">\(a_{i,j}\)</span>, sometimes also written as <span class="math inline">\(a_{ij}\)</span> are numbers
-for <span class="math inline">\(i \in \{1, \ldots, m\}\)</span> and <span class="math inline">\(j \in \{1, \ldots, n\}\)</span>.</p>
-<div id="transpose" class="section level3 hasAnchor" number="20.2.1">
-<h3><span class="header-section-number">A.2.1</span> Transpose<a href="Sx1-matrices.html#transpose" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>If <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span>, then the <strong>transpose</strong> of <span class="math inline">\(A\)</span> is the matrix
-<span class="math inline">\(A^\top \in \mathbb{R}^{n\times m}\)</span>, with <span class="math inline">\((A^\top)_{ij} = a_{ji}\)</span> for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> and <span class="math inline">\(j \in \{1, \ldots, m\}\)</span>. Graphically,
-this can be written as
-<span class="math display">\[\begin{equation*}
-  A^\top
-  = \begin{pmatrix}
-    a_{1,1} &amp; a_{2,1} &amp; \ldots  &amp; a_{m,1} \\
-    \vdots &amp; \vdots &amp; \ddots  &amp; \vdots \\
-    a_{1,n} &amp; a_{2,n} &amp; \ldots  &amp; a_{m,n}
-  \end{pmatrix},
-\end{equation*}\]</span></p>
-<div class="definition">
-<p><span id="def:unlabeled-div-74" class="definition"><strong>Definition A.1  </strong></span>A matrix <span class="math inline">\(A\)</span> is called <strong>symmetric</strong>, if <span class="math inline">\(A^\top = A\)</span>.</p>
-</div>
-</div>
-<div id="matrix-vector-product" class="section level3 hasAnchor" number="20.2.2">
-<h3><span class="header-section-number">A.2.2</span> Matrix-vector Product<a href="Sx1-matrices.html#matrix-vector-product" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>If <span class="math inline">\(A \in \mathbb{R}^{m \times n}\)</span> and <span class="math inline">\(v \in \mathbb{R}^n\)</span>, then
-<span class="math inline">\(Av \in \mathbb{R}^m\)</span> is the vector with
-<span class="math display">\[\begin{equation*}
-  (Av)_i
-  = \sum_{j=1}^n a_{ij} v_j
-\end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, m\}\)</span>.</p>
-<p>If we consider <span class="math inline">\(v\)</span> to be a <span class="math inline">\((n\times 1)\)</span>-matrix instead of a vector,
-<span class="math inline">\(Av\)</span> can also be interpreted as a matrix-matrix product between an <span class="math inline">\(m \times n\)</span> and an <span class="math inline">\(n\times 1\)</span> matrix. Using this convention, <span class="math inline">\(v^\top\)</span>
-is then interpreted as an <span class="math inline">\(1 \times n\)</span> matrix and if <span class="math inline">\(u\in\mathbb{R}^m\)</span> we
-have <span class="math inline">\(u^\top A \in \mathbb{R}^{1 \times n} \cong \mathbb{R}^n\)</span> with
-<span class="math display">\[\begin{equation*}
-  (u^\top A)_j
-  = \sum_{i=1}^m u_i a_{ij}
-\end{equation*}\]</span>
-for all <span class="math inline">\(j \in \{1, \ldots, n\}\)</span>. Going one step further, this
-notation also motivates the expression <span class="math inline">\(u^\top v\)</span> in
-equation <a href="Sx1-matrices.html#eq:inner-product">(A.1)</a>.</p>
-</div>
-<div id="matrix-matrix-product" class="section level3 hasAnchor" number="20.2.3">
-<h3><span class="header-section-number">A.2.3</span> Matrix-matrix Product<a href="Sx1-matrices.html#matrix-matrix-product" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>If <span class="math inline">\(A \in \mathbb{R}^{\ell \times m}\)</span> and <span class="math inline">\(B \in \mathbb{R}^{m\times n}\)</span>, then
-<span class="math inline">\(AB \in \mathbb{R}^{\ell \times n}\)</span> is the matrix with
-<span class="math display">\[\begin{equation*}
-  (AB)_{ik}
-  = \sum_{j=1}^m a_{ij} b_{jk}
-\end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, \ell\}\)</span> and <span class="math inline">\(j \in \{1, \ldots, n\}\)</span>.
-This is called the <strong>matrix product</strong> of <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. Note
-that <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> must have compatible shapes for the product to exist.</p>
-<p>Properties:</p>
+<div id="I03-lm-output" class="section level1 unnumbered hasAnchor">
+<h1>Interlude: Understanding the <code>lm()</code> Output<a href="I03-lm-output.html#I03-lm-output" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>We have seen that the <code>lm()</code> function returns an object which contains
+a lot of information about the fitted model. We can inspect this
+information by using the <code>summary()</code> function. The aim of this section
+is to help you understand how the output of <code>summary()</code> relates to the
+mathematical expressions we have considered in the previous sections.</p>
+<p>We will use the <code>stackloss</code> dataset as an example:</p>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="I03-lm-output.html#cb135-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb135-2"><a href="I03-lm-output.html#cb135-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<p><img src="images/lm-output.png" /><!-- --></p>
+<p>Here I have marked different parts of the output using red shaded boxes
+and using the letters A to I. We discuss each of the marked
+sections in turn:</p>
 <ul>
-<li><p>The matrix product is associative: if <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> and <span class="math inline">\(C\)</span> are matrices
-with shapes such that <span class="math inline">\(AB\)</span> and <span class="math inline">\(BC\)</span> exist, then we have <span class="math inline">\(A(BC) = (AB)C\)</span>.
-It does not matter in which order we perform the matrix products here.</p></li>
-<li><p>The matrix product is transitive: if <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> and <span class="math inline">\(C\)</span> have the
-correct shapes, we have <span class="math inline">\(A(B+C) = AB + AC\)</span>.</p></li>
-<li><p>The matrix product is <em>not</em> commutative: if <span class="math inline">\(AB\)</span> exists, in general
-<span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> don’t have the correct shapes for <span class="math inline">\(BA\)</span> to also exist,
-and even if <span class="math inline">\(BA\)</span> exists, in general we have <span class="math inline">\(AB \neq BA\)</span>.</p></li>
-<li><p>Taking the transpose swaps the order in a matrix product:
-we have
-<span class="math display" id="eq:AB-trans">\[\begin{equation}
-  (AB)^\top = B^\top A^\top  \tag{A.2}
-\end{equation}\]</span></p></li>
+<li><p>The first section, part <strong>A</strong>, contains summary statistics for the
+fitted residuals <span class="math inline">\(\hat\varepsilon_1, \ldots, \hat\varepsilon_n\)</span>. The values
+shown are the minimum, first quartile, median, third quartile,
+and maximum of the residuals. This is the same information
+we can get using the command <code>summary(resid(m)</code>.
+The mean is omitted from A, since if always equals zero.</p></li>
+<li><p>Column <strong>B</strong> shows the estimated coefficient vector <span class="math inline">\(\hat\beta\)</span>.
+This is computed using the formula from lemma <a href="S02-multiple.html#lem:multiple-LSQ">2.1</a>.</p></li>
+<li><p>Column <strong>C</strong> shows the standard error of the estimated coefficients.
+The <span class="math inline">\(i\)</span>th entry is the (estimated) standard deviation of <span class="math inline">\(\hat\beta_i\)</span>,
+computed as <span class="math inline">\(\sqrt{\hat\sigma^2 C_{ii}}\)</span>, where <span class="math inline">\(C = (X^\top X)^{-1}\)</span>.
+This corresponds to the variance shown in equation <a href="S04-model.html#eq:beta-hat-i">(4.2)</a>,
+where the true variance is <span class="math inline">\(\sigma^2\)</span> replaced with the estimate <span class="math inline">\(\hat\sigma^2\)</span>.
+These quantities are used to compute the t-test statistic in
+equation <a href="S05-single.html#eq:single-test">(5.2)</a>.</p></li>
+<li><p>Column <strong>D</strong> shows the t-test statistic for the coefficients.
+The values are computed using equation <a href="S05-single.html#eq:single-test">(5.2)</a>.</p></li>
+<li><p>Column <strong>E</strong> replicates the information from column <strong>D</strong> in different form,
+showing <a href="https://en.wikipedia.org/wiki/P-value"><span class="math inline">\(p\)</span>-values</a> instead of the
+test statistics.</p></li>
+<li><p>The field <strong>F</strong> shows the estimated standard deviation <span class="math inline">\(\hat\sigma\)</span>.
+This is computed as the square root of <span class="math inline">\(\hat\sigma^2\)</span> from
+equation <a href="S04-model.html#eq:hat-sigma-squared">(4.6)</a>.</p></li>
+<li><p>Field <strong>G</strong> shows the value <span class="math inline">\(n - p - 1\)</span>. This is the number of degrees
+of freedom in lemma <a href="S05-single.html#lem:beta-i-follows-t">5.2</a>. The value is needed
+when performing hypothesis tests and computing confidence intervals
+for individual coefficients.</p></li>
+<li><p>Field <strong>H</strong> shows the <span class="math inline">\(R^2\)</span> value and adjusted <span class="math inline">\(R^2\)</span> value. These are
+computed using definitions <a href="S08-diagnostics.html#def:R-squared">8.1</a> and <a href="S08-diagnostics.html#def:adjusted-R-squared">8.2</a>.</p></li>
+<li><p>Field <strong>I</strong> shows the <span class="math inline">\(F\)</span>-test statistic for testing the hypothesis
+<span class="math inline">\(H_i\colon \beta_1 = \cdots = \beta_p = 0\)</span> (omitting the coeficient
+<span class="math inline">\(\beta_0\)</span> for the intercept). This value can be used to test the hypothesis
+that the inputs have no effect on the output.
+The <span class="math inline">\(F\)</span>-test statistic is computed using equation <a href="S06-simultaneous.html#eq:simult-F">(6.1)</a>,
+the degrees of freedom shown are <span class="math inline">\(k = p\)</span> and <span class="math inline">\(n - p - 1\)</span>
+from lemma <a href="S06-simultaneous.html#lem:F-dist">6.1</a>.</p></li>
 </ul>
-</div>
-<div id="rank" class="section level3 hasAnchor" number="20.2.4">
-<h3><span class="header-section-number">A.2.4</span> Rank<a href="Sx1-matrices.html#rank" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="definition">
-<p><span id="def:unlabeled-div-75" class="definition"><strong>Definition A.2  </strong></span>The <strong>rank</strong> of a matrix <span class="math inline">\(A \in \mathbb{R}^{m \times n}\)</span> is the dimension of the
-image space of <span class="math inline">\(A\)</span>:
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{rank}}(A)
-  = \dim \bigl\{ Av \bigm| v\in \mathbb{R}^n \}.
-\end{equation*}\]</span></p>
-</div>
-<p>The rank can also be characterised as the largest number of linearly
-independent columns of <span class="math inline">\(A\)</span>, or the largest number of linearly
-independent rows of <span class="math inline">\(A\)</span>. Thus, for <span class="math inline">\(A \in \mathbb{R}^{m \times n}\)</span> we
-always have <span class="math inline">\(\mathop{\mathrm{rank}}(A) \leq \min(m, n)\)</span>. The matrix <span class="math inline">\(A\)</span>
-is said to have “full rank” if <span class="math inline">\(\mathop{\mathrm{rank}}(A) = \min(m, n)\)</span>.</p>
-</div>
-<div id="trace" class="section level3 hasAnchor" number="20.2.5">
-<h3><span class="header-section-number">A.2.5</span> Trace<a href="Sx1-matrices.html#trace" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="definition">
-<p><span id="def:unlabeled-div-76" class="definition"><strong>Definition A.3  </strong></span>The <strong>trace</strong> of a matrix <span class="math inline">\(A \in \mathbb{R}^{n\times n}\)</span> is given by
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{tr}}(A) = \sum_{i=1}^n a_ii.
-\end{equation*}\]</span></p>
-</div>
-<p>Properties:</p>
-<ul>
-<li><p><span class="math inline">\(\mathop{\mathrm{tr}}(A+B) = \mathop{\mathrm{tr}}(A) + \mathop{\mathrm{tr}}(B)\)</span></p></li>
-<li><p><span class="math inline">\(\mathop{\mathrm{tr}}(A^\top) = \mathop{\mathrm{tr}}(A)\)</span></p></li>
-<li><p><span class="math inline">\(\mathop{\mathrm{tr}}(ABC) = \mathop{\mathrm{tr}}(BCA) = \mathop{\mathrm{tr}}(CAB)\)</span>. The individual matrices <span class="math inline">\(A, B, C\)</span> don’t
-need to be square for this relation to hold, but the relation only holds for
-cyclic permutations as shown. In general <span class="math inline">\(\mathop{\mathrm{tr}}(ABC) \neq \mathop{\mathrm{tr}}(ACB)\)</span>.</p></li>
-</ul>
-</div>
-<div id="matrix-inverse" class="section level3 hasAnchor" number="20.2.6">
-<h3><span class="header-section-number">A.2.6</span> Matrix Inverse<a href="Sx1-matrices.html#matrix-inverse" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>If <span class="math inline">\(A\)</span> is a square matrix and if there is a matrix <span class="math inline">\(B\)</span> such that
-<span class="math inline">\(AB = I\)</span>, then <span class="math inline">\(A\)</span> is called <strong>invertible</strong> and the matrix <span class="math inline">\(B\)</span> is
-called the <strong>inverse</strong> of <span class="math inline">\(A\)</span>, denoted by <span class="math inline">\(A^{-1} := B\)</span>.
-Some important properties of the inverse:</p>
-<ul>
-<li><p>The inverse, if it exists, is unique.</p></li>
-<li><p>Left-inverse and right-inverse for matrices are the same:
-<span class="math inline">\(A^{-1} A = I\)</span> holds if and only if <span class="math inline">\(A A^{-1} = I\)</span>.</p></li>
-<li><p>If <span class="math inline">\(A\)</span> is symmetric and invertible, then <span class="math inline">\(A^{-1}\)</span> is also
-symmetric. This is true because <span class="math inline">\(A (A^{-1})^\top = (A^{-1} A)^\top = I^\top = I\)</span> and thus <span class="math inline">\((A^{-1})^\top\)</span> is an inverse of <span class="math inline">\(A\)</span>.
-Since the inverse is unique, <span class="math inline">\((A^{-1})^\top = A^{-1}\)</span>.</p></li>
-</ul>
-<div class="theorem">
-<p><span id="thm:matrix-inverse" class="theorem"><strong>Theorem A.1  </strong></span>Let <span class="math inline">\(A \in \mathbb{R}^{n\times n}\)</span>. Then the following statements are equivalent:</p>
-<ol style="list-style-type: lower-alpha">
-<li><span class="math inline">\(A\)</span> is invertible</li>
-<li><span class="math inline">\(A\)</span> has full rank, <em>i.e.</em> <span class="math inline">\(\mathop{\mathrm{rank}}(A) = n\)</span>.</li>
-<li>The equation <span class="math inline">\(Ax = 0\)</span> has <span class="math inline">\(x = 0\)</span> as its only solution.</li>
-<li>The equation <span class="math inline">\(Ax = b\)</span> has exactly one solution <span class="math inline">\(x\)</span> for every
-<span class="math inline">\(b\in\mathbb{R}^n\)</span>.</li>
-</ol>
-</div>
-</div>
-<div id="orthogonal-matrices" class="section level3 hasAnchor" number="20.2.7">
-<h3><span class="header-section-number">A.2.7</span> Orthogonal Matrices<a href="Sx1-matrices.html#orthogonal-matrices" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="definition">
-<p><span id="def:unlabeled-div-77" class="definition"><strong>Definition A.4  </strong></span>A matrix <span class="math inline">\(U\)</span> is called <strong>orthogonal</strong>, if <span class="math inline">\(U^\top U = I = U U^\top\)</span>.</p>
-</div>
-<p>Some important properties of orthogonal matrices:</p>
-<ul>
-<li><p>If <span class="math inline">\(U\)</span> is orthogonal, the inverse and the transpose are the same:
-<span class="math inline">\(U^\top = U^{-1}\)</span>.</p></li>
-<li><p>We have <span class="math inline">\(\| U x \|^2 = x^\top U^\top U x = x^\top x = \| x \|^2\)</span>.
-Thus, multiplying a vector <span class="math inline">\(x\)</span> by an orthogonal matrix <span class="math inline">\(U\)</span> does
-not change its length.</p></li>
-</ul>
-</div>
-<div id="positive-definite" class="section level3 hasAnchor" number="20.2.8">
-<h3><span class="header-section-number">A.2.8</span> Positive Definite Matrices<a href="Sx1-matrices.html#positive-definite" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="definition">
-<p><span id="def:unlabeled-div-78" class="definition"><strong>Definition A.5  </strong></span>A symmetric matrix <span class="math inline">\(A \in \mathbb{R}^{n\times n}\)</span> is called <strong>positive definite</strong>, if
-<span class="math display">\[\begin{equation*}
-  x^\top A x &gt; 0
-\end{equation*}\]</span>
-for all <span class="math inline">\(x \in \mathbb{R}^n\)</span> with <span class="math inline">\(x\neq 0\)</span>. The matrix is called
-<strong>positive semi-definite</strong>, if
-<span class="math display">\[\begin{equation*}
-  x^\top A x \geq 0
-\end{equation*}\]</span>
-for all <span class="math inline">\(x \in \mathbb{R}^n\)</span>.</p>
-</div>
-</div>
-<div id="idempotent" class="section level3 hasAnchor" number="20.2.9">
-<h3><span class="header-section-number">A.2.9</span> Idempotent Matrices<a href="Sx1-matrices.html#idempotent" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="definition">
-<p><span id="def:unlabeled-div-79" class="definition"><strong>Definition A.6  </strong></span>The matrix <span class="math inline">\(A\)</span> is <strong>idempotent</strong>, if <span class="math inline">\(A^2 = A\)</span>.</p>
-</div>
-</div>
-</div>
-<div id="eigenvalues" class="section level2 hasAnchor" number="20.3">
-<h2><span class="header-section-number">A.3</span> Eigenvalues<a href="Sx1-matrices.html#eigenvalues" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="definition">
-<p><span id="def:unlabeled-div-80" class="definition"><strong>Definition A.7  </strong></span>Let <span class="math inline">\(A \in\mathbb{R}^{n\times n}\)</span> be a square matrix and <span class="math inline">\(\lambda\in R\)</span>.
-The number <span class="math inline">\(\lambda\)</span> is called an <strong>eigenvalue</strong> of <span class="math inline">\(A\)</span>, if there
-exists a vector <span class="math inline">\(v \neq 0\)</span> such that <span class="math inline">\(A x = \lambda x\)</span>. Any
-such vector <span class="math inline">\(x\)</span> is called an <strong>eigenvector</strong> of <span class="math inline">\(A\)</span> with eigenvalue <span class="math inline">\(\lambda\)</span>.</p>
-</div>
-<p>While there are very many results about eigenvectors and eigenvalues
-in Linear Algebra, here we will only use a small number of these results.
-We summarise what we need for this module:</p>
-<ul>
-<li>If <span class="math inline">\(A\)</span> is idempotent and <span class="math inline">\(x\)</span> is an eigenvector with eigenvalue <span class="math inline">\(\lambda\)</span>,
-then we have <span class="math inline">\(\lambda x = A x = A^2 x = \lambda Ax = \lambda^2 x\)</span>. Thus we
-have <span class="math inline">\(\lambda^2 = \lambda\)</span>. This shows that the only eigenvalues possible
-for idempotent matrices are <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>.</li>
-</ul>
-<div class="theorem">
-<p><span id="thm:spectral" class="theorem"><strong>Theorem A.2  </strong></span>Let <span class="math inline">\(A\in\mathbb{R}^{n\times n}\)</span> be symmetric. Then there is an orthogonal
-matrix <span class="math inline">\(U\)</span> such that <span class="math inline">\(D := U A U^\top\)</span> is diagonal. The diagonal
-elements of <span class="math inline">\(D\)</span> are the eigenvalues of <span class="math inline">\(A\)</span> and the rows of <span class="math inline">\(U\)</span>
-are corresponding eigenvectors.</p>
-</div>
 
-</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="S19-efficiency.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="Sx2-probability.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S08-diagnostics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="S09-influence.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

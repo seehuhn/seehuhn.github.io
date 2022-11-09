@@ -243,6 +243,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.1" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#plots"><i class="fa fa-check"></i><b>8.1</b> Diagnostic Plots</a></li>
 <li class="chapter" data-level="8.2" data-path="S08-diagnostics.html"><a href="S08-diagnostics.html#R-squared"><i class="fa fa-check"></i><b>8.2</b> The Coefficient of Multiple Determination</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="I03-lm-output.html"><a href="I03-lm-output.html"><i class="fa fa-check"></i>Interlude: Understanding the <code>lm()</code> Output</a></li>
 <li class="chapter" data-level="9" data-path="S09-influence.html"><a href="S09-influence.html"><i class="fa fa-check"></i><b>9</b> The Influence of Observations</a>
 <ul>
 <li class="chapter" data-level="9.1" data-path="S09-influence.html"><a href="S09-influence.html#deleting"><i class="fa fa-check"></i><b>9.1</b> Deleting Observations</a></li>
@@ -476,30 +477,30 @@ coefficients. We illustrate this effect using a numerical example.</p>
 above: we have very similar two inputs, the sum of which nearly equals the
 output. We fit a model without the intercept, so that there are only two
 coefficients to estimate and plotting these is no problem.</p>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="S10-multicoll.html#cb152-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211101</span>)</span>
-<span id="cb152-2"><a href="S10-multicoll.html#cb152-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb152-3"><a href="S10-multicoll.html#cb152-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> (<span class="dv">1</span><span class="sc">:</span>n)</span>
-<span id="cb152-4"><a href="S10-multicoll.html#cb152-4" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span>n, <span class="fl">0.15</span>)</span>
-<span id="cb152-5"><a href="S10-multicoll.html#cb152-5" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span>n, <span class="fl">0.15</span>)</span>
-<span id="cb152-6"><a href="S10-multicoll.html#cb152-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2)</span></code></pre></div>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="S10-multicoll.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211101</span>)</span>
+<span id="cb153-2"><a href="S10-multicoll.html#cb153-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb153-3"><a href="S10-multicoll.html#cb153-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> (<span class="dv">1</span><span class="sc">:</span>n)</span>
+<span id="cb153-4"><a href="S10-multicoll.html#cb153-4" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span>n, <span class="fl">0.15</span>)</span>
+<span id="cb153-5"><a href="S10-multicoll.html#cb153-5" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span>n, <span class="fl">0.15</span>)</span>
+<span id="cb153-6"><a href="S10-multicoll.html#cb153-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2)</span></code></pre></div>
 <p>Similar to the approach in <a href="S06-simultaneous.html#coordinates-of-the-outline">section 6</a>,
 we can plot a confidence ellipse. (Don’t worry about the details of the
 commands used to plot the ellipse.)</p>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="S10-multicoll.html#cb153-1" aria-hidden="true" tabindex="-1"></a>sigma.hat <span class="ot">&lt;-</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma</span>
-<span id="cb153-2"><a href="S10-multicoll.html#cb153-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
-<span id="cb153-3"><a href="S10-multicoll.html#cb153-3" aria-hidden="true" tabindex="-1"></a>svd <span class="ot">&lt;-</span> <span class="fu">La.svd</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)</span>
-<span id="cb153-4"><a href="S10-multicoll.html#cb153-4" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb153-5"><a href="S10-multicoll.html#cb153-5" aria-hidden="true" tabindex="-1"></a>f.crit <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, <span class="fu">ncol</span>(X), <span class="fu">nrow</span>(X) <span class="sc">-</span> <span class="fu">ncol</span>(X))</span>
-<span id="cb153-6"><a href="S10-multicoll.html#cb153-6" aria-hidden="true" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">201</span>)</span>
-<span id="cb153-7"><a href="S10-multicoll.html#cb153-7" aria-hidden="true" tabindex="-1"></a>circ <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">cos</span>(phi), <span class="fu">sin</span>(phi)) <span class="sc">*</span> <span class="fu">sqrt</span>(f.crit <span class="sc">*</span> <span class="fu">ncol</span>(X) <span class="sc">*</span> sigma.hat<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb153-8"><a href="S10-multicoll.html#cb153-8" aria-hidden="true" tabindex="-1"></a>ellipse <span class="ot">&lt;-</span> svd<span class="sc">$</span>u <span class="sc">%*%</span> (circ <span class="sc">/</span> <span class="fu">sqrt</span>(svd<span class="sc">$</span>d)) <span class="sc">+</span> <span class="fu">coef</span>(m)</span>
-<span id="cb153-9"><a href="S10-multicoll.html#cb153-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb153-10"><a href="S10-multicoll.html#cb153-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ellipse[<span class="dv">1</span>,], ellipse[<span class="dv">2</span>,], <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">asp =</span> <span class="dv">1</span>,</span>
-<span id="cb153-11"><a href="S10-multicoll.html#cb153-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(beta[<span class="dv">1</span>]),</span>
-<span id="cb153-12"><a href="S10-multicoll.html#cb153-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(beta[<span class="dv">2</span>]))</span>
-<span id="cb153-13"><a href="S10-multicoll.html#cb153-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
-<span id="cb153-14"><a href="S10-multicoll.html#cb153-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>], <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>)</span>
-<span id="cb153-15"><a href="S10-multicoll.html#cb153-15" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>], <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="S10-multicoll.html#cb154-1" aria-hidden="true" tabindex="-1"></a>sigma.hat <span class="ot">&lt;-</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma</span>
+<span id="cb154-2"><a href="S10-multicoll.html#cb154-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb154-3"><a href="S10-multicoll.html#cb154-3" aria-hidden="true" tabindex="-1"></a>svd <span class="ot">&lt;-</span> <span class="fu">La.svd</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)</span>
+<span id="cb154-4"><a href="S10-multicoll.html#cb154-4" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb154-5"><a href="S10-multicoll.html#cb154-5" aria-hidden="true" tabindex="-1"></a>f.crit <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, <span class="fu">ncol</span>(X), <span class="fu">nrow</span>(X) <span class="sc">-</span> <span class="fu">ncol</span>(X))</span>
+<span id="cb154-6"><a href="S10-multicoll.html#cb154-6" aria-hidden="true" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="sc">*</span>pi, <span class="at">length.out =</span> <span class="dv">201</span>)</span>
+<span id="cb154-7"><a href="S10-multicoll.html#cb154-7" aria-hidden="true" tabindex="-1"></a>circ <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">cos</span>(phi), <span class="fu">sin</span>(phi)) <span class="sc">*</span> <span class="fu">sqrt</span>(f.crit <span class="sc">*</span> <span class="fu">ncol</span>(X) <span class="sc">*</span> sigma.hat<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb154-8"><a href="S10-multicoll.html#cb154-8" aria-hidden="true" tabindex="-1"></a>ellipse <span class="ot">&lt;-</span> svd<span class="sc">$</span>u <span class="sc">%*%</span> (circ <span class="sc">/</span> <span class="fu">sqrt</span>(svd<span class="sc">$</span>d)) <span class="sc">+</span> <span class="fu">coef</span>(m)</span>
+<span id="cb154-9"><a href="S10-multicoll.html#cb154-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb154-10"><a href="S10-multicoll.html#cb154-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ellipse[<span class="dv">1</span>,], ellipse[<span class="dv">2</span>,], <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">asp =</span> <span class="dv">1</span>,</span>
+<span id="cb154-11"><a href="S10-multicoll.html#cb154-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(beta[<span class="dv">1</span>]),</span>
+<span id="cb154-12"><a href="S10-multicoll.html#cb154-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(beta[<span class="dv">2</span>]))</span>
+<span id="cb154-13"><a href="S10-multicoll.html#cb154-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb154-14"><a href="S10-multicoll.html#cb154-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>], <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>)</span>
+<span id="cb154-15"><a href="S10-multicoll.html#cb154-15" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>], <span class="at">lty =</span> <span class="st">&quot;dotted&quot;</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/multicollellipse-1.png" width="672" /></p>
 <p>We can see that, as in the toy example above, the confidence region
 places <span class="math inline">\((\beta_1, \beta_2)\)</span> close to the line where <span class="math inline">\(\beta_1 + \beta_2 = 2\)</span>
@@ -563,7 +564,7 @@ argument <code>exact = TRUE</code> is omitted, only an approximate result
 is returned (using a faster algorithm).</p>
 <div class="example">
 <p><span id="exm:multcoll3" class="example"><strong>Example 10.3  </strong></span>Consider the following toy dataset:</p>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="S10-multicoll.html#cb154-1" aria-hidden="true" tabindex="-1"></a>data</span></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="S10-multicoll.html#cb155-1" aria-hidden="true" tabindex="-1"></a>data</span></code></pre></div>
 <pre class="rOutput"><code>       y   x.1    x.2    x.3    x.4
 1   7.37 4.182  0.078  0.008  1.043
 2   9.86 6.039  1.106 -0.009  0.137
@@ -577,14 +578,14 @@ is returned (using a faster algorithm).</p>
 10  6.80 2.248 -0.045  0.182  1.088</code></pre>
 <p>To inspect these data, we use a pair scatter plot of the input variables,
 leaving out the responses in column 1:</p>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="S10-multicoll.html#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data[,<span class="sc">-</span><span class="dv">1</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="S10-multicoll.html#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data[,<span class="sc">-</span><span class="dv">1</span>])</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/multicollairs-1.png" width="672" /></p>
 <p>While there are visbile patterns, there are no clear signs of
 a linear dependency between any two columns.
 To see whether there are problems with multicollinearity, we fit
 a linear model and determine the condition number.</p>
-<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="S10-multicoll.html#cb157-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> data)</span>
-<span id="cb157-2"><a href="S10-multicoll.html#cb157-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="S10-multicoll.html#cb158-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> data)</span>
+<span id="cb158-2"><a href="S10-multicoll.html#cb158-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 97.38214</code></pre>
 <p>Since the condition number is larger than 30, we can say that the
 data shows severe multicollinearity.</p>
@@ -593,9 +594,9 @@ are involved, we can use <a href="https://en.wikipedia.org/wiki/Singular_value_d
 This allows to write <span class="math inline">\(X\)</span> as <span class="math inline">\(X = U D V^\top\)</span>, where <span class="math inline">\(D\in\mathbb{R}^{(p+1)\times(p+1)}\)</span>
 is a diagonal matrix and <span class="math inline">\(U\in\mathbb{R}^{n\times(p+1)}\)</span> and
 <span class="math inline">\(V\in\mathbb{R}^{(p+1)\times(p+1)}\)</span> are matrices with orthonormal columns.</p>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="S10-multicoll.html#cb159-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
-<span id="cb159-2"><a href="S10-multicoll.html#cb159-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">svd</span>(X, <span class="at">nu =</span> <span class="dv">0</span>)</span>
-<span id="cb159-3"><a href="S10-multicoll.html#cb159-3" aria-hidden="true" tabindex="-1"></a>s</span></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="S10-multicoll.html#cb160-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb160-2"><a href="S10-multicoll.html#cb160-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">svd</span>(X, <span class="at">nu =</span> <span class="dv">0</span>)</span>
+<span id="cb160-3"><a href="S10-multicoll.html#cb160-3" aria-hidden="true" tabindex="-1"></a>s</span></code></pre></div>
 <pre class="rOutput"><code>$d
 [1] 20.3002516  2.0294781  1.8122508  1.2526330  0.2084597
 
@@ -610,7 +611,7 @@ $v
 matrix <span class="math inline">\(U\)</span>. The diagonal elements <span class="math inline">\(\sigma_0(X), \ldots, \sigma_{p}(X) \geq 0\)</span>,
 stored in <code>s$d</code>, are the singular values of <span class="math inline">\(X\)</span> in decreasing order.
 We can find the condition number using these values:</p>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="S10-multicoll.html#cb161-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>d[<span class="dv">1</span>] <span class="sc">/</span> s<span class="sc">$</span>d[<span class="fu">length</span>(s<span class="sc">$</span>d)]</span></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="S10-multicoll.html#cb162-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>d[<span class="dv">1</span>] <span class="sc">/</span> s<span class="sc">$</span>d[<span class="fu">length</span>(s<span class="sc">$</span>d)]</span></code></pre></div>
 <pre class="rOutput"><code>[1] 97.38214</code></pre>
 <p>This agrees with the value for <span class="math inline">\(\kappa(X)\)</span> we found above.</p>
 <p>Finally, the columns <span class="math inline">\(v_1, \ldots, v_{p+1}\)</span> of <code>s$v</code> are called the (right)
@@ -618,7 +619,7 @@ singular vectors of <span class="math inline">\(X\)</span>. We can use these ve
 are involved in multicollinearity: It is easy to show that <span class="math inline">\(\| X v_k \| = \sigma_k(X)\)</span>, so every “small” <span class="math inline">\(\sigma_k(X)\)</span> corresponds to a vector <span class="math inline">\(v_k\)</span>
 which describes an approximate linear dependency between the columns of <span class="math inline">\(X\)</span>.
 Looking at <span class="math inline">\(\sigma_4(X)\)</span> (the 5th element of <code>s$d</code>) we get</p>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="S10-multicoll.html#cb163-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(s<span class="sc">$</span>v[,<span class="dv">5</span>], <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="S10-multicoll.html#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(s<span class="sc">$</span>v[,<span class="dv">5</span>], <span class="dv">3</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] -0.533 -0.001  0.460  0.503  0.502</code></pre>
 <p>Rounding the numbers some more and remembering that the first
 value corresponds to the intercept, we get that
