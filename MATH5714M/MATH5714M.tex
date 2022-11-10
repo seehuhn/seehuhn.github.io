@@ -936,10 +936,10 @@ the execution times using the R package \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr     min       lq      mean   median      uq      max neval
-##  KDE1 853.251 905.5670 1033.4433 927.3175 955.136 7097.264  1000
-##  KDE2 116.768 165.6605  238.5508 174.3115 191.019 5533.688  1000
-##  KDE3 105.124 139.7075  209.6721 145.7140 156.497 8435.053  1000
+##  expr     min       lq      mean   median       uq      max neval
+##  KDE1 850.627 931.0895 1011.3196 952.5735 974.2420 6388.948  1000
+##  KDE2 117.424 176.4230  280.6056 184.7665 197.9685 6195.469  1000
+##  KDE3 106.682 148.5430  216.0543 154.6315 163.6720 7358.639  1000
 \end{verbatim}
 
 The output summarises the execution times for 1000 runs of each of the
@@ -968,8 +968,8 @@ as we used above.
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr    min       lq     mean  median       uq      max neval
-##  density 97.047 108.0555 130.5697 113.652 120.8065 4075.728  1000
+##     expr     min     lq     mean  median      uq      max neval
+##  density 102.336 113.98 131.6842 116.973 120.663 4344.934  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by
@@ -2332,12 +2332,12 @@ number~\(\kappa\). For the example above we get the following value:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{kappa}\NormalTok{(m)}
+\FunctionTok{kappa}\NormalTok{(m, }\AttributeTok{exact =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 2813.242
+## [1] 1849.947
 \end{verbatim}
 
 This is a large value, indicating collinearity. To improve the setup
@@ -2366,20 +2366,20 @@ Continuing from the previous example, we can see that writing the model as in\\
 \begin{Highlighting}[]
 \NormalTok{x.tilde }\OtherTok{\textless{}{-}} \DecValTok{5}
 \NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{{-}}\NormalTok{x.tilde) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{((x}\SpecialCharTok{{-}}\NormalTok{x.tilde)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{((x}\SpecialCharTok{{-}}\NormalTok{x.tilde)}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{))}
-\FunctionTok{kappa}\NormalTok{(m2)}
+\FunctionTok{kappa}\NormalTok{(m2, }\AttributeTok{exact =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 65.75674
+## [1] 76.59629
 \end{verbatim}
 
 While there is still collinearity, the condition number is now much smaller.
 \end{example}
 
-Polynomials of higher degree take very large values as \(|x|\) increases.
-These polynomials are best used for local interpolation of data.
-In contrast, polynomials of higher degree often make poor global models.
+Polynomials of higher degree take very large values as \(|x|\) increases and
+often make poor global models. Instead, these polynomials are best used for
+local interpolation of data.
 
 \hypertarget{polynomial-regression-with-weights}{%
 \subsection{Polynomial Regression with Weights}\label{polynomial-regression-with-weights}}
@@ -2483,7 +2483,7 @@ which is different from what \texttt{ksmooth()} uses. Experimentally I found
 that \texttt{bandwidth\ =\ 0.3} for \texttt{ksmooth()} corresponds to
 \texttt{bandwidth\ =\ 0.11} for \texttt{locpoly()}: the output of
 \texttt{ksmooth(...,\ bandwidth\ =\ 0.3)}
-and of \texttt{locpoly(x..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is near identical.
+and of \texttt{locpoly(..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is near identical.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2498,6 +2498,16 @@ and of \texttt{locpoly(x..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is near identic
 \FunctionTok{lines}\NormalTok{(m1, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
 
 \FunctionTok{library}\NormalTok{(KernSmooth)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## KernSmooth 2.23 loaded
+## Copyright M. P. Wand 1997-2009
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{locpoly}\NormalTok{(x, y, }\AttributeTok{degree =} \DecValTok{1}\NormalTok{, }\AttributeTok{bandwidth =} \FloatTok{0.11}\NormalTok{)}
 \FunctionTok{lines}\NormalTok{(m2, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
 \end{Highlighting}

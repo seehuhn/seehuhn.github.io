@@ -369,8 +369,8 @@ beyond the range of the data.</p>
 <p>When the regression is set up in this way, the design matrix often suffers
 from collinearity. To check for this, we can consider the condition
 number <span class="math inline">\(\kappa\)</span>. For the example above we get the following value:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="X06-locpoly.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m)</span></code></pre></div>
-<pre><code>## [1] 2813.242</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="X06-locpoly.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 1849.947</code></pre>
 <p>This is a large value, indicating collinearity. To improve the setup
 of the problem we can use the model
 <span class="math display">\[\begin{equation*}
@@ -393,13 +393,13 @@ This leads to the design matrix
 <a href="X06-locpoly.html#eq:X-local">(6.2)</a> greatly improves the condition number:</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="X06-locpoly.html#cb44-1" aria-hidden="true" tabindex="-1"></a>x.tilde <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb44-2"><a href="X06-locpoly.html#cb44-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">I</span>(x<span class="sc">-</span>x.tilde) <span class="sc">+</span> <span class="fu">I</span>((x<span class="sc">-</span>x.tilde)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>((x<span class="sc">-</span>x.tilde)<span class="sc">^</span><span class="dv">3</span>))</span>
-<span id="cb44-3"><a href="X06-locpoly.html#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m2)</span></code></pre></div>
-<pre><code>## [1] 65.75674</code></pre>
+<span id="cb44-3"><a href="X06-locpoly.html#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m2, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 76.59629</code></pre>
 <p>While there is still collinearity, the condition number is now much smaller.</p>
 </div>
-<p>Polynomials of higher degree take very large values as <span class="math inline">\(|x|\)</span> increases.
-These polynomials are best used for local interpolation of data.
-In contrast, polynomials of higher degree often make poor global models.</p>
+<p>Polynomials of higher degree take very large values as <span class="math inline">\(|x|\)</span> increases and
+often make poor global models. Instead, these polynomials are best used for
+local interpolation of data.</p>
 </div>
 <div id="polynomial-regression-with-weights" class="section level2 hasAnchor" number="6.3">
 <h2><span class="header-section-number">6.3</span> Polynomial Regression with Weights<a href="X06-locpoly.html#polynomial-regression-with-weights" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -500,7 +500,7 @@ which is different from what <code>ksmooth()</code> uses. Experimentally I found
 that <code>bandwidth = 0.3</code> for <code>ksmooth()</code> corresponds to
 <code>bandwidth = 0.11</code> for <code>locpoly()</code>: the output of
 <code>ksmooth(..., bandwidth = 0.3)</code>
-and of <code>locpoly(x.., degree = 0, bandwidth = 0.11)</code> is near identical.</p>
+and of <code>locpoly(.., degree = 0, bandwidth = 0.11)</code> is near identical.</p>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="X06-locpoly.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>
 <span id="cb46-2"><a href="X06-locpoly.html#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb46-3"><a href="X06-locpoly.html#cb46-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
@@ -511,9 +511,11 @@ and of <code>locpoly(x.., degree = 0, bandwidth = 0.11)</code> is near identical
 <span id="cb46-8"><a href="X06-locpoly.html#cb46-8" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> <span class="fl">0.3</span>)</span>
 <span id="cb46-9"><a href="X06-locpoly.html#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m1, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
 <span id="cb46-10"><a href="X06-locpoly.html#cb46-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-11"><a href="X06-locpoly.html#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
-<span id="cb46-12"><a href="X06-locpoly.html#cb46-12" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">1</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
-<span id="cb46-13"><a href="X06-locpoly.html#cb46-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<span id="cb46-11"><a href="X06-locpoly.html#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span></code></pre></div>
+<pre><code>## KernSmooth 2.23 loaded
+## Copyright M. P. Wand 1997-2009</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="X06-locpoly.html#cb48-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">1</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
+<span id="cb48-2"><a href="X06-locpoly.html#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/locpoly1-1.png" width="672" /></p>
 <p>Near the boundaries the Nadaray-Watson estimator is biased, because on the
 left-hand boundary all nearby samples correspond to larger values of the mean
@@ -530,19 +532,19 @@ bias near peaks.</p>
 <p><span id="exm:unlabeled-div-10" class="example"><strong>Example 6.4  </strong></span>We compare the Nadaraya-Watson estimator to locally polynomial regression
 with <span class="math inline">\(p=2\)</span>, using a simulated dataset which has a peak in the middle of the
 domain. We choose the same bandwidths as in the previous example.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="X06-locpoly.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>
-<span id="cb47-2"><a href="X06-locpoly.html#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-3"><a href="X06-locpoly.html#cb47-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
-<span id="cb47-4"><a href="X06-locpoly.html#cb47-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
-<span id="cb47-5"><a href="X06-locpoly.html#cb47-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.05</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb47-6"><a href="X06-locpoly.html#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>)</span>
-<span id="cb47-7"><a href="X06-locpoly.html#cb47-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-8"><a href="X06-locpoly.html#cb47-8" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> <span class="fl">0.3</span>, <span class="at">n.points =</span> <span class="dv">100</span>)</span>
-<span id="cb47-9"><a href="X06-locpoly.html#cb47-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m1, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
-<span id="cb47-10"><a href="X06-locpoly.html#cb47-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-11"><a href="X06-locpoly.html#cb47-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
-<span id="cb47-12"><a href="X06-locpoly.html#cb47-12" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
-<span id="cb47-13"><a href="X06-locpoly.html#cb47-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="X06-locpoly.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>
+<span id="cb49-2"><a href="X06-locpoly.html#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="X06-locpoly.html#cb49-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb49-4"><a href="X06-locpoly.html#cb49-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb49-5"><a href="X06-locpoly.html#cb49-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.05</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb49-6"><a href="X06-locpoly.html#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>)</span>
+<span id="cb49-7"><a href="X06-locpoly.html#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="X06-locpoly.html#cb49-8" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> <span class="fl">0.3</span>, <span class="at">n.points =</span> <span class="dv">100</span>)</span>
+<span id="cb49-9"><a href="X06-locpoly.html#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m1, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb49-10"><a href="X06-locpoly.html#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-11"><a href="X06-locpoly.html#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
+<span id="cb49-12"><a href="X06-locpoly.html#cb49-12" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
+<span id="cb49-13"><a href="X06-locpoly.html#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/locpoly2-1.png" width="672" /></p>
 <p>We can see that the Nadaraya-Watson estimator (red line) is biased near the
 peak, because all nearby samples correspond to smaller values of the mean line.
