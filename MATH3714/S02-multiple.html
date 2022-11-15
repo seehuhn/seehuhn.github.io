@@ -284,7 +284,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="13.3" data-path="S13-models.html"><a href="S13-models.html#criteria"><i class="fa fa-check"></i><b>13.3</b> Assessing Models</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
 <li class="chapter" data-level="14" data-path="S14-methods.html"><a href="S14-methods.html"><i class="fa fa-check"></i><b>14</b> Automatic Model Selection</a>
 <ul>
 <li class="chapter" data-level="14.1" data-path="S14-methods.html"><a href="S14-methods.html#exhaustive-search"><i class="fa fa-check"></i><b>14.1</b> Exhaustive Search</a></li>
@@ -296,6 +295,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.3.3" data-path="S14-methods.html"><a href="S14-methods.html#hybrid-methods"><i class="fa fa-check"></i><b>14.3.3</b> Hybrid Methods</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
 <li class="chapter" data-level="15" data-path="S15-factors.html"><a href="S15-factors.html"><i class="fa fa-check"></i><b>15</b> Factors</a>
 <ul>
 <li class="chapter" data-level="15.1" data-path="S15-factors.html"><a href="S15-factors.html#indicator-variables"><i class="fa fa-check"></i><b>15.1</b> Indicator Variables</a></li>
@@ -390,6 +390,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="S02-multiple" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">Section 2</span> Least Squares Estimates<a href="S02-multiple.html#S02-multiple" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<!--
+TODO(voss):
+* https://nhigham.com/2022/10/11/seven-sins-of-numerical-linear-algebra/
+  This points out that we should solve the least squares problem
+  using the QR decomposition, instead of forming `t(X) %*% X`.
+-->
 <div id="data-and-models" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Data and Models<a href="S02-multiple.html#data-and-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>For multiple linear regression we assume that there are <span class="math inline">\(p\)</span> inputs and
@@ -694,7 +700,7 @@ of <code>mtcars</code>):</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="S02-multiple.html#cb4-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> mtcars[, <span class="dv">1</span>]</span>
 <span id="cb4-2"><a href="S02-multiple.html#cb4-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, <span class="fu">data.matrix</span>(mtcars[, <span class="dv">2</span><span class="sc">:</span><span class="dv">11</span>]))</span></code></pre></div>
 <p>Next we compute <span class="math inline">\(X^\top X\)</span> and solve the normal equations. Often it is
-faster, easier, and has lower numerical errors to solve the normal equations
+faster, easier, and has smaller numerical errors to solve the normal equations
 rather than inverting the matrix <span class="math inline">\(X^\top X\)</span>.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="S02-multiple.html#cb5-1" aria-hidden="true" tabindex="-1"></a>XtX <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X</span>
 <span id="cb5-2"><a href="S02-multiple.html#cb5-2" aria-hidden="true" tabindex="-1"></a>beta.hat <span class="ot">&lt;-</span> <span class="fu">solve</span>(XtX, <span class="fu">t</span>(X) <span class="sc">%*%</span> y)</span>
