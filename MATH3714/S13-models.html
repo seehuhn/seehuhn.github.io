@@ -524,13 +524,14 @@ orthogonal to the included inputs, since then we have <span class="math inline">
   &amp;= \sigma^2 (X^\top X)^{-1} X^\top I X (X^\top X)^{-1} \\
   &amp;= \sigma^2 (X^\top X)^{-1}.
 \end{align*}\]</span>
+Thus, the variance of <span class="math inline">\(\hat\beta\)</span> is not affected by the omitted variables.
 Similar to our derivation in the section <a href="S04-model.html#var-est-bias">Estimating the Error Variance</a>
 one can show that
 <span class="math display">\[\begin{equation*}
   \mathbb{E}\bigl( \hat\sigma^2 \bigr)
   = \sigma^2 + \frac{\tilde\beta^\top \tilde X^\top (I - H) \tilde X \tilde \beta}{n-q}.
 \end{equation*}\]</span>
-This shows that the estimate of the error variance is in general also biased.</p>
+Thus, the estimate of the error variance is in general also biased.</p>
 <p>This shows that our estimates can become biased if some of the inputs
 are missing from our model. As in the previous section, it may happen
 that the MSE of the parameter estimates in the reduced model
@@ -671,13 +672,13 @@ we have <span class="math inline">\(\varepsilon_i = y_i - x_i^\top\beta\)</span>
 for our model is
 <span class="math display">\[\begin{align*}
   L(\beta, \sigma^2; X, y)
-  &amp;= \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}} \exp\Bigl( - \frac{(y_i - x_i^\top\beta)^2}{2\sigma^2} \Bigr) \\
-  &amp;= \frac{1}{(2\pi\sigma^2)^{n/2}} \exp\Bigl( - \sum_{i=1}^n \frac{(y_i - x_i^\top\beta)^2}{2\sigma^2} \Bigr).
+  &amp;= \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}} \exp\Bigl( - \frac{(y_i - (X\beta)_i)^2}{2\sigma^2} \Bigr) \\
+  &amp;= \frac{1}{(2\pi\sigma^2)^{n/2}} \exp\Bigl( - \sum_{i=1}^n \frac{(y_i - (X\beta)_i)^2}{2\sigma^2} \Bigr).
 \end{align*}\]</span>
 Taking logarithms we get
 <span class="math display">\[\begin{align*}
   \log L(\beta, \sigma^2; X, y)
-  &amp;= -\frac{n}{2} \log(2\pi\sigma^2) - \sum_{i=1}^n \frac{(y_i - x_i^\top\beta)^2}{2\sigma^2} \\
+  &amp;= -\frac{n}{2} \log(2\pi\sigma^2) - \sum_{i=1}^n \frac{(y_i - (X\beta)_i)^2}{2\sigma^2} \\
   &amp;= -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} r(\beta),
 \end{align*}\]</span>
 where <span class="math inline">\(r(\beta)\)</span> is the residual sum of squares, as introduced
@@ -699,7 +700,7 @@ Thus we get
   \mathrm{AIC}
   &amp;= 2q + n \log(2\pi\hat\sigma^2_\mathrm{MLE}) + \frac{1}{\hat\sigma^2_\mathrm{MLE}} r(\hat\beta) \\
   &amp;= 2q + n \log\bigl( 2\pi r(\hat\beta) / n \bigr) + n \\
-  &amp;= 2q + n \log\bigl( \|\hat\varepsilon\|^2 \bigr) + n + n \log( 2\pi / n )
+  &amp;= 2q + n \log\bigl( \|\hat\varepsilon\|^2 \bigr) + n + n \log( 2\pi / n ).
 \end{align*}\]</span></p></li>
 </ol>
 <div class="summary">

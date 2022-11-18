@@ -936,10 +936,10 @@ the execution times using the R package \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr     min       lq      mean   median       uq      max neval
-##  KDE1 850.627 931.0895 1011.3196 952.5735 974.2420 6388.948  1000
-##  KDE2 117.424 176.4230  280.6056 184.7665 197.9685 6195.469  1000
-##  KDE3 106.682 148.5430  216.0543 154.6315 163.6720 7358.639  1000
+##  expr      min        lq      mean   median        uq      max neval
+##  KDE1 2455.715 2634.3920 3242.0253 2985.780 3222.7845 25997.67  1000
+##  KDE2  342.974  738.0515 1024.0207  772.494  840.0565 15535.60  1000
+##  KDE3  288.950  567.5250  844.5363  599.821  655.8130 20402.83  1000
 \end{verbatim}
 
 The output summarises the execution times for 1000 runs of each of the
@@ -968,8 +968,8 @@ as we used above.
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr     min     lq     mean  median      uq      max neval
-##  density 102.336 113.98 131.6842 116.973 120.663 4344.934  1000
+##     expr     min      lq     mean  median      uq      max neval
+##  density 272.041 285.346 370.7815 298.245 370.048 10549.69  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by
@@ -2226,22 +2226,22 @@ In the \href{https://seehuhn.github.io/MATH3714/S02-multiple.html\#the-normal-eq
 we introduced the least squares method for linear regression. This method
 estimartes the regression coefficients by minimising the residual sum of
 squares:
-\begin{align*}
+\begin{equation*}
   r(\beta)
-  &= \sum_{i=1}^n \hat\varepsilon_i^2 \\
-  &= \hat\varepsilon^\top \hat\varepsilon.
-\end{align*}
+  = \sum_{i=1}^n \varepsilon_i^2
+  = \sum_{i=1}^n \bigl( y_i - (X\beta)_i \bigr)^2.
+\end{equation*}
 Here we will extend this method to include weights for the observations.
 Given weights
 \(w_1, \ldots, w_n > 0\), the weighted least squares method minimises
 \begin{equation*}
   r_w(\beta)
-  = \sum_{i=1}^n w_i \varepsilon_i^2.
+  = \sum_{i=1}^n w_i \varepsilon_i^2
+  = \sum_{i=1}^n w_i \bigl( y_i - (X\beta)_i \bigr)^2.
 \end{equation*}
 In matrix notation, this function can be written as
 \begin{align*}
   r_w(\beta)
-  = \varepsilon^\top W \varepsilon
   = (y - X \beta)^\top W (y - X \beta),
 \end{align*}
 where \(W\) is a diagonal matrix with the weights on the diagonal:
@@ -2498,16 +2498,6 @@ and of \texttt{locpoly(..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is near identica
 \FunctionTok{lines}\NormalTok{(m1, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
 
 \FunctionTok{library}\NormalTok{(KernSmooth)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## KernSmooth 2.23 loaded
-## Copyright M. P. Wand 1997-2009
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{locpoly}\NormalTok{(x, y, }\AttributeTok{degree =} \DecValTok{1}\NormalTok{, }\AttributeTok{bandwidth =} \FloatTok{0.11}\NormalTok{)}
 \FunctionTok{lines}\NormalTok{(m2, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
 \end{Highlighting}
@@ -2515,7 +2505,7 @@ and of \texttt{locpoly(..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is near identica
 
 \includegraphics{MATH5714M_files/figure-latex/locpoly1-1.pdf}
 
-Near the boundaries the Nadaray-Watson estimator is biased, because on the
+Near the boundaries the Nadaraya-Watson estimator is biased, because on the
 left-hand boundary all nearby samples correspond to larger values of the mean
 line, and similarly on the right-hand boundary all nearby samples correspond to
 smaller values of the mean line. In contrast, the local polynomial estimate

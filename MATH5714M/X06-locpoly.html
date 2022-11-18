@@ -272,22 +272,22 @@ given data <span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n)\)</span>.<
 we introduced the least squares method for linear regression. This method
 estimartes the regression coefficients by minimising the residual sum of
 squares:
-<span class="math display">\[\begin{align*}
+<span class="math display">\[\begin{equation*}
   r(\beta)
-  &amp;= \sum_{i=1}^n \hat\varepsilon_i^2 \\
-  &amp;= \hat\varepsilon^\top \hat\varepsilon.
-\end{align*}\]</span>
+  = \sum_{i=1}^n \varepsilon_i^2
+  = \sum_{i=1}^n \bigl( y_i - (X\beta)_i \bigr)^2.
+\end{equation*}\]</span>
 Here we will extend this method to include weights for the observations.
 Given weights
 <span class="math inline">\(w_1, \ldots, w_n &gt; 0\)</span>, the weighted least squares method minimises
 <span class="math display">\[\begin{equation*}
   r_w(\beta)
-  = \sum_{i=1}^n w_i \varepsilon_i^2.
+  = \sum_{i=1}^n w_i \varepsilon_i^2
+  = \sum_{i=1}^n w_i \bigl( y_i - (X\beta)_i \bigr)^2.
 \end{equation*}\]</span>
 In matrix notation, this function can be written as
 <span class="math display">\[\begin{align*}
   r_w(\beta)
-  = \varepsilon^\top W \varepsilon
   = (y - X \beta)^\top W (y - X \beta),
 \end{align*}\]</span>
 where <span class="math inline">\(W\)</span> is a diagonal matrix with the weights on the diagonal:
@@ -517,7 +517,7 @@ and of <code>locpoly(.., degree = 0, bandwidth = 0.11)</code> is near identical.
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="X06-locpoly.html#cb48-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">1</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
 <span id="cb48-2"><a href="X06-locpoly.html#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/locpoly1-1.png" width="672" /></p>
-<p>Near the boundaries the Nadaray-Watson estimator is biased, because on the
+<p>Near the boundaries the Nadaraya-Watson estimator is biased, because on the
 left-hand boundary all nearby samples correspond to larger values of the mean
 line, and similarly on the right-hand boundary all nearby samples correspond to
 smaller values of the mean line. In contrast, the local polynomial estimate

@@ -5042,7 +5042,7 @@ sections in turn:
   fitted residuals \(\hat\varepsilon_1, \ldots, \hat\varepsilon_n\). The values
   shown are the minimum, first quartile, median, third quartile,
   and maximum of the residuals. This is the same information
-  we can get using the command \texttt{summary(resid(m)}.
+  we can get using the command \texttt{summary(resid(m))}.
   The mean is omitted from A, since if always equals zero.
 \item
   Column \textbf{B} shows the estimated coefficient vector \(\hat\beta\).
@@ -7608,13 +7608,14 @@ Using the formula for \(\hat\beta\) we find
   &= \sigma^2 (X^\top X)^{-1} X^\top I X (X^\top X)^{-1} \\
   &= \sigma^2 (X^\top X)^{-1}.
 \end{align*}
+Thus, the variance of \(\hat\beta\) is not affected by the omitted variables.
 Similar to our derivation in the section \protect\hyperlink{var-est-bias}{Estimating the Error Variance}
 one can show that
 \begin{equation*}
   \mathbb{E}\bigl( \hat\sigma^2 \bigr)
   = \sigma^2 + \frac{\tilde\beta^\top \tilde X^\top (I - H) \tilde X \tilde \beta}{n-q}.
 \end{equation*}
-This shows that the estimate of the error variance is in general also biased.
+Thus, the estimate of the error variance is in general also biased.
 
 This shows that our estimates can become biased if some of the inputs
 are missing from our model. As in the previous section, it may happen
@@ -7803,13 +7804,13 @@ in a regression model.
   for our model is
   \begin{align*}
     L(\beta, \sigma^2; X, y)
-    &= \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}} \exp\Bigl( - \frac{(y_i - x_i^\top\beta)^2}{2\sigma^2} \Bigr) \\
-    &= \frac{1}{(2\pi\sigma^2)^{n/2}} \exp\Bigl( - \sum_{i=1}^n \frac{(y_i - x_i^\top\beta)^2}{2\sigma^2} \Bigr).
+    &= \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}} \exp\Bigl( - \frac{(y_i - (X\beta)_i)^2}{2\sigma^2} \Bigr) \\
+    &= \frac{1}{(2\pi\sigma^2)^{n/2}} \exp\Bigl( - \sum_{i=1}^n \frac{(y_i - (X\beta)_i)^2}{2\sigma^2} \Bigr).
   \end{align*}
   Taking logarithms we get
   \begin{align*}
     \log L(\beta, \sigma^2; X, y)
-    &= -\frac{n}{2} \log(2\pi\sigma^2) - \sum_{i=1}^n \frac{(y_i - x_i^\top\beta)^2}{2\sigma^2} \\
+    &= -\frac{n}{2} \log(2\pi\sigma^2) - \sum_{i=1}^n \frac{(y_i - (X\beta)_i)^2}{2\sigma^2} \\
     &= -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} r(\beta),
   \end{align*}
   where \(r(\beta)\) is the residual sum of squares, as introduced
@@ -7831,7 +7832,7 @@ in a regression model.
     \mathrm{AIC}
     &= 2q + n \log(2\pi\hat\sigma^2_\mathrm{MLE}) + \frac{1}{\hat\sigma^2_\mathrm{MLE}} r(\hat\beta) \\
     &= 2q + n \log\bigl( 2\pi r(\hat\beta) / n \bigr) + n \\
-    &= 2q + n \log\bigl( \|\hat\varepsilon\|^2 \bigr) + n + n \log( 2\pi / n )
+    &= 2q + n \log\bigl( \|\hat\varepsilon\|^2 \bigr) + n + n \log( 2\pi / n ).
   \end{align*}
 \end{enumerate}
 
