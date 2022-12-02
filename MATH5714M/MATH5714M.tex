@@ -936,10 +936,10 @@ the execution times using the R package \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min        lq      mean   median        uq      max neval
-##  KDE1 2455.715 2634.3920 3242.0253 2985.780 3222.7845 25997.67  1000
-##  KDE2  342.974  738.0515 1024.0207  772.494  840.0565 15535.60  1000
-##  KDE3  288.950  567.5250  844.5363  599.821  655.8130 20402.83  1000
+##  expr      min        lq     mean   median       uq       max neval
+##  KDE1 2484.995 2836.4245 4908.039 3322.447 4783.270 150195.22  1000
+##  KDE2  336.301  778.4965 1650.911  845.916 1173.153  60033.33  1000
+##  KDE3  275.639  599.9090 1403.458  650.804  845.157 199026.31  1000
 \end{verbatim}
 
 The output summarises the execution times for 1000 runs of each of the
@@ -968,8 +968,8 @@ as we used above.
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr     min      lq     mean  median      uq      max neval
-##  density 272.041 285.346 370.7815 298.245 370.048 10549.69  1000
+##     expr     min       lq     mean   median      uq      max neval
+##  density 270.696 283.2635 340.7126 286.1675 321.886 9178.035  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by
@@ -2498,6 +2498,16 @@ and of \texttt{locpoly(..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is near identica
 \FunctionTok{lines}\NormalTok{(m1, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
 
 \FunctionTok{library}\NormalTok{(KernSmooth)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## KernSmooth 2.23 loaded
+## Copyright M. P. Wand 1997-2009
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{locpoly}\NormalTok{(x, y, }\AttributeTok{degree =} \DecValTok{1}\NormalTok{, }\AttributeTok{bandwidth =} \FloatTok{0.11}\NormalTok{)}
 \FunctionTok{lines}\NormalTok{(m2, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
 \end{Highlighting}
@@ -2732,15 +2742,11 @@ in \(k\)-nearest neighbour regression. The methods we will use here
 are based on cross-validation.
 
 The idea of cross-validation is to measure goodness of fit by comparing each
-sample \(y_i\) to a fitted value \(\tilde y_i\), where the fitted values \(\tilde y_i\) are computed from a subset of the data which excludes \(x_i\). There are
-different ways to implement this idea:
+sample \(y_i\) to a fitted value~\(\tilde y_i\), where the fitted values \(\tilde y_i\) are computed from a subset of the data which excludes \(x_i\).
+This way, a method cannot achive a misleadingly good fit by overfitting the data.
+There are different ways to implement this idea:
 
 \begin{itemize}
-\item
-  In \textbf{leave-one-out cross-validation}, a separate model is fitted
-  for each \(i \in \{1, \ldots, n\}\), leaving out just the sample \((x_i, y_i)\)
-  for this model. This method can be computationally
-  expensive for large \(n\), since \(n\) models need to be fitted to the data.
 \item
   In \textbf{\emph{k}-fold cross-validation}, the data is partitioned into
   \(k\) subsamples of approximately equal size. Only \(k\) models are fitted,
@@ -2751,12 +2757,14 @@ different ways to implement this idea:
   accurate results than leave-one-out cross-validation.
   For this method to work, it is important that the subsamples
   are independent of each other.
+\item
+  In \textbf{leave-one-out cross-validation}, a separate model is fitted
+  for each \(i \in \{1, \ldots, n\}\), leaving out just the sample \((x_i, y_i)\)
+  for this model. This is the special case of \(k\)-fold cross validation
+  where \(k = n\).
+  Since \(n\) models need to be fitted to the data, for large \(n\)
+  the method can be computationally expensive.
 \end{itemize}
-
-The idea behind cross-validation is that we always compare \(y_i\) to
-a fitted value which was computed without using any information about
-the true value of \(y_i\). This way, a method cannot achive a misleadingly
-good fit by overfitting the data.
 
 \hypertarget{regression}{%
 \subsection{Regression}\label{regression}}
@@ -2867,13 +2875,13 @@ definition of the (I)MSE:
   \mathrm{IMSE}\bigl( \hat f_h \bigr)
   &= \int_{-\infty}^\infty \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr) \,dx \\
   &= \int_{-\infty}^\infty \mathbb{E}\Bigl( \bigl( \hat f_h(x) - f(x) \bigr)^2 \Bigr) \,dx \\
-  &= \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f_h(x)^2 - 2 \hat f(x) f(x)  + f(x)^2 \Bigr) \,dx \\
+  &= \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f_h(x)^2 - 2 \hat f_h(x) f(x)  + f(x)^2 \Bigr) \,dx \\
   &= \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f_h(x)^2 \Bigr) \,dx
-         - 2 \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f(x) f(x) \Bigr) \,dx \\
+         - 2 \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f_h(x) f(x) \Bigr) \,dx \\
       &\hskip5cm
          + \int_{-\infty}^\infty \mathbb{E}\Bigl( f(x)^2 \Bigr) \,dx \\
   &= \int_{-\infty}^\infty \mathbb{E}\Bigl( \hat f_h(x)^2 \Bigr) \,dx
-         - 2 \int_{-\infty}^\infty \mathbb{E}\bigl( \hat f(x) \bigr) f(x) \,dx \\
+         - 2 \int_{-\infty}^\infty \mathbb{E}\bigl( \hat f_h(x) \bigr) f(x) \,dx \\
       &\hskip5cm
          + \int_{-\infty}^\infty f(x)^2 \,dx,
 \end{align*}
@@ -3263,6 +3271,9 @@ to find the optimal \(h\) for each method.
 \FunctionTok{abline}\NormalTok{(}\AttributeTok{v =}\NormalTok{ best.h.NW)}
 \NormalTok{best.h.LL }\OtherTok{\textless{}{-}}\NormalTok{ h[}\FunctionTok{which.min}\NormalTok{(mse.ll)]}
 \FunctionTok{abline}\NormalTok{(}\AttributeTok{v =}\NormalTok{ best.h.LL, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{"NW"}\NormalTok{, }\StringTok{"LL"}\NormalTok{), }\AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{),}
+       \AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3305,7 +3316,8 @@ run than the code in the previous sections.
 \includegraphics{MATH5714M_files/figure-latex/cv-knn-1.pdf}
 
 We note the that leave-one-out mean squared error for kNN is smaller
-than it is for Nadaraya-Watson or local linear regression. Given
+than it is for Nadaraya-Watson or local linear regression, in the
+case of this dataset. Given
 the structure of the data, with different regions having very different
 densities of \(x\)-values, it makes sense that a method which choses
 the bandwidth ``adaptively'' performs better.
