@@ -597,7 +597,7 @@ peak hour demand (<span class="math inline">\(y\)</span>, measured in kW) to tot
 <span id="cb174-2"><a href="S11-improving.html#cb174-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/electric.dat&quot;</span>, <span class="at">header=</span><span class="cn">FALSE</span>)</span>
 <span id="cb174-3"><a href="S11-improving.html#cb174-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>V1, d<span class="sc">$</span>V2,</span>
 <span id="cb174-4"><a href="S11-improving.html#cb174-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;energy usage [kWh]&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;energy demand [kW]&quot;</span>)</span>
-<span id="cb174-5"><a href="S11-improving.html#cb174-5" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(V2 <span class="sc">~</span> ., <span class="at">data =</span> d)</span>
+<span id="cb174-5"><a href="S11-improving.html#cb174-5" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V2 <span class="sc">~</span> ., <span class="at">data =</span> d)</span>
 <span id="cb174-6"><a href="S11-improving.html#cb174-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m1)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/electric1-1.png" width="672" /></p>
 <p>A linear relationship looks plausible, but we can see that the spread
@@ -700,12 +700,14 @@ of <span class="math inline">\(\lambda\)</span>, together with the cutoff sugges
 <span id="cb178-11"><a href="S11-improving.html#cb178-11" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb178-12"><a href="S11-improving.html#cb178-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lambda, rss, <span class="at">type=</span><span class="st">&quot;l&quot;</span>)</span>
 <span id="cb178-13"><a href="S11-improving.html#cb178-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-14"><a href="S11-improving.html#cb178-14" aria-hidden="true" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">min</span>(rss) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.971</span>, <span class="dv">51</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="dv">51</span>)</span>
-<span id="cb178-15"><a href="S11-improving.html#cb178-15" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> cutoff)</span></code></pre></div>
+<span id="cb178-14"><a href="S11-improving.html#cb178-14" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(d) <span class="co"># 53</span></span>
+<span id="cb178-15"><a href="S11-improving.html#cb178-15" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb178-16"><a href="S11-improving.html#cb178-16" aria-hidden="true" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">min</span>(rss) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb178-17"><a href="S11-improving.html#cb178-17" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> cutoff)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/electric5-1.png" width="672" /></p>
 <p>This suggests the range of reasonable <span class="math inline">\(\lambda\)</span> values to be</p>
 <div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="S11-improving.html#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(lambda[<span class="fu">which</span>(rss <span class="sc">&lt;=</span> cutoff)])</span></code></pre></div>
-<pre class="rOutput"><code>[1] 0.307 0.784</code></pre>
+<pre class="rOutput"><code>[1] 0.298 0.784</code></pre>
 <p>The value <span class="math inline">\(\lambda = 1\)</span> (no transformation) is not contained in the interval,
 suggesting that a transformation may be helpful.
 Choosing a “simple” value inside the interval and close to the minimum,

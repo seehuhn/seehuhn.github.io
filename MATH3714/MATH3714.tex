@@ -6485,7 +6485,7 @@ peak hour demand (\(y\), measured in kW) to total energy usage during the month
 \NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}\StringTok{"data/electric.dat"}\NormalTok{, }\AttributeTok{header=}\ConstantTok{FALSE}\NormalTok{)}
 \FunctionTok{plot}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{V1, d}\SpecialCharTok{$}\NormalTok{V2,}
      \AttributeTok{xlab=}\StringTok{"energy usage [kWh]"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"energy demand [kW]"}\NormalTok{)}
-\NormalTok{m1 }\OtherTok{=} \FunctionTok{lm}\NormalTok{(V2 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ d)}
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(V2 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ d)}
 \FunctionTok{abline}\NormalTok{(m1)}
 \end{Highlighting}
 \end{Shaded}
@@ -6614,7 +6614,9 @@ of \(\lambda\), together with the cutoff suggested by equation~\eqref{eq:power-c
 \NormalTok{\}}
 \FunctionTok{plot}\NormalTok{(lambda, rss, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{)}
 
-\NormalTok{cutoff }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(rss) }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.971}\NormalTok{, }\DecValTok{51}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/} \DecValTok{51}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(d) }\CommentTok{\# 53}
+\NormalTok{p }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{cutoff }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(rss) }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{))}
 \FunctionTok{abline}\NormalTok{(}\AttributeTok{h =}\NormalTok{ cutoff)}
 \end{Highlighting}
 \end{Shaded}
@@ -6631,7 +6633,7 @@ This suggests the range of reasonable \(\lambda\) values to be
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] 0.307 0.784}
+\NormalTok{\# [1] 0.298 0.784}
 \end{Highlighting}
 \end{Shaded}
 
