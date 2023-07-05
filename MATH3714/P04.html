@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Problem Sheet 4 | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Problem Sheet 4 | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -127,6 +127,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="jvstyle.css" type="text/css" />
 </head>
@@ -430,9 +434,9 @@ fitted to the data.</li>
 <p>We can fit a model with an intercept and two inputs,
 <span class="math inline">\(T\)</span> and <span class="math inline">\(\max(0, T-T_0)\)</span>. In R we can use the following
 commands to fit such a model:</p>
-<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="P04.html#cb240-1" aria-hidden="true" tabindex="-1"></a>T0 <span class="ot">&lt;-</span> the.given.value <span class="co"># substitute the value of T0 here</span></span>
-<span id="cb240-2"><a href="P04.html#cb240-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(pressure <span class="sc">~</span> temperature <span class="sc">+</span> <span class="fu">I</span>(<span class="fu">pmax</span>(<span class="dv">0</span>, temperature<span class="sc">-</span>T0)),</span>
-<span id="cb240-3"><a href="P04.html#cb240-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> pressure)</span></code></pre></div>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="P04.html#cb240-1" tabindex="-1"></a>T0 <span class="ot">&lt;-</span> the.given.value <span class="co"># substitute the value of T0 here</span></span>
+<span id="cb240-2"><a href="P04.html#cb240-2" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(pressure <span class="sc">~</span> temperature <span class="sc">+</span> <span class="fu">I</span>(<span class="fu">pmax</span>(<span class="dv">0</span>, temperature<span class="sc">-</span>T0)),</span>
+<span id="cb240-3"><a href="P04.html#cb240-3" tabindex="-1"></a>        <span class="at">data =</span> pressure)</span></code></pre></div>
 </div>
 </div>
 <div class="subq">
@@ -456,10 +460,10 @@ temperature <span class="math inline">\(T_0\)</span>.</p>
 of the plot, where the pressure starts increasing more
 quickly. A quick experiment shows that the best <span class="math inline">\(R^2\)</span>
 value is achieved for <span class="math inline">\(T_0 \approx 273\)</span>:</p>
-<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="P04.html#cb241-1" aria-hidden="true" tabindex="-1"></a>T0 <span class="ot">&lt;-</span> <span class="dv">273</span></span>
-<span id="cb241-2"><a href="P04.html#cb241-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(pressure <span class="sc">~</span> temperature <span class="sc">+</span> <span class="fu">I</span>(<span class="fu">pmax</span>(<span class="dv">0</span>, temperature <span class="sc">-</span> T0)),</span>
-<span id="cb241-3"><a href="P04.html#cb241-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>pressure)</span>
-<span id="cb241-4"><a href="P04.html#cb241-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="P04.html#cb241-1" tabindex="-1"></a>T0 <span class="ot">&lt;-</span> <span class="dv">273</span></span>
+<span id="cb241-2"><a href="P04.html#cb241-2" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(pressure <span class="sc">~</span> temperature <span class="sc">+</span> <span class="fu">I</span>(<span class="fu">pmax</span>(<span class="dv">0</span>, temperature <span class="sc">-</span> T0)),</span>
+<span id="cb241-3"><a href="P04.html#cb241-3" tabindex="-1"></a>        <span class="at">data=</span>pressure)</span>
+<span id="cb241-4"><a href="P04.html#cb241-4" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = pressure ~ temperature + I(pmax(0, temperature - 
@@ -483,10 +487,10 @@ F-statistic: 501.3 on 2 and 16 DF,  p-value: 3.705e-15</code></pre>
 <p>To get a better understanding of how the extra term
 <span class="math inline">\(\max(0, T-T_0)\)</span> improves model fit, we plot the data
 together with the fitted model:</p>
-<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="P04.html#cb243-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pressure)</span>
-<span id="cb243-2"><a href="P04.html#cb243-2" aria-hidden="true" tabindex="-1"></a>T.plot <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">360</span>, <span class="at">l=</span><span class="dv">100</span>)</span>
-<span id="cb243-3"><a href="P04.html#cb243-3" aria-hidden="true" tabindex="-1"></a>p.plot <span class="ot">&lt;-</span> <span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">temperature=</span>T.plot))</span>
-<span id="cb243-4"><a href="P04.html#cb243-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(T.plot, p.plot)</span></code></pre></div>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="P04.html#cb243-1" tabindex="-1"></a><span class="fu">plot</span>(pressure)</span>
+<span id="cb243-2"><a href="P04.html#cb243-2" tabindex="-1"></a>T.plot <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">360</span>, <span class="at">l=</span><span class="dv">100</span>)</span>
+<span id="cb243-3"><a href="P04.html#cb243-3" tabindex="-1"></a>p.plot <span class="ot">&lt;-</span> <span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">temperature=</span>T.plot))</span>
+<span id="cb243-4"><a href="P04.html#cb243-4" tabindex="-1"></a><span class="fu">lines</span>(T.plot, p.plot)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/P04Q13c-1.png" width="672" /></p>
 <p>As expected, for <span class="math inline">\(T &gt; 273 = T_0\)</span>, the slope of the
 fitted line increases, leading to greatly improved
@@ -553,10 +557,10 @@ Based on the plot, discuss how well the model fits the data.</li>
 </ol>
 <div class="myanswers">
 <p>We can fit the model as follows:</p>
-<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="P04.html#cb244-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P04Q14.csv</span></span>
-<span id="cb244-2"><a href="P04.html#cb244-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/P04Q14.csv&quot;</span>)</span>
-<span id="cb244-3"><a href="P04.html#cb244-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
-<span id="cb244-4"><a href="P04.html#cb244-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m))</span></code></pre></div>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="P04.html#cb244-1" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P04Q14.csv</span></span>
+<span id="cb244-2"><a href="P04.html#cb244-2" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/P04Q14.csv&quot;</span>)</span>
+<span id="cb244-3"><a href="P04.html#cb244-3" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
+<span id="cb244-4"><a href="P04.html#cb244-4" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/P04Q14a-1.png" width="672" /></p>
 <p>The mean of the residuals does not form a straight line, so the
 dependency of <span class="math inline">\(y\)</span> on the <span class="math inline">\(x_i\)</span> seems to be nonlinear. Also, the variance
@@ -572,27 +576,27 @@ section <a href="S11-improving.html#power-transform">11.3</a> of the notes. Exp
 <div class="myanswers">
 <p>To choose the exponent <span class="math inline">\(\lambda\)</span>, we plot the residual sum of squares
 as a function of <span class="math inline">\(\lambda\)</span>.</p>
-<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="P04.html#cb245-1" aria-hidden="true" tabindex="-1"></a>gm <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(d<span class="sc">$</span>y)))</span>
-<span id="cb245-2"><a href="P04.html#cb245-2" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">101</span>)</span>
-<span id="cb245-3"><a href="P04.html#cb245-3" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(lambda))</span>
-<span id="cb245-4"><a href="P04.html#cb245-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(lambda)) {</span>
-<span id="cb245-5"><a href="P04.html#cb245-5" aria-hidden="true" tabindex="-1"></a>    li <span class="ot">&lt;-</span> lambda[i]</span>
-<span id="cb245-6"><a href="P04.html#cb245-6" aria-hidden="true" tabindex="-1"></a>    y.prime <span class="ot">&lt;-</span> (d<span class="sc">$</span>y<span class="sc">^</span>li <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (li <span class="sc">*</span> gm<span class="sc">^</span>(li<span class="dv">-1</span>))</span>
-<span id="cb245-7"><a href="P04.html#cb245-7" aria-hidden="true" tabindex="-1"></a>    mi <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
-<span id="cb245-8"><a href="P04.html#cb245-8" aria-hidden="true" tabindex="-1"></a>    rss[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(mi)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb245-9"><a href="P04.html#cb245-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb245-10"><a href="P04.html#cb245-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lambda, rss, <span class="at">type=</span><span class="st">&quot;l&quot;</span>)</span>
-<span id="cb245-11"><a href="P04.html#cb245-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb245-12"><a href="P04.html#cb245-12" aria-hidden="true" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">min</span>(rss) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.971</span>, <span class="dv">51</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="dv">51</span>)</span>
-<span id="cb245-13"><a href="P04.html#cb245-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> cutoff)</span></code></pre></div>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="P04.html#cb245-1" tabindex="-1"></a>gm <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(d<span class="sc">$</span>y)))</span>
+<span id="cb245-2"><a href="P04.html#cb245-2" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">101</span>)</span>
+<span id="cb245-3"><a href="P04.html#cb245-3" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(lambda))</span>
+<span id="cb245-4"><a href="P04.html#cb245-4" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(lambda)) {</span>
+<span id="cb245-5"><a href="P04.html#cb245-5" tabindex="-1"></a>    li <span class="ot">&lt;-</span> lambda[i]</span>
+<span id="cb245-6"><a href="P04.html#cb245-6" tabindex="-1"></a>    y.prime <span class="ot">&lt;-</span> (d<span class="sc">$</span>y<span class="sc">^</span>li <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (li <span class="sc">*</span> gm<span class="sc">^</span>(li<span class="dv">-1</span>))</span>
+<span id="cb245-7"><a href="P04.html#cb245-7" tabindex="-1"></a>    mi <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
+<span id="cb245-8"><a href="P04.html#cb245-8" tabindex="-1"></a>    rss[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(mi)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb245-9"><a href="P04.html#cb245-9" tabindex="-1"></a>}</span>
+<span id="cb245-10"><a href="P04.html#cb245-10" tabindex="-1"></a><span class="fu">plot</span>(lambda, rss, <span class="at">type=</span><span class="st">&quot;l&quot;</span>)</span>
+<span id="cb245-11"><a href="P04.html#cb245-11" tabindex="-1"></a></span>
+<span id="cb245-12"><a href="P04.html#cb245-12" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">min</span>(rss) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.971</span>, <span class="dv">51</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="dv">51</span>)</span>
+<span id="cb245-13"><a href="P04.html#cb245-13" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> cutoff)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/P04Q14b-1.png" width="672" /></p>
 <p>The horizonal line in this plot indicates the cutoff suggested by the
 rule of thumb in <a href="S11-improving.html#eq:power-cutoff">(11.1)</a>. Of the values of <span class="math inline">\(\lambda\)</span>
 where <code>rss</code> is below the cutoff, <span class="math inline">\(\lambda = 4\)</span> seems the most “simple”,
 so we try this value here.</p>
-<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="P04.html#cb246-1" aria-hidden="true" tabindex="-1"></a>y.prime <span class="ot">&lt;-</span> d<span class="sc">$</span>y <span class="sc">^</span> <span class="dv">4</span></span>
-<span id="cb246-2"><a href="P04.html#cb246-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
-<span id="cb246-3"><a href="P04.html#cb246-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m))</span></code></pre></div>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="P04.html#cb246-1" tabindex="-1"></a>y.prime <span class="ot">&lt;-</span> d<span class="sc">$</span>y <span class="sc">^</span> <span class="dv">4</span></span>
+<span id="cb246-2"><a href="P04.html#cb246-2" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x1 <span class="sc">+</span> x2, <span class="at">data =</span> d)</span>
+<span id="cb246-3"><a href="P04.html#cb246-3" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/P04Q14c-1.png" width="672" /></p>
 <p>Now the residual plot looks perfect!</p>
 </div>
@@ -614,11 +618,11 @@ as the response variable).</p>
   = \sum_{i=1}^n \Bigl( \frac{\hat\varepsilon_i}{1 - h_{ii}} \Bigr)^2
 \end{equation*}\]</span>
 from the lemma. Implementation in R is straightforward.</p>
-<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="P04.html#cb247-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
-<span id="cb247-2"><a href="P04.html#cb247-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
-<span id="cb247-3"><a href="P04.html#cb247-3" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
-<span id="cb247-4"><a href="P04.html#cb247-4" aria-hidden="true" tabindex="-1"></a>hii <span class="ot">&lt;-</span> <span class="fu">diag</span>(H)</span>
-<span id="cb247-5"><a href="P04.html#cb247-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((<span class="fu">resid</span>(m)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">-</span> hii))<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="P04.html#cb247-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb247-2"><a href="P04.html#cb247-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb247-3"><a href="P04.html#cb247-3" tabindex="-1"></a>H <span class="ot">&lt;-</span> X <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="fu">t</span>(X))</span>
+<span id="cb247-4"><a href="P04.html#cb247-4" tabindex="-1"></a>hii <span class="ot">&lt;-</span> <span class="fu">diag</span>(H)</span>
+<span id="cb247-5"><a href="P04.html#cb247-5" tabindex="-1"></a><span class="fu">sum</span>((<span class="fu">resid</span>(m)<span class="sc">/</span>(<span class="dv">1</span> <span class="sc">-</span> hii))<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 291.8689</code></pre>
 </div>
 </div>

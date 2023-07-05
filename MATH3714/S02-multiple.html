@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 2 Least Squares Estimates | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 2 Least Squares Estimates | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -127,6 +127,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="jvstyle.css" type="text/css" />
 </head>
@@ -409,7 +413,7 @@ a small dataset, which contains information about 32 automobiles
 and 9 other aspects of these cars. Here we consider <code>mpg</code> to be the output,
 and the other listed aspects to be inputs. Type <code>help(mtcars)</code> in R to learn
 more about this dataset:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="S02-multiple.html#cb1-1" aria-hidden="true" tabindex="-1"></a>mtcars</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="S02-multiple.html#cb1-1" tabindex="-1"></a>mtcars</span></code></pre></div>
 <pre class="rOutput"><code>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
@@ -450,8 +454,8 @@ the last column.</p>
 <p>It is easy to make scatter plots which show how a single
 input affects the output. For example, we can show how the engine power
 affects fuel consumption:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="S02-multiple.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mtcars<span class="sc">$</span>hp, mtcars<span class="sc">$</span>mpg,</span>
-<span id="cb3-2"><a href="S02-multiple.html#cb3-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;power [hp]&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;fuel consumption [mpg]&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="S02-multiple.html#cb3-1" tabindex="-1"></a><span class="fu">plot</span>(mtcars<span class="sc">$</span>hp, mtcars<span class="sc">$</span>mpg,</span>
+<span id="cb3-2"><a href="S02-multiple.html#cb3-2" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;power [hp]&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;fuel consumption [mpg]&quot;</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/mtcars-hp-mpg-plot-1.png" width="672" /></p>
 <p>We can see that cars with stronger engines tend to use more fuel
 (<em>i.e.</em> a gallon of fuel lasts for fewer miles; the curve goes down),
@@ -698,14 +702,14 @@ and later show how the same result can be obtained using R’s built-in function
 <p>We first split <code>mtcars</code> into the respons column <code>y</code> (the first column)
 and the design matrix <code>X</code> (a column of ones, followed by columns 2 to 11
 of <code>mtcars</code>):</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="S02-multiple.html#cb4-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> mtcars[, <span class="dv">1</span>]</span>
-<span id="cb4-2"><a href="S02-multiple.html#cb4-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, <span class="fu">data.matrix</span>(mtcars[, <span class="dv">2</span><span class="sc">:</span><span class="dv">11</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="S02-multiple.html#cb4-1" tabindex="-1"></a>y <span class="ot">&lt;-</span> mtcars[, <span class="dv">1</span>]</span>
+<span id="cb4-2"><a href="S02-multiple.html#cb4-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, <span class="fu">data.matrix</span>(mtcars[, <span class="dv">2</span><span class="sc">:</span><span class="dv">11</span>]))</span></code></pre></div>
 <p>Next we compute <span class="math inline">\(X^\top X\)</span> and solve the normal equations. Often it is
 faster, easier, and has smaller numerical errors to solve the normal equations
 rather than inverting the matrix <span class="math inline">\(X^\top X\)</span>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="S02-multiple.html#cb5-1" aria-hidden="true" tabindex="-1"></a>XtX <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X</span>
-<span id="cb5-2"><a href="S02-multiple.html#cb5-2" aria-hidden="true" tabindex="-1"></a>beta.hat <span class="ot">&lt;-</span> <span class="fu">solve</span>(XtX, <span class="fu">t</span>(X) <span class="sc">%*%</span> y)</span>
-<span id="cb5-3"><a href="S02-multiple.html#cb5-3" aria-hidden="true" tabindex="-1"></a>beta.hat</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="S02-multiple.html#cb5-1" tabindex="-1"></a>XtX <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X</span>
+<span id="cb5-2"><a href="S02-multiple.html#cb5-2" tabindex="-1"></a>beta.hat <span class="ot">&lt;-</span> <span class="fu">solve</span>(XtX, <span class="fu">t</span>(X) <span class="sc">%*%</span> y)</span>
+<span id="cb5-3"><a href="S02-multiple.html#cb5-3" tabindex="-1"></a>beta.hat</span></code></pre></div>
 <pre class="rOutput"><code>            [,1]
      12.30337416
 cyl  -0.11144048
@@ -725,16 +729,16 @@ corresponding coefficient <code>-0.02148212</code> is negative.</p>
 <p>Finally, compute the fitted values and generate a plot of fitted values
 against responses. If everything worked, we would expect the points in this
 plot to be close to the diagonal.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="S02-multiple.html#cb7-1" aria-hidden="true" tabindex="-1"></a>y.hat <span class="ot">&lt;-</span> X <span class="sc">%*%</span> beta.hat</span>
-<span id="cb7-2"><a href="S02-multiple.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y, y.hat, <span class="at">xlab =</span> <span class="st">&quot;responses&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;fitted values&quot;</span>)</span>
-<span id="cb7-3"><a href="S02-multiple.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">1</span>) <span class="co"># plot the diagonal</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="S02-multiple.html#cb7-1" tabindex="-1"></a>y.hat <span class="ot">&lt;-</span> X <span class="sc">%*%</span> beta.hat</span>
+<span id="cb7-2"><a href="S02-multiple.html#cb7-2" tabindex="-1"></a><span class="fu">plot</span>(y, y.hat, <span class="at">xlab =</span> <span class="st">&quot;responses&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;fitted values&quot;</span>)</span>
+<span id="cb7-3"><a href="S02-multiple.html#cb7-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">1</span>) <span class="co"># plot the diagonal</span></span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/y-y.hat-plot-1.png" width="672" /></p>
 <p>For comparison we now re-do the analysis using built-in R commands.
 In the <code>lm()</code> command below, we use <code>data=mtcars</code> to tell R where the
 data is stored, and the formula <code>mpg ~ .</code> states that we want to
 model <code>mpg</code> as a function of all other variable (this is the meaning of <code>.</code>).</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="S02-multiple.html#cb8-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars) <span class="co"># fit a linear model</span></span>
-<span id="cb8-2"><a href="S02-multiple.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m) <span class="co"># get the estimated coefficients</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="S02-multiple.html#cb8-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> ., <span class="at">data =</span> mtcars) <span class="co"># fit a linear model</span></span>
+<span id="cb8-2"><a href="S02-multiple.html#cb8-2" tabindex="-1"></a><span class="fu">coef</span>(m) <span class="co"># get the estimated coefficients</span></span></code></pre></div>
 <pre class="rOutput"><code>(Intercept)         cyl        disp          hp        drat          wt 
 12.30337416 -0.11144048  0.01333524 -0.02148212  0.78711097 -3.71530393 
        qsec          vs          am        gear        carb 
@@ -743,8 +747,8 @@ model <code>mpg</code> as a function of all other variable (this is the meaning 
 that we got the same result using both methods. The fitted values
 can be computed using <code>fitted.values(m)</code>. Here we just check that we get
 the same result as above:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="S02-multiple.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(<span class="fu">fitted.values</span>(m) <span class="sc">-</span> y.hat))</span></code></pre></div>
-<pre class="rOutput"><code>[1] 3.410605e-13</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="S02-multiple.html#cb10-1" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(<span class="fu">fitted.values</span>(m) <span class="sc">-</span> y.hat))</span></code></pre></div>
+<pre class="rOutput"><code>[1] 5.329071e-13</code></pre>
 <p>This result <code>5.329071e-13</code> stands for the number <span class="math inline">\(5.329071 \cdot 10^{-13}\)</span>,
 which is extremely small. The difference between our results and R’s result
 is caused by rounding errors.</p>

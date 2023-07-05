@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 11 Improving the Model Fit | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 11 Improving the Model Fit | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -127,6 +127,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="jvstyle.css" type="text/css" />
 </head>
@@ -562,27 +566,27 @@ constant variance is violated.</p>
 function <span class="math inline">\(\arcsin\)</span> is the inverse of the sine function. In R
 this function is available as <code>asin()</code>. To get some intuition about
 this transformation, we plot the function <span class="math inline">\(y \mapsto \arcsin(\sqrt{y})\)</span>:</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="S11-improving.html#cb172-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">l=</span><span class="dv">101</span>)</span>
-<span id="cb172-2"><a href="S11-improving.html#cb172-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y, <span class="fu">asin</span>(<span class="fu">sqrt</span>(y)), <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
-<span id="cb172-3"><a href="S11-improving.html#cb172-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(y <span class="sc">*</span> minute))</span></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="S11-improving.html#cb172-1" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">l=</span><span class="dv">101</span>)</span>
+<span id="cb172-2"><a href="S11-improving.html#cb172-2" tabindex="-1"></a><span class="fu">plot</span>(y, <span class="fu">asin</span>(<span class="fu">sqrt</span>(y)), <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
+<span id="cb172-3"><a href="S11-improving.html#cb172-3" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(y <span class="sc">*</span> minute))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/arcsin-transform-1.png" width="672" /></p>
 <p>We can see that the transformation is approximately linear for most
 of the interval, but has a steeper slope near the edges. The effect of
 this is to increase the size of fluctations for small and large
 <span class="math inline">\(y\)</span>-values. We now consider residual plots for the original and transformed
 data, for a simulated dataset:</p>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="S11-improving.html#cb173-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
-<span id="cb173-2"><a href="S11-improving.html#cb173-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb173-3"><a href="S11-improving.html#cb173-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">100</span>, x) <span class="sc">/</span> <span class="dv">100</span></span>
-<span id="cb173-4"><a href="S11-improving.html#cb173-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb173-5"><a href="S11-improving.html#cb173-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb173-6"><a href="S11-improving.html#cb173-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb173-7"><a href="S11-improving.html#cb173-7" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
-<span id="cb173-8"><a href="S11-improving.html#cb173-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m1), <span class="fu">resid</span>(m1))</span>
-<span id="cb173-9"><a href="S11-improving.html#cb173-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb173-10"><a href="S11-improving.html#cb173-10" aria-hidden="true" tabindex="-1"></a>y.prime <span class="ot">&lt;-</span> <span class="fu">asin</span>(<span class="fu">sqrt</span>(y))</span>
-<span id="cb173-11"><a href="S11-improving.html#cb173-11" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x)</span>
-<span id="cb173-12"><a href="S11-improving.html#cb173-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m2), <span class="fu">resid</span>(m2))</span></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="S11-improving.html#cb173-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb173-2"><a href="S11-improving.html#cb173-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb173-3"><a href="S11-improving.html#cb173-3" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">100</span>, x) <span class="sc">/</span> <span class="dv">100</span></span>
+<span id="cb173-4"><a href="S11-improving.html#cb173-4" tabindex="-1"></a></span>
+<span id="cb173-5"><a href="S11-improving.html#cb173-5" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb173-6"><a href="S11-improving.html#cb173-6" tabindex="-1"></a></span>
+<span id="cb173-7"><a href="S11-improving.html#cb173-7" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb173-8"><a href="S11-improving.html#cb173-8" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m1), <span class="fu">resid</span>(m1))</span>
+<span id="cb173-9"><a href="S11-improving.html#cb173-9" tabindex="-1"></a></span>
+<span id="cb173-10"><a href="S11-improving.html#cb173-10" tabindex="-1"></a>y.prime <span class="ot">&lt;-</span> <span class="fu">asin</span>(<span class="fu">sqrt</span>(y))</span>
+<span id="cb173-11"><a href="S11-improving.html#cb173-11" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x)</span>
+<span id="cb173-12"><a href="S11-improving.html#cb173-12" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m2), <span class="fu">resid</span>(m2))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/binomial-sampling-1.png" width="672" /></p>
 <p>The plot shows that the variance has indeed improved, while linearity
 has suffered (an S-shaped curve is now visible). Neither model is perfect and
@@ -593,32 +597,32 @@ is beneficial or not depends on the particular circumstances.</p>
 <p><span id="exm:electric" class="example"><strong>Example 11.3  </strong></span>An electric utility company is interested in developing a model relating the
 peak hour demand (<span class="math inline">\(y\)</span>, measured in kW) to total energy usage during the month
 (<span class="math inline">\(x\)</span>, in kWh). A scatter plot of the data is shown below:</p>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="S11-improving.html#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data at https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/electric.dat</span></span>
-<span id="cb174-2"><a href="S11-improving.html#cb174-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/electric.dat&quot;</span>, <span class="at">header=</span><span class="cn">FALSE</span>)</span>
-<span id="cb174-3"><a href="S11-improving.html#cb174-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>V1, d<span class="sc">$</span>V2,</span>
-<span id="cb174-4"><a href="S11-improving.html#cb174-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;energy usage [kWh]&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;energy demand [kW]&quot;</span>)</span>
-<span id="cb174-5"><a href="S11-improving.html#cb174-5" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V2 <span class="sc">~</span> ., <span class="at">data =</span> d)</span>
-<span id="cb174-6"><a href="S11-improving.html#cb174-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m1)</span></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="S11-improving.html#cb174-1" tabindex="-1"></a><span class="co"># data at https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/electric.dat</span></span>
+<span id="cb174-2"><a href="S11-improving.html#cb174-2" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/electric.dat&quot;</span>, <span class="at">header=</span><span class="cn">FALSE</span>)</span>
+<span id="cb174-3"><a href="S11-improving.html#cb174-3" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>V1, d<span class="sc">$</span>V2,</span>
+<span id="cb174-4"><a href="S11-improving.html#cb174-4" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;energy usage [kWh]&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;energy demand [kW]&quot;</span>)</span>
+<span id="cb174-5"><a href="S11-improving.html#cb174-5" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(V2 <span class="sc">~</span> ., <span class="at">data =</span> d)</span>
+<span id="cb174-6"><a href="S11-improving.html#cb174-6" tabindex="-1"></a><span class="fu">abline</span>(m1)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/electric1-1.png" width="672" /></p>
 <p>A linear relationship looks plausible, but we can see that the spread
 of points around the regression line widens as energy usage increases.
 this is more clearly visible in a residual plot:</p>
-<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="S11-improving.html#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m1), <span class="fu">resid</span>(m1),</span>
-<span id="cb175-2"><a href="S11-improving.html#cb175-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residuals&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="S11-improving.html#cb175-1" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m1), <span class="fu">resid</span>(m1),</span>
+<span id="cb175-2"><a href="S11-improving.html#cb175-2" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residuals&quot;</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/electric2-1.png" width="672" /></p>
 <p>We try a transformation of the data to stabilise the variance.
 From the “wedge” shape on the left hand side of the plot, it is clear
 that the variance <span class="math inline">\(\sigma^2\)</span> increases as <span class="math inline">\(y\)</span> increases.
 Thus we can try transformations like <span class="math inline">\(y&#39; = \log(y)\)</span> or
 <span class="math inline">\(y&#39; = \sqrt{y}\)</span>. Taking the logarithm for illustration, we get</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="S11-improving.html#cb176-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(V2) <span class="sc">~</span> ., <span class="at">data =</span> d)</span>
-<span id="cb176-2"><a href="S11-improving.html#cb176-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>V1, <span class="fu">log</span>(d<span class="sc">$</span>V2),</span>
-<span id="cb176-3"><a href="S11-improving.html#cb176-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;energy usage [kWh]&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;log-transformed y&quot;</span>)</span>
-<span id="cb176-4"><a href="S11-improving.html#cb176-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m2)</span></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="S11-improving.html#cb176-1" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(V2) <span class="sc">~</span> ., <span class="at">data =</span> d)</span>
+<span id="cb176-2"><a href="S11-improving.html#cb176-2" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>V1, <span class="fu">log</span>(d<span class="sc">$</span>V2),</span>
+<span id="cb176-3"><a href="S11-improving.html#cb176-3" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;energy usage [kWh]&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;log-transformed y&quot;</span>)</span>
+<span id="cb176-4"><a href="S11-improving.html#cb176-4" tabindex="-1"></a><span class="fu">abline</span>(m2)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/electric3-1.png" width="672" /></p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="S11-improving.html#cb177-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m2), <span class="fu">resid</span>(m2),</span>
-<span id="cb177-2"><a href="S11-improving.html#cb177-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residuals for log-transform&quot;</span>)</span>
-<span id="cb177-3"><a href="S11-improving.html#cb177-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="S11-improving.html#cb177-1" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m2), <span class="fu">resid</span>(m2),</span>
+<span id="cb177-2"><a href="S11-improving.html#cb177-2" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residuals for log-transform&quot;</span>)</span>
+<span id="cb177-3"><a href="S11-improving.html#cb177-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/electric4-1.png" width="672" /></p>
 <p>The spread of residuals now looks somewhat more reasonable.</p>
 </div>
@@ -687,26 +691,26 @@ interpret the model, it is usually better to select a “simple” <span class="
 <p><span id="exm:unlabeled-div-43" class="example"><strong>Example 11.4  </strong></span>Continuing from example <a href="S11-improving.html#exm:electric">11.3</a> above, we can try a power
 transform for the data. We start by plotting <span class="math inline">\(r(\lambda)\)</span> as a function
 of <span class="math inline">\(\lambda\)</span>, together with the cutoff suggested by equation <a href="S11-improving.html#eq:power-cutoff">(11.1)</a>:</p>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="S11-improving.html#cb178-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> d<span class="sc">$</span>V1</span>
-<span id="cb178-2"><a href="S11-improving.html#cb178-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> d<span class="sc">$</span>V2</span>
-<span id="cb178-3"><a href="S11-improving.html#cb178-3" aria-hidden="true" tabindex="-1"></a>gm <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(y))) <span class="co"># more stable way to compute geometric mean</span></span>
-<span id="cb178-4"><a href="S11-improving.html#cb178-4" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">101</span>)</span>
-<span id="cb178-5"><a href="S11-improving.html#cb178-5" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(lambda))</span>
-<span id="cb178-6"><a href="S11-improving.html#cb178-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(lambda)) {</span>
-<span id="cb178-7"><a href="S11-improving.html#cb178-7" aria-hidden="true" tabindex="-1"></a>    li <span class="ot">&lt;-</span> lambda[i]</span>
-<span id="cb178-8"><a href="S11-improving.html#cb178-8" aria-hidden="true" tabindex="-1"></a>    y.prime <span class="ot">&lt;-</span> (y<span class="sc">^</span>li <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (li <span class="sc">*</span> gm<span class="sc">^</span>(li<span class="dv">-1</span>))</span>
-<span id="cb178-9"><a href="S11-improving.html#cb178-9" aria-hidden="true" tabindex="-1"></a>    mi <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x)</span>
-<span id="cb178-10"><a href="S11-improving.html#cb178-10" aria-hidden="true" tabindex="-1"></a>    rss[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(mi)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb178-11"><a href="S11-improving.html#cb178-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb178-12"><a href="S11-improving.html#cb178-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lambda, rss, <span class="at">type=</span><span class="st">&quot;l&quot;</span>)</span>
-<span id="cb178-13"><a href="S11-improving.html#cb178-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb178-14"><a href="S11-improving.html#cb178-14" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(d) <span class="co"># 53</span></span>
-<span id="cb178-15"><a href="S11-improving.html#cb178-15" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb178-16"><a href="S11-improving.html#cb178-16" aria-hidden="true" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">min</span>(rss) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb178-17"><a href="S11-improving.html#cb178-17" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> cutoff)</span></code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="S11-improving.html#cb178-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> d<span class="sc">$</span>V1</span>
+<span id="cb178-2"><a href="S11-improving.html#cb178-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> d<span class="sc">$</span>V2</span>
+<span id="cb178-3"><a href="S11-improving.html#cb178-3" tabindex="-1"></a>gm <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(y))) <span class="co"># more stable way to compute geometric mean</span></span>
+<span id="cb178-4"><a href="S11-improving.html#cb178-4" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">101</span>)</span>
+<span id="cb178-5"><a href="S11-improving.html#cb178-5" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(lambda))</span>
+<span id="cb178-6"><a href="S11-improving.html#cb178-6" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(lambda)) {</span>
+<span id="cb178-7"><a href="S11-improving.html#cb178-7" tabindex="-1"></a>    li <span class="ot">&lt;-</span> lambda[i]</span>
+<span id="cb178-8"><a href="S11-improving.html#cb178-8" tabindex="-1"></a>    y.prime <span class="ot">&lt;-</span> (y<span class="sc">^</span>li <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (li <span class="sc">*</span> gm<span class="sc">^</span>(li<span class="dv">-1</span>))</span>
+<span id="cb178-9"><a href="S11-improving.html#cb178-9" tabindex="-1"></a>    mi <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x)</span>
+<span id="cb178-10"><a href="S11-improving.html#cb178-10" tabindex="-1"></a>    rss[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(mi)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb178-11"><a href="S11-improving.html#cb178-11" tabindex="-1"></a>}</span>
+<span id="cb178-12"><a href="S11-improving.html#cb178-12" tabindex="-1"></a><span class="fu">plot</span>(lambda, rss, <span class="at">type=</span><span class="st">&quot;l&quot;</span>)</span>
+<span id="cb178-13"><a href="S11-improving.html#cb178-13" tabindex="-1"></a></span>
+<span id="cb178-14"><a href="S11-improving.html#cb178-14" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(d) <span class="co"># 53</span></span>
+<span id="cb178-15"><a href="S11-improving.html#cb178-15" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb178-16"><a href="S11-improving.html#cb178-16" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">min</span>(rss) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb178-17"><a href="S11-improving.html#cb178-17" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> cutoff)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/electric5-1.png" width="672" /></p>
 <p>This suggests the range of reasonable <span class="math inline">\(\lambda\)</span> values to be</p>
-<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="S11-improving.html#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(lambda[<span class="fu">which</span>(rss <span class="sc">&lt;=</span> cutoff)])</span></code></pre></div>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="S11-improving.html#cb179-1" tabindex="-1"></a><span class="fu">range</span>(lambda[<span class="fu">which</span>(rss <span class="sc">&lt;=</span> cutoff)])</span></code></pre></div>
 <pre class="rOutput"><code>[1] 0.298 0.784</code></pre>
 <p>The value <span class="math inline">\(\lambda = 1\)</span> (no transformation) is not contained in the interval,
 suggesting that a transformation may be helpful.
@@ -717,17 +721,17 @@ we try <span class="math inline">\(\lambda = 0.5\)</span>. This leads to the fol
   = 2\sqrt{g} (\sqrt{y}-1).
 \end{equation*}\]</span>
 Up to the shift and scaling, this just takes the square root of the data.</p>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="S11-improving.html#cb181-1" aria-hidden="true" tabindex="-1"></a>y.prime <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(y)</span>
-<span id="cb181-2"><a href="S11-improving.html#cb181-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y.prime,</span>
-<span id="cb181-3"><a href="S11-improving.html#cb181-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;energy usage [kWh]&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;sqrt-transformed y&quot;</span>)</span>
-<span id="cb181-4"><a href="S11-improving.html#cb181-4" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x)</span>
-<span id="cb181-5"><a href="S11-improving.html#cb181-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(m3)</span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="S11-improving.html#cb181-1" tabindex="-1"></a>y.prime <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(y)</span>
+<span id="cb181-2"><a href="S11-improving.html#cb181-2" tabindex="-1"></a><span class="fu">plot</span>(x, y.prime,</span>
+<span id="cb181-3"><a href="S11-improving.html#cb181-3" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;energy usage [kWh]&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;sqrt-transformed y&quot;</span>)</span>
+<span id="cb181-4"><a href="S11-improving.html#cb181-4" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.prime <span class="sc">~</span> x)</span>
+<span id="cb181-5"><a href="S11-improving.html#cb181-5" tabindex="-1"></a><span class="fu">abline</span>(m3)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/electric6-1.png" width="672" /></p>
 <p>To see whether the variance of the residuals has improved, we consider
 a residual plot:</p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="S11-improving.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m3), <span class="fu">resid</span>(m3),</span>
-<span id="cb182-2"><a href="S11-improving.html#cb182-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residuals for sqrt-transform&quot;</span>)</span>
-<span id="cb182-3"><a href="S11-improving.html#cb182-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="S11-improving.html#cb182-1" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m3), <span class="fu">resid</span>(m3),</span>
+<span id="cb182-2"><a href="S11-improving.html#cb182-2" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residuals for sqrt-transform&quot;</span>)</span>
+<span id="cb182-3"><a href="S11-improving.html#cb182-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/electric7-1.png" width="672" /></p>
 <p>We see that the spread of the residuals has indeed improved, when compared to
 fitting the original data.</p>
@@ -768,14 +772,14 @@ we have
   = 10^8 + (0, 20001, 40004, \ldots, 200100)
 \end{equation*}\]</span>
 and <span class="math inline">\(\mathop{\mathrm{cor}}(x, x^2) \approx 1 - 9.74\times 10^{-9}\)</span>:</p>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="S11-improving.html#cb183-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">10000</span>, <span class="dv">10010</span>)</span>
-<span id="cb183-2"><a href="S11-improving.html#cb183-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(x, x<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="S11-improving.html#cb183-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">10000</span>, <span class="dv">10010</span>)</span>
+<span id="cb183-2"><a href="S11-improving.html#cb183-2" tabindex="-1"></a><span class="fu">cor</span>(x, x<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 1</code></pre>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="S11-improving.html#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">cor</span>(x, x<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="S11-improving.html#cb185-1" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">cor</span>(x, x<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 9.740257e-09</code></pre>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="S11-improving.html#cb187-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x, x<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb187-2"><a href="S11-improving.html#cb187-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre class="rOutput"><code>[1] 1.47006e+23</code></pre>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="S11-improving.html#cb187-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x, x<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb187-2"><a href="S11-improving.html#cb187-2" tabindex="-1"></a><span class="fu">kappa</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre class="rOutput"><code>[1] 1.31431e+24</code></pre>
 <p>The first result, for the correlation, is shown as <span class="math inline">\(1\)</span> due to rounding.
 The internal number representation of the correlation is actually less than
 <span class="math inline">\(1\)</span> and we can print the difference <code>1 - cor(x, x^2)</code> to get the result
@@ -785,11 +789,11 @@ of the output shows that the condition number is greater than <span class="math 
 so the problem indeed suffers severe multicollinearity.</p>
 <p>We can greatly improve the conditioning of the problem
 by using the centred data <span class="math inline">\(x^\ast_i = x_i - \bar x\)</span> before taking powers:</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="S11-improving.html#cb189-1" aria-hidden="true" tabindex="-1"></a>x.star <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">mean</span>(x)</span>
-<span id="cb189-2"><a href="S11-improving.html#cb189-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(x.star, x.star<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="S11-improving.html#cb189-1" tabindex="-1"></a>x.star <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb189-2"><a href="S11-improving.html#cb189-2" tabindex="-1"></a><span class="fu">cor</span>(x.star, x.star<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 0</code></pre>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="S11-improving.html#cb191-1" aria-hidden="true" tabindex="-1"></a>X.star <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x.star, x.star<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb191-2"><a href="S11-improving.html#cb191-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(<span class="fu">t</span>(X.star) <span class="sc">%*%</span> X.star, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="S11-improving.html#cb191-1" tabindex="-1"></a>X.star <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x.star, x.star<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb191-2"><a href="S11-improving.html#cb191-2" tabindex="-1"></a><span class="fu">kappa</span>(<span class="fu">t</span>(X.star) <span class="sc">%*%</span> X.star, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 408.7796</code></pre>
 <p>Now the correlation between <span class="math inline">\(x^\ast\)</span> and <span class="math inline">\((x^\ast)^2\)</span> is exactly zero,
 and the condition number is much improved.</p>
@@ -855,9 +859,9 @@ estimates <span class="math inline">\(\hat\beta_j\)</span> for <span class="math
 the command <code>poly(x, p)</code>. The output of this function is a matrix
 with elements <span class="math inline">\(\psi_j(x_i)\)</span> for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span> (omitting the intercept)
 and <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>. Continuing from the example above we find</p>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="S11-improving.html#cb193-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">10000</span>, <span class="dv">10010</span>)</span>
-<span id="cb193-2"><a href="S11-improving.html#cb193-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, <span class="fu">poly</span>(x, <span class="dv">2</span>)) <span class="co"># manually prepend a column of ones</span></span>
-<span id="cb193-3"><a href="S11-improving.html#cb193-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="S11-improving.html#cb193-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">10000</span>, <span class="dv">10010</span>)</span>
+<span id="cb193-2"><a href="S11-improving.html#cb193-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, <span class="fu">poly</span>(x, <span class="dv">2</span>)) <span class="co"># manually prepend a column of ones</span></span>
+<span id="cb193-3"><a href="S11-improving.html#cb193-3" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, <span class="dv">5</span>)</span></code></pre></div>
 <pre class="rOutput"><code>     1 2
   11 0 0
 1  0 1 0
@@ -865,7 +869,7 @@ and <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>. Continuing from
 <p>Different from our previous approach, the last two columns are now also
 orthogonal to the columns of ones. This further improves the conditioning
 of the design matrix:</p>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="S11-improving.html#cb195-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(X, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="S11-improving.html#cb195-1" tabindex="-1"></a><span class="fu">kappa</span>(X, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 3.316625</code></pre>
 <p>We see that the use of orthogonal polynomials entirely eliminated any
 problems with multicollinearity.</p>
@@ -876,19 +880,19 @@ real data, we use the built-in <code>cars</code> dataset in R. This dataset
 contains historic data (from the 1920s) about the speed of cars (in mph) and
 the distances taken to stop (in ft). We first fit a second order polynomial
 to the data using the naive approach:</p>
-<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="S11-improving.html#cb197-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed <span class="sc">+</span> <span class="fu">I</span>(speed<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> cars)</span>
-<span id="cb197-2"><a href="S11-improving.html#cb197-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cars)</span>
-<span id="cb197-3"><a href="S11-improving.html#cb197-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">predict</span>(m1, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">speed=</span><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="at">l=</span><span class="dv">31</span>))),</span>
-<span id="cb197-4"><a href="S11-improving.html#cb197-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="S11-improving.html#cb197-1" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed <span class="sc">+</span> <span class="fu">I</span>(speed<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> cars)</span>
+<span id="cb197-2"><a href="S11-improving.html#cb197-2" tabindex="-1"></a><span class="fu">plot</span>(cars)</span>
+<span id="cb197-3"><a href="S11-improving.html#cb197-3" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">predict</span>(m1, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">speed=</span><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="at">l=</span><span class="dv">31</span>))),</span>
+<span id="cb197-4"><a href="S11-improving.html#cb197-4" tabindex="-1"></a>      <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/cars-1.png" width="672" /></p>
 <p>Checking the condition number, we see that there is severe multicollinearity:</p>
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="S11-improving.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m1, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="S11-improving.html#cb198-1" tabindex="-1"></a><span class="fu">kappa</span>(m1, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 2160.976</code></pre>
 <p>We can also see that none of the coefficients is significantly different from
 zero, while the F-test rejects the hypothesis that the vector of all regression
 coefficients is zero. We have seen previously that this effect can be an
 indication of multicollinearity.</p>
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="S11-improving.html#cb200-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="S11-improving.html#cb200-1" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = dist ~ speed + I(speed^2), data = cars)
@@ -909,13 +913,13 @@ F-statistic: 47.14 on 2 and 47 DF,  p-value: 5.852e-12</code></pre>
 <p>We can fit an improved model using orthogonal polynomials. Since <code>lm()</code>
 automatically adds the intercept, we don’t need to prepend a column of ones to
 the <code>poly()</code> output here.</p>
-<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="S11-improving.html#cb202-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> <span class="fu">poly</span>(speed, <span class="dv">2</span>), <span class="at">data =</span> cars)</span>
-<span id="cb202-2"><a href="S11-improving.html#cb202-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kappa</span>(m2)</span></code></pre></div>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="S11-improving.html#cb202-1" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> <span class="fu">poly</span>(speed, <span class="dv">2</span>), <span class="at">data =</span> cars)</span>
+<span id="cb202-2"><a href="S11-improving.html#cb202-2" tabindex="-1"></a><span class="fu">kappa</span>(m2)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 6.670129</code></pre>
 <p>We see that in the new model there are no problems with multicollinearity any
 more. The new model also has coefficients which are significantly different
 from zero:</p>
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="S11-improving.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="S11-improving.html#cb204-1" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = dist ~ poly(speed, 2), data = cars)

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Interlude: Linear Regression in R | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Interlude: Linear Regression in R | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -127,6 +127,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="jvstyle.css" type="text/css" />
 </head>
@@ -406,13 +410,13 @@ Assuming, for example, that the explanatory variables are <code>x1</code>, <code
 and that the response variable is <code>y</code> in R, we can tell R to fit the
 linear model <span class="math inline">\(y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \varepsilon\)</span>
 by using the following command:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="I01-lm.html#cb12-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="I01-lm.html#cb12-1" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3)</span></code></pre></div>
 <p>Note that R automatically added the intercept term <span class="math inline">\(\beta_0\)</span> to this
 model. If we want to fit a model without an intercept,
 <em>i.e.</em> the model
 <span class="math inline">\(y = \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \varepsilon\)</span>, we have to add
 <code>0 +</code> in front of the explanatory variables:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="I01-lm.html#cb13-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="I01-lm.html#cb13-1" tabindex="-1"></a>    <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3)</span></code></pre></div>
 <p>The general form of a model specification is the response variable,
 followed by <code>~</code>, followed by a plus-separated list of explanatory
 variables. For this form of calling <code>lm()</code>, the variables <code>y</code>,
@@ -424,7 +428,7 @@ specify arbitrary R expressions to compute the numeric values to be
 used. For example, to fit the model
 <span class="math inline">\(\log(y) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \varepsilon\)</span> (assuming
 that all <span class="math inline">\(y_i\)</span> are positive) we can use the following command:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="I01-lm.html#cb14-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(<span class="fu">log</span>(y) <span class="sc">~</span> x1 <span class="sc">+</span> x2)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="I01-lm.html#cb14-1" tabindex="-1"></a>  <span class="fu">lm</span>(<span class="fu">log</span>(y) <span class="sc">~</span> x1 <span class="sc">+</span> x2)</span></code></pre></div>
 <p>Some care is needed, because <code>+</code>, <code>*</code> and <code>^</code> have a
 special meaning inside the first argument of <code>lm()</code>; any time
 we want to compute a variable for <code>lm()</code> using these
@@ -433,12 +437,12 @@ operations, we need to surround the corresponding expression with
 have their usual, arithmetic meaning. For example, to fit a model
 of the form <span class="math inline">\(y \sim \beta_0 + \beta_1 x + \beta_2 x^2 + \varepsilon\)</span>, we
 can use the following R command:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="I01-lm.html#cb15-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="I01-lm.html#cb15-1" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
 <p>Here, the use of <code>I()</code> tells R that <code>x^2</code> is to be
 interpreted as the vector <span class="math inline">\((x_1^2, \ldots, x_n^2)\)</span>. Similarly, we
 can fit a model of the form
 <span class="math inline">\(y = \beta_0 + \beta_1 (x_1 + x_2) + \varepsilon\)</span>:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="I01-lm.html#cb16-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">I</span>(x1<span class="sc">+</span>x2))</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="I01-lm.html#cb16-1" tabindex="-1"></a>  <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">I</span>(x1<span class="sc">+</span>x2))</span></code></pre></div>
 <p>Here, the use of <code>I()</code> tells R that <code>x1+x2</code> indicates the
 vector <span class="math inline">\((x_{1,1}+x_{2,1}, \ldots, x_{1,n}+x_{2,n})\)</span> instead of two
 separate explanatory variables.</p>
@@ -453,13 +457,13 @@ regression model. For example, the
 built into R consists of a data frame with columns <code>Air.Flow</code>,
 <code>Water.Temp</code>, <code>Acid.Conc.</code>, <code>stack.loss</code>. To predict
 <code>stackloss$stack.loss</code> from <code>stackloss$Air.Flow</code> we can write</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="I01-lm.html#cb17-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> Air.Flow, <span class="at">data=</span>stackloss)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="I01-lm.html#cb17-1" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> Air.Flow, <span class="at">data=</span>stackloss)</span></code></pre></div>
 <p>As a special case, a single dot “<code>.</code>” can be used in place of
 the explanatory variables in the model to indicate that all columns
 except for the given response should be used. Thus, the following
 two commands are equivalent:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="I01-lm.html#cb18-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data=</span>stackloss)</span>
-<span id="cb18-2"><a href="I01-lm.html#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> Air.Flow <span class="sc">+</span> Water.Temp <span class="sc">+</span> Acid.Conc., <span class="at">data=</span>stackloss)</span></code></pre></div></li>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="I01-lm.html#cb18-1" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data=</span>stackloss)</span>
+<span id="cb18-2"><a href="I01-lm.html#cb18-2" tabindex="-1"></a>  <span class="fu">lm</span>(stack.loss <span class="sc">~</span> Air.Flow <span class="sc">+</span> Water.Temp <span class="sc">+</span> Acid.Conc., <span class="at">data=</span>stackloss)</span></code></pre></div></li>
 </ul>
 </div>
 <div id="lm-model" class="section level2 unnumbered hasAnchor">
@@ -469,11 +473,11 @@ information about the fitted model. A good way to work with this object is to
 store it in a variable and then use commands like the ones listed below to work
 with this variable. For example, the following R command fits a model for the
 <code>stackloss</code> dataset and stores it in the variable <code>m</code>:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="I01-lm.html#cb19-1" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data=</span>stackloss)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="I01-lm.html#cb19-1" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data=</span>stackloss)</span></code></pre></div>
 <p>Many operations are available to use with this object <code>m</code>:</p>
 <ul>
 <li><p>Printing <code>m</code> to the screen:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="I01-lm.html#cb20-1" aria-hidden="true" tabindex="-1"></a>  m</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="I01-lm.html#cb20-1" tabindex="-1"></a>  m</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = stack.loss ~ ., data = stackloss)
@@ -484,7 +488,7 @@ Coefficients:
 <p>This shows the estimated values for the regression coefficient.</p></li>
 <li><p>The command <code>summary()</code> can be used to print additional
 information about the fitted model:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="I01-lm.html#cb22-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="I01-lm.html#cb22-1" tabindex="-1"></a>  <span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = stack.loss ~ ., data = stackloss)
@@ -509,12 +513,12 @@ F-statistic:  59.9 on 3 and 17 DF,  p-value: 3.016e-09</code></pre>
 all of this output.</p></li>
 <li><p>The coefficient vector <span class="math inline">\(\beta\)</span> can be obtained using
 <code>coef(m)</code>:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="I01-lm.html#cb24-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="I01-lm.html#cb24-1" tabindex="-1"></a>  <span class="fu">coef</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>(Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
 -39.9196744   0.7156402   1.2952861  -0.1521225 </code></pre></li>
 <li><p>The fitted values <span class="math inline">\(\hat y_i\)</span> can be obtained using
 the command <code>fitted(m)</code>:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="I01-lm.html#cb26-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fitted</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="I01-lm.html#cb26-1" tabindex="-1"></a>  <span class="fu">fitted</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>        1         2         3         4         5         6         7         8 
 38.765363 38.917485 32.444467 22.302226 19.711654 21.006940 21.389491 21.389491 
         9        10        11        12        13        14        15        16 
@@ -523,7 +527,7 @@ the command <code>fitted(m)</code>:</p>
  9.519951  8.455093  9.598257 13.587853 22.237713 </code></pre></li>
 <li><p>The estimated residuals <span class="math inline">\(\hat\varepsilon_i = y_i - \hat y_i\)</span> can
 be obtained using the command <code>resid(m)</code>:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="I01-lm.html#cb28-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">resid</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="I01-lm.html#cb28-1" tabindex="-1"></a>  <span class="fu">resid</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>          1           2           3           4           5           6 
  3.23463723 -1.91748529  4.55553300  5.69777417 -1.71165358 -3.00693970 
           7           8           9          10          11          12 
@@ -533,7 +537,7 @@ be obtained using the command <code>resid(m)</code>:</p>
          19          20          21 
 -0.59825656  1.41214728 -7.23771286 </code></pre></li>
 <li><p>The design matrix <span class="math inline">\(X\)</span> can be found using <code>model.matrix(m)</code>:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="I01-lm.html#cb30-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model.matrix</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="I01-lm.html#cb30-1" tabindex="-1"></a>  <span class="fu">model.matrix</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>   (Intercept) Air.Flow Water.Temp Acid.Conc.
 1            1       80         27         89
 2            1       80         27         88
@@ -574,17 +578,17 @@ predict responses for. The argument <code>new.data</code> should be a <code>data
 for each variable in the original model there should be a column in <code>newdata</code>
 which has the name of the original variable and contains the new values. For
 example, if the model was fitted using</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="I01-lm.html#cb32-1" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="I01-lm.html#cb32-1" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
 <p>and if the new samples are stored in <code>x.new</code>, then responses for
 the <span class="math inline">\(x\)</span>-values in <code>x.new</code> can be predicted using the following
 command:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="I01-lm.html#cb33-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">x=</span>x.new))</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="I01-lm.html#cb33-1" tabindex="-1"></a>  <span class="fu">predict</span>(m, <span class="fu">data.frame</span>(<span class="at">x=</span>x.new))</span></code></pre></div>
 <p>As a second example, for the <code>stackloss</code> dataset, the following
 commands can be used to predict <code>stack.loss</code> for two new
 <span class="math inline">\(x\)</span>-values:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="I01-lm.html#cb34-1" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
-<span id="cb34-2"><a href="I01-lm.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  new.data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Air.Flow=</span><span class="fu">c</span>(<span class="dv">70</span>, <span class="dv">73</span>), <span class="at">Water.Temp=</span><span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">24</span>), <span class="at">Acid.Conc.=</span><span class="fu">c</span>(<span class="dv">78</span>,<span class="dv">90</span>))</span>
-<span id="cb34-3"><a href="I01-lm.html#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(m, new.data)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="I01-lm.html#cb34-1" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb34-2"><a href="I01-lm.html#cb34-2" tabindex="-1"></a>  new.data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Air.Flow=</span><span class="fu">c</span>(<span class="dv">70</span>, <span class="dv">73</span>), <span class="at">Water.Temp=</span><span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">24</span>), <span class="at">Acid.Conc.=</span><span class="fu">c</span>(<span class="dv">78</span>,<span class="dv">90</span>))</span>
+<span id="cb34-3"><a href="I01-lm.html#cb34-3" tabindex="-1"></a>  <span class="fu">predict</span>(m, new.data)</span></code></pre></div>
 <pre class="rOutput"><code>       1        2 
 30.69174 29.71790 </code></pre>
 <p>More information about <code>predict()</code> can be found by reading

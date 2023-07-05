@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 12 Ridge Regression | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 12 Ridge Regression | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -127,6 +127,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="jvstyle.css" type="text/css" />
 </head>
@@ -477,25 +481,25 @@ given by
 <div class="example">
 <p><span id="exm:knorkel" class="example"><strong>Example 12.1  </strong></span>To illustrate the method, we compute the ridge regression estimate for
 a badly conditioned toy dataset.</p>
-<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="S12-ridge.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fix the true parameters for our simulated data:</span></span>
-<span id="cb206-2"><a href="S12-ridge.html#cb206-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, .<span class="dv">5</span>, .<span class="dv">5</span>)</span>
-<span id="cb206-3"><a href="S12-ridge.html#cb206-3" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">0.01</span></span>
-<span id="cb206-4"><a href="S12-ridge.html#cb206-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb206-5"><a href="S12-ridge.html#cb206-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211112</span>)</span>
-<span id="cb206-6"><a href="S12-ridge.html#cb206-6" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.01</span>, <span class="fl">2.00</span>, <span class="fl">2.99</span>, <span class="fl">4.02</span>, <span class="fl">5.01</span>, <span class="fl">5.99</span>)</span>
-<span id="cb206-7"><a href="S12-ridge.html#cb206-7" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.98</span>, <span class="fl">1.99</span>, <span class="fl">3.00</span>, <span class="fl">4.00</span>, <span class="fl">4.99</span>, <span class="fl">6.00</span>)</span>
-<span id="cb206-8"><a href="S12-ridge.html#cb206-8" aria-hidden="true" tabindex="-1"></a><span class="co"># beta[1] in R corresponds to \beta_0, beta[2] = \beta_1, beta[3] = \beta_2</span></span>
-<span id="cb206-9"><a href="S12-ridge.html#cb206-9" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> beta[<span class="dv">1</span>] <span class="sc">+</span> beta[<span class="dv">2</span>] <span class="sc">*</span> x1 <span class="sc">+</span> beta[<span class="dv">3</span>] <span class="sc">*</span> x2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">6</span>, <span class="dv">0</span>, sigma)</span>
-<span id="cb206-10"><a href="S12-ridge.html#cb206-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb206-11"><a href="S12-ridge.html#cb206-11" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fl">0.01</span></span>
-<span id="cb206-12"><a href="S12-ridge.html#cb206-12" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2)</span>
-<span id="cb206-13"><a href="S12-ridge.html#cb206-13" aria-hidden="true" tabindex="-1"></a>beta.ridge <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">+</span> lambda <span class="sc">*</span> <span class="fu">diag</span>(<span class="fu">ncol</span>(X)), <span class="fu">t</span>(X) <span class="sc">%*%</span> y)</span>
-<span id="cb206-14"><a href="S12-ridge.html#cb206-14" aria-hidden="true" tabindex="-1"></a>beta.ridge[,<span class="dv">1</span>] <span class="co"># get first column instead of n × 1 matrix, for tidiness</span></span></code></pre></div>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="S12-ridge.html#cb206-1" tabindex="-1"></a><span class="co"># fix the true parameters for our simulated data:</span></span>
+<span id="cb206-2"><a href="S12-ridge.html#cb206-2" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, .<span class="dv">5</span>, .<span class="dv">5</span>)</span>
+<span id="cb206-3"><a href="S12-ridge.html#cb206-3" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">0.01</span></span>
+<span id="cb206-4"><a href="S12-ridge.html#cb206-4" tabindex="-1"></a></span>
+<span id="cb206-5"><a href="S12-ridge.html#cb206-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211112</span>)</span>
+<span id="cb206-6"><a href="S12-ridge.html#cb206-6" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.01</span>, <span class="fl">2.00</span>, <span class="fl">2.99</span>, <span class="fl">4.02</span>, <span class="fl">5.01</span>, <span class="fl">5.99</span>)</span>
+<span id="cb206-7"><a href="S12-ridge.html#cb206-7" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.98</span>, <span class="fl">1.99</span>, <span class="fl">3.00</span>, <span class="fl">4.00</span>, <span class="fl">4.99</span>, <span class="fl">6.00</span>)</span>
+<span id="cb206-8"><a href="S12-ridge.html#cb206-8" tabindex="-1"></a><span class="co"># beta[1] in R corresponds to \beta_0, beta[2] = \beta_1, beta[3] = \beta_2</span></span>
+<span id="cb206-9"><a href="S12-ridge.html#cb206-9" tabindex="-1"></a>y <span class="ot">&lt;-</span> beta[<span class="dv">1</span>] <span class="sc">+</span> beta[<span class="dv">2</span>] <span class="sc">*</span> x1 <span class="sc">+</span> beta[<span class="dv">3</span>] <span class="sc">*</span> x2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">6</span>, <span class="dv">0</span>, sigma)</span>
+<span id="cb206-10"><a href="S12-ridge.html#cb206-10" tabindex="-1"></a></span>
+<span id="cb206-11"><a href="S12-ridge.html#cb206-11" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fl">0.01</span></span>
+<span id="cb206-12"><a href="S12-ridge.html#cb206-12" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2)</span>
+<span id="cb206-13"><a href="S12-ridge.html#cb206-13" tabindex="-1"></a>beta.ridge <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">+</span> lambda <span class="sc">*</span> <span class="fu">diag</span>(<span class="fu">ncol</span>(X)), <span class="fu">t</span>(X) <span class="sc">%*%</span> y)</span>
+<span id="cb206-14"><a href="S12-ridge.html#cb206-14" tabindex="-1"></a>beta.ridge[,<span class="dv">1</span>] <span class="co"># get first column instead of n × 1 matrix, for tidiness</span></span></code></pre></div>
 <pre class="rOutput"><code>(Intercept)          x1          x2 
 -0.01620501  0.52739367  0.47343531 </code></pre>
 <p>For comparison, we also compute the least squares estimate:</p>
-<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="S12-ridge.html#cb208-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2)</span>
-<span id="cb208-2"><a href="S12-ridge.html#cb208-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="S12-ridge.html#cb208-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2)</span>
+<span id="cb208-2"><a href="S12-ridge.html#cb208-2" tabindex="-1"></a><span class="fu">coef</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>(Intercept)          x1          x2 
 -0.02935851  1.03064453 -0.02749857 </code></pre>
 <p>We see that despite the small value of <span class="math inline">\(\lambda\)</span> there is a considerable
@@ -611,49 +615,49 @@ the MSE for every value of <span class="math inline">\(\lambda\)</span>. Here w
 use the fact that this is simulated data where we know the true
 values of <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\sigma^2\)</span>.</p>
 <p>We start with the bias:</p>
-<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="S12-ridge.html#cb210-1" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
-<span id="cb210-2"><a href="S12-ridge.html#cb210-2" aria-hidden="true" tabindex="-1"></a>Q <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">+</span> lambda <span class="sc">*</span> <span class="fu">diag</span>(<span class="fu">ncol</span>(X))</span>
-<span id="cb210-3"><a href="S12-ridge.html#cb210-3" aria-hidden="true" tabindex="-1"></a>lambda <span class="sc">*</span> <span class="fu">solve</span>(Q, <span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">%*%</span> beta)</span></code></pre></div>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="S12-ridge.html#cb210-1" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb210-2"><a href="S12-ridge.html#cb210-2" tabindex="-1"></a>Q <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">+</span> lambda <span class="sc">*</span> <span class="fu">diag</span>(<span class="fu">ncol</span>(X))</span>
+<span id="cb210-3"><a href="S12-ridge.html#cb210-3" tabindex="-1"></a>lambda <span class="sc">*</span> <span class="fu">solve</span>(Q, <span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">%*%</span> beta)</span></code></pre></div>
 <pre class="rOutput"><code>                    [,1]
 (Intercept) 0.0009178679
 x1          0.0497789499
 x2          0.0499545553</code></pre>
 <p>For the covariance matrix we get the following:</p>
-<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="S12-ridge.html#cb212-1" aria-hidden="true" tabindex="-1"></a>C1 <span class="ot">&lt;-</span> <span class="fu">solve</span>(Q) <span class="co"># Compute the inverse Q^{-1} ...</span></span>
-<span id="cb212-2"><a href="S12-ridge.html#cb212-2" aria-hidden="true" tabindex="-1"></a>C2 <span class="ot">&lt;-</span> C1 <span class="sc">%*%</span> C1 <span class="co"># ... and also Q^{-2}, to get</span></span>
-<span id="cb212-3"><a href="S12-ridge.html#cb212-3" aria-hidden="true" tabindex="-1"></a>sigma<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (C1 <span class="sc">-</span> lambda<span class="sc">*</span>C2) <span class="co"># the covariance matrix.</span></span></code></pre></div>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="S12-ridge.html#cb212-1" tabindex="-1"></a>C1 <span class="ot">&lt;-</span> <span class="fu">solve</span>(Q) <span class="co"># Compute the inverse Q^{-1} ...</span></span>
+<span id="cb212-2"><a href="S12-ridge.html#cb212-2" tabindex="-1"></a>C2 <span class="ot">&lt;-</span> C1 <span class="sc">%*%</span> C1 <span class="co"># ... and also Q^{-2}, to get</span></span>
+<span id="cb212-3"><a href="S12-ridge.html#cb212-3" tabindex="-1"></a>sigma<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (C1 <span class="sc">-</span> lambda<span class="sc">*</span>C2) <span class="co"># the covariance matrix.</span></span></code></pre></div>
 <pre class="rOutput"><code>              (Intercept)            x1            x2
 (Intercept)  7.291379e-05 -7.580602e-06 -9.226941e-06
 x1          -7.580602e-06  3.831264e-06 -1.540098e-06
 x2          -9.226941e-06 -1.540098e-06  4.221464e-06</code></pre>
 <p>Now we repeat these calculations in a loop, to plot the MSE
 as a function of <span class="math inline">\(\lambda\)</span>:</p>
-<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="S12-ridge.html#cb214-1" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>, <span class="at">length.out =</span> <span class="dv">100</span>) <span class="co"># range of lambda to try</span></span>
-<span id="cb214-2"><a href="S12-ridge.html#cb214-2" aria-hidden="true" tabindex="-1"></a>j.plus<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span> <span class="co"># we plot the error of \beta_1</span></span>
-<span id="cb214-3"><a href="S12-ridge.html#cb214-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb214-4"><a href="S12-ridge.html#cb214-4" aria-hidden="true" tabindex="-1"></a>variance <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(lambda))</span>
-<span id="cb214-5"><a href="S12-ridge.html#cb214-5" aria-hidden="true" tabindex="-1"></a>bias <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(lambda))</span>
-<span id="cb214-6"><a href="S12-ridge.html#cb214-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(lambda)) {</span>
-<span id="cb214-7"><a href="S12-ridge.html#cb214-7" aria-hidden="true" tabindex="-1"></a>    lambda.i <span class="ot">&lt;-</span> lambda[i]</span>
-<span id="cb214-8"><a href="S12-ridge.html#cb214-8" aria-hidden="true" tabindex="-1"></a>    Q <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">+</span> lambda.i <span class="sc">*</span> <span class="fu">diag</span>(<span class="fu">ncol</span>(X))</span>
-<span id="cb214-9"><a href="S12-ridge.html#cb214-9" aria-hidden="true" tabindex="-1"></a>    C1 <span class="ot">&lt;-</span> <span class="fu">solve</span>(Q)</span>
-<span id="cb214-10"><a href="S12-ridge.html#cb214-10" aria-hidden="true" tabindex="-1"></a>    bias[i] <span class="ot">&lt;-</span> (lambda.i <span class="sc">*</span> <span class="fu">solve</span>(Q, <span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">%*%</span> beta))[j.plus<span class="fl">.1</span>]</span>
-<span id="cb214-11"><a href="S12-ridge.html#cb214-11" aria-hidden="true" tabindex="-1"></a>    C2 <span class="ot">&lt;-</span> C1 <span class="sc">%*%</span> C1</span>
-<span id="cb214-12"><a href="S12-ridge.html#cb214-12" aria-hidden="true" tabindex="-1"></a>    C <span class="ot">&lt;-</span> C1 <span class="sc">-</span> lambda.i<span class="sc">*</span>C2</span>
-<span id="cb214-13"><a href="S12-ridge.html#cb214-13" aria-hidden="true" tabindex="-1"></a>    variance[i] <span class="ot">&lt;-</span> sigma<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> C[j.plus<span class="fl">.1</span>, j.plus<span class="fl">.1</span>]</span>
-<span id="cb214-14"><a href="S12-ridge.html#cb214-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb214-15"><a href="S12-ridge.html#cb214-15" aria-hidden="true" tabindex="-1"></a>MSE <span class="ot">&lt;-</span> variance <span class="sc">+</span> bias<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb214-16"><a href="S12-ridge.html#cb214-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb214-17"><a href="S12-ridge.html#cb214-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lambda, MSE, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">log =</span> <span class="st">&quot;x&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>))</span>
-<span id="cb214-18"><a href="S12-ridge.html#cb214-18" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(lambda, bias<span class="sc">^</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">&quot;#1b9e77&quot;</span>, <span class="at">lw =</span> <span class="dv">3</span>)</span>
-<span id="cb214-19"><a href="S12-ridge.html#cb214-19" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(lambda, variance, <span class="at">col=</span><span class="st">&quot;#d95f02&quot;</span>, <span class="at">lw =</span> <span class="dv">3</span>)</span>
-<span id="cb214-20"><a href="S12-ridge.html#cb214-20" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(lambda, MSE) <span class="co"># make sure MSE is not obscured by bias/variance</span></span>
-<span id="cb214-21"><a href="S12-ridge.html#cb214-21" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> lambda[<span class="fu">which.min</span>(MSE)]) <span class="co"># mark the minimum</span></span>
-<span id="cb214-22"><a href="S12-ridge.html#cb214-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb214-23"><a href="S12-ridge.html#cb214-23" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>,</span>
-<span id="cb214-24"><a href="S12-ridge.html#cb214-24" aria-hidden="true" tabindex="-1"></a>       <span class="fu">c</span>(<span class="st">&quot;bias squared&quot;</span>, <span class="st">&quot;variance&quot;</span>, <span class="st">&quot;MSE&quot;</span>),</span>
-<span id="cb214-25"><a href="S12-ridge.html#cb214-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;#1b9e77&quot;</span>, <span class="st">&quot;#d95f02&quot;</span>, <span class="st">&quot;black&quot;</span>),</span>
-<span id="cb214-26"><a href="S12-ridge.html#cb214-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">lw =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="S12-ridge.html#cb214-1" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">0</span>, <span class="at">length.out =</span> <span class="dv">100</span>) <span class="co"># range of lambda to try</span></span>
+<span id="cb214-2"><a href="S12-ridge.html#cb214-2" tabindex="-1"></a>j.plus<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span> <span class="co"># we plot the error of \beta_1</span></span>
+<span id="cb214-3"><a href="S12-ridge.html#cb214-3" tabindex="-1"></a></span>
+<span id="cb214-4"><a href="S12-ridge.html#cb214-4" tabindex="-1"></a>variance <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(lambda))</span>
+<span id="cb214-5"><a href="S12-ridge.html#cb214-5" tabindex="-1"></a>bias <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(lambda))</span>
+<span id="cb214-6"><a href="S12-ridge.html#cb214-6" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(lambda)) {</span>
+<span id="cb214-7"><a href="S12-ridge.html#cb214-7" tabindex="-1"></a>    lambda.i <span class="ot">&lt;-</span> lambda[i]</span>
+<span id="cb214-8"><a href="S12-ridge.html#cb214-8" tabindex="-1"></a>    Q <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">+</span> lambda.i <span class="sc">*</span> <span class="fu">diag</span>(<span class="fu">ncol</span>(X))</span>
+<span id="cb214-9"><a href="S12-ridge.html#cb214-9" tabindex="-1"></a>    C1 <span class="ot">&lt;-</span> <span class="fu">solve</span>(Q)</span>
+<span id="cb214-10"><a href="S12-ridge.html#cb214-10" tabindex="-1"></a>    bias[i] <span class="ot">&lt;-</span> (lambda.i <span class="sc">*</span> <span class="fu">solve</span>(Q, <span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">%*%</span> beta))[j.plus<span class="fl">.1</span>]</span>
+<span id="cb214-11"><a href="S12-ridge.html#cb214-11" tabindex="-1"></a>    C2 <span class="ot">&lt;-</span> C1 <span class="sc">%*%</span> C1</span>
+<span id="cb214-12"><a href="S12-ridge.html#cb214-12" tabindex="-1"></a>    C <span class="ot">&lt;-</span> C1 <span class="sc">-</span> lambda.i<span class="sc">*</span>C2</span>
+<span id="cb214-13"><a href="S12-ridge.html#cb214-13" tabindex="-1"></a>    variance[i] <span class="ot">&lt;-</span> sigma<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> C[j.plus<span class="fl">.1</span>, j.plus<span class="fl">.1</span>]</span>
+<span id="cb214-14"><a href="S12-ridge.html#cb214-14" tabindex="-1"></a>}</span>
+<span id="cb214-15"><a href="S12-ridge.html#cb214-15" tabindex="-1"></a>MSE <span class="ot">&lt;-</span> variance <span class="sc">+</span> bias<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb214-16"><a href="S12-ridge.html#cb214-16" tabindex="-1"></a></span>
+<span id="cb214-17"><a href="S12-ridge.html#cb214-17" tabindex="-1"></a><span class="fu">plot</span>(lambda, MSE, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">log =</span> <span class="st">&quot;x&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>))</span>
+<span id="cb214-18"><a href="S12-ridge.html#cb214-18" tabindex="-1"></a><span class="fu">lines</span>(lambda, bias<span class="sc">^</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">&quot;#1b9e77&quot;</span>, <span class="at">lw =</span> <span class="dv">3</span>)</span>
+<span id="cb214-19"><a href="S12-ridge.html#cb214-19" tabindex="-1"></a><span class="fu">lines</span>(lambda, variance, <span class="at">col=</span><span class="st">&quot;#d95f02&quot;</span>, <span class="at">lw =</span> <span class="dv">3</span>)</span>
+<span id="cb214-20"><a href="S12-ridge.html#cb214-20" tabindex="-1"></a><span class="fu">lines</span>(lambda, MSE) <span class="co"># make sure MSE is not obscured by bias/variance</span></span>
+<span id="cb214-21"><a href="S12-ridge.html#cb214-21" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> lambda[<span class="fu">which.min</span>(MSE)]) <span class="co"># mark the minimum</span></span>
+<span id="cb214-22"><a href="S12-ridge.html#cb214-22" tabindex="-1"></a></span>
+<span id="cb214-23"><a href="S12-ridge.html#cb214-23" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>,</span>
+<span id="cb214-24"><a href="S12-ridge.html#cb214-24" tabindex="-1"></a>       <span class="fu">c</span>(<span class="st">&quot;bias squared&quot;</span>, <span class="st">&quot;variance&quot;</span>, <span class="st">&quot;MSE&quot;</span>),</span>
+<span id="cb214-25"><a href="S12-ridge.html#cb214-25" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;#1b9e77&quot;</span>, <span class="st">&quot;#d95f02&quot;</span>, <span class="st">&quot;black&quot;</span>),</span>
+<span id="cb214-26"><a href="S12-ridge.html#cb214-26" tabindex="-1"></a>       <span class="at">lw =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">1</span>))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/ridge-MSE-1.png" width="672" /></p>
 <p>The vertical line at <span class="math inline">\(\lambda = 0.0183\)</span>
 marks the optimal value of <span class="math inline">\(\lambda\)</span>. We can see that for small <span class="math inline">\(\lambda\)</span> the

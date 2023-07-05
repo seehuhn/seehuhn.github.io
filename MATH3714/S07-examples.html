@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 7 Examples | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2022/23" />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 7 Examples | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -127,6 +127,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="jvstyle.css" type="text/css" />
 </head>
@@ -410,21 +414,21 @@ Repository. The data is available at</p>
 <p>There are nine different variables. (The web page explains the interpretation
 of these variables.) We will fit a model which describes <code>LC50</code> as a function
 of the remaining variables:</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="S07-examples.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity</span></span>
-<span id="cb95-2"><a href="S07-examples.html#cb95-2" aria-hidden="true" tabindex="-1"></a>qsar <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/qsar_aquatic_toxicity.csv&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb95-3"><a href="S07-examples.html#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(qsar) <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb95-4"><a href="S07-examples.html#cb95-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;TPSA&quot;</span>,</span>
-<span id="cb95-5"><a href="S07-examples.html#cb95-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;SAacc&quot;</span>,</span>
-<span id="cb95-6"><a href="S07-examples.html#cb95-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;H050&quot;</span>,</span>
-<span id="cb95-7"><a href="S07-examples.html#cb95-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;MLOGP&quot;</span>,</span>
-<span id="cb95-8"><a href="S07-examples.html#cb95-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;RDCHI&quot;</span>,</span>
-<span id="cb95-9"><a href="S07-examples.html#cb95-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;GATS1p&quot;</span>,</span>
-<span id="cb95-10"><a href="S07-examples.html#cb95-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;nN&quot;</span>,</span>
-<span id="cb95-11"><a href="S07-examples.html#cb95-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;C040&quot;</span>,</span>
-<span id="cb95-12"><a href="S07-examples.html#cb95-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;LC50&quot;</span></span>
-<span id="cb95-13"><a href="S07-examples.html#cb95-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb95-14"><a href="S07-examples.html#cb95-14" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar)</span>
-<span id="cb95-15"><a href="S07-examples.html#cb95-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="S07-examples.html#cb95-1" tabindex="-1"></a><span class="co"># data from https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity</span></span>
+<span id="cb95-2"><a href="S07-examples.html#cb95-2" tabindex="-1"></a>qsar <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/qsar_aquatic_toxicity.csv&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb95-3"><a href="S07-examples.html#cb95-3" tabindex="-1"></a><span class="fu">names</span>(qsar) <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb95-4"><a href="S07-examples.html#cb95-4" tabindex="-1"></a>    <span class="st">&quot;TPSA&quot;</span>,</span>
+<span id="cb95-5"><a href="S07-examples.html#cb95-5" tabindex="-1"></a>    <span class="st">&quot;SAacc&quot;</span>,</span>
+<span id="cb95-6"><a href="S07-examples.html#cb95-6" tabindex="-1"></a>    <span class="st">&quot;H050&quot;</span>,</span>
+<span id="cb95-7"><a href="S07-examples.html#cb95-7" tabindex="-1"></a>    <span class="st">&quot;MLOGP&quot;</span>,</span>
+<span id="cb95-8"><a href="S07-examples.html#cb95-8" tabindex="-1"></a>    <span class="st">&quot;RDCHI&quot;</span>,</span>
+<span id="cb95-9"><a href="S07-examples.html#cb95-9" tabindex="-1"></a>    <span class="st">&quot;GATS1p&quot;</span>,</span>
+<span id="cb95-10"><a href="S07-examples.html#cb95-10" tabindex="-1"></a>    <span class="st">&quot;nN&quot;</span>,</span>
+<span id="cb95-11"><a href="S07-examples.html#cb95-11" tabindex="-1"></a>    <span class="st">&quot;C040&quot;</span>,</span>
+<span id="cb95-12"><a href="S07-examples.html#cb95-12" tabindex="-1"></a>    <span class="st">&quot;LC50&quot;</span></span>
+<span id="cb95-13"><a href="S07-examples.html#cb95-13" tabindex="-1"></a>)</span>
+<span id="cb95-14"><a href="S07-examples.html#cb95-14" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar)</span>
+<span id="cb95-15"><a href="S07-examples.html#cb95-15" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = LC50 ~ ., data = qsar)
@@ -456,32 +460,32 @@ F-statistic:  63.5 on 8 and 537 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>To compute the confidence interval from first principles,
 we can use Lemma <a href="S05-single.html#lem:single-CI">5.3</a>. The centre of the confidence
 interval is given by <span class="math inline">\(\hat\beta_i\)</span>:</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="S07-examples.html#cb97-1" aria-hidden="true" tabindex="-1"></a>mid <span class="ot">&lt;-</span> <span class="fu">coef</span>(m)[<span class="dv">7</span>]</span>
-<span id="cb97-2"><a href="S07-examples.html#cb97-2" aria-hidden="true" tabindex="-1"></a>mid</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="S07-examples.html#cb97-1" tabindex="-1"></a>mid <span class="ot">&lt;-</span> <span class="fu">coef</span>(m)[<span class="dv">7</span>]</span>
+<span id="cb97-2"><a href="S07-examples.html#cb97-2" tabindex="-1"></a>mid</span></code></pre></div>
 <pre class="rOutput"><code>    GATS1p 
 -0.5713131 </code></pre>
 <p>To find the half-width of the interval, we need to first construct the
 covariance matrix <span class="math inline">\(C\)</span> and the estimated residual variance <span class="math inline">\(\hat\sigma^2\)</span>.
 We will also need the corresponding quantile of the <span class="math inline">\(t\)</span>-distribution.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="S07-examples.html#cb99-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
-<span id="cb99-2"><a href="S07-examples.html#cb99-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> qsar<span class="sc">$</span>LC50</span>
-<span id="cb99-3"><a href="S07-examples.html#cb99-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
-<span id="cb99-4"><a href="S07-examples.html#cb99-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X) <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb99-5"><a href="S07-examples.html#cb99-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-6"><a href="S07-examples.html#cb99-6" aria-hidden="true" tabindex="-1"></a>Cii <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)[<span class="dv">7</span>, <span class="dv">7</span>]</span>
-<span id="cb99-7"><a href="S07-examples.html#cb99-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Cii =&quot;</span>, Cii, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="S07-examples.html#cb99-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb99-2"><a href="S07-examples.html#cb99-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> qsar<span class="sc">$</span>LC50</span>
+<span id="cb99-3"><a href="S07-examples.html#cb99-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb99-4"><a href="S07-examples.html#cb99-4" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb99-5"><a href="S07-examples.html#cb99-5" tabindex="-1"></a></span>
+<span id="cb99-6"><a href="S07-examples.html#cb99-6" tabindex="-1"></a>Cii <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)[<span class="dv">7</span>, <span class="dv">7</span>]</span>
+<span id="cb99-7"><a href="S07-examples.html#cb99-7" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Cii =&quot;</span>, Cii, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre class="rOutput"><code>Cii = 0.01637454 </code></pre>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="S07-examples.html#cb101-1" aria-hidden="true" tabindex="-1"></a>sigma.hat.squared <span class="ot">&lt;-</span> <span class="fu">sum</span>((<span class="fu">fitted</span>(m) <span class="sc">-</span> y)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb101-2"><a href="S07-examples.html#cb101-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;hat.sigma.square =&quot;</span>, sigma.hat.squared, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="S07-examples.html#cb101-1" tabindex="-1"></a>sigma.hat.squared <span class="ot">&lt;-</span> <span class="fu">sum</span>((<span class="fu">fitted</span>(m) <span class="sc">-</span> y)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb101-2"><a href="S07-examples.html#cb101-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;hat.sigma.square =&quot;</span>, sigma.hat.squared, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre class="rOutput"><code>hat.sigma.square = 1.446134 </code></pre>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="S07-examples.html#cb103-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb103-2"><a href="S07-examples.html#cb103-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb103-3"><a href="S07-examples.html#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;t =&quot;</span>, t, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="S07-examples.html#cb103-1" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb103-2"><a href="S07-examples.html#cb103-2" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb103-3"><a href="S07-examples.html#cb103-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;t =&quot;</span>, t, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre class="rOutput"><code>t = 1.964391 </code></pre>
 <p>With this information in place, we can easily find the confidence
 interval:</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="S07-examples.html#cb105-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(Cii <span class="sc">*</span> sigma.hat.squared) <span class="sc">*</span> t</span>
-<span id="cb105-2"><a href="S07-examples.html#cb105-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, mid <span class="sc">-</span> d, <span class="st">&quot;, &quot;</span>, mid <span class="sc">+</span> d, <span class="st">&quot;]</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="S07-examples.html#cb105-1" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(Cii <span class="sc">*</span> sigma.hat.squared) <span class="sc">*</span> t</span>
+<span id="cb105-2"><a href="S07-examples.html#cb105-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, mid <span class="sc">-</span> d, <span class="st">&quot;, &quot;</span>, mid <span class="sc">+</span> d, <span class="st">&quot;]</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[-0.8735983, -0.2690279]</code></pre>
 </div>
 <div id="from-the-lm-output" class="section level3 hasAnchor" number="7.1.2">
@@ -493,9 +497,9 @@ row corresponding to <code>GATS1p</code> in the output shown above:</p>
 <p>The first number in this row is the centre of the confidence
 interval, the second number corresponds to <span class="math inline">\(\sqrt{\hat\sigma^2 C_{ii}}\)</span>.
 To have everything in one place, we copy the commands for computing <span class="math inline">\(t\)</span>:</p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="S07-examples.html#cb108-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb108-2"><a href="S07-examples.html#cb108-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb108-3"><a href="S07-examples.html#cb108-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="sc">-</span><span class="fl">0.571313</span> <span class="sc">-</span> <span class="fl">0.153882</span><span class="sc">*</span>t, <span class="st">&quot;, &quot;</span>, <span class="sc">-</span><span class="fl">0.571313</span> <span class="sc">+</span> <span class="fl">0.153882</span><span class="sc">*</span>t, <span class="st">&quot;]</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="S07-examples.html#cb108-1" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb108-2"><a href="S07-examples.html#cb108-2" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb108-3"><a href="S07-examples.html#cb108-3" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="sc">-</span><span class="fl">0.571313</span> <span class="sc">-</span> <span class="fl">0.153882</span><span class="sc">*</span>t, <span class="st">&quot;, &quot;</span>, <span class="sc">-</span><span class="fl">0.571313</span> <span class="sc">+</span> <span class="fl">0.153882</span><span class="sc">*</span>t, <span class="st">&quot;]</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[-0.8735975, -0.2690285]</code></pre>
 <p>This is the same result as above.</p>
 </div>
@@ -553,21 +557,21 @@ Then we can solve the inequality <span class="math inline">\(|T| \leq t_{n-p-1}(
 For the <a href="https://rdrr.io/r/datasets/stackloss.html"><code>stackloss</code> dataset</a>
 with input values <code>Air.Flow = 60</code>, <code>Water.Temp = 21</code> and <code>Acid.Conc = 87</code>,
 we can get the following results:</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="S07-examples.html#cb110-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
-<span id="cb110-2"><a href="S07-examples.html#cb110-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
-<span id="cb110-3"><a href="S07-examples.html#cb110-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
-<span id="cb110-4"><a href="S07-examples.html#cb110-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X) <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb110-5"><a href="S07-examples.html#cb110-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb110-6"><a href="S07-examples.html#cb110-6" aria-hidden="true" tabindex="-1"></a>tilde.x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">60</span>, <span class="dv">21</span>, <span class="dv">87</span>)</span>
-<span id="cb110-7"><a href="S07-examples.html#cb110-7" aria-hidden="true" tabindex="-1"></a>hat.beta <span class="ot">&lt;-</span> <span class="fu">coef</span>(m)</span>
-<span id="cb110-8"><a href="S07-examples.html#cb110-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb110-9"><a href="S07-examples.html#cb110-9" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">t</span>(tilde.x) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, tilde.x)</span>
-<span id="cb110-10"><a href="S07-examples.html#cb110-10" aria-hidden="true" tabindex="-1"></a>sigma.hat.squared <span class="ot">&lt;-</span> <span class="fu">sum</span>((<span class="fu">fitted</span>(m) <span class="sc">-</span> stackloss<span class="sc">$</span>stack.loss)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb110-11"><a href="S07-examples.html#cb110-11" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb110-12"><a href="S07-examples.html#cb110-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb110-13"><a href="S07-examples.html#cb110-13" aria-hidden="true" tabindex="-1"></a>mid <span class="ot">&lt;-</span> <span class="fu">t</span>(tilde.x) <span class="sc">%*%</span> hat.beta</span>
-<span id="cb110-14"><a href="S07-examples.html#cb110-14" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(c <span class="sc">*</span> sigma.hat.squared) <span class="sc">*</span> t</span>
-<span id="cb110-15"><a href="S07-examples.html#cb110-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, mid <span class="sc">-</span> d, <span class="st">&quot;, &quot;</span>, mid <span class="sc">+</span> d, <span class="st">&quot;]</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="S07-examples.html#cb110-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb110-2"><a href="S07-examples.html#cb110-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb110-3"><a href="S07-examples.html#cb110-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb110-4"><a href="S07-examples.html#cb110-4" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb110-5"><a href="S07-examples.html#cb110-5" tabindex="-1"></a></span>
+<span id="cb110-6"><a href="S07-examples.html#cb110-6" tabindex="-1"></a>tilde.x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">60</span>, <span class="dv">21</span>, <span class="dv">87</span>)</span>
+<span id="cb110-7"><a href="S07-examples.html#cb110-7" tabindex="-1"></a>hat.beta <span class="ot">&lt;-</span> <span class="fu">coef</span>(m)</span>
+<span id="cb110-8"><a href="S07-examples.html#cb110-8" tabindex="-1"></a></span>
+<span id="cb110-9"><a href="S07-examples.html#cb110-9" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fu">t</span>(tilde.x) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X, tilde.x)</span>
+<span id="cb110-10"><a href="S07-examples.html#cb110-10" tabindex="-1"></a>sigma.hat.squared <span class="ot">&lt;-</span> <span class="fu">sum</span>((<span class="fu">fitted</span>(m) <span class="sc">-</span> stackloss<span class="sc">$</span>stack.loss)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb110-11"><a href="S07-examples.html#cb110-11" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb110-12"><a href="S07-examples.html#cb110-12" tabindex="-1"></a></span>
+<span id="cb110-13"><a href="S07-examples.html#cb110-13" tabindex="-1"></a>mid <span class="ot">&lt;-</span> <span class="fu">t</span>(tilde.x) <span class="sc">%*%</span> hat.beta</span>
+<span id="cb110-14"><a href="S07-examples.html#cb110-14" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(c <span class="sc">*</span> sigma.hat.squared) <span class="sc">*</span> t</span>
+<span id="cb110-15"><a href="S07-examples.html#cb110-15" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, mid <span class="sc">-</span> d, <span class="st">&quot;, &quot;</span>, mid <span class="sc">+</span> d, <span class="st">&quot;]</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[15.46463, 18.50554]</code></pre>
 </div>
 <div id="testing-a-single-coefficient" class="section level2 hasAnchor" number="7.3">
@@ -585,12 +589,12 @@ We will perform a test at <span class="math inline">\(5\%\)</span>-level.</p>
 <h3><span class="header-section-number">7.3.1</span> From First Principles<a href="S07-examples.html#from-first-principles-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We can compute the test statistic manually, using the formula from
 equation <a href="S05-single.html#eq:single-test">(5.2)</a> with <span class="math inline">\(b = 0\)</span>:</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="S07-examples.html#cb112-1" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> hat.beta[<span class="dv">3</span>] <span class="sc">/</span> <span class="fu">sqrt</span>(sigma.hat.squared <span class="sc">*</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)[<span class="dv">3</span>, <span class="dv">3</span>])</span>
-<span id="cb112-2"><a href="S07-examples.html#cb112-2" aria-hidden="true" tabindex="-1"></a>T</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="S07-examples.html#cb112-1" tabindex="-1"></a>T <span class="ot">&lt;-</span> hat.beta[<span class="dv">3</span>] <span class="sc">/</span> <span class="fu">sqrt</span>(sigma.hat.squared <span class="sc">*</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)[<span class="dv">3</span>, <span class="dv">3</span>])</span>
+<span id="cb112-2"><a href="S07-examples.html#cb112-2" tabindex="-1"></a>T</span></code></pre></div>
 <pre class="rOutput"><code>Water.Temp 
   3.519567 </code></pre>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="S07-examples.html#cb114-1" aria-hidden="true" tabindex="-1"></a>t.crit <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb114-2"><a href="S07-examples.html#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abs</span>(T) <span class="sc">&gt;</span> t.crit</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="S07-examples.html#cb114-1" tabindex="-1"></a>t.crit <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb114-2"><a href="S07-examples.html#cb114-2" tabindex="-1"></a><span class="fu">abs</span>(T) <span class="sc">&gt;</span> t.crit</span></code></pre></div>
 <pre class="rOutput"><code>Water.Temp 
       TRUE </code></pre>
 <p>Since the test statistic is larger than the critical value,
@@ -599,7 +603,7 @@ we reject the hypothesis that <span class="math inline">\(\beta_2 = 0\)</span>.<
 <div id="using-the-lm-output-i" class="section level3 hasAnchor" number="7.3.2">
 <h3><span class="header-section-number">7.3.2</span> Using the <code>lm()</code> Output, I<a href="S07-examples.html#using-the-lm-output-i" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We can also find the test statistic in the <code>lm()</code> output:</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="S07-examples.html#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="S07-examples.html#cb116-1" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = stack.loss ~ ., data = stackloss)
@@ -652,10 +656,10 @@ level, and thus we would also reject this hypothesis at <span class="math inline
 </div>
 <p>This section illustrates how a group of coefficients can be tested
 simultaneously. We consider a small, synthetic dataset:</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="S07-examples.html#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/data/small/small.csv</span></span>
-<span id="cb118-2"><a href="S07-examples.html#cb118-2" aria-hidden="true" tabindex="-1"></a>small <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/small.csv&quot;</span>)</span>
-<span id="cb118-3"><a href="S07-examples.html#cb118-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> small)</span>
-<span id="cb118-4"><a href="S07-examples.html#cb118-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="S07-examples.html#cb118-1" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/data/small/small.csv</span></span>
+<span id="cb118-2"><a href="S07-examples.html#cb118-2" tabindex="-1"></a>small <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/small.csv&quot;</span>)</span>
+<span id="cb118-3"><a href="S07-examples.html#cb118-3" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> small)</span>
+<span id="cb118-4"><a href="S07-examples.html#cb118-4" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = y ~ ., data = small)
@@ -710,21 +714,21 @@ The test statistic is
 where <span class="math inline">\(K \hat\beta = (\hat\beta_1, \ldots, \hat\beta_4)\)</span>
 and <span class="math inline">\(K(X^\top X)^{-1} K^\top\)</span> is obtained by removing the first row and
 column from <span class="math inline">\((X^\top X)^{-1}\)</span>:</p>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="S07-examples.html#cb120-1" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">coef</span>(m)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb120-2"><a href="S07-examples.html#cb120-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
-<span id="cb120-3"><a href="S07-examples.html#cb120-3" aria-hidden="true" tabindex="-1"></a>C <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb120-4"><a href="S07-examples.html#cb120-4" aria-hidden="true" tabindex="-1"></a>F <span class="ot">&lt;-</span> <span class="fu">t</span>(b) <span class="sc">%*%</span> <span class="fu">solve</span>(C, b) <span class="sc">/</span> (<span class="dv">4</span> <span class="sc">*</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb120-5"><a href="S07-examples.html#cb120-5" aria-hidden="true" tabindex="-1"></a>F</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="S07-examples.html#cb120-1" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">coef</span>(m)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb120-2"><a href="S07-examples.html#cb120-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb120-3"><a href="S07-examples.html#cb120-3" tabindex="-1"></a>C <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)[<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb120-4"><a href="S07-examples.html#cb120-4" tabindex="-1"></a>F <span class="ot">&lt;-</span> <span class="fu">t</span>(b) <span class="sc">%*%</span> <span class="fu">solve</span>(C, b) <span class="sc">/</span> (<span class="dv">4</span> <span class="sc">*</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb120-5"><a href="S07-examples.html#cb120-5" tabindex="-1"></a>F</span></code></pre></div>
 <pre class="rOutput"><code>         [,1]
 [1,] 4.007393</code></pre>
 <p>From lemma <a href="S06-simultaneous.html#lem:simult-test">6.3</a> we know that under <span class="math inline">\(H_0\)</span>
 the test statistic is <span class="math inline">\(F_{k, n-p-1}\)</span> distributed, and the
 critical value is the <span class="math inline">\(1-\alpha\)</span> quantile of this distribution:</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="S07-examples.html#cb122-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)      <span class="co"># 14</span></span>
-<span id="cb122-2"><a href="S07-examples.html#cb122-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X) <span class="sc">-</span> <span class="dv">1</span>  <span class="co"># 4</span></span>
-<span id="cb122-3"><a href="S07-examples.html#cb122-3" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb122-4"><a href="S07-examples.html#cb122-4" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="fl">0.95</span>, k, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb122-5"><a href="S07-examples.html#cb122-5" aria-hidden="true" tabindex="-1"></a>f</span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="S07-examples.html#cb122-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)      <span class="co"># 14</span></span>
+<span id="cb122-2"><a href="S07-examples.html#cb122-2" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X) <span class="sc">-</span> <span class="dv">1</span>  <span class="co"># 4</span></span>
+<span id="cb122-3"><a href="S07-examples.html#cb122-3" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb122-4"><a href="S07-examples.html#cb122-4" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="fl">0.95</span>, k, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb122-5"><a href="S07-examples.html#cb122-5" tabindex="-1"></a>f</span></code></pre></div>
 <pre class="rOutput"><code>[1] 3.633089</code></pre>
 <p>Since the test statistic is larger than the critical value, we can
 reject <span class="math inline">\(H_0\)</span> and conclude at significance level <span class="math inline">\(5\%\)</span> that not

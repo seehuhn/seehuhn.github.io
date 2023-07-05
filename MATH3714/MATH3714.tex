@@ -6,16 +6,19 @@
   a4paper,
 ]{article}
 \usepackage{amsmath,amssymb}
-\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -46,13 +49,13 @@
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
 \newcommand{\BuiltInTok}[1]{#1}
 \newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
 \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
@@ -60,7 +63,7 @@
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
 \newcommand{\ExtensionTok}[1]{#1}
 \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\ImportTok}[1]{#1}
 \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
@@ -69,7 +72,7 @@
 \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
 \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
 \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
@@ -112,7 +115,7 @@
 \bibliographystyle{plainnat}
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
 \hypersetup{
   pdftitle={MATH3714 Linear Regression and Robustness},
   pdfauthor={Jochen Voss},
@@ -1081,7 +1084,7 @@ the same result as above:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] 3.410605e{-}13}
+\NormalTok{\# [1] 5.329071e{-}13}
 \end{Highlighting}
 \end{Shaded}
 
@@ -5619,14 +5622,15 @@ defined.
 Consider the following data:
 
 \begin{longtable}[]{@{}rcl@{}}
-\toprule()
+\toprule\noalign{}
 \(y\) & \(x_1\) & \(x_2\) \\
-\midrule()
+\midrule\noalign{}
 \endhead
+\bottomrule\noalign{}
+\endlastfoot
 2 & 1 & 1 \\
 4 & 2 & 2 \\
 6 & 3 & 3 \\
-\bottomrule()
 \end{longtable}
 
 In this case, an exact match with no residuals can be achieved
@@ -5833,11 +5837,11 @@ is a diagonal matrix and \(U\in\mathbb{R}^{n\times(p+1)}\) and
 \NormalTok{\# }
 \NormalTok{\# $v}
 \NormalTok{\#             [,1]       [,2]        [,3]        [,4]          [,5]}
-\NormalTok{\# [1,] {-}0.14024576 {-}0.5552821  0.04218055 {-}0.62161197 {-}0.5327403485}
-\NormalTok{\# [2,] {-}0.98554152  0.1088264 {-}0.04131956  0.12311216 {-}0.0009051211}
-\NormalTok{\# [3,] {-}0.04170949  0.4036310 {-}0.21603327 {-}0.75981456  0.4597323397}
-\NormalTok{\# [4,] {-}0.03395454 {-}0.6495911 {-}0.55665792  0.11926737  0.5027780067}
-\NormalTok{\# [5,] {-}0.07839927 {-}0.3081105  0.79998442 {-}0.08306065  0.5020431792}
+\NormalTok{\# [1,] {-}0.14024576 {-}0.5552821 {-}0.04218055 {-}0.62161197  0.5327403485}
+\NormalTok{\# [2,] {-}0.98554152  0.1088264  0.04131956  0.12311216  0.0009051211}
+\NormalTok{\# [3,] {-}0.04170949  0.4036310  0.21603327 {-}0.75981456 {-}0.4597323397}
+\NormalTok{\# [4,] {-}0.03395454 {-}0.6495911  0.55665792  0.11926737 {-}0.5027780067}
+\NormalTok{\# [5,] {-}0.07839927 {-}0.3081105 {-}0.79998442 {-}0.08306065 {-}0.5020431792}
 \end{Highlighting}
 \end{Shaded}
 
@@ -5874,7 +5878,7 @@ Looking at \(\sigma_4(X)\) (the 5th element of \texttt{s\$d}) we get
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] {-}0.533 {-}0.001  0.460  0.503  0.502}
+\NormalTok{\# [1]  0.533  0.001 {-}0.460 {-}0.503 {-}0.502}
 \end{Highlighting}
 \end{Shaded}
 
@@ -5950,10 +5954,12 @@ of the workshop in week~6 where the answers will be discussed.
 variables \(x_1\), \(x_2\) and \(x_3\).
 
 \begin{longtable}[]{@{}rrrrr@{}}
-\toprule()
+\toprule\noalign{}
 \(i\) & \(x_{1,i}\) & \(x_{2,i}\) & \(x_{3,i}\) & \(y_i\) \\
-\midrule()
+\midrule\noalign{}
 \endhead
+\bottomrule\noalign{}
+\endlastfoot
 1 & -2.17 & -2.08 & -2.16 & 4.47 \\
 2 & -1.35 & -0.50 & -0.74 & 5.60 \\
 3 & -1.22 & -1.00 & -1.78 & 4.16 \\
@@ -5966,7 +5972,6 @@ variables \(x_1\), \(x_2\) and \(x_3\).
 10 & 1.53 & 2.30 & 1.35 & 5.35 \\
 11 & 2.46 & 2.55 & 1.77 & 4.86 \\
 12 & 5.00 & 5.04 & 4.05 & 5.09 \\
-\bottomrule()
 \end{longtable}
 
 These data are also available in machine-readable form at
@@ -6343,7 +6348,7 @@ to linear models:
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5195}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2597}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2208}}@{}}
-\toprule()
+\toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 nonlinear model
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
@@ -6351,13 +6356,14 @@ transformation
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 linear Model
 \end{minipage} \\
-\midrule()
+\midrule\noalign{}
 \endhead
+\bottomrule\noalign{}
+\endlastfoot
 \(y \approx \beta_0 x^{\beta_1}\) & \(x'=\log(x)\), \(y'=\log(y)\) & \(y' \approx \log(\beta_0) + \beta_1 x'\) \\
 \(y \approx \beta_0 e^{\beta_1 x}\) & \(y'=\log y\) & \(y' \approx \log \beta_0 +\beta_1 x\) \\
 \(y \approx \beta_0+\beta_1\log x\) & \(x'=\log x\) & \(y \approx \beta_0+\beta_1 x'\) \\
 \(y \approx \frac{x}{\beta_0 x-\beta_1}\) & \(x'=1/x\), \(y'=1/y\) & \(y' \approx \beta_0-\beta_1 x'\) \\
-\bottomrule()
 \end{longtable}
 
 In all such cases we also would need to check the residuals of the transformed
@@ -6399,21 +6405,22 @@ Some commonly-used variance stabilising transformations are:
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.6000}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.4000}}@{}}
-\toprule()
+\toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 variance
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 transformation
 \end{minipage} \\
-\midrule()
+\midrule\noalign{}
 \endhead
+\bottomrule\noalign{}
+\endlastfoot
 \(\sigma^2 = \text{constant}\) & no transformation \\
 \(\sigma^2 \propto y\) & \(y' = \sqrt{y}\) \\
 \(\sigma^2 \propto y^2\) & \(y' = \log y\) \\
 \(\sigma^2 \propto y^3\) & \(y' = \frac{1}{\sqrt{y}}\) \\
 \(\sigma^2 \propto y^4\) & \(y' = \frac{1}{y}\) \\
 \(\sigma^2 \propto y(1-y)\) where \(y \in [0,1]\) & \(y' = \arcsin(\sqrt{y})\) \\
-\bottomrule()
 \end{longtable}
 
 Of course we do not have accurate knowledge of the relationship, but it can be
@@ -6744,7 +6751,7 @@ and \(\mathop{\mathrm{cor}}(x, x^2) \approx 1 - 9.74\times 10^{-9}\):
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] 1.47006e+23}
+\NormalTok{\# [1] 1.31431e+24}
 \end{Highlighting}
 \end{Shaded}
 
@@ -8803,14 +8810,15 @@ Assume we are given data
 Then we can encode this data using the following design matrix:
 
 \begin{longtable}[]{@{}ccc@{}}
-\toprule()
+\toprule\noalign{}
 intercept & \(x_1\) & \(1_\mathrm{\{female\}}(x_2)\) \\
-\midrule()
+\midrule\noalign{}
 \endhead
+\bottomrule\noalign{}
+\endlastfoot
 1 & 1 & 0 \\
 1 & 2 & 1 \\
 1 & 3 & 1 \\
-\bottomrule()
 \end{longtable}
 
 \end{example}
@@ -9284,10 +9292,10 @@ The data were collected from the following sources.
   \url{https://population.un.org/wpp/Download/Standard/CSV/}\strut \\
   \texttt{country}, \texttt{year}, \texttt{population.size}, \texttt{population.density}, \texttt{region}, \texttt{sub.region}
 \item
-  \url{https://data.un.org/Data.aspx?d=SNAAMA\&f=grID\%3A101\%3BcurrID\%3AUSD\%3BpcFlag\%3A1}\strut \\
+  \url{https://data.un.org/Data.aspx?d=SNAAMA&f=grID\%3A101\%3BcurrID\%3AUSD\%3BpcFlag\%3A1}\strut \\
   \texttt{country}, \texttt{year}, \texttt{GDP.per.capita}
 \item
-  \url{http://data.un.org/Data.aspx?d=WHO\&f=MEASURE_CODE\%3aWHS7_104}\strut \\
+  \url{http://data.un.org/Data.aspx?d=WHO&f=MEASURE_CODE\%3aWHS7_104}\strut \\
   \texttt{country}, \texttt{year}, \texttt{health.spending}
 \item
   \url{https://www.who.int/data/gho/data/indicators/indicator-details/GHO/alcohol-recorded-per-capita-(15-)-consumption-(in-litres-of-pure-alcohol)}\strut \\
@@ -11413,7 +11421,7 @@ is said to have ``full rank'' if \(\mathop{\mathrm{rank}}(A) = \min(m, n)\).
 \begin{definition}
 The \textbf{trace} of a matrix \(A \in \mathbb{R}^{n\times n}\) is given by
 \begin{equation*}
-  \mathop{\mathrm{tr}}(A) = \sum_{i=1}^n a_ii.
+  \mathop{\mathrm{tr}}(A) = \sum_{i=1}^n a_{ii}.
 \end{equation*}
 \end{definition}
 
@@ -11427,7 +11435,7 @@ Properties:
 \item
   \(\mathop{\mathrm{tr}}(ABC) = \mathop{\mathrm{tr}}(BCA) = \mathop{\mathrm{tr}}(CAB)\). The individual matrices \(A, B, C\) don't
   need to be square for this relation to hold, but the relation only holds for
-  cyclic permutations as shown. In general \(\mathop{\mathrm{tr}}(ABC) \neq \mathop{\mathrm{tr}}(ACB)\).
+  cyclic permutations as shown. In general, we have \(\mathop{\mathrm{tr}}(ABC) \neq \mathop{\mathrm{tr}}(ACB)\).
 \end{itemize}
 
 \hypertarget{matrix-inverse}{%
