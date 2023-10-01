@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 4 Kernel Density Estimation in Practice | MATH5714 Linear Regression, Robustness and Smoothing</title>
   <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2022/23" />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 4 Kernel Density Estimation in Practice | MATH5714 Linear Regression, Robustness and Smoothing" />
   <meta property="og:type" content="book" />
@@ -64,7 +64,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -127,6 +127,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="jvstyle.css" type="text/css" />
 </head>
@@ -447,36 +451,36 @@ density estimate for the snowfall data. We will use the Epanechnikov kernel.
 For compatibility with the kernels built into R, we rescale this kernel, so
 that <span class="math inline">\(\mu_2(K) = 1\)</span>, i.e. we consider <span class="math inline">\(K_{\sqrt{5}}\)</span> in place of <span class="math inline">\(K\)</span>. An easy
 calculation shows that the roughness is then <span class="math inline">\(R(K) = 3 / (5*\sqrt(5))\)</span>.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="X04-practice.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># downloaded from https://www1.maths.leeds.ac.uk/~voss/data/buffalo/</span></span>
-<span id="cb34-2"><a href="X04-practice.html#cb34-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/buffalo.csv&quot;</span>)</span>
-<span id="cb34-3"><a href="X04-practice.html#cb34-3" aria-hidden="true" tabindex="-1"></a>snowfall <span class="ot">&lt;-</span> x<span class="sc">$</span>snowfall</span>
-<span id="cb34-4"><a href="X04-practice.html#cb34-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(snowfall)</span>
-<span id="cb34-5"><a href="X04-practice.html#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-6"><a href="X04-practice.html#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Roughness of the Epanechnikov kernel, after rescaling with h = sqrt(5)</span></span>
-<span id="cb34-7"><a href="X04-practice.html#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># so that the second moment becomes mu_2 = 1:</span></span>
-<span id="cb34-8"><a href="X04-practice.html#cb34-8" aria-hidden="true" tabindex="-1"></a>R.K <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">/</span> (<span class="dv">5</span> <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">5</span>))</span>
-<span id="cb34-9"><a href="X04-practice.html#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-10"><a href="X04-practice.html#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Rule of thumb:</span></span>
-<span id="cb34-11"><a href="X04-practice.html#cb34-11" aria-hidden="true" tabindex="-1"></a>R.fpp <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">/</span> (<span class="dv">8</span> <span class="sc">*</span> <span class="fu">sd</span>(snowfall)<span class="sc">^</span><span class="dv">5</span> <span class="sc">*</span> <span class="fu">sqrt</span>(pi))</span>
-<span id="cb34-12"><a href="X04-practice.html#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-13"><a href="X04-practice.html#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="co"># formula for the optimal h</span></span>
-<span id="cb34-14"><a href="X04-practice.html#cb34-14" aria-hidden="true" tabindex="-1"></a>my.bw <span class="ot">&lt;-</span> (R.K <span class="sc">/</span> (n <span class="sc">*</span> <span class="dv">1</span><span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> R.fpp))<span class="sc">^</span><span class="fl">0.2</span></span>
-<span id="cb34-15"><a href="X04-practice.html#cb34-15" aria-hidden="true" tabindex="-1"></a>my.bw</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="X04-practice.html#cb34-1" tabindex="-1"></a><span class="co"># downloaded from https://www1.maths.leeds.ac.uk/~voss/data/buffalo/</span></span>
+<span id="cb34-2"><a href="X04-practice.html#cb34-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/buffalo.csv&quot;</span>)</span>
+<span id="cb34-3"><a href="X04-practice.html#cb34-3" tabindex="-1"></a>snowfall <span class="ot">&lt;-</span> x<span class="sc">$</span>snowfall</span>
+<span id="cb34-4"><a href="X04-practice.html#cb34-4" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(snowfall)</span>
+<span id="cb34-5"><a href="X04-practice.html#cb34-5" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="X04-practice.html#cb34-6" tabindex="-1"></a><span class="co"># Roughness of the Epanechnikov kernel, after rescaling with h = sqrt(5)</span></span>
+<span id="cb34-7"><a href="X04-practice.html#cb34-7" tabindex="-1"></a><span class="co"># so that the second moment becomes mu_2 = 1:</span></span>
+<span id="cb34-8"><a href="X04-practice.html#cb34-8" tabindex="-1"></a>R.K <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">/</span> (<span class="dv">5</span> <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">5</span>))</span>
+<span id="cb34-9"><a href="X04-practice.html#cb34-9" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="X04-practice.html#cb34-10" tabindex="-1"></a><span class="co"># Rule of thumb:</span></span>
+<span id="cb34-11"><a href="X04-practice.html#cb34-11" tabindex="-1"></a>R.fpp <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">/</span> (<span class="dv">8</span> <span class="sc">*</span> <span class="fu">sd</span>(snowfall)<span class="sc">^</span><span class="dv">5</span> <span class="sc">*</span> <span class="fu">sqrt</span>(pi))</span>
+<span id="cb34-12"><a href="X04-practice.html#cb34-12" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="X04-practice.html#cb34-13" tabindex="-1"></a><span class="co"># formula for the optimal h</span></span>
+<span id="cb34-14"><a href="X04-practice.html#cb34-14" tabindex="-1"></a>my.bw <span class="ot">&lt;-</span> (R.K <span class="sc">/</span> (n <span class="sc">*</span> <span class="dv">1</span><span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> R.fpp))<span class="sc">^</span><span class="fl">0.2</span></span>
+<span id="cb34-15"><a href="X04-practice.html#cb34-15" tabindex="-1"></a>my.bw</span></code></pre></div>
 <pre><code>## [1] 11.58548</code></pre>
 <p>R has a variety of different builtin methods to estimate bandwidths.
 See stats/bandwidth for a description. For comparison to our result,
 we list here the bandwidths suggested by some of R’s algorithms:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="X04-practice.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
-<span id="cb36-2"><a href="X04-practice.html#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="fu">c</span>(<span class="st">&quot;nrd0&quot;</span>, <span class="st">&quot;nrd&quot;</span>, <span class="st">&quot;SJ&quot;</span>),</span>
-<span id="cb36-3"><a href="X04-practice.html#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">bw =</span> <span class="fu">c</span>(<span class="fu">bw.nrd0</span>(snowfall), <span class="fu">bw.nrd</span>(snowfall), <span class="fu">bw.SJ</span>(snowfall)))</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="X04-practice.html#cb36-1" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb36-2"><a href="X04-practice.html#cb36-2" tabindex="-1"></a>  <span class="at">name =</span> <span class="fu">c</span>(<span class="st">&quot;nrd0&quot;</span>, <span class="st">&quot;nrd&quot;</span>, <span class="st">&quot;SJ&quot;</span>),</span>
+<span id="cb36-3"><a href="X04-practice.html#cb36-3" tabindex="-1"></a>  <span class="at">bw =</span> <span class="fu">c</span>(<span class="fu">bw.nrd0</span>(snowfall), <span class="fu">bw.nrd</span>(snowfall), <span class="fu">bw.SJ</span>(snowfall)))</span></code></pre></div>
 <pre><code>##   name        bw
 ## 1 nrd0  9.724206
 ## 2  nrd 11.452953
 ## 3   SJ 11.903840</code></pre>
 <p>All of these value seem close the value we obtained manually. Using
 our bandwidth estimate, we get the following estimated density.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="X04-practice.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(snowfall, <span class="at">bw =</span> my.bw, <span class="at">kernel =</span> <span class="st">&quot;epanechnikov&quot;</span>),</span>
-<span id="cb38-2"><a href="X04-practice.html#cb38-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="cn">NA</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="X04-practice.html#cb38-1" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(snowfall, <span class="at">bw =</span> my.bw, <span class="at">kernel =</span> <span class="st">&quot;epanechnikov&quot;</span>),</span>
+<span id="cb38-2"><a href="X04-practice.html#cb38-2" tabindex="-1"></a>     <span class="at">main =</span> <span class="cn">NA</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/buffalo-final-1.png" width="672" /></p>
 <p>In practice one would just use one of the built-in methods, for example using
 <code>bw="SJ"</code> instead of estimating the bandwidth manually.</p>

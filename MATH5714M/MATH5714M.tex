@@ -6,16 +6,19 @@
   a4paper,
 ]{article}
 \usepackage{amsmath,amssymb}
-\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -46,13 +49,13 @@
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
 \newcommand{\BuiltInTok}[1]{#1}
 \newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
 \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
@@ -60,7 +63,7 @@
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
 \newcommand{\ExtensionTok}[1]{#1}
 \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\ImportTok}[1]{#1}
 \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
@@ -69,7 +72,7 @@
 \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
 \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
 \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
@@ -109,7 +112,7 @@
 \bibliographystyle{plainnat}
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
 \hypersetup{
   pdftitle={MATH5714 Linear Regression, Robustness and Smoothing},
   pdfauthor={Jochen Voss},
@@ -158,8 +161,7 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\Var}{\mathop{\mathrm{Var}}}
 
-\hypertarget{home}{%
-\section*{Preface}\label{home}}
+\section*{Preface}\label{home}
 \addcontentsline{toc}{section}{Preface}
 
 From previous modules we know how to fit a regression line through
@@ -193,8 +195,7 @@ in figure~\ref{fig:accel}.
 
 \clearpage
 
-\hypertarget{X01-KDE}{%
-\section{Kernel Density Estimation}\label{X01-KDE}}
+\section{Kernel Density Estimation}\label{X01-KDE}
 
 In this section we discuss the topic of ``Kernel Density Estimation''.
 Here we suppose we are given data \(x_1,\ldots, x_n \in\mathbb{R}^d\) from an
@@ -202,11 +203,9 @@ unknown probability density, say \(f\). Our objective is to estimate
 the density~\(f\). This section lays the foundations for many of the
 following topics.
 
-\hypertarget{histograms}{%
-\subsection{Histograms}\label{histograms}}
+\subsection{Histograms}\label{histograms}
 
-\hypertarget{probability-densities}{%
-\subsubsection{Probability Densities}\label{probability-densities}}
+\subsubsection{Probability Densities}\label{probability-densities}
 
 Before we consider how to estimate a density, let us just remember what a
 density is. A random variable \(X \in \mathbb{R}\) has \textbf{density} \(f\colon \mathbb{R}\to [0, \infty)\) if
@@ -241,8 +240,7 @@ if and only if \(f \geq 0\) and
   \int_{-\infty}^\infty f(x) \,dx = 1.
 \end{equation*}
 
-\hypertarget{histograms-1}{%
-\subsubsection{Histograms}\label{histograms-1}}
+\subsubsection{Histograms}\label{histograms-1}
 
 In the univariate case, \emph{i.e.}~for \(d = 1\), a commonly used technique
 to approximate the density of a sample is to plot a histogram. To
@@ -303,8 +301,7 @@ and thus we choose
 As expected, the height of the bar for the bucket \([a,b]\) is proportional
 to the number \(n_{a,b}\) of samples in the bucket.
 
-\hypertarget{choice-of-buckets}{%
-\subsubsection{Choice of Buckets}\label{choice-of-buckets}}
+\subsubsection{Choice of Buckets}\label{choice-of-buckets}
 
 Histograms are only meaningful if the buckets are chosen well. If
 the buckets are too large, not much of the structure of \(f\) can be
@@ -402,16 +399,14 @@ values for the \texttt{break} argument to \texttt{hist()}, which R uses as the
 \caption{\label{fig:snow-hist-col}This figure illustrates how the bucket size in a histogram can be controlled in R.}
 \end{figure}
 
-\hypertarget{kernel-density-estimation}{%
-\subsection{Kernel Density Estimation}\label{kernel-density-estimation}}
+\subsection{Kernel Density Estimation}\label{kernel-density-estimation}
 
 Kernel density estimation allows to estimate the density \(f\) for given
 data while avoiding some of the disadvantages of histograms.
 Again, we suppose that we are given data \(x_1, \ldots, x_n \in \mathbb{R}\)
 and that we want to estimate the density \(f\).
 
-\hypertarget{motivation}{%
-\subsubsection{Motivation}\label{motivation}}
+\subsubsection{Motivation}\label{motivation}
 
 Similar to the argument in the previous subsection, for \(x\) in a ``small''
 interval \([a,b]\) we can estimate \(f(x)\) as
@@ -469,8 +464,7 @@ The function \(K(x) = 1/2 \, I_{[-1,+1]}(x)\) on the right-hand side is
 called the kernel of the estimate, and the parameter \(h\) is called the
 \textbf{bandwidth} or the smoothing parameter.
 
-\hypertarget{definition-of-a-kernel-density-estimator}{%
-\subsubsection{Definition of a Kernel Density Estimator}\label{definition-of-a-kernel-density-estimator}}
+\subsubsection{Definition of a Kernel Density Estimator}\label{definition-of-a-kernel-density-estimator}
 
 The general kernel density estimate is a generalisation of the idea
 from the previous subsection. We first define the class of functions
@@ -532,15 +526,13 @@ Similar to the bucket width in histograms, the bandwidth parameter~\(h\)
 controls how smooth the density estimate~\(\hat f_h\) is, as a function
 of~\(x\).
 
-\hypertarget{kernels}{%
-\subsubsection{Kernels}\label{kernels}}
+\subsubsection{Kernels}\label{kernels}
 
 There are many different kernels in use. Some examples are listed
 below. A more exhautive list can, for example, be found
 \href{https://en.wikipedia.org/wiki/Kernel_(statistics)\#Kernel_functions_in_common_use}{on Wikipedia}.
 
-\hypertarget{uniform-kernel}{%
-\paragraph{Uniform Kernel}\label{uniform-kernel}}
+\paragraph{Uniform Kernel}\label{uniform-kernel}
 
 \begin{equation*}
   K(x)
@@ -552,8 +544,7 @@ below. A more exhautive list can, for example, be found
 
 \includegraphics{MATH5714M_files/figure-latex/kUniform-1.pdf}
 
-\hypertarget{triangular}{%
-\paragraph{Triangular Kernel}\label{triangular}}
+\paragraph{Triangular Kernel}\label{triangular}
 
 \begin{equation*}
   K(x)
@@ -565,8 +556,7 @@ below. A more exhautive list can, for example, be found
 
 \includegraphics{MATH5714M_files/figure-latex/kTriangular-1.pdf}
 
-\hypertarget{epanechnikov-kernel}{%
-\paragraph{Epanechnikov Kernel}\label{epanechnikov-kernel}}
+\paragraph{Epanechnikov Kernel}\label{epanechnikov-kernel}
 
 \begin{equation*}
   K(x)
@@ -578,8 +568,7 @@ below. A more exhautive list can, for example, be found
 
 \includegraphics{MATH5714M_files/figure-latex/kEpanechnikov-1.pdf}
 
-\hypertarget{gaussian-kernel}{%
-\paragraph{Gaussian Kernel}\label{gaussian-kernel}}
+\paragraph{Gaussian Kernel}\label{gaussian-kernel}
 
 \begin{equation*}
   K(x)
@@ -588,8 +577,7 @@ below. A more exhautive list can, for example, be found
 
 \includegraphics{MATH5714M_files/figure-latex/kGaussian-1.pdf}
 
-\hypertarget{kernel-density-estimation-in-r}{%
-\subsection{Kernel Density Estimation in R}\label{kernel-density-estimation-in-r}}
+\subsection{Kernel Density Estimation in R}\label{kernel-density-estimation-in-r}
 
 Kernel density estimates can be computed in R using the built-in
 \texttt{density()} function. If \texttt{x} is a vector containing the data, then
@@ -684,8 +672,7 @@ bandwidth parameter. The result is shown in figure~\ref{fig:snow-dens-col}.
 
 \clearpage
 
-\hypertarget{I01-KDE}{%
-\section*{Interlude: Kernel Density Estimation in R}\label{I01-KDE}}
+\section*{Interlude: Kernel Density Estimation in R}\label{I01-KDE}
 \addcontentsline{toc}{section}{Interlude: Kernel Density Estimation in R}
 
 In the previous section we have already seen how the function \texttt{density()}
@@ -703,8 +690,7 @@ previous section.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{direct-implementation}{%
-\subsection*{Direct Implementation}\label{direct-implementation}}
+\subsection*{Direct Implementation}\label{direct-implementation}
 \addcontentsline{toc}{subsection}{Direct Implementation}
 
 The kernel density estimate for given data \(x_1, \ldots, x_n \in\mathbb{R}\)
@@ -796,8 +782,7 @@ the built-in function \texttt{density()}, but on the other hand using our own co
 we can control all details of the computation and there is no uncertainty
 about what exactly the code does.
 
-\hypertarget{speed-improvements}{%
-\subsection*{Speed Improvements}\label{speed-improvements}}
+\subsection*{Speed Improvements}\label{speed-improvements}
 \addcontentsline{toc}{subsection}{Speed Improvements}
 
 In this sub-section we will see how we can speed up our implementation
@@ -936,10 +921,10 @@ the execution times using the R package \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min        lq     mean   median       uq       max neval
-##  KDE1 2484.995 2836.4245 4908.039 3322.447 4783.270 150195.22  1000
-##  KDE2  336.301  778.4965 1650.911  845.916 1173.153  60033.33  1000
-##  KDE3  275.639  599.9090 1403.458  650.804  845.157 199026.31  1000
+##  expr     min       lq     mean   median       uq      max neval
+##  KDE1 870.676 920.2245 983.4964 942.3645 963.3565 5007.207  1000
+##  KDE2 122.672 162.9750 247.7252 175.8900 180.8920 4522.341  1000
+##  KDE3 110.495 132.0405 182.8052 148.9530 153.1145 6208.097  1000
 \end{verbatim}
 
 The output summarises the execution times for 1000 runs of each of the
@@ -968,8 +953,8 @@ as we used above.
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr     min       lq     mean   median      uq      max neval
-##  density 270.696 283.2635 340.7126 286.1675 321.886 9178.035  1000
+##     expr    min     lq     mean  median      uq      max neval
+##  density 97.498 109.06 124.7277 111.479 114.841 4350.551  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by
@@ -994,8 +979,7 @@ exact implementation of the method:
 
 \clearpage
 
-\hypertarget{X02-Bias}{%
-\section{The Bias of Kernel Density Estimates}\label{X02-Bias}}
+\section{The Bias of Kernel Density Estimates}\label{X02-Bias}
 
 In the previous section we introduced the kernel density estimate
 \begin{equation}
@@ -1007,8 +991,7 @@ The aim of the current section is to quantify the error of this approximation
 and to understand how this error depends on the true density~\(f\)
 and on the bandwidth~\(h > 0\).
 
-\hypertarget{a-statistical-model}{%
-\subsection{A Statistical Model}\label{a-statistical-model}}
+\subsection{A Statistical Model}\label{a-statistical-model}
 
 As usual, we will make a statistical model for the data \(x_1, \ldots, x_n\),
 and then use this model to analyse how well the estimator performs.
@@ -1041,8 +1024,7 @@ this problem is called a ``non-parametric'' estimation problem.
 Our estimate for the density \(f\) is the function \(\hat f_h\colon \mathbb{R}\to \mathbb{R}\),
 where \(\hat f_h(x)\) is given by~\eqref{eq:KDE-est} for every \(x \in\mathbb{R}\).
 
-\hypertarget{the-bias-of-the-estimate}{%
-\subsection{The Bias of the Estimate}\label{the-bias-of-the-estimate}}
+\subsection{The Bias of the Estimate}\label{the-bias-of-the-estimate}
 
 As ususal, the \textbf{bias} of our estimate is the difference between
 what the estimator gives on average and the truth. For our estimation
@@ -1080,8 +1062,7 @@ we can write this expectation as an integral to get
 \end{align*}
 where we used the symmetry of \(K_h\) and the substitution \(z = y - x\).
 
-\hypertarget{moments-of-kernels}{%
-\subsection{Moments of Kernels}\label{moments-of-kernels}}
+\subsection{Moments of Kernels}\label{moments-of-kernels}
 
 To understand how the bias changes as \(h\) varies, we will need to
 consider properties of \(K\) and \(K_h\) in more detail.
@@ -1167,8 +1148,7 @@ and
 \end{equation}
 Thus, \(Y\) is centred and the variance of \(Y\) is proportional to~\(h^2\).
 
-\hypertarget{the-bias-for-small-bandwidth}{%
-\subsection{The Bias for Small Bandwidth}\label{the-bias-for-small-bandwidth}}
+\subsection{The Bias for Small Bandwidth}\label{the-bias-for-small-bandwidth}
 
 Considering again the formula
 \begin{equation*}
@@ -1230,8 +1210,7 @@ two effects to find the optimal value of~\(h\).
 
 \clearpage
 
-\hypertarget{X03-Var}{%
-\section{The Variance of Kernel Density Estimates}\label{X03-Var}}
+\section{The Variance of Kernel Density Estimates}\label{X03-Var}
 
 In the previous section we considered the bias of the estimator
 \begin{equation*}
@@ -1247,8 +1226,7 @@ for all \(i \in \{1, \ldots, n\}\) (we used \(i=1\)), and we used this relation
 to compute the bias. In this section, we will use similar arguments to compute
 the variance and the mean squared error of the estimator.
 
-\hypertarget{variance}{%
-\subsection{Variance}\label{variance}}
+\subsection{Variance}\label{variance}
 
 We use the formula
 \begin{equation*}
@@ -1257,8 +1235,7 @@ We use the formula
 \end{equation*}
 and consider the two terms separately.
 
-\hypertarget{second-moment}{%
-\subsubsection{Second Moment}\label{second-moment}}
+\subsubsection{Second Moment}\label{second-moment}
 
 For the second moment term in the definition of the variance we get
 \begin{align*}
@@ -1292,8 +1269,7 @@ Since \((n-1)/n - 1 = -1/n\) we get
                                                           \label{eq:Var-hat-f-2}
 \end{equation}
 
-\hypertarget{the-roughness-of-a-kernel}{%
-\subsubsection{The Roughness of a Kernel}\label{the-roughness-of-a-kernel}}
+\subsubsection{The Roughness of a Kernel}\label{the-roughness-of-a-kernel}
 
 Similar to what we did in the last section, we will use Taylor expansion
 of \(f\) around the point \(x\) to understand the behaviour of the variance
@@ -1341,8 +1317,7 @@ This gives the result
 \end{equation}
 for small \(h\).
 
-\hypertarget{the-variance-for-small-bandwidth}{%
-\subsubsection{The Variance for Small Bandwidth}\label{the-variance-for-small-bandwidth}}
+\subsubsection{The Variance for Small Bandwidth}\label{the-variance-for-small-bandwidth}
 
 Here we consider the term \(\mathbb{E}\bigl( \hat f_h(x) \bigr)^2\) in the formula
 for the variance. From the previous section we know
@@ -1377,8 +1352,7 @@ we find
 \end{equation}
 as~\(h\downarrow 0\).
 
-\hypertarget{mean-squared-error}{%
-\subsection{Mean Squared Error}\label{mean-squared-error}}
+\subsection{Mean Squared Error}\label{mean-squared-error}
 
 The Mean Squared Error of the estimator \(\hat f_h(x)\) for \(f(x)\) is given
 by
@@ -1418,8 +1392,7 @@ with the understanding that the constants in the definition of \(o(h^4)\)
 do not depend on \(n\) and that \(o(1/nh)\) really means ``\(o(1/h)\), where the
 constants are proportional to \(1/n\).''
 
-\hypertarget{optimal-bandwidth}{%
-\subsection{Optimal Bandwidth}\label{optimal-bandwidth}}
+\subsection{Optimal Bandwidth}\label{optimal-bandwidth}
 
 The two terms on the right-hand side of \eqref{eq:f-hat-MSE} are balanced in
 that the first term decreases for large \(h\) while the second term decreases for
@@ -1488,15 +1461,13 @@ This expression clearly shows the contribution of \(n\), \(K\) and \(f\):
 
 \clearpage
 
-\hypertarget{X04-practice}{%
-\section{Kernel Density Estimation in Practice}\label{X04-practice}}
+\section{Kernel Density Estimation in Practice}\label{X04-practice}
 
 In this section we conclude our discussion of kernel density estimation
 by considering different aspects which are important when using the method
 in practice.
 
-\hypertarget{integrated-error}{%
-\subsection{Integrated Error}\label{integrated-error}}
+\subsection{Integrated Error}\label{integrated-error}
 
 From equation~\eqref{eq:f-hat-MSE} we know
 \begin{equation*}
@@ -1538,8 +1509,7 @@ Thus, in order to minimise the error we still need to choose
 \(h \propto n^{-1/5}\) and we should choose a kernel \(K\) which minimises
 the value~\(R(K)^2 \mu_2(K)\).
 
-\hypertarget{choice-of-kernel}{%
-\subsection{Choice of Kernel}\label{choice-of-kernel}}
+\subsection{Choice of Kernel}\label{choice-of-kernel}
 
 The integrated error in equation~\eqref{eq:IMSE-opt} is proportional to
 \(\bigl( R(K)^2 \mu_2(K) \bigr)^{2/5}\), and none of the remaining terms in
@@ -1590,7 +1560,7 @@ values:
   >{\centering\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1400}}
   >{\centering\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1400}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.0800}}@{}}
-\toprule()
+\toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedleft
 kernel
 \end{minipage} & \begin{minipage}[b]{\linewidth}\centering
@@ -1601,13 +1571,14 @@ kernel
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 \(R(K)^2 \mu_2(K)\)
 \end{minipage} \\
-\midrule()
+\midrule\noalign{}
 \endhead
+\bottomrule\noalign{}
+\endlastfoot
 Uniform & \includegraphics[width=4cm,height=\textheight]{MATH5714M_files/figure-html/kUniform-1.pdf} & \(\displaystyle\frac13\) & \(\displaystyle\frac12\) & \(0.08333\) \\
 Triangular & \includegraphics[width=4cm,height=\textheight]{MATH5714M_files/figure-html/kTriangular-1.pdf} & \(\displaystyle\frac16\) & \(\displaystyle\frac23\) & \(0.07407\) \\
 Epanechnikov & \includegraphics[width=4cm,height=\textheight]{MATH5714M_files/figure-html/kEpanechnikov-1.pdf} & \(\displaystyle\frac15\) & \(\displaystyle\frac35\) & \(0.07200\) \\
 Gaussian & \includegraphics[width=4cm,height=\textheight]{MATH5714M_files/figure-html/kGaussian-1.pdf} & \(1\) & \(\displaystyle\frac{1}{2\sqrt{\pi}}\) & \(0.07958\) \\
-\bottomrule()
 \end{longtable}
 
 The best value in the table is obtained for the Epanechnikov kernel,
@@ -1616,8 +1587,7 @@ is indeed optimal amongst all kernels. Since the difference in error
 for the kernels listed above is only a few percent, any of these kernels
 would be a reasonable choice.
 
-\hypertarget{bwsel}{%
-\subsection{Bandwidth Selection}\label{bwsel}}
+\subsection{Bandwidth Selection}\label{bwsel}
 
 Our formulas for the optimal bandwidth contain the terms
 \(f(x)^2 |f''(x)|\) for fixed \(x\) and \(R(f'')\) for the integrated error.
@@ -1717,8 +1687,7 @@ our bandwidth estimate, we get the following estimated density.
 In practice one would just use one of the built-in methods, for example using
 \texttt{bw="SJ"} instead of estimating the bandwidth manually.
 
-\hypertarget{higher-dimensions}{%
-\subsection{Higher Dimensions}\label{higher-dimensions}}
+\subsection{Higher Dimensions}\label{higher-dimensions}
 
 So far we have only considered the one-dimensional case, where the samples \(x_i\)
 are real numbers. In this subsection we will sketch how these methods will need
@@ -1794,8 +1763,7 @@ and we will not discuss this here.
 
 \clearpage
 
-\hypertarget{X05-smoothing}{%
-\section{Kernel Smoothing}\label{X05-smoothing}}
+\section{Kernel Smoothing}\label{X05-smoothing}
 
 We now consider the statistical model
 \begin{equation*}
@@ -1807,8 +1775,7 @@ random variables with \(\mathbb{E}(\varepsilon_i) = 0\). We are given data \((x_
 \(i\in \{1, \ldots, n\}\) and our aim is to estimate the function~\(m\). The
 task of estimating the function~\(m\) from data is called \textbf{smoothing}.
 
-\hypertarget{the-nadaraya-watson-estimator}{%
-\subsection{The Nadaraya-Watson Estimator}\label{the-nadaraya-watson-estimator}}
+\subsection{The Nadaraya-Watson Estimator}\label{the-nadaraya-watson-estimator}
 
 Since we have
 \begin{equation*}
@@ -1912,8 +1879,7 @@ the previous estimate. In contrast, if we reduce the bandwidth to \(h = 0.1\)
 spacing of the data points is too large.
 \end{example}
 
-\hypertarget{estimation-error}{%
-\subsection{Estimation Error}\label{estimation-error}}
+\subsection{Estimation Error}\label{estimation-error}
 
 Here we will discuss how fast the estimation error decreases in the
 limit of \(n\to \infty\), \emph{i.e.}~for the case when we have a large dateset
@@ -1957,7 +1923,7 @@ as \(n \to \infty\) and \(h \downarrow 0\). We can write \(\hat m_h(x)\) as
   = \frac{\hat r_h(x)}{\hat f_h(x)}  \label{eq:m-hat-h}
 \end{equation}
 where \(\hat f_h(x)\) is the kernel density estimator from
-\protect\hyperlink{X01-KDE}{Section 1} and
+\hyperref[X01-KDE]{Section 1} and
 \begin{equation*}
   \hat r_h(x)
   := \frac1n \sum_{i=1}^n K_h(x - X_i) Y_i.
@@ -1965,8 +1931,7 @@ where \(\hat f_h(x)\) is the kernel density estimator from
 We will consider the numerator and denominator of equation \eqref{eq:m-hat-h}
 separately
 
-\hypertarget{denominator}{%
-\subsubsection*{Denominator}\label{denominator}}
+\subsubsection*{Denominator}\label{denominator}
 \addcontentsline{toc}{subsubsection}{Denominator}
 
 From equations \eqref{eq:fhatbias} and \eqref{eq:fhatvar} we know that
@@ -1981,13 +1946,12 @@ and
 \end{equation*}
 as \(h \downarrow 0\).
 
-\hypertarget{numerator}{%
-\subsubsection*{Numerator}\label{numerator}}
+\subsubsection*{Numerator}\label{numerator}
 \addcontentsline{toc}{subsubsection}{Numerator}
 
 We start by considering the numerator \(\hat r_h(x)\). The arguments used here
 will be very similar to the arguments used in the section about the
-\protect\hyperlink{X03-Var}{variance of kernel density estimates}.
+\hyperref[X03-Var]{variance of kernel density estimates}.
 
 The expectation of \(\hat r_h(x)\) is
 \begin{align*}
@@ -2090,8 +2054,7 @@ Combining these equations we find
 \end{equation*}
 as \(n\to\infty\), \(h\downarrow 0\) and \(nh\to\infty\).
 
-\hypertarget{mean-squared-error-1}{%
-\subsubsection*{Mean Squared Error}\label{mean-squared-error-1}}
+\subsubsection*{Mean Squared Error}\label{mean-squared-error-1}
 \addcontentsline{toc}{subsubsection}{Mean Squared Error}
 
 To turn our results about \(\hat r_h\) and our previous results about
@@ -2210,8 +2173,7 @@ So finally we have
 
 \clearpage
 
-\hypertarget{X06-locpoly}{%
-\section{Local Polynomial Regression}\label{X06-locpoly}}
+\section{Local Polynomial Regression}\label{X06-locpoly}
 
 Local polynomial regression is a generalisation of the
 Nadaraya-Watson estimator. The method combines the two ideas of
@@ -2219,8 +2181,7 @@ linear regression with weights and polynomial regression. The aim
 is still to estimate the model mean \(m \colon\mathbb{R}\to \mathbb{R}\) from
 given data \((x_1, y_1), \ldots, (x_n, y_n)\).
 
-\hypertarget{linear-regression-with-weights}{%
-\subsection{Linear Regression with Weights}\label{linear-regression-with-weights}}
+\subsection{Linear Regression with Weights}\label{linear-regression-with-weights}
 
 In the \href{https://seehuhn.github.io/MATH3714/S02-multiple.html\#the-normal-equations}{level 3 part of the module},
 we introduced the least squares method for linear regression. This method
@@ -2274,8 +2235,7 @@ As before, the fitted value for inputs \((\tilde x_1, \ldots, \tilde x_p) \in \m
 \end{equation*}
 where \(\tilde x = (1, \tilde x_1, \ldots, \tilde x_n)\).
 
-\hypertarget{polynomial-regression}{%
-\subsection{Polynomial Regression}\label{polynomial-regression}}
+\subsection{Polynomial Regression}\label{polynomial-regression}
 
 In these notes we only consider the case of \(p=1\). In this case we
 can easily fit a polynomial of degree \(p\) to the data by using
@@ -2381,8 +2341,7 @@ Polynomials of higher degree take very large values as \(|x|\) increases and
 often make poor global models. Instead, these polynomials are best used for
 local interpolation of data.
 
-\hypertarget{polynomial-regression-with-weights}{%
-\subsection{Polynomial Regression with Weights}\label{polynomial-regression-with-weights}}
+\subsection{Polynomial Regression with Weights}\label{polynomial-regression-with-weights}
 
 The idea of local polynomial regression is to combine polynomial regression
 with weights which give more weight to close by observations: to get an
@@ -2428,13 +2387,11 @@ an estimate of \(\hat m_h\) is needed. To get a regression line, this needs
 to be done over a grid of \(\tilde x\) values. Thus, this method can
 be computationally expensive.
 
-\hypertarget{special-cases}{%
-\subsection{Special Cases}\label{special-cases}}
+\subsection{Special Cases}\label{special-cases}
 
 Here we discuss the special cases of \(p=0\), \(p=1\), and \(p=2\).
 
-\hypertarget{p-0}{%
-\subsubsection*{\texorpdfstring{\(p = 0\)}{p = 0}}\label{p-0}}
+\subsubsection*{\texorpdfstring{\(p = 0\)}{p = 0}}\label{p-0}
 \addcontentsline{toc}{subsubsection}{\(p = 0\)}
 
 For \(p=0\), the polynomial consists only of the constant term \(\beta_0\).
@@ -2462,8 +2419,7 @@ This is the same formula as in definition~\ref{def:NW}: for \(p=0\)
 the local polynomial regression estimator is the same as the Nadaraya-Watson
 estimator.
 
-\hypertarget{p-1}{%
-\subsubsection*{\texorpdfstring{\(p = 1\)}{p = 1}}\label{p-1}}
+\subsubsection*{\texorpdfstring{\(p = 1\)}{p = 1}}\label{p-1}
 \addcontentsline{toc}{subsubsection}{\(p = 1\)}
 
 For \(p=1\) the polynomial is a straight line, allowing to model the
@@ -2498,16 +2454,6 @@ and of \texttt{locpoly(..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is near identica
 \FunctionTok{lines}\NormalTok{(m1, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
 
 \FunctionTok{library}\NormalTok{(KernSmooth)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## KernSmooth 2.23 loaded
-## Copyright M. P. Wand 1997-2009
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{locpoly}\NormalTok{(x, y, }\AttributeTok{degree =} \DecValTok{1}\NormalTok{, }\AttributeTok{bandwidth =} \FloatTok{0.11}\NormalTok{)}
 \FunctionTok{lines}\NormalTok{(m2, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
 \end{Highlighting}
@@ -2522,8 +2468,7 @@ smaller values of the mean line. In contrast, the local polynomial estimate
 retains its slope right up to the boundary.
 \end{example}
 
-\hypertarget{p-2}{%
-\subsubsection*{\texorpdfstring{\(p = 2\)}{p = 2}}\label{p-2}}
+\subsubsection*{\texorpdfstring{\(p = 2\)}{p = 2}}\label{p-2}
 \addcontentsline{toc}{subsubsection}{\(p = 2\)}
 
 For \(p=2\) the local polynomials are parabolas. This allows sometimes to reduce
@@ -2576,8 +2521,7 @@ In contrast, the local polynomial estimate (blue line) has much lower bias.
 
 \clearpage
 
-\hypertarget{X07-nearest}{%
-\section{\texorpdfstring{\emph{k}-Nearest Neighbour Regression}{k-Nearest Neighbour Regression}}\label{X07-nearest}}
+\section{\texorpdfstring{\emph{k}-Nearest Neighbour Regression}{k-Nearest Neighbour Regression}}\label{X07-nearest}
 
 In the previous sections we used a fixed bandwidth \(h\) to determine the
 scale on which ``closeness'' of existing samples to a new input \(x\) was
@@ -2589,8 +2533,7 @@ smaller bandwidths in regions where there are many samples. The
 \(k\)-nearest neighbour method is one of several methods which implements
 this idea.
 
-\hypertarget{definition-of-the-estimator}{%
-\subsection{Definition of the Estimator}\label{definition-of-the-estimator}}
+\subsection{Definition of the Estimator}\label{definition-of-the-estimator}
 
 \begin{definition}
 For \(k \in \{1, \ldots, n\}\), the \textbf{\emph{k}-nearest neighbour}, or
@@ -2634,8 +2577,7 @@ computationally very expensive, since the data needs to be sorted afresh
 for every new input \(x\). Advanced data structures like \href{https://en.wikipedia.org/wiki/Cover_tree}{``cover trees''} can
 be used to speed up the process of finding the nearest neighbours.
 
-\hypertarget{properties}{%
-\subsection{Properties}\label{properties}}
+\subsection{Properties}\label{properties}
 
 The parameter \(k\) controls the ``smoothness'' of the estimate. In the
 extreme case \(k = n\), we have \(J_n(x) = \{1, \ldots, n\}\) and
@@ -2654,8 +2596,7 @@ Independent of the value of \(k\), the function \(\hat m_k\) is always a
 step function, with jumps at points \(x\) where two points have equal
 distance from~\(x\).
 
-\hypertarget{numerical-experiment}{%
-\subsection{Numerical Experiment}\label{numerical-experiment}}
+\subsection{Numerical Experiment}\label{numerical-experiment}
 
 In R, an implementation of the \(k\)-NN method can be found in the \texttt{FNN} package.
 This package implements not only \(k\)-NN regression, but also \(k\)-NN
@@ -2704,8 +2645,7 @@ Here we use the arbitrarily chosen value \(k = 50\).
 The estimated mean curve looks reasonable.
 \end{example}
 
-\hypertarget{variants-of-the-method}{%
-\subsection{Variants of the Method}\label{variants-of-the-method}}
+\subsection{Variants of the Method}\label{variants-of-the-method}
 
 \begin{itemize}
 \item
@@ -2733,8 +2673,7 @@ The estimated mean curve looks reasonable.
 
 \clearpage
 
-\hypertarget{X08-xval}{%
-\section{Cross-validation}\label{X08-xval}}
+\section{Cross-validation}\label{X08-xval}
 
 In this section we will discuss methods for chosing the bandwidth~\(h\)
 for kernel-based methods, and the size \(k\) of the neighbourhood used
@@ -2766,8 +2705,7 @@ There are different ways to implement this idea:
   the method can be computationally expensive.
 \end{itemize}
 
-\hypertarget{regression}{%
-\subsection{Regression}\label{regression}}
+\subsection{Regression}\label{regression}
 
 In linear regression, we find the regression line by minimising
 the residual sum of squares. One could be tempted to try the same
@@ -2797,8 +2735,7 @@ regression.
 A similar approach can be used to find the optimal \(k\) for
 a \(k\)-nearest neighbour estimate.
 
-\hypertarget{kernel-density-estimation-1}{%
-\subsection{Kernel Density Estimation}\label{kernel-density-estimation-1}}
+\subsection{Kernel Density Estimation}\label{kernel-density-estimation-1}
 
 When using kernel density estimation in practice, we need to choose the
 bandwidth~\(h\). One idea for finding a good \(h\) is by using
@@ -2950,16 +2887,14 @@ easier to implement as there is no integration involved.
 
 \clearpage
 
-\hypertarget{X09-examples}{%
-\section{Examples}\label{X09-examples}}
+\section{Examples}\label{X09-examples}
 
 To conclude these notes, we give three examples where we use
 cross-validation to choose the tuning parameter in kernel
 density estimation, kernel regression, and k-nearest neighbour
 regression.
 
-\hypertarget{kernel-density-estimation-2}{%
-\subsection{Kernel Density Estimation}\label{kernel-density-estimation-2}}
+\subsection{Kernel Density Estimation}\label{kernel-density-estimation-2}
 
 Here we show how to find a good bandwidth for Kernel Density Estimation,
 by using cross-validation. From lemma~\ref{lem:KDE-XV} we know that
@@ -3100,8 +3035,7 @@ The kernel density estimate using this \(h\) is shown in the following figure.
 
 \includegraphics{MATH5714M_files/figure-latex/cv-KDE-best-1.pdf}
 
-\hypertarget{kernel-regression}{%
-\subsection{Kernel Regression}\label{kernel-regression}}
+\subsection{Kernel Regression}\label{kernel-regression}
 
 To illustrate cross-validation for the different smoothing methods,
 we use the \texttt{faithful} dataset again.
@@ -3172,7 +3106,7 @@ the Nadaraya-Watson estimator:
 
 We will also consider local linear smoothing, \emph{i.e.} local polynomial
 smoothing where the degree \(p\) of the polynomials is \(p=1\).
-As we have seen in the section about \protect\hyperlink{polynomial-regression-with-weights}{Polynomial Regression with Weights},
+As we have seen in the section about \hyperref[polynomial-regression-with-weights]{Polynomial Regression with Weights},
 the local linear estimator can be computed as
 \begin{equation*}
   \hat m_h(x)
@@ -3282,8 +3216,7 @@ to find the optimal \(h\) for each method.
 As expected, the optimal bandwidth for local linear regression is
 larger than for the Nadaraya Watson estimator.
 
-\hypertarget{k-nearest-neighbour-regression}{%
-\subsection{\texorpdfstring{\emph{k}-Nearest Neighbour Regression}{k-Nearest Neighbour Regression}}\label{k-nearest-neighbour-regression}}
+\subsection{\texorpdfstring{\emph{k}-Nearest Neighbour Regression}{k-Nearest Neighbour Regression}}\label{k-nearest-neighbour-regression}
 
 To conclude this section we use leave-one-out cross-validation to determine the
 optimal \(k\) for \(k\)-nearest neighbour regression. Here it seems difficult to
