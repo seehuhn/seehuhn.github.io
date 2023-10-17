@@ -1124,7 +1124,7 @@ the same result as above:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] 5.329071e{-}13}
+\NormalTok{\# [1] 3.410605e{-}13}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1499,230 +1499,6 @@ the \href{https://rdrr.io/r/stats/predict.lm.html}{output of \texttt{help(predic
 
 \clearpage
 
-\section*{Problem Sheet 1}\label{P01}
-\addcontentsline{toc}{section}{Problem Sheet 1}
-
-\excludecomment{myanswers}
-
-You should attempt all these questions and write up your solutions in advance
-of your workshop in week~3 where the answers will be discussed.
-
-\textbf{1.} Consider the simple linear regression model
-\(y_i = \beta_0 + x_{i} \beta_1 + \varepsilon_i\) for
-\(i \in \{1, 2, \ldots, n\}\) and let \(X\) be the design matrix.
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\tightlist
-\item
-  Show that \(\displaystyle X^\top X = \begin{pmatrix}  n & \sum_{i=1}^n x_i \\  \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2  \end{pmatrix} \in \mathbb{R}^{2\times 2}\).
-\end{enumerate}
-
-\begin{myanswers}
-For simple linear regression, we have \(p=1\) and the design matrix is
-\begin{equation*}
-    X = \begin{pmatrix}
-      1 & x_1 \\
-      1 & x_2 \\
-      \vdots & \vdots \\
-      1 & x_n
-    \end{pmatrix}.
-  \end{equation*}
-Thus we have
-\begin{align*}
-    X^\top X
-    &= \begin{pmatrix}
-        1 & 1 & \cdots & 1 \\
-        x_1 & x_2 & \cdots & x_n
-    \end{pmatrix} \begin{pmatrix}
-      1 & x_1 \\
-      1 & x_2 \\
-      \vdots & \vdots \\
-      1 & x_n
-    \end{pmatrix} \\
-    &= \begin{pmatrix}
-      \sum_{i=1}^n 1 &  \sum_{i=1}^n 1 \cdot x_i \\
-      \sum_{i=1}^n x_i \cdot 1 & \sum_{i=1}^n x_i^2
-    \end{pmatrix} \\
-    &= \begin{pmatrix}
-      n & \sum_{i=1}^n x_i \\
-      \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2
-    \end{pmatrix}.
-  \end{align*}
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Using the formula
-  \begin{equation*}
-   \begin{pmatrix} a & b \\ c & d \end{pmatrix}^{-1}
-   = \frac{1}{ad-bc} \begin{pmatrix} \;d & -b \\ -c & \,a \end{pmatrix},
-      \end{equation*}
-  find \((X^\top X)^{-1}\).
-\end{enumerate}
-
-\begin{myanswers}
-Using the formula for the inverse of a \(2\times 2\)-matrix, we find
-\begin{align*}
-    (X^\top X)^{-1}
-    &= \begin{pmatrix}
-      n & \sum_{i=1}^n x_i \\
-      \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2
-    \end{pmatrix}^{-1} \\
-    &= \frac{1}{n \sum_{i=1}^n x_i^2 - \bigl(\sum_{i=1}^n x_i\bigr)^2}
-      \begin{pmatrix}
-      \sum_{i=1}^n x_i^2 & -\sum_{i=1}^n x_i \\
-      -\sum_{i=1}^n x_i & n
-    \end{pmatrix}.
-  \end{align*}
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  Find \(X^\top y\) and use this to derive an explicit formula for
-  the least squares estimate \(\hat\beta = (X^\top X)^{-1} X^\top y\).
-\end{enumerate}
-
-\begin{myanswers}
-Omitting the indices in the sums for brevity, we have
-\begin{equation*}
-    X^\top y
-    = \begin{pmatrix}
-        1 & 1 & \cdots & 1 \\
-        x_1 & x_2 & \cdots & x_n
-    \end{pmatrix} \begin{pmatrix}
-      y_1 \\ y_2 \\ \vdots \\ y_n
-    \end{pmatrix}
-    = \begin{pmatrix}
-      \sum y_i \\
-      \sum x_i y_i
-    \end{pmatrix}
-  \end{equation*}
-and thus
-\begin{align*}
-    \hat\beta
-    &= (X^\top X)^{-1} X^\top y \\
-    &= \frac{1}{n \sum x_i^2 - \bigl(\sum x_i\bigr)^2}
-      \begin{pmatrix}
-      \sum x_i^2 & -\sum x_i \\
-      -\sum x_i & n
-    \end{pmatrix}
-    \begin{pmatrix}
-      \sum y_i \\
-      \sum x_i y_i
-    \end{pmatrix} \\
-    &= \frac{1}{n \sum x_i^2 - \bigl(\sum x_i\bigr)^2}
-      \begin{pmatrix}
-        \sum x_i^2 \sum y_i - \sum x_i \sum x_i y_i \\
-        -\sum x_i \sum y_i + n \sum x_i y_i
-      \end{pmatrix} \\
-    &= \frac{1}{\frac1n \sum_{i=1}^n x_i^2 - \bigl(\frac1n \sum_{i=1}^n x_i\bigr)^2}
-      \begin{pmatrix}
-        \frac1n \sum_{i=1}^n x_i^2 \cdot \frac1n\sum_{i=1}^n y_i
-            - \frac1n\sum_{i=1}^n x_i \cdot \frac1n\sum_{i=1}^n x_i y_i \\
-        \frac1n\sum_{i=1}^n x_i y_i
-            - \frac1n\sum_{i=1}^n x_i \cdot \frac1n\sum_{i=1}^n y_i
-      \end{pmatrix}.
-  \end{align*}
-This completes the answer.
-
-Inspection of the final result shows that we have recovered the traditional
-formula for the coefficients in simple linear regression, only written in
-slightly unusual form. For example, the term \(\frac1n \sum_{i=1}^n x_i^2 -  \bigl(\frac1n \sum_{i=1}^n x_i\bigr)^2\) equals the sample variance of the
-\(x_i\) (up to a factor of \(n/(n-1)\)). The algebra in this answer could be
-slightly simplified by changing to new coordinates \(\tilde x_i = x_i - \bar  x\) and \(\tilde y_i = y_i - \bar y\) before fitting the regression model.
-
-\end{myanswers}
-
-\textbf{2.} Let \(X\) be the design matrix of a model including an intercept, and
-let \(H = X (X^\top X)^{-1} X^\top \in\mathbb{R}^{n\times n}\) be the hat matrix.
-Finally, let \(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\).
-Show that \(H \mathbf{1} = \mathbf{1}\).
-
-\begin{myanswers}
-We already know that \(H X = X (X^\top X)^{-1} X^\top X = X\). Since
-the first column of \(X\) equals \(\mathbf{1}\), the first column of
-the matrix equation \(HX = X\) is \(H\mathbf{1} = \mathbf{1}\). This
-completes the proof.
-
-\end{myanswers}
-
-\textbf{3.} For the \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} dataset}
-built into R, predict a value for \texttt{stack.loss} when the inputs are
-\texttt{Air.Flow\ =\ 60}, \texttt{Water.Temp\ =\ 21} and \texttt{Acid.Conc\ =\ 87}.
-
-\begin{myanswers}
-We can fit the model using \texttt{lm()} as usual:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
-\NormalTok{m}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = stack.loss \textasciitilde{} ., data = stackloss)}
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\# (Intercept)     Air.Flow   Water.Temp   Acid.Conc.  }
-\NormalTok{\#    {-}39.9197       0.7156       1.2953      {-}0.1521}
-\end{Highlighting}
-\end{Shaded}
-
-To predict a new value, we use the \texttt{predict()} command. Note that
-\texttt{Acid.Conc.} is spelled with a trailing dot, which we need to include
-in the name when we supply the new input values here.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{predict}\NormalTok{(m, }\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Air.Flow =} \DecValTok{60}\NormalTok{, }\AttributeTok{Water.Temp =} \DecValTok{21}\NormalTok{, }\AttributeTok{Acid.Conc. =} \DecValTok{87}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#        1 }
-\NormalTok{\# 16.98509}
-\end{Highlighting}
-\end{Shaded}
-
-Thus, the predicted value for \texttt{stack.loss} is \(16.98509\).
-
-\end{myanswers}
-
-\textbf{4.} Let \(\varepsilon_1, \ldots, \varepsilon_n \sim \mathcal{N}(\mu, \sigma^2)\) be independent.
-Then \(\varepsilon= (\varepsilon_1, \ldots, \varepsilon_n)\) is a random vector. Determine
-\(\mathbb{E}(\varepsilon)\), \(\mathop{\mathrm{Cov}}(\varepsilon)\) and \(\mathbb{E}\bigl( \|\varepsilon\|^2 \bigr)\).
-
-\begin{myanswers}
-We immediately find \(\mathbb{E}(\varepsilon) = \mu \mathbf{1}\) where
-\(\mathbf{1} = (1, \ldots, 1) \in\mathbb{R}^n\). Since the \(\varepsilon_i\) are independent,
-we have \(\mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I\). Finally we have
-\begin{align*}
-  \mathbb{E}\bigl(\|\varepsilon\|^2\bigr)
-  &= \mathbb{E}\bigl( \sum_{i=1}^n \varepsilon_i^2 \bigr) \\
-  &= \sum_{i=1}^n E(\varepsilon_i^2) \\
-  &= n \mathbb{E}(\varepsilon_1^2).
-\end{align*}
-Since \(\mathbb{E}(\varepsilon_1^2) = \mathop{\mathrm{Var}}(\varepsilon_1) + \mathbb{E}(\varepsilon_1)^2 = \sigma^2 + \mu^2\)
-we get \(\mathbb{E}\bigl(\|\varepsilon\|^2\bigr) = n (\sigma^2 + \mu^2)\).
-
-\end{myanswers}
-
-\clearpage
-
 \section{Random Vectors and Covariance}\label{S03-cov}
 
 Like in the one-dimensional case, we can build a \textbf{statistical model}
@@ -1756,7 +1532,7 @@ This is formalised in the following definition.
 Let \(Z = (Z_1, \ldots, Z_n) \in \mathbb{R}^n\) be a random vector.
 Then the expectation of \(Z\) is the (non-random) vector
 \begin{equation*}
-    \mathbb{E}(Z)
+    \mathbb{E}(X)
     = \begin{pmatrix}
       \mathbb{E}(Z_1) \\ \vdots \\ \mathbb{E}(Z_n)
     \end{pmatrix}
@@ -2130,6 +1906,230 @@ exclude cases like this.
 \item
   We learned about the definition of the multivariate normal distribution.
 \end{itemize}
+
+\clearpage
+
+\section*{Problem Sheet 1}\label{P01}
+\addcontentsline{toc}{section}{Problem Sheet 1}
+
+\excludecomment{myanswers}
+
+You should attempt all these questions and write up your solutions in advance
+of your workshop in week~3 where the answers will be discussed.
+
+\textbf{1.} Consider the simple linear regression model
+\(y_i = \beta_0 + x_{i} \beta_1 + \varepsilon_i\) for
+\(i \in \{1, 2, \ldots, n\}\) and let \(X\) be the design matrix.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Show that \(\displaystyle X^\top X = \begin{pmatrix}  n & \sum_{i=1}^n x_i \\  \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2  \end{pmatrix} \in \mathbb{R}^{2\times 2}\).
+\end{enumerate}
+
+\begin{myanswers}
+For simple linear regression, we have \(p=1\) and the design matrix is
+\begin{equation*}
+    X = \begin{pmatrix}
+      1 & x_1 \\
+      1 & x_2 \\
+      \vdots & \vdots \\
+      1 & x_n
+    \end{pmatrix}.
+  \end{equation*}
+Thus we have
+\begin{align*}
+    X^\top X
+    &= \begin{pmatrix}
+        1 & 1 & \cdots & 1 \\
+        x_1 & x_2 & \cdots & x_n
+    \end{pmatrix} \begin{pmatrix}
+      1 & x_1 \\
+      1 & x_2 \\
+      \vdots & \vdots \\
+      1 & x_n
+    \end{pmatrix} \\
+    &= \begin{pmatrix}
+      \sum_{i=1}^n 1 &  \sum_{i=1}^n 1 \cdot x_i \\
+      \sum_{i=1}^n x_i \cdot 1 & \sum_{i=1}^n x_i^2
+    \end{pmatrix} \\
+    &= \begin{pmatrix}
+      n & \sum_{i=1}^n x_i \\
+      \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2
+    \end{pmatrix}.
+  \end{align*}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Using the formula
+  \begin{equation*}
+   \begin{pmatrix} a & b \\ c & d \end{pmatrix}^{-1}
+   = \frac{1}{ad-bc} \begin{pmatrix} \;d & -b \\ -c & \,a \end{pmatrix},
+      \end{equation*}
+  find \((X^\top X)^{-1}\).
+\end{enumerate}
+
+\begin{myanswers}
+Using the formula for the inverse of a \(2\times 2\)-matrix, we find
+\begin{align*}
+    (X^\top X)^{-1}
+    &= \begin{pmatrix}
+      n & \sum_{i=1}^n x_i \\
+      \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2
+    \end{pmatrix}^{-1} \\
+    &= \frac{1}{n \sum_{i=1}^n x_i^2 - \bigl(\sum_{i=1}^n x_i\bigr)^2}
+      \begin{pmatrix}
+      \sum_{i=1}^n x_i^2 & -\sum_{i=1}^n x_i \\
+      -\sum_{i=1}^n x_i & n
+    \end{pmatrix}.
+  \end{align*}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Find \(X^\top y\) and use this to derive an explicit formula for
+  the least squares estimate \(\hat\beta = (X^\top X)^{-1} X^\top y\).
+\end{enumerate}
+
+\begin{myanswers}
+Omitting the indices in the sums for brevity, we have
+\begin{equation*}
+    X^\top y
+    = \begin{pmatrix}
+        1 & 1 & \cdots & 1 \\
+        x_1 & x_2 & \cdots & x_n
+    \end{pmatrix} \begin{pmatrix}
+      y_1 \\ y_2 \\ \vdots \\ y_n
+    \end{pmatrix}
+    = \begin{pmatrix}
+      \sum y_i \\
+      \sum x_i y_i
+    \end{pmatrix}
+  \end{equation*}
+and thus
+\begin{align*}
+    \hat\beta
+    &= (X^\top X)^{-1} X^\top y \\
+    &= \frac{1}{n \sum x_i^2 - \bigl(\sum x_i\bigr)^2}
+      \begin{pmatrix}
+      \sum x_i^2 & -\sum x_i \\
+      -\sum x_i & n
+    \end{pmatrix}
+    \begin{pmatrix}
+      \sum y_i \\
+      \sum x_i y_i
+    \end{pmatrix} \\
+    &= \frac{1}{n \sum x_i^2 - \bigl(\sum x_i\bigr)^2}
+      \begin{pmatrix}
+        \sum x_i^2 \sum y_i - \sum x_i \sum x_i y_i \\
+        -\sum x_i \sum y_i + n \sum x_i y_i
+      \end{pmatrix} \\
+    &= \frac{1}{\frac1n \sum_{i=1}^n x_i^2 - \bigl(\frac1n \sum_{i=1}^n x_i\bigr)^2}
+      \begin{pmatrix}
+        \frac1n \sum_{i=1}^n x_i^2 \cdot \frac1n\sum_{i=1}^n y_i
+            - \frac1n\sum_{i=1}^n x_i \cdot \frac1n\sum_{i=1}^n x_i y_i \\
+        \frac1n\sum_{i=1}^n x_i y_i
+            - \frac1n\sum_{i=1}^n x_i \cdot \frac1n\sum_{i=1}^n y_i
+      \end{pmatrix}.
+  \end{align*}
+This completes the answer.
+
+Inspection of the final result shows that we have recovered the traditional
+formula for the coefficients in simple linear regression, only written in
+slightly unusual form. For example, the term \(\frac1n \sum_{i=1}^n x_i^2 -  \bigl(\frac1n \sum_{i=1}^n x_i\bigr)^2\) equals the sample variance of the
+\(x_i\) (up to a factor of \(n/(n-1)\)). The algebra in this answer could be
+slightly simplified by changing to new coordinates \(\tilde x_i = x_i - \bar  x\) and \(\tilde y_i = y_i - \bar y\) before fitting the regression model.
+
+\end{myanswers}
+
+\textbf{2.} Let \(X\) be the design matrix of a model including an intercept, and
+let \(H = X (X^\top X)^{-1} X^\top \in\mathbb{R}^{n\times n}\) be the hat matrix.
+Finally, let \(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\).
+Show that \(H \mathbf{1} = \mathbf{1}\).
+
+\begin{myanswers}
+We already know that \(H X = X (X^\top X)^{-1} X^\top X = X\). Since
+the first column of \(X\) equals \(\mathbf{1}\), the first column of
+the matrix equation \(HX = X\) is \(H\mathbf{1} = \mathbf{1}\). This
+completes the proof.
+
+\end{myanswers}
+
+\textbf{3.} For the \href{https://rdrr.io/r/datasets/stackloss.html}{\texttt{stackloss} dataset}
+built into R, predict a value for \texttt{stack.loss} when the inputs are
+\texttt{Air.Flow\ =\ 60}, \texttt{Water.Temp\ =\ 21} and \texttt{Acid.Conc\ =\ 87}.
+
+\begin{myanswers}
+We can fit the model using \texttt{lm()} as usual:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\NormalTok{m}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = stack.loss \textasciitilde{} ., data = stackloss)}
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\# (Intercept)     Air.Flow   Water.Temp   Acid.Conc.  }
+\NormalTok{\#    {-}39.9197       0.7156       1.2953      {-}0.1521}
+\end{Highlighting}
+\end{Shaded}
+
+To predict a new value, we use the \texttt{predict()} command. Note that
+\texttt{Acid.Conc.} is spelled with a trailing dot, which we need to include
+in the name when we supply the new input values here.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{predict}\NormalTok{(m, }\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Air.Flow =} \DecValTok{60}\NormalTok{, }\AttributeTok{Water.Temp =} \DecValTok{21}\NormalTok{, }\AttributeTok{Acid.Conc. =} \DecValTok{87}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#        1 }
+\NormalTok{\# 16.98509}
+\end{Highlighting}
+\end{Shaded}
+
+Thus, the predicted value for \texttt{stack.loss} is \(16.98509\).
+
+\end{myanswers}
+
+\textbf{4.} Let \(\varepsilon_1, \ldots, \varepsilon_n \sim \mathcal{N}(\mu, \sigma^2)\) be independent.
+Then \(\varepsilon= (\varepsilon_1, \ldots, \varepsilon_n)\) is a random vector. Determine
+\(\mathbb{E}(\varepsilon)\), \(\mathop{\mathrm{Cov}}(\varepsilon)\) and \(\mathbb{E}\bigl( \|\varepsilon\|^2 \bigr)\).
+
+\begin{myanswers}
+We immediately find \(\mathbb{E}(\varepsilon) = \mu \mathbf{1}\) where
+\(\mathbf{1} = (1, \ldots, 1) \in\mathbb{R}^n\). Since the \(\varepsilon_i\) are independent,
+we have \(\mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I\). Finally we have
+\begin{align*}
+  \mathbb{E}\bigl(\|\varepsilon\|^2\bigr)
+  &= \mathbb{E}\bigl( \sum_{i=1}^n \varepsilon_i^2 \bigr) \\
+  &= \sum_{i=1}^n E(\varepsilon_i^2) \\
+  &= n \mathbb{E}(\varepsilon_1^2).
+\end{align*}
+Since \(\mathbb{E}(\varepsilon_1^2) = \mathop{\mathrm{Var}}(\varepsilon_1) + \mathbb{E}(\varepsilon_1)^2 = \sigma^2 + \mu^2\)
+we get \(\mathbb{E}\bigl(\|\varepsilon\|^2\bigr) = n (\sigma^2 + \mu^2)\).
+
+\end{myanswers}
 
 \clearpage
 
@@ -3817,292 +3817,6 @@ encountered problems are the following:
 
 \clearpage
 
-\section*{Problem Sheet 2}\label{P02}
-\addcontentsline{toc}{section}{Problem Sheet 2}
-
-\excludecomment{myanswers}
-
-You should attempt all these questions and write up your solutions in advance
-of the workshop in week~5 where the answers will be discussed.
-
-\textbf{5.} Assume that \(X \sim \mathcal{N}(0, 1)\), \(Y\sim \chi^2(2)\) and
-\(Z \sim \chi^2(3)\) are independent. What are the distributions of
-the following random variables?
-
-\begin{itemize}
-\item
-  \(X^2\),
-\item
-  \(X^2 + Y + Z\),
-\item
-  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}}\),
-\item
-  \(\displaystyle\frac{2X^2}{Y}\), and
-\item
-  \(1.5\, Y/Z\).
-\end{itemize}
-
-\begin{myanswers}
-
-The distributions involved in this question are the normal
-distribution, the \(\chi^2\)-dis-tri-bu-tion, the \(t\)-distribution
-and the \(F\)-distribution. The general rules are: (1) the sum of
-squares of \(d\) independent, standard normally distributed random
-variables follows a \(\chi^2(d)\)-distribution. (2) If
-\(Z\sim\mathcal{N}(0,1)\) and \(V \sim \chi^2(d)\) are independent, then
-\(Z / \sqrt{V / d} \sim t(d)\), and finally (3) If
-\(V_1\sim \chi^2(d_1)\) and \(V_2\sim \chi^2(d_2)\) are independent,
-then \((V_1/d_1)/(V_2/d_2) \sim F(d_1, d_2)\). Using these rules:
-
-\begin{itemize}
-\item
-  \(X^2 \sim \chi^2(1)\),
-\item
-  \(X^2 + Y + Z \sim \chi^2(1+2+3) = \chi^2(6)\),
-\item
-  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}} = \frac{X}{\sqrt{Y/2}} \sim t(2)\),
-\item
-  \(\displaystyle\frac{2X^2}{Y} = \frac{X^2/1}{Y/2} \sim F(1,2)\),
-\item
-  \(\displaystyle 1.5\, Y/Z = \frac{Y/2}{Z/3} \sim F(2, 3)\).
-\end{itemize}
-
-\end{myanswers}
-
-\textbf{6.} Let \(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\) and let \(X \sim \mathcal{N}(\mu, \sigma^2 I)\) be a normally-distributed random vector, where \(I\) is the
-\(n\times n\) identity matrix. Define \(A = \frac1n \mathbf{1} \mathbf{1}^\top \in \mathbb{R}^{n\times n}\).
-
-\begin{itemize}
-\item
-  Show that \((AX)_i = \bar X\) for all \(i \in \{1, \ldots, n\}\),
-  where \(\bar X = \frac1n \sum_{j=1}^n X_j\).
-\item
-  Show that \(A\) is symmetric.
-\item
-  Show that \(A\) is idempotent.
-\item
-  Use results from lectures to conclude that the random
-  variables \(AX\) and \(X^\top (I-A)X\) are independent.
-\item
-  Using the previous parts of the question, show that \(\bar X\)
-  and \(\frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2\) are independent.
-\end{itemize}
-
-\begin{myanswers}
-
-The matrix \(A = (a_{ij})\) has entries \(a_{ij} = 1/n\) for all
-\(i, j \in \{1, \ldots, n\}\). Using this observation, the statements
-of the first few questions follow easily:
-
-\begin{itemize}
-\item
-  We have
-  \begin{equation*}
-    (Ax)_i
-    = \sum_{j=1}^n a_{ij} x_j
-    = \sum_{j=1}^n \frac1n x_j
-    = \frac1n \sum_{j=1}^n x_j
-    = \bar x
-  \end{equation*}
-  for all \(i \in \{1, \ldots, n\}\).
-\item
-  We have
-  \begin{equation*}
-    a_{ij}
-    = \frac1n
-    = a_{ji}
-  \end{equation*}
-  for all \(i, j \in \{1, \ldots, n\}\) and thus \(A\) is symmetric.
-\item
-  We have
-  \(\mathbf{1}^\top \mathbf{1} = \sum_{i=1}^n 1 \cdot 1 = n\) and
-  thus
-  \begin{equation*}
-    A^2
-    = \bigl( \frac1n \mathbf{1} \mathbf{1}^\top \bigr)
-        \bigl( \frac1n \mathbf{1} \mathbf{1}^\top \bigr)
-    = \frac{1}{n^2} \mathbf{1}
-        \bigl(\mathbf{1}^\top\mathbf{1}\bigr) \mathbf{1}^\top
-    = \frac1n \mathbf{1} \mathbf{1}^\top
-    = A.
-  \end{equation*}
-  (Alternatively, we could use the fact that we know the entries
-  of~\(A\) and compute \(A^2\) explicitly.)
-\item
-  For the remaining statements we will use the fact that \(X\) is
-  normally distributed. We will repeatedly use the
-  result that if two random variables \(X\) and~\(Y\) are independent,
-  that then any function of \(X\) is independent of any function of
-  \(Y\).
-
-  In lectures we learned that, if \(A\) is symmetric and idempotent
-  and if \(\varepsilon\sim \mathcal{N}(0, I)\), then \(A\varepsilon\) and \((I-A)\varepsilon\) are
-  independent. Applying this result with
-  \(\varepsilon= (X - \mu \mathbf{1}) / \sigma\) we
-  find that \(AX = \sigma A\varepsilon+ \mu A \mathbf{1}\) and
-  \((I-A)X = \sigma (I-A)\varepsilon+ \mu (I-A)\mathbf{1}\)
-  are independent, since they are functions of \(A\varepsilon\) and \((I-A)\varepsilon\).
-
-  Since
-  \((I - A)^\top (I - A) = I^2 - I A - A I + A^2 = I - A - A + A = I - A\) we have
-  \begin{equation*}
-    X^\top (I-A)X
-    = X^\top (I - A)^\top (I-A)X
-    = \Bigl( (I-A)X \Bigr)^\top \Bigl( (I-A)X \Bigr).
-  \end{equation*}
-  Thus, \(X^\top (I-A)X\) is a function of \((I-A)X\) and as such is
-  also independent of \(AX\).
-\item
-  We have seen \((AX)_i = \bar X\) and thus
-  \(\bigl((I - A)X\bigr)_i = X_i - \bar X\). This gives
-  \begin{align*}
-    X^\top (I-A)X
-    &= \Bigl( (I-A)X \Bigr)^\top \Bigl( (I-A)X \Bigr) \\
-    &= \sum_{i=1}^n \Bigl( (I-A)X \Bigr)_i^2 \\
-    &= \sum_{i=1}^n (X_i - \bar X)^2
-  \end{align*}
-  Thus we can write the sample mean as \(\bar X = (AX)_i\), and the
-  sample variance as
-  \(\mathrm{s}_X^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2 = X^\top (I-A)X / (n-1)\), and if \(X\) is normally distributed the
-  two values \(\bar X\) and \(\mathrm{s}_X^2\) are independent.
-\end{itemize}
-
-\end{myanswers}
-
-\textbf{7.} Consider the following R commands:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data=}\NormalTok{stackloss)}
-\FunctionTok{summary}\NormalTok{(m)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = stack.loss \textasciitilde{} ., data = stackloss)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#     Min      1Q  Median      3Q     Max }
-\NormalTok{\# {-}7.2377 {-}1.7117 {-}0.4551  2.3614  5.6978 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#             Estimate Std. Error t value Pr(\textgreater{}|t|)    }
-\NormalTok{\# (Intercept) {-}39.9197    11.8960  {-}3.356  0.00375 ** }
-\NormalTok{\# Air.Flow      0.7156     0.1349   5.307  5.8e{-}05 ***}
-\NormalTok{\# Water.Temp    1.2953     0.3680   3.520  0.00263 ** }
-\NormalTok{\# Acid.Conc.   {-}0.1521     0.1563  {-}0.973  0.34405    }
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 3.243 on 17 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.9136,  Adjusted R{-}squared:  0.8983 }
-\NormalTok{\# F{-}statistic:  59.9 on 3 and 17 DF,  p{-}value: 3.016e{-}09}
-\end{Highlighting}
-\end{Shaded}
-
-Either using this output, or using R to further inspect the built-in
-\texttt{stackloss} dataset, find a \(99\%\)-confidence interval for the
-parameter \(\beta_\mathtt{Acid.Conc.}\).
-
-\begin{myanswers}
-From lectures, we know that a confidence interval for a single
-coefficient~\(\beta_j\) is given by
-\begin{equation*}
-  [U, V]
-  = \Bigl[ \hat\beta_j - t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}},
-        \hat\beta_j + t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}} \Bigr],
-\end{equation*}
-where \(t_{n-p-1}\) is the \((1-\alpha/2)\)-quantile of the \(t\)-distribution,
-\(C_{jj} = (X^\top X)^{-1}_{jj}\), and \(X\) is the design matrix.
-
-We can read off the required values for computing the confidence
-interval from the output of \texttt{summary(m)}: the centre of the
-confidence interval can be found in the column \texttt{Estimate}, the
-standard error \(\sqrt{\widehat{\sigma^2} C_{jj}}\) is given in column
-\texttt{Std.\ Error}, and the value \(n-p-1\) for the \(t\)-quantile can be
-found as the \texttt{degrees\ of\ freedom} for the residual standard error,
-near the bottom of the output. Using these values, we can find a
-\(95\%\)-confidence interval for \texttt{Acid.Conc.} as
-follows:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{0.1521} \SpecialCharTok{{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.995}\NormalTok{, }\DecValTok{17}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.1563}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.1521} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.995}\NormalTok{, }\DecValTok{17}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.1563}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# [1] {-}0.6050934  0.3008934}
-\end{Highlighting}
-\end{Shaded}
-
-Thus, the confidence interval is \(\bigl[ -0.605, 0.301 \bigr]\).
-
-\end{myanswers}
-
-\textbf{8.} The file \texttt{20211020.csv} from
-
-\begin{itemize}
-\tightlist
-\item
-  \url{https://www1.maths.leeds.ac.uk/~voss/data/20211020.csv}
-\end{itemize}
-
-contains pairs of \((x, y)\) values. Fit the following models to the data:
-
-\begin{itemize}
-\item
-  \(y = \beta_0 + \beta_1 x + \varepsilon\)
-\item
-  \(y = \beta_0 + \beta_1 x + \beta_2 x^2 + \varepsilon\)
-\item
-  \(y = \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \varepsilon\)
-\end{itemize}
-
-For each model, create a ``residual plot'', \emph{i.e.} a scatter plot which
-has the fitted values on the horizontal axis and the residuals on the
-vertical axis. Comment on the resulting plots.
-
-\begin{myanswers}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/data/20211020.csv}
-\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/20211020.csv"}\NormalTok{)}
-
-\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{data =}\NormalTok{ d)}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P02Q08-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d)}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P02Q08-2.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d)}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m3), }\FunctionTok{resid}\NormalTok{(m3))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P02Q08-3.pdf}
-
-\end{myanswers}
-
-\clearpage
-
 \section{Examples}\label{S07-examples}
 
 To illustrate the results of the last two sections, we consider a series
@@ -4611,6 +4325,292 @@ and thus also at \(\alpha=0.05\).
   We have learned how to use the \texttt{lm()} output to compute confidence
   intervals and to perform hypothesis tests.
 \end{itemize}
+
+\clearpage
+
+\section*{Problem Sheet 2}\label{P02}
+\addcontentsline{toc}{section}{Problem Sheet 2}
+
+\excludecomment{myanswers}
+
+You should attempt all these questions and write up your solutions in advance
+of the workshop in week~5 where the answers will be discussed.
+
+\textbf{5.} Assume that \(X \sim \mathcal{N}(0, 1)\), \(Y\sim \chi^2(2)\) and
+\(Z \sim \chi^2(3)\) are independent. What are the distributions of
+the following random variables?
+
+\begin{itemize}
+\item
+  \(X^2\),
+\item
+  \(X^2 + Y + Z\),
+\item
+  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}}\),
+\item
+  \(\displaystyle\frac{2X^2}{Y}\), and
+\item
+  \(1.5\, Y/Z\).
+\end{itemize}
+
+\begin{myanswers}
+
+The distributions involved in this question are the normal
+distribution, the \(\chi^2\)-dis-tri-bu-tion, the \(t\)-distribution
+and the \(F\)-distribution. The general rules are: (1) the sum of
+squares of \(d\) independent, standard normally distributed random
+variables follows a \(\chi^2(d)\)-distribution. (2) If
+\(Z\sim\mathcal{N}(0,1)\) and \(V \sim \chi^2(d)\) are independent, then
+\(Z / \sqrt{V / d} \sim t(d)\), and finally (3) If
+\(V_1\sim \chi^2(d_1)\) and \(V_2\sim \chi^2(d_2)\) are independent,
+then \((V_1/d_1)/(V_2/d_2) \sim F(d_1, d_2)\). Using these rules:
+
+\begin{itemize}
+\item
+  \(X^2 \sim \chi^2(1)\),
+\item
+  \(X^2 + Y + Z \sim \chi^2(1+2+3) = \chi^2(6)\),
+\item
+  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}} = \frac{X}{\sqrt{Y/2}} \sim t(2)\),
+\item
+  \(\displaystyle\frac{2X^2}{Y} = \frac{X^2/1}{Y/2} \sim F(1,2)\),
+\item
+  \(\displaystyle 1.5\, Y/Z = \frac{Y/2}{Z/3} \sim F(2, 3)\).
+\end{itemize}
+
+\end{myanswers}
+
+\textbf{6.} Let \(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\) and let \(X \sim \mathcal{N}(\mu, \sigma^2 I)\) be a normally-distributed random vector, where \(I\) is the
+\(n\times n\) identity matrix. Define \(A = \frac1n \mathbf{1} \mathbf{1}^\top \in \mathbb{R}^{n\times n}\).
+
+\begin{itemize}
+\item
+  Show that \((AX)_i = \bar X\) for all \(i \in \{1, \ldots, n\}\),
+  where \(\bar X = \frac1n \sum_{j=1}^n X_j\).
+\item
+  Show that \(A\) is symmetric.
+\item
+  Show that \(A\) is idempotent.
+\item
+  Use results from lectures to conclude that the random
+  variables \(AX\) and \(X^\top (I-A)X\) are independent.
+\item
+  Using the previous parts of the question, show that \(\bar X\)
+  and \(\frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2\) are independent.
+\end{itemize}
+
+\begin{myanswers}
+
+The matrix \(A = (a_{ij})\) has entries \(a_{ij} = 1/n\) for all
+\(i, j \in \{1, \ldots, n\}\). Using this observation, the statements
+of the first few questions follow easily:
+
+\begin{itemize}
+\item
+  We have
+  \begin{equation*}
+    (Ax)_i
+    = \sum_{j=1}^n a_{ij} x_j
+    = \sum_{j=1}^n \frac1n x_j
+    = \frac1n \sum_{j=1}^n x_j
+    = \bar x
+  \end{equation*}
+  for all \(i \in \{1, \ldots, n\}\).
+\item
+  We have
+  \begin{equation*}
+    a_{ij}
+    = \frac1n
+    = a_{ji}
+  \end{equation*}
+  for all \(i, j \in \{1, \ldots, n\}\) and thus \(A\) is symmetric.
+\item
+  We have
+  \(\mathbf{1}^\top \mathbf{1} = \sum_{i=1}^n 1 \cdot 1 = n\) and
+  thus
+  \begin{equation*}
+    A^2
+    = \bigl( \frac1n \mathbf{1} \mathbf{1}^\top \bigr)
+        \bigl( \frac1n \mathbf{1} \mathbf{1}^\top \bigr)
+    = \frac{1}{n^2} \mathbf{1}
+        \bigl(\mathbf{1}^\top\mathbf{1}\bigr) \mathbf{1}^\top
+    = \frac1n \mathbf{1} \mathbf{1}^\top
+    = A.
+  \end{equation*}
+  (Alternatively, we could use the fact that we know the entries
+  of~\(A\) and compute \(A^2\) explicitly.)
+\item
+  For the remaining statements we will use the fact that \(X\) is
+  normally distributed. We will repeatedly use the
+  result that if two random variables \(X\) and~\(Y\) are independent,
+  that then any function of \(X\) is independent of any function of
+  \(Y\).
+
+  In lectures we learned that, if \(A\) is symmetric and idempotent
+  and if \(\varepsilon\sim \mathcal{N}(0, I)\), then \(A\varepsilon\) and \((I-A)\varepsilon\) are
+  independent. Applying this result with
+  \(\varepsilon= (X - \mu \mathbf{1}) / \sigma\) we
+  find that \(AX = \sigma A\varepsilon+ \mu A \mathbf{1}\) and
+  \((I-A)X = \sigma (I-A)\varepsilon+ \mu (I-A)\mathbf{1}\)
+  are independent, since they are functions of \(A\varepsilon\) and \((I-A)\varepsilon\).
+
+  Since
+  \((I - A)^\top (I - A) = I^2 - I A - A I + A^2 = I - A - A + A = I - A\) we have
+  \begin{equation*}
+    X^\top (I-A)X
+    = X^\top (I - A)^\top (I-A)X
+    = \Bigl( (I-A)X \Bigr)^\top \Bigl( (I-A)X \Bigr).
+  \end{equation*}
+  Thus, \(X^\top (I-A)X\) is a function of \((I-A)X\) and as such is
+  also independent of \(AX\).
+\item
+  We have seen \((AX)_i = \bar X\) and thus
+  \(\bigl((I - A)X\bigr)_i = X_i - \bar X\). This gives
+  \begin{align*}
+    X^\top (I-A)X
+    &= \Bigl( (I-A)X \Bigr)^\top \Bigl( (I-A)X \Bigr) \\
+    &= \sum_{i=1}^n \Bigl( (I-A)X \Bigr)_i^2 \\
+    &= \sum_{i=1}^n (X_i - \bar X)^2
+  \end{align*}
+  Thus we can write the sample mean as \(\bar X = (AX)_i\), and the
+  sample variance as
+  \(\mathrm{s}_X^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2 = X^\top (I-A)X / (n-1)\), and if \(X\) is normally distributed the
+  two values \(\bar X\) and \(\mathrm{s}_X^2\) are independent.
+\end{itemize}
+
+\end{myanswers}
+
+\textbf{7.} Consider the following R commands:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data=}\NormalTok{stackloss)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = stack.loss \textasciitilde{} ., data = stackloss)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}7.2377 {-}1.7117 {-}0.4551  2.3614  5.6978 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#             Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept) {-}39.9197    11.8960  {-}3.356  0.00375 ** }
+\NormalTok{\# Air.Flow      0.7156     0.1349   5.307  5.8e{-}05 ***}
+\NormalTok{\# Water.Temp    1.2953     0.3680   3.520  0.00263 ** }
+\NormalTok{\# Acid.Conc.   {-}0.1521     0.1563  {-}0.973  0.34405    }
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 3.243 on 17 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.9136,  Adjusted R{-}squared:  0.8983 }
+\NormalTok{\# F{-}statistic:  59.9 on 3 and 17 DF,  p{-}value: 3.016e{-}09}
+\end{Highlighting}
+\end{Shaded}
+
+Either using this output, or using R to further inspect the built-in
+\texttt{stackloss} dataset, find a \(99\%\)-confidence interval for the
+parameter \(\beta_\mathtt{Acid.Conc.}\).
+
+\begin{myanswers}
+From lectures, we know that a confidence interval for a single
+coefficient~\(\beta_j\) is given by
+\begin{equation*}
+  [U, V]
+  = \Bigl[ \hat\beta_j - t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}},
+        \hat\beta_j + t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}} \Bigr],
+\end{equation*}
+where \(t_{n-p-1}\) is the \((1-\alpha/2)\)-quantile of the \(t\)-distribution,
+\(C_{jj} = (X^\top X)^{-1}_{jj}\), and \(X\) is the design matrix.
+
+We can read off the required values for computing the confidence
+interval from the output of \texttt{summary(m)}: the centre of the
+confidence interval can be found in the column \texttt{Estimate}, the
+standard error \(\sqrt{\widehat{\sigma^2} C_{jj}}\) is given in column
+\texttt{Std.\ Error}, and the value \(n-p-1\) for the \(t\)-quantile can be
+found as the \texttt{degrees\ of\ freedom} for the residual standard error,
+near the bottom of the output. Using these values, we can find a
+\(95\%\)-confidence interval for \texttt{Acid.Conc.} as
+follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{0.1521} \SpecialCharTok{{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.995}\NormalTok{, }\DecValTok{17}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.1563}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.1521} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.995}\NormalTok{, }\DecValTok{17}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.1563}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# [1] {-}0.6050934  0.3008934}
+\end{Highlighting}
+\end{Shaded}
+
+Thus, the confidence interval is \(\bigl[ -0.605, 0.301 \bigr]\).
+
+\end{myanswers}
+
+\textbf{8.} The file \texttt{20211020.csv} from
+
+\begin{itemize}
+\tightlist
+\item
+  \url{https://www1.maths.leeds.ac.uk/~voss/data/20211020.csv}
+\end{itemize}
+
+contains pairs of \((x, y)\) values. Fit the following models to the data:
+
+\begin{itemize}
+\item
+  \(y = \beta_0 + \beta_1 x + \varepsilon\)
+\item
+  \(y = \beta_0 + \beta_1 x + \beta_2 x^2 + \varepsilon\)
+\item
+  \(y = \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \varepsilon\)
+\end{itemize}
+
+For each model, create a ``residual plot'', \emph{i.e.} a scatter plot which
+has the fitted values on the horizontal axis and the residuals on the
+vertical axis. Comment on the resulting plots.
+
+\begin{myanswers}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/data/20211020.csv}
+\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/20211020.csv"}\NormalTok{)}
+
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P02Q08-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P02Q08-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m3), }\FunctionTok{resid}\NormalTok{(m3))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P02Q08-3.pdf}
+
+\end{myanswers}
 
 \clearpage
 
@@ -5788,377 +5788,6 @@ as possible.
 
 \clearpage
 
-\section*{Problem Sheet 3}\label{P03}
-\addcontentsline{toc}{section}{Problem Sheet 3}
-
-\excludecomment{myanswers}
-
-You should attempt all these questions and write up your solutions in advance
-of the workshop in week~7 where the answers will be discussed.
-
-\textbf{9.} Consider the following dataset. Our aim is to predict \(y\) from the
-variables \(x_1\), \(x_2\) and \(x_3\).
-
-\begin{longtable}[]{@{}rrrrr@{}}
-\toprule\noalign{}
-\(i\) & \(x_{1,i}\) & \(x_{2,i}\) & \(x_{3,i}\) & \(y_i\) \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-1 & -2.17 & -2.08 & -2.16 & 4.47 \\
-2 & -1.35 & -0.50 & -0.74 & 5.60 \\
-3 & -1.22 & -1.00 & -1.78 & 4.16 \\
-4 & -1.04 & -0.32 & -0.40 & 5.52 \\
-5 & -0.87 & -0.39 & -0.67 & 5.27 \\
-6 & -0.41 & 0.07 & -0.66 & 4.70 \\
-7 & 0.07 & 0.74 & 0.37 & 5.50 \\
-8 & 0.25 & 0.35 & 0.02 & 4.84 \\
-9 & 0.87 & 1.28 & 0.52 & 4.92 \\
-10 & 1.53 & 2.30 & 1.35 & 5.35 \\
-11 & 2.46 & 2.55 & 1.77 & 4.86 \\
-12 & 5.00 & 5.04 & 4.05 & 5.09 \\
-\end{longtable}
-
-These data are also available in machine-readable form at
-
-\begin{itemize}
-\tightlist
-\item
-  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P03Q09.csv}
-\end{itemize}
-
-Using these data:
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\tightlist
-\item
-  Fit a linear model of the form
-  \(y_i = \beta_0 + x_{1,i} \beta_1 + x_{2,i} \beta_2 + x_{3,i} \beta_3 + \varepsilon_i\).
-\end{enumerate}
-
-\begin{myanswers}
-
-To fit the required model we can use the following R commands:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{"https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/P03Q09.csv"}
-\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(url)}
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2 }\SpecialCharTok{+}\NormalTok{ x3, }\AttributeTok{data=}\NormalTok{x)}
-\end{Highlighting}
-\end{Shaded}
-
-The fitted model has the following coefficients:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{summary}\NormalTok{(m)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = y \textasciitilde{} x1 + x2 + x3, data = x)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#       Min        1Q    Median        3Q       Max }
-\NormalTok{\# {-}0.104928 {-}0.032723 {-}0.001836  0.024802  0.142993 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#             Estimate Std. Error t value Pr(\textgreater{}|t|)    }
-\NormalTok{\# (Intercept)  4.97725    0.06026  82.598 5.15e{-}13 ***}
-\NormalTok{\# x1          {-}1.11954    0.07427 {-}15.074 3.71e{-}07 ***}
-\NormalTok{\# x2           0.28176    0.12023   2.344   0.0472 *  }
-\NormalTok{\# x3           1.06621    0.09492  11.232 3.54e{-}06 ***}
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 0.07109 on 8 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.9817,  Adjusted R{-}squared:  0.9748 }
-\NormalTok{\# F{-}statistic: 142.8 on 3 and 8 DF,  p{-}value: 2.76e{-}07}
-\end{Highlighting}
-\end{Shaded}
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Determine a \(95\%\) confidence interval for the coefficient~\(\beta_2\).
-\end{enumerate}
-
-\begin{myanswers}
-From lectures we know that a confidence interval for a single
-coefficient~\(\beta_j\) is given by
-\begin{equation*}
-  [U, V]
-  = \Bigl[ \hat\beta_j - t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}},
-       \hat\beta_j + t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}} \Bigr],
-\end{equation*}
-where \(t_{n-p-1}\) is the \((1-\alpha/2)\)-quantile of the \(t\)-distribution,
-\(C_{jj} = (X^\top X)^{-1}_{jj}\), and \(X\) is the design matrix.
-
-We can read off the required values for computing the confidence
-interval from the output of \texttt{summary(m)}: the centre of the
-confidence interval can be found in the column \texttt{Estimate},
-the standard error \(\sqrt{\widehat{\sigma^2} C_{jj}}\) is given in
-column \texttt{Std.\ Error}, and \(n-p-1 = 12 - 3 - 1 = 8\). Using
-these values, we can find a \(95\%\)-confidence interval for
-\(\beta_2\) as follows:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-  \FunctionTok{c}\NormalTok{(}\FloatTok{0.28176} \SpecialCharTok{{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DecValTok{8}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.12023}\NormalTok{, }\FloatTok{0.28176} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DecValTok{8}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.12023}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# [1] 0.004509123 0.559010877}
-\end{Highlighting}
-\end{Shaded}
-
-Thus, the confidence interval is \(\bigl[ 0.0045, 0.5590 \bigr]\).
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  Perform a hypothesis test, at the \(95\%\)-level, for the
-  hypothesis \(H_0\colon \beta_2 = 0\) with alternative \(H_1\colon \beta_2 \neq 0\).
-\end{enumerate}
-
-\begin{myanswers}
-The test statistic is
-\begin{equation*}
-  T
-  = \frac{\bigl|\hat\beta_2\bigr|}{\sqrt{\widehat{\sigma^2} C_{jj}} }
-  = \frac{0.28176}{0.12023}
-  = 2.344.
-\end{equation*}
-(This value is also shown in the column \texttt{t\ value} of the R
-summary output.) The critical value is
-\begin{equation*}
-  t
-  = t_{n-p-1}(\alpha/2)
-  = 2.306.
-\end{equation*}
-Since \(T > t\), we can reject the hypothesis \(\beta_2 = 0\) at the
-\(95\%\)-level.
-
-\end{myanswers}
-
-\textbf{10.} Let \(x_1, \ldots, x_n, y_1, \ldots, y_n \in \mathbb{R}\) be given. Assume
-that it is known that the \(y\)-values satisfy
-\(y \approx 1 - x + c x^2 - d x^3\), where \(c\) and \(d\) are unknown
-constants.
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\tightlist
-\item
-  Explain how linear regression can be used to estimate the
-  parameters \(c\) and \(d\) from the given data.
-\end{enumerate}
-
-\begin{myanswers}
-We can rewrite the equation for \(y\) as
-\begin{equation*}
-  y + x - 1 = c x^2 - d x^3,
-\end{equation*}
-where \(c\) and \(d\) are the unknown quantities, and \(x\) and \(y\)
-are given. Thus we can estimate \(c\) and \(d\) by fitting
-a linear model with two inputs, \(x_i^2\) and \(x_i^3\)
-and one output \(y_i + x_i - 1\). The model does not include
-an intercept.
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  What is the design matrix in this situation?
-\end{enumerate}
-
-\begin{myanswers}
-Since there is no intercept, the design matrix is
-\begin{equation*}
-  X = \begin{pmatrix}
-    x_1^2 & x_1^3 \\
-    x_2^2 & x_2^3 \\
-    \vdots & \vdots \\
-    x_n^2 & x_n^3 \\
-  \end{pmatrix}
-  \in \mathbb{R}^{n\times 2}.
-\end{equation*}
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  Why can \emph{linear} regression be used, despite the presence
-  of the \emph{non-linear} terms \(x^2\) and~\(x^3\)?
-\end{enumerate}
-
-\begin{myanswers}
-A linear model is appropriate, because the response depends
-on the unknown coefficients \(c\) and \(d\) in a linear way: \(c\) and \(d\)
-are only multiplied by known constants, and there are no non-linear
-functions of \(c\) and \(d\) in the model.
-
-\end{myanswers}
-
-\textbf{11.} In this question we consider four different datasets, given by
-inputs \(x_i\) and responses \(y_i\) for \(i \in \{1, 2, 3, 4\}\).
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\tightlist
-\item
-  Based on the following plots, discuss model fit of each model.
-  Describe all relevant features of the plots.
-  Describe any problems with the model fit you find.
-\end{enumerate}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-    \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{2}\NormalTok{))}
-
-\NormalTok{    m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y1 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1)}
-    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
-    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m1), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
-
-\NormalTok{    m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y2 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x2)}
-    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
-    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m2), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
-
-\NormalTok{    m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y3 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x3)}
-    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m3), }\FunctionTok{resid}\NormalTok{(m3), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
-    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m3), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
-
-\NormalTok{    m4 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y4 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x4)}
-    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m4), }\FunctionTok{resid}\NormalTok{(m4), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
-    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m4), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/four-models-1.pdf}
-
-\begin{myanswers}
-
-We first note that the given R commands generate the plots along
-rows, so the first row of plots corresponds to model~\texttt{m1}, the
-second row to model~\texttt{m2}, and so on. The plots shown are
-residual plots in the left column, and Q-Q-plots in the right
-column.
-
-\begin{itemize}
-\tightlist
-\item
-  \textbf{m1:} Samples in the residual plot on the left
-  seem to follow an upside down parabola indicating a non-linear
-  relationship between \(x\) and \(y\). Samples in the QQ-plot on the
-  right seem to (approximately?) follow a straight line, so
-  residuals seem to be (approximately?) normally distributed. No
-  outliers are visible.
-\item
-  \textbf{m2:} Samples in the residual plot form a band
-  centred at zero. Possibly very negative residuals are less
-  frequent for fitted values \(\hat y_i < 4\)? No outliers are
-  apparent. The samples in the QQ-plot seem to clearly fall on a
-  straight line. Overall, model fit seems very good.
-\item
-  \textbf{m3:} The samples in the residual plot are
-  centred around \(\hat\varepsilon= 0\), but the width of the spread
-  increases as the fitted values increase, leasing to a triangular
-  shape. This indicates that the variance of the residuals is not
-  constant but increases with \(y\). Possibly, a model with
-  multiplicative noise would be appropriate for these data. The
-  QQ-plot shows an approximately straight line, but fit is not as
-  good as for model~\texttt{m2}.
-\item
-  \textbf{m4:} The samples in the residual plot form a
-  horizontal band centred at~\(\hat\varepsilon= 0\), no outliers are
-  visible. The QQ-plot shows clearly that the residuals are not
-  normally distributed: the samples form an ``S-shaped'' line,
-  indicating that the errors have lighter tails than we would expect
-  for a normal distribution.
-\end{itemize}
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Which of the four models has the best fit?
-\end{enumerate}
-
-\begin{myanswers}
-The data in \texttt{m1} seems to
-have a non-linear relationship between \(x\) and~\(y\), the data
-in~\texttt{m3} seems to be better modelled using multiplicative noise,
-and the residuals in~\texttt{m4} seem not to be normally
-distributed. Thus, the model with the best fit is~\texttt{m2},
-because it is the only model which does not show any obvious
-problems.
-
-\end{myanswers}
-
-\textbf{12.} Using singular value decomposition,
-we can write a design matrix \(X\) as \(X = U D V^\top\),
-where \(D\in\mathbb{R}^{(p+1)\times(p+1)}\) is a diagonal matrix
-and \(U\in\mathbb{R}^{n\times(p+1)}\) and \(V\in\mathbb{R}^{(p+1)\times(p+1)}\) are matrices with orthonormal columns.
-Denote the diagonal elements of \(D\) by \(\sigma_0(X), \ldots, \sigma_p(X) \geq 0\),
-and the columns of \(V\) by \(v_0, \ldots, v_p\).
-Show that \(\| X v_k \| = \sigma_k(X)\).
-(We used this fact in example~\ref{exm:multcoll3}.)
-
-\begin{myanswers}
-Using the singular value decomposition of \(X\), we find
-\begin{equation*}
-  \| X v_k \|
-  = \| U D V^\top v_k \|.
-\end{equation*}
-For every vector \(x\) we
-have \(\| U x \|^2 = x^\top U^\top U x = x^\top x = \| x \|^2\).
-Thus, multiplying a vector \(x\) by \(U\) does
-not change its length. Using this rule we find
-\begin{equation*}
-  \| X v_k \|
-  = \| D V^\top v_k \|.
-\end{equation*}
-Since the columns of \(V\) are orthonormal, we have \(V^\top v_k = e_k\),
-where \(e_k = (0, \ldots, 1, \ldots, 0)\) is the \(k\)th standard basis vector.
-Thus we get
-\begin{equation*}
-  \| X v_k \|
-  = \| D e_k \|
-  = \| \sigma_k(X) e_k \|
-  = \sigma_k(X) \| e_k \|
-  = \sigma_k(X)
-\end{equation*}
-as required. This completes the proof.
-
-\end{myanswers}
-
-\clearpage
-
 \section{Measures for Model Fit}\label{S11-diagnostics}
 
 \subsection{The Coefficient of Multiple Determination}\label{R-squared}
@@ -6550,6 +6179,377 @@ Thus we get
    &= 2q + n \log\bigl( 2\pi r(\hat\beta) / n \bigr) + n \\
    &= 2q + n \log\bigl( \|\hat\varepsilon\|^2 \bigr) + n + n \log( 2\pi / n ).
 \end{align*}
+
+\clearpage
+
+\section*{Problem Sheet 3}\label{P03}
+\addcontentsline{toc}{section}{Problem Sheet 3}
+
+\excludecomment{myanswers}
+
+You should attempt all these questions and write up your solutions in advance
+of the workshop in week~7 where the answers will be discussed.
+
+\textbf{9.} Consider the following dataset. Our aim is to predict \(y\) from the
+variables \(x_1\), \(x_2\) and \(x_3\).
+
+\begin{longtable}[]{@{}rrrrr@{}}
+\toprule\noalign{}
+\(i\) & \(x_{1,i}\) & \(x_{2,i}\) & \(x_{3,i}\) & \(y_i\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & -2.17 & -2.08 & -2.16 & 4.47 \\
+2 & -1.35 & -0.50 & -0.74 & 5.60 \\
+3 & -1.22 & -1.00 & -1.78 & 4.16 \\
+4 & -1.04 & -0.32 & -0.40 & 5.52 \\
+5 & -0.87 & -0.39 & -0.67 & 5.27 \\
+6 & -0.41 & 0.07 & -0.66 & 4.70 \\
+7 & 0.07 & 0.74 & 0.37 & 5.50 \\
+8 & 0.25 & 0.35 & 0.02 & 4.84 \\
+9 & 0.87 & 1.28 & 0.52 & 4.92 \\
+10 & 1.53 & 2.30 & 1.35 & 5.35 \\
+11 & 2.46 & 2.55 & 1.77 & 4.86 \\
+12 & 5.00 & 5.04 & 4.05 & 5.09 \\
+\end{longtable}
+
+These data are also available in machine-readable form at
+
+\begin{itemize}
+\tightlist
+\item
+  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P03Q09.csv}
+\end{itemize}
+
+Using these data:
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Fit a linear model of the form
+  \(y_i = \beta_0 + x_{1,i} \beta_1 + x_{2,i} \beta_2 + x_{3,i} \beta_3 + \varepsilon_i\).
+\end{enumerate}
+
+\begin{myanswers}
+
+To fit the required model we can use the following R commands:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{"https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/P03Q09.csv"}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(url)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2 }\SpecialCharTok{+}\NormalTok{ x3, }\AttributeTok{data=}\NormalTok{x)}
+\end{Highlighting}
+\end{Shaded}
+
+The fitted model has the following coefficients:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = y \textasciitilde{} x1 + x2 + x3, data = x)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#       Min        1Q    Median        3Q       Max }
+\NormalTok{\# {-}0.104928 {-}0.032723 {-}0.001836  0.024802  0.142993 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#             Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept)  4.97725    0.06026  82.598 5.15e{-}13 ***}
+\NormalTok{\# x1          {-}1.11954    0.07427 {-}15.074 3.71e{-}07 ***}
+\NormalTok{\# x2           0.28176    0.12023   2.344   0.0472 *  }
+\NormalTok{\# x3           1.06621    0.09492  11.232 3.54e{-}06 ***}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 0.07109 on 8 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.9817,  Adjusted R{-}squared:  0.9748 }
+\NormalTok{\# F{-}statistic: 142.8 on 3 and 8 DF,  p{-}value: 2.76e{-}07}
+\end{Highlighting}
+\end{Shaded}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Determine a \(95\%\) confidence interval for the coefficient~\(\beta_2\).
+\end{enumerate}
+
+\begin{myanswers}
+From lectures we know that a confidence interval for a single
+coefficient~\(\beta_j\) is given by
+\begin{equation*}
+  [U, V]
+  = \Bigl[ \hat\beta_j - t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}},
+       \hat\beta_j + t_{n-p-1}(\alpha/2) \sqrt{\widehat{\sigma^2} C_{jj}} \Bigr],
+\end{equation*}
+where \(t_{n-p-1}\) is the \((1-\alpha/2)\)-quantile of the \(t\)-distribution,
+\(C_{jj} = (X^\top X)^{-1}_{jj}\), and \(X\) is the design matrix.
+
+We can read off the required values for computing the confidence
+interval from the output of \texttt{summary(m)}: the centre of the
+confidence interval can be found in the column \texttt{Estimate},
+the standard error \(\sqrt{\widehat{\sigma^2} C_{jj}}\) is given in
+column \texttt{Std.\ Error}, and \(n-p-1 = 12 - 3 - 1 = 8\). Using
+these values, we can find a \(95\%\)-confidence interval for
+\(\beta_2\) as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \FunctionTok{c}\NormalTok{(}\FloatTok{0.28176} \SpecialCharTok{{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DecValTok{8}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.12023}\NormalTok{, }\FloatTok{0.28176} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DecValTok{8}\NormalTok{) }\SpecialCharTok{*} \FloatTok{0.12023}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# [1] 0.004509123 0.559010877}
+\end{Highlighting}
+\end{Shaded}
+
+Thus, the confidence interval is \(\bigl[ 0.0045, 0.5590 \bigr]\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Perform a hypothesis test, at the \(95\%\)-level, for the
+  hypothesis \(H_0\colon \beta_2 = 0\) with alternative \(H_1\colon \beta_2 \neq 0\).
+\end{enumerate}
+
+\begin{myanswers}
+The test statistic is
+\begin{equation*}
+  T
+  = \frac{\bigl|\hat\beta_2\bigr|}{\sqrt{\widehat{\sigma^2} C_{jj}} }
+  = \frac{0.28176}{0.12023}
+  = 2.344.
+\end{equation*}
+(This value is also shown in the column \texttt{t\ value} of the R
+summary output.) The critical value is
+\begin{equation*}
+  t
+  = t_{n-p-1}(\alpha/2)
+  = 2.306.
+\end{equation*}
+Since \(T > t\), we can reject the hypothesis \(\beta_2 = 0\) at the
+\(95\%\)-level.
+
+\end{myanswers}
+
+\textbf{10.} Let \(x_1, \ldots, x_n, y_1, \ldots, y_n \in \mathbb{R}\) be given. Assume
+that it is known that the \(y\)-values satisfy
+\(y \approx 1 - x + c x^2 - d x^3\), where \(c\) and \(d\) are unknown
+constants.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Explain how linear regression can be used to estimate the
+  parameters \(c\) and \(d\) from the given data.
+\end{enumerate}
+
+\begin{myanswers}
+We can rewrite the equation for \(y\) as
+\begin{equation*}
+  y + x - 1 = c x^2 - d x^3,
+\end{equation*}
+where \(c\) and \(d\) are the unknown quantities, and \(x\) and \(y\)
+are given. Thus we can estimate \(c\) and \(d\) by fitting
+a linear model with two inputs, \(x_i^2\) and \(x_i^3\)
+and one output \(y_i + x_i - 1\). The model does not include
+an intercept.
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  What is the design matrix in this situation?
+\end{enumerate}
+
+\begin{myanswers}
+Since there is no intercept, the design matrix is
+\begin{equation*}
+  X = \begin{pmatrix}
+    x_1^2 & x_1^3 \\
+    x_2^2 & x_2^3 \\
+    \vdots & \vdots \\
+    x_n^2 & x_n^3 \\
+  \end{pmatrix}
+  \in \mathbb{R}^{n\times 2}.
+\end{equation*}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Why can \emph{linear} regression be used, despite the presence
+  of the \emph{non-linear} terms \(x^2\) and~\(x^3\)?
+\end{enumerate}
+
+\begin{myanswers}
+A linear model is appropriate, because the response depends
+on the unknown coefficients \(c\) and \(d\) in a linear way: \(c\) and \(d\)
+are only multiplied by known constants, and there are no non-linear
+functions of \(c\) and \(d\) in the model.
+
+\end{myanswers}
+
+\textbf{11.} In this question we consider four different datasets, given by
+inputs \(x_i\) and responses \(y_i\) for \(i \in \{1, 2, 3, 4\}\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Based on the following plots, discuss model fit of each model.
+  Describe all relevant features of the plots.
+  Describe any problems with the model fit you find.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+    \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+
+\NormalTok{    m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y1 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1)}
+    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
+    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m1), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
+
+\NormalTok{    m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y2 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x2)}
+    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
+    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m2), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
+
+\NormalTok{    m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y3 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x3)}
+    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m3), }\FunctionTok{resid}\NormalTok{(m3), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
+    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m3), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
+
+\NormalTok{    m4 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y4 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x4)}
+    \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m4), }\FunctionTok{resid}\NormalTok{(m4), }\AttributeTok{xlab=}\StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"residuals"}\NormalTok{)}
+    \FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m4), }\AttributeTok{main=}\ConstantTok{NULL}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/four-models-1.pdf}
+
+\begin{myanswers}
+
+We first note that the given R commands generate the plots along
+rows, so the first row of plots corresponds to model~\texttt{m1}, the
+second row to model~\texttt{m2}, and so on. The plots shown are
+residual plots in the left column, and Q-Q-plots in the right
+column.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{m1:} Samples in the residual plot on the left
+  seem to follow an upside down parabola indicating a non-linear
+  relationship between \(x\) and \(y\). Samples in the QQ-plot on the
+  right seem to (approximately?) follow a straight line, so
+  residuals seem to be (approximately?) normally distributed. No
+  outliers are visible.
+\item
+  \textbf{m2:} Samples in the residual plot form a band
+  centred at zero. Possibly very negative residuals are less
+  frequent for fitted values \(\hat y_i < 4\)? No outliers are
+  apparent. The samples in the QQ-plot seem to clearly fall on a
+  straight line. Overall, model fit seems very good.
+\item
+  \textbf{m3:} The samples in the residual plot are
+  centred around \(\hat\varepsilon= 0\), but the width of the spread
+  increases as the fitted values increase, leasing to a triangular
+  shape. This indicates that the variance of the residuals is not
+  constant but increases with \(y\). Possibly, a model with
+  multiplicative noise would be appropriate for these data. The
+  QQ-plot shows an approximately straight line, but fit is not as
+  good as for model~\texttt{m2}.
+\item
+  \textbf{m4:} The samples in the residual plot form a
+  horizontal band centred at~\(\hat\varepsilon= 0\), no outliers are
+  visible. The QQ-plot shows clearly that the residuals are not
+  normally distributed: the samples form an ``S-shaped'' line,
+  indicating that the errors have lighter tails than we would expect
+  for a normal distribution.
+\end{itemize}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Which of the four models has the best fit?
+\end{enumerate}
+
+\begin{myanswers}
+The data in \texttt{m1} seems to
+have a non-linear relationship between \(x\) and~\(y\), the data
+in~\texttt{m3} seems to be better modelled using multiplicative noise,
+and the residuals in~\texttt{m4} seem not to be normally
+distributed. Thus, the model with the best fit is~\texttt{m2},
+because it is the only model which does not show any obvious
+problems.
+
+\end{myanswers}
+
+\textbf{12.} Using singular value decomposition,
+we can write a design matrix \(X\) as \(X = U D V^\top\),
+where \(D\in\mathbb{R}^{(p+1)\times(p+1)}\) is a diagonal matrix
+and \(U\in\mathbb{R}^{n\times(p+1)}\) and \(V\in\mathbb{R}^{(p+1)\times(p+1)}\) are matrices with orthonormal columns.
+Denote the diagonal elements of \(D\) by \(\sigma_0(X), \ldots, \sigma_p(X) \geq 0\),
+and the columns of \(V\) by \(v_0, \ldots, v_p\).
+Show that \(\| X v_k \| = \sigma_k(X)\).
+(We used this fact in example~\ref{exm:multcoll3}.)
+
+\begin{myanswers}
+Using the singular value decomposition of \(X\), we find
+\begin{equation*}
+  \| X v_k \|
+  = \| U D V^\top v_k \|.
+\end{equation*}
+For every vector \(x\) we
+have \(\| U x \|^2 = x^\top U^\top U x = x^\top x = \| x \|^2\).
+Thus, multiplying a vector \(x\) by \(U\) does
+not change its length. Using this rule we find
+\begin{equation*}
+  \| X v_k \|
+  = \| D V^\top v_k \|.
+\end{equation*}
+Since the columns of \(V\) are orthonormal, we have \(V^\top v_k = e_k\),
+where \(e_k = (0, \ldots, 1, \ldots, 0)\) is the \(k\)th standard basis vector.
+Thus we get
+\begin{equation*}
+  \| X v_k \|
+  = \| D e_k \|
+  = \| \sigma_k(X) e_k \|
+  = \sigma_k(X) \| e_k \|
+  = \sigma_k(X)
+\end{equation*}
+as required. This completes the proof.
+
+\end{myanswers}
 
 \clearpage
 
@@ -8055,317 +8055,6 @@ optional \texttt{contrasts.arg} argument to \texttt{lm()} and \texttt{model.matr
 
 \clearpage
 
-\section*{Problem Sheet 4}\label{P04}
-\addcontentsline{toc}{section}{Problem Sheet 4}
-
-\excludecomment{myanswers}
-
-You should attempt all these questions and write up your solutions in advance
-of the workshop in week~9 where the answers will be discussed.
-
-\textbf{13.} Consider the dataset \texttt{pressure}, built into~R, which
-describes the vapour pressure~\(P\) of mercury as a function of
-temperature~\(T\).
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\tightlist
-\item
-  For given \(T_0\), explain how a model of the form
-  \(P = \beta_0 + T \beta_1 + \max(0, T-T_0) \beta_2 + \varepsilon\) can be
-  fitted to the data.
-\end{enumerate}
-
-\begin{myanswers}
-
-We can fit a model with an intercept and two inputs,
-\(T\) and \(\max(0, T-T_0)\). In R we can use the following
-commands to fit such a model:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{T0 }\OtherTok{\textless{}{-}}\NormalTok{ the.given.value }\CommentTok{\# substitute the value of T0 here}
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(pressure }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, temperature}\SpecialCharTok{{-}}\NormalTok{T0)),}
-        \AttributeTok{data =}\NormalTok{ pressure)}
-\end{Highlighting}
-\end{Shaded}
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Why might a model of this form make sense for the given data?
-\end{enumerate}
-
-\begin{myanswers}
-Such a model may make sense, because the slope of the
-samples increases faster than linear as the temperature~\(T\)
-increases. The term \(\max(0, T-T_0)\) is zero for small~\(T\),
-but adds an additional slope once \(T\) exceeds the cutoff
-temperature~\(T_0\).
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  What is a good value of \(T_0\) for this dataset?
-\end{enumerate}
-
-\begin{myanswers}
-\(T_0\) should be placed at the end of the ``flat'' part
-of the plot, where the pressure starts increasing more
-quickly. A quick experiment shows that the best \(R^2\)
-value is achieved for \(T_0 \approx 273\):
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{T0 }\OtherTok{\textless{}{-}} \DecValTok{273}
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(pressure }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, temperature }\SpecialCharTok{{-}}\NormalTok{ T0)),}
-        \AttributeTok{data=}\NormalTok{pressure)}
-\FunctionTok{summary}\NormalTok{(m)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = pressure \textasciitilde{} temperature + I(pmax(0, temperature {-} }
-\NormalTok{\#     T0)), data = pressure)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#     Min      1Q  Median      3Q     Max }
-\NormalTok{\# {-}53.125 {-}17.553  {-}6.308  13.017  55.839 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#                               Estimate Std. Error t value Pr(\textgreater{}|t|)    }
-\NormalTok{\# (Intercept)                  {-}17.62933   14.63735  {-}1.204   0.2459    }
-\NormalTok{\# temperature                    0.25472    0.08774   2.903   0.0104 *  }
-\NormalTok{\# I(pmax(0, temperature {-} T0))   7.77118    0.38024  20.437 6.85e{-}13 ***}
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 29.86 on 16 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.9843,  Adjusted R{-}squared:  0.9823 }
-\NormalTok{\# F{-}statistic: 501.3 on 2 and 16 DF,  p{-}value: 3.705e{-}15}
-\end{Highlighting}
-\end{Shaded}
-
-To get a better understanding of how the extra term
-\(\max(0, T-T_0)\) improves model fit, we plot the data
-together with the fitted model:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(pressure)}
-\NormalTok{T.plot }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{360}\NormalTok{, }\AttributeTok{l=}\DecValTok{100}\NormalTok{)}
-\NormalTok{p.plot }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(m, }\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{temperature=}\NormalTok{T.plot))}
-\FunctionTok{lines}\NormalTok{(T.plot, p.plot)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P04Q13c-1.pdf}
-
-As expected, for \(T > 273 = T_0\), the slope of the
-fitted line increases, leading to greatly improved
-model fit. (An alternative, and probably superior approach would
-be to transform the data and try to fit a straight line to the
-transformed data instead.)
-
-\end{myanswers}
-
-\textbf{14.} Where possible, rewrite the following regression models in linear form.
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\tightlist
-\item
-  \(y = \beta_0 \beta_1^x\)
-\end{enumerate}
-
-\begin{myanswers}
-We can take logarithms:
-\begin{equation*}
-  \log(y)
-  = \log(\beta_0) + x \log(\beta_1)
-  =: \beta_0' + x \beta_1'.
-\end{equation*}
-Notice that writing \(\log(y) = \beta_0' + x \beta_1' + \varepsilon\)
-implies \(y = \beta_0 \beta_1^x \exp(\varepsilon)\).
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  \(y = \beta_0 + \beta_1 \sin(x_1) + \beta_2 \exp(x_2)\)
-\end{enumerate}
-
-\begin{myanswers}
-We can simply set \(x_1' = \sin(x_1)\) and \(x_2' = \exp(x_2)\).
-This transformation does not affect the error term.
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  \(y = \frac{x}{\beta_0 + \beta_1 x}\)
-\end{enumerate}
-
-\begin{myanswers}
-We can write
-\begin{equation*}
-  \frac1y
-  = \frac{\beta_0 + \beta_1 x}{x}
-  = \beta_0 \frac1x + \beta_1.
-\end{equation*}
-Thus we can use \(x' = 1/x\), \(y' = 1/y\), \(\beta_0' = \beta_1\) and
-\(\beta_1' = \beta_0\). This transformation affects the noise, too,
-so some care is needed.
-
-\end{myanswers}
-
-\textbf{15.} Consider the dataset from
-
-\begin{itemize}
-\tightlist
-\item
-  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P04Q14.csv}
-\end{itemize}
-
-The dataset contains samples \((x_{i,1}, x_{i,2}, y_i)\). We want to
-find a model for \(y\) as a function of \(x_1\) and~\(x_2\).
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\tightlist
-\item
-  Fit a linear model to the data and produce a residual plot.
-  Based on the plot, discuss how well the model fits the data.
-\end{enumerate}
-
-\begin{myanswers}
-We can fit the model as follows:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/P04Q14.csv}
-\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/P04Q14.csv"}\NormalTok{)}
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{data =}\NormalTok{ d)}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P04Q14a-1.pdf}
-
-The mean of the residuals does not form a straight line, so the
-dependency of \(y\) on the \(x_i\) seems to be nonlinear. Also, the variance
-of the residuals decreases as \(\hat y\) increases. Model fit is not good
-and a transformation of the data may be useful.
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Apply a Power Transform to the model, as described in
-  section~\ref{power-transform} of the notes. Explain your choice of \(\lambda\).
-\end{enumerate}
-
-\begin{myanswers}
-To choose the exponent \(\lambda\), we plot the residual sum of squares
-as a function of \(\lambda\).
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{gm }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(}\FunctionTok{mean}\NormalTok{(}\FunctionTok{log}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{y)))}
-\NormalTok{lambda }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{101}\NormalTok{)}
-\NormalTok{rss }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(lambda))}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(lambda)) \{}
-\NormalTok{    li }\OtherTok{\textless{}{-}}\NormalTok{ lambda[i]}
-\NormalTok{    y.prime }\OtherTok{\textless{}{-}}\NormalTok{ (d}\SpecialCharTok{$}\NormalTok{y}\SpecialCharTok{\^{}}\NormalTok{li }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (li }\SpecialCharTok{*}\NormalTok{ gm}\SpecialCharTok{\^{}}\NormalTok{(li}\DecValTok{{-}1}\NormalTok{))}
-\NormalTok{    mi }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{data =}\NormalTok{ d)}
-\NormalTok{    rss[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{resid}\NormalTok{(mi)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
-\NormalTok{\}}
-\FunctionTok{plot}\NormalTok{(lambda, rss, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{)}
-
-\NormalTok{cutoff }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(rss) }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.971}\NormalTok{, }\DecValTok{51}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/} \DecValTok{51}\NormalTok{)}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =}\NormalTok{ cutoff)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P04Q14b-1.pdf}
-
-The horizonal line in this plot indicates the cutoff suggested by the
-rule of thumb in~\eqref{eq:power-cutoff}. Of the values of \(\lambda\)
-where \texttt{rss} is below the cutoff, \(\lambda = 4\) seems the most ``simple'',
-so we try this value here.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{y.prime }\OtherTok{\textless{}{-}}\NormalTok{ d}\SpecialCharTok{$}\NormalTok{y }\SpecialCharTok{\^{}} \DecValTok{4}
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{data =}\NormalTok{ d)}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P04Q14c-1.pdf}
-
-Now the residual plot looks perfect!
-
-\end{myanswers}
-
-\textbf{16.} The Prediction Error Sum of Squares (PRESS) is defined as
-\begin{equation*}
-  \mathrm{PRESS}
-  = \sum_{i=1}^n \bigl( y_i - \hat y^{(i)}_i \bigr)^2.
-\end{equation*}
-Using lemma~\ref{lem:PRESS}, or otherwise, determine the PRESS
-value for the \texttt{stackloss} dataset built into R (using \texttt{stack.loss}
-as the response variable).
-
-\begin{myanswers}
-
-We can use the formula
-\begin{equation*}
-  \mathrm{PRESS}
-  = \sum_{i=1}^n \Bigl( \frac{\hat\varepsilon_i}{1 - h_{ii}} \Bigr)^2
-\end{equation*}
-from the lemma. Implementation in R is straightforward.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
-\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m)}
-\NormalTok{H }\OtherTok{\textless{}{-}}\NormalTok{ X }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X, }\FunctionTok{t}\NormalTok{(X))}
-\NormalTok{hii }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(H)}
-\FunctionTok{sum}\NormalTok{((}\FunctionTok{resid}\NormalTok{(m)}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ hii))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# [1] 291.8689}
-\end{Highlighting}
-\end{Shaded}
-
-\end{myanswers}
-
-\clearpage
-
 \section{Multicollinearity}\label{S15-multicoll}
 
 \begin{definition}
@@ -8706,6 +8395,317 @@ be addressed:
   Singular value decomposition can used to better understand linear
   dependencies in the inputs.
 \end{itemize}
+
+\clearpage
+
+\section*{Problem Sheet 4}\label{P04}
+\addcontentsline{toc}{section}{Problem Sheet 4}
+
+\excludecomment{myanswers}
+
+You should attempt all these questions and write up your solutions in advance
+of the workshop in week~9 where the answers will be discussed.
+
+\textbf{13.} Consider the dataset \texttt{pressure}, built into~R, which
+describes the vapour pressure~\(P\) of mercury as a function of
+temperature~\(T\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  For given \(T_0\), explain how a model of the form
+  \(P = \beta_0 + T \beta_1 + \max(0, T-T_0) \beta_2 + \varepsilon\) can be
+  fitted to the data.
+\end{enumerate}
+
+\begin{myanswers}
+
+We can fit a model with an intercept and two inputs,
+\(T\) and \(\max(0, T-T_0)\). In R we can use the following
+commands to fit such a model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{T0 }\OtherTok{\textless{}{-}}\NormalTok{ the.given.value }\CommentTok{\# substitute the value of T0 here}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(pressure }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, temperature}\SpecialCharTok{{-}}\NormalTok{T0)),}
+        \AttributeTok{data =}\NormalTok{ pressure)}
+\end{Highlighting}
+\end{Shaded}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Why might a model of this form make sense for the given data?
+\end{enumerate}
+
+\begin{myanswers}
+Such a model may make sense, because the slope of the
+samples increases faster than linear as the temperature~\(T\)
+increases. The term \(\max(0, T-T_0)\) is zero for small~\(T\),
+but adds an additional slope once \(T\) exceeds the cutoff
+temperature~\(T_0\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  What is a good value of \(T_0\) for this dataset?
+\end{enumerate}
+
+\begin{myanswers}
+\(T_0\) should be placed at the end of the ``flat'' part
+of the plot, where the pressure starts increasing more
+quickly. A quick experiment shows that the best \(R^2\)
+value is achieved for \(T_0 \approx 273\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{T0 }\OtherTok{\textless{}{-}} \DecValTok{273}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(pressure }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature }\SpecialCharTok{+} \FunctionTok{I}\NormalTok{(}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, temperature }\SpecialCharTok{{-}}\NormalTok{ T0)),}
+        \AttributeTok{data=}\NormalTok{pressure)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = pressure \textasciitilde{} temperature + I(pmax(0, temperature {-} }
+\NormalTok{\#     T0)), data = pressure)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}53.125 {-}17.553  {-}6.308  13.017  55.839 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#                               Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept)                  {-}17.62933   14.63735  {-}1.204   0.2459    }
+\NormalTok{\# temperature                    0.25472    0.08774   2.903   0.0104 *  }
+\NormalTok{\# I(pmax(0, temperature {-} T0))   7.77118    0.38024  20.437 6.85e{-}13 ***}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 29.86 on 16 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.9843,  Adjusted R{-}squared:  0.9823 }
+\NormalTok{\# F{-}statistic: 501.3 on 2 and 16 DF,  p{-}value: 3.705e{-}15}
+\end{Highlighting}
+\end{Shaded}
+
+To get a better understanding of how the extra term
+\(\max(0, T-T_0)\) improves model fit, we plot the data
+together with the fitted model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(pressure)}
+\NormalTok{T.plot }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{360}\NormalTok{, }\AttributeTok{l=}\DecValTok{100}\NormalTok{)}
+\NormalTok{p.plot }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(m, }\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{temperature=}\NormalTok{T.plot))}
+\FunctionTok{lines}\NormalTok{(T.plot, p.plot)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P04Q13c-1.pdf}
+
+As expected, for \(T > 273 = T_0\), the slope of the
+fitted line increases, leading to greatly improved
+model fit. (An alternative, and probably superior approach would
+be to transform the data and try to fit a straight line to the
+transformed data instead.)
+
+\end{myanswers}
+
+\textbf{14.} Where possible, rewrite the following regression models in linear form.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  \(y = \beta_0 \beta_1^x\)
+\end{enumerate}
+
+\begin{myanswers}
+We can take logarithms:
+\begin{equation*}
+  \log(y)
+  = \log(\beta_0) + x \log(\beta_1)
+  =: \beta_0' + x \beta_1'.
+\end{equation*}
+Notice that writing \(\log(y) = \beta_0' + x \beta_1' + \varepsilon\)
+implies \(y = \beta_0 \beta_1^x \exp(\varepsilon)\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  \(y = \beta_0 + \beta_1 \sin(x_1) + \beta_2 \exp(x_2)\)
+\end{enumerate}
+
+\begin{myanswers}
+We can simply set \(x_1' = \sin(x_1)\) and \(x_2' = \exp(x_2)\).
+This transformation does not affect the error term.
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  \(y = \frac{x}{\beta_0 + \beta_1 x}\)
+\end{enumerate}
+
+\begin{myanswers}
+We can write
+\begin{equation*}
+  \frac1y
+  = \frac{\beta_0 + \beta_1 x}{x}
+  = \beta_0 \frac1x + \beta_1.
+\end{equation*}
+Thus we can use \(x' = 1/x\), \(y' = 1/y\), \(\beta_0' = \beta_1\) and
+\(\beta_1' = \beta_0\). This transformation affects the noise, too,
+so some care is needed.
+
+\end{myanswers}
+
+\textbf{15.} Consider the dataset from
+
+\begin{itemize}
+\tightlist
+\item
+  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P04Q14.csv}
+\end{itemize}
+
+The dataset contains samples \((x_{i,1}, x_{i,2}, y_i)\). We want to
+find a model for \(y\) as a function of \(x_1\) and~\(x_2\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Fit a linear model to the data and produce a residual plot.
+  Based on the plot, discuss how well the model fits the data.
+\end{enumerate}
+
+\begin{myanswers}
+We can fit the model as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/P04Q14.csv}
+\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/P04Q14.csv"}\NormalTok{)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P04Q14a-1.pdf}
+
+The mean of the residuals does not form a straight line, so the
+dependency of \(y\) on the \(x_i\) seems to be nonlinear. Also, the variance
+of the residuals decreases as \(\hat y\) increases. Model fit is not good
+and a transformation of the data may be useful.
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Apply a Power Transform to the model, as described in
+  section~\ref{power-transform} of the notes. Explain your choice of \(\lambda\).
+\end{enumerate}
+
+\begin{myanswers}
+To choose the exponent \(\lambda\), we plot the residual sum of squares
+as a function of \(\lambda\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gm }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(}\FunctionTok{mean}\NormalTok{(}\FunctionTok{log}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{y)))}
+\NormalTok{lambda }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{101}\NormalTok{)}
+\NormalTok{rss }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(lambda))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(lambda)) \{}
+\NormalTok{    li }\OtherTok{\textless{}{-}}\NormalTok{ lambda[i]}
+\NormalTok{    y.prime }\OtherTok{\textless{}{-}}\NormalTok{ (d}\SpecialCharTok{$}\NormalTok{y}\SpecialCharTok{\^{}}\NormalTok{li }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (li }\SpecialCharTok{*}\NormalTok{ gm}\SpecialCharTok{\^{}}\NormalTok{(li}\DecValTok{{-}1}\NormalTok{))}
+\NormalTok{    mi }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{data =}\NormalTok{ d)}
+\NormalTok{    rss[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{resid}\NormalTok{(mi)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{\}}
+\FunctionTok{plot}\NormalTok{(lambda, rss, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{)}
+
+\NormalTok{cutoff }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(rss) }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.971}\NormalTok{, }\DecValTok{51}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/} \DecValTok{51}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =}\NormalTok{ cutoff)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P04Q14b-1.pdf}
+
+The horizonal line in this plot indicates the cutoff suggested by the
+rule of thumb in~\eqref{eq:power-cutoff}. Of the values of \(\lambda\)
+where \texttt{rss} is below the cutoff, \(\lambda = 4\) seems the most ``simple'',
+so we try this value here.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y.prime }\OtherTok{\textless{}{-}}\NormalTok{ d}\SpecialCharTok{$}\NormalTok{y }\SpecialCharTok{\^{}} \DecValTok{4}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P04Q14c-1.pdf}
+
+Now the residual plot looks perfect!
+
+\end{myanswers}
+
+\textbf{16.} The Prediction Error Sum of Squares (PRESS) is defined as
+\begin{equation*}
+  \mathrm{PRESS}
+  = \sum_{i=1}^n \bigl( y_i - \hat y^{(i)}_i \bigr)^2.
+\end{equation*}
+Using lemma~\ref{lem:PRESS}, or otherwise, determine the PRESS
+value for the \texttt{stackloss} dataset built into R (using \texttt{stack.loss}
+as the response variable).
+
+\begin{myanswers}
+
+We can use the formula
+\begin{equation*}
+  \mathrm{PRESS}
+  = \sum_{i=1}^n \Bigl( \frac{\hat\varepsilon_i}{1 - h_{ii}} \Bigr)^2
+\end{equation*}
+from the lemma. Implementation in R is straightforward.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(m)}
+\NormalTok{H }\OtherTok{\textless{}{-}}\NormalTok{ X }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X, }\FunctionTok{t}\NormalTok{(X))}
+\NormalTok{hii }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(H)}
+\FunctionTok{sum}\NormalTok{((}\FunctionTok{resid}\NormalTok{(m)}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ hii))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# [1] 291.8689}
+\end{Highlighting}
+\end{Shaded}
+
+\end{myanswers}
 
 \clearpage
 
@@ -9712,367 +9712,6 @@ A variant of this method is implemented by the R function~\texttt{line()}.
 
 \clearpage
 
-\section*{Problem Sheet 5}\label{P05}
-\addcontentsline{toc}{section}{Problem Sheet 5}
-
-\excludecomment{myanswers}
-
-You should attempt all these questions and write up your solutions in advance
-of the workshop in week 11 where the answers will be discussed.
-
-\textbf{17.} Consider the dataset at
-
-\begin{itemize}
-\tightlist
-\item
-  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P05Q17.csv}
-\end{itemize}
-
-which contains samples from variables \(x_1, x_2, y \in \mathbb{R}\) and
-\(x_3 \in \{\mathrm{R}, \mathrm{G}, \mathrm{B}\}\).
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\tightlist
-\item
-  Load the data into R.
-\end{enumerate}
-
-\begin{myanswers}
-
-We can load the data into R as follows:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/}
-\NormalTok{dd }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/P05Q17.csv"}\NormalTok{)}
-\CommentTok{\# fix the order of levels:}
-\NormalTok{dd}\SpecialCharTok{$}\NormalTok{x3 }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(dd}\SpecialCharTok{$}\NormalTok{x3, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"R"}\NormalTok{, }\StringTok{"G"}\NormalTok{, }\StringTok{"B"}\NormalTok{))}
-\FunctionTok{head}\NormalTok{(dd)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#          x1         x2 x3        y}
-\NormalTok{\# 1  1.940066 {-}0.7755552  B 2.709368}
-\NormalTok{\# 2 {-}1.214413  0.4842872  R 1.254138}
-\NormalTok{\# 3  1.940301  3.1189902  B 3.228220}
-\NormalTok{\# 4  4.599154  3.5881714  B 5.541995}
-\NormalTok{\# 5  3.891628 {-}4.4026497  B 4.018021}
-\NormalTok{\# 6  2.615079 {-}0.9916691  R 0.449100}
-\end{Highlighting}
-\end{Shaded}
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Fit a simple linear model to describe \(y\) as a function of \(x_1\), \(x_2\)
-  and~\(x_3\), taking into account that \(x_3\) is a categorical variable.
-  Show that the behaviour of the residuals depends on the levels of \(x_3\).
-\end{enumerate}
-
-\begin{myanswers}
-To fit a simple linear model:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ dd)}
-\FunctionTok{summary}\NormalTok{(m)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = y \textasciitilde{} ., data = dd)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#     Min      1Q  Median      3Q     Max }
-\NormalTok{\# {-}2.7641 {-}1.0211  0.0354  0.6991  3.7245 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#             Estimate Std. Error t value Pr(\textgreater{}|t|)    }
-\NormalTok{\# (Intercept)  0.91712    0.37429   2.450   0.0182 *  }
-\NormalTok{\# x1           0.51294    0.07220   7.105 7.13e{-}09 ***}
-\NormalTok{\# x2           0.53629    0.08328   6.440 6.93e{-}08 ***}
-\NormalTok{\# x3G          0.10016    0.57361   0.175   0.8622    }
-\NormalTok{\# x3B         {-}0.25865    0.51595  {-}0.501   0.6186    }
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 1.54 on 45 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.7044,  Adjusted R{-}squared:  0.6781 }
-\NormalTok{\# F{-}statistic:  26.8 on 4 and 45 DF,  p{-}value: 2.082e{-}11}
-\end{Highlighting}
-\end{Shaded}
-
-In a residual plot we can colour-code the residuals by the level of \(x_3\):
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m),}
-     \AttributeTok{col =} \FunctionTok{as.numeric}\NormalTok{(dd}\SpecialCharTok{$}\NormalTok{x3) }\SpecialCharTok{+} \DecValTok{1}\NormalTok{, }\AttributeTok{pch =} \FunctionTok{as.numeric}\NormalTok{(dd}\SpecialCharTok{$}\NormalTok{x3) }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)}
-\FunctionTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{levels}\NormalTok{(dd}\SpecialCharTok{$}\NormalTok{x3), }\AttributeTok{col=}\DecValTok{2}\SpecialCharTok{:}\DecValTok{4}\NormalTok{, }\AttributeTok{pch =} \DecValTok{2}\SpecialCharTok{:}\DecValTok{4}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P05Q17-1.pdf}
-
-This shows that that the residuals for level \texttt{G} are much smaller
-than for the other levels.
-
-\end{myanswers}
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  Find an improved model, which includes some of the interaction
-  terms between \(x_3\) and the other variables. For each level of \(x_3\),
-  write the mathematical equation for the fitted model mean of your
-  chosen model.
-\end{enumerate}
-
-\begin{myanswers}
-We can start by trying all interaction terms:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{data =}\NormalTok{ dd)}
-\FunctionTok{summary}\NormalTok{(m2)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = y \textasciitilde{} .\^{}2, data = dd)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#       Min        1Q    Median        3Q       Max }
-\NormalTok{\# {-}0.139522 {-}0.058383 {-}0.002396  0.037826  0.227631 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#               Estimate Std. Error t value Pr(\textgreater{}|t|)    }
-\NormalTok{\# (Intercept)  1.0129619  0.0216220  46.849   \textless{}2e{-}16 ***}
-\NormalTok{\# x1           0.1017179  0.0069591  14.617   \textless{}2e{-}16 ***}
-\NormalTok{\# x2           0.8860760  0.0073076 121.254   \textless{}2e{-}16 ***}
-\NormalTok{\# x3G         {-}0.0287990  0.0334521  {-}0.861    0.394    }
-\NormalTok{\# x3B          0.0082008  0.0300303   0.273    0.786    }
-\NormalTok{\# x1:x2       {-}0.0007807  0.0016391  {-}0.476    0.636    }
-\NormalTok{\# x1:x3G       0.4025315  0.0125449  32.087   \textless{}2e{-}16 ***}
-\NormalTok{\# x1:x3B       0.8029663  0.0088744  90.481   \textless{}2e{-}16 ***}
-\NormalTok{\# x2:x3G      {-}0.3936519  0.0131191 {-}30.006   \textless{}2e{-}16 ***}
-\NormalTok{\# x2:x3B      {-}0.7841714  0.0105136 {-}74.586   \textless{}2e{-}16 ***}
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 0.08068 on 40 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.9993,  Adjusted R{-}squared:  0.9991 }
-\NormalTok{\# F{-}statistic:  6160 on 9 and 40 DF,  p{-}value: \textless{} 2.2e{-}16}
-\end{Highlighting}
-\end{Shaded}
-
-Many of the interaction terms are significantly
-different from zero and the adjusted \(R^2\)-value has
-dramatically increased. A good choice of model seems
-to be \texttt{y\ \textasciitilde{}\ x1\ +\ x2\ +\ x1:x3\ +\ x2:x3}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2 }\SpecialCharTok{+}\NormalTok{ x1}\SpecialCharTok{:}\NormalTok{x3 }\SpecialCharTok{+}\NormalTok{ x2}\SpecialCharTok{:}\NormalTok{x3, }\AttributeTok{data =}\NormalTok{ dd)}
-\FunctionTok{summary}\NormalTok{(m3)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = y \textasciitilde{} x1 + x2 + x1:x3 + x2:x3, data = dd)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#       Min        1Q    Median        3Q       Max }
-\NormalTok{\# {-}0.136497 {-}0.053054 {-}0.003199  0.040097  0.241331 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)    }
-\NormalTok{\# (Intercept)  1.006764   0.012370   81.39   \textless{}2e{-}16 ***}
-\NormalTok{\# x1           0.101630   0.006318   16.09   \textless{}2e{-}16 ***}
-\NormalTok{\# x2           0.886702   0.006935  127.86   \textless{}2e{-}16 ***}
-\NormalTok{\# x1:x3G       0.404014   0.012109   33.37   \textless{}2e{-}16 ***}
-\NormalTok{\# x1:x3B       0.803071   0.008462   94.91   \textless{}2e{-}16 ***}
-\NormalTok{\# x2:x3G      {-}0.392663   0.012882  {-}30.48   \textless{}2e{-}16 ***}
-\NormalTok{\# x2:x3B      {-}0.783259   0.009569  {-}81.85   \textless{}2e{-}16 ***}
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 0.08005 on 43 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.9992,  Adjusted R{-}squared:  0.9991 }
-\NormalTok{\# F{-}statistic:  9383 on 6 and 43 DF,  p{-}value: \textless{} 2.2e{-}16}
-\end{Highlighting}
-\end{Shaded}
-
-The fitted model mean for \(x_3 = \mathrm{R}\) is
-\begin{equation*}
-  y
-  \approx 1.007 + 0.102 x_1 + 0.887 x_2.
-\end{equation*}
-For \(x_3 = \mathrm{G}\) we get
-\begin{align*}
-  y
-  &\approx 1.007 + (0.102 + 0.404) x_1 + (0.887 - 0.393) x_2 \\
-  &= 1.007 + 0.506 x_1 + 0.494 x_2
-\end{align*}
-Finally, for \(x_3 = \mathrm{B}\) we find
-\begin{align*}
-  y
-  &\approx 1.007 + (0.102 + 0.803) x_1 + (0.887 - 0.783) x_2 \\
-  &= 1.007 + 0.905 x_1 + 0.104 x_2.
-\end{align*}
-
-\end{myanswers}
-
-\textbf{18.}
-Consider the dataset at
-
-\begin{itemize}
-\tightlist
-\item
-  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P05Q18.csv}
-\end{itemize}
-
-Identify the \(x\)-space outlier in this dataset.
-
-\begin{myanswers}
-We start by loading the data into R:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/P05Q18.csv"}\NormalTok{)}
-\FunctionTok{head}\NormalTok{(X)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#             x1          x2         x3         x4}
-\NormalTok{\# 1 {-}1.359560124  0.66310168  2.5866758 {-}1.7229394}
-\NormalTok{\# 2  0.624644511 {-}0.01925607 {-}0.1692926 {-}0.5092775}
-\NormalTok{\# 3  0.957938698 {-}0.54734504 {-}0.9680673  0.6074693}
-\NormalTok{\# 4  0.733255177 {-}0.37217623 {-}0.6027061  0.2751777}
-\NormalTok{\# 5  0.355021570 {-}0.58332351  0.2386221 {-}0.1934059}
-\NormalTok{\# 6  0.002907357 {-}0.69562237  0.5365051  0.3047116}
-\end{Highlighting}
-\end{Shaded}
-
-To identify the outlier, we compute the leverage of each sample.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(X)}
-\NormalTok{H }\OtherTok{\textless{}{-}}\NormalTok{ X }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X, }\FunctionTok{t}\NormalTok{(X))}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{diag}\NormalTok{(H))}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P05Q18a-1.pdf}
-
-The plot shows that one sample has a much larger leverage than
-the other samples.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{which.max}\NormalTok{(}\FunctionTok{diag}\NormalTok{(H))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# [1] 96}
-\end{Highlighting}
-\end{Shaded}
-
-Thus, the \(x\)-space outlier is in row 96 of the matrix~\(X\).
-
-Note that the outlier does not look special on a pair scatter plot:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{pairs}\NormalTok{(X, }\AttributeTok{col =}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(X) }\SpecialCharTok{==} \DecValTok{96}\NormalTok{) }\SpecialCharTok{+} \DecValTok{1}\NormalTok{, }\AttributeTok{cex =} \FloatTok{0.5}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/P05Q18b-1.pdf}
-
-\end{myanswers}
-
-\textbf{19.}
-The sample median is a robust estimator of the mean.
-Determine the breakdown point.
-
-\begin{myanswers}
-The median can be obtained by arranging the samples in increasing
-order and inspecting the middle element (for odd \(n\)) or
-the middle two elements (for even \(n\)) in this list.
-Let \(x_{(1)}, \ldots, x_{(n)}\) be the samples arranged in increasing order.
-
-For odd \(n\): The median equals \(x_{(k)}\) where \(k = (n+1) / 2\).
-In order to move the median to infinity, we have
-to move \(x_{(k)}, x_{(k+1)}, \ldots, x_{(n)}\) to infinity.
-These are \((n+1) / 2\) values in total and thus the breakdown point
-is \((n+1) / 2n\).
-
-For even \(n\): The median equals \((x_{(k)} + x_{(k+1)})/2\) where \(k = n / 2\).
-In order to move the median to infinity, we have
-to move \(x_{(k+1)}, x_{(k+2)}, \ldots, x_{(n)}\) to infinity.
-These are \(n / 2\) values in total and thus the breakdown point
-is \(1/2\).
-
-\end{myanswers}
-
-\textbf{20.}
-Determine the breakdown point for the resistant line from
-example~\ref{exm:resistant-line}.
-
-\begin{myanswers}
-The regression coefficients in the example are computed
-as
-\begin{equation*}
-  \hat\beta_1
-  = \frac{y_\mathrm{R} - y_\mathrm{L}}{x_\mathrm{R} - x_\mathrm{L}}
-\end{equation*}
-and
-\begin{equation*}
-  \hat\beta_0
-  = \frac{y_\mathrm{L} + y_\mathrm{M} + y_\mathrm{R}}{3}
-      - \hat\beta_1 \frac{x_\mathrm{L} + x_\mathrm{M} + x_\mathrm{R}}{3},
-\end{equation*}
-where
-\(x_\mathrm{L}\), \(x_\mathrm{M}\) and \(x_\mathrm{R}\)
-are the medians of the lower, middle and upper third of the \(x_{(i)}\),
-and \(y_\mathrm{L}\), \(y_\mathrm{M}\) and \(y_\mathrm{R}\) are the medians
-of the corresponding \(y\) values, respectively.
-
-To move either of the estimated regression coefficients to infinity,
-we need to move one of \(x_\mathrm{L}\), \(x_\mathrm{M}\), \(x_\mathrm{R}\),
-\(y_\mathrm{L}\), \(y_\mathrm{M}\), or \(y_\mathrm{R}\) to infinity.
-From the previous question we know that this requires to modify
-half of the corresponing third of the data, so the breakdown point
-of the method is \(1/2 \cdot 1/3 = 1/6\).
-
-\end{myanswers}
-
-\clearpage
-
 \section{M-Estimators}\label{S18-m-est}
 
 In this section we introduce a class of estimators which can be robust to
@@ -10544,6 +10183,367 @@ the estimate~\(\hat\beta\).
 \item
   We discussed different choices for the objective function of an M-estimator.
 \end{itemize}
+
+\clearpage
+
+\section*{Problem Sheet 5}\label{P05}
+\addcontentsline{toc}{section}{Problem Sheet 5}
+
+\excludecomment{myanswers}
+
+You should attempt all these questions and write up your solutions in advance
+of the workshop in week 11 where the answers will be discussed.
+
+\textbf{17.} Consider the dataset at
+
+\begin{itemize}
+\tightlist
+\item
+  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P05Q17.csv}
+\end{itemize}
+
+which contains samples from variables \(x_1, x_2, y \in \mathbb{R}\) and
+\(x_3 \in \{\mathrm{R}, \mathrm{G}, \mathrm{B}\}\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Load the data into R.
+\end{enumerate}
+
+\begin{myanswers}
+
+We can load the data into R as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/}
+\NormalTok{dd }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/P05Q17.csv"}\NormalTok{)}
+\CommentTok{\# fix the order of levels:}
+\NormalTok{dd}\SpecialCharTok{$}\NormalTok{x3 }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(dd}\SpecialCharTok{$}\NormalTok{x3, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"R"}\NormalTok{, }\StringTok{"G"}\NormalTok{, }\StringTok{"B"}\NormalTok{))}
+\FunctionTok{head}\NormalTok{(dd)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#          x1         x2 x3        y}
+\NormalTok{\# 1  1.940066 {-}0.7755552  B 2.709368}
+\NormalTok{\# 2 {-}1.214413  0.4842872  R 1.254138}
+\NormalTok{\# 3  1.940301  3.1189902  B 3.228220}
+\NormalTok{\# 4  4.599154  3.5881714  B 5.541995}
+\NormalTok{\# 5  3.891628 {-}4.4026497  B 4.018021}
+\NormalTok{\# 6  2.615079 {-}0.9916691  R 0.449100}
+\end{Highlighting}
+\end{Shaded}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Fit a simple linear model to describe \(y\) as a function of \(x_1\), \(x_2\)
+  and~\(x_3\), taking into account that \(x_3\) is a categorical variable.
+  Show that the behaviour of the residuals depends on the levels of \(x_3\).
+\end{enumerate}
+
+\begin{myanswers}
+To fit a simple linear model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = y \textasciitilde{} ., data = dd)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}2.7641 {-}1.0211  0.0354  0.6991  3.7245 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#             Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept)  0.91712    0.37429   2.450   0.0182 *  }
+\NormalTok{\# x1           0.51294    0.07220   7.105 7.13e{-}09 ***}
+\NormalTok{\# x2           0.53629    0.08328   6.440 6.93e{-}08 ***}
+\NormalTok{\# x3G          0.10016    0.57361   0.175   0.8622    }
+\NormalTok{\# x3B         {-}0.25865    0.51595  {-}0.501   0.6186    }
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 1.54 on 45 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.7044,  Adjusted R{-}squared:  0.6781 }
+\NormalTok{\# F{-}statistic:  26.8 on 4 and 45 DF,  p{-}value: 2.082e{-}11}
+\end{Highlighting}
+\end{Shaded}
+
+In a residual plot we can colour-code the residuals by the level of \(x_3\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m),}
+     \AttributeTok{col =} \FunctionTok{as.numeric}\NormalTok{(dd}\SpecialCharTok{$}\NormalTok{x3) }\SpecialCharTok{+} \DecValTok{1}\NormalTok{, }\AttributeTok{pch =} \FunctionTok{as.numeric}\NormalTok{(dd}\SpecialCharTok{$}\NormalTok{x3) }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)}
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{levels}\NormalTok{(dd}\SpecialCharTok{$}\NormalTok{x3), }\AttributeTok{col=}\DecValTok{2}\SpecialCharTok{:}\DecValTok{4}\NormalTok{, }\AttributeTok{pch =} \DecValTok{2}\SpecialCharTok{:}\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P05Q17-1.pdf}
+
+This shows that that the residuals for level \texttt{G} are much smaller
+than for the other levels.
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Find an improved model, which includes some of the interaction
+  terms between \(x_3\) and the other variables. For each level of \(x_3\),
+  write the mathematical equation for the fitted model mean of your
+  chosen model.
+\end{enumerate}
+
+\begin{myanswers}
+We can start by trying all interaction terms:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{summary}\NormalTok{(m2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = y \textasciitilde{} .\^{}2, data = dd)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#       Min        1Q    Median        3Q       Max }
+\NormalTok{\# {-}0.139522 {-}0.058383 {-}0.002396  0.037826  0.227631 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#               Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept)  1.0129619  0.0216220  46.849   \textless{}2e{-}16 ***}
+\NormalTok{\# x1           0.1017179  0.0069591  14.617   \textless{}2e{-}16 ***}
+\NormalTok{\# x2           0.8860760  0.0073076 121.254   \textless{}2e{-}16 ***}
+\NormalTok{\# x3G         {-}0.0287990  0.0334521  {-}0.861    0.394    }
+\NormalTok{\# x3B          0.0082008  0.0300303   0.273    0.786    }
+\NormalTok{\# x1:x2       {-}0.0007807  0.0016391  {-}0.476    0.636    }
+\NormalTok{\# x1:x3G       0.4025315  0.0125449  32.087   \textless{}2e{-}16 ***}
+\NormalTok{\# x1:x3B       0.8029663  0.0088744  90.481   \textless{}2e{-}16 ***}
+\NormalTok{\# x2:x3G      {-}0.3936519  0.0131191 {-}30.006   \textless{}2e{-}16 ***}
+\NormalTok{\# x2:x3B      {-}0.7841714  0.0105136 {-}74.586   \textless{}2e{-}16 ***}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 0.08068 on 40 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.9993,  Adjusted R{-}squared:  0.9991 }
+\NormalTok{\# F{-}statistic:  6160 on 9 and 40 DF,  p{-}value: \textless{} 2.2e{-}16}
+\end{Highlighting}
+\end{Shaded}
+
+Many of the interaction terms are significantly
+different from zero and the adjusted \(R^2\)-value has
+dramatically increased. A good choice of model seems
+to be \texttt{y\ \textasciitilde{}\ x1\ +\ x2\ +\ x1:x3\ +\ x2:x3}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2 }\SpecialCharTok{+}\NormalTok{ x1}\SpecialCharTok{:}\NormalTok{x3 }\SpecialCharTok{+}\NormalTok{ x2}\SpecialCharTok{:}\NormalTok{x3, }\AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{summary}\NormalTok{(m3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = y \textasciitilde{} x1 + x2 + x1:x3 + x2:x3, data = dd)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#       Min        1Q    Median        3Q       Max }
+\NormalTok{\# {-}0.136497 {-}0.053054 {-}0.003199  0.040097  0.241331 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept)  1.006764   0.012370   81.39   \textless{}2e{-}16 ***}
+\NormalTok{\# x1           0.101630   0.006318   16.09   \textless{}2e{-}16 ***}
+\NormalTok{\# x2           0.886702   0.006935  127.86   \textless{}2e{-}16 ***}
+\NormalTok{\# x1:x3G       0.404014   0.012109   33.37   \textless{}2e{-}16 ***}
+\NormalTok{\# x1:x3B       0.803071   0.008462   94.91   \textless{}2e{-}16 ***}
+\NormalTok{\# x2:x3G      {-}0.392663   0.012882  {-}30.48   \textless{}2e{-}16 ***}
+\NormalTok{\# x2:x3B      {-}0.783259   0.009569  {-}81.85   \textless{}2e{-}16 ***}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 0.08005 on 43 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.9992,  Adjusted R{-}squared:  0.9991 }
+\NormalTok{\# F{-}statistic:  9383 on 6 and 43 DF,  p{-}value: \textless{} 2.2e{-}16}
+\end{Highlighting}
+\end{Shaded}
+
+The fitted model mean for \(x_3 = \mathrm{R}\) is
+\begin{equation*}
+  y
+  \approx 1.007 + 0.102 x_1 + 0.887 x_2.
+\end{equation*}
+For \(x_3 = \mathrm{G}\) we get
+\begin{align*}
+  y
+  &\approx 1.007 + (0.102 + 0.404) x_1 + (0.887 - 0.393) x_2 \\
+  &= 1.007 + 0.506 x_1 + 0.494 x_2
+\end{align*}
+Finally, for \(x_3 = \mathrm{B}\) we find
+\begin{align*}
+  y
+  &\approx 1.007 + (0.102 + 0.803) x_1 + (0.887 - 0.783) x_2 \\
+  &= 1.007 + 0.905 x_1 + 0.104 x_2.
+\end{align*}
+
+\end{myanswers}
+
+\textbf{18.}
+Consider the dataset at
+
+\begin{itemize}
+\tightlist
+\item
+  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P05Q18.csv}
+\end{itemize}
+
+Identify the \(x\)-space outlier in this dataset.
+
+\begin{myanswers}
+We start by loading the data into R:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/P05Q18.csv"}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(X)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#             x1          x2         x3         x4}
+\NormalTok{\# 1 {-}1.359560124  0.66310168  2.5866758 {-}1.7229394}
+\NormalTok{\# 2  0.624644511 {-}0.01925607 {-}0.1692926 {-}0.5092775}
+\NormalTok{\# 3  0.957938698 {-}0.54734504 {-}0.9680673  0.6074693}
+\NormalTok{\# 4  0.733255177 {-}0.37217623 {-}0.6027061  0.2751777}
+\NormalTok{\# 5  0.355021570 {-}0.58332351  0.2386221 {-}0.1934059}
+\NormalTok{\# 6  0.002907357 {-}0.69562237  0.5365051  0.3047116}
+\end{Highlighting}
+\end{Shaded}
+
+To identify the outlier, we compute the leverage of each sample.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(X)}
+\NormalTok{H }\OtherTok{\textless{}{-}}\NormalTok{ X }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X, }\FunctionTok{t}\NormalTok{(X))}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{diag}\NormalTok{(H))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P05Q18a-1.pdf}
+
+The plot shows that one sample has a much larger leverage than
+the other samples.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{which.max}\NormalTok{(}\FunctionTok{diag}\NormalTok{(H))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# [1] 96}
+\end{Highlighting}
+\end{Shaded}
+
+Thus, the \(x\)-space outlier is in row 96 of the matrix~\(X\).
+
+Note that the outlier does not look special on a pair scatter plot:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pairs}\NormalTok{(X, }\AttributeTok{col =}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(X) }\SpecialCharTok{==} \DecValTok{96}\NormalTok{) }\SpecialCharTok{+} \DecValTok{1}\NormalTok{, }\AttributeTok{cex =} \FloatTok{0.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/P05Q18b-1.pdf}
+
+\end{myanswers}
+
+\textbf{19.}
+The sample median is a robust estimator of the mean.
+Determine the breakdown point.
+
+\begin{myanswers}
+The median can be obtained by arranging the samples in increasing
+order and inspecting the middle element (for odd \(n\)) or
+the middle two elements (for even \(n\)) in this list.
+Let \(x_{(1)}, \ldots, x_{(n)}\) be the samples arranged in increasing order.
+
+For odd \(n\): The median equals \(x_{(k)}\) where \(k = (n+1) / 2\).
+In order to move the median to infinity, we have
+to move \(x_{(k)}, x_{(k+1)}, \ldots, x_{(n)}\) to infinity.
+These are \((n+1) / 2\) values in total and thus the breakdown point
+is \((n+1) / 2n\).
+
+For even \(n\): The median equals \((x_{(k)} + x_{(k+1)})/2\) where \(k = n / 2\).
+In order to move the median to infinity, we have
+to move \(x_{(k+1)}, x_{(k+2)}, \ldots, x_{(n)}\) to infinity.
+These are \(n / 2\) values in total and thus the breakdown point
+is \(1/2\).
+
+\end{myanswers}
+
+\textbf{20.}
+Determine the breakdown point for the resistant line from
+example~\ref{exm:resistant-line}.
+
+\begin{myanswers}
+The regression coefficients in the example are computed
+as
+\begin{equation*}
+  \hat\beta_1
+  = \frac{y_\mathrm{R} - y_\mathrm{L}}{x_\mathrm{R} - x_\mathrm{L}}
+\end{equation*}
+and
+\begin{equation*}
+  \hat\beta_0
+  = \frac{y_\mathrm{L} + y_\mathrm{M} + y_\mathrm{R}}{3}
+      - \hat\beta_1 \frac{x_\mathrm{L} + x_\mathrm{M} + x_\mathrm{R}}{3},
+\end{equation*}
+where
+\(x_\mathrm{L}\), \(x_\mathrm{M}\) and \(x_\mathrm{R}\)
+are the medians of the lower, middle and upper third of the \(x_{(i)}\),
+and \(y_\mathrm{L}\), \(y_\mathrm{M}\) and \(y_\mathrm{R}\) are the medians
+of the corresponding \(y\) values, respectively.
+
+To move either of the estimated regression coefficients to infinity,
+we need to move one of \(x_\mathrm{L}\), \(x_\mathrm{M}\), \(x_\mathrm{R}\),
+\(y_\mathrm{L}\), \(y_\mathrm{M}\), or \(y_\mathrm{R}\) to infinity.
+From the previous question we know that this requires to modify
+half of the corresponing third of the data, so the breakdown point
+of the method is \(1/2 \cdot 1/3 = 1/6\).
+
+\end{myanswers}
 
 \clearpage
 
