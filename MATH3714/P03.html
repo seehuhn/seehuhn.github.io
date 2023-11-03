@@ -248,7 +248,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.1" data-path="S08-influence.html"><a href="S08-influence.html#deleting"><i class="fa fa-check"></i><b>8.1</b> Deleting Observations</a></li>
 <li class="chapter" data-level="8.2" data-path="S08-influence.html"><a href="S08-influence.html#influence"><i class="fa fa-check"></i><b>8.2</b> Cook’s Distance</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a></li>
+<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-plots.html"><a href="S09-plots.html#residual-plots"><i class="fa fa-check"></i><b>9.1</b> Residual Plots</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-plots.html"><a href="S09-plots.html#q-q-plots"><i class="fa fa-check"></i><b>9.2</b> Q-Q Plots</a></li>
+<li class="chapter" data-level="9.3" data-path="S09-plots.html"><a href="S09-plots.html#other-plot-types"><i class="fa fa-check"></i><b>9.3</b> Other Plot Types</a></li>
+</ul></li>
 <li class="chapter" data-level="10" data-path="S10-improving.html"><a href="S10-improving.html"><i class="fa fa-check"></i><b>10</b> Improving the Model Fit</a>
 <ul>
 <li class="chapter" data-level="10.1" data-path="S10-improving.html"><a href="S10-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>10.1</b> Linearising the Mean</a></li>
@@ -528,11 +533,11 @@ variables <span class="math inline">\(x_1\)</span>, <span class="math inline">\(
 </ol>
 <div class="myanswers">
 <p>To fit the required model we can use the following R commands:</p>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="P03.html#cb169-1" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">&quot;https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P03Q09.csv&quot;</span></span>
-<span id="cb169-2"><a href="P03.html#cb169-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url)</span>
-<span id="cb169-3"><a href="P03.html#cb169-3" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3, <span class="at">data=</span>x)</span></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="P03.html#cb174-1" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">&quot;https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P03Q09.csv&quot;</span></span>
+<span id="cb174-2"><a href="P03.html#cb174-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url)</span>
+<span id="cb174-3"><a href="P03.html#cb174-3" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3, <span class="at">data=</span>x)</span></code></pre></div>
 <p>The fitted model has the following coefficients:</p>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="P03.html#cb170-1" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="P03.html#cb175-1" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = y ~ x1 + x2 + x3, data = x)
@@ -576,7 +581,7 @@ the standard error <span class="math inline">\(\sqrt{\widehat{\sigma^2} C_{jj}}\
 column <code>Std. Error</code>, and <span class="math inline">\(n-p-1 = 12 - 3 - 1 = 8\)</span>. Using
 these values, we can find a <span class="math inline">\(95\%\)</span>-confidence interval for
 <span class="math inline">\(\beta_2\)</span> as follows:</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="P03.html#cb172-1" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.28176</span> <span class="sc">-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="dv">8</span>) <span class="sc">*</span> <span class="fl">0.12023</span>, <span class="fl">0.28176</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="dv">8</span>) <span class="sc">*</span> <span class="fl">0.12023</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="P03.html#cb177-1" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.28176</span> <span class="sc">-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="dv">8</span>) <span class="sc">*</span> <span class="fl">0.12023</span>, <span class="fl">0.28176</span> <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="dv">8</span>) <span class="sc">*</span> <span class="fl">0.12023</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 0.004509123 0.559010877</code></pre>
 <p>Thus, the confidence interval is <span class="math inline">\(\bigl[ 0.0045, 0.5590 \bigr]\)</span>.</p>
 </div>
@@ -667,23 +672,23 @@ inputs <span class="math inline">\(x_i\)</span> and responses <span class="math 
 Describe all relevant features of the plots.
 Describe any problems with the model fit you find.</li>
 </ol>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="P03.html#cb174-1" tabindex="-1"></a>    <span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">2</span>))</span>
-<span id="cb174-2"><a href="P03.html#cb174-2" tabindex="-1"></a></span>
-<span id="cb174-3"><a href="P03.html#cb174-3" tabindex="-1"></a>    m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y1 <span class="sc">~</span> x1)</span>
-<span id="cb174-4"><a href="P03.html#cb174-4" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m1), <span class="fu">resid</span>(m1), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
-<span id="cb174-5"><a href="P03.html#cb174-5" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m1), <span class="at">main=</span><span class="cn">NULL</span>)</span>
-<span id="cb174-6"><a href="P03.html#cb174-6" tabindex="-1"></a></span>
-<span id="cb174-7"><a href="P03.html#cb174-7" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y2 <span class="sc">~</span> x2)</span>
-<span id="cb174-8"><a href="P03.html#cb174-8" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m2), <span class="fu">resid</span>(m2), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
-<span id="cb174-9"><a href="P03.html#cb174-9" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m2), <span class="at">main=</span><span class="cn">NULL</span>)</span>
-<span id="cb174-10"><a href="P03.html#cb174-10" tabindex="-1"></a></span>
-<span id="cb174-11"><a href="P03.html#cb174-11" tabindex="-1"></a>    m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y3 <span class="sc">~</span> x3)</span>
-<span id="cb174-12"><a href="P03.html#cb174-12" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m3), <span class="fu">resid</span>(m3), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
-<span id="cb174-13"><a href="P03.html#cb174-13" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m3), <span class="at">main=</span><span class="cn">NULL</span>)</span>
-<span id="cb174-14"><a href="P03.html#cb174-14" tabindex="-1"></a></span>
-<span id="cb174-15"><a href="P03.html#cb174-15" tabindex="-1"></a>    m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y4 <span class="sc">~</span> x4)</span>
-<span id="cb174-16"><a href="P03.html#cb174-16" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m4), <span class="fu">resid</span>(m4), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
-<span id="cb174-17"><a href="P03.html#cb174-17" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m4), <span class="at">main=</span><span class="cn">NULL</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="P03.html#cb179-1" tabindex="-1"></a>    <span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">2</span>))</span>
+<span id="cb179-2"><a href="P03.html#cb179-2" tabindex="-1"></a></span>
+<span id="cb179-3"><a href="P03.html#cb179-3" tabindex="-1"></a>    m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y1 <span class="sc">~</span> x1)</span>
+<span id="cb179-4"><a href="P03.html#cb179-4" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m1), <span class="fu">resid</span>(m1), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
+<span id="cb179-5"><a href="P03.html#cb179-5" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m1), <span class="at">main=</span><span class="cn">NULL</span>)</span>
+<span id="cb179-6"><a href="P03.html#cb179-6" tabindex="-1"></a></span>
+<span id="cb179-7"><a href="P03.html#cb179-7" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y2 <span class="sc">~</span> x2)</span>
+<span id="cb179-8"><a href="P03.html#cb179-8" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m2), <span class="fu">resid</span>(m2), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
+<span id="cb179-9"><a href="P03.html#cb179-9" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m2), <span class="at">main=</span><span class="cn">NULL</span>)</span>
+<span id="cb179-10"><a href="P03.html#cb179-10" tabindex="-1"></a></span>
+<span id="cb179-11"><a href="P03.html#cb179-11" tabindex="-1"></a>    m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y3 <span class="sc">~</span> x3)</span>
+<span id="cb179-12"><a href="P03.html#cb179-12" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m3), <span class="fu">resid</span>(m3), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
+<span id="cb179-13"><a href="P03.html#cb179-13" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m3), <span class="at">main=</span><span class="cn">NULL</span>)</span>
+<span id="cb179-14"><a href="P03.html#cb179-14" tabindex="-1"></a></span>
+<span id="cb179-15"><a href="P03.html#cb179-15" tabindex="-1"></a>    m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y4 <span class="sc">~</span> x4)</span>
+<span id="cb179-16"><a href="P03.html#cb179-16" tabindex="-1"></a>    <span class="fu">plot</span>(<span class="fu">fitted</span>(m4), <span class="fu">resid</span>(m4), <span class="at">xlab=</span><span class="st">&quot;fitted values&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;residuals&quot;</span>)</span>
+<span id="cb179-17"><a href="P03.html#cb179-17" tabindex="-1"></a>    <span class="fu">qqnorm</span>(<span class="fu">resid</span>(m4), <span class="at">main=</span><span class="cn">NULL</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/four-models-1.png" width="672" /></p>
 <div class="myanswers">
 <p>We first note that the given R commands generate the plots along

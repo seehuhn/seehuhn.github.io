@@ -248,7 +248,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.1" data-path="S08-influence.html"><a href="S08-influence.html#deleting"><i class="fa fa-check"></i><b>8.1</b> Deleting Observations</a></li>
 <li class="chapter" data-level="8.2" data-path="S08-influence.html"><a href="S08-influence.html#influence"><i class="fa fa-check"></i><b>8.2</b> Cook’s Distance</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a></li>
+<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-plots.html"><a href="S09-plots.html#residual-plots"><i class="fa fa-check"></i><b>9.1</b> Residual Plots</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-plots.html"><a href="S09-plots.html#q-q-plots"><i class="fa fa-check"></i><b>9.2</b> Q-Q Plots</a></li>
+<li class="chapter" data-level="9.3" data-path="S09-plots.html"><a href="S09-plots.html#other-plot-types"><i class="fa fa-check"></i><b>9.3</b> Other Plot Types</a></li>
+</ul></li>
 <li class="chapter" data-level="10" data-path="S10-improving.html"><a href="S10-improving.html"><i class="fa fa-check"></i><b>10</b> Improving the Model Fit</a>
 <ul>
 <li class="chapter" data-level="10.1" data-path="S10-improving.html"><a href="S10-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>10.1</b> Linearising the Mean</a></li>
@@ -527,34 +532,34 @@ C fail, this algorithms needs to fit all <span class="math inline">\(2^p\)</span
 <p><span id="exm:qsar-search" class="example"><strong>Example 12.1  </strong></span>To demonstrate the steps of the algorithm, we implement the method
 “by hand”. We use the QSAR dataset, which we have already seen
 in section <a href="S07-examples.html#S07-examples">7</a>:</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="S12-automatic.html#cb176-1" tabindex="-1"></a><span class="co"># data from https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity</span></span>
-<span id="cb176-2"><a href="S12-automatic.html#cb176-2" tabindex="-1"></a>qsar <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/qsar_aquatic_toxicity.csv&quot;</span>,</span>
-<span id="cb176-3"><a href="S12-automatic.html#cb176-3" tabindex="-1"></a>                 <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb176-4"><a href="S12-automatic.html#cb176-4" tabindex="-1"></a>fields <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb176-5"><a href="S12-automatic.html#cb176-5" tabindex="-1"></a>    <span class="st">&quot;TPSA&quot;</span>,</span>
-<span id="cb176-6"><a href="S12-automatic.html#cb176-6" tabindex="-1"></a>    <span class="st">&quot;SAacc&quot;</span>,</span>
-<span id="cb176-7"><a href="S12-automatic.html#cb176-7" tabindex="-1"></a>    <span class="st">&quot;H050&quot;</span>,</span>
-<span id="cb176-8"><a href="S12-automatic.html#cb176-8" tabindex="-1"></a>    <span class="st">&quot;MLOGP&quot;</span>,</span>
-<span id="cb176-9"><a href="S12-automatic.html#cb176-9" tabindex="-1"></a>    <span class="st">&quot;RDCHI&quot;</span>,</span>
-<span id="cb176-10"><a href="S12-automatic.html#cb176-10" tabindex="-1"></a>    <span class="st">&quot;GATS1p&quot;</span>,</span>
-<span id="cb176-11"><a href="S12-automatic.html#cb176-11" tabindex="-1"></a>    <span class="st">&quot;nN&quot;</span>,</span>
-<span id="cb176-12"><a href="S12-automatic.html#cb176-12" tabindex="-1"></a>    <span class="st">&quot;C040&quot;</span>,</span>
-<span id="cb176-13"><a href="S12-automatic.html#cb176-13" tabindex="-1"></a>    <span class="st">&quot;LC50&quot;</span></span>
-<span id="cb176-14"><a href="S12-automatic.html#cb176-14" tabindex="-1"></a>)</span>
-<span id="cb176-15"><a href="S12-automatic.html#cb176-15" tabindex="-1"></a><span class="fu">names</span>(qsar) <span class="ot">&lt;-</span> fields</span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="S12-automatic.html#cb181-1" tabindex="-1"></a><span class="co"># data from https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity</span></span>
+<span id="cb181-2"><a href="S12-automatic.html#cb181-2" tabindex="-1"></a>qsar <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/qsar_aquatic_toxicity.csv&quot;</span>,</span>
+<span id="cb181-3"><a href="S12-automatic.html#cb181-3" tabindex="-1"></a>                 <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb181-4"><a href="S12-automatic.html#cb181-4" tabindex="-1"></a>fields <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb181-5"><a href="S12-automatic.html#cb181-5" tabindex="-1"></a>    <span class="st">&quot;TPSA&quot;</span>,</span>
+<span id="cb181-6"><a href="S12-automatic.html#cb181-6" tabindex="-1"></a>    <span class="st">&quot;SAacc&quot;</span>,</span>
+<span id="cb181-7"><a href="S12-automatic.html#cb181-7" tabindex="-1"></a>    <span class="st">&quot;H050&quot;</span>,</span>
+<span id="cb181-8"><a href="S12-automatic.html#cb181-8" tabindex="-1"></a>    <span class="st">&quot;MLOGP&quot;</span>,</span>
+<span id="cb181-9"><a href="S12-automatic.html#cb181-9" tabindex="-1"></a>    <span class="st">&quot;RDCHI&quot;</span>,</span>
+<span id="cb181-10"><a href="S12-automatic.html#cb181-10" tabindex="-1"></a>    <span class="st">&quot;GATS1p&quot;</span>,</span>
+<span id="cb181-11"><a href="S12-automatic.html#cb181-11" tabindex="-1"></a>    <span class="st">&quot;nN&quot;</span>,</span>
+<span id="cb181-12"><a href="S12-automatic.html#cb181-12" tabindex="-1"></a>    <span class="st">&quot;C040&quot;</span>,</span>
+<span id="cb181-13"><a href="S12-automatic.html#cb181-13" tabindex="-1"></a>    <span class="st">&quot;LC50&quot;</span></span>
+<span id="cb181-14"><a href="S12-automatic.html#cb181-14" tabindex="-1"></a>)</span>
+<span id="cb181-15"><a href="S12-automatic.html#cb181-15" tabindex="-1"></a><span class="fu">names</span>(qsar) <span class="ot">&lt;-</span> fields</span></code></pre></div>
 <p>To make it easy to add/remove columns automatically, we first construct
 the design matrix, remove columns as needed, and then use the resulting
 matrix in the call to <code>lm()</code> (instead of specifying the terms to include
 by name).</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="S12-automatic.html#cb177-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar)</span>
-<span id="cb177-2"><a href="S12-automatic.html#cb177-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, <span class="sc">-</span><span class="dv">1</span>] <span class="co"># remove the intercept, since lm() will re-add it later</span></span>
-<span id="cb177-3"><a href="S12-automatic.html#cb177-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
-<span id="cb177-4"><a href="S12-automatic.html#cb177-4" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
-<span id="cb177-5"><a href="S12-automatic.html#cb177-5" tabindex="-1"></a></span>
-<span id="cb177-6"><a href="S12-automatic.html#cb177-6" tabindex="-1"></a>y <span class="ot">&lt;-</span> qsar<span class="sc">$</span>LC50</span>
-<span id="cb177-7"><a href="S12-automatic.html#cb177-7" tabindex="-1"></a></span>
-<span id="cb177-8"><a href="S12-automatic.html#cb177-8" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X) <span class="co"># full model</span></span>
-<span id="cb177-9"><a href="S12-automatic.html#cb177-9" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="S12-automatic.html#cb182-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar)</span>
+<span id="cb182-2"><a href="S12-automatic.html#cb182-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, <span class="sc">-</span><span class="dv">1</span>] <span class="co"># remove the intercept, since lm() will re-add it later</span></span>
+<span id="cb182-3"><a href="S12-automatic.html#cb182-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb182-4"><a href="S12-automatic.html#cb182-4" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
+<span id="cb182-5"><a href="S12-automatic.html#cb182-5" tabindex="-1"></a></span>
+<span id="cb182-6"><a href="S12-automatic.html#cb182-6" tabindex="-1"></a>y <span class="ot">&lt;-</span> qsar<span class="sc">$</span>LC50</span>
+<span id="cb182-7"><a href="S12-automatic.html#cb182-7" tabindex="-1"></a></span>
+<span id="cb182-8"><a href="S12-automatic.html#cb182-8" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X) <span class="co"># full model</span></span>
+<span id="cb182-9"><a href="S12-automatic.html#cb182-9" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = y ~ X)
@@ -584,103 +589,103 @@ F-statistic:  63.5 on 8 and 537 DF,  p-value: &lt; 2.2e-16</code></pre>
 shows that the new method of calling <code>lm()</code> gives the same results
 as before. Now we follow the steps of the algorithm.</p>
 <p><strong>A.</strong> The values <span class="math inline">\(\varphi_1, \ldots, \varphi_p\)</span> can be computed as follows:</p>
-<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="S12-automatic.html#cb179-1" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p) <span class="co"># pre-allocate an empty vector</span></span>
-<span id="cb179-2"><a href="S12-automatic.html#cb179-2" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) {</span>
-<span id="cb179-3"><a href="S12-automatic.html#cb179-3" tabindex="-1"></a>    idx <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span>p)[<span class="sc">-</span>j] <span class="co"># all variables except x[j]</span></span>
-<span id="cb179-4"><a href="S12-automatic.html#cb179-4" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[,idx])</span>
-<span id="cb179-5"><a href="S12-automatic.html#cb179-5" tabindex="-1"></a>    phi[j] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb179-6"><a href="S12-automatic.html#cb179-6" tabindex="-1"></a>}</span>
-<span id="cb179-7"><a href="S12-automatic.html#cb179-7" tabindex="-1"></a></span>
-<span id="cb179-8"><a href="S12-automatic.html#cb179-8" tabindex="-1"></a><span class="co"># change the order of columns in X, so that the phi_j are decreasing</span></span>
-<span id="cb179-9"><a href="S12-automatic.html#cb179-9" tabindex="-1"></a>jj <span class="ot">&lt;-</span> <span class="fu">order</span>(phi, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb179-10"><a href="S12-automatic.html#cb179-10" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, jj]</span>
-<span id="cb179-11"><a href="S12-automatic.html#cb179-11" tabindex="-1"></a>phi <span class="ot">&lt;-</span> phi[jj]</span>
-<span id="cb179-12"><a href="S12-automatic.html#cb179-12" tabindex="-1"></a><span class="fu">plot</span>(phi, <span class="at">xlab =</span> <span class="st">&quot;j&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(varphi[j]))</span></code></pre></div>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="S12-automatic.html#cb184-1" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p) <span class="co"># pre-allocate an empty vector</span></span>
+<span id="cb184-2"><a href="S12-automatic.html#cb184-2" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) {</span>
+<span id="cb184-3"><a href="S12-automatic.html#cb184-3" tabindex="-1"></a>    idx <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span>p)[<span class="sc">-</span>j] <span class="co"># all variables except x[j]</span></span>
+<span id="cb184-4"><a href="S12-automatic.html#cb184-4" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[,idx])</span>
+<span id="cb184-5"><a href="S12-automatic.html#cb184-5" tabindex="-1"></a>    phi[j] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb184-6"><a href="S12-automatic.html#cb184-6" tabindex="-1"></a>}</span>
+<span id="cb184-7"><a href="S12-automatic.html#cb184-7" tabindex="-1"></a></span>
+<span id="cb184-8"><a href="S12-automatic.html#cb184-8" tabindex="-1"></a><span class="co"># change the order of columns in X, so that the phi_j are decreasing</span></span>
+<span id="cb184-9"><a href="S12-automatic.html#cb184-9" tabindex="-1"></a>jj <span class="ot">&lt;-</span> <span class="fu">order</span>(phi, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb184-10"><a href="S12-automatic.html#cb184-10" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, jj]</span>
+<span id="cb184-11"><a href="S12-automatic.html#cb184-11" tabindex="-1"></a>phi <span class="ot">&lt;-</span> phi[jj]</span>
+<span id="cb184-12"><a href="S12-automatic.html#cb184-12" tabindex="-1"></a><span class="fu">plot</span>(phi, <span class="at">xlab =</span> <span class="st">&quot;j&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(varphi[j]))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/exhaustiveA-1.png" width="672" /></p>
 <p>The plot shows the residual sum of squares for the model with input <span class="math inline">\(x_j\)</span>
 omitted, for <span class="math inline">\(j\)</span> ranging from 1 to 8.</p>
 <p><strong>B.</strong> Next, we compute the residual
 sum of squares of the model which consists only of the intercept.
 This is the case <span class="math inline">\(q = 0\)</span>.</p>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="S12-automatic.html#cb180-1" tabindex="-1"></a>all.q <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span>p</span>
-<span id="cb180-2"><a href="S12-automatic.html#cb180-2" tabindex="-1"></a>best.rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># For storing the best RSS for q = 0, ..., p,</span></span>
-<span id="cb180-3"><a href="S12-automatic.html#cb180-3" tabindex="-1"></a>best.model <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, p <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># and the corresponding models.</span></span>
-<span id="cb180-4"><a href="S12-automatic.html#cb180-4" tabindex="-1"></a></span>
-<span id="cb180-5"><a href="S12-automatic.html#cb180-5" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span>)</span>
-<span id="cb180-6"><a href="S12-automatic.html#cb180-6" tabindex="-1"></a>best.rss[<span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb180-7"><a href="S12-automatic.html#cb180-7" tabindex="-1"></a>best.model[[<span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">integer</span>(<span class="dv">0</span>) <span class="co"># a vector of length 0 (no columns)</span></span>
-<span id="cb180-8"><a href="S12-automatic.html#cb180-8" tabindex="-1"></a></span>
-<span id="cb180-9"><a href="S12-automatic.html#cb180-9" tabindex="-1"></a>count <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># number of models fitted so far</span></span></code></pre></div>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="S12-automatic.html#cb185-1" tabindex="-1"></a>all.q <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span>p</span>
+<span id="cb185-2"><a href="S12-automatic.html#cb185-2" tabindex="-1"></a>best.rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># For storing the best RSS for q = 0, ..., p,</span></span>
+<span id="cb185-3"><a href="S12-automatic.html#cb185-3" tabindex="-1"></a>best.model <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, p <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># and the corresponding models.</span></span>
+<span id="cb185-4"><a href="S12-automatic.html#cb185-4" tabindex="-1"></a></span>
+<span id="cb185-5"><a href="S12-automatic.html#cb185-5" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span>)</span>
+<span id="cb185-6"><a href="S12-automatic.html#cb185-6" tabindex="-1"></a>best.rss[<span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb185-7"><a href="S12-automatic.html#cb185-7" tabindex="-1"></a>best.model[[<span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">integer</span>(<span class="dv">0</span>) <span class="co"># a vector of length 0 (no columns)</span></span>
+<span id="cb185-8"><a href="S12-automatic.html#cb185-8" tabindex="-1"></a></span>
+<span id="cb185-9"><a href="S12-automatic.html#cb185-9" tabindex="-1"></a>count <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># number of models fitted so far</span></span></code></pre></div>
 <p><strong>C.</strong> Now we consider <span class="math inline">\(q \in \{1, \ldots, p-2\}\)</span>. The algorithm groups
 these cases by the position <span class="math inline">\(k\)</span> of the first column omitted in the model,
 starting with <span class="math inline">\(k = q+1\)</span> and then decreasing <span class="math inline">\(k\)</span> in each step.
 We use the function <code>combn</code> from the <code>sets</code> package
 to get all possible choices of
 <span class="math inline">\(q - k + 1\)</span> columns out of <span class="math inline">\(\{k+1, \ldots, p\}\)</span>.</p>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="S12-automatic.html#cb181-1" tabindex="-1"></a><span class="fu">library</span>(sets) <span class="co"># this defines &quot;combn()&quot;</span></span>
-<span id="cb181-2"><a href="S12-automatic.html#cb181-2" tabindex="-1"></a><span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(p<span class="dv">-2</span>)) {</span>
-<span id="cb181-3"><a href="S12-automatic.html#cb181-3" tabindex="-1"></a>    best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="cn">Inf</span></span>
-<span id="cb181-4"><a href="S12-automatic.html#cb181-4" tabindex="-1"></a></span>
-<span id="cb181-5"><a href="S12-automatic.html#cb181-5" tabindex="-1"></a>    <span class="co"># Consider all sets of q columns, ...</span></span>
-<span id="cb181-6"><a href="S12-automatic.html#cb181-6" tabindex="-1"></a>    <span class="cf">for</span> (k <span class="cf">in</span> (q<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="dv">1</span>) {</span>
-<span id="cb181-7"><a href="S12-automatic.html#cb181-7" tabindex="-1"></a>        <span class="co"># ... where the first omitted column is k.</span></span>
-<span id="cb181-8"><a href="S12-automatic.html#cb181-8" tabindex="-1"></a></span>
-<span id="cb181-9"><a href="S12-automatic.html#cb181-9" tabindex="-1"></a>        <span class="co"># We have to include 1, ..., k-1, and ...</span></span>
-<span id="cb181-10"><a href="S12-automatic.html#cb181-10" tabindex="-1"></a>        a <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(k<span class="dv">-1</span>)</span>
-<span id="cb181-11"><a href="S12-automatic.html#cb181-11" tabindex="-1"></a></span>
-<span id="cb181-12"><a href="S12-automatic.html#cb181-12" tabindex="-1"></a>        <span class="co"># ... for the remaining q - (k-1) inputs, we try all</span></span>
-<span id="cb181-13"><a href="S12-automatic.html#cb181-13" tabindex="-1"></a>        <span class="co"># possible combinations.</span></span>
-<span id="cb181-14"><a href="S12-automatic.html#cb181-14" tabindex="-1"></a>        bb <span class="ot">&lt;-</span> <span class="fu">combn</span>((k<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>p, q <span class="sc">-</span> k <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb181-15"><a href="S12-automatic.html#cb181-15" tabindex="-1"></a>        <span class="cf">for</span> (l <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">ncol</span>(bb))) {</span>
-<span id="cb181-16"><a href="S12-automatic.html#cb181-16" tabindex="-1"></a>            b <span class="ot">&lt;-</span> bb[, l]</span>
-<span id="cb181-17"><a href="S12-automatic.html#cb181-17" tabindex="-1"></a>            included <span class="ot">&lt;-</span> <span class="fu">c</span>(a, b)</span>
-<span id="cb181-18"><a href="S12-automatic.html#cb181-18" tabindex="-1"></a></span>
-<span id="cb181-19"><a href="S12-automatic.html#cb181-19" tabindex="-1"></a>            m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[, included])</span>
-<span id="cb181-20"><a href="S12-automatic.html#cb181-20" tabindex="-1"></a>            count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb181-21"><a href="S12-automatic.html#cb181-21" tabindex="-1"></a>            rss <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb181-22"><a href="S12-automatic.html#cb181-22" tabindex="-1"></a></span>
-<span id="cb181-23"><a href="S12-automatic.html#cb181-23" tabindex="-1"></a>            <span class="cf">if</span> (rss <span class="sc">&lt;</span> best.rss[q <span class="sc">+</span> <span class="dv">1</span>]) {</span>
-<span id="cb181-24"><a href="S12-automatic.html#cb181-24" tabindex="-1"></a>                best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> rss</span>
-<span id="cb181-25"><a href="S12-automatic.html#cb181-25" tabindex="-1"></a>                best.model[[q <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> included</span>
-<span id="cb181-26"><a href="S12-automatic.html#cb181-26" tabindex="-1"></a>            }</span>
-<span id="cb181-27"><a href="S12-automatic.html#cb181-27" tabindex="-1"></a>        }</span>
-<span id="cb181-28"><a href="S12-automatic.html#cb181-28" tabindex="-1"></a></span>
-<span id="cb181-29"><a href="S12-automatic.html#cb181-29" tabindex="-1"></a>        <span class="cf">if</span> (k <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> best.rss[q] <span class="sc">&lt;=</span> phi[k<span class="dv">-1</span>]) {</span>
-<span id="cb181-30"><a href="S12-automatic.html#cb181-30" tabindex="-1"></a>            <span class="co"># If we reach this point, we know that we found the best</span></span>
-<span id="cb181-31"><a href="S12-automatic.html#cb181-31" tabindex="-1"></a>            <span class="co"># arrangement and we can exit the loop over k early.</span></span>
-<span id="cb181-32"><a href="S12-automatic.html#cb181-32" tabindex="-1"></a>            <span class="co"># This is what makes the algorithm efficient.</span></span>
-<span id="cb181-33"><a href="S12-automatic.html#cb181-33" tabindex="-1"></a>            <span class="cf">break</span></span>
-<span id="cb181-34"><a href="S12-automatic.html#cb181-34" tabindex="-1"></a>        }</span>
-<span id="cb181-35"><a href="S12-automatic.html#cb181-35" tabindex="-1"></a>    }</span>
-<span id="cb181-36"><a href="S12-automatic.html#cb181-36" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="S12-automatic.html#cb186-1" tabindex="-1"></a><span class="fu">library</span>(sets) <span class="co"># this defines &quot;combn()&quot;</span></span>
+<span id="cb186-2"><a href="S12-automatic.html#cb186-2" tabindex="-1"></a><span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(p<span class="dv">-2</span>)) {</span>
+<span id="cb186-3"><a href="S12-automatic.html#cb186-3" tabindex="-1"></a>    best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="cn">Inf</span></span>
+<span id="cb186-4"><a href="S12-automatic.html#cb186-4" tabindex="-1"></a></span>
+<span id="cb186-5"><a href="S12-automatic.html#cb186-5" tabindex="-1"></a>    <span class="co"># Consider all sets of q columns, ...</span></span>
+<span id="cb186-6"><a href="S12-automatic.html#cb186-6" tabindex="-1"></a>    <span class="cf">for</span> (k <span class="cf">in</span> (q<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="dv">1</span>) {</span>
+<span id="cb186-7"><a href="S12-automatic.html#cb186-7" tabindex="-1"></a>        <span class="co"># ... where the first omitted column is k.</span></span>
+<span id="cb186-8"><a href="S12-automatic.html#cb186-8" tabindex="-1"></a></span>
+<span id="cb186-9"><a href="S12-automatic.html#cb186-9" tabindex="-1"></a>        <span class="co"># We have to include 1, ..., k-1, and ...</span></span>
+<span id="cb186-10"><a href="S12-automatic.html#cb186-10" tabindex="-1"></a>        a <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(k<span class="dv">-1</span>)</span>
+<span id="cb186-11"><a href="S12-automatic.html#cb186-11" tabindex="-1"></a></span>
+<span id="cb186-12"><a href="S12-automatic.html#cb186-12" tabindex="-1"></a>        <span class="co"># ... for the remaining q - (k-1) inputs, we try all</span></span>
+<span id="cb186-13"><a href="S12-automatic.html#cb186-13" tabindex="-1"></a>        <span class="co"># possible combinations.</span></span>
+<span id="cb186-14"><a href="S12-automatic.html#cb186-14" tabindex="-1"></a>        bb <span class="ot">&lt;-</span> <span class="fu">combn</span>((k<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>p, q <span class="sc">-</span> k <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb186-15"><a href="S12-automatic.html#cb186-15" tabindex="-1"></a>        <span class="cf">for</span> (l <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">ncol</span>(bb))) {</span>
+<span id="cb186-16"><a href="S12-automatic.html#cb186-16" tabindex="-1"></a>            b <span class="ot">&lt;-</span> bb[, l]</span>
+<span id="cb186-17"><a href="S12-automatic.html#cb186-17" tabindex="-1"></a>            included <span class="ot">&lt;-</span> <span class="fu">c</span>(a, b)</span>
+<span id="cb186-18"><a href="S12-automatic.html#cb186-18" tabindex="-1"></a></span>
+<span id="cb186-19"><a href="S12-automatic.html#cb186-19" tabindex="-1"></a>            m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[, included])</span>
+<span id="cb186-20"><a href="S12-automatic.html#cb186-20" tabindex="-1"></a>            count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb186-21"><a href="S12-automatic.html#cb186-21" tabindex="-1"></a>            rss <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb186-22"><a href="S12-automatic.html#cb186-22" tabindex="-1"></a></span>
+<span id="cb186-23"><a href="S12-automatic.html#cb186-23" tabindex="-1"></a>            <span class="cf">if</span> (rss <span class="sc">&lt;</span> best.rss[q <span class="sc">+</span> <span class="dv">1</span>]) {</span>
+<span id="cb186-24"><a href="S12-automatic.html#cb186-24" tabindex="-1"></a>                best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> rss</span>
+<span id="cb186-25"><a href="S12-automatic.html#cb186-25" tabindex="-1"></a>                best.model[[q <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> included</span>
+<span id="cb186-26"><a href="S12-automatic.html#cb186-26" tabindex="-1"></a>            }</span>
+<span id="cb186-27"><a href="S12-automatic.html#cb186-27" tabindex="-1"></a>        }</span>
+<span id="cb186-28"><a href="S12-automatic.html#cb186-28" tabindex="-1"></a></span>
+<span id="cb186-29"><a href="S12-automatic.html#cb186-29" tabindex="-1"></a>        <span class="cf">if</span> (k <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> best.rss[q] <span class="sc">&lt;=</span> phi[k<span class="dv">-1</span>]) {</span>
+<span id="cb186-30"><a href="S12-automatic.html#cb186-30" tabindex="-1"></a>            <span class="co"># If we reach this point, we know that we found the best</span></span>
+<span id="cb186-31"><a href="S12-automatic.html#cb186-31" tabindex="-1"></a>            <span class="co"># arrangement and we can exit the loop over k early.</span></span>
+<span id="cb186-32"><a href="S12-automatic.html#cb186-32" tabindex="-1"></a>            <span class="co"># This is what makes the algorithm efficient.</span></span>
+<span id="cb186-33"><a href="S12-automatic.html#cb186-33" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb186-34"><a href="S12-automatic.html#cb186-34" tabindex="-1"></a>        }</span>
+<span id="cb186-35"><a href="S12-automatic.html#cb186-35" tabindex="-1"></a>    }</span>
+<span id="cb186-36"><a href="S12-automatic.html#cb186-36" tabindex="-1"></a>}</span></code></pre></div>
 <p><strong>D.</strong> We already fitted all models with <span class="math inline">\(p-1\)</span> inputs, when we computed <code>phi</code>.
 Since we sorted the models, the best of these models is last in the list.
 This covers the case <span class="math inline">\(q = p - 1\)</span>.</p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="S12-automatic.html#cb182-1" tabindex="-1"></a>best.rss[(p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">min</span>(phi)</span>
-<span id="cb182-2"><a href="S12-automatic.html#cb182-2" tabindex="-1"></a>omitted <span class="ot">&lt;-</span> jj[<span class="fu">length</span>(jj)]</span>
-<span id="cb182-3"><a href="S12-automatic.html#cb182-3" tabindex="-1"></a>best.model[[(p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span>p)[<span class="sc">-</span>omitted]</span>
-<span id="cb182-4"><a href="S12-automatic.html#cb182-4" tabindex="-1"></a>count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="fu">length</span>(phi)</span></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="S12-automatic.html#cb187-1" tabindex="-1"></a>best.rss[(p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">min</span>(phi)</span>
+<span id="cb187-2"><a href="S12-automatic.html#cb187-2" tabindex="-1"></a>omitted <span class="ot">&lt;-</span> jj[<span class="fu">length</span>(jj)]</span>
+<span id="cb187-3"><a href="S12-automatic.html#cb187-3" tabindex="-1"></a>best.model[[(p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span>p)[<span class="sc">-</span>omitted]</span>
+<span id="cb187-4"><a href="S12-automatic.html#cb187-4" tabindex="-1"></a>count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="fu">length</span>(phi)</span></code></pre></div>
 <p><strong>E.</strong> Finally, for <span class="math inline">\(q = p\)</span> we fit the full model:</p>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="S12-automatic.html#cb183-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X)</span>
-<span id="cb183-2"><a href="S12-automatic.html#cb183-2" tabindex="-1"></a>best.rss[p <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb183-3"><a href="S12-automatic.html#cb183-3" tabindex="-1"></a>best.model[[p <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>p</span>
-<span id="cb183-4"><a href="S12-automatic.html#cb183-4" tabindex="-1"></a>count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="S12-automatic.html#cb188-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X)</span>
+<span id="cb188-2"><a href="S12-automatic.html#cb188-2" tabindex="-1"></a>best.rss[p <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb188-3"><a href="S12-automatic.html#cb188-3" tabindex="-1"></a>best.model[[p <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>p</span>
+<span id="cb188-4"><a href="S12-automatic.html#cb188-4" tabindex="-1"></a>count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div>
 <p><strong>F.</strong> Now we can find the model with the best <span class="math inline">\(R^2_\mathrm{adj}\)</span>:</p>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="S12-automatic.html#cb184-1" tabindex="-1"></a><span class="fu">plot</span>(all.q, best.rss <span class="sc">/</span> (n <span class="sc">-</span> all.q <span class="sc">-</span> <span class="dv">1</span>),</span>
-<span id="cb184-2"><a href="S12-automatic.html#cb184-2" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;q&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residual variance&quot;</span>)</span>
-<span id="cb184-3"><a href="S12-automatic.html#cb184-3" tabindex="-1"></a>best.q <span class="ot">&lt;-</span> all.q[<span class="fu">which.min</span>(best.rss <span class="sc">/</span> (n <span class="sc">-</span> all.q <span class="sc">-</span> <span class="dv">1</span>))]</span>
-<span id="cb184-4"><a href="S12-automatic.html#cb184-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.q)</span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="S12-automatic.html#cb189-1" tabindex="-1"></a><span class="fu">plot</span>(all.q, best.rss <span class="sc">/</span> (n <span class="sc">-</span> all.q <span class="sc">-</span> <span class="dv">1</span>),</span>
+<span id="cb189-2"><a href="S12-automatic.html#cb189-2" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;q&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residual variance&quot;</span>)</span>
+<span id="cb189-3"><a href="S12-automatic.html#cb189-3" tabindex="-1"></a>best.q <span class="ot">&lt;-</span> all.q[<span class="fu">which.min</span>(best.rss <span class="sc">/</span> (n <span class="sc">-</span> all.q <span class="sc">-</span> <span class="dv">1</span>))]</span>
+<span id="cb189-4"><a href="S12-automatic.html#cb189-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.q)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/exhaustiveB-1.png" width="672" /></p>
 <p>We see that the model with <span class="math inline">\(q = 6\)</span> variables has the the
 lowest <span class="math inline">\(\hat\sigma^2\)</span> and thus the highest <span class="math inline">\(R^2_\mathrm{adj}\)</span>.
 The values for <span class="math inline">\(q = 7\)</span> and <span class="math inline">\(q = 8\)</span> are very close to
 optimal. The best model uses the following variables:</p>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="S12-automatic.html#cb185-1" tabindex="-1"></a><span class="fu">colnames</span>(X)[best.model[[<span class="dv">6</span> <span class="sc">+</span> <span class="dv">1</span>]]]</span></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="S12-automatic.html#cb190-1" tabindex="-1"></a><span class="fu">colnames</span>(X)[best.model[[<span class="dv">6</span> <span class="sc">+</span> <span class="dv">1</span>]]]</span></code></pre></div>
 <pre class="rOutput"><code>[1] &quot;TPSA&quot;   &quot;SAacc&quot;  &quot;MLOGP&quot;  &quot;nN&quot;     &quot;RDCHI&quot;  &quot;GATS1p&quot;</code></pre>
 <p>We can fit the optimal model from the original data:</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="S12-automatic.html#cb187-1" tabindex="-1"></a>m.best <span class="ot">&lt;-</span> <span class="fu">lm</span>(LC50 <span class="sc">~</span> TPSA <span class="sc">+</span> SAacc <span class="sc">+</span> MLOGP <span class="sc">+</span> nN <span class="sc">+</span> RDCHI <span class="sc">+</span> GATS1p,</span>
-<span id="cb187-2"><a href="S12-automatic.html#cb187-2" tabindex="-1"></a>             <span class="at">data =</span> qsar)</span>
-<span id="cb187-3"><a href="S12-automatic.html#cb187-3" tabindex="-1"></a><span class="fu">summary</span>(m.best)</span></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="S12-automatic.html#cb192-1" tabindex="-1"></a>m.best <span class="ot">&lt;-</span> <span class="fu">lm</span>(LC50 <span class="sc">~</span> TPSA <span class="sc">+</span> SAacc <span class="sc">+</span> MLOGP <span class="sc">+</span> nN <span class="sc">+</span> RDCHI <span class="sc">+</span> GATS1p,</span>
+<span id="cb192-2"><a href="S12-automatic.html#cb192-2" tabindex="-1"></a>             <span class="at">data =</span> qsar)</span>
+<span id="cb192-3"><a href="S12-automatic.html#cb192-3" tabindex="-1"></a><span class="fu">summary</span>(m.best)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = LC50 ~ TPSA + SAacc + MLOGP + nN + RDCHI + GATS1p, 
@@ -708,20 +713,20 @@ F-statistic: 84.82 on 6 and 539 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>This shows that <span class="math inline">\(R^2_\mathrm{adj}\)</span> has indeed marginally improved,
 from <span class="math inline">\(0.4785\)</span> to <span class="math inline">\(0.4799\)</span></p>
 <p>To conclude, we check that the complicated algorithm indeed saved some work:</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="S12-automatic.html#cb189-1" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">^</span>p</span>
-<span id="cb189-2"><a href="S12-automatic.html#cb189-2" tabindex="-1"></a><span class="fu">cat</span>(count,</span>
-<span id="cb189-3"><a href="S12-automatic.html#cb189-3" tabindex="-1"></a>    <span class="st">&quot; models fitted (&quot;</span>, <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> count <span class="sc">/</span> total, <span class="dv">1</span>), <span class="st">&quot;%)</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
-<span id="cb189-4"><a href="S12-automatic.html#cb189-4" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="S12-automatic.html#cb194-1" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">^</span>p</span>
+<span id="cb194-2"><a href="S12-automatic.html#cb194-2" tabindex="-1"></a><span class="fu">cat</span>(count,</span>
+<span id="cb194-3"><a href="S12-automatic.html#cb194-3" tabindex="-1"></a>    <span class="st">&quot; models fitted (&quot;</span>, <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> count <span class="sc">/</span> total, <span class="dv">1</span>), <span class="st">&quot;%)</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb194-4"><a href="S12-automatic.html#cb194-4" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
 <pre class="rOutput"><code>88 models fitted (34.4%)</code></pre>
 <p>This shows that we only needed to fit 88 of the 256 models under consideration.</p>
 </div>
 <div class="example">
 <p><span id="exm:unlabeled-div-43" class="example"><strong>Example 12.2  </strong></span>We can perform the analysis from the previous example automatically,
 using the function <code>regsubsets()</code> from the <code>leaps</code> package:</p>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="S12-automatic.html#cb191-1" tabindex="-1"></a><span class="fu">library</span>(leaps)</span>
-<span id="cb191-2"><a href="S12-automatic.html#cb191-2" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar,</span>
-<span id="cb191-3"><a href="S12-automatic.html#cb191-3" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;exhaustive&quot;</span>)</span>
-<span id="cb191-4"><a href="S12-automatic.html#cb191-4" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="S12-automatic.html#cb196-1" tabindex="-1"></a><span class="fu">library</span>(leaps)</span>
+<span id="cb196-2"><a href="S12-automatic.html#cb196-2" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar,</span>
+<span id="cb196-3"><a href="S12-automatic.html#cb196-3" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;exhaustive&quot;</span>)</span>
+<span id="cb196-4"><a href="S12-automatic.html#cb196-4" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>Subset selection object
 Call: regsubsets.formula(LC50 ~ ., data = qsar, method = &quot;exhaustive&quot;)
 8 Variables  (and intercept)
@@ -748,7 +753,7 @@ Selection Algorithm: exhaustive
 <p>This shows the best model of each size. The only step left is
 to decide which <span class="math inline">\(q\)</span> to use. This choice depends on the cost-complexity
 tradeoff. Here we consider <span class="math inline">\(R^2_\mathrm{adj}\)</span> again:</p>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="S12-automatic.html#cb193-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(m)<span class="sc">$</span>adjr2, <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="S12-automatic.html#cb198-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(m)<span class="sc">$</span>adjr2, <span class="dv">4</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 0.2855 0.3860 0.4441 0.4588 0.4666 0.4799 0.4795 0.4785</code></pre>
 <p>This gives the <span class="math inline">\(R^2_\mathrm{adj}\)</span> for the optimal model of each size
 again. At the end of the list we recognise the values <code>0.4799</code> and

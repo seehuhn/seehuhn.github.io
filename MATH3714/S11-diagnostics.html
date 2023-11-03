@@ -248,7 +248,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.1" data-path="S08-influence.html"><a href="S08-influence.html#deleting"><i class="fa fa-check"></i><b>8.1</b> Deleting Observations</a></li>
 <li class="chapter" data-level="8.2" data-path="S08-influence.html"><a href="S08-influence.html#influence"><i class="fa fa-check"></i><b>8.2</b> Cook’s Distance</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a></li>
+<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-plots.html"><a href="S09-plots.html#residual-plots"><i class="fa fa-check"></i><b>9.1</b> Residual Plots</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-plots.html"><a href="S09-plots.html#q-q-plots"><i class="fa fa-check"></i><b>9.2</b> Q-Q Plots</a></li>
+<li class="chapter" data-level="9.3" data-path="S09-plots.html"><a href="S09-plots.html#other-plot-types"><i class="fa fa-check"></i><b>9.3</b> Other Plot Types</a></li>
+</ul></li>
 <li class="chapter" data-level="10" data-path="S10-improving.html"><a href="S10-improving.html"><i class="fa fa-check"></i><b>10</b> Improving the Model Fit</a>
 <ul>
 <li class="chapter" data-level="10.1" data-path="S10-improving.html"><a href="S10-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>10.1</b> Linearising the Mean</a></li>
@@ -528,13 +533,13 @@ and thus often indicates good model fit.</p>
 <div class="example">
 <p><span id="exm:unlabeled-div-39" class="example"><strong>Example 11.1  </strong></span>We can easily compute the <span class="math inline">\(R^2\)</span> value for the <code>stackloss</code> dataset
 manually:</p>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="S11-diagnostics.html#cb161-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
-<span id="cb161-2"><a href="S11-diagnostics.html#cb161-2" tabindex="-1"></a>R.squared <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">var</span>(<span class="fu">resid</span>(m)) <span class="sc">/</span> <span class="fu">var</span>(stackloss<span class="sc">$</span>stack.loss)</span>
-<span id="cb161-3"><a href="S11-diagnostics.html#cb161-3" tabindex="-1"></a>R.squared</span></code></pre></div>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="S11-diagnostics.html#cb166-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb166-2"><a href="S11-diagnostics.html#cb166-2" tabindex="-1"></a>R.squared <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">var</span>(<span class="fu">resid</span>(m)) <span class="sc">/</span> <span class="fu">var</span>(stackloss<span class="sc">$</span>stack.loss)</span>
+<span id="cb166-3"><a href="S11-diagnostics.html#cb166-3" tabindex="-1"></a>R.squared</span></code></pre></div>
 <pre class="rOutput"><code>[1] 0.9135769</code></pre>
 <p>We can also find this value near the bottom of the output of
 <code>summary(m)</code>, listed as <code>Multiple R-squared</code>:</p>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="S11-diagnostics.html#cb163-1" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="S11-diagnostics.html#cb168-1" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = stack.loss ~ ., data = stackloss)
@@ -573,19 +578,19 @@ attempt to compensate for this effect is the adjusted <span class="math inline">
 <div class="example">
 <p><span id="exm:unlabeled-div-40" class="example"><strong>Example 11.2  </strong></span>The adjusted <span class="math inline">\(R^2\)</span> value for the stackloss dataset
 can be found as follows:</p>
-<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="S11-diagnostics.html#cb165-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(stackloss)</span>
-<span id="cb165-2"><a href="S11-diagnostics.html#cb165-2" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(stackloss) <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb165-3"><a href="S11-diagnostics.html#cb165-3" tabindex="-1"></a>R.squared.adj <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> R.squared)</span>
-<span id="cb165-4"><a href="S11-diagnostics.html#cb165-4" tabindex="-1"></a>R.squared.adj</span></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="S11-diagnostics.html#cb170-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(stackloss)</span>
+<span id="cb170-2"><a href="S11-diagnostics.html#cb170-2" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(stackloss) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb170-3"><a href="S11-diagnostics.html#cb170-3" tabindex="-1"></a>R.squared.adj <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> R.squared)</span>
+<span id="cb170-4"><a href="S11-diagnostics.html#cb170-4" tabindex="-1"></a>R.squared.adj</span></code></pre></div>
 <pre class="rOutput"><code>[1] 0.8983258</code></pre>
 <p>We can also find this value near the bottom of the output of
 <code>summary(m)</code>, listed as <code>Adjusted R-squared</code>.</p>
 </div>
 <div class="example">
-<p><span id="exm:unlabeled-div-41" class="example"><strong>Example 11.3  </strong></span>As suggested in example <a href="S09-plots.html#exm:stackloss-plot">9.1</a>, we may want to
+<p><span id="exm:unlabeled-div-41" class="example"><strong>Example 11.3  </strong></span>As suggested in example <a href="S09-plots.html#exm:stackloss-plot">9.7</a>, we may want to
 include a new quadratic term in the stackloss dataset:</p>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="S11-diagnostics.html#cb167-1" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> . <span class="sc">+</span> <span class="fu">I</span>(Water.Temp<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> stackloss)</span>
-<span id="cb167-2"><a href="S11-diagnostics.html#cb167-2" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="S11-diagnostics.html#cb172-1" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> . <span class="sc">+</span> <span class="fu">I</span>(Water.Temp<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> stackloss)</span>
+<span id="cb172-2"><a href="S11-diagnostics.html#cb172-2" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = stack.loss ~ . + I(Water.Temp^2), data = stackloss)
@@ -726,6 +731,14 @@ Thus we get
    &amp;= 2q + n \log\bigl( 2\pi r(\hat\beta) / n \bigr) + n \\
    &amp;= 2q + n \log\bigl( \|\hat\varepsilon\|^2 \bigr) + n + n \log( 2\pi / n ).
 \end{align*}\]</span></p>
+<div class="mysummary">
+<p><strong>Summary</strong></p>
+<ul>
+<li>The <span class="math inline">\(R^2\)</span> value is a numerical measure of the goodness of fit of a model.</li>
+<li>If models with different numbers of variables are compared,
+<span class="math inline">\(R^2_\mathrm{adj}\)</span> should be used instead of <span class="math inline">\(R^2\)</span>.</li>
+</ul>
+</div>
 
 </div>
 </div>

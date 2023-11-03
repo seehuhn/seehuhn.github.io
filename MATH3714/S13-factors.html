@@ -248,7 +248,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.1" data-path="S08-influence.html"><a href="S08-influence.html#deleting"><i class="fa fa-check"></i><b>8.1</b> Deleting Observations</a></li>
 <li class="chapter" data-level="8.2" data-path="S08-influence.html"><a href="S08-influence.html#influence"><i class="fa fa-check"></i><b>8.2</b> Cook’s Distance</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a></li>
+<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-plots.html"><a href="S09-plots.html#residual-plots"><i class="fa fa-check"></i><b>9.1</b> Residual Plots</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-plots.html"><a href="S09-plots.html#q-q-plots"><i class="fa fa-check"></i><b>9.2</b> Q-Q Plots</a></li>
+<li class="chapter" data-level="9.3" data-path="S09-plots.html"><a href="S09-plots.html#other-plot-types"><i class="fa fa-check"></i><b>9.3</b> Other Plot Types</a></li>
+</ul></li>
 <li class="chapter" data-level="10" data-path="S10-improving.html"><a href="S10-improving.html"><i class="fa fa-check"></i><b>10</b> Improving the Model Fit</a>
 <ul>
 <li class="chapter" data-level="10.1" data-path="S10-improving.html"><a href="S10-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>10.1</b> Linearising the Mean</a></li>
@@ -500,25 +505,25 @@ In the simulated data we have two groups, one which has been “treated”
 and a control group. There is a “value” which decreases with age,
 and is lower for the group which has been treated (the intercept is 10
 instead of 12).</p>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="S13-factors.html#cb195-1" tabindex="-1"></a>age1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">18</span>, <span class="dv">40</span>)</span>
-<span id="cb195-2"><a href="S13-factors.html#cb195-2" tabindex="-1"></a>group1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb195-3"><a href="S13-factors.html#cb195-3" tabindex="-1"></a>    <span class="at">value=</span><span class="dv">10</span> <span class="sc">-</span> <span class="fl">0.2</span> <span class="sc">*</span> age1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd=</span><span class="fl">0.5</span>),</span>
-<span id="cb195-4"><a href="S13-factors.html#cb195-4" tabindex="-1"></a>    <span class="at">age=</span>age1,</span>
-<span id="cb195-5"><a href="S13-factors.html#cb195-5" tabindex="-1"></a>    <span class="at">treated=</span><span class="st">&quot;yes&quot;</span>)</span>
-<span id="cb195-6"><a href="S13-factors.html#cb195-6" tabindex="-1"></a>age2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">18</span>, <span class="dv">80</span>)</span>
-<span id="cb195-7"><a href="S13-factors.html#cb195-7" tabindex="-1"></a>group2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb195-8"><a href="S13-factors.html#cb195-8" tabindex="-1"></a>    <span class="at">value=</span><span class="dv">12</span> <span class="sc">-</span> <span class="fl">0.2</span> <span class="sc">*</span> age2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd=</span><span class="fl">0.5</span>),</span>
-<span id="cb195-9"><a href="S13-factors.html#cb195-9" tabindex="-1"></a>    <span class="at">age=</span>age2,</span>
-<span id="cb195-10"><a href="S13-factors.html#cb195-10" tabindex="-1"></a>    <span class="at">treated=</span><span class="st">&quot;no&quot;</span>)</span>
-<span id="cb195-11"><a href="S13-factors.html#cb195-11" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(group1, group2)</span>
-<span id="cb195-12"><a href="S13-factors.html#cb195-12" tabindex="-1"></a></span>
-<span id="cb195-13"><a href="S13-factors.html#cb195-13" tabindex="-1"></a>data<span class="sc">$</span>treated <span class="ot">&lt;-</span> <span class="fu">factor</span>(data<span class="sc">$</span>treated, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;no&quot;</span>, <span class="st">&quot;yes&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="S13-factors.html#cb200-1" tabindex="-1"></a>age1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">18</span>, <span class="dv">40</span>)</span>
+<span id="cb200-2"><a href="S13-factors.html#cb200-2" tabindex="-1"></a>group1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb200-3"><a href="S13-factors.html#cb200-3" tabindex="-1"></a>    <span class="at">value=</span><span class="dv">10</span> <span class="sc">-</span> <span class="fl">0.2</span> <span class="sc">*</span> age1 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd=</span><span class="fl">0.5</span>),</span>
+<span id="cb200-4"><a href="S13-factors.html#cb200-4" tabindex="-1"></a>    <span class="at">age=</span>age1,</span>
+<span id="cb200-5"><a href="S13-factors.html#cb200-5" tabindex="-1"></a>    <span class="at">treated=</span><span class="st">&quot;yes&quot;</span>)</span>
+<span id="cb200-6"><a href="S13-factors.html#cb200-6" tabindex="-1"></a>age2 <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">18</span>, <span class="dv">80</span>)</span>
+<span id="cb200-7"><a href="S13-factors.html#cb200-7" tabindex="-1"></a>group2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb200-8"><a href="S13-factors.html#cb200-8" tabindex="-1"></a>    <span class="at">value=</span><span class="dv">12</span> <span class="sc">-</span> <span class="fl">0.2</span> <span class="sc">*</span> age2 <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd=</span><span class="fl">0.5</span>),</span>
+<span id="cb200-9"><a href="S13-factors.html#cb200-9" tabindex="-1"></a>    <span class="at">age=</span>age2,</span>
+<span id="cb200-10"><a href="S13-factors.html#cb200-10" tabindex="-1"></a>    <span class="at">treated=</span><span class="st">&quot;no&quot;</span>)</span>
+<span id="cb200-11"><a href="S13-factors.html#cb200-11" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(group1, group2)</span>
+<span id="cb200-12"><a href="S13-factors.html#cb200-12" tabindex="-1"></a></span>
+<span id="cb200-13"><a href="S13-factors.html#cb200-13" tabindex="-1"></a>data<span class="sc">$</span>treated <span class="ot">&lt;-</span> <span class="fu">factor</span>(data<span class="sc">$</span>treated, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;no&quot;</span>, <span class="st">&quot;yes&quot;</span>))</span></code></pre></div>
 <p>The last line of the code tells R explicitely that the <code>treated</code> column
 represents a factor with levels “no” and “yes”. Internally, this column will
 now be represented by numbers 1 (for “no”) and 2 (for “yes”), but this numeric representation
 is mostly hidden from the user. Now we fit a regression model:</p>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="S13-factors.html#cb196-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(value <span class="sc">~</span> ., <span class="at">data =</span> data)</span>
-<span id="cb196-2"><a href="S13-factors.html#cb196-2" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="S13-factors.html#cb201-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(value <span class="sc">~</span> ., <span class="at">data =</span> data)</span>
+<span id="cb201-2"><a href="S13-factors.html#cb201-2" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = value ~ ., data = data)
@@ -554,24 +559,24 @@ for this model are
 <p>To get a better
 idea of the model fit, we plot the data together with
 separate regression lines for “yes” (red) and “no” (black):</p>
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="S13-factors.html#cb198-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb198-2"><a href="S13-factors.html#cb198-2" tabindex="-1"></a><span class="fu">plot</span>(value <span class="sc">~</span> age, <span class="at">data =</span> data,</span>
-<span id="cb198-3"><a href="S13-factors.html#cb198-3" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">ifelse</span>(treated <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>))</span>
-<span id="cb198-4"><a href="S13-factors.html#cb198-4" tabindex="-1"></a></span>
-<span id="cb198-5"><a href="S13-factors.html#cb198-5" tabindex="-1"></a><span class="co"># regression line for the reference level `treatment == &quot;no&quot;`</span></span>
-<span id="cb198-6"><a href="S13-factors.html#cb198-6" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>])</span>
-<span id="cb198-7"><a href="S13-factors.html#cb198-7" tabindex="-1"></a></span>
-<span id="cb198-8"><a href="S13-factors.html#cb198-8" tabindex="-1"></a><span class="co"># regression line for the level `treatment = &quot;yes&quot;`:</span></span>
-<span id="cb198-9"><a href="S13-factors.html#cb198-9" tabindex="-1"></a><span class="co"># here we need to add the coefficient for `treatedyes`</span></span>
-<span id="cb198-10"><a href="S13-factors.html#cb198-10" tabindex="-1"></a><span class="co"># to the intercept</span></span>
-<span id="cb198-11"><a href="S13-factors.html#cb198-11" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(m)[<span class="dv">3</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>], <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
-<span id="cb198-12"><a href="S13-factors.html#cb198-12" tabindex="-1"></a></span>
-<span id="cb198-13"><a href="S13-factors.html#cb198-13" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;no&quot;</span>, <span class="st">&quot;yes&quot;</span>),</span>
-<span id="cb198-14"><a href="S13-factors.html#cb198-14" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb198-15"><a href="S13-factors.html#cb198-15" tabindex="-1"></a></span>
-<span id="cb198-16"><a href="S13-factors.html#cb198-16" tabindex="-1"></a><span class="co"># also show a boxplot for comparison</span></span>
-<span id="cb198-17"><a href="S13-factors.html#cb198-17" tabindex="-1"></a><span class="fu">boxplot</span>(value <span class="sc">~</span> treated, <span class="at">data =</span> data,</span>
-<span id="cb198-18"><a href="S13-factors.html#cb198-18" tabindex="-1"></a>        <span class="at">border =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="S13-factors.html#cb203-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb203-2"><a href="S13-factors.html#cb203-2" tabindex="-1"></a><span class="fu">plot</span>(value <span class="sc">~</span> age, <span class="at">data =</span> data,</span>
+<span id="cb203-3"><a href="S13-factors.html#cb203-3" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">ifelse</span>(treated <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>))</span>
+<span id="cb203-4"><a href="S13-factors.html#cb203-4" tabindex="-1"></a></span>
+<span id="cb203-5"><a href="S13-factors.html#cb203-5" tabindex="-1"></a><span class="co"># regression line for the reference level `treatment == &quot;no&quot;`</span></span>
+<span id="cb203-6"><a href="S13-factors.html#cb203-6" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>])</span>
+<span id="cb203-7"><a href="S13-factors.html#cb203-7" tabindex="-1"></a></span>
+<span id="cb203-8"><a href="S13-factors.html#cb203-8" tabindex="-1"></a><span class="co"># regression line for the level `treatment = &quot;yes&quot;`:</span></span>
+<span id="cb203-9"><a href="S13-factors.html#cb203-9" tabindex="-1"></a><span class="co"># here we need to add the coefficient for `treatedyes`</span></span>
+<span id="cb203-10"><a href="S13-factors.html#cb203-10" tabindex="-1"></a><span class="co"># to the intercept</span></span>
+<span id="cb203-11"><a href="S13-factors.html#cb203-11" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(m)[<span class="dv">3</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>], <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb203-12"><a href="S13-factors.html#cb203-12" tabindex="-1"></a></span>
+<span id="cb203-13"><a href="S13-factors.html#cb203-13" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;no&quot;</span>, <span class="st">&quot;yes&quot;</span>),</span>
+<span id="cb203-14"><a href="S13-factors.html#cb203-14" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb203-15"><a href="S13-factors.html#cb203-15" tabindex="-1"></a></span>
+<span id="cb203-16"><a href="S13-factors.html#cb203-16" tabindex="-1"></a><span class="co"># also show a boxplot for comparison</span></span>
+<span id="cb203-17"><a href="S13-factors.html#cb203-17" tabindex="-1"></a><span class="fu">boxplot</span>(value <span class="sc">~</span> treated, <span class="at">data =</span> data,</span>
+<span id="cb203-18"><a href="S13-factors.html#cb203-18" tabindex="-1"></a>        <span class="at">border =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/factors-1.png" width="672" /></p>
 <p>We can see that the two regression lines, corresponding to the two levels
 are parallel. They have the same slope but different intercepts.</p>
@@ -610,12 +615,12 @@ interaction term in a backward variable selection procedure whilst the main
 effects are also included.</p>
 <div class="example">
 <p><span id="exm:unlabeled-div-46" class="example"><strong>Example 13.3  </strong></span>Consider the following toy dataset:</p>
-<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="S13-factors.html#cb199-1" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
-<span id="cb199-2"><a href="S13-factors.html#cb199-2" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span></span></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="S13-factors.html#cb204-1" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb204-2"><a href="S13-factors.html#cb204-2" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span></span></code></pre></div>
 <p>In <code>lm()</code> and related functions we can write <code>x1:x2</code> as a shorthand
 for <code>I(x1*x2)</code>. The column <code>x1:x2</code> in the R output corresponds
 to the mathematical expression <span class="math inline">\(x_1 x_2\)</span>.</p>
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="S13-factors.html#cb200-1" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> x1 <span class="sc">+</span> x1<span class="sc">:</span>x2)</span></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="S13-factors.html#cb205-1" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> x1 <span class="sc">+</span> x1<span class="sc">:</span>x2)</span></code></pre></div>
 <pre class="rOutput"><code>  (Intercept) x1 x1:x2
 1           1  2     2
 2           1  2     4
@@ -624,7 +629,7 @@ attr(,&quot;assign&quot;)
 [1] 0 1 2</code></pre>
 <p>We can write <code>x1*x2</code> as a shorthand for the model with the
 three terms <code>x1 + x2 + x1:x2</code>:</p>
-<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="S13-factors.html#cb202-1" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> x1<span class="sc">*</span>x2)</span></code></pre></div>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="S13-factors.html#cb207-1" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> x1<span class="sc">*</span>x2)</span></code></pre></div>
 <pre class="rOutput"><code>  (Intercept) x1 x2 x1:x2
 1           1  2  1     2
 2           1  2  2     4
@@ -646,22 +651,22 @@ will be positively correlated with temperature, whereas for low rainfall the
 correlation may be slightly negative, because in hot weather, plants need more
 water, and if it is very hot and dry, the plants may even die.</p>
 <p>We generate a toy dataset in R to represent such a situation:</p>
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="S13-factors.html#cb204-1" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">15</span>, <span class="dv">35</span>)</span>
-<span id="cb204-2"><a href="S13-factors.html#cb204-2" tabindex="-1"></a>wet <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb204-3"><a href="S13-factors.html#cb204-3" tabindex="-1"></a>    <span class="at">yield=</span><span class="dv">40</span> <span class="sc">+</span> <span class="dv">7</span><span class="sc">*</span>T <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd =</span> <span class="dv">10</span>),</span>
-<span id="cb204-4"><a href="S13-factors.html#cb204-4" tabindex="-1"></a>    <span class="at">temperature=</span>T,</span>
-<span id="cb204-5"><a href="S13-factors.html#cb204-5" tabindex="-1"></a>    <span class="at">rainfall=</span><span class="st">&quot;high&quot;</span>)</span>
-<span id="cb204-6"><a href="S13-factors.html#cb204-6" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">15</span>, <span class="dv">35</span>)</span>
-<span id="cb204-7"><a href="S13-factors.html#cb204-7" tabindex="-1"></a>dry <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb204-8"><a href="S13-factors.html#cb204-8" tabindex="-1"></a>    <span class="at">yield=</span><span class="dv">120</span> <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>T <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd =</span> <span class="dv">10</span>),</span>
-<span id="cb204-9"><a href="S13-factors.html#cb204-9" tabindex="-1"></a>    <span class="at">temperature=</span>T,</span>
-<span id="cb204-10"><a href="S13-factors.html#cb204-10" tabindex="-1"></a>    <span class="at">rainfall=</span><span class="st">&quot;low&quot;</span>)</span>
-<span id="cb204-11"><a href="S13-factors.html#cb204-11" tabindex="-1"></a>crops <span class="ot">&lt;-</span> <span class="fu">rbind</span>(wet, dry)</span>
-<span id="cb204-12"><a href="S13-factors.html#cb204-12" tabindex="-1"></a>crops<span class="sc">$</span>rainfall <span class="ot">&lt;-</span> <span class="fu">factor</span>(crops<span class="sc">$</span>rainfall, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;low&quot;</span>, <span class="st">&quot;high&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="S13-factors.html#cb209-1" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">15</span>, <span class="dv">35</span>)</span>
+<span id="cb209-2"><a href="S13-factors.html#cb209-2" tabindex="-1"></a>wet <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb209-3"><a href="S13-factors.html#cb209-3" tabindex="-1"></a>    <span class="at">yield=</span><span class="dv">40</span> <span class="sc">+</span> <span class="dv">7</span><span class="sc">*</span>T <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd =</span> <span class="dv">10</span>),</span>
+<span id="cb209-4"><a href="S13-factors.html#cb209-4" tabindex="-1"></a>    <span class="at">temperature=</span>T,</span>
+<span id="cb209-5"><a href="S13-factors.html#cb209-5" tabindex="-1"></a>    <span class="at">rainfall=</span><span class="st">&quot;high&quot;</span>)</span>
+<span id="cb209-6"><a href="S13-factors.html#cb209-6" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">25</span>, <span class="dv">15</span>, <span class="dv">35</span>)</span>
+<span id="cb209-7"><a href="S13-factors.html#cb209-7" tabindex="-1"></a>dry <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb209-8"><a href="S13-factors.html#cb209-8" tabindex="-1"></a>    <span class="at">yield=</span><span class="dv">120</span> <span class="sc">-</span> <span class="dv">2</span><span class="sc">*</span>T <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">sd =</span> <span class="dv">10</span>),</span>
+<span id="cb209-9"><a href="S13-factors.html#cb209-9" tabindex="-1"></a>    <span class="at">temperature=</span>T,</span>
+<span id="cb209-10"><a href="S13-factors.html#cb209-10" tabindex="-1"></a>    <span class="at">rainfall=</span><span class="st">&quot;low&quot;</span>)</span>
+<span id="cb209-11"><a href="S13-factors.html#cb209-11" tabindex="-1"></a>crops <span class="ot">&lt;-</span> <span class="fu">rbind</span>(wet, dry)</span>
+<span id="cb209-12"><a href="S13-factors.html#cb209-12" tabindex="-1"></a>crops<span class="sc">$</span>rainfall <span class="ot">&lt;-</span> <span class="fu">factor</span>(crops<span class="sc">$</span>rainfall, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;low&quot;</span>, <span class="st">&quot;high&quot;</span>))</span></code></pre></div>
 <p>Now we fit a model, including <code>temperature</code>, <code>rainfall</code> and
 an interaction term:</p>
-<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="S13-factors.html#cb205-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(yield <span class="sc">~</span> temperature<span class="sc">*</span>rainfall, <span class="at">data =</span> crops)</span>
-<span id="cb205-2"><a href="S13-factors.html#cb205-2" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="S13-factors.html#cb210-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(yield <span class="sc">~</span> temperature<span class="sc">*</span>rainfall, <span class="at">data =</span> crops)</span>
+<span id="cb210-2"><a href="S13-factors.html#cb210-2" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = yield ~ temperature * rainfall, data = crops)
@@ -692,13 +697,13 @@ F-statistic: 923.8 on 3 and 46 DF,  p-value: &lt; 2.2e-16</code></pre>
 \end{equation*}\]</span>
 Finally, we can generate a plot of the data together
 with the two regression lines.</p>
-<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="S13-factors.html#cb207-1" tabindex="-1"></a><span class="fu">plot</span>(yield <span class="sc">~</span> temperature, <span class="at">data=</span>crops,</span>
-<span id="cb207-2"><a href="S13-factors.html#cb207-2" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">ifelse</span>(rainfall <span class="sc">==</span> <span class="st">&quot;low&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>))</span>
-<span id="cb207-3"><a href="S13-factors.html#cb207-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>])</span>
-<span id="cb207-4"><a href="S13-factors.html#cb207-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(m)[<span class="dv">3</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>] <span class="sc">+</span> <span class="fu">coef</span>(m)[<span class="dv">4</span>],</span>
-<span id="cb207-5"><a href="S13-factors.html#cb207-5" tabindex="-1"></a>       <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
-<span id="cb207-6"><a href="S13-factors.html#cb207-6" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;dry&quot;</span>, <span class="st">&quot;wet&quot;</span>),</span>
-<span id="cb207-7"><a href="S13-factors.html#cb207-7" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">pch =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="S13-factors.html#cb212-1" tabindex="-1"></a><span class="fu">plot</span>(yield <span class="sc">~</span> temperature, <span class="at">data=</span>crops,</span>
+<span id="cb212-2"><a href="S13-factors.html#cb212-2" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">ifelse</span>(rainfall <span class="sc">==</span> <span class="st">&quot;low&quot;</span>, <span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>))</span>
+<span id="cb212-3"><a href="S13-factors.html#cb212-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>])</span>
+<span id="cb212-4"><a href="S13-factors.html#cb212-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="fu">coef</span>(m)[<span class="dv">1</span>] <span class="sc">+</span> <span class="fu">coef</span>(m)[<span class="dv">3</span>], <span class="at">b =</span> <span class="fu">coef</span>(m)[<span class="dv">2</span>] <span class="sc">+</span> <span class="fu">coef</span>(m)[<span class="dv">4</span>],</span>
+<span id="cb212-5"><a href="S13-factors.html#cb212-5" tabindex="-1"></a>       <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb212-6"><a href="S13-factors.html#cb212-6" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;dry&quot;</span>, <span class="st">&quot;wet&quot;</span>),</span>
+<span id="cb212-7"><a href="S13-factors.html#cb212-7" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>), <span class="at">pch =</span> <span class="dv">1</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/interactions-1.png" width="672" /></p>
 <p>As expected, the two lines have different intercepts and different slopes.</p>
 </div>

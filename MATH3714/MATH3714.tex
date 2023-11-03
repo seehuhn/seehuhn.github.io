@@ -5118,101 +5118,7 @@ large.
 
 \section{Diagnostic Plots}\label{S09-plots}
 
-The regression model is often checked by examining the residuals. Various plots
-are used:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  A scatter plot of the response \(y\) against each of the explanatory
-  variables \(x_j\) for \(j \in \{1, \ldots, p\}\).
-\item
-  A scatter plot of \(\hat\varepsilon\) against each of the explanatory variables
-  \(x_j\) for \(j \in \{1, \ldots, p\}\).
-\item
-  A plot of \(\hat\varepsilon_i\) \emph{vs.} \(\hat y_i\). If the variance of the residuals
-  seems to increase with \(\hat y\) then a transformation may be necessary.
-  This type of plot is often called a ``residual plot''. The presence of a curvilinear
-  relationship (in this plot, or the ones above) suggests a higher-order term,
-  perhaps a quadratic in the explanatory variable, should be added to the
-  model, or possibly a transformation should be applied to the response
-  variable.
-\item
-  A \href{https://en.wikipedia.org/wiki/Q\%E2\%80\%93Q_plot}{Q-Q plot}
-  of the residuals can be used to assess whether the residuals are normally
-  distributed. These plots plot quantiles of the data against quantiles
-  of a normal distribution. If the residual are normally distributed,
-  the points in a Q-Q plot will approximately lie on a straight line.
-  The R
-  command to produce Q-Q plots for the normal distribution is \texttt{qqnorm()}.
-\item
-  Data are often collected in time order. Even if time is not an explanatory
-  variable, a plot of \(y\) \emph{vs.} time can be of interest. It can reveal
-  serial correlation in the data. Similarly, plotting the residuals \emph{vs.}
-  time.
-\item
-  A plot of \(x_j\) \emph{vs.} \(x_k\) for \(j\neq k\) can also be useful.
-  If two or more regressors are highly correlated, we say that
-  multicollinearity is present. When this occurs the least squares estimate
-  \(\hat\beta\) becomes numerically unstable. (We will learn more about this
-  effect in chapter~\ref{S15-multicoll}.)
-\end{enumerate}
-
-\begin{example}
-\protect\hypertarget{exm:stackloss-plot}{}\label{exm:stackloss-plot}An example for the first type of diagnostic plot would be to
-plot \texttt{stack.loss} against \texttt{Water.Temp} for the \texttt{stackloss} dataset:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(stackloss}\SpecialCharTok{$}\NormalTok{Water.Temp, stackloss}\SpecialCharTok{$}\NormalTok{stack.loss,}
-     \AttributeTok{xlab =} \StringTok{"water temperature"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Stack loss"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/stackloss-plot-1.pdf}
-
-Clearly the stack loss increases with water temperature, but the
-relationship may not be linear. It may make sense to include
-the square of the water temperature as an additional input variable
-in the model.
-\end{example}
-
-\begin{example}
-\protect\hypertarget{exm:stackloss-resid}{}\label{exm:stackloss-resid}To produce a ``residual plot'', we first need to fit a model to the data.
-For the \texttt{stackloss} dataset this can be done as follows:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m),}
-     \AttributeTok{xlab =} \StringTok{"fitted value"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residual"}\NormalTok{)}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{MATH3714_files/figure-latex/stackloss-resid-1.pdf}
-
-We can see that the residuals are clustered around zero as expected.
-Since there are no obvious patterns, the plot does not indicate any
-problems with model fit.
-\end{example}
-
-\textbf{Summary}
-
-\begin{itemize}
-\tightlist
-\item
-  Diagnostic plots can help to discover problems with model fit.
-\item
-  The \(R^2\) value is a numerical measure of the goodness of fit of a model.
-\item
-  If models with different numbers of variables are compared,
-  \(R^2_\mathrm{adj}\) should be used instead of \(R^2\).
-\end{itemize}
-
-\clearpage
-
-\section{Improving the Model Fit}\label{S10-improving}
+(The following video refers to an older version of this section.)
 
 When we developed the theory for linear models, we used the following
 assumptions:
@@ -5228,9 +5134,233 @@ assumptions:
   In particular, the variance of the \(\varepsilon_i\) does not depend on~\(i\).
 \end{itemize}
 
-The \hyperref[S09-plots]{diagnostic plots} introduced in section\\
-\ref{S09-plots} can often reveal if the data do not fit these modelling
-assumptions. In cases where the assumptions are violated, sometimes a linear
+Sometimes, plotting the data can reveal when these assumptions are violated.
+Here we discuss different plot types which can be used for this purpose.
+
+\subsection{Residual Plots}\label{residual-plots}
+
+A plot of \(\hat\varepsilon_i\) against \(\hat y_i\) is often called a ``residual plot''.
+If the modelling assuptions are correct, the errors will be independent
+and normally distributed with mean zero and constant variance. The fitted
+residuals are estimates of the errors, so they should approximately satisfy
+these two properties.
+
+If the variance of the residuals seems to increase with \(\hat y\) then a
+transformation may be necessary. The presence of a curvilinear relationship in
+this plot suggests a non-linear relationship between inputs and outputs.
+
+\begin{example}
+\protect\hypertarget{exm:correct-resid}{}\label{exm:correct-resid}To demonstrate the use of residual plots, we first produce such a plot
+for simulated data, where we know that the modelling assumptions are
+satisfied.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{50}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{, }\AttributeTok{length.out =}\NormalTok{ n)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \DecValTok{2} \SpecialCharTok{+} \FloatTok{0.5} \SpecialCharTok{*}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n)}
+
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m),}
+     \AttributeTok{xlab =} \StringTok{"fitted value"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residual"}\NormalTok{,}
+     \AttributeTok{main =} \StringTok{"modelling assumptions satisfied"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/correct-resid-1.pdf}
+
+We can see that the residuals are clustered around zero as expected.
+\end{example}
+
+\begin{example}
+\protect\hypertarget{exm:wrong-resid}{}\label{exm:wrong-resid}Next we consider a residual plot where the modelling assumptions
+are known to be violated. Here we generate data using a
+quadratic dependency (instead of linear) of the output on the input:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{50}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{, }\AttributeTok{length.out =}\NormalTok{ n)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \DecValTok{2} \SpecialCharTok{+} \FloatTok{0.5} \SpecialCharTok{*}\NormalTok{ x}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n)}
+
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m),}
+     \AttributeTok{xlab =} \StringTok{"fitted value"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residual"}\NormalTok{,}
+     \AttributeTok{main =} \StringTok{"modelling assumptions violated"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/wrong-resid-1.pdf}
+
+It is clear that the residuals are not centred around the horizontal
+zero line, but form a parabola instead.
+\end{example}
+
+The structure of the \(x\)-values can affect the visual appearance of this
+type of plot, even if the modelling assumptions are exactly satisfied.
+For example, if the \(x\)-values ``thin out'' towards the edges of the range,
+the ``band'' of residuals may appear narrower there, just because there
+are fewer chances for large residuals to occur near the edges.
+
+The following example shows a residual plot for real data, where it
+is unknown whether or not the modelling assumptions are satisfied.
+
+\begin{example}
+\protect\hypertarget{exm:stackloss-resid}{}\label{exm:stackloss-resid}A residual plot for the \texttt{stackloss} data set can be produced as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m),}
+     \AttributeTok{xlab =} \StringTok{"fitted value"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residual"}\NormalTok{,}
+     \AttributeTok{main =} \StringTok{"stackloss"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/stackloss-resid-1.pdf}
+
+We can see that the residuals are clustered around zero as expected.
+Since there are no obvious patterns, the plot does not indicate any
+problems with model fit.
+\end{example}
+
+\subsection{Q-Q Plots}\label{q-q-plots}
+
+A \href{https://en.wikipedia.org/wiki/Q\%E2\%80\%93Q_plot}{Q-Q plot} of the residuals
+can be used to assess whether the residuals are normally distributed. These
+plots plot quantiles of the data against quantiles of a normal distribution.
+If the residual are normally distributed, the points in a Q-Q plot will
+approximately lie on a straight line. The R command to produce Q-Q plots for
+the normal distribution is \texttt{qqnorm()}.
+
+\begin{example}
+\protect\hypertarget{exm:correct-qq-plot}{}\label{exm:correct-qq-plot}We first show an example with simulated data, where the modelling
+assumptions are known to be satisfied.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{50}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{, }\AttributeTok{length.out =}\NormalTok{ n)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \DecValTok{2} \SpecialCharTok{+} \FloatTok{0.5} \SpecialCharTok{*}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n)}
+
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m), }\AttributeTok{main =} \StringTok{"modelling assumptions satisfied"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/correct-qq-plot-1.pdf}
+
+As expected, the points lie approximately on a straight line.
+\end{example}
+
+\begin{example}
+\protect\hypertarget{exm:wrong-qq-plot}{}\label{exm:wrong-qq-plot}Next we consider an example where the errors are exponentially instead
+of normally distributed.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{50}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{, }\AttributeTok{length.out =}\NormalTok{ n)}
+\NormalTok{eps }\OtherTok{\textless{}{-}} \FunctionTok{rexp}\NormalTok{(n) }\SpecialCharTok{{-}} \DecValTok{1} \CommentTok{\# we subtract 1, so that the errors still have mean zero}
+\NormalTok{y }\OtherTok{\textless{}{-}} \DecValTok{2} \SpecialCharTok{+}\NormalTok{ x }\SpecialCharTok{+}\NormalTok{ eps}
+
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m), }\AttributeTok{main =} \StringTok{"modelling assumptions violated"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/wrong-qq-plot-1.pdf}
+
+Now the points of the Q-Q plot lie on a curved line, indicating that the
+residuals are not normally distributed.
+\end{example}
+
+\begin{example}
+\protect\hypertarget{exm:stackloss-qq-plot}{}\label{exm:stackloss-qq-plot}Next we consider an example where the errors are exponentially instead
+of normally distributed.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\FunctionTok{qqnorm}\NormalTok{(}\FunctionTok{resid}\NormalTok{(m), }\AttributeTok{main =} \StringTok{"stackloss"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/stackloss-qq-plot-1.pdf}
+
+The points in this Q-Q plot lie more or less on a straight line,
+so it seems a reasonable to assume that the errors were normally
+distributed.
+\end{example}
+
+\subsection{Other Plot Types}\label{other-plot-types}
+
+Sometimes, different plot types are also used.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  A scatter plot of the response \(y\) against each of the explanatory
+  variables \(x_j\) for \(j \in \{1, \ldots, p\}\). Great care is needed
+  when interpreting such plots: even if the full model is linear,
+  the dependency of the output on individual inputs may appear non-linear.
+  This can be caused by non-linear structures in the input data (which
+  don't violate the modelling assumptions).
+\item
+  A scatter plot of \(\hat\varepsilon\) against each of the explanatory variables
+  \(x_j\) for \(j \in \{1, \ldots, p\}\). Again, care is needed when trying
+  to interpret such plots.
+\item
+  A plot of \(x_j\) against \(x_k\) for \(j\neq k\) can also be useful.
+  For example, if two or more regressors are highly correlated, we say that
+  multicollinearity is present. When this occurs, the least squares estimate
+  \(\hat\beta\) becomes numerically unstable. (We will learn more about this
+  effect in chapter~\ref{S15-multicoll}.)
+\item
+  Data are often collected in time order. Even if time is not an explanatory
+  variable, a plot of \(y\) against time can be of interest. It can reveal
+  serial correlation in the data. Similarly, plotting the residuals against
+  time.
+\end{enumerate}
+
+\begin{example}
+\protect\hypertarget{exm:stackloss-plot}{}\label{exm:stackloss-plot}We can plot \texttt{stack.loss} against \texttt{Water.Temp} for the \texttt{stackloss} dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(stackloss}\SpecialCharTok{$}\NormalTok{Water.Temp, stackloss}\SpecialCharTok{$}\NormalTok{stack.loss,}
+     \AttributeTok{xlab =} \StringTok{"water temperature"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Stack loss"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{MATH3714_files/figure-latex/stackloss-plot-1.pdf}
+
+Clearly the stack loss increases with water temperature, but the
+relationship seems not to be linear. It may make sense to include
+the square of the water temperature as an additional input variable
+in the model.
+\end{example}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  Diagnostic plots can help to discover problems with model fit.
+\item
+  The most important diagnostic plots are residual plots and Q-Q plots.
+\end{itemize}
+
+\clearpage
+
+\section{Improving the Model Fit}\label{S10-improving}
+
+The \hyperref[S09-plots]{diagnostic plots} introduced in section~\ref{S09-plots}
+can often reveal if the data do not fit the modelling assumptions.
+In cases where the assumptions are violated, sometimes a linear
 model can still be used if the data is transformed first.
 
 \subsection{Linearising the Mean}\label{linearising-the-mean}
@@ -6177,6 +6307,17 @@ Thus we get
    &= 2q + n \log\bigl( 2\pi r(\hat\beta) / n \bigr) + n \\
    &= 2q + n \log\bigl( \|\hat\varepsilon\|^2 \bigr) + n + n \log( 2\pi / n ).
 \end{align*}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  The \(R^2\) value is a numerical measure of the goodness of fit of a model.
+\item
+  If models with different numbers of variables are compared,
+  \(R^2_\mathrm{adj}\) should be used instead of \(R^2\).
+\end{itemize}
 
 \clearpage
 

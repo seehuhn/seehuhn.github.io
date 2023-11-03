@@ -248,7 +248,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.1" data-path="S08-influence.html"><a href="S08-influence.html#deleting"><i class="fa fa-check"></i><b>8.1</b> Deleting Observations</a></li>
 <li class="chapter" data-level="8.2" data-path="S08-influence.html"><a href="S08-influence.html#influence"><i class="fa fa-check"></i><b>8.2</b> Cook’s Distance</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a></li>
+<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-plots.html"><a href="S09-plots.html#residual-plots"><i class="fa fa-check"></i><b>9.1</b> Residual Plots</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-plots.html"><a href="S09-plots.html#q-q-plots"><i class="fa fa-check"></i><b>9.2</b> Q-Q Plots</a></li>
+<li class="chapter" data-level="9.3" data-path="S09-plots.html"><a href="S09-plots.html#other-plot-types"><i class="fa fa-check"></i><b>9.3</b> Other Plot Types</a></li>
+</ul></li>
 <li class="chapter" data-level="10" data-path="S10-improving.html"><a href="S10-improving.html"><i class="fa fa-check"></i><b>10</b> Improving the Model Fit</a>
 <ul>
 <li class="chapter" data-level="10.1" data-path="S10-improving.html"><a href="S10-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>10.1</b> Linearising the Mean</a></li>
@@ -393,83 +398,174 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="S09-plots" class="section level1 hasAnchor" number="9">
 <h1><span class="header-section-number">Section 9</span> Diagnostic Plots<a href="S09-plots.html#S09-plots" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<!--
-TODO (voss):
-* This section is too short
-* make it clear that residual plots are the most important,
-  followed by Q-Q plots
-* add examples about how to interpret the plots
--->
+<p>(The following video refers to an older version of this section.)</p>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/AOZICnbvLms" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </div>
 </div>
-<p>The regression model is often checked by examining the residuals. Various plots
-are used:</p>
-<ol style="list-style-type: decimal">
-<li><p>A scatter plot of the response <span class="math inline">\(y\)</span> against each of the explanatory
-variables <span class="math inline">\(x_j\)</span> for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>.</p></li>
-<li><p>A scatter plot of <span class="math inline">\(\hat\varepsilon\)</span> against each of the explanatory variables
-<span class="math inline">\(x_j\)</span> for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>.</p></li>
-<li><p>A plot of <span class="math inline">\(\hat\varepsilon_i\)</span> <em>vs.</em> <span class="math inline">\(\hat y_i\)</span>. If the variance of the residuals
-seems to increase with <span class="math inline">\(\hat y\)</span> then a transformation may be necessary.
-This type of plot is often called a “residual plot”. The presence of a curvilinear
-relationship (in this plot, or the ones above) suggests a higher-order term,
-perhaps a quadratic in the explanatory variable, should be added to the
-model, or possibly a transformation should be applied to the response
-variable.</p></li>
-<li><p>A <a href="https://en.wikipedia.org/wiki/Q%E2%80%93Q_plot">Q-Q plot</a>
-of the residuals can be used to assess whether the residuals are normally
-distributed. These plots plot quantiles of the data against quantiles
-of a normal distribution. If the residual are normally distributed,
-the points in a Q-Q plot will approximately lie on a straight line.
-The R
-command to produce Q-Q plots for the normal distribution is <code>qqnorm()</code>.</p></li>
-<li><p>Data are often collected in time order. Even if time is not an explanatory
-variable, a plot of <span class="math inline">\(y\)</span> <em>vs.</em> time can be of interest. It can reveal
-serial correlation in the data. Similarly, plotting the residuals <em>vs.</em>
-time.</p></li>
-<li><p>A plot of <span class="math inline">\(x_j\)</span> <em>vs.</em> <span class="math inline">\(x_k\)</span> for <span class="math inline">\(j\neq k\)</span> can also be useful.
-If two or more regressors are highly correlated, we say that
-multicollinearity is present. When this occurs the least squares estimate
-<span class="math inline">\(\hat\beta\)</span> becomes numerically unstable. (We will learn more about this
-effect in chapter <a href="S15-multicoll.html#S15-multicoll">15</a>.)</p></li>
-</ol>
+<p>When we developed the theory for linear models, we used the following
+assumptions:</p>
+<ul>
+<li><p>Linear relationship between inputs and outputs: <span class="math inline">\(y \approx x^\top \beta\)</span></p></li>
+<li><p>Independence of errors: the <span class="math inline">\(\varepsilon_i = y_i - (X\beta)_i\)</span> are independent
+of each other.</p></li>
+<li><p>Normally distributed errors: <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span> for all <span class="math inline">\(i\)</span>.
+In particular, the variance of the <span class="math inline">\(\varepsilon_i\)</span> does not depend on <span class="math inline">\(i\)</span>.</p></li>
+</ul>
+<p>Sometimes, plotting the data can reveal when these assumptions are violated.
+Here we discuss different plot types which can be used for this purpose.</p>
+<div id="residual-plots" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> Residual Plots<a href="S09-plots.html#residual-plots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A plot of <span class="math inline">\(\hat\varepsilon_i\)</span> against <span class="math inline">\(\hat y_i\)</span> is often called a “residual plot”.
+If the modelling assuptions are correct, the errors will be independent
+and normally distributed with mean zero and constant variance. The fitted
+residuals are estimates of the errors, so they should approximately satisfy
+these two properties.</p>
+<p>If the variance of the residuals seems to increase with <span class="math inline">\(\hat y\)</span> then a
+transformation may be necessary. The presence of a curvilinear relationship in
+this plot suggests a non-linear relationship between inputs and outputs.</p>
 <div class="example">
-<p><span id="exm:stackloss-plot" class="example"><strong>Example 9.1  </strong></span>An example for the first type of diagnostic plot would be to
-plot <code>stack.loss</code> against <code>Water.Temp</code> for the <code>stackloss</code> dataset:</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="S09-plots.html#cb142-1" tabindex="-1"></a><span class="fu">plot</span>(stackloss<span class="sc">$</span>Water.Temp, stackloss<span class="sc">$</span>stack.loss,</span>
-<span id="cb142-2"><a href="S09-plots.html#cb142-2" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;water temperature&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Stack loss&quot;</span>)</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/stackloss-plot-1.png" width="672" /></p>
-<p>Clearly the stack loss increases with water temperature, but the
-relationship may not be linear. It may make sense to include
-the square of the water temperature as an additional input variable
-in the model.</p>
+<p><span id="exm:correct-resid" class="example"><strong>Example 9.1  </strong></span>To demonstrate the use of residual plots, we first produce such a plot
+for simulated data, where we know that the modelling assumptions are
+satisfied.</p>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="S09-plots.html#cb142-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb142-2"><a href="S09-plots.html#cb142-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb142-3"><a href="S09-plots.html#cb142-3" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb142-4"><a href="S09-plots.html#cb142-4" tabindex="-1"></a></span>
+<span id="cb142-5"><a href="S09-plots.html#cb142-5" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb142-6"><a href="S09-plots.html#cb142-6" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m),</span>
+<span id="cb142-7"><a href="S09-plots.html#cb142-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted value&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residual&quot;</span>,</span>
+<span id="cb142-8"><a href="S09-plots.html#cb142-8" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;modelling assumptions satisfied&quot;</span>)</span>
+<span id="cb142-9"><a href="S09-plots.html#cb142-9" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/correct-resid-1.png" width="672" /></p>
+<p>We can see that the residuals are clustered around zero as expected.</p>
 </div>
 <div class="example">
-<p><span id="exm:stackloss-resid" class="example"><strong>Example 9.2  </strong></span>To produce a “residual plot”, we first need to fit a model to the data.
-For the <code>stackloss</code> dataset this can be done as follows:</p>
-<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="S09-plots.html#cb143-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
-<span id="cb143-2"><a href="S09-plots.html#cb143-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m),</span>
-<span id="cb143-3"><a href="S09-plots.html#cb143-3" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted value&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residual&quot;</span>)</span>
-<span id="cb143-4"><a href="S09-plots.html#cb143-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><span id="exm:wrong-resid" class="example"><strong>Example 9.2  </strong></span>Next we consider a residual plot where the modelling assumptions
+are known to be violated. Here we generate data using a
+quadratic dependency (instead of linear) of the output on the input:</p>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="S09-plots.html#cb143-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb143-2"><a href="S09-plots.html#cb143-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb143-3"><a href="S09-plots.html#cb143-3" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb143-4"><a href="S09-plots.html#cb143-4" tabindex="-1"></a></span>
+<span id="cb143-5"><a href="S09-plots.html#cb143-5" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb143-6"><a href="S09-plots.html#cb143-6" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m),</span>
+<span id="cb143-7"><a href="S09-plots.html#cb143-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted value&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residual&quot;</span>,</span>
+<span id="cb143-8"><a href="S09-plots.html#cb143-8" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;modelling assumptions violated&quot;</span>)</span>
+<span id="cb143-9"><a href="S09-plots.html#cb143-9" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/wrong-resid-1.png" width="672" /></p>
+<p>It is clear that the residuals are not centred around the horizontal
+zero line, but form a parabola instead.</p>
+</div>
+<p>The structure of the <span class="math inline">\(x\)</span>-values can affect the visual appearance of this
+type of plot, even if the modelling assumptions are exactly satisfied.
+For example, if the <span class="math inline">\(x\)</span>-values “thin out” towards the edges of the range,
+the “band” of residuals may appear narrower there, just because there
+are fewer chances for large residuals to occur near the edges.</p>
+<p>The following example shows a residual plot for real data, where it
+is unknown whether or not the modelling assumptions are satisfied.</p>
+<div class="example">
+<p><span id="exm:stackloss-resid" class="example"><strong>Example 9.3  </strong></span>A residual plot for the <code>stackloss</code> data set can be produced as follows:</p>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="S09-plots.html#cb144-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb144-2"><a href="S09-plots.html#cb144-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(m), <span class="fu">resid</span>(m),</span>
+<span id="cb144-3"><a href="S09-plots.html#cb144-3" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;fitted value&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residual&quot;</span>,</span>
+<span id="cb144-4"><a href="S09-plots.html#cb144-4" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;stackloss&quot;</span>)</span>
+<span id="cb144-5"><a href="S09-plots.html#cb144-5" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/stackloss-resid-1.png" width="672" /></p>
 <p>We can see that the residuals are clustered around zero as expected.
 Since there are no obvious patterns, the plot does not indicate any
 problems with model fit.</p>
 </div>
+</div>
+<div id="q-q-plots" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> Q-Q Plots<a href="S09-plots.html#q-q-plots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A <a href="https://en.wikipedia.org/wiki/Q%E2%80%93Q_plot">Q-Q plot</a> of the residuals
+can be used to assess whether the residuals are normally distributed. These
+plots plot quantiles of the data against quantiles of a normal distribution.
+If the residual are normally distributed, the points in a Q-Q plot will
+approximately lie on a straight line. The R command to produce Q-Q plots for
+the normal distribution is <code>qqnorm()</code>.</p>
+<div class="example">
+<p><span id="exm:correct-qq-plot" class="example"><strong>Example 9.4  </strong></span>We first show an example with simulated data, where the modelling
+assumptions are known to be satisfied.</p>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="S09-plots.html#cb145-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb145-2"><a href="S09-plots.html#cb145-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb145-3"><a href="S09-plots.html#cb145-3" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb145-4"><a href="S09-plots.html#cb145-4" tabindex="-1"></a></span>
+<span id="cb145-5"><a href="S09-plots.html#cb145-5" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb145-6"><a href="S09-plots.html#cb145-6" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(m), <span class="at">main =</span> <span class="st">&quot;modelling assumptions satisfied&quot;</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/correct-qq-plot-1.png" width="672" /></p>
+<p>As expected, the points lie approximately on a straight line.</p>
+</div>
+<div class="example">
+<p><span id="exm:wrong-qq-plot" class="example"><strong>Example 9.5  </strong></span>Next we consider an example where the errors are exponentially instead
+of normally distributed.</p>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="S09-plots.html#cb146-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb146-2"><a href="S09-plots.html#cb146-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb146-3"><a href="S09-plots.html#cb146-3" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n) <span class="sc">-</span> <span class="dv">1</span> <span class="co"># we subtract 1, so that the errors still have mean zero</span></span>
+<span id="cb146-4"><a href="S09-plots.html#cb146-4" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">+</span> x <span class="sc">+</span> eps</span>
+<span id="cb146-5"><a href="S09-plots.html#cb146-5" tabindex="-1"></a></span>
+<span id="cb146-6"><a href="S09-plots.html#cb146-6" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb146-7"><a href="S09-plots.html#cb146-7" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(m), <span class="at">main =</span> <span class="st">&quot;modelling assumptions violated&quot;</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/wrong-qq-plot-1.png" width="672" /></p>
+<p>Now the points of the Q-Q plot lie on a curved line, indicating that the
+residuals are not normally distributed.</p>
+</div>
+<div class="example">
+<p><span id="exm:stackloss-qq-plot" class="example"><strong>Example 9.6  </strong></span>Next we consider an example where the errors are exponentially instead
+of normally distributed.</p>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="S09-plots.html#cb147-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb147-2"><a href="S09-plots.html#cb147-2" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(m), <span class="at">main =</span> <span class="st">&quot;stackloss&quot;</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/stackloss-qq-plot-1.png" width="672" /></p>
+<p>The points in this Q-Q plot lie more or less on a straight line,
+so it seems a reasonable to assume that the errors were normally
+distributed.</p>
+</div>
+</div>
+<div id="other-plot-types" class="section level2 hasAnchor" number="9.3">
+<h2><span class="header-section-number">9.3</span> Other Plot Types<a href="S09-plots.html#other-plot-types" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Sometimes, different plot types are also used.</p>
+<ol style="list-style-type: decimal">
+<li><p>A scatter plot of the response <span class="math inline">\(y\)</span> against each of the explanatory
+variables <span class="math inline">\(x_j\)</span> for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>. Great care is needed
+when interpreting such plots: even if the full model is linear,
+the dependency of the output on individual inputs may appear non-linear.
+This can be caused by non-linear structures in the input data (which
+don’t violate the modelling assumptions).</p></li>
+<li><p>A scatter plot of <span class="math inline">\(\hat\varepsilon\)</span> against each of the explanatory variables
+<span class="math inline">\(x_j\)</span> for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>. Again, care is needed when trying
+to interpret such plots.</p></li>
+<li><p>A plot of <span class="math inline">\(x_j\)</span> against <span class="math inline">\(x_k\)</span> for <span class="math inline">\(j\neq k\)</span> can also be useful.
+For example, if two or more regressors are highly correlated, we say that
+multicollinearity is present. When this occurs, the least squares estimate
+<span class="math inline">\(\hat\beta\)</span> becomes numerically unstable. (We will learn more about this
+effect in chapter <a href="S15-multicoll.html#S15-multicoll">15</a>.)</p></li>
+<li><p>Data are often collected in time order. Even if time is not an explanatory
+variable, a plot of <span class="math inline">\(y\)</span> against time can be of interest. It can reveal
+serial correlation in the data. Similarly, plotting the residuals against
+time.</p></li>
+</ol>
+<div class="example">
+<p><span id="exm:stackloss-plot" class="example"><strong>Example 9.7  </strong></span>We can plot <code>stack.loss</code> against <code>Water.Temp</code> for the <code>stackloss</code> dataset:</p>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="S09-plots.html#cb148-1" tabindex="-1"></a><span class="fu">plot</span>(stackloss<span class="sc">$</span>Water.Temp, stackloss<span class="sc">$</span>stack.loss,</span>
+<span id="cb148-2"><a href="S09-plots.html#cb148-2" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;water temperature&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Stack loss&quot;</span>)</span></code></pre></div>
+<p><img src="MATH3714_files/figure-html/stackloss-plot-1.png" width="672" /></p>
+<p>Clearly the stack loss increases with water temperature, but the
+relationship seems not to be linear. It may make sense to include
+the square of the water temperature as an additional input variable
+in the model.</p>
+</div>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
 <li>Diagnostic plots can help to discover problems with model fit.</li>
-<li>The <span class="math inline">\(R^2\)</span> value is a numerical measure of the goodness of fit of a model.</li>
-<li>If models with different numbers of variables are compared,
-<span class="math inline">\(R^2_\mathrm{adj}\)</span> should be used instead of <span class="math inline">\(R^2\)</span>.</li>
+<li>The most important diagnostic plots are residual plots and Q-Q plots.</li>
 </ul>
 </div>
 
+</div>
 </div>
             </section>
 

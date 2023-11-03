@@ -248,7 +248,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.1" data-path="S08-influence.html"><a href="S08-influence.html#deleting"><i class="fa fa-check"></i><b>8.1</b> Deleting Observations</a></li>
 <li class="chapter" data-level="8.2" data-path="S08-influence.html"><a href="S08-influence.html#influence"><i class="fa fa-check"></i><b>8.2</b> Cook’s Distance</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a></li>
+<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-plots.html"><a href="S09-plots.html#residual-plots"><i class="fa fa-check"></i><b>9.1</b> Residual Plots</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-plots.html"><a href="S09-plots.html#q-q-plots"><i class="fa fa-check"></i><b>9.2</b> Q-Q Plots</a></li>
+<li class="chapter" data-level="9.3" data-path="S09-plots.html"><a href="S09-plots.html#other-plot-types"><i class="fa fa-check"></i><b>9.3</b> Other Plot Types</a></li>
+</ul></li>
 <li class="chapter" data-level="10" data-path="S10-improving.html"><a href="S10-improving.html"><i class="fa fa-check"></i><b>10</b> Improving the Model Fit</a>
 <ul>
 <li class="chapter" data-level="10.1" data-path="S10-improving.html"><a href="S10-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>10.1</b> Linearising the Mean</a></li>
@@ -416,9 +421,9 @@ like height and weight. Here we have data which gives
 the mouth volume (in cubic centimetres), age, sex (female = 0, male = 1),
 height (in metres) and weight (in kilos) for 61 volunteers.
 The first few samples are as shown:</p>
-<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="S14-examples.html#cb208-1" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/mouth-volume.txt</span></span>
-<span id="cb208-2"><a href="S14-examples.html#cb208-2" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/mouth-volume.txt&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb208-3"><a href="S14-examples.html#cb208-3" tabindex="-1"></a><span class="fu">head</span>(dd)</span></code></pre></div>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="S14-examples.html#cb213-1" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/mouth-volume.txt</span></span>
+<span id="cb213-2"><a href="S14-examples.html#cb213-2" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/mouth-volume.txt&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb213-3"><a href="S14-examples.html#cb213-3" tabindex="-1"></a><span class="fu">head</span>(dd)</span></code></pre></div>
 <pre class="rOutput"><code>  Mouth_Volume Age Sex Height  Weight
 1       56.659  29   1  1.730  70.455
 2       47.938  24   0  1.632  60.000
@@ -433,8 +438,8 @@ here does not matter, since the default factor coding would be identical
 to the coding in the present data.</p>
 <p>Our aim is to fit a model which describes mouth volume in terms of the
 other variables. We start by fitting a basic model:</p>
-<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="S14-examples.html#cb210-1" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
-<span id="cb210-2"><a href="S14-examples.html#cb210-2" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="S14-examples.html#cb215-1" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
+<span id="cb215-2"><a href="S14-examples.html#cb215-2" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = Mouth_Volume ~ ., data = dd)
@@ -460,8 +465,8 @@ F-statistic: 4.888 on 4 and 56 DF,  p-value: 0.001882</code></pre>
 and since the <span class="math inline">\(R^2\)</span> value is not close to~<span class="math inline">\(1\)</span>,
 model fit seems poor. To improve model fit, we try to include all
 pairwise interaction terms:</p>
-<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="S14-examples.html#cb212-1" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd)</span>
-<span id="cb212-2"><a href="S14-examples.html#cb212-2" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="S14-examples.html#cb217-1" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd)</span>
+<span id="cb217-2"><a href="S14-examples.html#cb217-2" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = Mouth_Volume ~ .^2, data = dd)
@@ -489,10 +494,10 @@ Multiple R-squared:  0.3219,    Adjusted R-squared:  0.1863
 F-statistic: 2.374 on 10 and 50 DF,  p-value: 0.0218</code></pre>
 <p>None of the interaction terms look useful when used in combination.
 We try to select a subset of variables to get a better fit:</p>
-<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="S14-examples.html#cb214-1" tabindex="-1"></a><span class="fu">library</span>(leaps)</span>
-<span id="cb214-2"><a href="S14-examples.html#cb214-2" tabindex="-1"></a>r3 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(Mouth_Volume <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd, <span class="at">nvmax =</span> <span class="dv">10</span>)</span>
-<span id="cb214-3"><a href="S14-examples.html#cb214-3" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">summary</span>(r3)</span>
-<span id="cb214-4"><a href="S14-examples.html#cb214-4" tabindex="-1"></a>s</span></code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="S14-examples.html#cb219-1" tabindex="-1"></a><span class="fu">library</span>(leaps)</span>
+<span id="cb219-2"><a href="S14-examples.html#cb219-2" tabindex="-1"></a>r3 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(Mouth_Volume <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd, <span class="at">nvmax =</span> <span class="dv">10</span>)</span>
+<span id="cb219-3"><a href="S14-examples.html#cb219-3" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">summary</span>(r3)</span>
+<span id="cb219-4"><a href="S14-examples.html#cb219-4" tabindex="-1"></a>s</span></code></pre></div>
 <pre class="rOutput"><code>Subset selection object
 Call: regsubsets.formula(Mouth_Volume ~ .^2, data = dd, nvmax = 10)
 10 Variables  (and intercept)
@@ -534,7 +539,7 @@ Selection Algorithm: exhaustive
 <p>The table shows the optimal model for every number of variables,
 for <span class="math inline">\(p\)</span> ranging from <span class="math inline">\(1\)</span> to <span class="math inline">\(10\)</span>. To choose the number of variables
 we can use the adjusted <span class="math inline">\(R^2\)</span>-value:</p>
-<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="S14-examples.html#cb216-1" tabindex="-1"></a>s<span class="sc">$</span>which[<span class="fu">which.max</span>(s<span class="sc">$</span>adjr2),]</span></code></pre></div>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="S14-examples.html#cb221-1" tabindex="-1"></a>s<span class="sc">$</span>which[<span class="fu">which.max</span>(s<span class="sc">$</span>adjr2),]</span></code></pre></div>
 <pre class="rOutput"><code>  (Intercept)           Age           Sex        Height        Weight 
          TRUE          TRUE         FALSE          TRUE         FALSE 
       Age:Sex    Age:Height    Age:Weight    Sex:Height    Sex:Weight 
@@ -543,10 +548,10 @@ Height:Weight
         FALSE </code></pre>
 <p>The optimal model consists of the five variables listed. For further
 examination, we fit the corresponding model using <code>lm()</code>:</p>
-<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="S14-examples.html#cb218-1" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume</span>
-<span id="cb218-2"><a href="S14-examples.html#cb218-2" tabindex="-1"></a>         <span class="sc">~</span> Age <span class="sc">+</span> Height <span class="sc">+</span> Age<span class="sc">:</span>Sex <span class="sc">+</span> Age<span class="sc">:</span>Height <span class="sc">+</span> Sex<span class="sc">:</span>Weight,</span>
-<span id="cb218-3"><a href="S14-examples.html#cb218-3" tabindex="-1"></a>         <span class="at">data =</span> dd)</span>
-<span id="cb218-4"><a href="S14-examples.html#cb218-4" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code></pre></div>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="S14-examples.html#cb223-1" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume</span>
+<span id="cb223-2"><a href="S14-examples.html#cb223-2" tabindex="-1"></a>         <span class="sc">~</span> Age <span class="sc">+</span> Height <span class="sc">+</span> Age<span class="sc">:</span>Sex <span class="sc">+</span> Age<span class="sc">:</span>Height <span class="sc">+</span> Sex<span class="sc">:</span>Weight,</span>
+<span id="cb223-3"><a href="S14-examples.html#cb223-3" tabindex="-1"></a>         <span class="at">data =</span> dd)</span>
+<span id="cb223-4"><a href="S14-examples.html#cb223-4" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = Mouth_Volume ~ Age + Height + Age:Sex + Age:Height + 
@@ -575,8 +580,8 @@ zero and the adjusted <span class="math inline">\(R^2\)</span> value has (slight
 the structure of the model seems hard to explain and the model seems
 difficult to interpret. For comparison, we consider the second-best
 model, with <span class="math inline">\(p=2\)</span>:</p>
-<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="S14-examples.html#cb220-1" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> Age<span class="sc">:</span>Weight <span class="sc">+</span> Sex<span class="sc">:</span>Weight, <span class="at">data =</span> dd)</span>
-<span id="cb220-2"><a href="S14-examples.html#cb220-2" tabindex="-1"></a><span class="fu">summary</span>(m4)</span></code></pre></div>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="S14-examples.html#cb225-1" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> Age<span class="sc">:</span>Weight <span class="sc">+</span> Sex<span class="sc">:</span>Weight, <span class="at">data =</span> dd)</span>
+<span id="cb225-2"><a href="S14-examples.html#cb225-2" tabindex="-1"></a><span class="fu">summary</span>(m4)</span></code></pre></div>
 <pre class="rOutput"><code>
 Call:
 lm(formula = Mouth_Volume ~ Age:Weight + Sex:Weight, data = dd)
@@ -631,10 +636,10 @@ affect fitted values and the goodness of fit, but it will affect the estimates
 parameters.</p>
 <p>Differnt choices of factor codings are built into R. Here we illustrate some
 of these choices using a factor which represents week days:</p>
-<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="S14-examples.html#cb222-1" tabindex="-1"></a>days <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;Mon&quot;</span>, <span class="st">&quot;Tue&quot;</span>, <span class="st">&quot;Wed&quot;</span>, <span class="st">&quot;Thu&quot;</span>, <span class="st">&quot;Fri&quot;</span>, <span class="st">&quot;Sat&quot;</span>, <span class="st">&quot;Sun&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="S14-examples.html#cb227-1" tabindex="-1"></a>days <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;Mon&quot;</span>, <span class="st">&quot;Tue&quot;</span>, <span class="st">&quot;Wed&quot;</span>, <span class="st">&quot;Thu&quot;</span>, <span class="st">&quot;Fri&quot;</span>, <span class="st">&quot;Sat&quot;</span>, <span class="st">&quot;Sun&quot;</span>))</span></code></pre></div>
 <ul>
 <li><p><strong>Indicator variables.</strong> This is the default coding:</p>
-<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="S14-examples.html#cb223-1" tabindex="-1"></a><span class="fu">contr.treatment</span>(days)</span></code></pre></div>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="S14-examples.html#cb228-1" tabindex="-1"></a><span class="fu">contr.treatment</span>(days)</span></code></pre></div>
 <pre class="rOutput"><code>    Tue Wed Thu Fri Sat Sun
 Mon   0   0   0   0   0   0
 Tue   1   0   0   0   0   0
@@ -647,7 +652,7 @@ Sun   0   0   0   0   0   1</code></pre>
 weekday is encoded. The regression coefficients can be interpreted as the
 change of intercept relative to the reference level (in this case Monday).</p></li>
 <li><p><strong>Deviation coding</strong> uses “sum to zero” contrasts:</p>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="S14-examples.html#cb225-1" tabindex="-1"></a><span class="fu">contr.sum</span>(days)</span></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="S14-examples.html#cb230-1" tabindex="-1"></a><span class="fu">contr.sum</span>(days)</span></code></pre></div>
 <pre class="rOutput"><code>    [,1] [,2] [,3] [,4] [,5] [,6]
 Mon    1    0    0    0    0    0
 Tue    0    1    0    0    0    0
@@ -662,7 +667,7 @@ and decreased for Sundays. This coding can sometimes reduce collinearity
 in the design matrix.</p></li>
 <li><p><strong>Helmert coding</strong> contrasts the second level with the first, the third with
 the average of the first two, and so on:</p>
-<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="S14-examples.html#cb227-1" tabindex="-1"></a><span class="fu">contr.helmert</span>(days)</span></code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="S14-examples.html#cb232-1" tabindex="-1"></a><span class="fu">contr.helmert</span>(days)</span></code></pre></div>
 <pre class="rOutput"><code>    [,1] [,2] [,3] [,4] [,5] [,6]
 Mon   -1   -1   -1   -1   -1   -1
 Tue    1   -1   -1   -1   -1   -1
@@ -674,21 +679,21 @@ Sun    0    0    0    0    0    6</code></pre></li>
 </ul>
 <p>We can set the coding for each factor separately, using the
 optional <code>contrasts.arg</code> argument to <code>lm()</code> and <code>model.matrix()</code>:</p>
-<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="S14-examples.html#cb229-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211127</span>)</span>
-<span id="cb229-2"><a href="S14-examples.html#cb229-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
-<span id="cb229-3"><a href="S14-examples.html#cb229-3" tabindex="-1"></a></span>
-<span id="cb229-4"><a href="S14-examples.html#cb229-4" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n)</span>
-<span id="cb229-5"><a href="S14-examples.html#cb229-5" tabindex="-1"></a></span>
-<span id="cb229-6"><a href="S14-examples.html#cb229-6" tabindex="-1"></a>day.names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Mon&quot;</span>, <span class="st">&quot;Tue&quot;</span>, <span class="st">&quot;Wed&quot;</span>, <span class="st">&quot;Thu&quot;</span>, <span class="st">&quot;Fri&quot;</span>, <span class="st">&quot;Sat&quot;</span>, <span class="st">&quot;Sun&quot;</span>)</span>
-<span id="cb229-7"><a href="S14-examples.html#cb229-7" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">sample</span>(day.names, <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb229-8"><a href="S14-examples.html#cb229-8" tabindex="-1"></a><span class="co"># Explicitly specify the levels, in case a day is missing</span></span>
-<span id="cb229-9"><a href="S14-examples.html#cb229-9" tabindex="-1"></a><span class="co"># from the sample and to fix the order of days:</span></span>
-<span id="cb229-10"><a href="S14-examples.html#cb229-10" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">factor</span>(x2, <span class="at">levels =</span> day.names)</span>
-<span id="cb229-11"><a href="S14-examples.html#cb229-11" tabindex="-1"></a></span>
-<span id="cb229-12"><a href="S14-examples.html#cb229-12" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x1, x2)</span>
-<span id="cb229-13"><a href="S14-examples.html#cb229-13" tabindex="-1"></a></span>
-<span id="cb229-14"><a href="S14-examples.html#cb229-14" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
-<span id="cb229-15"><a href="S14-examples.html#cb229-15" tabindex="-1"></a><span class="fu">head</span>(X1)</span></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="S14-examples.html#cb234-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211127</span>)</span>
+<span id="cb234-2"><a href="S14-examples.html#cb234-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb234-3"><a href="S14-examples.html#cb234-3" tabindex="-1"></a></span>
+<span id="cb234-4"><a href="S14-examples.html#cb234-4" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n)</span>
+<span id="cb234-5"><a href="S14-examples.html#cb234-5" tabindex="-1"></a></span>
+<span id="cb234-6"><a href="S14-examples.html#cb234-6" tabindex="-1"></a>day.names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Mon&quot;</span>, <span class="st">&quot;Tue&quot;</span>, <span class="st">&quot;Wed&quot;</span>, <span class="st">&quot;Thu&quot;</span>, <span class="st">&quot;Fri&quot;</span>, <span class="st">&quot;Sat&quot;</span>, <span class="st">&quot;Sun&quot;</span>)</span>
+<span id="cb234-7"><a href="S14-examples.html#cb234-7" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">sample</span>(day.names, <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb234-8"><a href="S14-examples.html#cb234-8" tabindex="-1"></a><span class="co"># Explicitly specify the levels, in case a day is missing</span></span>
+<span id="cb234-9"><a href="S14-examples.html#cb234-9" tabindex="-1"></a><span class="co"># from the sample and to fix the order of days:</span></span>
+<span id="cb234-10"><a href="S14-examples.html#cb234-10" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">factor</span>(x2, <span class="at">levels =</span> day.names)</span>
+<span id="cb234-11"><a href="S14-examples.html#cb234-11" tabindex="-1"></a></span>
+<span id="cb234-12"><a href="S14-examples.html#cb234-12" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x1, x2)</span>
+<span id="cb234-13"><a href="S14-examples.html#cb234-13" tabindex="-1"></a></span>
+<span id="cb234-14"><a href="S14-examples.html#cb234-14" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
+<span id="cb234-15"><a href="S14-examples.html#cb234-15" tabindex="-1"></a><span class="fu">head</span>(X1)</span></code></pre></div>
 <pre class="rOutput"><code>  (Intercept)         x1 x2Tue x2Wed x2Thu x2Fri x2Sat x2Sun
 1           1 0.41745367     1     0     0     0     0     0
 2           1 0.88671893     0     0     1     0     0     0
@@ -696,11 +701,11 @@ optional <code>contrasts.arg</code> argument to <code>lm()</code> and <code>mode
 4           1 0.31986826     0     0     0     0     0     1
 5           1 0.27863787     0     0     0     0     0     0
 6           1 0.03346104     0     1     0     0     0     0</code></pre>
-<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="S14-examples.html#cb231-1" tabindex="-1"></a><span class="fu">kappa</span>(X1, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="S14-examples.html#cb236-1" tabindex="-1"></a><span class="fu">kappa</span>(X1, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 10.37243</code></pre>
-<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="S14-examples.html#cb233-1" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> ., <span class="at">data =</span> dd,</span>
-<span id="cb233-2"><a href="S14-examples.html#cb233-2" tabindex="-1"></a>                   <span class="at">contrasts.arg =</span> <span class="fu">list</span>(<span class="at">x2 =</span> contr.sum))</span>
-<span id="cb233-3"><a href="S14-examples.html#cb233-3" tabindex="-1"></a><span class="fu">head</span>(X2)</span></code></pre></div>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="S14-examples.html#cb238-1" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> ., <span class="at">data =</span> dd,</span>
+<span id="cb238-2"><a href="S14-examples.html#cb238-2" tabindex="-1"></a>                   <span class="at">contrasts.arg =</span> <span class="fu">list</span>(<span class="at">x2 =</span> contr.sum))</span>
+<span id="cb238-3"><a href="S14-examples.html#cb238-3" tabindex="-1"></a><span class="fu">head</span>(X2)</span></code></pre></div>
 <pre class="rOutput"><code>  (Intercept)         x1 x21 x22 x23 x24 x25 x26
 1           1 0.41745367   0   1   0   0   0   0
 2           1 0.88671893   0   0   0   1   0   0
@@ -708,7 +713,7 @@ optional <code>contrasts.arg</code> argument to <code>lm()</code> and <code>mode
 4           1 0.31986826  -1  -1  -1  -1  -1  -1
 5           1 0.27863787   1   0   0   0   0   0
 6           1 0.03346104   0   0   1   0   0   0</code></pre>
-<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="S14-examples.html#cb235-1" tabindex="-1"></a><span class="fu">kappa</span>(X2, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="S14-examples.html#cb240-1" tabindex="-1"></a><span class="fu">kappa</span>(X2, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre class="rOutput"><code>[1] 6.677298</code></pre>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
