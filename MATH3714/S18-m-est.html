@@ -273,8 +273,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="11.3" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#PRESS"><i class="fa fa-check"></i><b>11.3</b> Prediction Error Sum of Squares</a></li>
 <li class="chapter" data-level="11.4" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#AIC"><i class="fa fa-check"></i><b>11.4</b> Akaike’s Information Criterion</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
 <li class="chapter" data-level="" data-path="I03-lm-output.html"><a href="I03-lm-output.html"><i class="fa fa-check"></i>Interlude: Understanding the <code>lm()</code> Output</a></li>
+<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
 <li class="chapter" data-level="12" data-path="S12-automatic.html"><a href="S12-automatic.html"><i class="fa fa-check"></i><b>12</b> Automatic Model Selection</a>
 <ul>
 <li class="chapter" data-level="12.1" data-path="S12-automatic.html"><a href="S12-automatic.html#exhaustive-search"><i class="fa fa-check"></i><b>12.1</b> Exhaustive Search</a></li>
@@ -303,12 +303,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.3" data-path="S15-multicoll.html"><a href="S15-multicoll.html#mitigations"><i class="fa fa-check"></i><b>15.3</b> Mitigations</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
-<ul>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#references"><i class="fa fa-check"></i>References</a></li>
-</ul></li>
 <li class="chapter" data-level="16" data-path="S16-ridge.html"><a href="S16-ridge.html"><i class="fa fa-check"></i><b>16</b> Ridge Regression</a>
 <ul>
 <li class="chapter" data-level="16.1" data-path="S16-ridge.html"><a href="S16-ridge.html#definition-the-estimator"><i class="fa fa-check"></i><b>16.1</b> Definition the Estimator</a></li>
@@ -402,6 +396,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 TODO:
 - try to shorten this section
 - look up Peter Huber (1964)
+- introduce `rlm()` from MASS package
 -->
 <p>In this section we introduce a class of estimators which can be robust to
 <span class="math inline">\(y\)</span>-space outliers.</p>
@@ -445,34 +440,34 @@ for <span class="math inline">\(x\)</span>-space outliers which are sufficiently
 data, the LAV line will pass exactly through the corresponding point
 <span class="math inline">\((x_i, y_i)\)</span>, so the LAV estimator is more susceptible to <span class="math inline">\(x\)</span>-space outliers
 than least squares regression is, and the breakdown point is still <span class="math inline">\(1/n\)</span>.</p>
-<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb280-1"><a href="S18-m-est.html#cb280-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">202111202</span>)</span>
-<span id="cb280-2"><a href="S18-m-est.html#cb280-2" tabindex="-1"></a></span>
-<span id="cb280-3"><a href="S18-m-est.html#cb280-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">12</span></span>
-<span id="cb280-4"><a href="S18-m-est.html#cb280-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="at">length.out =</span> n<span class="sc">+</span><span class="dv">1</span>)[<span class="sc">-</span>(n<span class="sc">/</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)]</span>
-<span id="cb280-5"><a href="S18-m-est.html#cb280-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.4</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.3</span>)</span>
-<span id="cb280-6"><a href="S18-m-est.html#cb280-6" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
-<span id="cb280-7"><a href="S18-m-est.html#cb280-7" tabindex="-1"></a></span>
-<span id="cb280-8"><a href="S18-m-est.html#cb280-8" tabindex="-1"></a><span class="co"># we try four different extra samples, one after another:</span></span>
-<span id="cb280-9"><a href="S18-m-est.html#cb280-9" tabindex="-1"></a>x.extra <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">2.5</span>, <span class="dv">20</span>, <span class="at">length.out =</span> <span class="dv">4</span>)</span>
-<span id="cb280-10"><a href="S18-m-est.html#cb280-10" tabindex="-1"></a>y.extra <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb280-11"><a href="S18-m-est.html#cb280-11" tabindex="-1"></a></span>
-<span id="cb280-12"><a href="S18-m-est.html#cb280-12" tabindex="-1"></a>lav <span class="ot">&lt;-</span> <span class="cf">function</span>(par, x, y) {</span>
-<span id="cb280-13"><a href="S18-m-est.html#cb280-13" tabindex="-1"></a>  beta0 <span class="ot">&lt;-</span> par[<span class="dv">1</span>]</span>
-<span id="cb280-14"><a href="S18-m-est.html#cb280-14" tabindex="-1"></a>  beta1 <span class="ot">&lt;-</span> par[<span class="dv">2</span>]</span>
-<span id="cb280-15"><a href="S18-m-est.html#cb280-15" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">abs</span>(y <span class="sc">-</span> beta0 <span class="sc">-</span> beta1<span class="sc">*</span>x))</span>
-<span id="cb280-16"><a href="S18-m-est.html#cb280-16" tabindex="-1"></a>}</span>
-<span id="cb280-17"><a href="S18-m-est.html#cb280-17" tabindex="-1"></a></span>
-<span id="cb280-18"><a href="S18-m-est.html#cb280-18" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="co"># We want a 2x2 grid of plots,</span></span>
-<span id="cb280-19"><a href="S18-m-est.html#cb280-19" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="co"># using smaller margins, and</span></span>
-<span id="cb280-20"><a href="S18-m-est.html#cb280-20" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="co"># we move the labels closer to the axes.</span></span>
-<span id="cb280-21"><a href="S18-m-est.html#cb280-21" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) {</span>
-<span id="cb280-22"><a href="S18-m-est.html#cb280-22" tabindex="-1"></a>  <span class="fu">plot</span>(x, y, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">21</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">5</span>))</span>
-<span id="cb280-23"><a href="S18-m-est.html#cb280-23" tabindex="-1"></a>  <span class="fu">abline</span>(m)</span>
-<span id="cb280-24"><a href="S18-m-est.html#cb280-24" tabindex="-1"></a></span>
-<span id="cb280-25"><a href="S18-m-est.html#cb280-25" tabindex="-1"></a>  o <span class="ot">&lt;-</span> <span class="fu">optim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), lav, <span class="cn">NULL</span>, <span class="fu">c</span>(x, x.extra[i]), <span class="fu">c</span>(y, y.extra[i]))</span>
-<span id="cb280-26"><a href="S18-m-est.html#cb280-26" tabindex="-1"></a>  <span class="fu">abline</span>(o<span class="sc">$</span>par[<span class="dv">1</span>], o<span class="sc">$</span>par[<span class="dv">2</span>], <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">lty=</span><span class="st">&quot;dashed&quot;</span>)</span>
-<span id="cb280-27"><a href="S18-m-est.html#cb280-27" tabindex="-1"></a>  <span class="fu">points</span>(x.extra[i], y.extra[i], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span>
-<span id="cb280-28"><a href="S18-m-est.html#cb280-28" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb279-1"><a href="S18-m-est.html#cb279-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">202111202</span>)</span>
+<span id="cb279-2"><a href="S18-m-est.html#cb279-2" tabindex="-1"></a></span>
+<span id="cb279-3"><a href="S18-m-est.html#cb279-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb279-4"><a href="S18-m-est.html#cb279-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="at">length.out =</span> n<span class="sc">+</span><span class="dv">1</span>)[<span class="sc">-</span>(n<span class="sc">/</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)]</span>
+<span id="cb279-5"><a href="S18-m-est.html#cb279-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.4</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.3</span>)</span>
+<span id="cb279-6"><a href="S18-m-est.html#cb279-6" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb279-7"><a href="S18-m-est.html#cb279-7" tabindex="-1"></a></span>
+<span id="cb279-8"><a href="S18-m-est.html#cb279-8" tabindex="-1"></a><span class="co"># we try four different extra samples, one after another:</span></span>
+<span id="cb279-9"><a href="S18-m-est.html#cb279-9" tabindex="-1"></a>x.extra <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">2.5</span>, <span class="dv">20</span>, <span class="at">length.out =</span> <span class="dv">4</span>)</span>
+<span id="cb279-10"><a href="S18-m-est.html#cb279-10" tabindex="-1"></a>y.extra <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb279-11"><a href="S18-m-est.html#cb279-11" tabindex="-1"></a></span>
+<span id="cb279-12"><a href="S18-m-est.html#cb279-12" tabindex="-1"></a>lav <span class="ot">&lt;-</span> <span class="cf">function</span>(par, x, y) {</span>
+<span id="cb279-13"><a href="S18-m-est.html#cb279-13" tabindex="-1"></a>  beta0 <span class="ot">&lt;-</span> par[<span class="dv">1</span>]</span>
+<span id="cb279-14"><a href="S18-m-est.html#cb279-14" tabindex="-1"></a>  beta1 <span class="ot">&lt;-</span> par[<span class="dv">2</span>]</span>
+<span id="cb279-15"><a href="S18-m-est.html#cb279-15" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">abs</span>(y <span class="sc">-</span> beta0 <span class="sc">-</span> beta1<span class="sc">*</span>x))</span>
+<span id="cb279-16"><a href="S18-m-est.html#cb279-16" tabindex="-1"></a>}</span>
+<span id="cb279-17"><a href="S18-m-est.html#cb279-17" tabindex="-1"></a></span>
+<span id="cb279-18"><a href="S18-m-est.html#cb279-18" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="co"># We want a 2x2 grid of plots,</span></span>
+<span id="cb279-19"><a href="S18-m-est.html#cb279-19" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="co"># using smaller margins, and</span></span>
+<span id="cb279-20"><a href="S18-m-est.html#cb279-20" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="co"># we move the labels closer to the axes.</span></span>
+<span id="cb279-21"><a href="S18-m-est.html#cb279-21" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) {</span>
+<span id="cb279-22"><a href="S18-m-est.html#cb279-22" tabindex="-1"></a>  <span class="fu">plot</span>(x, y, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">21</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">5</span>))</span>
+<span id="cb279-23"><a href="S18-m-est.html#cb279-23" tabindex="-1"></a>  <span class="fu">abline</span>(m)</span>
+<span id="cb279-24"><a href="S18-m-est.html#cb279-24" tabindex="-1"></a></span>
+<span id="cb279-25"><a href="S18-m-est.html#cb279-25" tabindex="-1"></a>  o <span class="ot">&lt;-</span> <span class="fu">optim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), lav, <span class="cn">NULL</span>, <span class="fu">c</span>(x, x.extra[i]), <span class="fu">c</span>(y, y.extra[i]))</span>
+<span id="cb279-26"><a href="S18-m-est.html#cb279-26" tabindex="-1"></a>  <span class="fu">abline</span>(o<span class="sc">$</span>par[<span class="dv">1</span>], o<span class="sc">$</span>par[<span class="dv">2</span>], <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">lty=</span><span class="st">&quot;dashed&quot;</span>)</span>
+<span id="cb279-27"><a href="S18-m-est.html#cb279-27" tabindex="-1"></a>  <span class="fu">points</span>(x.extra[i], y.extra[i], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span>
+<span id="cb279-28"><a href="S18-m-est.html#cb279-28" tabindex="-1"></a>}</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/lav-estimator-1.png" width="672" /></p>
 </div>
 <p>Define <span class="math inline">\(s(\beta) = r(y - X\beta)\)</span>. Then we have
@@ -637,16 +632,16 @@ to the following examples easier. The derivative of <span class="math inline">\(
 \end{equation*}\]</span></p>
 <p>The following R code can be used to plot <span class="math inline">\(\psi\)</span> and the weight
 function <span class="math inline">\(w\)</span>:</p>
-<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="S18-m-est.html#cb281-1" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="at">length.out =</span> <span class="dv">201</span>)</span>
-<span id="cb281-2"><a href="S18-m-est.html#cb281-2" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) eps</span>
-<span id="cb281-3"><a href="S18-m-est.html#cb281-3" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb281-4"><a href="S18-m-est.html#cb281-4" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
-<span id="cb281-5"><a href="S18-m-est.html#cb281-5" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
-<span id="cb281-6"><a href="S18-m-est.html#cb281-6" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
-<span id="cb281-7"><a href="S18-m-est.html#cb281-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
-<span id="cb281-8"><a href="S18-m-est.html#cb281-8" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb281-9"><a href="S18-m-est.html#cb281-9" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
-<span id="cb281-10"><a href="S18-m-est.html#cb281-10" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
+<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb280-1"><a href="S18-m-est.html#cb280-1" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="at">length.out =</span> <span class="dv">201</span>)</span>
+<span id="cb280-2"><a href="S18-m-est.html#cb280-2" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) eps</span>
+<span id="cb280-3"><a href="S18-m-est.html#cb280-3" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb280-4"><a href="S18-m-est.html#cb280-4" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb280-5"><a href="S18-m-est.html#cb280-5" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
+<span id="cb280-6"><a href="S18-m-est.html#cb280-6" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb280-7"><a href="S18-m-est.html#cb280-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
+<span id="cb280-8"><a href="S18-m-est.html#cb280-8" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb280-9"><a href="S18-m-est.html#cb280-9" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
+<span id="cb280-10"><a href="S18-m-est.html#cb280-10" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/psi-lsq-1.png" width="672" /></p>
 <p>The right-hand plot shows that weight of observations does not depend
 on their magnitude. This property is what makes the least squares estimate
@@ -674,16 +669,16 @@ and the weight function is
   = \frac{\mathop{\mathrm{sign}}(\varepsilon)}{\varepsilon}
   = \frac{1}{|\varepsilon|}.
 \end{equation*}\]</span></p>
-<div class="sourceCode" id="cb282"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb282-1"><a href="S18-m-est.html#cb282-1" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb282-2"><a href="S18-m-est.html#cb282-2" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) <span class="fu">sign</span>(eps)</span>
-<span id="cb282-3"><a href="S18-m-est.html#cb282-3" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb282-4"><a href="S18-m-est.html#cb282-4" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
-<span id="cb282-5"><a href="S18-m-est.html#cb282-5" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
-<span id="cb282-6"><a href="S18-m-est.html#cb282-6" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
-<span id="cb282-7"><a href="S18-m-est.html#cb282-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
-<span id="cb282-8"><a href="S18-m-est.html#cb282-8" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb282-9"><a href="S18-m-est.html#cb282-9" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
-<span id="cb282-10"><a href="S18-m-est.html#cb282-10" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="S18-m-est.html#cb281-1" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb281-2"><a href="S18-m-est.html#cb281-2" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) <span class="fu">sign</span>(eps)</span>
+<span id="cb281-3"><a href="S18-m-est.html#cb281-3" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb281-4"><a href="S18-m-est.html#cb281-4" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb281-5"><a href="S18-m-est.html#cb281-5" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
+<span id="cb281-6"><a href="S18-m-est.html#cb281-6" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb281-7"><a href="S18-m-est.html#cb281-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
+<span id="cb281-8"><a href="S18-m-est.html#cb281-8" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb281-9"><a href="S18-m-est.html#cb281-9" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
+<span id="cb281-10"><a href="S18-m-est.html#cb281-10" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/psi-abs-1.png" width="672" /></p>
 </div>
 <div id="Huber" class="section level3 hasAnchor" number="18.3.3">
@@ -709,16 +704,16 @@ t \mathop{\mathrm{sign}}(\varepsilon) &amp; \mbox{if } |\varepsilon| &gt; t.
 the weight of observations where the residuals satisfy <span class="math inline">\(|\varepsilon_i| \leq t\)</span>
 is the same as for least squares, but larger residuals get lower weights,
 leading to a more robust estimator.</p>
-<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb283-1"><a href="S18-m-est.html#cb283-1" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb283-2"><a href="S18-m-est.html#cb283-2" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> t, eps, t <span class="sc">*</span> <span class="fu">sign</span>(eps))</span>
-<span id="cb283-3"><a href="S18-m-est.html#cb283-3" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb283-4"><a href="S18-m-est.html#cb283-4" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
-<span id="cb283-5"><a href="S18-m-est.html#cb283-5" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
-<span id="cb283-6"><a href="S18-m-est.html#cb283-6" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
-<span id="cb283-7"><a href="S18-m-est.html#cb283-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
-<span id="cb283-8"><a href="S18-m-est.html#cb283-8" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb283-9"><a href="S18-m-est.html#cb283-9" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
-<span id="cb283-10"><a href="S18-m-est.html#cb283-10" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
+<div class="sourceCode" id="cb282"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb282-1"><a href="S18-m-est.html#cb282-1" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb282-2"><a href="S18-m-est.html#cb282-2" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> t, eps, t <span class="sc">*</span> <span class="fu">sign</span>(eps))</span>
+<span id="cb282-3"><a href="S18-m-est.html#cb282-3" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb282-4"><a href="S18-m-est.html#cb282-4" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb282-5"><a href="S18-m-est.html#cb282-5" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
+<span id="cb282-6"><a href="S18-m-est.html#cb282-6" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb282-7"><a href="S18-m-est.html#cb282-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
+<span id="cb282-8"><a href="S18-m-est.html#cb282-8" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb282-9"><a href="S18-m-est.html#cb282-9" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
+<span id="cb282-10"><a href="S18-m-est.html#cb282-10" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/psi-huber-1.png" width="672" /></p>
 </div>
 <div id="hampels-method" class="section level3 hasAnchor" number="18.3.4">
@@ -746,24 +741,24 @@ a \frac{\varepsilon- c \mathop{\mathrm{sign}}(\varepsilon)}{b - c} &amp; \mbox{i
 \end{equation*}\]</span>
 Since these formulas are tedious to understand, we consider plots
 of <span class="math inline">\(\psi\)</span> and <span class="math inline">\(\psi(\varepsilon) / \varepsilon\)</span> again:</p>
-<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="S18-m-est.html#cb284-1" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
-<span id="cb284-2"><a href="S18-m-est.html#cb284-2" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fl">1.5</span></span>
-<span id="cb284-3"><a href="S18-m-est.html#cb284-3" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fl">2.5</span></span>
-<span id="cb284-4"><a href="S18-m-est.html#cb284-4" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) {</span>
-<span id="cb284-5"><a href="S18-m-est.html#cb284-5" tabindex="-1"></a>    <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> a, eps,</span>
-<span id="cb284-6"><a href="S18-m-est.html#cb284-6" tabindex="-1"></a>           <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> b, a <span class="sc">*</span> <span class="fu">sign</span>(eps),</span>
-<span id="cb284-7"><a href="S18-m-est.html#cb284-7" tabindex="-1"></a>                  <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> c,</span>
-<span id="cb284-8"><a href="S18-m-est.html#cb284-8" tabindex="-1"></a>                         a <span class="sc">*</span> (eps <span class="sc">-</span> c<span class="sc">*</span><span class="fu">sign</span>(eps)) <span class="sc">/</span> (b <span class="sc">-</span> c),</span>
-<span id="cb284-9"><a href="S18-m-est.html#cb284-9" tabindex="-1"></a>                         <span class="dv">0</span>)))</span>
-<span id="cb284-10"><a href="S18-m-est.html#cb284-10" tabindex="-1"></a>}</span>
-<span id="cb284-11"><a href="S18-m-est.html#cb284-11" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb284-12"><a href="S18-m-est.html#cb284-12" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
-<span id="cb284-13"><a href="S18-m-est.html#cb284-13" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
-<span id="cb284-14"><a href="S18-m-est.html#cb284-14" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
-<span id="cb284-15"><a href="S18-m-est.html#cb284-15" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
-<span id="cb284-16"><a href="S18-m-est.html#cb284-16" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb284-17"><a href="S18-m-est.html#cb284-17" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
-<span id="cb284-18"><a href="S18-m-est.html#cb284-18" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
+<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb283-1"><a href="S18-m-est.html#cb283-1" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb283-2"><a href="S18-m-est.html#cb283-2" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fl">1.5</span></span>
+<span id="cb283-3"><a href="S18-m-est.html#cb283-3" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="fl">2.5</span></span>
+<span id="cb283-4"><a href="S18-m-est.html#cb283-4" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) {</span>
+<span id="cb283-5"><a href="S18-m-est.html#cb283-5" tabindex="-1"></a>    <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> a, eps,</span>
+<span id="cb283-6"><a href="S18-m-est.html#cb283-6" tabindex="-1"></a>           <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> b, a <span class="sc">*</span> <span class="fu">sign</span>(eps),</span>
+<span id="cb283-7"><a href="S18-m-est.html#cb283-7" tabindex="-1"></a>                  <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> c,</span>
+<span id="cb283-8"><a href="S18-m-est.html#cb283-8" tabindex="-1"></a>                         a <span class="sc">*</span> (eps <span class="sc">-</span> c<span class="sc">*</span><span class="fu">sign</span>(eps)) <span class="sc">/</span> (b <span class="sc">-</span> c),</span>
+<span id="cb283-9"><a href="S18-m-est.html#cb283-9" tabindex="-1"></a>                         <span class="dv">0</span>)))</span>
+<span id="cb283-10"><a href="S18-m-est.html#cb283-10" tabindex="-1"></a>}</span>
+<span id="cb283-11"><a href="S18-m-est.html#cb283-11" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb283-12"><a href="S18-m-est.html#cb283-12" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb283-13"><a href="S18-m-est.html#cb283-13" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
+<span id="cb283-14"><a href="S18-m-est.html#cb283-14" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb283-15"><a href="S18-m-est.html#cb283-15" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
+<span id="cb283-16"><a href="S18-m-est.html#cb283-16" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb283-17"><a href="S18-m-est.html#cb283-17" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
+<span id="cb283-18"><a href="S18-m-est.html#cb283-18" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/psi-hampel-1.png" width="672" /></p>
 <p>We see that small residuals, with <span class="math inline">\(|\varepsilon_i| \leq a\)</span> get the same weight
 as for least squares regression, and the weight for larger residuals
@@ -797,21 +792,21 @@ with derivative
 \end{equation*}\]</span>
 The plots show that this is a simplified variant of Hampel’s
 estimator:</p>
-<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb285-1"><a href="S18-m-est.html#cb285-1" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fl">2.5</span></span>
-<span id="cb285-2"><a href="S18-m-est.html#cb285-2" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="at">length.out =</span> <span class="dv">201</span>)</span>
-<span id="cb285-3"><a href="S18-m-est.html#cb285-3" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) {</span>
-<span id="cb285-4"><a href="S18-m-est.html#cb285-4" tabindex="-1"></a>    <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> a,</span>
-<span id="cb285-5"><a href="S18-m-est.html#cb285-5" tabindex="-1"></a>           eps <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> (eps <span class="sc">/</span> a)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">^</span><span class="dv">2</span>,</span>
-<span id="cb285-6"><a href="S18-m-est.html#cb285-6" tabindex="-1"></a>           <span class="dv">0</span>)</span>
-<span id="cb285-7"><a href="S18-m-est.html#cb285-7" tabindex="-1"></a>}</span>
-<span id="cb285-8"><a href="S18-m-est.html#cb285-8" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb285-9"><a href="S18-m-est.html#cb285-9" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
-<span id="cb285-10"><a href="S18-m-est.html#cb285-10" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
-<span id="cb285-11"><a href="S18-m-est.html#cb285-11" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
-<span id="cb285-12"><a href="S18-m-est.html#cb285-12" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
-<span id="cb285-13"><a href="S18-m-est.html#cb285-13" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb285-14"><a href="S18-m-est.html#cb285-14" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
-<span id="cb285-15"><a href="S18-m-est.html#cb285-15" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
+<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="S18-m-est.html#cb284-1" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fl">2.5</span></span>
+<span id="cb284-2"><a href="S18-m-est.html#cb284-2" tabindex="-1"></a>eps <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="at">length.out =</span> <span class="dv">201</span>)</span>
+<span id="cb284-3"><a href="S18-m-est.html#cb284-3" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) {</span>
+<span id="cb284-4"><a href="S18-m-est.html#cb284-4" tabindex="-1"></a>    <span class="fu">ifelse</span>(<span class="fu">abs</span>(eps) <span class="sc">&lt;=</span> a,</span>
+<span id="cb284-5"><a href="S18-m-est.html#cb284-5" tabindex="-1"></a>           eps <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> (eps <span class="sc">/</span> a)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb284-6"><a href="S18-m-est.html#cb284-6" tabindex="-1"></a>           <span class="dv">0</span>)</span>
+<span id="cb284-7"><a href="S18-m-est.html#cb284-7" tabindex="-1"></a>}</span>
+<span id="cb284-8"><a href="S18-m-est.html#cb284-8" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb284-9"><a href="S18-m-est.html#cb284-9" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb284-10"><a href="S18-m-est.html#cb284-10" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
+<span id="cb284-11"><a href="S18-m-est.html#cb284-11" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb284-12"><a href="S18-m-est.html#cb284-12" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
+<span id="cb284-13"><a href="S18-m-est.html#cb284-13" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb284-14"><a href="S18-m-est.html#cb284-14" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
+<span id="cb284-15"><a href="S18-m-est.html#cb284-15" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/psi-tukey-1.png" width="672" /></p>
 <p>Again, <span class="math inline">\(\rho\)</span> is not convex and care is needed when computing
 the estimate <span class="math inline">\(\hat\beta\)</span>.</p>

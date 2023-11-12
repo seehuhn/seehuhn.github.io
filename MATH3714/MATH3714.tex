@@ -6198,7 +6198,7 @@ The estimate for the error variance,
 \end{equation*}
 can be used, where \(q\) is the number of columns of the design matrix.
 (For the full model with an intercept we have \(q = p+1\).)
-``Good'' models have small \(\hat\sigma^2\). Since
+``Good'' models have small \(\hat\sigma^2\). We have
 \begin{align*}
   R^2_\mathrm{adj}
   &= 1 - \frac{\frac{1}{n-q}\mathrm{s}_{\hat\varepsilon}^2}{\frac{1}{n-1}\mathrm{s}_y^2} \\
@@ -6207,9 +6207,8 @@ can be used, where \(q\) is the number of columns of the design matrix.
   &= 1 - \frac{\hat\sigma^2}{\mathrm{s}_y^2},
 \end{align*}
 where \(\mathrm{s}_{\hat\varepsilon}^2\) and \(\mathrm{s}_y^2\) are the sample variances
-as before, minimising \(\hat\sigma^2\) is equivalent to
-maximising \(R^2_\mathrm{adj}\). Thus, this criterion is equivalent to
-the first one.
+as before. Thus, minimising \(\hat\sigma^2\) is equivalent to
+maximising \(R^2_\mathrm{adj}\).
 
 \subsection{Prediction Error Sum of Squares}\label{PRESS}
 
@@ -6317,6 +6316,82 @@ Thus we get
 \item
   If models with different numbers of variables are compared,
   \(R^2_\mathrm{adj}\) should be used instead of \(R^2\).
+\item
+  Other measures for the quality of model fit include PRESS and AIC.
+\end{itemize}
+
+\clearpage
+
+\section*{\texorpdfstring{Interlude: Understanding the \texttt{lm()} Output}{Interlude: Understanding the lm() Output}}\label{I03-lm-output}
+\addcontentsline{toc}{section}{Interlude: Understanding the \texttt{lm()} Output}
+
+We have seen that the \texttt{lm()} function returns an object which contains
+a lot of information about the fitted model. We can inspect this
+information by using the \texttt{summary()} function. The aim of this section
+is to help you understand how the output of \texttt{summary()} relates to the
+mathematical expressions we have considered in the previous sections.
+
+We will use the \texttt{stackloss} dataset as an example:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{images/lm-output.png}
+
+Here I have marked different parts of the output using red shaded boxes
+and using the letters A to~I. We discuss each of the marked
+sections in turn:
+
+\begin{itemize}
+\item
+  The first section, part \textbf{A}, contains summary statistics for the
+  fitted residuals \(\hat\varepsilon_1, \ldots, \hat\varepsilon_n\). The values
+  shown are the minimum, first quartile, median, third quartile,
+  and maximum of the residuals. This is the same information
+  we can get using the command \texttt{summary(resid(m))}.
+  The mean is omitted from A, since if always equals zero.
+\item
+  Column \textbf{B} shows the estimated coefficient vector \(\hat\beta\).
+  This is computed using the formula from lemma~\ref{lem:multiple-LSQ}.
+\item
+  Column \textbf{C} shows the standard error of the estimated coefficients.
+  The \(i\)th entry is the (estimated) standard deviation of \(\hat\beta_i\),
+  computed as \(\sqrt{\hat\sigma^2 C_{ii}}\), where \(C = (X^\top X)^{-1}\).
+  This corresponds to the variance shown in equation~\eqref{eq:beta-hat-i},
+  where the true variance is \(\sigma^2\) replaced with the estimate \(\hat\sigma^2\).
+  These quantities are used to compute the t-test statistic in
+  equation~\eqref{eq:single-test}.
+\item
+  Column \textbf{D} shows the t-test statistic for the coefficients.
+  The values are computed using equation~\eqref{eq:single-test}.
+\item
+  Column \textbf{E} replicates the information from column \textbf{D} in different form,
+  showing \href{https://en.wikipedia.org/wiki/P-value}{\(p\)-values} instead of the
+  test statistics.
+\item
+  The field \textbf{F} shows the estimated standard deviation~\(\hat\sigma\).
+  This is computed as the square root of \(\hat\sigma^2\) from
+  equation~\eqref{eq:hat-sigma-squared}.
+\item
+  Field \textbf{G} shows the value \(n - p - 1\). This is the number of degrees
+  of freedom in lemma~\ref{lem:beta-i-follows-t}. The value is needed
+  when performing hypothesis tests and computing confidence intervals
+  for individual coefficients.
+\item
+  Field \textbf{H} shows the \(R^2\) value and adjusted \(R^2\) value. These are
+  computed using definitions \ref{def:R-squared} and \ref{def:adjusted-R-squared}.
+\item
+  Field \textbf{I} shows the \(F\)-test statistic for testing the hypothesis
+  \(H_i\colon \beta_1 = \cdots = \beta_p = 0\) (omitting the coeficient
+  \(\beta_0\) for the intercept). This value can be used to test the hypothesis
+  that the inputs have no effect on the output.
+  The \(F\)-test statistic is computed using equation~\eqref{eq:simult-F},
+  the degrees of freedom shown are \(k = p\) and \(n - p - 1\)
+  from lemma~\ref{lem:F-dist}.
 \end{itemize}
 
 \clearpage
@@ -6689,80 +6764,6 @@ Thus we get
 as required. This completes the proof.
 
 \end{myanswers}
-
-\clearpage
-
-\section*{\texorpdfstring{Interlude: Understanding the \texttt{lm()} Output}{Interlude: Understanding the lm() Output}}\label{I03-lm-output}
-\addcontentsline{toc}{section}{Interlude: Understanding the \texttt{lm()} Output}
-
-We have seen that the \texttt{lm()} function returns an object which contains
-a lot of information about the fitted model. We can inspect this
-information by using the \texttt{summary()} function. The aim of this section
-is to help you understand how the output of \texttt{summary()} relates to the
-mathematical expressions we have considered in the previous sections.
-
-We will use the \texttt{stackloss} dataset as an example:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
-\FunctionTok{summary}\NormalTok{(m)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{images/lm-output.png}
-
-Here I have marked different parts of the output using red shaded boxes
-and using the letters A to~I. We discuss each of the marked
-sections in turn:
-
-\begin{itemize}
-\item
-  The first section, part \textbf{A}, contains summary statistics for the
-  fitted residuals \(\hat\varepsilon_1, \ldots, \hat\varepsilon_n\). The values
-  shown are the minimum, first quartile, median, third quartile,
-  and maximum of the residuals. This is the same information
-  we can get using the command \texttt{summary(resid(m))}.
-  The mean is omitted from A, since if always equals zero.
-\item
-  Column \textbf{B} shows the estimated coefficient vector \(\hat\beta\).
-  This is computed using the formula from lemma~\ref{lem:multiple-LSQ}.
-\item
-  Column \textbf{C} shows the standard error of the estimated coefficients.
-  The \(i\)th entry is the (estimated) standard deviation of \(\hat\beta_i\),
-  computed as \(\sqrt{\hat\sigma^2 C_{ii}}\), where \(C = (X^\top X)^{-1}\).
-  This corresponds to the variance shown in equation~\eqref{eq:beta-hat-i},
-  where the true variance is \(\sigma^2\) replaced with the estimate \(\hat\sigma^2\).
-  These quantities are used to compute the t-test statistic in
-  equation~\eqref{eq:single-test}.
-\item
-  Column \textbf{D} shows the t-test statistic for the coefficients.
-  The values are computed using equation~\eqref{eq:single-test}.
-\item
-  Column \textbf{E} replicates the information from column \textbf{D} in different form,
-  showing \href{https://en.wikipedia.org/wiki/P-value}{\(p\)-values} instead of the
-  test statistics.
-\item
-  The field \textbf{F} shows the estimated standard deviation~\(\hat\sigma\).
-  This is computed as the square root of \(\hat\sigma^2\) from
-  equation~\eqref{eq:hat-sigma-squared}.
-\item
-  Field \textbf{G} shows the value \(n - p - 1\). This is the number of degrees
-  of freedom in lemma~\ref{lem:beta-i-follows-t}. The value is needed
-  when performing hypothesis tests and computing confidence intervals
-  for individual coefficients.
-\item
-  Field \textbf{H} shows the \(R^2\) value and adjusted \(R^2\) value. These are
-  computed using definitions \ref{def:R-squared} and \ref{def:adjusted-R-squared}.
-\item
-  Field \textbf{I} shows the \(F\)-test statistic for testing the hypothesis
-  \(H_i\colon \beta_1 = \cdots = \beta_p = 0\) (omitting the coeficient
-  \(\beta_0\) for the intercept). This value can be used to test the hypothesis
-  that the inputs have no effect on the output.
-  The \(F\)-test statistic is computed using equation~\eqref{eq:simult-F},
-  the degrees of freedom shown are \(k = p\) and \(n - p - 1\)
-  from lemma~\ref{lem:F-dist}.
-\end{itemize}
 
 \clearpage
 
@@ -8845,179 +8846,6 @@ from the lemma. Implementation in R is straightforward.
 \end{Shaded}
 
 \end{myanswers}
-
-\clearpage
-
-\section*{Practical}\label{practical}
-\addcontentsline{toc}{section}{Practical}
-
-\begin{itemize}
-\tightlist
-\item
-  The MATH3714 and MATH5714M modules are assessed by an examination (80\%)
-  and a practical (20\%). This is the practical, worth 20\% of your final
-  module mark.
-\item
-  You must hand in your solution (printed on paper)
-  by \textbf{Friday, 16th December 2022, 2pm}. The easiest way to hand in
-  is to pass your report to me after one of the lectures. Alternatively,
-  I will also set up a pidgeonhole for you to drop your report into.
-\item
-  Reports must be typeset (not handwritten) and should be no more than 8 pages
-  in length (but can be shorter). Your report must show your name and student ID
-  on the front page.
-\item
-  Within reason you may talk to your friends about this piece of work,
-  but you should not send R code (or output) to each other.
-  Your report must be your own work.
-\end{itemize}
-
-\subsection*{Dataset}\label{dataset}
-\addcontentsline{toc}{subsection}{Dataset}
-
-In this practical we are interested in factors which influence
-the life expectancy at birth. We consider the following dataset:
-
-\begin{itemize}
-\tightlist
-\item
-  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/practical.csv}
-\end{itemize}
-
-You can read the data into R using the following command:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/practical.csv"}\NormalTok{,}
-              \AttributeTok{stringsAsFactors =} \ConstantTok{TRUE}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-The dataset contain the following variables:
-
-\begin{itemize}
-\tightlist
-\item
-  \texttt{country}: country
-\item
-  \texttt{region}: geographic region the country is in
-\item
-  \texttt{sub.region}: geographic sub-region the country is in
-\item
-  \texttt{year}: year the data refers to
-\item
-  \texttt{GDP.per.capita}: Per capita GDP at current prices (USD)
-\item
-  \texttt{health.spending}: Per capita government expenditure on health at average exchange rate (USD,
-  only until 2010)
-\item
-  \texttt{HIV}: Prevalence of HIV among adults aged 15 to 49 (\%)
-\item
-  \texttt{alcohol}: Alcohol, recorded per capita (15+) consumption (in litres of pure alcohol)
-\item
-  \texttt{tobacco}: Prevalence of current tobacco use among adults aged \(\geq 15\) years
-\item
-  \texttt{population.size}: population size, for the given country and year (thousands)
-\item
-  \texttt{population.density}: Population per square kilometre, for the given country and year (thousands)
-\item
-  \texttt{life.expectancy}: Life expectancy at birth (years). This is the variable we are interested in.
-\end{itemize}
-
-\subsection*{Tasks}\label{tasks}
-\addcontentsline{toc}{subsection}{Tasks}
-
-The aim of this practical is to fit an appropriate model to these data, which
-predicts the life expectancy \texttt{life.expectancy} from the other variables.
-
-This practical is deliberately open-ended, with little guidance on how to proceed.
-
-\textbf{Task 1.} We start by considering \texttt{life.expectancy} as a function
-of \texttt{GDP.per.capita} only.
-
-\begin{itemize}
-\item
-  Using appropriate transformations of the data, find a linear model which can
-  describe the relationship between \texttt{life.expectancy} (response) and
-  \texttt{GDP.per.capita} (input).
-\item
-  Using appropriate diagnostics, confirm that your model is acceptable.
-  In your answer, you only need to describe your final model and \emph{one} other
-  model which you have examined, but deemed less appropriate.
-\item
-  Using your model obtain a 95\% confidence interval for the mean (expected)
-  life expectancy at birth, for a country with a per capita GDP of 5000~USD.
-\end{itemize}
-
-\textbf{Task 2.} Now we also consider the remaining variables in the dataset.
-
-\begin{itemize}
-\item
-  With due consideration to
-
-  \begin{itemize}
-  \tightlist
-  \item
-    transformations (where, and if, necessary)
-  \item
-    appropriate choice of variables
-  \item
-    model selection
-  \item
-    model checking
-  \item
-    missing data
-  \item
-    \emph{etc.}
-  \end{itemize}
-
-  obtain a model which is able to predict \texttt{life.expectancy} using some or all
-  of these additional variables.
-\item
-  Note that some variables are missing data. Missing data is indicated
-  by the value \texttt{NA} (not available). You should decide how to deal with
-  missing data, \emph{e.g.} by ignoring the corresponding samples.
-  You should explain your choice in your report.
-\item
-  Justify your choice by comparing at least two ``competing'' models.
-  The comparison should take note of at
-  least (a) model selection criteria, (b) diagnostics, and (c) interpretability.
-\item
-  Interpret the parameters in your preferred model.
-\end{itemize}
-
-There is no single right or wrong answer to this practical.
-The important thing is that you justify your approach.
-
-\subsection*{References}\label{references}
-\addcontentsline{toc}{subsection}{References}
-
-The data were collected from the following sources.
-
-\begin{itemize}
-\tightlist
-\item
-  \url{https://www.who.int/data/gho/data/indicators/indicator-details/GHO/life-expectancy-at-birth-(years)}\strut \\
-  \texttt{country}, \texttt{year}, \texttt{life.expectancy}
-\item
-  \url{https://population.un.org/wpp/Download/Standard/CSV/}\strut \\
-  \texttt{country}, \texttt{year}, \texttt{population.size}, \texttt{population.density}, \texttt{region}, \texttt{sub.region}
-\item
-  \url{https://data.un.org/Data.aspx?d=SNAAMA&f=grID\%3A101\%3BcurrID\%3AUSD\%3BpcFlag\%3A1}\strut \\
-  \texttt{country}, \texttt{year}, \texttt{GDP.per.capita}
-\item
-  \url{http://data.un.org/Data.aspx?d=WHO&f=MEASURE_CODE\%3aWHS7_104}\strut \\
-  \texttt{country}, \texttt{year}, \texttt{health.spending}
-\item
-  \url{https://www.who.int/data/gho/data/indicators/indicator-details/GHO/alcohol-recorded-per-capita-(15-)-consumption-(in-litres-of-pure-alcohol)}\strut \\
-  \texttt{country}, \texttt{year}, \texttt{alcohol}
-\item
-  \url{https://www.who.int/data/gho/data/indicators/indicator-details/GHO/age-standardized-prevalence-of-current-tobacco-smoking-among-persons-aged-15-years-and-older}\strut \\
-  \texttt{country}, \texttt{year}, \texttt{tobacco}
-\item
-  \url{https://www.who.int/data/gho/data/indicators/indicator-details/GHO/prevalence-of-hiv-among-adults-aged-15-to-49-(-)}\strut \\
-  \texttt{country}, \texttt{year}, \texttt{HIV}
-\end{itemize}
 
 \clearpage
 

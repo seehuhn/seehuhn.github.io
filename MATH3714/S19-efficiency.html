@@ -273,8 +273,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="11.3" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#PRESS"><i class="fa fa-check"></i><b>11.3</b> Prediction Error Sum of Squares</a></li>
 <li class="chapter" data-level="11.4" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#AIC"><i class="fa fa-check"></i><b>11.4</b> Akaike’s Information Criterion</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
 <li class="chapter" data-level="" data-path="I03-lm-output.html"><a href="I03-lm-output.html"><i class="fa fa-check"></i>Interlude: Understanding the <code>lm()</code> Output</a></li>
+<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
 <li class="chapter" data-level="12" data-path="S12-automatic.html"><a href="S12-automatic.html"><i class="fa fa-check"></i><b>12</b> Automatic Model Selection</a>
 <ul>
 <li class="chapter" data-level="12.1" data-path="S12-automatic.html"><a href="S12-automatic.html#exhaustive-search"><i class="fa fa-check"></i><b>12.1</b> Exhaustive Search</a></li>
@@ -303,12 +303,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.3" data-path="S15-multicoll.html"><a href="S15-multicoll.html#mitigations"><i class="fa fa-check"></i><b>15.3</b> Mitigations</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
-<ul>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#references"><i class="fa fa-check"></i>References</a></li>
-</ul></li>
 <li class="chapter" data-level="16" data-path="S16-ridge.html"><a href="S16-ridge.html"><i class="fa fa-check"></i><b>16</b> Ridge Regression</a>
 <ul>
 <li class="chapter" data-level="16.1" data-path="S16-ridge.html"><a href="S16-ridge.html#definition-the-estimator"><i class="fa fa-check"></i><b>16.1</b> Definition the Estimator</a></li>
@@ -553,22 +547,22 @@ as <span class="math inline">\(n\to\infty\)</span>.</p>
 introduce artifical outliers by shifting <span class="math inline">\(30\%\)</span> of the data
 to the bottom right. These artificial outliers are represented
 by the red circles in the plot.</p>
-<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="S19-efficiency.html#cb301-1" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;MASS&quot;</span>) <span class="co"># for lqs()</span></span>
-<span id="cb301-2"><a href="S19-efficiency.html#cb301-2" tabindex="-1"></a></span>
-<span id="cb301-3"><a href="S19-efficiency.html#cb301-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211207</span>)</span>
-<span id="cb301-4"><a href="S19-efficiency.html#cb301-4" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
-<span id="cb301-5"><a href="S19-efficiency.html#cb301-5" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb301-6"><a href="S19-efficiency.html#cb301-6" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb301-7"><a href="S19-efficiency.html#cb301-7" tabindex="-1"></a></span>
-<span id="cb301-8"><a href="S19-efficiency.html#cb301-8" tabindex="-1"></a><span class="co"># add 30% outliers</span></span>
-<span id="cb301-9"><a href="S19-efficiency.html#cb301-9" tabindex="-1"></a>n.ol <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fl">0.3</span><span class="sc">*</span>n)</span>
-<span id="cb301-10"><a href="S19-efficiency.html#cb301-10" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">sample.int</span>(n, n.ol)</span>
-<span id="cb301-11"><a href="S19-efficiency.html#cb301-11" tabindex="-1"></a>x[idx] <span class="ot">&lt;-</span> x[idx] <span class="sc">+</span> <span class="dv">15</span></span>
-<span id="cb301-12"><a href="S19-efficiency.html#cb301-12" tabindex="-1"></a>y[idx] <span class="ot">&lt;-</span> y[idx] <span class="sc">-</span> <span class="dv">10</span></span>
-<span id="cb301-13"><a href="S19-efficiency.html#cb301-13" tabindex="-1"></a></span>
-<span id="cb301-14"><a href="S19-efficiency.html#cb301-14" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lqs</span>(y<span class="sc">~</span>x, <span class="at">method=</span><span class="st">&quot;lms&quot;</span>)</span>
-<span id="cb301-15"><a href="S19-efficiency.html#cb301-15" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">col =</span> <span class="fu">ifelse</span>(<span class="dv">1</span><span class="sc">:</span>n <span class="sc">%in%</span> idx, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>))</span>
-<span id="cb301-16"><a href="S19-efficiency.html#cb301-16" tabindex="-1"></a><span class="fu">abline</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="S19-efficiency.html#cb300-1" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;MASS&quot;</span>) <span class="co"># for lqs()</span></span>
+<span id="cb300-2"><a href="S19-efficiency.html#cb300-2" tabindex="-1"></a></span>
+<span id="cb300-3"><a href="S19-efficiency.html#cb300-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211207</span>)</span>
+<span id="cb300-4"><a href="S19-efficiency.html#cb300-4" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb300-5"><a href="S19-efficiency.html#cb300-5" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb300-6"><a href="S19-efficiency.html#cb300-6" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb300-7"><a href="S19-efficiency.html#cb300-7" tabindex="-1"></a></span>
+<span id="cb300-8"><a href="S19-efficiency.html#cb300-8" tabindex="-1"></a><span class="co"># add 30% outliers</span></span>
+<span id="cb300-9"><a href="S19-efficiency.html#cb300-9" tabindex="-1"></a>n.ol <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fl">0.3</span><span class="sc">*</span>n)</span>
+<span id="cb300-10"><a href="S19-efficiency.html#cb300-10" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">sample.int</span>(n, n.ol)</span>
+<span id="cb300-11"><a href="S19-efficiency.html#cb300-11" tabindex="-1"></a>x[idx] <span class="ot">&lt;-</span> x[idx] <span class="sc">+</span> <span class="dv">15</span></span>
+<span id="cb300-12"><a href="S19-efficiency.html#cb300-12" tabindex="-1"></a>y[idx] <span class="ot">&lt;-</span> y[idx] <span class="sc">-</span> <span class="dv">10</span></span>
+<span id="cb300-13"><a href="S19-efficiency.html#cb300-13" tabindex="-1"></a></span>
+<span id="cb300-14"><a href="S19-efficiency.html#cb300-14" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lqs</span>(y<span class="sc">~</span>x, <span class="at">method=</span><span class="st">&quot;lms&quot;</span>)</span>
+<span id="cb300-15"><a href="S19-efficiency.html#cb300-15" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">col =</span> <span class="fu">ifelse</span>(<span class="dv">1</span><span class="sc">:</span>n <span class="sc">%in%</span> idx, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>))</span>
+<span id="cb300-16"><a href="S19-efficiency.html#cb300-16" tabindex="-1"></a><span class="fu">abline</span>(m)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/lms-1.png" width="672" /></p>
 </div>
 </div>
@@ -594,9 +588,9 @@ function from the <code>MASS</code> library.</p>
 <div class="example">
 <p><span id="exm:unlabeled-div-70" class="example"><strong>Example 19.3  </strong></span>The following code computes an LTS regression estimate. The
 data is the same as in the previous example.</p>
-<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb302-1"><a href="S19-efficiency.html#cb302-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lqs</span>(y<span class="sc">~</span>x, <span class="at">method =</span> <span class="st">&quot;lts&quot;</span>, <span class="at">quantile =</span> <span class="fu">floor</span>(n<span class="sc">/</span><span class="dv">2</span>)<span class="sc">+</span><span class="dv">1</span>)</span>
-<span id="cb302-2"><a href="S19-efficiency.html#cb302-2" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">col =</span> <span class="fu">ifelse</span>(<span class="dv">1</span><span class="sc">:</span>n <span class="sc">%in%</span> idx, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>))</span>
-<span id="cb302-3"><a href="S19-efficiency.html#cb302-3" tabindex="-1"></a><span class="fu">abline</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="S19-efficiency.html#cb301-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lqs</span>(y<span class="sc">~</span>x, <span class="at">method =</span> <span class="st">&quot;lts&quot;</span>, <span class="at">quantile =</span> <span class="fu">floor</span>(n<span class="sc">/</span><span class="dv">2</span>)<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb301-2"><a href="S19-efficiency.html#cb301-2" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">col =</span> <span class="fu">ifelse</span>(<span class="dv">1</span><span class="sc">:</span>n <span class="sc">%in%</span> idx, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>))</span>
+<span id="cb301-3"><a href="S19-efficiency.html#cb301-3" tabindex="-1"></a><span class="fu">abline</span>(m)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/lts-1.png" width="672" /></p>
 </div>
 <p>One can show that LTS has an efficiency of approximately <span class="math inline">\(0.08\)</span>

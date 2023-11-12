@@ -273,8 +273,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="11.3" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#PRESS"><i class="fa fa-check"></i><b>11.3</b> Prediction Error Sum of Squares</a></li>
 <li class="chapter" data-level="11.4" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#AIC"><i class="fa fa-check"></i><b>11.4</b> Akaike’s Information Criterion</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
 <li class="chapter" data-level="" data-path="I03-lm-output.html"><a href="I03-lm-output.html"><i class="fa fa-check"></i>Interlude: Understanding the <code>lm()</code> Output</a></li>
+<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
 <li class="chapter" data-level="12" data-path="S12-automatic.html"><a href="S12-automatic.html"><i class="fa fa-check"></i><b>12</b> Automatic Model Selection</a>
 <ul>
 <li class="chapter" data-level="12.1" data-path="S12-automatic.html"><a href="S12-automatic.html#exhaustive-search"><i class="fa fa-check"></i><b>12.1</b> Exhaustive Search</a></li>
@@ -303,12 +303,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.3" data-path="S15-multicoll.html"><a href="S15-multicoll.html#mitigations"><i class="fa fa-check"></i><b>15.3</b> Mitigations</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
-<ul>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#references"><i class="fa fa-check"></i>References</a></li>
-</ul></li>
 <li class="chapter" data-level="16" data-path="S16-ridge.html"><a href="S16-ridge.html"><i class="fa fa-check"></i><b>16</b> Ridge Regression</a>
 <ul>
 <li class="chapter" data-level="16.1" data-path="S16-ridge.html"><a href="S16-ridge.html#definition-the-estimator"><i class="fa fa-check"></i><b>16.1</b> Definition the Estimator</a></li>
@@ -464,28 +458,28 @@ one can show that <span class="math inline">\(h_i \in [1/n, 1]\)</span> for ever
 <div class="example">
 <p><span id="exm:unlabeled-div-57" class="example"><strong>Example 17.1  </strong></span>We use simulated data to illustrate the effect of outliers and
 the difference between leverage and influence.</p>
-<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="S17-robust.html#cb274-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211130</span>)</span>
-<span id="cb274-2"><a href="S17-robust.html#cb274-2" tabindex="-1"></a></span>
-<span id="cb274-3"><a href="S17-robust.html#cb274-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">12</span></span>
-<span id="cb274-4"><a href="S17-robust.html#cb274-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="at">length.out =</span> n<span class="sc">+</span><span class="dv">1</span>)[<span class="sc">-</span>(n<span class="sc">/</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)]</span>
-<span id="cb274-5"><a href="S17-robust.html#cb274-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.4</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.3</span>)</span>
-<span id="cb274-6"><a href="S17-robust.html#cb274-6" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
-<span id="cb274-7"><a href="S17-robust.html#cb274-7" tabindex="-1"></a></span>
-<span id="cb274-8"><a href="S17-robust.html#cb274-8" tabindex="-1"></a><span class="co"># we try four different extra samples, one after another:</span></span>
-<span id="cb274-9"><a href="S17-robust.html#cb274-9" tabindex="-1"></a>x.extra <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="fl">9.5</span>, <span class="fl">2.5</span>, <span class="fl">9.5</span>)</span>
-<span id="cb274-10"><a href="S17-robust.html#cb274-10" tabindex="-1"></a>y.extra <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">2.3</span>, <span class="fl">5.4</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="fl">0.5</span>)</span>
-<span id="cb274-11"><a href="S17-robust.html#cb274-11" tabindex="-1"></a></span>
-<span id="cb274-12"><a href="S17-robust.html#cb274-12" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="co"># We want a 2x2 grid of plots,</span></span>
-<span id="cb274-13"><a href="S17-robust.html#cb274-13" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="co"># using smaller margins, and</span></span>
-<span id="cb274-14"><a href="S17-robust.html#cb274-14" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="co"># we move the labels closer to the axes.</span></span>
-<span id="cb274-15"><a href="S17-robust.html#cb274-15" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) {</span>
-<span id="cb274-16"><a href="S17-robust.html#cb274-16" tabindex="-1"></a>    <span class="fu">plot</span>(x, y, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="fl">5.5</span>))</span>
-<span id="cb274-17"><a href="S17-robust.html#cb274-17" tabindex="-1"></a>    <span class="fu">abline</span>(m)</span>
-<span id="cb274-18"><a href="S17-robust.html#cb274-18" tabindex="-1"></a></span>
-<span id="cb274-19"><a href="S17-robust.html#cb274-19" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">c</span>(y, y.extra[i]) <span class="sc">~</span> <span class="fu">c</span>(x, x.extra[i]))</span>
-<span id="cb274-20"><a href="S17-robust.html#cb274-20" tabindex="-1"></a>    <span class="fu">abline</span>(m2, <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">lty=</span><span class="st">&quot;dashed&quot;</span>)</span>
-<span id="cb274-21"><a href="S17-robust.html#cb274-21" tabindex="-1"></a>    <span class="fu">points</span>(x.extra[i], y.extra[i], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span>
-<span id="cb274-22"><a href="S17-robust.html#cb274-22" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="S17-robust.html#cb273-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211130</span>)</span>
+<span id="cb273-2"><a href="S17-robust.html#cb273-2" tabindex="-1"></a></span>
+<span id="cb273-3"><a href="S17-robust.html#cb273-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">12</span></span>
+<span id="cb273-4"><a href="S17-robust.html#cb273-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="at">length.out =</span> n<span class="sc">+</span><span class="dv">1</span>)[<span class="sc">-</span>(n<span class="sc">/</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)]</span>
+<span id="cb273-5"><a href="S17-robust.html#cb273-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.4</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.3</span>)</span>
+<span id="cb273-6"><a href="S17-robust.html#cb273-6" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb273-7"><a href="S17-robust.html#cb273-7" tabindex="-1"></a></span>
+<span id="cb273-8"><a href="S17-robust.html#cb273-8" tabindex="-1"></a><span class="co"># we try four different extra samples, one after another:</span></span>
+<span id="cb273-9"><a href="S17-robust.html#cb273-9" tabindex="-1"></a>x.extra <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="fl">9.5</span>, <span class="fl">2.5</span>, <span class="fl">9.5</span>)</span>
+<span id="cb273-10"><a href="S17-robust.html#cb273-10" tabindex="-1"></a>y.extra <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">2.3</span>, <span class="fl">5.4</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="fl">0.5</span>)</span>
+<span id="cb273-11"><a href="S17-robust.html#cb273-11" tabindex="-1"></a></span>
+<span id="cb273-12"><a href="S17-robust.html#cb273-12" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="co"># We want a 2x2 grid of plots,</span></span>
+<span id="cb273-13"><a href="S17-robust.html#cb273-13" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="co"># using smaller margins, and</span></span>
+<span id="cb273-14"><a href="S17-robust.html#cb273-14" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="co"># we move the labels closer to the axes.</span></span>
+<span id="cb273-15"><a href="S17-robust.html#cb273-15" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) {</span>
+<span id="cb273-16"><a href="S17-robust.html#cb273-16" tabindex="-1"></a>    <span class="fu">plot</span>(x, y, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="fl">5.5</span>))</span>
+<span id="cb273-17"><a href="S17-robust.html#cb273-17" tabindex="-1"></a>    <span class="fu">abline</span>(m)</span>
+<span id="cb273-18"><a href="S17-robust.html#cb273-18" tabindex="-1"></a></span>
+<span id="cb273-19"><a href="S17-robust.html#cb273-19" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">c</span>(y, y.extra[i]) <span class="sc">~</span> <span class="fu">c</span>(x, x.extra[i]))</span>
+<span id="cb273-20"><a href="S17-robust.html#cb273-20" tabindex="-1"></a>    <span class="fu">abline</span>(m2, <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">lty=</span><span class="st">&quot;dashed&quot;</span>)</span>
+<span id="cb273-21"><a href="S17-robust.html#cb273-21" tabindex="-1"></a>    <span class="fu">points</span>(x.extra[i], y.extra[i], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span>
+<span id="cb273-22"><a href="S17-robust.html#cb273-22" tabindex="-1"></a>}</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/leverage-1.png" width="672" /></p>
 <p>The black circles in all four panels are the same, and the black, solid line is
 the regression line fitted to these points. The filled, red circle is
@@ -564,37 +558,37 @@ condition for influential samples as
 against leverage. As in section <a href="S08-influence.html#deleting">8.1</a>, we can use the
 function <code>influence()</code> to easily obtain the diagonal elements of the
 hat matrix.</p>
-<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="S17-robust.html#cb275-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="co"># We want a 2x2 grid of plots,</span></span>
-<span id="cb275-2"><a href="S17-robust.html#cb275-2" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="co"># using smaller margins, and</span></span>
-<span id="cb275-3"><a href="S17-robust.html#cb275-3" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="co"># we move the labels closer to the axes.</span></span>
-<span id="cb275-4"><a href="S17-robust.html#cb275-4" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) {</span>
-<span id="cb275-5"><a href="S17-robust.html#cb275-5" tabindex="-1"></a>    xx <span class="ot">&lt;-</span> <span class="fu">c</span>(x, x.extra[i])</span>
-<span id="cb275-6"><a href="S17-robust.html#cb275-6" tabindex="-1"></a>    yy <span class="ot">&lt;-</span> <span class="fu">c</span>(y, y.extra[i])</span>
-<span id="cb275-7"><a href="S17-robust.html#cb275-7" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">length</span>(xx)</span>
-<span id="cb275-8"><a href="S17-robust.html#cb275-8" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb275-9"><a href="S17-robust.html#cb275-9" tabindex="-1"></a></span>
-<span id="cb275-10"><a href="S17-robust.html#cb275-10" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">lm</span>(yy <span class="sc">~</span> xx)</span>
-<span id="cb275-11"><a href="S17-robust.html#cb275-11" tabindex="-1"></a></span>
-<span id="cb275-12"><a href="S17-robust.html#cb275-12" tabindex="-1"></a>    <span class="co"># get the leverage</span></span>
-<span id="cb275-13"><a href="S17-robust.html#cb275-13" tabindex="-1"></a>    hii <span class="ot">&lt;-</span> <span class="fu">influence</span>(m)<span class="sc">$</span>hat</span>
-<span id="cb275-14"><a href="S17-robust.html#cb275-14" tabindex="-1"></a></span>
-<span id="cb275-15"><a href="S17-robust.html#cb275-15" tabindex="-1"></a>    <span class="co"># get the studentized residuals</span></span>
-<span id="cb275-16"><a href="S17-robust.html#cb275-16" tabindex="-1"></a>    sigma.hat <span class="ot">&lt;-</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma</span>
-<span id="cb275-17"><a href="S17-robust.html#cb275-17" tabindex="-1"></a>    ri <span class="ot">&lt;-</span> <span class="fu">resid</span>(m) <span class="sc">/</span> sigma.hat <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> hii)</span>
-<span id="cb275-18"><a href="S17-robust.html#cb275-18" tabindex="-1"></a></span>
-<span id="cb275-19"><a href="S17-robust.html#cb275-19" tabindex="-1"></a>    <span class="fu">plot</span>(hii, ri, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span>n, <span class="dv">1</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>,<span class="dv">3</span>),</span>
-<span id="cb275-20"><a href="S17-robust.html#cb275-20" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;leverage&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;studentised resid.&quot;</span>)</span>
-<span id="cb275-21"><a href="S17-robust.html#cb275-21" tabindex="-1"></a></span>
-<span id="cb275-22"><a href="S17-robust.html#cb275-22" tabindex="-1"></a>    <span class="co"># plot a 95% interval for the residuals</span></span>
-<span id="cb275-23"><a href="S17-robust.html#cb275-23" tabindex="-1"></a>    <span class="fu">abline</span>(<span class="at">h =</span> <span class="sc">+</span><span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span><span class="dv">1</span>))</span>
-<span id="cb275-24"><a href="S17-robust.html#cb275-24" tabindex="-1"></a>    <span class="fu">abline</span>(<span class="at">h =</span> <span class="sc">-</span><span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span><span class="dv">1</span>))</span>
-<span id="cb275-25"><a href="S17-robust.html#cb275-25" tabindex="-1"></a></span>
-<span id="cb275-26"><a href="S17-robust.html#cb275-26" tabindex="-1"></a>    <span class="co"># also plot the line where D_i = 1</span></span>
-<span id="cb275-27"><a href="S17-robust.html#cb275-27" tabindex="-1"></a>    h <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">/</span>n, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
-<span id="cb275-28"><a href="S17-robust.html#cb275-28" tabindex="-1"></a>    r.infl <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((p<span class="sc">+</span><span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>h) <span class="sc">/</span> h)</span>
-<span id="cb275-29"><a href="S17-robust.html#cb275-29" tabindex="-1"></a>    <span class="fu">lines</span>(h, r.infl, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
-<span id="cb275-30"><a href="S17-robust.html#cb275-30" tabindex="-1"></a>    <span class="fu">lines</span>(h, <span class="sc">-</span>r.infl, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
-<span id="cb275-31"><a href="S17-robust.html#cb275-31" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="S17-robust.html#cb274-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="co"># We want a 2x2 grid of plots,</span></span>
+<span id="cb274-2"><a href="S17-robust.html#cb274-2" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="co"># using smaller margins, and</span></span>
+<span id="cb274-3"><a href="S17-robust.html#cb274-3" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="co"># we move the labels closer to the axes.</span></span>
+<span id="cb274-4"><a href="S17-robust.html#cb274-4" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) {</span>
+<span id="cb274-5"><a href="S17-robust.html#cb274-5" tabindex="-1"></a>    xx <span class="ot">&lt;-</span> <span class="fu">c</span>(x, x.extra[i])</span>
+<span id="cb274-6"><a href="S17-robust.html#cb274-6" tabindex="-1"></a>    yy <span class="ot">&lt;-</span> <span class="fu">c</span>(y, y.extra[i])</span>
+<span id="cb274-7"><a href="S17-robust.html#cb274-7" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">length</span>(xx)</span>
+<span id="cb274-8"><a href="S17-robust.html#cb274-8" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb274-9"><a href="S17-robust.html#cb274-9" tabindex="-1"></a></span>
+<span id="cb274-10"><a href="S17-robust.html#cb274-10" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">lm</span>(yy <span class="sc">~</span> xx)</span>
+<span id="cb274-11"><a href="S17-robust.html#cb274-11" tabindex="-1"></a></span>
+<span id="cb274-12"><a href="S17-robust.html#cb274-12" tabindex="-1"></a>    <span class="co"># get the leverage</span></span>
+<span id="cb274-13"><a href="S17-robust.html#cb274-13" tabindex="-1"></a>    hii <span class="ot">&lt;-</span> <span class="fu">influence</span>(m)<span class="sc">$</span>hat</span>
+<span id="cb274-14"><a href="S17-robust.html#cb274-14" tabindex="-1"></a></span>
+<span id="cb274-15"><a href="S17-robust.html#cb274-15" tabindex="-1"></a>    <span class="co"># get the studentized residuals</span></span>
+<span id="cb274-16"><a href="S17-robust.html#cb274-16" tabindex="-1"></a>    sigma.hat <span class="ot">&lt;-</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma</span>
+<span id="cb274-17"><a href="S17-robust.html#cb274-17" tabindex="-1"></a>    ri <span class="ot">&lt;-</span> <span class="fu">resid</span>(m) <span class="sc">/</span> sigma.hat <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> hii)</span>
+<span id="cb274-18"><a href="S17-robust.html#cb274-18" tabindex="-1"></a></span>
+<span id="cb274-19"><a href="S17-robust.html#cb274-19" tabindex="-1"></a>    <span class="fu">plot</span>(hii, ri, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span>n, <span class="dv">1</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>,<span class="dv">3</span>),</span>
+<span id="cb274-20"><a href="S17-robust.html#cb274-20" tabindex="-1"></a>         <span class="at">xlab =</span> <span class="st">&quot;leverage&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;studentised resid.&quot;</span>)</span>
+<span id="cb274-21"><a href="S17-robust.html#cb274-21" tabindex="-1"></a></span>
+<span id="cb274-22"><a href="S17-robust.html#cb274-22" tabindex="-1"></a>    <span class="co"># plot a 95% interval for the residuals</span></span>
+<span id="cb274-23"><a href="S17-robust.html#cb274-23" tabindex="-1"></a>    <span class="fu">abline</span>(<span class="at">h =</span> <span class="sc">+</span><span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb274-24"><a href="S17-robust.html#cb274-24" tabindex="-1"></a>    <span class="fu">abline</span>(<span class="at">h =</span> <span class="sc">-</span><span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> p <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb274-25"><a href="S17-robust.html#cb274-25" tabindex="-1"></a></span>
+<span id="cb274-26"><a href="S17-robust.html#cb274-26" tabindex="-1"></a>    <span class="co"># also plot the line where D_i = 1</span></span>
+<span id="cb274-27"><a href="S17-robust.html#cb274-27" tabindex="-1"></a>    h <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">/</span>n, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb274-28"><a href="S17-robust.html#cb274-28" tabindex="-1"></a>    r.infl <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((p<span class="sc">+</span><span class="dv">1</span>) <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>h) <span class="sc">/</span> h)</span>
+<span id="cb274-29"><a href="S17-robust.html#cb274-29" tabindex="-1"></a>    <span class="fu">lines</span>(h, r.infl, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb274-30"><a href="S17-robust.html#cb274-30" tabindex="-1"></a>    <span class="fu">lines</span>(h, <span class="sc">-</span>r.infl, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb274-31"><a href="S17-robust.html#cb274-31" tabindex="-1"></a>}</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/reslev-1.png" width="672" /></p>
 <p>If the model is correct, <span class="math inline">\(95\%\)</span> of the samples should lie in the
 band formed by the two horizontal lines. In the bottom-left panel we can
@@ -679,34 +673,34 @@ as an estimate of the slope, and
 for the intercept.</p>
 <p>We can easily implement this method in R. To demonstrate this,
 we use simulated data with artificial outliers:</p>
-<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="S17-robust.html#cb276-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211129</span>)</span>
-<span id="cb276-2"><a href="S17-robust.html#cb276-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">24</span></span>
-<span id="cb276-3"><a href="S17-robust.html#cb276-3" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb276-4"><a href="S17-robust.html#cb276-4" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb276-5"><a href="S17-robust.html#cb276-5" tabindex="-1"></a></span>
-<span id="cb276-6"><a href="S17-robust.html#cb276-6" tabindex="-1"></a>outlier <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
-<span id="cb276-7"><a href="S17-robust.html#cb276-7" tabindex="-1"></a>y[outlier] <span class="ot">&lt;-</span> y[outlier] <span class="sc">+</span> <span class="dv">15</span></span></code></pre></div>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="S17-robust.html#cb275-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211129</span>)</span>
+<span id="cb275-2"><a href="S17-robust.html#cb275-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">24</span></span>
+<span id="cb275-3"><a href="S17-robust.html#cb275-3" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb275-4"><a href="S17-robust.html#cb275-4" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb275-5"><a href="S17-robust.html#cb275-5" tabindex="-1"></a></span>
+<span id="cb275-6"><a href="S17-robust.html#cb275-6" tabindex="-1"></a>outlier <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
+<span id="cb275-7"><a href="S17-robust.html#cb275-7" tabindex="-1"></a>y[outlier] <span class="ot">&lt;-</span> y[outlier] <span class="sc">+</span> <span class="dv">15</span></span></code></pre></div>
 <p>We start by sorting the data in order of increasing <span class="math inline">\(x\)</span>-values:</p>
-<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="S17-robust.html#cb277-1" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">order</span>(x)</span>
-<span id="cb277-2"><a href="S17-robust.html#cb277-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> x[idx]</span>
-<span id="cb277-3"><a href="S17-robust.html#cb277-3" tabindex="-1"></a>y <span class="ot">&lt;-</span> y[idx]</span></code></pre></div>
+<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="S17-robust.html#cb276-1" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">order</span>(x)</span>
+<span id="cb276-2"><a href="S17-robust.html#cb276-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> x[idx]</span>
+<span id="cb276-3"><a href="S17-robust.html#cb276-3" tabindex="-1"></a>y <span class="ot">&lt;-</span> y[idx]</span></code></pre></div>
 <p>Now we can compute the resistant line:</p>
-<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb278-1"><a href="S17-robust.html#cb278-1" tabindex="-1"></a>xL <span class="ot">&lt;-</span> <span class="fu">median</span>(x[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>])</span>
-<span id="cb278-2"><a href="S17-robust.html#cb278-2" tabindex="-1"></a>xM <span class="ot">&lt;-</span> <span class="fu">median</span>(x[<span class="dv">9</span><span class="sc">:</span><span class="dv">16</span>])</span>
-<span id="cb278-3"><a href="S17-robust.html#cb278-3" tabindex="-1"></a>xR <span class="ot">&lt;-</span> <span class="fu">median</span>(x[<span class="dv">17</span><span class="sc">:</span><span class="dv">24</span>])</span>
-<span id="cb278-4"><a href="S17-robust.html#cb278-4" tabindex="-1"></a>yL <span class="ot">&lt;-</span> <span class="fu">median</span>(y[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>])</span>
-<span id="cb278-5"><a href="S17-robust.html#cb278-5" tabindex="-1"></a>yM <span class="ot">&lt;-</span> <span class="fu">median</span>(y[<span class="dv">9</span><span class="sc">:</span><span class="dv">16</span>])</span>
-<span id="cb278-6"><a href="S17-robust.html#cb278-6" tabindex="-1"></a>yR <span class="ot">&lt;-</span> <span class="fu">median</span>(y[<span class="dv">17</span><span class="sc">:</span><span class="dv">24</span>])</span>
-<span id="cb278-7"><a href="S17-robust.html#cb278-7" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> (yR <span class="sc">-</span> yL) <span class="sc">/</span> (xR <span class="sc">-</span> xL)</span>
-<span id="cb278-8"><a href="S17-robust.html#cb278-8" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> (yL <span class="sc">+</span> yM <span class="sc">+</span> yR) <span class="sc">/</span> <span class="dv">3</span> <span class="sc">-</span> beta1 <span class="sc">*</span> (xL <span class="sc">+</span> xM <span class="sc">+</span> xR) <span class="sc">/</span> <span class="dv">3</span></span></code></pre></div>
+<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="S17-robust.html#cb277-1" tabindex="-1"></a>xL <span class="ot">&lt;-</span> <span class="fu">median</span>(x[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>])</span>
+<span id="cb277-2"><a href="S17-robust.html#cb277-2" tabindex="-1"></a>xM <span class="ot">&lt;-</span> <span class="fu">median</span>(x[<span class="dv">9</span><span class="sc">:</span><span class="dv">16</span>])</span>
+<span id="cb277-3"><a href="S17-robust.html#cb277-3" tabindex="-1"></a>xR <span class="ot">&lt;-</span> <span class="fu">median</span>(x[<span class="dv">17</span><span class="sc">:</span><span class="dv">24</span>])</span>
+<span id="cb277-4"><a href="S17-robust.html#cb277-4" tabindex="-1"></a>yL <span class="ot">&lt;-</span> <span class="fu">median</span>(y[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>])</span>
+<span id="cb277-5"><a href="S17-robust.html#cb277-5" tabindex="-1"></a>yM <span class="ot">&lt;-</span> <span class="fu">median</span>(y[<span class="dv">9</span><span class="sc">:</span><span class="dv">16</span>])</span>
+<span id="cb277-6"><a href="S17-robust.html#cb277-6" tabindex="-1"></a>yR <span class="ot">&lt;-</span> <span class="fu">median</span>(y[<span class="dv">17</span><span class="sc">:</span><span class="dv">24</span>])</span>
+<span id="cb277-7"><a href="S17-robust.html#cb277-7" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> (yR <span class="sc">-</span> yL) <span class="sc">/</span> (xR <span class="sc">-</span> xL)</span>
+<span id="cb277-8"><a href="S17-robust.html#cb277-8" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> (yL <span class="sc">+</span> yM <span class="sc">+</span> yR) <span class="sc">/</span> <span class="dv">3</span> <span class="sc">-</span> beta1 <span class="sc">*</span> (xL <span class="sc">+</span> xM <span class="sc">+</span> xR) <span class="sc">/</span> <span class="dv">3</span></span></code></pre></div>
 <p>Finally, we plot the result.</p>
-<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb279-1"><a href="S17-robust.html#cb279-1" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">col =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each=</span><span class="dv">8</span>))</span>
-<span id="cb279-2"><a href="S17-robust.html#cb279-2" tabindex="-1"></a><span class="fu">abline</span>(beta0, beta1, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb279-3"><a href="S17-robust.html#cb279-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> xL, <span class="at">col =</span> <span class="dv">1</span>)</span>
-<span id="cb279-4"><a href="S17-robust.html#cb279-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> xM, <span class="at">col =</span> <span class="dv">2</span>)</span>
-<span id="cb279-5"><a href="S17-robust.html#cb279-5" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> xR, <span class="at">col =</span> <span class="dv">3</span>)</span>
-<span id="cb279-6"><a href="S17-robust.html#cb279-6" tabindex="-1"></a><span class="fu">segments</span>(<span class="fu">c</span>(x[<span class="dv">1</span>], x[<span class="dv">9</span>], x[<span class="dv">17</span>]), <span class="fu">c</span>(yL, yM, yR), <span class="fu">c</span>(x[<span class="dv">8</span>], x[<span class="dv">16</span>], x[<span class="dv">24</span>]),</span>
-<span id="cb279-7"><a href="S17-robust.html#cb279-7" tabindex="-1"></a>         <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb278-1"><a href="S17-robust.html#cb278-1" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">col =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each=</span><span class="dv">8</span>))</span>
+<span id="cb278-2"><a href="S17-robust.html#cb278-2" tabindex="-1"></a><span class="fu">abline</span>(beta0, beta1, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb278-3"><a href="S17-robust.html#cb278-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> xL, <span class="at">col =</span> <span class="dv">1</span>)</span>
+<span id="cb278-4"><a href="S17-robust.html#cb278-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> xM, <span class="at">col =</span> <span class="dv">2</span>)</span>
+<span id="cb278-5"><a href="S17-robust.html#cb278-5" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> xR, <span class="at">col =</span> <span class="dv">3</span>)</span>
+<span id="cb278-6"><a href="S17-robust.html#cb278-6" tabindex="-1"></a><span class="fu">segments</span>(<span class="fu">c</span>(x[<span class="dv">1</span>], x[<span class="dv">9</span>], x[<span class="dv">17</span>]), <span class="fu">c</span>(yL, yM, yR), <span class="fu">c</span>(x[<span class="dv">8</span>], x[<span class="dv">16</span>], x[<span class="dv">24</span>]),</span>
+<span id="cb278-7"><a href="S17-robust.html#cb278-7" tabindex="-1"></a>         <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/resistant-1.png" width="672" /></p>
 <p>The horizontal and vertical line segments in the plot give the medians
 used in the computation. The blue, sloped line is the resistant line.
