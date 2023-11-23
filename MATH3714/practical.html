@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Practical | MATH3714 Linear Regression and Robustness</title>
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Practical | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Practical | MATH3714 Linear Regression and Robustness" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="S14-examples.html"/>
+<link rel="next" href="S15-multicoll.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P96L0SF56N');
+</script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="jvstyle.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH3714 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
+<ul>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
+<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
+<li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
+<li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
+<li class="chapter" data-level="2.2" data-path="S02-multiple.html"><a href="S02-multiple.html#the-normal-equations"><i class="fa fa-check"></i><b>2.2</b> The Normal Equations</a></li>
+<li class="chapter" data-level="2.3" data-path="S02-multiple.html"><a href="S02-multiple.html#fitted-values"><i class="fa fa-check"></i><b>2.3</b> Fitted Values</a></li>
+<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#models-without-intercept"><i class="fa fa-check"></i><b>2.4</b> Models Without Intercept</a></li>
+<li class="chapter" data-level="2.5" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.5</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html"><i class="fa fa-check"></i>Interlude: Linear Regression in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-fitting"><i class="fa fa-check"></i>Fitting a Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-model"><i class="fa fa-check"></i>Understanding the Model</a></li>
+<li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html#lm-predict"><i class="fa fa-check"></i>Making Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="S03-cov.html"><a href="S03-cov.html"><i class="fa fa-check"></i><b>3</b> Random Vectors and Covariance</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="S03-cov.html"><a href="S03-cov.html#expectation"><i class="fa fa-check"></i><b>3.1</b> Expectation</a></li>
+<li class="chapter" data-level="3.2" data-path="S03-cov.html"><a href="S03-cov.html#sec:covariance"><i class="fa fa-check"></i><b>3.2</b> Covariance Matrix</a></li>
+<li class="chapter" data-level="3.3" data-path="S03-cov.html"><a href="S03-cov.html#the-multivariate-normal-distribution"><i class="fa fa-check"></i><b>3.3</b> The Multivariate Normal Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
+<li class="chapter" data-level="4" data-path="S04-model.html"><a href="S04-model.html"><i class="fa fa-check"></i><b>4</b> Properties of the Least Squares Estimate</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="S04-model.html"><a href="S04-model.html#mean-and-covariance"><i class="fa fa-check"></i><b>4.1</b> Mean and Covariance</a></li>
+<li class="chapter" data-level="4.2" data-path="S04-model.html"><a href="S04-model.html#hat-matrix"><i class="fa fa-check"></i><b>4.2</b> Properties of the Hat Matrix</a></li>
+<li class="chapter" data-level="4.3" data-path="S04-model.html"><a href="S04-model.html#Cochran"><i class="fa fa-check"></i><b>4.3</b> Cochran’s theorem</a></li>
+<li class="chapter" data-level="4.4" data-path="S04-model.html"><a href="S04-model.html#var-est-bias"><i class="fa fa-check"></i><b>4.4</b> Estimating the Error Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="S05-single.html"><a href="S05-single.html"><i class="fa fa-check"></i><b>5</b> Uncertainty for Individual Regression Coefficients</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="S05-single.html"><a href="S05-single.html#measuring-the-estimation-error"><i class="fa fa-check"></i><b>5.1</b> Measuring the Estimation Error</a></li>
+<li class="chapter" data-level="5.2" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals"><i class="fa fa-check"></i><b>5.2</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="5.3" data-path="S05-single.html"><a href="S05-single.html#hypthesis-tests"><i class="fa fa-check"></i><b>5.3</b> Hypthesis Tests</a></li>
+<li class="chapter" data-level="5.4" data-path="S05-single.html"><a href="S05-single.html#r-experiments"><i class="fa fa-check"></i><b>5.4</b> R Experiments</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="S05-single.html"><a href="S05-single.html#fitting-the-model"><i class="fa fa-check"></i><b>5.4.1</b> Fitting the model</a></li>
+<li class="chapter" data-level="5.4.2" data-path="S05-single.html"><a href="S05-single.html#estimating-the-variance-of-the-error"><i class="fa fa-check"></i><b>5.4.2</b> Estimating the Variance of the Error</a></li>
+<li class="chapter" data-level="5.4.3" data-path="S05-single.html"><a href="S05-single.html#estimating-the-standard-errors"><i class="fa fa-check"></i><b>5.4.3</b> Estimating the Standard Errors</a></li>
+<li class="chapter" data-level="5.4.4" data-path="S05-single.html"><a href="S05-single.html#hypothesis-tests"><i class="fa fa-check"></i><b>5.4.4</b> Hypothesis tests</a></li>
+<li class="chapter" data-level="5.4.5" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals-1"><i class="fa fa-check"></i><b>5.4.5</b> Confidence Intervals</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html"><i class="fa fa-check"></i><b>6</b> Estimating Coefficients Simultaneously</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-dist"><i class="fa fa-check"></i><b>6.1</b> Linear Combinations of Coefficients</a></li>
+<li class="chapter" data-level="6.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-CI"><i class="fa fa-check"></i><b>6.2</b> Confidence Regions</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#result"><i class="fa fa-check"></i><b>6.2.1</b> Result</a></li>
+<li class="chapter" data-level="6.2.2" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#numerical-experiments"><i class="fa fa-check"></i><b>6.2.2</b> Numerical Experiments</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="S06-simultaneous.html"><a href="S06-simultaneous.html#sec:simult-test"><i class="fa fa-check"></i><b>6.3</b> Hypothesis Tests</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html"><i class="fa fa-check"></i>Interlude: Loading Data into R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-csv-files"><i class="fa fa-check"></i>Importing CSV Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#importing-microsoft-excel-files"><i class="fa fa-check"></i>Importing Microsoft Excel Files</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#checking-the-imported-data"><i class="fa fa-check"></i>Checking the Imported Data</a></li>
+<li class="chapter" data-level="" data-path="I02-read.html"><a href="I02-read.html#common-problems"><i class="fa fa-check"></i>Common Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="S07-examples.html"><a href="S07-examples.html"><i class="fa fa-check"></i><b>7</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="S07-examples.html"><a href="S07-examples.html#simple-confidence-interval"><i class="fa fa-check"></i><b>7.1</b> Simple Confidence Interval</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles"><i class="fa fa-check"></i><b>7.1.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.1.2" data-path="S07-examples.html"><a href="S07-examples.html#from-the-lm-output"><i class="fa fa-check"></i><b>7.1.2</b> From the <code>lm()</code> Output</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="S07-examples.html"><a href="S07-examples.html#confidence-intervals-for-the-mean"><i class="fa fa-check"></i><b>7.2</b> Confidence Intervals for the Mean</a></li>
+<li class="chapter" data-level="7.3" data-path="S07-examples.html"><a href="S07-examples.html#testing-a-single-coefficient"><i class="fa fa-check"></i><b>7.3</b> Testing a Single Coefficient</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-1"><i class="fa fa-check"></i><b>7.3.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.3.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-i"><i class="fa fa-check"></i><b>7.3.2</b> Using the <code>lm()</code> Output, I</a></li>
+<li class="chapter" data-level="7.3.3" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output-ii"><i class="fa fa-check"></i><b>7.3.3</b> Using the <code>lm()</code> Output, II</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="S07-examples.html"><a href="S07-examples.html#testing-multiple-coefficents"><i class="fa fa-check"></i><b>7.4</b> Testing Multiple Coefficents</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="S07-examples.html"><a href="S07-examples.html#from-first-principles-2"><i class="fa fa-check"></i><b>7.4.1</b> From First Principles</a></li>
+<li class="chapter" data-level="7.4.2" data-path="S07-examples.html"><a href="S07-examples.html#using-the-lm-output"><i class="fa fa-check"></i><b>7.4.2</b> Using the <code>lm()</code> output</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P02.html"><a href="P02.html"><i class="fa fa-check"></i>Problem Sheet 2</a></li>
+<li class="chapter" data-level="8" data-path="S08-influence.html"><a href="S08-influence.html"><i class="fa fa-check"></i><b>8</b> The Influence of Observations</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="S08-influence.html"><a href="S08-influence.html#deleting"><i class="fa fa-check"></i><b>8.1</b> Deleting Observations</a></li>
+<li class="chapter" data-level="8.2" data-path="S08-influence.html"><a href="S08-influence.html#influence"><i class="fa fa-check"></i><b>8.2</b> Cook’s Distance</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="S09-plots.html"><a href="S09-plots.html#residual-plots"><i class="fa fa-check"></i><b>9.1</b> Residual Plots</a></li>
+<li class="chapter" data-level="9.2" data-path="S09-plots.html"><a href="S09-plots.html#q-q-plots"><i class="fa fa-check"></i><b>9.2</b> Q-Q Plots</a></li>
+<li class="chapter" data-level="9.3" data-path="S09-plots.html"><a href="S09-plots.html#other-plot-types"><i class="fa fa-check"></i><b>9.3</b> Other Plot Types</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="S10-improving.html"><a href="S10-improving.html"><i class="fa fa-check"></i><b>10</b> Improving the Model Fit</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="S10-improving.html"><a href="S10-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>10.1</b> Linearising the Mean</a></li>
+<li class="chapter" data-level="10.2" data-path="S10-improving.html"><a href="S10-improving.html#stabilising-the-variance"><i class="fa fa-check"></i><b>10.2</b> Stabilising the Variance</a></li>
+<li class="chapter" data-level="10.3" data-path="S10-improving.html"><a href="S10-improving.html#power-transform"><i class="fa fa-check"></i><b>10.3</b> The Power Transform</a></li>
+<li class="chapter" data-level="10.4" data-path="S10-improving.html"><a href="S10-improving.html#candidate-models"><i class="fa fa-check"></i><b>10.4</b> Candidate Models</a></li>
+<li class="chapter" data-level="10.5" data-path="S10-improving.html"><a href="S10-improving.html#misspecified-models"><i class="fa fa-check"></i><b>10.5</b> Misspecified Models</a>
+<ul>
+<li class="chapter" data-level="10.5.1" data-path="S10-improving.html"><a href="S10-improving.html#missing-variables"><i class="fa fa-check"></i><b>10.5.1</b> Missing Variables</a></li>
+<li class="chapter" data-level="10.5.2" data-path="S10-improving.html"><a href="S10-improving.html#unnecessary-variables"><i class="fa fa-check"></i><b>10.5.2</b> Unnecessary Variables</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html"><i class="fa fa-check"></i><b>11</b> Measures for Model Fit</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#R-squared"><i class="fa fa-check"></i><b>11.1</b> The Coefficient of Multiple Determination</a></li>
+<li class="chapter" data-level="11.2" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#error-var"><i class="fa fa-check"></i><b>11.2</b> Error Variance</a></li>
+<li class="chapter" data-level="11.3" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#PRESS"><i class="fa fa-check"></i><b>11.3</b> Prediction Error Sum of Squares</a></li>
+<li class="chapter" data-level="11.4" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#AIC"><i class="fa fa-check"></i><b>11.4</b> Akaike’s Information Criterion</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I03-lm-output.html"><a href="I03-lm-output.html"><i class="fa fa-check"></i>Interlude: Understanding the <code>lm()</code> Output</a></li>
+<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
+<li class="chapter" data-level="12" data-path="S12-automatic.html"><a href="S12-automatic.html"><i class="fa fa-check"></i><b>12</b> Automatic Model Selection</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="S12-automatic.html"><a href="S12-automatic.html#exhaustive-search"><i class="fa fa-check"></i><b>12.1</b> Exhaustive Search</a></li>
+<li class="chapter" data-level="12.2" data-path="S12-automatic.html"><a href="S12-automatic.html#search-algorithm"><i class="fa fa-check"></i><b>12.2</b> Search Algorithm</a></li>
+<li class="chapter" data-level="12.3" data-path="S12-automatic.html"><a href="S12-automatic.html#other-methods"><i class="fa fa-check"></i><b>12.3</b> Other Methods</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="S12-automatic.html"><a href="S12-automatic.html#stepwise-forward-selection"><i class="fa fa-check"></i><b>12.3.1</b> Stepwise Forward Selection</a></li>
+<li class="chapter" data-level="12.3.2" data-path="S12-automatic.html"><a href="S12-automatic.html#stepwise-backward-selection"><i class="fa fa-check"></i><b>12.3.2</b> Stepwise Backward Selection</a></li>
+<li class="chapter" data-level="12.3.3" data-path="S12-automatic.html"><a href="S12-automatic.html#hybrid-methods"><i class="fa fa-check"></i><b>12.3.3</b> Hybrid Methods</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="S13-factors.html"><a href="S13-factors.html"><i class="fa fa-check"></i><b>13</b> Factors</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="S13-factors.html"><a href="S13-factors.html#indicator-variables"><i class="fa fa-check"></i><b>13.1</b> Indicator Variables</a></li>
+<li class="chapter" data-level="13.2" data-path="S13-factors.html"><a href="S13-factors.html#interactions"><i class="fa fa-check"></i><b>13.2</b> Interactions</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="S14-examples.html"><a href="S14-examples.html"><i class="fa fa-check"></i><b>14</b> Examples</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="S14-examples.html"><a href="S14-examples.html#interactions-example"><i class="fa fa-check"></i><b>14.1</b> Use of Interaction Terms in Modelling</a></li>
+<li class="chapter" data-level="14.2" data-path="S14-examples.html"><a href="S14-examples.html#codings"><i class="fa fa-check"></i><b>14.2</b> Alternative Factor Codings</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
+<ul>
+<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
+<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="S15-multicoll.html"><a href="S15-multicoll.html"><i class="fa fa-check"></i><b>15</b> Multicollinearity</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="S15-multicoll.html"><a href="S15-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>15.1</b> Consequences of Multicollinearity</a></li>
+<li class="chapter" data-level="15.2" data-path="S15-multicoll.html"><a href="S15-multicoll.html#detecting-multicollinearity"><i class="fa fa-check"></i><b>15.2</b> Detecting Multicollinearity</a></li>
+<li class="chapter" data-level="15.3" data-path="S15-multicoll.html"><a href="S15-multicoll.html#mitigations"><i class="fa fa-check"></i><b>15.3</b> Mitigations</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
+<li class="chapter" data-level="16" data-path="S16-ridge.html"><a href="S16-ridge.html"><i class="fa fa-check"></i><b>16</b> Ridge Regression</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="S16-ridge.html"><a href="S16-ridge.html#definition-the-estimator"><i class="fa fa-check"></i><b>16.1</b> Definition the Estimator</a></li>
+<li class="chapter" data-level="16.2" data-path="S16-ridge.html"><a href="S16-ridge.html#properties-of-the-estimate"><i class="fa fa-check"></i><b>16.2</b> Properties of the Estimate</a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="S16-ridge.html"><a href="S16-ridge.html#bias"><i class="fa fa-check"></i><b>16.2.1</b> Bias</a></li>
+<li class="chapter" data-level="16.2.2" data-path="S16-ridge.html"><a href="S16-ridge.html#variance"><i class="fa fa-check"></i><b>16.2.2</b> Variance</a></li>
+<li class="chapter" data-level="16.2.3" data-path="S16-ridge.html"><a href="S16-ridge.html#mean-squared-error"><i class="fa fa-check"></i><b>16.2.3</b> Mean Squared Error</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="S16-ridge.html"><a href="S16-ridge.html#standardisation"><i class="fa fa-check"></i><b>16.3</b> Standardisation</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="S17-robust.html"><a href="S17-robust.html"><i class="fa fa-check"></i><b>17</b> Robust Regression</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="S17-robust.html"><a href="S17-robust.html#outliers"><i class="fa fa-check"></i><b>17.1</b> Outliers</a>
+<ul>
+<li class="chapter" data-level="17.1.1" data-path="S17-robust.html"><a href="S17-robust.html#leverage"><i class="fa fa-check"></i><b>17.1.1</b> Leverage</a></li>
+<li class="chapter" data-level="17.1.2" data-path="S17-robust.html"><a href="S17-robust.html#studentised-residuals"><i class="fa fa-check"></i><b>17.1.2</b> Studentised Residuals</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="S17-robust.html"><a href="S17-robust.html#breakdown-points"><i class="fa fa-check"></i><b>17.2</b> Breakdown Points</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="S18-m-est.html"><a href="S18-m-est.html"><i class="fa fa-check"></i><b>18</b> M-Estimators</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="S18-m-est.html"><a href="S18-m-est.html#definition"><i class="fa fa-check"></i><b>18.1</b> Definition</a></li>
+<li class="chapter" data-level="18.2" data-path="S18-m-est.html"><a href="S18-m-est.html#iterative-methods"><i class="fa fa-check"></i><b>18.2</b> Iterative Methods</a></li>
+<li class="chapter" data-level="18.3" data-path="S18-m-est.html"><a href="S18-m-est.html#objective-functions"><i class="fa fa-check"></i><b>18.3</b> Objective Functions</a>
+<ul>
+<li class="chapter" data-level="18.3.1" data-path="S18-m-est.html"><a href="S18-m-est.html#least-squares-method"><i class="fa fa-check"></i><b>18.3.1</b> Least Squares Method</a></li>
+<li class="chapter" data-level="18.3.2" data-path="S18-m-est.html"><a href="S18-m-est.html#least-absolute-values"><i class="fa fa-check"></i><b>18.3.2</b> Least Absolute Values</a></li>
+<li class="chapter" data-level="18.3.3" data-path="S18-m-est.html"><a href="S18-m-est.html#Huber"><i class="fa fa-check"></i><b>18.3.3</b> Huber’s <span class="math inline">\(t\)</span>-function</a></li>
+<li class="chapter" data-level="18.3.4" data-path="S18-m-est.html"><a href="S18-m-est.html#hampels-method"><i class="fa fa-check"></i><b>18.3.4</b> Hampel’s Method</a></li>
+<li class="chapter" data-level="18.3.5" data-path="S18-m-est.html"><a href="S18-m-est.html#tukeys-bisquare-method"><i class="fa fa-check"></i><b>18.3.5</b> Tukey’s Bisquare Method</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P05.html"><a href="P05.html"><i class="fa fa-check"></i>Problem Sheet 5</a></li>
+<li class="chapter" data-level="19" data-path="S19-efficiency.html"><a href="S19-efficiency.html"><i class="fa fa-check"></i><b>19</b> Efficiency of Robust Estimators</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="S19-efficiency.html"><a href="S19-efficiency.html#efficiency"><i class="fa fa-check"></i><b>19.1</b> Efficiency</a></li>
+<li class="chapter" data-level="19.2" data-path="S19-efficiency.html"><a href="S19-efficiency.html#robust-estimators"><i class="fa fa-check"></i><b>19.2</b> Robust estimators</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="S19-efficiency.html"><a href="S19-efficiency.html#least-median-of-squares"><i class="fa fa-check"></i><b>19.2.1</b> Least Median of Squares</a></li>
+<li class="chapter" data-level="19.2.2" data-path="S19-efficiency.html"><a href="S19-efficiency.html#least-trimmed-squares"><i class="fa fa-check"></i><b>19.2.2</b> Least Trimmed Squares</a></li>
+</ul></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
+<ul>
+<li class="chapter" data-level="A.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#vectors"><i class="fa fa-check"></i><b>A.1</b> Vectors</a></li>
+<li class="chapter" data-level="A.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-rules"><i class="fa fa-check"></i><b>A.2</b> Matrices</a>
+<ul>
+<li class="chapter" data-level="A.2.1" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#transpose"><i class="fa fa-check"></i><b>A.2.1</b> Transpose</a></li>
+<li class="chapter" data-level="A.2.2" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-vector-product"><i class="fa fa-check"></i><b>A.2.2</b> Matrix-vector Product</a></li>
+<li class="chapter" data-level="A.2.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-matrix-product"><i class="fa fa-check"></i><b>A.2.3</b> Matrix-matrix Product</a></li>
+<li class="chapter" data-level="A.2.4" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#rank"><i class="fa fa-check"></i><b>A.2.4</b> Rank</a></li>
+<li class="chapter" data-level="A.2.5" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#trace"><i class="fa fa-check"></i><b>A.2.5</b> Trace</a></li>
+<li class="chapter" data-level="A.2.6" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#matrix-inverse"><i class="fa fa-check"></i><b>A.2.6</b> Matrix Inverse</a></li>
+<li class="chapter" data-level="A.2.7" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#orthogonal-matrices"><i class="fa fa-check"></i><b>A.2.7</b> Orthogonal Matrices</a></li>
+<li class="chapter" data-level="A.2.8" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#positive-definite"><i class="fa fa-check"></i><b>A.2.8</b> Positive Definite Matrices</a></li>
+<li class="chapter" data-level="A.2.9" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#idempotent"><i class="fa fa-check"></i><b>A.2.9</b> Idempotent Matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="A.3" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html#eigenvalues"><i class="fa fa-check"></i><b>A.3</b> Eigenvalues</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="Sx2-probability.html"><a href="Sx2-probability.html"><i class="fa fa-check"></i><b>B</b> Probability Reminders</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="Sx2-probability.html"><a href="Sx2-probability.html#independence"><i class="fa fa-check"></i><b>B.1</b> Independence</a></li>
+<li class="chapter" data-level="B.2" data-path="Sx2-probability.html"><a href="Sx2-probability.html#chi-square"><i class="fa fa-check"></i><b>B.2</b> The Chi-Squared Distribution</a></li>
+<li class="chapter" data-level="B.3" data-path="Sx2-probability.html"><a href="Sx2-probability.html#t"><i class="fa fa-check"></i><b>B.3</b> The t-distribution</a></li>
+</ul></li>
+<li class="divider"></li>
+<li class="chapter"><span><b>THE END</b></span></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH3714 Linear Regression and Robustness</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="practical" class="section level1 unnumbered hasAnchor">
+<h1>Practical<a href="practical.html#practical" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<ul>
+<li>The MATH3714 and MATH5714M modules are assessed by an examination (80%)
+and a practical (20%). This is the practical, worth 20% of your final
+module mark.</li>
+<li>You must hand in your solution via Gradescope
+by <strong>Thursday, 14th December 2023, 2pm</strong>.</li>
+<li>Reports must be typeset (not handwritten) and should be no more than 7 pages
+in length (9 pages for MATH5714M).</li>
+<li>Within reason you may talk to your friends about this piece of work,
+but you should not send R code (or output) to each other.
+Your report must be your own work.</li>
+</ul>
+<div id="dataset" class="section level2 unnumbered hasAnchor">
+<h2>Dataset<a href="practical.html#dataset" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this practical we examine a dataset which lists house prices in California
+(from the 1990 census) together with a variety of related variables.
+You can download the dataset from here:</p>
+<ul>
+<li><a href="https://www1.maths.leeds.ac.uk/~voss/data/housing/" class="uri">https://www1.maths.leeds.ac.uk/~voss/data/housing/</a></li>
+</ul>
+<p>For most tasks you will only need the “training dataset”.
+The “test dataset” is only used in task 3.</p>
+</div>
+<div id="tasks" class="section level2 unnumbered hasAnchor">
+<h2>Tasks<a href="practical.html#tasks" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The aim of the practical is to fit an appropriate model to these data, which
+predicts the median house value <code>medianHouseValue</code> from the other variables.</p>
+<p>This practical is deliberately open-ended, with little guidance on how to proceed.
+There is no single right or wrong answer to this practical.
+The important thing is that you justify your approach.</p>
+<p><strong>Task 1.</strong> We start by considering <code>medianHouseValue</code> as a function of
+<code>medianIncome</code> only.</p>
+<ul>
+<li><p>Using the training dataset,
+fit a linear model which can describe the relationship between
+<code>medianHouseValue</code> (response) and <code>medianIncome</code> (input).</p></li>
+<li><p>Using appropriate diagnostics, discuss how well the model fits the data.</p></li>
+<li><p>Determine a 95% confidence interval for the intercept in your model.</p></li>
+</ul>
+<p><strong>Task 2.</strong> Now we also consider the remaining variables in the dataset.</p>
+<ul>
+<li><p>With due consideration to</p>
+<ul>
+<li>transformations (where, and if, necessary)</li>
+<li>appropriate choice of variables</li>
+<li>model selection</li>
+<li>model checking</li>
+<li><em>etc.</em></li>
+</ul>
+<p>obtain a model which is able to predict <code>medianHouseValue</code> using some or all
+of these additional variables.</p></li>
+<li><p>Discuss the special role of <code>latitude</code> and <code>longitude</code> and whether/how
+these two variables should be included in a model.</p></li>
+<li><p>Justify your choice of model by comparing at least two “competing” models.
+The comparison should take note of at
+least (a) model selection criteria, (b) diagnostics, and (c) interpretability.</p></li>
+<li><p>Interpret the parameters in your preferred model.</p></li>
+</ul>
+<p><strong>Task 3.</strong> Now also load the test dataset into R.</p>
+<ul>
+<li><p>For each sample in the
+test dataset, use your model (still trained on the training dataset) to
+predict <code>medianHouseValue</code>.</p></li>
+<li><p>Compare the predicted values to the actual values by computing the
+mean squared error
+<span class="math display">\[\begin{equation*}
+   \mathrm{MSE}
+   = \frac{1}{n_\mathrm{test}} \sum_{i=1}^{n_\mathrm{test}} (\hat y_i - y_i)^2
+\end{equation*}\]</span></p></li>
+<li><p>Comment on the result.</p></li>
+</ul>
+<p><strong>Task 4 (only for MATH5714M).</strong> Use the Nadaraya-Watsen estimator to
+estimate the average median house value as a function of latitude.</p>
+<ul>
+<li><p>Create a plot of your estimate.</p></li>
+<li><p>Carefully explain how you chose the bandwidth for your estimator.</p></li>
+<li><p>Discuss your results.</p></li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="S14-examples.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="S15-multicoll.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH3714.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
