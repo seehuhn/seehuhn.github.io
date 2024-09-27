@@ -90,15 +90,17 @@
 \makesavenoteenv{longtable}
 \usepackage{graphicx}
 \makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
 % Set default figure placement to htbp
-\makeatletter
 \def\fps@figure{htbp}
 \makeatother
 \setlength{\emergencystretch}{3em} % prevent overfull lines
@@ -108,12 +110,9 @@
 \usepackage{comment}
 \specialcomment{myanswers}{\smallbreak\begingroup\leftskip=\leftmargini\noindent Solution: }%
   {\medbreak\endgroup}
-\ifLuaTeX
-  \usepackage{selnolig}  % disable illegal ligatures
-\fi
 \usepackage[]{natbib}
 \bibliographystyle{plainnat}
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
@@ -353,8 +352,10 @@ for the intercept and \(\beta_1\) for the slope.
 
 \subsection{Residual Sum of Squares}\label{residual-sum-of-squares}
 
-In simple linear regression, the aim is to find a regression line \(y = \beta_0 + \beta_1 x\), such that the line is ``close'' to given data points
-\((x_1, y_1), \ldots, (x_n, y_n) \in\mathbb{R}^2\) for \(i \in \{1, 2, \ldots, n\}\). The ususal way to find \(\beta_0\) and \(\beta_1\), and thus the regression
+In simple linear regression, the aim is to find a regression line \(y =
+\beta_0 + \beta_1 x\), such that the line is ``close'' to given data points
+\((x_1, y_1), \ldots, (x_n, y_n) \in\mathbb{R}^2\) for \(i \in \{1, 2, \ldots,
+n\}\). The ususal way to find \(\beta_0\) and \(\beta_1\), and thus the regression
 line, is by minimising the \textbf{residual sum of squares}:
 \begin{equation}
   r(\beta_0, \beta_1)
@@ -613,7 +614,8 @@ We write
   \end{pmatrix}
   \in\mathbb{R}^2
 \end{equation*}
-Using this notation, we can rewrite the \(n\) equations \(y_i = \beta_0 + x_i \beta_1 + \varepsilon_i\) for \(i \in \{1, \ldots, n\}\) as one
+Using this notation, we can rewrite the \(n\) equations \(y_i = \beta_0 +
+x_i \beta_1 + \varepsilon_i\) for \(i \in \{1, \ldots, n\}\) as one
 vector-valued equation in~\(\mathbb{R}^n\): we get
 \begin{equation*}
   y = X\beta + \varepsilon,
@@ -633,7 +635,8 @@ for
   \hat\beta
   = (X X^\top)^{-1} X^\top y
 \end{equation*}
-and one can check that the components of this vector \(\hat\beta = (\hat\beta_0, \hat\beta_1)\) coincide with the estimates we obtained above.
+and one can check that the components of this vector \(\hat\beta = (\hat\beta_0,
+\hat\beta_1)\) coincide with the estimates we obtained above.
 
 \textbf{Summary}
 
@@ -713,7 +716,8 @@ more about this dataset:
 
 For this dataset we have \(n = 32\) (number of cars), and \(p = 10\) (number
 of attributes, excluding \texttt{mpg}). The values \(y_1, \ldots, y_{32}\) are listed
-in the first column of the table, the values \(x_{i,1}\) for \(i \in \{1, \ldots, 32\}\) are shown in the second column, and the values \(x_{i,10}\) are shown in
+in the first column of the table, the values \(x_{i,1}\) for \(i \in \{1, \ldots,
+32\}\) are shown in the second column, and the values \(x_{i,10}\) are shown in
 the last column.
 
 It is easy to make scatter plots which show how a single
@@ -727,7 +731,7 @@ affects fuel consumption:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/mtcars-hp-mpg-plot-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/mtcars-hp-mpg-plot-1.pdf}}
 
 We can see that cars with stronger engines tend to use more fuel
 (\emph{i.e.}~a gallon of fuel lasts for fewer miles; the curve goes down),
@@ -807,7 +811,8 @@ the sums in equation~\eqref{eq:lmdata}, and \eqref{eq:lmmodel}
 is an equation of vectors of size~\(n\), which combines the \(n\)
 individual equations from \eqref{eq:lmdata}.
 
-To simplify notation, we index the columns of \(X\) by \(0, 1, \ldots, p\) (instead of the more conventional \(1, \ldots, p+1\)), so that we
+To simplify notation, we index the columns of \(X\) by \(0, 1, \ldots,
+p\) (instead of the more conventional \(1, \ldots, p+1\)), so that we
 can for example write
 \begin{equation*}
   (X \beta)_i
@@ -1088,7 +1093,7 @@ plot to be close to the diagonal.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/y-y.hat-plot-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/y-y.hat-plot-1.pdf}}
 
 For comparison we now re-do the analysis using built-in R commands.
 In the \texttt{lm()} command below, we use \texttt{data=mtcars} to tell R where the
@@ -1124,7 +1129,7 @@ the same result as above:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] 3.410605e{-}13}
+\NormalTok{\# [1] 3.979039e{-}13}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1637,7 +1642,8 @@ section~\ref{Sx1-matrices} in the appendix.
     = \bigl( (Z - \mu) (Z - \mu)^\top \bigr)_{ij}
     = (Z - \mu)_i (Z - \mu)_j.
   \end{equation*}
-  Taking expectations gives \(\mathbb{E}(M_{ij}) = E\bigl( (Z - \mu)_i (Z - \mu)_j \bigr) = \mathop{\mathrm{Cov}}(Z_i, Z_j)\) and thus we can write
+  Taking expectations gives \(\mathbb{E}(M_{ij}) = E\bigl( (Z - \mu)_i (Z - \mu)_j
+  \bigr) = \mathop{\mathrm{Cov}}(Z_i, Z_j)\) and thus we can write
   \begin{equation}
     \mathop{\mathrm{Cov}}(Z)
     = \mathbb{E}\bigl( (Z - \mu) (Z - \mu)^\top \bigr).  \label{eq:cov-prod}
@@ -1834,7 +1840,7 @@ We can use R to plot a sample of this two-dimensional normal distribution.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/MVN-plot-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/MVN-plot-1.pdf}}
 \end{example}
 
 \begin{example}
@@ -1873,7 +1879,7 @@ that \(Z_1\) and \(Z_2\) are normally distributed.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/not-a-normal-hist-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/not-a-normal-hist-1.pdf}}
 
 The histograms make it plausible that the components are indeed normally
 distributed. Now we use a scatter plot to show the joint distribution
@@ -1887,7 +1893,7 @@ of \(Z_1\) and~\(Z_2\):
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/not-a-normal-scatter-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/not-a-normal-scatter-1.pdf}}
 
 This plot looks peculiar! Most people would not call this a normal distribution
 and the formal definition of a multivariate normal distribution is made to
@@ -1912,6 +1918,8 @@ exclude cases like this.
 \section*{Problem Sheet 1}\label{P01}
 \addcontentsline{toc}{section}{Problem Sheet 1}
 
+\excludecomment{myanswers}
+
 You should attempt all these questions and write up your solutions in advance
 of your workshop in week~3 where the answers will be discussed.
 
@@ -1923,7 +1931,10 @@ of your workshop in week~3 where the answers will be discussed.
 \def\labelenumi{\alph{enumi}.}
 \tightlist
 \item
-  Show that \(\displaystyle X^\top X = \begin{pmatrix}  n & \sum_{i=1}^n x_i \\  \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2  \end{pmatrix} \in \mathbb{R}^{2\times 2}\).
+  Show that \(\displaystyle X^\top X = \begin{pmatrix}
+   n & \sum_{i=1}^n x_i \\
+   \sum_{i=1}^n x_i & \sum_{i=1}^n x_i^2
+      \end{pmatrix} \in \mathbb{R}^{2\times 2}\).
 \end{enumerate}
 
 \begin{myanswers}
@@ -2044,9 +2055,11 @@ This completes the answer.
 
 Inspection of the final result shows that we have recovered the traditional
 formula for the coefficients in simple linear regression, only written in
-slightly unusual form. For example, the term \(\frac1n \sum_{i=1}^n x_i^2 -  \bigl(\frac1n \sum_{i=1}^n x_i\bigr)^2\) equals the sample variance of the
+slightly unusual form. For example, the term \(\frac1n \sum_{i=1}^n x_i^2 -
+  \bigl(\frac1n \sum_{i=1}^n x_i\bigr)^2\) equals the sample variance of the
 \(x_i\) (up to a factor of \(n/(n-1)\)). The algebra in this answer could be
-slightly simplified by changing to new coordinates \(\tilde x_i = x_i - \bar  x\) and \(\tilde y_i = y_i - \bar y\) before fitting the regression model.
+slightly simplified by changing to new coordinates \(\tilde x_i = x_i - \bar
+  x\) and \(\tilde y_i = y_i - \bar y\) before fitting the regression model.
 
 \end{myanswers}
 
@@ -2239,7 +2252,8 @@ This completes the proof.
 \end{proof}
 
 The lemma implies that \(\mathbb{E}(\hat\beta) = \beta\), \emph{i.e.}~the estimator
-\(\hat\beta\) is unbiased. Note that for this statement we only used \(\mathbb{E}(\varepsilon) = 0\) to compute the expectation of~\(\hat\beta\). Thus, the estimator will still
+\(\hat\beta\) is unbiased. Note that for this statement we only used \(\mathbb{E}(\varepsilon) =
+0\) to compute the expectation of~\(\hat\beta\). Thus, the estimator will still
 be unbiased for correlated noise or for noise which is not normally distributed.
 
 We have seen \hyperref[eq:Cov-diag-elem]{earlier} that the diagonal elements
@@ -2415,7 +2429,8 @@ of the diagonal elements \(D_{ii}\) and \((I - D)_{ii}\) is \(1\) and the other
 one is \(0\) for every~\(i\).
 
 Since \(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\) we find that \(\eta := U \varepsilon\) is normally
-distributed with mean \(U 0 = 0\) and covariance matrix \(\sigma^2 U I U^\top = \sigma^2 U U^\top = \sigma^2 I\). Thus \(\eta\) has the same distribution as
+distributed with mean \(U 0 = 0\) and covariance matrix \(\sigma^2 U I U^\top =
+\sigma^2 U U^\top = \sigma^2 I\). Thus \(\eta\) has the same distribution as
 \(\varepsilon\) does: \(\eta \sim \mathcal{N}(0, \sigma^2I)\) and the components \(\eta_i\)
 are independent of each other. We have
 \begin{equation*}
@@ -2923,7 +2938,8 @@ find the corresponding critical value:
 \end{Shaded}
 
 Using the critical value \(t\) we can decided whether \(H_0\) should be accepted or
-rejected. For example, looking at the intercept \(\beta_0\), we find \(|T_0| = |-3.3557234| > 2.109816 = t_{n-p-1}(1-\alpha/2)\) and thus we can reject the
+rejected. For example, looking at the intercept \(\beta_0\), we find \(|T_0| =
+|-3.3557234| > 2.109816 = t_{n-p-1}(1-\alpha/2)\) and thus we can reject the
 hypothesis \(H_0\colon \beta_0 = 0\). This means that the intercept is
 significantly different from 0.
 
@@ -2974,7 +2990,8 @@ different coefficients will usually not be independent.
 \subsection{Linear Combinations of Coefficients}\label{sec:simult-dist}
 
 As a general setup which allows to describe which coefficients we are
-interested in, we consider the image \(K\beta\), where \(K \in \mathbb{R}^{k \times (p+1)}\) with \(k \leq p+1\).
+interested in, we consider the image \(K\beta\), where \(K \in \mathbb{R}^{k \times
+(p+1)}\) with \(k \leq p+1\).
 
 \begin{example}
 If \(p = 3\) and
@@ -3135,7 +3152,9 @@ Define
 \end{equation*}
 where \(f_{k,n-p-1}(\alpha)\) is the \((1-\alpha)\)-quantile of the
 \(F_{k,n-p-1}\)-distribution. This is a ``ball'' around \(K\hat\beta\) in \(\mathbb{R}^k\),
-where distance is measured using the norm \(\| \;\cdot\; \|_{K(X^\top X)^{-1} K^\top}\) introduced above. The following lemma shows that \(\sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}\) is the correct choice of ``radius'' to make the
+where distance is measured using the norm \(\| \;\cdot\; \|_{K(X^\top X)^{-1}
+K^\top}\) introduced above. The following lemma shows that \(\sqrt{k \hat\sigma^2
+f_{k,n-p-1}(\alpha)}\) is the correct choice of ``radius'' to make the
 ball cover the true value \(K\beta\) with probability \(1-\alpha\).
 
 \begin{lemma}
@@ -3341,7 +3360,7 @@ value in a plot:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/ellipse-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/ellipse-1.pdf}}
 
 The green ellipse in this plot is the 95\% confidence ellipse
 for the vector \((\beta_1, \beta_2)\).
@@ -3438,7 +3457,7 @@ with \(\varphi\in [0, 2\pi]\). This allows to plot the boundary line in~R.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/ellipse2-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/ellipse2-1.pdf}}
 
 To verify that everything is consistent, we have plotted the line on top
 of the image from the previous subsection. Since the black line perfectly
@@ -3603,7 +3622,7 @@ from the questionnaire into R
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{  x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/rintro/Q2016.csv"}\NormalTok{)}
+\NormalTok{  x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"https://teaching.seehuhn.de/rintro/Q2016.csv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -4167,7 +4186,8 @@ the bottom. Alternatively, we can use the so called ``p-value'' listed in the
 \(H_0\) is still rejected. Here we find \(0.00263\) and since we have
 \(\alpha = 0.05 > 0.00263\), we can see that \(H_0\) is rejected.
 
-If we wanted to test \(\beta_2 = 1\) instead, we could use the value \(\hat\beta_2 = 1.2953\) from the \texttt{Estimate} column and \(\sqrt{\hat\sigma^2 C_{ii}} = 0.3680\)
+If we wanted to test \(\beta_2 = 1\) instead, we could use the value \(\hat\beta_2
+= 1.2953\) from the \texttt{Estimate} column and \(\sqrt{\hat\sigma^2 C_{ii}} = 0.3680\)
 from the \texttt{Std.\ Error} column, to get \(T = (1.2953 - 1) / 0.3680\) and then we
 would accept or reject the hypothesis \(\beta_2 = 1\) by comparing the result to
 the critical value~\texttt{qt(0.975,\ 17)}.
@@ -4186,7 +4206,7 @@ simultaneously. We consider a small, synthetic dataset:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/data/small/small.csv}
+\CommentTok{\# data from https://teaching.seehuhn.de/data/small/small.csv}
 \NormalTok{small }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/small.csv"}\NormalTok{)}
 \NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ small)}
 \FunctionTok{summary}\NormalTok{(m)}
@@ -4328,6 +4348,8 @@ and thus also at \(\alpha=0.05\).
 \section*{Problem Sheet 2}\label{P02}
 \addcontentsline{toc}{section}{Problem Sheet 2}
 
+\excludecomment{myanswers}
+
 You should attempt all these questions and write up your solutions in advance
 of the workshop in week~5 where the answers will be discussed.
 
@@ -4364,9 +4386,9 @@ then \((V_1/d_1)/(V_2/d_2) \sim F(d_1, d_2)\). Using these rules:
 \item
   \(X^2 \sim \chi^2(1)\),
 \item
-  \(X^2 + Y + Z \sim \chi^2(1+2+3) = \chi^2(6)\),
+  \(X^2 + Y + Z \sim \chi^2(1+2+3) =  \chi^2(6)\),
 \item
-  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}} = \frac{X}{\sqrt{Y/2}} \sim t(2)\),
+  \(\displaystyle\frac{\sqrt{2}X}{\sqrt{Y}} = \frac{X}{\sqrt{Y/2}} \sim  t(2)\),
 \item
   \(\displaystyle\frac{2X^2}{Y} = \frac{X^2/1}{Y/2} \sim F(1,2)\),
 \item
@@ -4375,8 +4397,10 @@ then \((V_1/d_1)/(V_2/d_2) \sim F(d_1, d_2)\). Using these rules:
 
 \end{myanswers}
 
-\textbf{6.} Let \(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\) and let \(X \sim \mathcal{N}(\mu, \sigma^2 I)\) be a normally-distributed random vector, where \(I\) is the
-\(n\times n\) identity matrix. Define \(A = \frac1n \mathbf{1} \mathbf{1}^\top \in \mathbb{R}^{n\times n}\).
+\textbf{6.} Let \(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\) and let \(X \sim \mathcal{N}(\mu,
+\sigma^2 I)\) be a normally-distributed random vector, where \(I\) is the
+\(n\times n\) identity matrix. Define \(A = \frac1n
+\mathbf{1} \mathbf{1}^\top \in \mathbb{R}^{n\times n}\).
 
 \begin{itemize}
 \item
@@ -4450,7 +4474,8 @@ of the first few questions follow easily:
   are independent, since they are functions of \(A\varepsilon\) and \((I-A)\varepsilon\).
 
   Since
-  \((I - A)^\top (I - A) = I^2 - I A - A I + A^2 = I - A - A + A = I - A\) we have
+  \((I - A)^\top (I - A) = I^2 - I A - A I + A^2 = I - A
+  - A + A = I - A\) we have
   \begin{equation*}
     X^\top (I-A)X
     = X^\top (I - A)^\top (I-A)X
@@ -4469,7 +4494,8 @@ of the first few questions follow easily:
   \end{align*}
   Thus we can write the sample mean as \(\bar X = (AX)_i\), and the
   sample variance as
-  \(\mathrm{s}_X^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2 = X^\top (I-A)X / (n-1)\), and if \(X\) is normally distributed the
+  \(\mathrm{s}_X^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar X)^2 =
+  X^\top (I-A)X / (n-1)\), and if \(X\) is normally distributed the
   two values \(\bar X\) and \(\mathrm{s}_X^2\) are independent.
 \end{itemize}
 
@@ -4555,7 +4581,7 @@ Thus, the confidence interval is \(\bigl[ -0.605, 0.301 \bigr]\).
 \begin{itemize}
 \tightlist
 \item
-  \url{https://www1.maths.leeds.ac.uk/~voss/data/20211020.csv}
+  \url{https://teaching.seehuhn.de/data/20211020.csv}
 \end{itemize}
 
 contains pairs of \((x, y)\) values. Fit the following models to the data:
@@ -4577,7 +4603,7 @@ vertical axis. Comment on the resulting plots.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/data/20211020.csv}
+\CommentTok{\# data from https://teaching.seehuhn.de/data/20211020.csv}
 \NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/20211020.csv"}\NormalTok{)}
 
 \NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{data =}\NormalTok{ d)}
@@ -4585,7 +4611,7 @@ vertical axis. Comment on the resulting plots.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/P02Q08-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/P02Q08-1.pdf}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4594,7 +4620,7 @@ vertical axis. Comment on the resulting plots.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/P02Q08-2.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/P02Q08-2.pdf}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4603,7 +4629,7 @@ vertical axis. Comment on the resulting plots.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/P02Q08-3.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/P02Q08-3.pdf}}
 
 \end{myanswers}
 
@@ -4693,7 +4719,8 @@ when some observations are omitted.
 \end{equation*}
 where \(H_{II} := X_I (X^\top X)^{-1} X_I^\top = (h_{ij})_{i,j\in I}\) is the
 matrix which contains the elements of the hat matrix~\(H\) where both row and
-column are in \(I\), and \(\hat\varepsilon_I = (\hat\varepsilon_i)_{i\in I} = (y_i - \hat y_i)_{i\in I}\) is the vector of residuals at the omitted samples.
+column are in \(I\), and \(\hat\varepsilon_I = (\hat\varepsilon_i)_{i\in I} = (y_i - \hat
+y_i)_{i\in I}\) is the vector of residuals at the omitted samples.
 \end{lemma}
 
 The vector \(\hat\varepsilon_I\) consists of a subset of the original
@@ -5033,7 +5060,7 @@ simulated data. We include an \(x\)-space outlier:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/influence-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/influence-1.pdf}}
 
 The black line in the plot is the regression line using all data,
 the red line is the regression line fitted using only the left-most
@@ -5165,7 +5192,7 @@ satisfied.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/correct-resid-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/correct-resid-1.pdf}}
 
 We can see that the residuals are clustered around zero as expected.
 \end{example}
@@ -5189,7 +5216,7 @@ quadratic dependency (instead of linear) of the output on the input:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/wrong-resid-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/wrong-resid-1.pdf}}
 
 It is clear that the residuals are not centred around the horizontal
 zero line, but form a parabola instead.
@@ -5217,7 +5244,7 @@ is unknown whether or not the modelling assumptions are satisfied.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/stackloss-resid-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/stackloss-resid-1.pdf}}
 
 We can see that the residuals are clustered around zero as expected.
 Since there are no obvious patterns, the plot does not indicate any
@@ -5248,7 +5275,7 @@ assumptions are known to be satisfied.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/correct-qq-plot-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/correct-qq-plot-1.pdf}}
 
 As expected, the points lie approximately on a straight line.
 \end{example}
@@ -5269,7 +5296,7 @@ of normally distributed.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/wrong-qq-plot-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/wrong-qq-plot-1.pdf}}
 
 Now the points of the Q-Q plot lie on a curved line, indicating that the
 residuals are not normally distributed.
@@ -5286,7 +5313,7 @@ of normally distributed.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/stackloss-qq-plot-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/stackloss-qq-plot-1.pdf}}
 
 The points in this Q-Q plot lie more or less on a straight line,
 so it seems a reasonable to assume that the errors were normally
@@ -5333,7 +5360,7 @@ Sometimes, different plot types are also used.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/stackloss-plot-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/stackloss-plot-1.pdf}}
 
 Clearly the stack loss increases with water temperature, but the
 relationship seems not to be linear. It may make sense to include
@@ -5368,9 +5395,9 @@ We list some examples of non-linear models which can be transformed
 to linear models:
 
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5195}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2597}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2208}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.5195}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2597}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2208}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 nonlinear model
@@ -5425,8 +5452,8 @@ strict equality.
 Some commonly-used variance stabilising transformations are:
 
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.6000}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.4000}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.6000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4000}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 variance
@@ -5454,7 +5481,9 @@ model.
 
 \begin{example}
 The last transformation in the table above corresponds to the case of binomial
-sampling: If \(x = p\) and \(Y \sim B(n, p) / n\) then we have \(\mathbb{E}(Y) = n p / n = x\) and a linear model may be appropriate. But we also have \(\mathop{\mathrm{Var}}(Y) = p (1 - p) / n \propto \mathbb{E}(Y) \bigl( 1- \mathbb{E}(Y) \bigr)\), so the assumption of
+sampling: If \(x = p\) and \(Y \sim B(n, p) / n\) then we have \(\mathbb{E}(Y)
+= n p / n = x\) and a linear model may be appropriate. But we also have \(\mathop{\mathrm{Var}}(Y)
+= p (1 - p) / n \propto \mathbb{E}(Y) \bigl( 1- \mathbb{E}(Y) \bigr)\), so the assumption of
 constant variance is violated.
 
 We try to apply the transformation suggested in the table. The
@@ -5470,7 +5499,7 @@ this transformation, we plot the function \(y \mapsto \arcsin(\sqrt{y})\):
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/arcsin-transform-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/arcsin-transform-1.pdf}}
 
 We can see that the transformation is approximately linear for most
 of the interval, but has a steeper slope near the edges. The effect of
@@ -5495,7 +5524,7 @@ data, for a simulated dataset:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/binomial-sampling-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/binomial-sampling-1.pdf}}
 
 The plot shows that the variance has indeed improved, while linearity
 has suffered (an S-shaped curve is now visible). Neither model is perfect and
@@ -5510,7 +5539,7 @@ peak hour demand (\(y\), measured in kW) to total energy usage during the month
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# data at https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/electric.dat}
+\CommentTok{\# data at https://teaching.seehuhn.de/2022/MATH3714/electric.dat}
 \NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}\StringTok{"data/electric.dat"}\NormalTok{, }\AttributeTok{header=}\ConstantTok{FALSE}\NormalTok{)}
 \FunctionTok{plot}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{V1, d}\SpecialCharTok{$}\NormalTok{V2,}
      \AttributeTok{xlab=}\StringTok{"energy usage [kWh]"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"energy demand [kW]"}\NormalTok{)}
@@ -5519,7 +5548,7 @@ peak hour demand (\(y\), measured in kW) to total energy usage during the month
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/electric1-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric1-1.pdf}}
 
 A linear relationship looks plausible, but we can see that the spread
 of points around the regression line widens as energy usage increases.
@@ -5532,7 +5561,7 @@ this is more clearly visible in a residual plot:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/electric2-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric2-1.pdf}}
 
 We try a transformation of the data to stabilise the variance.
 From the ``wedge'' shape on the left hand side of the plot, it is clear
@@ -5549,7 +5578,7 @@ Thus we can try transformations like \(y' = \log(y)\) or
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/electric3-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric3-1.pdf}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -5559,7 +5588,7 @@ Thus we can try transformations like \(y' = \log(y)\) or
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/electric4-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric4-1.pdf}}
 
 The spread of residuals now looks somewhat more reasonable.
 \end{example}
@@ -5580,7 +5609,8 @@ where \(g = (\prod_{i=1}^n y_i)^{1/n}\) is the geometric mean.
 
 The geometric mean is a constant (it does not depend on \(i\)) and is not needed
 for the power transform, but it is usually included to make values for
-different \(\lambda\) more comparable. For \(\lambda = 1\) the transform is \(y' = y - 1\). This is a simple shift which has no effect on the fitted model, it just
+different \(\lambda\) more comparable. For \(\lambda = 1\) the transform is \(y' = y
+- 1\). This is a simple shift which has no effect on the fitted model, it just
 decreases the intercept by \(1\) and leaves the residuals unchanged. Thus, this
 case is that same as applying no transformation.
 
@@ -5649,7 +5679,7 @@ of \(\lambda\), together with the cutoff suggested by equation~\eqref{eq:power-c
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/electric5-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric5-1.pdf}}
 
 This suggests the range of reasonable \(\lambda\) values to be
 
@@ -5685,7 +5715,7 @@ Up to the shift and scaling, this just takes the square root of the data.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/electric6-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric6-1.pdf}}
 
 To see whether the variance of the residuals has improved, we consider
 a residual plot:
@@ -5698,7 +5728,7 @@ a residual plot:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/electric7-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric7-1.pdf}}
 
 We see that the spread of the residuals has indeed improved, when compared to
 fitting the original data.
@@ -5722,7 +5752,8 @@ this model in various ways:
 \item
   In the section about \hyperref[S10-improving]{Improving the Model Fit} we have seen that
   sometimes it is useful to transform input variables before using them
-  in the model. This can either happen individually, \emph{e.g.}~\(x_2' = \log x_2\), or collectively, \emph{e.g.}~\(x^\ast = x_1 x_2\). The number of
+  in the model. This can either happen individually, \emph{e.g.}~\(x_2' = \log
+  x_2\), or collectively, \emph{e.g.}~\(x^\ast = x_1 x_2\). The number of
   models we may obtain in this way is unlimited.
 \end{itemize}
 
@@ -5760,7 +5791,8 @@ where \(H = X (X^\top X)^{-1} X^\top\) is the hat matrix computed
 without using \(x_{q+1}, \ldots, x_p\).
 
 If we write \(\tilde X \in \mathbb{R}^{n\times (p-q)}\) for the matrix with columns
-\(x_{q+1}, \ldots, x_p\) and \(\tilde\beta = (\beta_{q+1}, \ldots, \beta_p) \in \mathbb{R}^{p-q}\), then the full model can be written as
+\(x_{q+1}, \ldots, x_p\) and \(\tilde\beta = (\beta_{q+1}, \ldots, \beta_p) \in
+\mathbb{R}^{p-q}\), then the full model can be written as
 \begin{equation*}
   Y
   = X \beta + \tilde X \tilde\beta + \varepsilon
@@ -6047,7 +6079,8 @@ express \(R^2\) as
   R^2
   = \mathrm{s}_{\hat y}^2 / \mathrm{s}_y^2.
 \end{equation*}
-Since both numerator and denominator are positive, if is clear the \(R^2 \geq 0\). Similarly, from the definition it is clear that \(R^2 \leq 1\), so that we
+Since both numerator and denominator are positive, if is clear the \(R^2 \geq
+0\). Similarly, from the definition it is clear that \(R^2 \leq 1\), so that we
 always have \(R^2 \in [0, 1]\). A large value of \(R^2\) indicates that
 the residuals are small compared to the sample variance of the \(y_i\),
 and thus often indicates good model fit.
@@ -6339,7 +6372,7 @@ We will use the \texttt{stackloss} dataset as an example:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{images/lm-output.png}
+\pandocbounded{\includegraphics[keepaspectratio]{images/lm-output.png}}
 
 Here I have marked different parts of the output using red shaded boxes
 and using the letters A to~I. We discuss each of the marked
@@ -6398,6 +6431,8 @@ sections in turn:
 \section*{Problem Sheet 3}\label{P03}
 \addcontentsline{toc}{section}{Problem Sheet 3}
 
+\excludecomment{myanswers}
+
 You should attempt all these questions and write up your solutions in advance
 of the workshop in week~7 where the answers will be discussed.
 
@@ -6430,7 +6465,7 @@ These data are also available in machine-readable form at
 \begin{itemize}
 \tightlist
 \item
-  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P03Q09.csv}
+  \url{https://teaching.seehuhn.de/2022/MATH3714/P03Q09.csv}
 \end{itemize}
 
 Using these data:
@@ -6449,7 +6484,7 @@ To fit the required model we can use the following R commands:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{"https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/P03Q09.csv"}
+\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{"https://teaching.seehuhn.de/2022/MATH3714/P03Q09.csv"}
 \NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(url)}
 \NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2 }\SpecialCharTok{+}\NormalTok{ x3, }\AttributeTok{data=}\NormalTok{x)}
 \end{Highlighting}
@@ -6661,7 +6696,7 @@ inputs \(x_i\) and responses \(y_i\) for \(i \in \{1, 2, 3, 4\}\).
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/four-models-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/four-models-1.pdf}}
 
 \begin{myanswers}
 
@@ -6783,7 +6818,8 @@ a method which can often find the model with the largest \(R^2_\mathrm{adj}\)
 without having to fit all \(2^p\) models. We consider the least squares
 estimate throughout.
 
-We can characterise each possible model by the set \(J \subseteq \{1, \ldots p\}\) of variables included in the model. The model includes variable \(x_j\), if
+We can characterise each possible model by the set \(J \subseteq \{1, \ldots
+p\}\) of variables included in the model. The model includes variable \(x_j\), if
 and only if \(j \in J\). Here we assume that the intercept is always included,
 so that \(J=\emptyset\) corresponds to the model \(Y = \beta_0 + \varepsilon\).
 
@@ -7000,7 +7036,7 @@ as before. Now we follow the steps of the algorithm.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/exhaustiveA-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/exhaustiveA-1.pdf}}
 
 The plot shows the residual sum of squares for the model with input \(x_j\)
 omitted, for \(j\) ranging from 1 to~8.
@@ -7106,7 +7142,7 @@ This covers the case \(q = p - 1\).
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/exhaustiveB-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/exhaustiveB-1.pdf}}
 
 We see that the model with \(q = 6\) variables has the the
 lowest \(\hat\sigma^2\) and thus the highest \(R^2_\mathrm{adj}\).
@@ -7353,7 +7389,8 @@ Assume that \(x_j \in \{a_1, \ldots, a_k\}\) is a factor which has \(k\) possibl
 values. The possible values of the factor, \(a_1, \ldots, a_k\) are also called
 the \textbf{levels} of the factor. The easiest way to include a factor in a
 regression model is via \textbf{indicator variables}. For this we represent \(x_j\)
-using \(k-1\) columns in the design matrix, say \(\tilde x_1, \ldots, \tilde x_{k-1}\), where
+using \(k-1\) columns in the design matrix, say \(\tilde x_1, \ldots, \tilde
+x_{k-1}\), where
 \begin{equation*}
   \tilde x_{\ell i}
   = \begin{cases}
@@ -7513,7 +7550,7 @@ separate regression lines for ``yes'' (red) and ``no'' (black):
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/factors-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/factors-1.pdf}}
 
 We can see that the two regression lines, corresponding to the two levels
 are parallel. They have the same slope but different intercepts.
@@ -7693,7 +7730,7 @@ with the two regression lines.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/interactions-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/interactions-1.pdf}}
 
 As expected, the two lines have different intercepts and different slopes.
 \end{example}
@@ -7731,7 +7768,7 @@ The first few samples are as shown:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/mouth{-}volume.txt}
+\CommentTok{\# data from https://teaching.seehuhn.de/2022/MATH3714/mouth{-}volume.txt}
 \NormalTok{dd }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}\StringTok{"data/mouth{-}volume.txt"}\NormalTok{, }\AttributeTok{header =} \ConstantTok{TRUE}\NormalTok{)}
 \FunctionTok{head}\NormalTok{(dd)}
 \end{Highlighting}
@@ -8193,132 +8230,6 @@ optional \texttt{contrasts.arg} argument to \texttt{lm()} and \texttt{model.matr
 
 \clearpage
 
-\section*{Practical}\label{practical}
-\addcontentsline{toc}{section}{Practical}
-
-\begin{itemize}
-\tightlist
-\item
-  The MATH3714 and MATH5714M modules are assessed by an examination (80\%)
-  and a practical (20\%). This is the practical, worth 20\% of your final
-  module mark.
-\item
-  You must hand in your solution via Gradescope
-  by \textbf{Thursday, 14th December 2023, 2pm}.
-\item
-  Reports must be typeset (not handwritten) and should be no more than 7 pages
-  in length (9 pages for MATH5714M).
-\item
-  Within reason you may talk to your friends about this piece of work,
-  but you should not send R code (or output) to each other.
-  Your report must be your own work.
-\end{itemize}
-
-\subsection*{Dataset}\label{dataset}
-\addcontentsline{toc}{subsection}{Dataset}
-
-In this practical we examine a dataset which lists house prices in California
-(from the 1990 census) together with a variety of related variables.
-You can download the dataset from here:
-
-\begin{itemize}
-\tightlist
-\item
-  \url{https://www1.maths.leeds.ac.uk/~voss/data/housing/}
-\end{itemize}
-
-For most tasks you will only need the ``training dataset''.
-The ``test dataset'' is only used in task 3.
-
-\subsection*{Tasks}\label{tasks}
-\addcontentsline{toc}{subsection}{Tasks}
-
-The aim of the practical is to fit an appropriate model to these data, which
-predicts the median house value \texttt{medianHouseValue} from the other variables.
-
-This practical is deliberately open-ended, with little guidance on how to proceed.
-There is no single right or wrong answer to this practical.
-The important thing is that you justify your approach.
-
-\textbf{Task 1.} We start by considering \texttt{medianHouseValue} as a function of
-\texttt{medianIncome} only.
-
-\begin{itemize}
-\item
-  Using the training dataset,
-  fit a linear model which can describe the relationship between
-  \texttt{medianHouseValue} (response) and \texttt{medianIncome} (input).
-\item
-  Using appropriate diagnostics, discuss how well the model fits the data.
-\item
-  Determine a 95\% confidence interval for the intercept in your model.
-\end{itemize}
-
-\textbf{Task 2.} Now we also consider the remaining variables in the dataset.
-
-\begin{itemize}
-\item
-  With due consideration to
-
-  \begin{itemize}
-  \tightlist
-  \item
-    transformations (where, and if, necessary)
-  \item
-    appropriate choice of variables
-  \item
-    model selection
-  \item
-    model checking
-  \item
-    \emph{etc.}
-  \end{itemize}
-
-  obtain a model which is able to predict \texttt{medianHouseValue} using some or all
-  of these additional variables.
-\item
-  Discuss the special role of \texttt{latitude} and \texttt{longitude} and whether/how
-  these two variables should be included in a model.
-\item
-  Justify your choice of model by comparing at least two ``competing'' models.
-  The comparison should take note of at
-  least (a) model selection criteria, (b) diagnostics, and (c) interpretability.
-\item
-  Interpret the parameters in your preferred model.
-\end{itemize}
-
-\textbf{Task 3.} Now also load the test dataset into R.
-
-\begin{itemize}
-\item
-  For each sample in the
-  test dataset, use your model (still trained on the training dataset) to
-  predict \texttt{medianHouseValue}.
-\item
-  Compare the predicted values to the actual values by computing the
-  mean squared error
-  \begin{equation*}
-     \mathrm{MSE}
-     = \frac{1}{n_\mathrm{test}} \sum_{i=1}^{n_\mathrm{test}} (\hat y_i - y_i)^2
-  \end{equation*}
-\item
-  Comment on the result.
-\end{itemize}
-
-\textbf{Task 4 (only for MATH5714M).} Use the Nadaraya-Watsen estimator to
-estimate the average median house value as a function of latitude.
-
-\begin{itemize}
-\item
-  Create a plot of your estimate.
-\item
-  Carefully explain how you chose the bandwidth for your estimator.
-\item
-  Discuss your results.
-\end{itemize}
-
-\clearpage
-
 \section{Multicollinearity}\label{S15-multicoll}
 
 \begin{definition}
@@ -8334,7 +8245,8 @@ such that \(X v \approx 0\).
 
 \subsection{Consequences of Multicollinearity}\label{consequences-of-multicollinearity}
 
-In the derivation of the least squares estimator \(\hat\beta = (X^\top X)^{-1} X^\top y\) we had to assume that the matrix \(X^\top X\) is
+In the derivation of the least squares estimator \(\hat\beta =
+(X^\top X)^{-1} X^\top y\) we had to assume that the matrix \(X^\top X\) is
 invertible. If the columns of \(X\) are linearly dependent, \(X^\top X\) is no
 longer invertible and the least squares estimate is no longer uniquely
 defined.
@@ -8413,7 +8325,7 @@ commands used to plot the ellipse.)
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/multicollellipse-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/multicollellipse-1.pdf}}
 
 We can see that, as in the toy example above, the confidence region
 places \((\beta_1, \beta_2)\) close to the line where \(\beta_1 + \beta_2 = 2\)
@@ -8461,14 +8373,16 @@ The \textbf{condition number} of \(X\) is defined to be
 \end{equation*}
 where \(\sigma_\mathrm{max}(X) = \sqrt{\lambda_\mathrm{max}(X^\top X)}\) is the
 largest singular value of \(X\), computed as the square root of the largest
-eigenvalue of \(X^\top X\), and similarly \(\sigma_\mathrm{min}(X) = \sqrt{\lambda_\mathrm{min}(X^\top X)}\) is the smallest singular value of \(X\),
+eigenvalue of \(X^\top X\), and similarly \(\sigma_\mathrm{min}(X) =
+\sqrt{\lambda_\mathrm{min}(X^\top X)}\) is the smallest singular value of \(X\),
 computed as the square root of the smallest eigenvalue of \(X^\top X\).
 \end{definition}
 
 As a rule of thumb, if \(\kappa(X) < 10\) there are no significant problems
 with multicollinearity, and if \(\kappa(X) > 30\) the regression problem
 sufferes severe problems with multicollinearity. In the case where the
-columns of \(X\) are exactly linearly dependent, we have \(\sigma_\mathrm{min}(X) = 0\) and \(\kappa(X) = \infty\).
+columns of \(X\) are exactly linearly dependent, we have \(\sigma_\mathrm{min}(X)
+= 0\) and \(\kappa(X) = \infty\).
 
 In R, the condition number can be computed using the
 \href{https://rdrr.io/r/base/kappa.html}{function \texttt{kappa()}}. The function
@@ -8513,7 +8427,7 @@ leaving out the responses in column~1:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/multicollairs-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/multicollairs-1.pdf}}
 
 While there are visbile patterns, there are no clear signs of
 a linear dependency between any two columns.
@@ -8586,7 +8500,8 @@ This agrees with the value for \(\kappa(X)\) we found above.
 
 Finally, the columns \(v_1, \ldots, v_{p+1}\) of \texttt{s\$v} are called the (right)
 singular vectors of~\(X\). We can use these vectors to identify which variables
-are involved in multicollinearity: It is easy to show that \(\| X v_k \| = \sigma_k(X)\), so every ``small'' \(\sigma_k(X)\) corresponds to a vector \(v_k\)
+are involved in multicollinearity: It is easy to show that \(\| X v_k \| =
+\sigma_k(X)\), so every ``small'' \(\sigma_k(X)\) corresponds to a vector \(v_k\)
 which describes an approximate linear dependency between the columns of \(X\).
 Looking at \(\sigma_4(X)\) (the 5th element of \texttt{s\$d}) we get
 
@@ -8664,6 +8579,8 @@ be addressed:
 
 \section*{Problem Sheet 4}\label{P04}
 \addcontentsline{toc}{section}{Problem Sheet 4}
+
+\excludecomment{myanswers}
 
 You should attempt all these questions and write up your solutions in advance
 of the workshop in week~9 where the answers will be discussed.
@@ -8775,7 +8692,7 @@ together with the fitted model:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/P04Q13c-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/P04Q13c-1.pdf}}
 
 As expected, for \(T > 273 = T_0\), the slope of the
 fitted line increases, leading to greatly improved
@@ -8846,7 +8763,7 @@ so some care is needed.
 \begin{itemize}
 \tightlist
 \item
-  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P04Q14.csv}
+  \url{https://teaching.seehuhn.de/2022/MATH3714/P04Q14.csv}
 \end{itemize}
 
 The dataset contains samples \((x_{i,1}, x_{i,2}, y_i)\). We want to
@@ -8865,14 +8782,14 @@ We can fit the model as follows:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/P04Q14.csv}
+\CommentTok{\# data from https://teaching.seehuhn.de/2022/MATH3714/P04Q14.csv}
 \NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/P04Q14.csv"}\NormalTok{)}
 \NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x2, }\AttributeTok{data =}\NormalTok{ d)}
 \FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m), }\FunctionTok{resid}\NormalTok{(m))}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/P04Q14a-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/P04Q14a-1.pdf}}
 
 The mean of the residuals does not form a straight line, so the
 dependency of \(y\) on the \(x_i\) seems to be nonlinear. Also, the variance
@@ -8914,7 +8831,7 @@ as a function of \(\lambda\).
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/P04Q14b-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/P04Q14b-1.pdf}}
 
 The horizonal line in this plot indicates the cutoff suggested by the
 rule of thumb in~\eqref{eq:power-cutoff}. Of the values of \(\lambda\)
@@ -8929,7 +8846,7 @@ so we try this value here.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/P04Q14c-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/P04Q14c-1.pdf}}
 
 Now the residual plot looks perfect!
 
@@ -9018,8 +8935,10 @@ The term being minimised is
 consisting of the residual sum of squares plus a penalty term. The
 regularisation parameter \(\lambda\) controls the relative weight of these two
 terms. For large \(\lambda\), the main objective to minimise the norm
-\(\|\beta\|\) and one can show that \(\lim_{\lambda \to\infty} \hat\beta^{(\lambda)} = 0\). For \(\lambda \downarrow 0\) only the residual sum
-of squares is left and if \(X^\top X\) is invertible we get \(\hat\beta^{(0)} = \hat\beta\), \emph{i.e.}~here the ridge regression estimate coincides with the least
+\(\|\beta\|\) and one can show that \(\lim_{\lambda \to\infty}
+\hat\beta^{(\lambda)} = 0\). For \(\lambda \downarrow 0\) only the residual sum
+of squares is left and if \(X^\top X\) is invertible we get \(\hat\beta^{(0)} =
+\hat\beta\), \emph{i.e.}~here the ridge regression estimate coincides with the least
 squares estimate.
 
 As in lemma~\ref{lem:multiple-LSQ} we can find an explicit formula
@@ -9108,7 +9027,8 @@ even in cases where the least squares estimate is \emph{not} uniquely defined.
 
 There are variants of the method where the penalty term \(\|\beta\|^2\) is is
 replaced with a different penalty term. One example of this is Lasso (least
-absolute shrinkage and selection operator) regression, which uses \(\|\beta\|_1 = \sum_{j=0}^p |\beta_j|\) as the penalty term.
+absolute shrinkage and selection operator) regression, which uses \(\|\beta\|_1
+= \sum_{j=0}^p |\beta_j|\) as the penalty term.
 
 Outside statistics, ridge regression is known as \textbf{Tikhonov regularisation}.
 
@@ -9175,7 +9095,8 @@ depends on the unknown error variance~\(\sigma^2\).
 If \(X^\top X\) is invertible, this covariance will convert to the
 covariance of the least squares estimator as \(\lambda \downarrow 0\).
 From this we can find the variance of individual components
-as \(\mathop{\mathrm{Var}}\bigl( \hat\beta^{(\lambda)}_j \bigr) = \mathop{\mathrm{Cov}}( \hat\beta^{(\lambda)} )_{jj}\).
+as \(\mathop{\mathrm{Var}}\bigl( \hat\beta^{(\lambda)}_j \bigr) =
+\mathop{\mathrm{Cov}}( \hat\beta^{(\lambda)} )_{jj}\).
 
 \subsubsection{Mean Squared Error}\label{mean-squared-error}
 
@@ -9274,7 +9195,7 @@ as a function of~\(\lambda\):
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/ridge-MSE-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/ridge-MSE-1.pdf}}
 
 The vertical line at \(\lambda = 0.0183\)
 marks the optimal value of \(\lambda\). We can see that for small \(\lambda\) the
@@ -9530,7 +9451,7 @@ the difference between leverage and influence.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/leverage-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/leverage-1.pdf}}
 
 The black circles in all four panels are the same, and the black, solid line is
 the regression line fitted to these points. The filled, red circle is
@@ -9652,7 +9573,7 @@ hat matrix.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/reslev-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/reslev-1.pdf}}
 
 If the model is correct, \(95\%\) of the samples should lie in the
 band formed by the two horizontal lines. In the bottom-left panel we can
@@ -9778,7 +9699,7 @@ Finally, we plot the result.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/resistant-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/resistant-1.pdf}}
 
 The horizontal and vertical line segments in the plot give the medians
 used in the computation. The blue, sloped line is the resistant line.
@@ -9879,7 +9800,7 @@ than least squares regression is, and the breakdown point is still \(1/n\).
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/lav-estimator-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/lav-estimator-1.pdf}}
 \end{example}
 
 Define \(s(\beta) = r(y - X\beta)\). Then we have
@@ -10065,7 +9986,7 @@ function~\(w\):
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/psi-lsq-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/psi-lsq-1.pdf}}
 
 The right-hand plot shows that weight of observations does not depend
 on their magnitude. This property is what makes the least squares estimate
@@ -10109,7 +10030,7 @@ and the weight function is
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/psi-abs-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/psi-abs-1.pdf}}
 
 \subsubsection{\texorpdfstring{Huber's \(t\)-function}{Huber's t-function}}\label{Huber}
 
@@ -10151,7 +10072,7 @@ leading to a more robust estimator.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/psi-huber-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/psi-huber-1.pdf}}
 
 \subsubsection{Hampel's Method}\label{hampels-method}
 
@@ -10202,7 +10123,7 @@ of \(\psi\) and \(\psi(\varepsilon) / \varepsilon\) again:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/psi-hampel-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/psi-hampel-1.pdf}}
 
 We see that small residuals, with \(|\varepsilon_i| \leq a\) get the same weight
 as for least squares regression, and the weight for larger residuals
@@ -10258,7 +10179,7 @@ estimator:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/psi-tukey-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/psi-tukey-1.pdf}}
 
 Again, \(\rho\) is not convex and care is needed when computing
 the estimate~\(\hat\beta\).
@@ -10280,15 +10201,17 @@ the estimate~\(\hat\beta\).
 \section*{Problem Sheet 5}\label{P05}
 \addcontentsline{toc}{section}{Problem Sheet 5}
 
+\excludecomment{myanswers}
+
 You should attempt all these questions and write up your solutions in advance
-of the workshop in week 11 where the answers will be discussed.
+of the workshop in week 10 where the answers will be discussed.
 
 \textbf{17.} Consider the dataset at
 
 \begin{itemize}
 \tightlist
 \item
-  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P05Q17.csv}
+  \url{https://teaching.seehuhn.de/2022/MATH3714/P05Q17.csv}
 \end{itemize}
 
 which contains samples from variables \(x_1, x_2, y \in \mathbb{R}\) and
@@ -10307,7 +10230,7 @@ We can load the data into R as follows:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# data from https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/}
+\CommentTok{\# data from https://teaching.seehuhn.de/2022/MATH3714/}
 \NormalTok{dd }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/P05Q17.csv"}\NormalTok{)}
 \CommentTok{\# fix the order of levels:}
 \NormalTok{dd}\SpecialCharTok{$}\NormalTok{x3 }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(dd}\SpecialCharTok{$}\NormalTok{x3, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"R"}\NormalTok{, }\StringTok{"G"}\NormalTok{, }\StringTok{"B"}\NormalTok{))}
@@ -10385,7 +10308,7 @@ In a residual plot we can colour-code the residuals by the level of \(x_3\):
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/P05Q17-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/P05Q17-1.pdf}}
 
 This shows that that the residuals for level \texttt{G} are much smaller
 than for the other levels.
@@ -10510,7 +10433,7 @@ Consider the dataset at
 \begin{itemize}
 \tightlist
 \item
-  \url{https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P05Q18.csv}
+  \url{https://teaching.seehuhn.de/2022/MATH3714/P05Q18.csv}
 \end{itemize}
 
 Identify the \(x\)-space outlier in this dataset.
@@ -10520,7 +10443,7 @@ We start by loading the data into R:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"https://www1.maths.leeds.ac.uk/\textasciitilde{}voss/2022/MATH3714/P05Q18.csv"}\NormalTok{)}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"https://teaching.seehuhn.de/2022/MATH3714/P05Q18.csv"}\NormalTok{)}
 \FunctionTok{head}\NormalTok{(X)}
 \end{Highlighting}
 \end{Shaded}
@@ -10547,7 +10470,7 @@ To identify the outlier, we compute the leverage of each sample.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/P05Q18a-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/P05Q18a-1.pdf}}
 
 The plot shows that one sample has a much larger leverage than
 the other samples.
@@ -10574,7 +10497,7 @@ Note that the outlier does not look special on a pair scatter plot:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/P05Q18b-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/P05Q18b-1.pdf}}
 
 \end{myanswers}
 
@@ -10673,7 +10596,8 @@ for the population mean. Here we show that the median has lower efficiency
 than the mean.
 
 Suppose \(X_1,\ldots, X_n\) are i.i.d.~with CDF \(F(x)\), \emph{i.e.}
-\(P(X_i \leq x) = F(x)\). As before, let \(X_{(1)} \leq \cdots \leq X_{(n)}\) be the samples arranged in order of increasing value.
+\(P(X_i \leq x) = F(x)\). As before, let \(X_{(1)} \leq \cdots \leq
+X_{(n)}\) be the samples arranged in order of increasing value.
 Then the distribution of \(X_{(k)}\) has CDF
 \begin{equation*}
   P(X_{(k)} \leq x)
@@ -10824,7 +10748,7 @@ by the red circles in the plot.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/lms-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/lms-1.pdf}}
 \end{example}
 
 \subsubsection{Least Trimmed Squares}\label{least-trimmed-squares}
@@ -10861,7 +10785,7 @@ data is the same as in the previous example.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{MATH3714_files/figure-latex/lts-1.pdf}
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/lts-1.pdf}}
 \end{example}
 
 One can show that LTS has an efficiency of approximately \(0.08\)
@@ -10938,7 +10862,8 @@ for \(i \in \{1, \ldots, m\}\) and \(j \in \{1, \ldots, n\}\).
 \subsubsection{Transpose}\label{transpose}
 
 If \(A \in \mathbb{R}^{m\times n}\), then the \textbf{transpose} of \(A\) is the matrix
-\(A^\top \in \mathbb{R}^{n\times m}\), with \((A^\top)_{ij} = a_{ji}\) for all \(i \in \{1, \ldots, n\}\) and \(j \in \{1, \ldots, m\}\). Graphically,
+\(A^\top \in \mathbb{R}^{n\times m}\), with \((A^\top)_{ij} = a_{ji}\) for all \(i
+\in \{1, \ldots, n\}\) and \(j \in \{1, \ldots, m\}\). Graphically,
 this can be written as
 \begin{equation*}
   A^\top
@@ -10964,7 +10889,8 @@ If \(A \in \mathbb{R}^{m \times n}\) and \(v \in \mathbb{R}^n\), then
 for all \(i \in \{1, \ldots, m\}\).
 
 If we consider \(v\) to be a \((n\times 1)\)-matrix instead of a vector,
-\(Av\) can also be interpreted as a matrix-matrix product between an \(m \times n\) and an \(n\times 1\) matrix. Using this convention, \(v^\top\)
+\(Av\) can also be interpreted as a matrix-matrix product between an \(m
+\times n\) and an \(n\times 1\) matrix. Using this convention, \(v^\top\)
 is then interpreted as an \(1 \times n\) matrix and if \(u\in\mathbb{R}^m\) we
 have \(u^\top A \in \mathbb{R}^{1 \times n} \cong \mathbb{R}^n\) with
 \begin{equation*}
@@ -11063,7 +10989,8 @@ Some important properties of the inverse:
   \(A^{-1} A = I\) holds if and only if \(A A^{-1} = I\).
 \item
   If \(A\) is symmetric and invertible, then \(A^{-1}\) is also
-  symmetric. This is true because \(A (A^{-1})^\top = (A^{-1} A)^\top = I^\top = I\) and thus \((A^{-1})^\top\) is an inverse of \(A\).
+  symmetric. This is true because \(A (A^{-1})^\top = (A^{-1} A)^\top
+  = I^\top = I\) and thus \((A^{-1})^\top\) is an inverse of \(A\).
   Since the inverse is unique, \((A^{-1})^\top = A^{-1}\).
 \end{itemize}
 

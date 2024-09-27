@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 6 Estimating Coefficients Simultaneously | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 6 Estimating Coefficients Simultaneously | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -74,7 +74,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -296,11 +296,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1" data-path="S14-examples.html"><a href="S14-examples.html#interactions-example"><i class="fa fa-check"></i><b>14.1</b> Use of Interaction Terms in Modelling</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-examples.html"><a href="S14-examples.html#codings"><i class="fa fa-check"></i><b>14.2</b> Alternative Factor Codings</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
-<ul>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
-</ul></li>
 <li class="chapter" data-level="15" data-path="S15-multicoll.html"><a href="S15-multicoll.html"><i class="fa fa-check"></i><b>15</b> Multicollinearity</a>
 <ul>
 <li class="chapter" data-level="15.1" data-path="S15-multicoll.html"><a href="S15-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>15.1</b> Consequences of Multicollinearity</a></li>
@@ -409,7 +404,8 @@ different coefficients will usually not be independent.</p>
 </div>
 </div>
 <p>As a general setup which allows to describe which coefficients we are
-interested in, we consider the image <span class="math inline">\(K\beta\)</span>, where <span class="math inline">\(K \in \mathbb{R}^{k \times (p+1)}\)</span> with <span class="math inline">\(k \leq p+1\)</span>.</p>
+interested in, we consider the image <span class="math inline">\(K\beta\)</span>, where <span class="math inline">\(K \in \mathbb{R}^{k \times
+(p+1)}\)</span> with <span class="math inline">\(k \leq p+1\)</span>.</p>
 <div class="example">
 <p><span id="exm:unlabeled-div-21" class="example"><strong>Example 6.1  </strong></span>If <span class="math inline">\(p = 3\)</span> and
 <span class="math display">\[\begin{equation*}
@@ -565,7 +561,9 @@ ellipsoid.</p>
 \end{equation*}\]</span>
 where <span class="math inline">\(f_{k,n-p-1}(\alpha)\)</span> is the <span class="math inline">\((1-\alpha)\)</span>-quantile of the
 <span class="math inline">\(F_{k,n-p-1}\)</span>-distribution. This is a “ball” around <span class="math inline">\(K\hat\beta\)</span> in <span class="math inline">\(\mathbb{R}^k\)</span>,
-where distance is measured using the norm <span class="math inline">\(\| \;\cdot\; \|_{K(X^\top X)^{-1} K^\top}\)</span> introduced above. The following lemma shows that <span class="math inline">\(\sqrt{k \hat\sigma^2 f_{k,n-p-1}(\alpha)}\)</span> is the correct choice of “radius” to make the
+where distance is measured using the norm <span class="math inline">\(\| \;\cdot\; \|_{K(X^\top X)^{-1}
+K^\top}\)</span> introduced above. The following lemma shows that <span class="math inline">\(\sqrt{k \hat\sigma^2
+f_{k,n-p-1}(\alpha)}\)</span> is the correct choice of “radius” to make the
 ball cover the true value <span class="math inline">\(K\beta\)</span> with probability <span class="math inline">\(1-\alpha\)</span>.</p>
 <div class="lemma">
 <p><span id="lem:unlabeled-div-24" class="lemma"><strong>Lemma 6.2  </strong></span>We have
@@ -602,7 +600,7 @@ Now the claim follows, since <span class="math inline">\(f_{k,n-p-1}(\alpha)\)</
 before:</p>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="S06-simultaneous.html#cb59-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
 <span id="cb59-2"><a href="S06-simultaneous.html#cb59-2" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
-<pre class="rOutput"><code>
+<pre class="routput"><code>
 Call:
 lm(formula = stack.loss ~ ., data = stackloss)
 
@@ -649,7 +647,7 @@ inside or outside the ellipse:</p>
 <span id="cb63-4"><a href="S06-simultaneous.html#cb63-4" tabindex="-1"></a>d <span class="ot">&lt;-</span> a <span class="sc">-</span> K.beta.hat</span>
 <span id="cb63-5"><a href="S06-simultaneous.html#cb63-5" tabindex="-1"></a>F <span class="ot">&lt;-</span> <span class="fu">t</span>(d) <span class="sc">%*%</span> <span class="fu">solve</span>(Q, d) <span class="sc">/</span> (k <span class="sc">*</span> sigma.hat<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb63-6"><a href="S06-simultaneous.html#cb63-6" tabindex="-1"></a>F</span></code></pre></div>
-<pre class="rOutput"><code>         [,1]
+<pre class="routput"><code>         [,1]
 [1,] 2.834083</code></pre>
 <p>The <span class="math inline">\(F\)</span> value, measuring the distance from the centre of the ellipse
 is <span class="math inline">\(2.834\)</span> for this test point. This has to be compared to the
@@ -657,7 +655,7 @@ critical value:</p>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="S06-simultaneous.html#cb65-1" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
 <span id="cb65-2"><a href="S06-simultaneous.html#cb65-2" tabindex="-1"></a>f.crit <span class="ot">&lt;-</span> <span class="fu">qf</span>(<span class="dv">1</span> <span class="sc">-</span> alpha, k, n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
 <span id="cb65-3"><a href="S06-simultaneous.html#cb65-3" tabindex="-1"></a>f.crit</span></code></pre></div>
-<pre class="rOutput"><code>[1] 3.591531</code></pre>
+<pre class="routput"><code>[1] 3.591531</code></pre>
 <p>Since the <span class="math inline">\(F\)</span> value is less than the critical value, the point <span class="math inline">\((1, 1)\)</span>
 is inside the ellipse. As the next step, we will plot a picture of the
 full ellipse.</p>
@@ -681,14 +679,14 @@ We start by making a list of grid points.</p>
 <span id="cb67-11"><a href="S06-simultaneous.html#cb67-11" tabindex="-1"></a>                           <span class="at">y =</span> yy <span class="sc">-</span> K.beta.hat[<span class="dv">2</span>],</span>
 <span id="cb67-12"><a href="S06-simultaneous.html#cb67-12" tabindex="-1"></a>                           <span class="at">KEEP.OUT.ATTRS =</span> <span class="cn">FALSE</span>))</span>
 <span id="cb67-13"><a href="S06-simultaneous.html#cb67-13" tabindex="-1"></a><span class="fu">dim</span>(Z)</span></code></pre></div>
-<pre class="rOutput"><code>[1] 40000     2</code></pre>
+<pre class="routput"><code>[1] 40000     2</code></pre>
 <p>The matrix <span class="math inline">\(Z\)</span> now has two columns, containing the <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> coordinates
 respectively of the <span class="math inline">\(200\times 200\)</span> points in our grid.
 Now we need to compute the <span class="math inline">\(F\)</span> value for every grid point:</p>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="S06-simultaneous.html#cb69-1" tabindex="-1"></a>F <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(Z <span class="sc">*</span> <span class="fu">t</span>(<span class="fu">solve</span>(Q, <span class="fu">t</span>(Z)))) <span class="sc">/</span> (k <span class="sc">*</span> sigma.hat<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb69-2"><a href="S06-simultaneous.html#cb69-2" tabindex="-1"></a>F <span class="ot">&lt;-</span> <span class="fu">matrix</span>(F, <span class="at">byrow =</span> <span class="cn">TRUE</span>, L, L)</span>
 <span id="cb69-3"><a href="S06-simultaneous.html#cb69-3" tabindex="-1"></a><span class="fu">dim</span>(F)</span></code></pre></div>
-<pre class="rOutput"><code>[1] 200 200</code></pre>
+<pre class="routput"><code>[1] 200 200</code></pre>
 <p>The resulting matrix contains the <span class="math inline">\(F\)</span> value for every grid point.
 Finally, we can mark all the points where <span class="math inline">\(F\)</span> exceeds the critical
 value in a plot:</p>
@@ -714,7 +712,7 @@ of the matrix <span class="math inline">\(Q\)</span>. This allows to write <span
 where <span class="math inline">\(U\)</span> and <span class="math inline">\(V\)</span> are orthogonal matrices and <span class="math inline">\(D\)</span> is a diagonal matrix:</p>
 <div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="S06-simultaneous.html#cb72-1" tabindex="-1"></a>svd <span class="ot">&lt;-</span> <span class="fu">La.svd</span>(Q)</span>
 <span id="cb72-2"><a href="S06-simultaneous.html#cb72-2" tabindex="-1"></a>svd</span></code></pre></div>
-<pre class="rOutput"><code>$d
+<pre class="routput"><code>$d
 [1] 0.0138678012 0.0007364967
 
 $u

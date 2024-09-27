@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 13 Factors | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 13 Factors | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -74,7 +74,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -296,11 +296,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1" data-path="S14-examples.html"><a href="S14-examples.html#interactions-example"><i class="fa fa-check"></i><b>14.1</b> Use of Interaction Terms in Modelling</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-examples.html"><a href="S14-examples.html#codings"><i class="fa fa-check"></i><b>14.2</b> Alternative Factor Codings</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
-<ul>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
-</ul></li>
 <li class="chapter" data-level="15" data-path="S15-multicoll.html"><a href="S15-multicoll.html"><i class="fa fa-check"></i><b>15</b> Multicollinearity</a>
 <ul>
 <li class="chapter" data-level="15.1" data-path="S15-multicoll.html"><a href="S15-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>15.1</b> Consequences of Multicollinearity</a></li>
@@ -432,7 +427,8 @@ usual regression model
 values. The possible values of the factor, <span class="math inline">\(a_1, \ldots, a_k\)</span> are also called
 the <strong>levels</strong> of the factor. The easiest way to include a factor in a
 regression model is via <strong>indicator variables</strong>. For this we represent <span class="math inline">\(x_j\)</span>
-using <span class="math inline">\(k-1\)</span> columns in the design matrix, say <span class="math inline">\(\tilde x_1, \ldots, \tilde x_{k-1}\)</span>, where
+using <span class="math inline">\(k-1\)</span> columns in the design matrix, say <span class="math inline">\(\tilde x_1, \ldots, \tilde
+x_{k-1}\)</span>, where
 <span class="math display">\[\begin{equation*}
   \tilde x_{\ell i}
   = \begin{cases}
@@ -468,24 +464,24 @@ Assume we are given data
 Then we can encode this data using the following design matrix:</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th align="center">intercept</th>
 <th align="center"><span class="math inline">\(x_1\)</span></th>
 <th align="center"><span class="math inline">\(1_\mathrm{\{female\}}(x_2)\)</span></th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="center">1</td>
 <td align="center">1</td>
 <td align="center">0</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="center">1</td>
 <td align="center">2</td>
 <td align="center">1</td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="center">1</td>
 <td align="center">3</td>
 <td align="center">1</td>
@@ -523,7 +519,7 @@ now be represented by numbers 1 (for “no”) and 2 (for “yes”), but this n
 is mostly hidden from the user. Now we fit a regression model:</p>
 <div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="S13-factors.html#cb201-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(value <span class="sc">~</span> ., <span class="at">data =</span> data)</span>
 <span id="cb201-2"><a href="S13-factors.html#cb201-2" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
-<pre class="rOutput"><code>
+<pre class="routput"><code>
 Call:
 lm(formula = value ~ ., data = data)
 
@@ -620,7 +616,7 @@ effects are also included.</p>
 for <code>I(x1*x2)</code>. The column <code>x1:x2</code> in the R output corresponds
 to the mathematical expression <span class="math inline">\(x_1 x_2\)</span>.</p>
 <div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="S13-factors.html#cb205-1" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> x1 <span class="sc">+</span> x1<span class="sc">:</span>x2)</span></code></pre></div>
-<pre class="rOutput"><code>  (Intercept) x1 x1:x2
+<pre class="routput"><code>  (Intercept) x1 x1:x2
 1           1  2     2
 2           1  2     4
 3           1  2     6
@@ -629,7 +625,7 @@ attr(,&quot;assign&quot;)
 <p>We can write <code>x1*x2</code> as a shorthand for the model with the
 three terms <code>x1 + x2 + x1:x2</code>:</p>
 <div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="S13-factors.html#cb207-1" tabindex="-1"></a><span class="fu">model.matrix</span>(<span class="sc">~</span> x1<span class="sc">*</span>x2)</span></code></pre></div>
-<pre class="rOutput"><code>  (Intercept) x1 x2 x1:x2
+<pre class="routput"><code>  (Intercept) x1 x2 x1:x2
 1           1  2  1     2
 2           1  2  2     4
 3           1  2  3     6
@@ -666,7 +662,7 @@ water, and if it is very hot and dry, the plants may even die.</p>
 an interaction term:</p>
 <div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="S13-factors.html#cb210-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(yield <span class="sc">~</span> temperature<span class="sc">*</span>rainfall, <span class="at">data =</span> crops)</span>
 <span id="cb210-2"><a href="S13-factors.html#cb210-2" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
-<pre class="rOutput"><code>
+<pre class="routput"><code>
 Call:
 lm(formula = yield ~ temperature * rainfall, data = crops)
 

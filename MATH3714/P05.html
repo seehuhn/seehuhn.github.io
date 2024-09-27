@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Problem Sheet 5 | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Problem Sheet 5 | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -74,7 +74,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -296,11 +296,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1" data-path="S14-examples.html"><a href="S14-examples.html#interactions-example"><i class="fa fa-check"></i><b>14.1</b> Use of Interaction Terms in Modelling</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-examples.html"><a href="S14-examples.html#codings"><i class="fa fa-check"></i><b>14.2</b> Alternative Factor Codings</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
-<ul>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
-</ul></li>
 <li class="chapter" data-level="15" data-path="S15-multicoll.html"><a href="S15-multicoll.html"><i class="fa fa-check"></i><b>15</b> Multicollinearity</a>
 <ul>
 <li class="chapter" data-level="15.1" data-path="S15-multicoll.html"><a href="S15-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>15.1</b> Consequences of Multicollinearity</a></li>
@@ -415,18 +410,15 @@ $(document).ready(function() {
   })
 });
 </script>
-<!--
 <style>.myanswers { display: none !important; }</style>
-\excludecomment{myanswers}
--->
 <div class="mysummary">
 <p>You should attempt all these questions and write up your solutions in advance
-of the workshop in week 11 where the answers will be discussed.</p>
+of the workshop in week 10 where the answers will be discussed.</p>
 </div>
 <div class="myq">
 <p><strong>17.</strong> Consider the dataset at</p>
 <ul>
-<li><a href="https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P05Q17.csv" class="uri">https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P05Q17.csv</a></li>
+<li><a href="https://teaching.seehuhn.de/2022/MATH3714/P05Q17.csv" class="uri">https://teaching.seehuhn.de/2022/MATH3714/P05Q17.csv</a></li>
 </ul>
 <p>which contains samples from variables <span class="math inline">\(x_1, x_2, y \in \mathbb{R}\)</span> and
 <span class="math inline">\(x_3 \in \{\mathrm{R}, \mathrm{G}, \mathrm{B}\}\)</span>.</p>
@@ -436,12 +428,12 @@ of the workshop in week 11 where the answers will be discussed.</p>
 </ol>
 <div class="myanswers">
 <p>We can load the data into R as follows:</p>
-<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb285-1"><a href="P05.html#cb285-1" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/</span></span>
+<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb285-1"><a href="P05.html#cb285-1" tabindex="-1"></a><span class="co"># data from https://teaching.seehuhn.de/2022/MATH3714/</span></span>
 <span id="cb285-2"><a href="P05.html#cb285-2" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/P05Q17.csv&quot;</span>)</span>
 <span id="cb285-3"><a href="P05.html#cb285-3" tabindex="-1"></a><span class="co"># fix the order of levels:</span></span>
 <span id="cb285-4"><a href="P05.html#cb285-4" tabindex="-1"></a>dd<span class="sc">$</span>x3 <span class="ot">&lt;-</span> <span class="fu">factor</span>(dd<span class="sc">$</span>x3, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;R&quot;</span>, <span class="st">&quot;G&quot;</span>, <span class="st">&quot;B&quot;</span>))</span>
 <span id="cb285-5"><a href="P05.html#cb285-5" tabindex="-1"></a><span class="fu">head</span>(dd)</span></code></pre></div>
-<pre class="rOutput"><code>         x1         x2 x3        y
+<pre class="routput"><code>         x1         x2 x3        y
 1  1.940066 -0.7755552  B 2.709368
 2 -1.214413  0.4842872  R 1.254138
 3  1.940301  3.1189902  B 3.228220
@@ -460,7 +452,7 @@ Show that the behaviour of the residuals depends on the levels of <span class="m
 <p>To fit a simple linear model:</p>
 <div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb287-1"><a href="P05.html#cb287-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
 <span id="cb287-2"><a href="P05.html#cb287-2" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
-<pre class="rOutput"><code>
+<pre class="routput"><code>
 Call:
 lm(formula = y ~ ., data = dd)
 
@@ -501,7 +493,7 @@ chosen model.</li>
 <p>We can start by trying all interaction terms:</p>
 <div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb290-1"><a href="P05.html#cb290-1" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd)</span>
 <span id="cb290-2"><a href="P05.html#cb290-2" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
-<pre class="rOutput"><code>
+<pre class="routput"><code>
 Call:
 lm(formula = y ~ .^2, data = dd)
 
@@ -533,7 +525,7 @@ dramatically increased. A good choice of model seems
 to be <code>y ~ x1 + x2 + x1:x3 + x2:x3</code></p>
 <div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="P05.html#cb292-1" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x1<span class="sc">:</span>x3 <span class="sc">+</span> x2<span class="sc">:</span>x3, <span class="at">data =</span> dd)</span>
 <span id="cb292-2"><a href="P05.html#cb292-2" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code></pre></div>
-<pre class="rOutput"><code>
+<pre class="routput"><code>
 Call:
 lm(formula = y ~ x1 + x2 + x1:x3 + x2:x3, data = dd)
 
@@ -580,14 +572,14 @@ Finally, for <span class="math inline">\(x_3 = \mathrm{B}\)</span> we find
 <p><strong>18.</strong>
 Consider the dataset at</p>
 <ul>
-<li><a href="https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P05Q18.csv" class="uri">https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P05Q18.csv</a></li>
+<li><a href="https://teaching.seehuhn.de/2022/MATH3714/P05Q18.csv" class="uri">https://teaching.seehuhn.de/2022/MATH3714/P05Q18.csv</a></li>
 </ul>
 <p>Identify the <span class="math inline">\(x\)</span>-space outlier in this dataset.</p>
 <div class="myanswers">
 <p>We start by loading the data into R:</p>
-<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="P05.html#cb294-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/P05Q18.csv&quot;</span>)</span>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="P05.html#cb294-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://teaching.seehuhn.de/2022/MATH3714/P05Q18.csv&quot;</span>)</span>
 <span id="cb294-2"><a href="P05.html#cb294-2" tabindex="-1"></a><span class="fu">head</span>(X)</span></code></pre></div>
-<pre class="rOutput"><code>            x1          x2         x3         x4
+<pre class="routput"><code>            x1          x2         x3         x4
 1 -1.359560124  0.66310168  2.5866758 -1.7229394
 2  0.624644511 -0.01925607 -0.1692926 -0.5092775
 3  0.957938698 -0.54734504 -0.9680673  0.6074693
@@ -602,7 +594,7 @@ Consider the dataset at</p>
 <p>The plot shows that one sample has a much larger leverage than
 the other samples.</p>
 <div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb297-1"><a href="P05.html#cb297-1" tabindex="-1"></a><span class="fu">which.max</span>(<span class="fu">diag</span>(H))</span></code></pre></div>
-<pre class="rOutput"><code>[1] 96</code></pre>
+<pre class="routput"><code>[1] 96</code></pre>
 <p>Thus, the <span class="math inline">\(x\)</span>-space outlier is in row 96 of the matrix <span class="math inline">\(X\)</span>.</p>
 <p>Note that the outlier does not look special on a pair scatter plot:</p>
 <div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb299-1"><a href="P05.html#cb299-1" tabindex="-1"></a><span class="fu">pairs</span>(X, <span class="at">col =</span> (<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(X) <span class="sc">==</span> <span class="dv">96</span>) <span class="sc">+</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span></code></pre></div>

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 5 Uncertainty for Individual Regression Coefficients | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 5 Uncertainty for Individual Regression Coefficients | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -74,7 +74,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -295,11 +295,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="14.1" data-path="S14-examples.html"><a href="S14-examples.html#interactions-example"><i class="fa fa-check"></i><b>14.1</b> Use of Interaction Terms in Modelling</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-examples.html"><a href="S14-examples.html#codings"><i class="fa fa-check"></i><b>14.2</b> Alternative Factor Codings</a></li>
-</ul></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
-<ul>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
 </ul></li>
 <li class="chapter" data-level="15" data-path="S15-multicoll.html"><a href="S15-multicoll.html"><i class="fa fa-check"></i><b>15</b> Multicollinearity</a>
 <ul>
@@ -627,7 +622,7 @@ Before we do this, we will perform some experiments with R.</p>
 <h3><span class="header-section-number">5.4.1</span> Fitting the model<a href="S05-single.html#fitting-the-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="S05-single.html#cb43-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
 <span id="cb43-2"><a href="S05-single.html#cb43-2" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
-<pre class="rOutput"><code>
+<pre class="routput"><code>
 Call:
 lm(formula = stack.loss ~ ., data = stackloss)
 
@@ -654,7 +649,7 @@ F-statistic:  59.9 on 3 and 17 DF,  p-value: 3.016e-09</code></pre>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="S05-single.html#cb45-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
 <span id="cb45-2"><a href="S05-single.html#cb45-2" tabindex="-1"></a>C <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)</span>
 <span id="cb45-3"><a href="S05-single.html#cb45-3" tabindex="-1"></a><span class="fu">round</span>(C, <span class="dv">4</span>)</span></code></pre></div>
-<pre class="rOutput"><code>            (Intercept) Air.Flow Water.Temp Acid.Conc.
+<pre class="routput"><code>            (Intercept) Air.Flow Water.Temp Acid.Conc.
 (Intercept)     13.4527   0.0273    -0.0620    -0.1594
 Air.Flow         0.0273   0.0017    -0.0035    -0.0007
 Water.Temp      -0.0620  -0.0035     0.0129     0.0000
@@ -665,12 +660,12 @@ Acid.Conc.      -0.1594  -0.0007     0.0000     0.0023</code></pre>
 <span id="cb47-3"><a href="S05-single.html#cb47-3" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(stackloss) <span class="sc">-</span> <span class="dv">1</span></span>
 <span id="cb47-4"><a href="S05-single.html#cb47-4" tabindex="-1"></a>hat.sigma2 <span class="ot">&lt;-</span> <span class="fu">sum</span>((y <span class="sc">-</span> <span class="fu">fitted</span>(m))<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
 <span id="cb47-5"><a href="S05-single.html#cb47-5" tabindex="-1"></a>hat.sigma2</span></code></pre></div>
-<pre class="rOutput"><code>[1] 10.51941</code></pre>
+<pre class="routput"><code>[1] 10.51941</code></pre>
 <p>The square root of this number, so the estimated standard deviation of the
 <span class="math inline">\(\varepsilon_i\)</span> is shown as <code>Residual standard error</code> in the summary output above.
 We check that we get the same result:</p>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="S05-single.html#cb49-1" tabindex="-1"></a><span class="fu">sqrt</span>(hat.sigma2)</span></code></pre></div>
-<pre class="rOutput"><code>[1] 3.243364</code></pre>
+<pre class="routput"><code>[1] 3.243364</code></pre>
 <p>This result is also listed as the <code>Residual standard error</code> near the
 bottom of the <code>summary(m)</code> output, above.</p>
 </div>
@@ -680,7 +675,7 @@ bottom of the <code>summary(m)</code> output, above.</p>
 <span class="math inline">\(\mathop{\mathrm{stdev}}(\hat\beta)_i\)</span> as <span class="math inline">\(\sqrt{\hat\sigma^2 C_{ii}}\)</span>:</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="S05-single.html#cb51-1" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(hat.sigma2 <span class="sc">*</span> <span class="fu">diag</span>(C))</span>
 <span id="cb51-2"><a href="S05-single.html#cb51-2" tabindex="-1"></a>se</span></code></pre></div>
-<pre class="rOutput"><code>(Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
+<pre class="routput"><code>(Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
  11.8959969   0.1348582   0.3680243   0.1562940 </code></pre>
 <p>These values are also listed in the <code>Std. Error</code> column of the <code>summary(m)</code>
 output.</p>
@@ -691,7 +686,7 @@ output.</p>
 for this case is the following:</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="S05-single.html#cb53-1" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">coef</span>(m) <span class="sc">/</span> se</span>
 <span id="cb53-2"><a href="S05-single.html#cb53-2" tabindex="-1"></a>T</span></code></pre></div>
-<pre class="rOutput"><code>(Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
+<pre class="routput"><code>(Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
  -3.3557234   5.3066130   3.5195672  -0.9733098 </code></pre>
 <p>These values are also listed in the <code>t value</code> column of the <code>summary(m)</code>
 output.</p>
@@ -700,9 +695,10 @@ find the corresponding critical value:</p>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="S05-single.html#cb55-1" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
 <span id="cb55-2"><a href="S05-single.html#cb55-2" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span> , n <span class="sc">-</span> p <span class="sc">-</span> <span class="dv">1</span>)</span>
 <span id="cb55-3"><a href="S05-single.html#cb55-3" tabindex="-1"></a>t</span></code></pre></div>
-<pre class="rOutput"><code>[1] 2.109816</code></pre>
+<pre class="routput"><code>[1] 2.109816</code></pre>
 <p>Using the critical value <span class="math inline">\(t\)</span> we can decided whether <span class="math inline">\(H_0\)</span> should be accepted or
-rejected. For example, looking at the intercept <span class="math inline">\(\beta_0\)</span>, we find <span class="math inline">\(|T_0| = |-3.3557234| &gt; 2.109816 = t_{n-p-1}(1-\alpha/2)\)</span> and thus we can reject the
+rejected. For example, looking at the intercept <span class="math inline">\(\beta_0\)</span>, we find <span class="math inline">\(|T_0| =
+|-3.3557234| &gt; 2.109816 = t_{n-p-1}(1-\alpha/2)\)</span> and thus we can reject the
 hypothesis <span class="math inline">\(H_0\colon \beta_0 = 0\)</span>. This means that the intercept is
 significantly different from 0.</p>
 </div>
@@ -711,7 +707,7 @@ significantly different from 0.</p>
 <p>Using the quantile <code>t</code> we can also get confidence intervals. Here we
 only show the confidence interval for the intercept <span class="math inline">\(\beta_0\)</span>:</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="S05-single.html#cb57-1" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">coef</span>(m)[<span class="dv">1</span>] <span class="sc">-</span> se[<span class="dv">1</span>] <span class="sc">*</span> t, <span class="fu">coef</span>(m)[<span class="dv">1</span>] <span class="sc">+</span> se[<span class="dv">1</span>] <span class="sc">*</span> t)</span></code></pre></div>
-<pre class="rOutput"><code>(Intercept) (Intercept) 
+<pre class="routput"><code>(Intercept) (Intercept) 
   -65.01803   -14.82131 </code></pre>
 <p>Confidence intervals for the remaining coefficients can be obtained simimlarly.</p>
 <div class="mysummary">

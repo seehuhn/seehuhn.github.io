@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 10 Improving the Model Fit | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 10 Improving the Model Fit | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -74,7 +74,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -296,11 +296,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1" data-path="S14-examples.html"><a href="S14-examples.html#interactions-example"><i class="fa fa-check"></i><b>14.1</b> Use of Interaction Terms in Modelling</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-examples.html"><a href="S14-examples.html#codings"><i class="fa fa-check"></i><b>14.2</b> Alternative Factor Codings</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
-<ul>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
-</ul></li>
 <li class="chapter" data-level="15" data-path="S15-multicoll.html"><a href="S15-multicoll.html"><i class="fa fa-check"></i><b>15</b> Multicollinearity</a>
 <ul>
 <li class="chapter" data-level="15.1" data-path="S15-multicoll.html"><a href="S15-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>15.1</b> Consequences of Multicollinearity</a></li>
@@ -399,6 +394,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Section 10</span> Improving the Model Fit<a href="S10-improving.html#S10-improving" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <!--
 TODO:
+* Can we swap sections 10 and 11?
 * This section is too long!
 * move 10.4 somewhere else
 * add more videos
@@ -441,29 +437,29 @@ to linear models:</p>
 <col width="22%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th align="left">nonlinear model</th>
 <th align="left">transformation</th>
 <th align="left">linear Model</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left"><span class="math inline">\(y \approx \beta_0 x^{\beta_1}\)</span></td>
 <td align="left"><span class="math inline">\(x&#39;=\log(x)\)</span>, <span class="math inline">\(y&#39;=\log(y)\)</span></td>
 <td align="left"><span class="math inline">\(y&#39; \approx \log(\beta_0) + \beta_1 x&#39;\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><span class="math inline">\(y \approx \beta_0 e^{\beta_1 x}\)</span></td>
 <td align="left"><span class="math inline">\(y&#39;=\log y\)</span></td>
 <td align="left"><span class="math inline">\(y&#39; \approx \log \beta_0 +\beta_1 x\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left"><span class="math inline">\(y \approx \beta_0+\beta_1\log x\)</span></td>
 <td align="left"><span class="math inline">\(x&#39;=\log x\)</span></td>
 <td align="left"><span class="math inline">\(y \approx \beta_0+\beta_1 x&#39;\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><span class="math inline">\(y \approx \frac{x}{\beta_0 x-\beta_1}\)</span></td>
 <td align="left"><span class="math inline">\(x&#39;=1/x\)</span>, <span class="math inline">\(y&#39;=1/y\)</span></td>
 <td align="left"><span class="math inline">\(y&#39; \approx \beta_0-\beta_1 x&#39;\)</span></td>
@@ -514,33 +510,33 @@ strict equality.</p>
 <col width="40%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th align="left">variance</th>
 <th align="left">transformation</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td align="left"><span class="math inline">\(\sigma^2 = \text{constant}\)</span></td>
 <td align="left">no transformation</td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><span class="math inline">\(\sigma^2 \propto y\)</span></td>
 <td align="left"><span class="math inline">\(y&#39; = \sqrt{y}\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left"><span class="math inline">\(\sigma^2 \propto y^2\)</span></td>
 <td align="left"><span class="math inline">\(y&#39; = \log y\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><span class="math inline">\(\sigma^2 \propto y^3\)</span></td>
 <td align="left"><span class="math inline">\(y&#39; = \frac{1}{\sqrt{y}}\)</span></td>
 </tr>
-<tr class="odd">
+<tr>
 <td align="left"><span class="math inline">\(\sigma^2 \propto y^4\)</span></td>
 <td align="left"><span class="math inline">\(y&#39; = \frac{1}{y}\)</span></td>
 </tr>
-<tr class="even">
+<tr>
 <td align="left"><span class="math inline">\(\sigma^2 \propto y(1-y)\)</span> where <span class="math inline">\(y \in [0,1]\)</span></td>
 <td align="left"><span class="math inline">\(y&#39; = \arcsin(\sqrt{y})\)</span></td>
 </tr>
@@ -554,7 +550,9 @@ see whether the transformed data can still reasonably be described by a linear
 model.</p>
 <div class="example">
 <p><span id="exm:unlabeled-div-35" class="example"><strong>Example 10.2  </strong></span>The last transformation in the table above corresponds to the case of binomial
-sampling: If <span class="math inline">\(x = p\)</span> and <span class="math inline">\(Y \sim B(n, p) / n\)</span> then we have <span class="math inline">\(\mathbb{E}(Y) = n p / n = x\)</span> and a linear model may be appropriate. But we also have <span class="math inline">\(\mathop{\mathrm{Var}}(Y) = p (1 - p) / n \propto \mathbb{E}(Y) \bigl( 1- \mathbb{E}(Y) \bigr)\)</span>, so the assumption of
+sampling: If <span class="math inline">\(x = p\)</span> and <span class="math inline">\(Y \sim B(n, p) / n\)</span> then we have <span class="math inline">\(\mathbb{E}(Y)
+= n p / n = x\)</span> and a linear model may be appropriate. But we also have <span class="math inline">\(\mathop{\mathrm{Var}}(Y)
+= p (1 - p) / n \propto \mathbb{E}(Y) \bigl( 1- \mathbb{E}(Y) \bigr)\)</span>, so the assumption of
 constant variance is violated.</p>
 <p>We try to apply the transformation suggested in the table. The
 function <span class="math inline">\(\arcsin\)</span> is the inverse of the sine function. In R
@@ -591,7 +589,7 @@ is beneficial or not depends on the particular circumstances.</p>
 <p><span id="exm:electric" class="example"><strong>Example 10.3  </strong></span>An electric utility company is interested in developing a model relating the
 peak hour demand (<span class="math inline">\(y\)</span>, measured in kW) to total energy usage during the month
 (<span class="math inline">\(x\)</span>, in kWh). A scatter plot of the data is shown below:</p>
-<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="S10-improving.html#cb151-1" tabindex="-1"></a><span class="co"># data at https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/electric.dat</span></span>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="S10-improving.html#cb151-1" tabindex="-1"></a><span class="co"># data at https://teaching.seehuhn.de/2022/MATH3714/electric.dat</span></span>
 <span id="cb151-2"><a href="S10-improving.html#cb151-2" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/electric.dat&quot;</span>, <span class="at">header=</span><span class="cn">FALSE</span>)</span>
 <span id="cb151-3"><a href="S10-improving.html#cb151-3" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>V1, d<span class="sc">$</span>V2,</span>
 <span id="cb151-4"><a href="S10-improving.html#cb151-4" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;energy usage [kWh]&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;energy demand [kW]&quot;</span>)</span>
@@ -642,7 +640,8 @@ Thus we can try transformations like <span class="math inline">\(y&#39; = \log(y
 where <span class="math inline">\(g = (\prod_{i=1}^n y_i)^{1/n}\)</span> is the geometric mean.</p>
 <p>The geometric mean is a constant (it does not depend on <span class="math inline">\(i\)</span>) and is not needed
 for the power transform, but it is usually included to make values for
-different <span class="math inline">\(\lambda\)</span> more comparable. For <span class="math inline">\(\lambda = 1\)</span> the transform is <span class="math inline">\(y&#39; = y - 1\)</span>. This is a simple shift which has no effect on the fitted model, it just
+different <span class="math inline">\(\lambda\)</span> more comparable. For <span class="math inline">\(\lambda = 1\)</span> the transform is <span class="math inline">\(y&#39; = y
+- 1\)</span>. This is a simple shift which has no effect on the fitted model, it just
 decreases the intercept by <span class="math inline">\(1\)</span> and leaves the residuals unchanged. Thus, this
 case is that same as applying no transformation.</p>
 <p>Using Taylor approximation on the numerator in the definition
@@ -705,7 +704,7 @@ of <span class="math inline">\(\lambda\)</span>, together with the cutoff sugges
 <p><img src="MATH3714_files/figure-html/electric5-1.png" width="672" /></p>
 <p>This suggests the range of reasonable <span class="math inline">\(\lambda\)</span> values to be</p>
 <div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="S10-improving.html#cb156-1" tabindex="-1"></a><span class="fu">range</span>(lambda[<span class="fu">which</span>(rss <span class="sc">&lt;=</span> cutoff)])</span></code></pre></div>
-<pre class="rOutput"><code>[1] 0.298 0.784</code></pre>
+<pre class="routput"><code>[1] 0.298 0.784</code></pre>
 <p>The value <span class="math inline">\(\lambda = 1\)</span> (no transformation) is not contained in the interval,
 suggesting that a transformation may be helpful.
 Choosing a “simple” value inside the interval and close to the minimum,
@@ -746,7 +745,8 @@ the others, and similarly the intercept may be included or not,
 there are <span class="math inline">\(2^{p+1}\)</span> possible models to consider.</p></li>
 <li><p>In the section about <a href="S10-improving.html#S10-improving">Improving the Model Fit</a> we have seen that
 sometimes it is useful to transform input variables before using them
-in the model. This can either happen individually, <em>e.g.</em> <span class="math inline">\(x_2&#39; = \log x_2\)</span>, or collectively, <em>e.g.</em> <span class="math inline">\(x^\ast = x_1 x_2\)</span>. The number of
+in the model. This can either happen individually, <em>e.g.</em> <span class="math inline">\(x_2&#39; = \log
+x_2\)</span>, or collectively, <em>e.g.</em> <span class="math inline">\(x^\ast = x_1 x_2\)</span>. The number of
 models we may obtain in this way is unlimited.</p></li>
 </ul>
 <p>If we want to compare these candidate models in a systematic way,
@@ -781,7 +781,8 @@ and our estimate for the error variance <span class="math inline">\(\sigma^2\)</
 where <span class="math inline">\(H = X (X^\top X)^{-1} X^\top\)</span> is the hat matrix computed
 without using <span class="math inline">\(x_{q+1}, \ldots, x_p\)</span>.</p>
 <p>If we write <span class="math inline">\(\tilde X \in \mathbb{R}^{n\times (p-q)}\)</span> for the matrix with columns
-<span class="math inline">\(x_{q+1}, \ldots, x_p\)</span> and <span class="math inline">\(\tilde\beta = (\beta_{q+1}, \ldots, \beta_p) \in \mathbb{R}^{p-q}\)</span>, then the full model can be written as
+<span class="math inline">\(x_{q+1}, \ldots, x_p\)</span> and <span class="math inline">\(\tilde\beta = (\beta_{q+1}, \ldots, \beta_p) \in
+\mathbb{R}^{p-q}\)</span>, then the full model can be written as
 <span class="math display">\[\begin{equation*}
   Y
   = X \beta + \tilde X \tilde\beta + \varepsilon
@@ -858,7 +859,7 @@ for the original dataset:</p>
 <div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="S10-improving.html#cb160-1" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
 <span id="cb160-2"><a href="S10-improving.html#cb160-2" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X1) <span class="sc">%*%</span> X1))</span>
 <span id="cb160-3"><a href="S10-improving.html#cb160-3" tabindex="-1"></a>d1</span></code></pre></div>
-<pre class="rOutput"><code> (Intercept)     Air.Flow   Water.Temp   Acid.Conc. 
+<pre class="routput"><code> (Intercept)     Air.Flow   Water.Temp   Acid.Conc. 
 13.452726695  0.001728874  0.012875424  0.002322167 </code></pre>
 <p>Now we add a column of noise and re-compute the values:</p>
 <div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="S10-improving.html#cb162-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211115</span>)</span>
@@ -866,11 +867,11 @@ for the original dataset:</p>
 <span id="cb162-3"><a href="S10-improving.html#cb162-3" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X1, <span class="fu">rnorm</span>(n))</span>
 <span id="cb162-4"><a href="S10-improving.html#cb162-4" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X2) <span class="sc">%*%</span> X2))</span>
 <span id="cb162-5"><a href="S10-improving.html#cb162-5" tabindex="-1"></a>d2</span></code></pre></div>
-<pre class="rOutput"><code> (Intercept)     Air.Flow   Water.Temp   Acid.Conc.              
+<pre class="routput"><code> (Intercept)     Air.Flow   Water.Temp   Acid.Conc.              
 14.397515774  0.001730570  0.015195467  0.002796487  0.064828744 </code></pre>
 <p>Finally, we determine the change in variance in percent:</p>
 <div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="S10-improving.html#cb164-1" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> (d2[<span class="sc">-</span><span class="dv">5</span>] <span class="sc">-</span> d1) <span class="sc">/</span> d1, <span class="dv">3</span>)</span></code></pre></div>
-<pre class="rOutput"><code>(Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
+<pre class="routput"><code>(Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
       7.023       0.098      18.019      20.426 </code></pre>
 <p>We see that the variances of the <span class="math inline">\(\hat\beta_j\)</span> increased by up to <span class="math inline">\(20\%\)</span>
 when we added the unnecessary input.</p>

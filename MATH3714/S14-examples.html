@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 14 Examples | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 14 Examples | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="S13-factors.html"/>
-<link rel="next" href="practical.html"/>
+<link rel="next" href="S15-multicoll.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -74,7 +74,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -296,11 +296,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1" data-path="S14-examples.html"><a href="S14-examples.html#interactions-example"><i class="fa fa-check"></i><b>14.1</b> Use of Interaction Terms in Modelling</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-examples.html"><a href="S14-examples.html#codings"><i class="fa fa-check"></i><b>14.2</b> Alternative Factor Codings</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
-<ul>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
-</ul></li>
 <li class="chapter" data-level="15" data-path="S15-multicoll.html"><a href="S15-multicoll.html"><i class="fa fa-check"></i><b>15</b> Multicollinearity</a>
 <ul>
 <li class="chapter" data-level="15.1" data-path="S15-multicoll.html"><a href="S15-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>15.1</b> Consequences of Multicollinearity</a></li>
@@ -420,10 +415,10 @@ like height and weight. Here we have data which gives
 the mouth volume (in cubic centimetres), age, sex (female = 0, male = 1),
 height (in metres) and weight (in kilos) for 61 volunteers.
 The first few samples are as shown:</p>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="S14-examples.html#cb213-1" tabindex="-1"></a><span class="co"># data from https://www1.maths.leeds.ac.uk/~voss/2022/MATH3714/mouth-volume.txt</span></span>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="S14-examples.html#cb213-1" tabindex="-1"></a><span class="co"># data from https://teaching.seehuhn.de/2022/MATH3714/mouth-volume.txt</span></span>
 <span id="cb213-2"><a href="S14-examples.html#cb213-2" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/mouth-volume.txt&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb213-3"><a href="S14-examples.html#cb213-3" tabindex="-1"></a><span class="fu">head</span>(dd)</span></code></pre></div>
-<pre class="rOutput"><code>  Mouth_Volume Age Sex Height  Weight
+<pre class="routput"><code>  Mouth_Volume Age Sex Height  Weight
 1       56.659  29   1  1.730  70.455
 2       47.938  24   0  1.632  60.000
 3       60.995  45   0  1.727 102.273
@@ -439,7 +434,7 @@ to the coding in the present data.</p>
 other variables. We start by fitting a basic model:</p>
 <div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="S14-examples.html#cb215-1" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
 <span id="cb215-2"><a href="S14-examples.html#cb215-2" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
-<pre class="rOutput"><code>
+<pre class="routput"><code>
 Call:
 lm(formula = Mouth_Volume ~ ., data = dd)
 
@@ -466,7 +461,7 @@ model fit seems poor. To improve model fit, we try to include all
 pairwise interaction terms:</p>
 <div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="S14-examples.html#cb217-1" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd)</span>
 <span id="cb217-2"><a href="S14-examples.html#cb217-2" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
-<pre class="rOutput"><code>
+<pre class="routput"><code>
 Call:
 lm(formula = Mouth_Volume ~ .^2, data = dd)
 
@@ -497,7 +492,7 @@ We try to select a subset of variables to get a better fit:</p>
 <span id="cb219-2"><a href="S14-examples.html#cb219-2" tabindex="-1"></a>r3 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(Mouth_Volume <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd, <span class="at">nvmax =</span> <span class="dv">10</span>)</span>
 <span id="cb219-3"><a href="S14-examples.html#cb219-3" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">summary</span>(r3)</span>
 <span id="cb219-4"><a href="S14-examples.html#cb219-4" tabindex="-1"></a>s</span></code></pre></div>
-<pre class="rOutput"><code>Subset selection object
+<pre class="routput"><code>Subset selection object
 Call: regsubsets.formula(Mouth_Volume ~ .^2, data = dd, nvmax = 10)
 10 Variables  (and intercept)
               Forced in Forced out
@@ -539,7 +534,7 @@ Selection Algorithm: exhaustive
 for <span class="math inline">\(p\)</span> ranging from <span class="math inline">\(1\)</span> to <span class="math inline">\(10\)</span>. To choose the number of variables
 we can use the adjusted <span class="math inline">\(R^2\)</span>-value:</p>
 <div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="S14-examples.html#cb221-1" tabindex="-1"></a>s<span class="sc">$</span>which[<span class="fu">which.max</span>(s<span class="sc">$</span>adjr2),]</span></code></pre></div>
-<pre class="rOutput"><code>  (Intercept)           Age           Sex        Height        Weight 
+<pre class="routput"><code>  (Intercept)           Age           Sex        Height        Weight 
          TRUE          TRUE         FALSE          TRUE         FALSE 
       Age:Sex    Age:Height    Age:Weight    Sex:Height    Sex:Weight 
          TRUE          TRUE         FALSE         FALSE          TRUE 
@@ -551,7 +546,7 @@ examination, we fit the corresponding model using <code>lm()</code>:</p>
 <span id="cb223-2"><a href="S14-examples.html#cb223-2" tabindex="-1"></a>         <span class="sc">~</span> Age <span class="sc">+</span> Height <span class="sc">+</span> Age<span class="sc">:</span>Sex <span class="sc">+</span> Age<span class="sc">:</span>Height <span class="sc">+</span> Sex<span class="sc">:</span>Weight,</span>
 <span id="cb223-3"><a href="S14-examples.html#cb223-3" tabindex="-1"></a>         <span class="at">data =</span> dd)</span>
 <span id="cb223-4"><a href="S14-examples.html#cb223-4" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code></pre></div>
-<pre class="rOutput"><code>
+<pre class="routput"><code>
 Call:
 lm(formula = Mouth_Volume ~ Age + Height + Age:Sex + Age:Height + 
     Sex:Weight, data = dd)
@@ -581,7 +576,7 @@ difficult to interpret. For comparison, we consider the second-best
 model, with <span class="math inline">\(p=2\)</span>:</p>
 <div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="S14-examples.html#cb225-1" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> Age<span class="sc">:</span>Weight <span class="sc">+</span> Sex<span class="sc">:</span>Weight, <span class="at">data =</span> dd)</span>
 <span id="cb225-2"><a href="S14-examples.html#cb225-2" tabindex="-1"></a><span class="fu">summary</span>(m4)</span></code></pre></div>
-<pre class="rOutput"><code>
+<pre class="routput"><code>
 Call:
 lm(formula = Mouth_Volume ~ Age:Weight + Sex:Weight, data = dd)
 
@@ -639,7 +634,7 @@ of these choices using a factor which represents week days:</p>
 <ul>
 <li><p><strong>Indicator variables.</strong> This is the default coding:</p>
 <div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="S14-examples.html#cb228-1" tabindex="-1"></a><span class="fu">contr.treatment</span>(days)</span></code></pre></div>
-<pre class="rOutput"><code>    Tue Wed Thu Fri Sat Sun
+<pre class="routput"><code>    Tue Wed Thu Fri Sat Sun
 Mon   0   0   0   0   0   0
 Tue   1   0   0   0   0   0
 Wed   0   1   0   0   0   0
@@ -652,7 +647,7 @@ weekday is encoded. The regression coefficients can be interpreted as the
 change of intercept relative to the reference level (in this case Monday).</p></li>
 <li><p><strong>Deviation coding</strong> uses “sum to zero” contrasts:</p>
 <div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="S14-examples.html#cb230-1" tabindex="-1"></a><span class="fu">contr.sum</span>(days)</span></code></pre></div>
-<pre class="rOutput"><code>    [,1] [,2] [,3] [,4] [,5] [,6]
+<pre class="routput"><code>    [,1] [,2] [,3] [,4] [,5] [,6]
 Mon    1    0    0    0    0    0
 Tue    0    1    0    0    0    0
 Wed    0    0    1    0    0    0
@@ -667,7 +662,7 @@ in the design matrix.</p></li>
 <li><p><strong>Helmert coding</strong> contrasts the second level with the first, the third with
 the average of the first two, and so on:</p>
 <div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="S14-examples.html#cb232-1" tabindex="-1"></a><span class="fu">contr.helmert</span>(days)</span></code></pre></div>
-<pre class="rOutput"><code>    [,1] [,2] [,3] [,4] [,5] [,6]
+<pre class="routput"><code>    [,1] [,2] [,3] [,4] [,5] [,6]
 Mon   -1   -1   -1   -1   -1   -1
 Tue    1   -1   -1   -1   -1   -1
 Wed    0    2   -1   -1   -1   -1
@@ -693,7 +688,7 @@ optional <code>contrasts.arg</code> argument to <code>lm()</code> and <code>mode
 <span id="cb234-13"><a href="S14-examples.html#cb234-13" tabindex="-1"></a></span>
 <span id="cb234-14"><a href="S14-examples.html#cb234-14" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
 <span id="cb234-15"><a href="S14-examples.html#cb234-15" tabindex="-1"></a><span class="fu">head</span>(X1)</span></code></pre></div>
-<pre class="rOutput"><code>  (Intercept)         x1 x2Tue x2Wed x2Thu x2Fri x2Sat x2Sun
+<pre class="routput"><code>  (Intercept)         x1 x2Tue x2Wed x2Thu x2Fri x2Sat x2Sun
 1           1 0.41745367     1     0     0     0     0     0
 2           1 0.88671893     0     0     1     0     0     0
 3           1 0.41924327     0     0     1     0     0     0
@@ -701,11 +696,11 @@ optional <code>contrasts.arg</code> argument to <code>lm()</code> and <code>mode
 5           1 0.27863787     0     0     0     0     0     0
 6           1 0.03346104     0     1     0     0     0     0</code></pre>
 <div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="S14-examples.html#cb236-1" tabindex="-1"></a><span class="fu">kappa</span>(X1, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre class="rOutput"><code>[1] 10.37243</code></pre>
+<pre class="routput"><code>[1] 10.37243</code></pre>
 <div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="S14-examples.html#cb238-1" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> ., <span class="at">data =</span> dd,</span>
 <span id="cb238-2"><a href="S14-examples.html#cb238-2" tabindex="-1"></a>                   <span class="at">contrasts.arg =</span> <span class="fu">list</span>(<span class="at">x2 =</span> contr.sum))</span>
 <span id="cb238-3"><a href="S14-examples.html#cb238-3" tabindex="-1"></a><span class="fu">head</span>(X2)</span></code></pre></div>
-<pre class="rOutput"><code>  (Intercept)         x1 x21 x22 x23 x24 x25 x26
+<pre class="routput"><code>  (Intercept)         x1 x21 x22 x23 x24 x25 x26
 1           1 0.41745367   0   1   0   0   0   0
 2           1 0.88671893   0   0   0   1   0   0
 3           1 0.41924327   0   0   0   1   0   0
@@ -713,7 +708,7 @@ optional <code>contrasts.arg</code> argument to <code>lm()</code> and <code>mode
 5           1 0.27863787   1   0   0   0   0   0
 6           1 0.03346104   0   0   1   0   0   0</code></pre>
 <div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="S14-examples.html#cb240-1" tabindex="-1"></a><span class="fu">kappa</span>(X2, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre class="rOutput"><code>[1] 6.677298</code></pre>
+<pre class="routput"><code>[1] 6.677298</code></pre>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
@@ -731,7 +726,7 @@ fit.</li>
         </div>
       </div>
 <a href="S13-factors.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="practical.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S15-multicoll.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

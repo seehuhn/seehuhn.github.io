@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Interlude: Kernel Density Estimation in R | MATH5714 Linear Regression, Robustness and Smoothing</title>
   <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2023/24" />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Interlude: Kernel Density Estimation in R | MATH5714 Linear Regression, Robustness and Smoothing" />
   <meta property="og:type" content="book" />
@@ -74,7 +74,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -259,7 +259,7 @@ can be used compute kernel density estimates in R. In the current section
 we will compare different methods to compute these estimates “by hand”.</p>
 <p>For out experiments we will use the same “snowfall” dataset as in the
 previous section.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="I01-KDE.html#cb9-1" tabindex="-1"></a><span class="co"># downloaded from https://www1.maths.leeds.ac.uk/~voss/data/buffalo/</span></span>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="I01-KDE.html#cb9-1" tabindex="-1"></a><span class="co"># downloaded from https://teaching.seehuhn.de/data/buffalo/</span></span>
 <span id="cb9-2"><a href="I01-KDE.html#cb9-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/buffalo.csv&quot;</span>)</span>
 <span id="cb9-3"><a href="I01-KDE.html#cb9-3" tabindex="-1"></a>snowfall <span class="ot">&lt;-</span> x<span class="sc">$</span>snowfall</span></code></pre></div>
 <div id="direct-implementation" class="section level2 unnumbered hasAnchor">
@@ -391,10 +391,10 @@ the execution times using the R package <code>microbenchmark</code>:</p>
 <span id="cb28-6"><a href="I01-KDE.html#cb28-6" tabindex="-1"></a>  <span class="at">KDE3 =</span> <span class="fu">KDE3</span>(x.tilde, snowfall, K, h),</span>
 <span id="cb28-7"><a href="I01-KDE.html#cb28-7" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
-##  expr     min       lq     mean   median       uq      max neval
-##  KDE1 806.634 857.5765 921.1077 871.9880 887.4450 6603.337  1000
-##  KDE2 112.750 153.6680 199.7293 161.2940 167.7105 3551.256  1000
-##  KDE3 101.967 131.8970 170.8944 136.6735 141.8600 3317.720  1000</code></pre>
+##  expr      min        lq      mean   median        uq      max neval
+##  KDE1 1399.084 1459.3745 1533.3724 1475.959 1491.1700 6755.898  1000
+##  KDE2  198.358  236.5290  309.6930  261.211  266.2130 4921.312  1000
+##  KDE3  179.252  211.4165  275.8489  224.762  228.2675 8104.183  1000</code></pre>
 <p>The output summarises the execution times for 1000 runs of each of the
 three functions. The columns correspond to the fastest measured time,
 lower quartile, mean, median, upper quartile and slowest time, respectively.
@@ -413,8 +413,8 @@ as we used above.</p>
 <span id="cb30-5"><a href="I01-KDE.html#cb30-5" tabindex="-1"></a>}</span>
 <span id="cb30-6"><a href="I01-KDE.html#cb30-6" tabindex="-1"></a><span class="fu">microbenchmark</span>(<span class="at">density =</span> <span class="fu">KDE.builtin</span>(x.tilde, snowfall, <span class="st">&quot;triangular&quot;</span>, h), <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
-##     expr    min      lq     mean median      uq      max neval
-##  density 91.512 100.204 113.2603 103.32 106.805 2872.665  1000</code></pre>
+##     expr     min       lq     mean  median      uq      max neval
+##  density 158.219 168.9815 185.0491 171.052 173.758 4278.186  1000</code></pre>
 <p>The result shows that <code>density()</code> is faster than <code>KDE3()</code>, but by
 a factor of less than 2. The reason is that <code>density()</code> uses a
 more efficient algorithm for computing an approximation to
@@ -425,7 +425,7 @@ exact implementation of the method:</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="I01-KDE.html#cb32-1" tabindex="-1"></a>f.hat1 <span class="ot">&lt;-</span> <span class="fu">KDE3</span>(x.tilde, snowfall, K, h)</span>
 <span id="cb32-2"><a href="I01-KDE.html#cb32-2" tabindex="-1"></a>f.hat2 <span class="ot">&lt;-</span> <span class="fu">KDE.builtin</span>(x.tilde, snowfall, <span class="st">&quot;triangular&quot;</span>, h)</span>
 <span id="cb32-3"><a href="I01-KDE.html#cb32-3" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(f.hat1 <span class="sc">-</span> f.hat2))</span></code></pre></div>
-<pre><code>## [1] 3.228798e-05</code></pre>
+<pre><code>## [1] 1.935582e-05</code></pre>
 
 </div>
 </div>

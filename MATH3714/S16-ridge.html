@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 16 Ridge Regression | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 16 Ridge Regression | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -74,7 +74,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -296,11 +296,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1" data-path="S14-examples.html"><a href="S14-examples.html#interactions-example"><i class="fa fa-check"></i><b>14.1</b> Use of Interaction Terms in Modelling</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-examples.html"><a href="S14-examples.html#codings"><i class="fa fa-check"></i><b>14.2</b> Alternative Factor Codings</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html"><i class="fa fa-check"></i>Practical</a>
-<ul>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
-<li class="chapter" data-level="" data-path="practical.html"><a href="practical.html#tasks"><i class="fa fa-check"></i>Tasks</a></li>
-</ul></li>
 <li class="chapter" data-level="15" data-path="S15-multicoll.html"><a href="S15-multicoll.html"><i class="fa fa-check"></i><b>15</b> Multicollinearity</a>
 <ul>
 <li class="chapter" data-level="15.1" data-path="S15-multicoll.html"><a href="S15-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>15.1</b> Consequences of Multicollinearity</a></li>
@@ -448,8 +443,10 @@ denotes the Euclidean norm of the vector <span class="math inline">\(\beta\)</sp
 consisting of the residual sum of squares plus a penalty term. The
 regularisation parameter <span class="math inline">\(\lambda\)</span> controls the relative weight of these two
 terms. For large <span class="math inline">\(\lambda\)</span>, the main objective to minimise the norm
-<span class="math inline">\(\|\beta\|\)</span> and one can show that <span class="math inline">\(\lim_{\lambda \to\infty} \hat\beta^{(\lambda)} = 0\)</span>. For <span class="math inline">\(\lambda \downarrow 0\)</span> only the residual sum
-of squares is left and if <span class="math inline">\(X^\top X\)</span> is invertible we get <span class="math inline">\(\hat\beta^{(0)} = \hat\beta\)</span>, <em>i.e.</em> here the ridge regression estimate coincides with the least
+<span class="math inline">\(\|\beta\|\)</span> and one can show that <span class="math inline">\(\lim_{\lambda \to\infty}
+\hat\beta^{(\lambda)} = 0\)</span>. For <span class="math inline">\(\lambda \downarrow 0\)</span> only the residual sum
+of squares is left and if <span class="math inline">\(X^\top X\)</span> is invertible we get <span class="math inline">\(\hat\beta^{(0)} =
+\hat\beta\)</span>, <em>i.e.</em> here the ridge regression estimate coincides with the least
 squares estimate.</p>
 <p>As in lemma <a href="S02-multiple.html#lem:multiple-LSQ">2.1</a> we can find an explicit formula
 for the ridge regression estimate. For this we write <span class="math inline">\(r^{(\lambda)}\)</span>
@@ -482,12 +479,12 @@ a badly conditioned toy dataset.</p>
 <span id="cb264-12"><a href="S16-ridge.html#cb264-12" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2)</span>
 <span id="cb264-13"><a href="S16-ridge.html#cb264-13" tabindex="-1"></a>beta.ridge <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">+</span> lambda <span class="sc">*</span> <span class="fu">diag</span>(<span class="fu">ncol</span>(X)), <span class="fu">t</span>(X) <span class="sc">%*%</span> y)</span>
 <span id="cb264-14"><a href="S16-ridge.html#cb264-14" tabindex="-1"></a>beta.ridge[,<span class="dv">1</span>] <span class="co"># get first column instead of n × 1 matrix, for tidiness</span></span></code></pre></div>
-<pre class="rOutput"><code>(Intercept)          x1          x2 
+<pre class="routput"><code>(Intercept)          x1          x2 
 -0.01620501  0.52739367  0.47343531 </code></pre>
 <p>For comparison, we also compute the least squares estimate:</p>
 <div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="S16-ridge.html#cb266-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x1 <span class="sc">+</span> x2)</span>
 <span id="cb266-2"><a href="S16-ridge.html#cb266-2" tabindex="-1"></a><span class="fu">coef</span>(m)</span></code></pre></div>
-<pre class="rOutput"><code>(Intercept)          x1          x2 
+<pre class="routput"><code>(Intercept)          x1          x2 
 -0.02935851  1.03064453 -0.02749857 </code></pre>
 <p>We see that despite the small value of <span class="math inline">\(\lambda\)</span> there is a considerable
 difference between the estimated values <span class="math inline">\(\hat\beta\)</span> and
@@ -512,7 +509,8 @@ ridge regression estimate for <span class="math inline">\(\lambda &gt; 0\)</span
 even in cases where the least squares estimate is <em>not</em> uniquely defined.</p>
 <p>There are variants of the method where the penalty term <span class="math inline">\(\|\beta\|^2\)</span> is is
 replaced with a different penalty term. One example of this is Lasso (least
-absolute shrinkage and selection operator) regression, which uses <span class="math inline">\(\|\beta\|_1 = \sum_{j=0}^p |\beta_j|\)</span> as the penalty term.</p>
+absolute shrinkage and selection operator) regression, which uses <span class="math inline">\(\|\beta\|_1
+= \sum_{j=0}^p |\beta_j|\)</span> as the penalty term.</p>
 <p>Outside statistics, ridge regression is known as <strong>Tikhonov regularisation</strong>.</p>
 </div>
 <div id="properties-of-the-estimate" class="section level2 hasAnchor" number="16.2">
@@ -576,7 +574,8 @@ depends on the unknown error variance <span class="math inline">\(\sigma^2\)</s
 <p>If <span class="math inline">\(X^\top X\)</span> is invertible, this covariance will convert to the
 covariance of the least squares estimator as <span class="math inline">\(\lambda \downarrow 0\)</span>.
 From this we can find the variance of individual components
-as <span class="math inline">\(\mathop{\mathrm{Var}}\bigl( \hat\beta^{(\lambda)}_j \bigr) = \mathop{\mathrm{Cov}}( \hat\beta^{(\lambda)} )_{jj}\)</span>.</p>
+as <span class="math inline">\(\mathop{\mathrm{Var}}\bigl( \hat\beta^{(\lambda)}_j \bigr) =
+\mathop{\mathrm{Cov}}( \hat\beta^{(\lambda)} )_{jj}\)</span>.</p>
 </div>
 <div id="mean-squared-error" class="section level3 hasAnchor" number="16.2.3">
 <h3><span class="header-section-number">16.2.3</span> Mean Squared Error<a href="S16-ridge.html#mean-squared-error" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -605,7 +604,7 @@ values of <span class="math inline">\(\beta\)</span> and <span class="math inli
 <div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="S16-ridge.html#cb268-1" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
 <span id="cb268-2"><a href="S16-ridge.html#cb268-2" tabindex="-1"></a>Q <span class="ot">&lt;-</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">+</span> lambda <span class="sc">*</span> <span class="fu">diag</span>(<span class="fu">ncol</span>(X))</span>
 <span id="cb268-3"><a href="S16-ridge.html#cb268-3" tabindex="-1"></a>lambda <span class="sc">*</span> <span class="fu">solve</span>(Q, <span class="fu">t</span>(X) <span class="sc">%*%</span> X <span class="sc">%*%</span> beta)</span></code></pre></div>
-<pre class="rOutput"><code>                    [,1]
+<pre class="routput"><code>                    [,1]
 (Intercept) 0.0009178679
 x1          0.0497789499
 x2          0.0499545553</code></pre>
@@ -613,7 +612,7 @@ x2          0.0499545553</code></pre>
 <div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="S16-ridge.html#cb270-1" tabindex="-1"></a>C1 <span class="ot">&lt;-</span> <span class="fu">solve</span>(Q) <span class="co"># Compute the inverse Q^{-1} ...</span></span>
 <span id="cb270-2"><a href="S16-ridge.html#cb270-2" tabindex="-1"></a>C2 <span class="ot">&lt;-</span> C1 <span class="sc">%*%</span> C1 <span class="co"># ... and also Q^{-2}, to get</span></span>
 <span id="cb270-3"><a href="S16-ridge.html#cb270-3" tabindex="-1"></a>sigma<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> (C1 <span class="sc">-</span> lambda<span class="sc">*</span>C2) <span class="co"># the covariance matrix.</span></span></code></pre></div>
-<pre class="rOutput"><code>              (Intercept)            x1            x2
+<pre class="routput"><code>              (Intercept)            x1            x2
 (Intercept)  7.291379e-05 -7.580602e-06 -9.226941e-06
 x1          -7.580602e-06  3.831264e-06 -1.540098e-06
 x2          -9.226941e-06 -1.540098e-06  4.221464e-06</code></pre>
