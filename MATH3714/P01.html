@@ -5,19 +5,19 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Problem Sheet 1 | MATH3714 Linear Regression and Robustness</title>
-  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2024/25" />
   <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Problem Sheet 1 | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   
-  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2024/25" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Problem Sheet 1 | MATH3714 Linear Regression and Robustness" />
   
-  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2024/25" />
   
 
 <meta name="author" content="Jochen Voss" />
@@ -51,15 +51,6 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-P96L0SF56N');
-</script>
 
 
 <style type="text/css">
@@ -149,14 +140,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
-<ul>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
-</ul></li>
 <li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
@@ -416,7 +399,60 @@ $(document).ready(function() {
 of your workshop in week 3 where the answers will be discussed.</p>
 </div>
 <div class="myq">
-<p><strong>1.</strong> Consider the simple linear regression model
+<p><strong>1.</strong> Consider a simple linear regression model fitted to a dataset with <span class="math inline">\(n\)</span>
+pairs of observations <span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n)\)</span>.
+Let <span class="math inline">\(\hat\beta = (\hat\beta_0, \hat\beta_1)\)</span> be the least squares estimate
+of the coefficients in the model.</p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Show that if we shift all <span class="math inline">\(y\)</span>-values by a constant <span class="math inline">\(c\)</span> (<em>i.e.</em>, replace
+each <span class="math inline">\(y_i\)</span> with <span class="math inline">\(y_i+c\)</span>), the new least squares estimate for the slope
+<span class="math inline">\(\hat\beta_1\)</span> remains unchanged, while the new estimate for the intercept
+becomes <span class="math inline">\(\hat\beta_0+c\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>Let us denote the new <span class="math inline">\(y\)</span>-values as <span class="math inline">\(y&#39;_i = y_i + c\)</span>.
+Then the new RSS is
+<span class="math display">\[\begin{align*}
+    \text{RSS}&#39;(\beta_0, \beta_1)
+    &amp;= \sum_{i=1}^n (y&#39;_i - (\beta_0 + \beta_1 x_i))^2 \\
+    &amp;= \sum_{i=1}^n ((y_i + c) - (\beta_0 + \beta_1 x_i))^2 \\
+    &amp;= \sum_{i=1}^n (y_i - (\beta_0 - c + \beta_1 x_i))^2.
+  \end{align*}\]</span>
+This is equivalent to the original RSS with <span class="math inline">\(\beta_0\)</span> replaced by
+<span class="math inline">\(\beta_0 - c\)</span>. Therefore, the value of <span class="math inline">\(\beta_1\)</span> that minimizes this will
+be the same as before, while the value of <span class="math inline">\(\beta_0\)</span> that minimizes it will
+be <span class="math inline">\(\hat\beta_0+c\)</span>.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Now consider shifting all <span class="math inline">\(x\)</span>-values by a constant <span class="math inline">\(d\)</span> (<em>i.e.</em>, replace
+each <span class="math inline">\(x_i\)</span> with <span class="math inline">\(x_i+d\)</span>). How does this affect the least squares estimates
+<span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span>? Express the new estimates in terms of the
+original estimates and the constant <span class="math inline">\(d\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>Let us denote the new <span class="math inline">\(x\)</span>-values as <span class="math inline">\(x&#39;_i = x_i + d\)</span>.
+Then the new RSS is
+<span class="math display">\[\begin{align*}
+    \text{RSS}&#39;(\beta_0, \beta_1)
+    &amp;= \sum_{i=1}^n (y_i - (\beta_0 + \beta_1 (x_i + d)))^2 \\
+    &amp;= \sum_{i=1}^n (y_i - (\beta_0 + \beta_1 d + \beta_1 x_i))^2.
+  \end{align*}\]</span>
+This is equivalent to the original RSS with <span class="math inline">\(\beta_0\)</span> replaced by
+<span class="math inline">\(\beta_0 + \beta_1 d\)</span>. Therefore, the new estimates will be
+<span class="math display">\[\begin{align*}
+    \hat\beta_1&#39; &amp;= \hat\beta_1, \\
+    \hat\beta_0&#39; &amp;= \hat\beta_0 - \hat\beta_1 d.
+  \end{align*}\]</span>
+The slope remains unchanged, but the intercept changes to maintain the
+same fitted line in the shifted coordinate system.</p>
+</div>
+</div>
+</div>
+<div class="myq">
+<p><strong>2.</strong> Consider the simple linear regression model
 <span class="math inline">\(y_i = \beta_0 + x_{i} \beta_1 + \varepsilon_i\)</span> for
 <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span> and let <span class="math inline">\(X\)</span> be the design matrix.</p>
 <div class="subq">
@@ -542,7 +578,7 @@ slightly simplified by changing to new coordinates <span class="math inline">\(\
 </div>
 </div>
 <div class="myq">
-<p><strong>2.</strong> Let <span class="math inline">\(X\)</span> be the design matrix of a model including an intercept, and
+<p><strong>3.</strong> Let <span class="math inline">\(X\)</span> be the design matrix of a model including an intercept, and
 let <span class="math inline">\(H = X (X^\top X)^{-1} X^\top \in\mathbb{R}^{n\times n}\)</span> be the hat matrix.
 Finally, let <span class="math inline">\(\mathbf{1} = (1, 1, \ldots, 1) \in\mathbb{R}^n\)</span>.
 Show that <span class="math inline">\(H \mathbf{1} = \mathbf{1}\)</span>.</p>
@@ -554,7 +590,7 @@ completes the proof.</p>
 </div>
 </div>
 <div class="myq">
-<p><strong>3.</strong> For the <a href="https://rdrr.io/r/datasets/stackloss.html"><code>stackloss</code> dataset</a>
+<p><strong>4.</strong> For the <a href="https://rdrr.io/r/datasets/stackloss.html"><code>stackloss</code> dataset</a>
 built into R, predict a value for <code>stack.loss</code> when the inputs are
 <code>Air.Flow = 60</code>, <code>Water.Temp = 21</code> and <code>Acid.Conc = 87</code>.</p>
 <div class="myanswers">
@@ -578,7 +614,7 @@ in the name when we supply the new input values here.</p>
 </div>
 </div>
 <div class="myq">
-<p><strong>4.</strong> Let <span class="math inline">\(\varepsilon_1, \ldots, \varepsilon_n \sim \mathcal{N}(\mu, \sigma^2)\)</span> be independent.
+<p><strong>5.</strong> Let <span class="math inline">\(\varepsilon_1, \ldots, \varepsilon_n \sim \mathcal{N}(\mu, \sigma^2)\)</span> be independent.
 Then <span class="math inline">\(\varepsilon= (\varepsilon_1, \ldots, \varepsilon_n)\)</span> is a random vector. Determine
 <span class="math inline">\(\mathbb{E}(\varepsilon)\)</span>, <span class="math inline">\(\mathop{\mathrm{Cov}}(\varepsilon)\)</span> and <span class="math inline">\(\mathbb{E}\bigl( \|\varepsilon\|^2 \bigr)\)</span>.</p>
 <div class="myanswers">

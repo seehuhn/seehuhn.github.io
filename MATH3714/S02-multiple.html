@@ -5,19 +5,19 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 2 Least Squares Estimates | MATH3714 Linear Regression and Robustness</title>
-  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
+  <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2024/25" />
   <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 2 Least Squares Estimates | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   
-  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
+  <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2024/25" />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Section 2 Least Squares Estimates | MATH3714 Linear Regression and Robustness" />
   
-  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2023/24" />
+  <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2024/25" />
   
 
 <meta name="author" content="Jochen Voss" />
@@ -51,15 +51,6 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P96L0SF56N"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-P96L0SF56N');
-</script>
 
 
 <style type="text/css">
@@ -149,14 +140,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html"><i class="fa fa-check"></i>About MATH3714</a>
-<ul>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#notes"><i class="fa fa-check"></i>Notes and videos</a></li>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#lectures"><i class="fa fa-check"></i>Lectures</a></li>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#workshops"><i class="fa fa-check"></i>Workshops and Problem Sheets</a></li>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#software"><i class="fa fa-check"></i>Software</a></li>
-<li class="chapter" data-level="" data-path="S00-about.html"><a href="S00-about.html#assessments"><i class="fa fa-check"></i>Assessments</a></li>
-</ul></li>
 <li class="chapter" data-level="1" data-path="S01-simple.html"><a href="S01-simple.html"><i class="fa fa-check"></i><b>1</b> Simple Linear Regression</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="S01-simple.html"><a href="S01-simple.html#residual-sum-of-squares"><i class="fa fa-check"></i><b>1.1</b> Residual Sum of Squares</a></li>
@@ -394,7 +377,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Section 2</span> Least Squares Estimates<a href="S02-multiple.html#S02-multiple" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <!--
 TODO(voss):
-* Try to shorten this section?
 * https://nhigham.com/2022/10/11/seven-sins-of-numerical-linear-algebra/
   This points out that we should solve the least squares problem
   using the QR decomposition, instead of forming `t(X) %*% X`.
@@ -462,21 +444,16 @@ but leaving out the other inputs omits a lot of information. It is
 not easy to make a plot which takes all inputs into account. Is is
 also not immediately obvious which of the variables are most
 important.</p>
-<p>In linear regression, we assume that the output depends on the
-inputs in a linear (or more precisely, <em>affine</em>) way. We write
-this as
+<p>In linear regression, we assume that the output depends on the inputs in a
+linear way. We write this as
 <span class="math display" id="eq:lmdata">\[\begin{equation}
   y_i
   = \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i \tag{2.1}
 \end{equation}\]</span>
-where the errors <span class="math inline">\(\varepsilon_i\)</span> are assumed to be “small”. Here, <span class="math inline">\(i\)</span>
-ranges over all <span class="math inline">\(n\)</span> samples, so <a href="S02-multiple.html#eq:lmdata">(2.1)</a> represents <span class="math inline">\(n\)</span>
-simultaneous equations.</p>
-<p>The parameters <span class="math inline">\(\beta_j\)</span> can be interpreted as the expected change in
-the response <span class="math inline">\(y\)</span> per unit change in <span class="math inline">\(x_j\)</span> when all other regressor
-variables are held fixed. For this reason the parameters <span class="math inline">\(\beta_j\)</span>
-(for <span class="math inline">\(j=1, \ldots, p\)</span>) are sometimes called <em>partial</em> regression
-coefficients.</p>
+where the errors <span class="math inline">\(\varepsilon_i\)</span> are assumed to be “small”. Here, <span class="math inline">\(i\)</span> ranges over
+all <span class="math inline">\(n\)</span> samples, so <a href="S02-multiple.html#eq:lmdata">(2.1)</a> represents <span class="math inline">\(n\)</span> simultaneous equations. The
+parameters <span class="math inline">\(\beta_j\)</span> can be interpreted as the expected change in the response
+<span class="math inline">\(y\)</span> per unit change in <span class="math inline">\(x_j\)</span> when all other inputs are held fixed.</p>
 <p>This model describes a hyperplane in the <span class="math inline">\((p+1)\)</span>-dimensional space of
 the inputs <span class="math inline">\(x_j\)</span> and the output <span class="math inline">\(y\)</span>. The hyperplane is easily
 visualized when <span class="math inline">\(p=1\)</span> (as a line in <span class="math inline">\(\mathbb{R}^2\)</span>), and visualisation can be
