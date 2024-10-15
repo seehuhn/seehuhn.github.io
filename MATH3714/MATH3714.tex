@@ -2125,17 +2125,23 @@ precisely we have
 \end{equation}
 where \(\varepsilon= (\varepsilon_1, \ldots, \varepsilon_n)\) is a random error.
 The individual errors \(\varepsilon_1, \ldots, \varepsilon_n\)
-are now assumed to be i.i.d.~random variables with \(\mathbb{E}(\varepsilon_i) = 0\) and
-\(\mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\).
+are assumed to be i.i.d.~random variables with \(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\).
+
+Remarks:
 
 \begin{itemize}
 \item
-  Again, we assume that the \(x\)-values are fixed and known. The only
-  random quantities in the model are \(\varepsilon_i\) and \(Y_i\).
-\item
-  The parameters in this model are now the regression coefficients
+  The parameters in this model are the regression coefficients
   \(\beta = (\beta_0, \beta_1, \cdots, \beta_p) \in \mathbb{R}^{p+1}\) and
   the error variance~\(\sigma^2\).
+\item
+  The model assumes that the \(x\)-values are fixed and known. The only
+  random quantities in the model are \(\varepsilon_i\) and \(Y_i\). This is a modelling
+  assumption, there are more general models where the \(x\)-values are also
+  random.
+\item
+  Using the notation from the previous section, we have
+  \(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\) and \(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\).
 \end{itemize}
 
 The usual approach in statistics to quantify how well an estimator works
@@ -2292,7 +2298,7 @@ have \((I - H)^\top = I^\top - H^\top = I - H\) and
   &= I - H.
 \end{align*}
 
-For future reference we also state two simpler results: we have
+For future reference we also state two simple results: we have
 \begin{equation}
   H X = X (X^\top X)^{-1} X^\top X = X  \label{eq:XH}
 \end{equation}
@@ -2301,7 +2307,16 @@ and
   (I - H) X = IX - HX = X - X = 0.  \label{eq:XIH}
 \end{equation}
 
-Finally, if we have a vector \(v \in \mathbb{R}^n\) we can write \(v\) as
+\begin{lemma}
+For every vector \(v \in \mathbb{R}^n\) we have
+\begin{equation}
+  \|y\|^2
+  = \|\hat y\|^2 + \|\hat\varepsilon\|^2.  \label{eq:eps-y-orth}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+We can write \(v\) as
 \begin{align*}
   v
   &= (H + I - H)v \\
@@ -2328,17 +2343,9 @@ As a result we get
 for any vector \(v \in \mathbb{R}^n\).
 (This is \href{https://en.wikipedia.org/wiki/Pythagorean_theorem}{Pythagoras' theorem} in \(\mathbb{R}^n\).)
 Since \(\hat y = Hy\) and \(\hat\varepsilon= (I - H)y\), we can apply this idea to the
-vector \(v = y\) to get
-\begin{equation}
-  \|y\|^2
-  = \|\hat y\|^2 + \|\hat\varepsilon\|^2.  \label{eq:eps-y-orth}
-\end{equation}
-
-We note without proof that geometrically, \(H\) can be interpreted as the
-orthogonal projection onto the subspace of \(\mathbb{R}^n\) which is spanned by
-the columns of \(X\). This subspace contains the possible output vectors
-of the linear system and the least squares procedure finds the point \(\hat y\)
-in this subspace which is closest to the observed data \(y\in\mathbb{R}^n\).
+vector \(v = y\) to get \(\|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2\).
+This completes the proof.
+\end{proof}
 
 Some authors define:
 
@@ -2359,6 +2366,12 @@ turns into
   \mathrm{SS}_\mathrm{T}
   = \mathrm{SS}_\mathrm{R} + \mathrm{SS}_\mathrm{E}.
 \end{equation*}
+
+We note without proof that geometrically, \(H\) can be interpreted as the
+orthogonal projection onto the subspace of \(\mathbb{R}^n\) which is spanned by
+the columns of \(X\). This subspace contains the possible output vectors
+of the linear system and the least squares procedure finds the point \(\hat y\)
+in this subspace which is closest to the observed data \(y\in\mathbb{R}^n\).
 
 \subsection{Cochran's theorem}\label{Cochran}
 
@@ -2472,6 +2485,14 @@ but the denominator is decreased by one for each component of the
 vector~\(\beta\). Using Cochran's theorem, we can now show that the estimator
 \(\hat\sigma^2\) is unbiased.
 
+\begin{lemma}
+\protect\hypertarget{lem:sigma-hat-unbiased}{}\label{lem:sigma-hat-unbiased}We have
+\begin{equation*}
+  \mathbb{E}(\hat\sigma^2) = \sigma^2.
+\end{equation*}
+\end{lemma}
+
+\begin{proof}
 We first note that
 \begin{align*}
   (n - p - 1) \hat\sigma^2
@@ -2512,6 +2533,7 @@ and thus
   = \sigma^2.
 \end{equation*}
 This proves that \(\hat\sigma^2\) is an unbiased estimator for \(\sigma^2\).
+\end{proof}
 
 \textbf{Summary}
 
