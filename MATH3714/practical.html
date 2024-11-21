@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 14 Examples | MATH3714 Linear Regression and Robustness</title>
+  <title>Practical | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2024/25" />
   <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 14 Examples | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Practical | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2024/25" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 14 Examples | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Practical | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2024/25" />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="S13-factors.html"/>
-<link rel="next" href="S15-multicoll.html"/>
+<link rel="prev" href="S15-multicoll.html"/>
+<link rel="next" href="P04.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -385,333 +385,131 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="S14-examples" class="section level1 hasAnchor" number="14">
-<h1><span class="header-section-number">Section 14</span> Examples<a href="S14-examples.html#S14-examples" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<!--
-TODO (voss):
-* this section could be longer
-* try to find a nice split between sections 13 and 14
-* maybe remove "alternative factor codings"?
--->
-<p>In this section we illustrate the results of the previous sections
-with the help of an example.</p>
-<div id="interactions-example" class="section level2 hasAnchor" number="14.1">
-<h2><span class="header-section-number">14.1</span> Use of Interaction Terms in Modelling<a href="S14-examples.html#interactions-example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/RMoaWpbAhXQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<div class="example">
-<p><span id="exm:unlabeled-div-51" class="example"><strong>Example 14.1  </strong></span>Researchers in Food Science studied how big people’s mouths tend to be.
-It transpires that mouth volume is related to more easily measured quantities
-like height and weight. Here we have data which gives
-the mouth volume (in cubic centimetres), age, sex (female = 0, male = 1),
-height (in metres) and weight (in kilos) for 61 volunteers.
-The first few samples are as shown:</p>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="S14-examples.html#cb213-1" tabindex="-1"></a><span class="co"># data from https://teaching.seehuhn.de/2022/MATH3714/mouth-volume.txt</span></span>
-<span id="cb213-2"><a href="S14-examples.html#cb213-2" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/mouth-volume.txt&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb213-3"><a href="S14-examples.html#cb213-3" tabindex="-1"></a><span class="fu">head</span>(dd)</span></code></pre></div>
-<pre class="routput"><code>  Mouth_Volume Age Sex Height  Weight
-1       56.659  29   1  1.730  70.455
-2       47.938  24   0  1.632  60.000
-3       60.995  45   0  1.727 102.273
-4       68.917  23   0  1.641  78.636
-5       60.956  27   0  1.600  57.273
-6       76.204  23   1  1.746  66.818</code></pre>
-<p>Normally it is important to check that categorical variables are correctly
-recognised as factors, when importing data into R. As an exception,
-the fact that <code>sex</code> is stored as an integer variable (instead of a factor)
-here does not matter, since the default factor coding would be identical
-to the coding in the present data.</p>
-<p>Our aim is to fit a model which describes mouth volume in terms of the
-other variables. We start by fitting a basic model:</p>
-<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="S14-examples.html#cb215-1" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
-<span id="cb215-2"><a href="S14-examples.html#cb215-2" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
-<pre class="routput"><code>
-Call:
-lm(formula = Mouth_Volume ~ ., data = dd)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--33.242 -10.721  -3.223   8.800  43.218 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)  
-(Intercept)   0.9882    45.2736   0.022   0.9827  
-Age           0.3617     0.2607   1.387   0.1709  
-Sex           5.5030     5.9385   0.927   0.3581  
-Height       15.8980    29.1952   0.545   0.5882  
-Weight        0.2640     0.1400   1.885   0.0646 .
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-
-Residual standard error: 15.04 on 56 degrees of freedom
-Multiple R-squared:  0.2588,    Adjusted R-squared:  0.2059 
-F-statistic: 4.888 on 4 and 56 DF,  p-value: 0.001882</code></pre>
-<p>Since no coefficient is significantly different from zero (at <span class="math inline">\(5\%\)</span>-level),
-and since the <span class="math inline">\(R^2\)</span> value is not close to~<span class="math inline">\(1\)</span>,
-model fit seems poor. To improve model fit, we try to include all
-pairwise interaction terms:</p>
-<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="S14-examples.html#cb217-1" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd)</span>
-<span id="cb217-2"><a href="S14-examples.html#cb217-2" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
-<pre class="routput"><code>
-Call:
-lm(formula = Mouth_Volume ~ .^2, data = dd)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--35.528  -8.168  -1.995   6.704  44.136 
-
-Coefficients:
-                Estimate Std. Error t value Pr(&gt;|t|)
-(Intercept)    2.875e+02  2.337e+02   1.230    0.225
-Age           -8.370e+00  6.352e+00  -1.318    0.194
-Sex           -9.318e+01  1.325e+02  -0.703    0.485
-Height        -1.540e+02  1.505e+02  -1.023    0.311
-Weight         5.889e-01  2.713e+00   0.217    0.829
-Age:Sex       -9.023e-01  1.035e+00  -0.872    0.388
-Age:Height     5.374e+00  4.062e+00   1.323    0.192
-Age:Weight    -1.754e-03  2.027e-02  -0.087    0.931
-Sex:Height     5.989e+01  7.536e+01   0.795    0.431
-Sex:Weight     3.110e-01  4.177e-01   0.744    0.460
-Height:Weight -2.680e-01  1.755e+00  -0.153    0.879
-
-Residual standard error: 15.22 on 50 degrees of freedom
-Multiple R-squared:  0.3219,    Adjusted R-squared:  0.1863 
-F-statistic: 2.374 on 10 and 50 DF,  p-value: 0.0218</code></pre>
-<p>None of the interaction terms look useful when used in combination.
-We try to select a subset of variables to get a better fit:</p>
-<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="S14-examples.html#cb219-1" tabindex="-1"></a><span class="fu">library</span>(leaps)</span>
-<span id="cb219-2"><a href="S14-examples.html#cb219-2" tabindex="-1"></a>r3 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(Mouth_Volume <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> dd, <span class="at">nvmax =</span> <span class="dv">10</span>)</span>
-<span id="cb219-3"><a href="S14-examples.html#cb219-3" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">summary</span>(r3)</span>
-<span id="cb219-4"><a href="S14-examples.html#cb219-4" tabindex="-1"></a>s</span></code></pre></div>
-<pre class="routput"><code>Subset selection object
-Call: regsubsets.formula(Mouth_Volume ~ .^2, data = dd, nvmax = 10)
-10 Variables  (and intercept)
-              Forced in Forced out
-Age               FALSE      FALSE
-Sex               FALSE      FALSE
-Height            FALSE      FALSE
-Weight            FALSE      FALSE
-Age:Sex           FALSE      FALSE
-Age:Height        FALSE      FALSE
-Age:Weight        FALSE      FALSE
-Sex:Height        FALSE      FALSE
-Sex:Weight        FALSE      FALSE
-Height:Weight     FALSE      FALSE
-1 subsets of each size up to 10
-Selection Algorithm: exhaustive
-          Age Sex Height Weight Age:Sex Age:Height Age:Weight Sex:Height
-1  ( 1 )  &quot; &quot; &quot; &quot; &quot; &quot;    &quot; &quot;    &quot; &quot;     &quot; &quot;        &quot; &quot;        &quot; &quot;       
-2  ( 1 )  &quot; &quot; &quot; &quot; &quot; &quot;    &quot; &quot;    &quot; &quot;     &quot; &quot;        &quot;*&quot;        &quot; &quot;       
-3  ( 1 )  &quot; &quot; &quot;*&quot; &quot; &quot;    &quot; &quot;    &quot; &quot;     &quot; &quot;        &quot;*&quot;        &quot;*&quot;       
-4  ( 1 )  &quot; &quot; &quot;*&quot; &quot; &quot;    &quot; &quot;    &quot; &quot;     &quot; &quot;        &quot;*&quot;        &quot;*&quot;       
-5  ( 1 )  &quot;*&quot; &quot; &quot; &quot;*&quot;    &quot; &quot;    &quot;*&quot;     &quot;*&quot;        &quot; &quot;        &quot; &quot;       
-6  ( 1 )  &quot;*&quot; &quot; &quot; &quot;*&quot;    &quot; &quot;    &quot;*&quot;     &quot;*&quot;        &quot; &quot;        &quot;*&quot;       
-7  ( 1 )  &quot;*&quot; &quot;*&quot; &quot;*&quot;    &quot; &quot;    &quot;*&quot;     &quot;*&quot;        &quot; &quot;        &quot;*&quot;       
-8  ( 1 )  &quot;*&quot; &quot;*&quot; &quot;*&quot;    &quot;*&quot;    &quot;*&quot;     &quot;*&quot;        &quot; &quot;        &quot;*&quot;       
-9  ( 1 )  &quot;*&quot; &quot;*&quot; &quot;*&quot;    &quot;*&quot;    &quot;*&quot;     &quot;*&quot;        &quot; &quot;        &quot;*&quot;       
-10  ( 1 ) &quot;*&quot; &quot;*&quot; &quot;*&quot;    &quot;*&quot;    &quot;*&quot;     &quot;*&quot;        &quot;*&quot;        &quot;*&quot;       
-          Sex:Weight Height:Weight
-1  ( 1 )  &quot; &quot;        &quot;*&quot;          
-2  ( 1 )  &quot;*&quot;        &quot; &quot;          
-3  ( 1 )  &quot; &quot;        &quot; &quot;          
-4  ( 1 )  &quot;*&quot;        &quot; &quot;          
-5  ( 1 )  &quot;*&quot;        &quot; &quot;          
-6  ( 1 )  &quot;*&quot;        &quot; &quot;          
-7  ( 1 )  &quot;*&quot;        &quot; &quot;          
-8  ( 1 )  &quot;*&quot;        &quot; &quot;          
-9  ( 1 )  &quot;*&quot;        &quot;*&quot;          
-10  ( 1 ) &quot;*&quot;        &quot;*&quot;          </code></pre>
-<p>The table shows the optimal model for every number of variables,
-for <span class="math inline">\(p\)</span> ranging from <span class="math inline">\(1\)</span> to <span class="math inline">\(10\)</span>. To choose the number of variables
-we can use the adjusted <span class="math inline">\(R^2\)</span>-value:</p>
-<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="S14-examples.html#cb221-1" tabindex="-1"></a>s<span class="sc">$</span>which[<span class="fu">which.max</span>(s<span class="sc">$</span>adjr2),]</span></code></pre></div>
-<pre class="routput"><code>  (Intercept)           Age           Sex        Height        Weight 
-         TRUE          TRUE         FALSE          TRUE         FALSE 
-      Age:Sex    Age:Height    Age:Weight    Sex:Height    Sex:Weight 
-         TRUE          TRUE         FALSE         FALSE          TRUE 
-Height:Weight 
-        FALSE </code></pre>
-<p>The optimal model consists of the five variables listed. For further
-examination, we fit the corresponding model using <code>lm()</code>:</p>
-<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="S14-examples.html#cb223-1" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume</span>
-<span id="cb223-2"><a href="S14-examples.html#cb223-2" tabindex="-1"></a>         <span class="sc">~</span> Age <span class="sc">+</span> Height <span class="sc">+</span> Age<span class="sc">:</span>Sex <span class="sc">+</span> Age<span class="sc">:</span>Height <span class="sc">+</span> Sex<span class="sc">:</span>Weight,</span>
-<span id="cb223-3"><a href="S14-examples.html#cb223-3" tabindex="-1"></a>         <span class="at">data =</span> dd)</span>
-<span id="cb223-4"><a href="S14-examples.html#cb223-4" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code></pre></div>
-<pre class="routput"><code>
-Call:
-lm(formula = Mouth_Volume ~ Age + Height + Age:Sex + Age:Height + 
-    Sex:Weight, data = dd)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--36.590  -9.577  -1.545   7.728  42.779 
-
-Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)  
-(Intercept)  265.6236   122.3362   2.171   0.0342 *
-Age           -8.4905     4.0559  -2.093   0.0409 *
-Height      -134.0835    72.8589  -1.840   0.0711 .
-Age:Sex       -0.8633     0.4944  -1.746   0.0864 .
-Age:Height     5.3644     2.4047   2.231   0.0298 *
-Sex:Weight     0.4059     0.1659   2.446   0.0177 *
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-
-Residual standard error: 14.65 on 55 degrees of freedom
-Multiple R-squared:  0.3096,    Adjusted R-squared:  0.2468 
-F-statistic: 4.932 on 5 and 55 DF,  p-value: 0.0008437</code></pre>
-<p>This looks much better: now most variables are significantly different from
-zero and the adjusted <span class="math inline">\(R^2\)</span> value has (slightly) improved. Nevertheless,
-the structure of the model seems hard to explain and the model seems
-difficult to interpret. For comparison, we consider the second-best
-model, with <span class="math inline">\(p=2\)</span>:</p>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="S14-examples.html#cb225-1" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Mouth_Volume <span class="sc">~</span> Age<span class="sc">:</span>Weight <span class="sc">+</span> Sex<span class="sc">:</span>Weight, <span class="at">data =</span> dd)</span>
-<span id="cb225-2"><a href="S14-examples.html#cb225-2" tabindex="-1"></a><span class="fu">summary</span>(m4)</span></code></pre></div>
-<pre class="routput"><code>
-Call:
-lm(formula = Mouth_Volume ~ Age:Weight + Sex:Weight, data = dd)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--34.161 -10.206  -3.738   9.087  43.747 
-
-Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 43.678187   4.788206   9.122 8.35e-13 ***
-Age:Weight   0.005554   0.002372   2.342   0.0226 *  
-Weight:Sex   0.127360   0.048640   2.618   0.0113 *  
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-
-Residual standard error: 14.72 on 58 degrees of freedom
-Multiple R-squared:  0.2651,    Adjusted R-squared:  0.2398 
-F-statistic: 10.46 on 2 and 58 DF,  p-value: 0.000132</code></pre>
-<p>The adjusted <span class="math inline">\(R^2\)</span>-value of this model is only slightly reduced,
-and all regression coefficients are significantly
-different from zero.</p>
-<p><span class="math display">\[\begin{equation*}
-  \textrm{mouth volume}
-  = 43.68
-    + \begin{cases}
-      0.0056 \, \mathrm{age} \times \mathrm{weight}
-          &amp; \mbox{for females} \\
-      (0.0056 \, \mathrm{age} + 0.1274) \, \mathrm{weight}
-          &amp; \mbox{for males.}
-  \end{cases}
-\end{equation*}\]</span></p>
-<p>This model is still not trivial to interpret, but it does show
-that mouth volume increases with weight and age, and that the
-dependency on weight is stronger for males.</p>
-</div>
-</div>
-<div id="codings" class="section level2 hasAnchor" number="14.2">
-<h2><span class="header-section-number">14.2</span> Alternative Factor Codings<a href="S14-examples.html#codings" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/dXoWazHB64A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>The above coding of factors using indicator variables is the default procedure
-in R. There are other choices of coding. It transpires that any mapping to
-vectors which (together with the intercept, if present) span a <span class="math inline">\(k\)</span> dimensional
-space, will work for a factor with <span class="math inline">\(k\)</span> levels. The choice of coding will not
-affect fitted values and the goodness of fit, but it will affect the estimates
-<span class="math inline">\(\hat\beta\)</span>, so the coding needs to be known before any interpretation of the
-parameters.</p>
-<p>Differnt choices of factor codings are built into R. Here we illustrate some
-of these choices using a factor which represents week days:</p>
-<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="S14-examples.html#cb227-1" tabindex="-1"></a>days <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;Mon&quot;</span>, <span class="st">&quot;Tue&quot;</span>, <span class="st">&quot;Wed&quot;</span>, <span class="st">&quot;Thu&quot;</span>, <span class="st">&quot;Fri&quot;</span>, <span class="st">&quot;Sat&quot;</span>, <span class="st">&quot;Sun&quot;</span>))</span></code></pre></div>
+<div id="practical" class="section level1 unnumbered hasAnchor">
+<h1>Practical<a href="practical.html#practical" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <ul>
-<li><p><strong>Indicator variables.</strong> This is the default coding:</p>
-<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="S14-examples.html#cb228-1" tabindex="-1"></a><span class="fu">contr.treatment</span>(days)</span></code></pre></div>
-<pre class="routput"><code>    Tue Wed Thu Fri Sat Sun
-Mon   0   0   0   0   0   0
-Tue   1   0   0   0   0   0
-Wed   0   1   0   0   0   0
-Thu   0   0   1   0   0   0
-Fri   0   0   0   1   0   0
-Sat   0   0   0   0   1   0
-Sun   0   0   0   0   0   1</code></pre>
-<p>The seven rows correspond to the weekdays, the six columns show how each
-weekday is encoded. The regression coefficients can be interpreted as the
-change of intercept relative to the reference level (in this case Monday).</p></li>
-<li><p><strong>Deviation coding</strong> uses “sum to zero” contrasts:</p>
-<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="S14-examples.html#cb230-1" tabindex="-1"></a><span class="fu">contr.sum</span>(days)</span></code></pre></div>
-<pre class="routput"><code>    [,1] [,2] [,3] [,4] [,5] [,6]
-Mon    1    0    0    0    0    0
-Tue    0    1    0    0    0    0
-Wed    0    0    1    0    0    0
-Thu    0    0    0    1    0    0
-Fri    0    0    0    0    1    0
-Sat    0    0    0    0    0    1
-Sun   -1   -1   -1   -1   -1   -1</code></pre>
-<p>This constrasts each level with the final level. For example,
-<span class="math inline">\(\hat\beta_1\)</span> is the amount the intercept is increased for Mondays
-and decreased for Sundays. This coding can sometimes reduce collinearity
-in the design matrix.</p></li>
-<li><p><strong>Helmert coding</strong> contrasts the second level with the first, the third with
-the average of the first two, and so on:</p>
-<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="S14-examples.html#cb232-1" tabindex="-1"></a><span class="fu">contr.helmert</span>(days)</span></code></pre></div>
-<pre class="routput"><code>    [,1] [,2] [,3] [,4] [,5] [,6]
-Mon   -1   -1   -1   -1   -1   -1
-Tue    1   -1   -1   -1   -1   -1
-Wed    0    2   -1   -1   -1   -1
-Thu    0    0    3   -1   -1   -1
-Fri    0    0    0    4   -1   -1
-Sat    0    0    0    0    5   -1
-Sun    0    0    0    0    0    6</code></pre></li>
+<li>The MATH3714 and MATH5714M modules are assessed by an examination (80%)
+and a practical (20%). This is the practical, worth 20% of your final
+module mark.</li>
+<li>You must hand in your solution via Gradescope
+by <strong>Thursday, 5th December 2023, 5pm</strong>.</li>
+<li>Reports must be typeset (not handwritten) and should be no more than 6 pages
+in length (8 pages for MATH5714M).</li>
+<li>Within reason you may talk to your friends about this piece of work,
+but you should not send R code (or output) to each other.
+Your report must be your own work.</li>
 </ul>
-<p>We can set the coding for each factor separately, using the
-optional <code>contrasts.arg</code> argument to <code>lm()</code> and <code>model.matrix()</code>:</p>
-<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="S14-examples.html#cb234-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211127</span>)</span>
-<span id="cb234-2"><a href="S14-examples.html#cb234-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
-<span id="cb234-3"><a href="S14-examples.html#cb234-3" tabindex="-1"></a></span>
-<span id="cb234-4"><a href="S14-examples.html#cb234-4" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">runif</span>(n)</span>
-<span id="cb234-5"><a href="S14-examples.html#cb234-5" tabindex="-1"></a></span>
-<span id="cb234-6"><a href="S14-examples.html#cb234-6" tabindex="-1"></a>day.names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Mon&quot;</span>, <span class="st">&quot;Tue&quot;</span>, <span class="st">&quot;Wed&quot;</span>, <span class="st">&quot;Thu&quot;</span>, <span class="st">&quot;Fri&quot;</span>, <span class="st">&quot;Sat&quot;</span>, <span class="st">&quot;Sun&quot;</span>)</span>
-<span id="cb234-7"><a href="S14-examples.html#cb234-7" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">sample</span>(day.names, <span class="at">size =</span> n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb234-8"><a href="S14-examples.html#cb234-8" tabindex="-1"></a><span class="co"># Explicitly specify the levels, in case a day is missing</span></span>
-<span id="cb234-9"><a href="S14-examples.html#cb234-9" tabindex="-1"></a><span class="co"># from the sample and to fix the order of days:</span></span>
-<span id="cb234-10"><a href="S14-examples.html#cb234-10" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">factor</span>(x2, <span class="at">levels =</span> day.names)</span>
-<span id="cb234-11"><a href="S14-examples.html#cb234-11" tabindex="-1"></a></span>
-<span id="cb234-12"><a href="S14-examples.html#cb234-12" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x1, x2)</span>
-<span id="cb234-13"><a href="S14-examples.html#cb234-13" tabindex="-1"></a></span>
-<span id="cb234-14"><a href="S14-examples.html#cb234-14" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> ., <span class="at">data =</span> dd)</span>
-<span id="cb234-15"><a href="S14-examples.html#cb234-15" tabindex="-1"></a><span class="fu">head</span>(X1)</span></code></pre></div>
-<pre class="routput"><code>  (Intercept)         x1 x2Tue x2Wed x2Thu x2Fri x2Sat x2Sun
-1           1 0.41745367     1     0     0     0     0     0
-2           1 0.88671893     0     0     1     0     0     0
-3           1 0.41924327     0     0     1     0     0     0
-4           1 0.31986826     0     0     0     0     0     1
-5           1 0.27863787     0     0     0     0     0     0
-6           1 0.03346104     0     1     0     0     0     0</code></pre>
-<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="S14-examples.html#cb236-1" tabindex="-1"></a><span class="fu">kappa</span>(X1, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre class="routput"><code>[1] 10.37243</code></pre>
-<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="S14-examples.html#cb238-1" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> ., <span class="at">data =</span> dd,</span>
-<span id="cb238-2"><a href="S14-examples.html#cb238-2" tabindex="-1"></a>                   <span class="at">contrasts.arg =</span> <span class="fu">list</span>(<span class="at">x2 =</span> contr.sum))</span>
-<span id="cb238-3"><a href="S14-examples.html#cb238-3" tabindex="-1"></a><span class="fu">head</span>(X2)</span></code></pre></div>
-<pre class="routput"><code>  (Intercept)         x1 x21 x22 x23 x24 x25 x26
-1           1 0.41745367   0   1   0   0   0   0
-2           1 0.88671893   0   0   0   1   0   0
-3           1 0.41924327   0   0   0   1   0   0
-4           1 0.31986826  -1  -1  -1  -1  -1  -1
-5           1 0.27863787   1   0   0   0   0   0
-6           1 0.03346104   0   0   1   0   0   0</code></pre>
-<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="S14-examples.html#cb240-1" tabindex="-1"></a><span class="fu">kappa</span>(X2, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre class="routput"><code>[1] 6.677298</code></pre>
-<div class="mysummary">
-<p><strong>Summary</strong></p>
+<div id="dataset" class="section level2 unnumbered hasAnchor">
+<h2>Dataset<a href="practical.html#dataset" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <a href="https://www.metoffice.gov.uk/research/climate/maps-and-data/historic-station-data">Met Office historic station
+dataset</a>
+contains long-term weather measurements from a network of weather stations
+across the UK. The full dataset includes records from 37 stations, with some
+series extending more than 100 years – the oldest stations (Oxford and Armagh)
+began recording in 1853. Each station is identified by its name and precise
+geographical coordinates.</p>
+<p>The dataset contains five key monthly measurements:</p>
 <ul>
-<li>We have seen how interaction terms can be used to improve model
-fit.</li>
-<li>We have seen how different factor codings can be used in R.</li>
+<li>Mean daily maximum temperature (<code>tmax</code>)</li>
+<li>Mean daily minimum temperature (<code>tmin</code>)</li>
+<li>Days of air frost (<code>af</code>)</li>
+<li>Total rainfall (<code>rain</code>)</li>
+<li>Total sunshine duration (<code>sun</code>)</li>
+</ul>
+<p>For the practical we will consider a subset of this dataset.
+Please download the practical data from here:</p>
+<ul>
+<li><a href="https://teaching.seehuhn.de/data/historic-station-data/" class="uri">https://teaching.seehuhn.de/data/historic-station-data/</a></li>
 </ul>
 </div>
+<div id="guidance" class="section level2 unnumbered hasAnchor">
+<h2>Guidance<a href="practical.html#guidance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><p>This practical is deliberately open-ended. There is no single right or wrong
+answer to this practical. Sometimes you need to chose your own approach and
+justify your decisions.</p></li>
+<li><p>Include relevant R code in your report. The reader should be
+able to replicate your analysis and get the same results.</p></li>
+<li><p>Use the page limit to guide you in deciding how much detail to include.</p></li>
+<li><p>Only include code, plots and output that are relevant to your discussion.</p></li>
+<li><p>Where multiple plots demonstrate similar points, include only the most
+illustrative example.</p></li>
+</ul>
+</div>
+<div id="tasks" class="section level2 unnumbered hasAnchor">
+<h2>Tasks<a href="practical.html#tasks" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>Task 1 (15 marks)</strong></p>
+<p>Fit a linear model relating average maximum temperature (<code>tmax</code>) to <code>year</code>.
+Create a scatter plot showing the data and fitted line. Test whether there is a
+significant relationship between year and maximum temperature at the 5%
+significance level. State your conclusion in context.</p>
+<p>Marking criteria:</p>
+<ul>
+<li>Correct model fitting</li>
+<li>Appropriate scatter plot</li>
+<li>Correct hypothesis test</li>
+<li>Clear conclusion</li>
+<li>Presentation of results</li>
+</ul>
+<p><strong>Task 2 (25 marks)</strong></p>
+<p>The data shows strong seasonal variation. Explain how this affects the results
+from task 1. Fit an improved model for maximum temperature, using the year and
+month as inputs. Using plots and numerical summaries, demonstrate that the new
+model is an improvement over the original model.</p>
+<p>Marking criteria:</p>
+<ul>
+<li>Brief explanation of how seasonality affects task 1 results</li>
+<li>Correct model specification with month as a factor</li>
+<li>Appropriate model diagnostics</li>
+<li>Clear explanation of model improvements</li>
+<li>Presentation of results</li>
+</ul>
+<p><strong>Task 3 (20 marks)</strong></p>
+<p>Using the weather station as another categorical variable, fit a model
+for maximum temperature which uses the year, month and station as inputs.
+Discuss whether there is any evidence that the temperature trend
+varies between stations. Discuss your results in context.</p>
+<p>Marking criteria:</p>
+<ul>
+<li>Correct model specification including station effects</li>
+<li>Appropriate analysis and discuss</li>
+<li>Presentation of results</li>
+</ul>
+<p><strong>Task 4 (20 marks)</strong></p>
+<p>Modify the model from task 2 (using the year and month as inputs) to include a
+quadratic term for the year. Explain why this might be a good idea. Using
+plots and numerical summaries, discuss whether the quadratic term improves the
+model fit.</p>
+<p>Marking criteria:</p>
+<ul>
+<li>Correct model specification with clear justification</li>
+<li>Appropriate model diagnostics</li>
+<li>Presentation of results</li>
+</ul>
+<p><strong>Task 5 (MATH5714M only, 10 marks)</strong></p>
+<p>Use kernel density estimation to estimate the distribution of the residuals for
+the model from task 2. Based on your results, discuss whether the residuals
+are normally distributed.</p>
+<p>Marking criteria:</p>
+<ul>
+<li>Correct use of kernel density estimation</li>
+<li>Appropriate choice of bandwidth</li>
+<li>Clear discussion of normality</li>
+<li>Presentation of results</li>
+</ul>
+<p><strong>Task 6 (MATH5714M only, 10 marks)</strong></p>
+<p>The column <code>af</code> in the dataset records the number of days with air frost. Using
+either the Nadaraya-Watson kernel regression or local polynomial regression,
+fit a model for <code>af</code> as a function of <code>tmax</code>. Justify your choice of
+regression method. Discuss your results in context.</p>
+<p>Marking criteria:</p>
+<ul>
+<li>Correct model fitting</li>
+<li>Appropriate choice of regression bandwidth</li>
+<li>Clear justification of regression method used</li>
+<li>Appropriate analysis and discussion</li>
+<li>Presentation of results</li>
+</ul>
 
 </div>
 </div>
@@ -720,8 +518,8 @@ fit.</li>
           </div>
         </div>
       </div>
-<a href="S13-factors.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="S15-multicoll.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S15-multicoll.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="P04.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
