@@ -2373,6 +2373,29 @@ the columns of \(X\). This subspace contains the possible output vectors
 of the linear system and the least squares procedure finds the point \(\hat y\)
 in this subspace which is closest to the observed data \(y\in\mathbb{R}^n\).
 
+One final property of \(H\) which we will need later is that the trace
+of \(H\) is equal to the number of parameters in the model plus one
+
+\begin{lemma}
+We have
+\begin{equation}
+  \mathop{\mathrm{tr}}(H) = p+1.  \label{eq:tr-H}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Using the property of the trace that \(\mathop{\mathrm{tr}}(ABC) = \mathop{\mathrm{tr}}(BCA)\) (see section~\ref{trace}),
+we find
+\begin{align*}
+  \mathop{\mathrm{tr}}(H)
+  &= \mathop{\mathrm{tr}}\bigl( X (X^\top X)^{-1} X^\top \bigr) \\
+  &= \mathop{\mathrm{tr}}\bigl( (X^\top X)^{-1} X^\top X \bigr) \\
+  &= \mathop{\mathrm{tr}}(I) \\
+  &= p+1.
+\end{align*}
+This completes the proof.
+\end{proof}
+
 \subsection{Cochran's theorem}\label{Cochran}
 
 Our main tool in this and the following section will be a simplified
@@ -9148,7 +9171,7 @@ As in lemma~\ref{lem:multiple-LSQ} we can find an explicit formula
 for the ridge regression estimate. For this we write \(r^{(\lambda)}\)
 as
 \begin{equation*}
-  r^{(\lambda)}
+  r^{(\lambda)}(\beta)
   = (y - X\beta)^\top (y - X\beta)
       + \lambda \beta^\top \beta
 \end{equation*}

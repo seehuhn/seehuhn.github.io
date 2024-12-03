@@ -389,7 +389,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Section 4</span> Properties of the Least Squares Estimate<a href="S04-model.html#S04-model" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <!--
 TODO:
-- explain \sum h_{ii} = p here, for use in S13 and S17
+- explain \sum h_{ii} = p+1 here, for use in S13 and S17
 - explain h_{ii} \in [1/n, 1] for S17.  Maybe even (1/n, 1)?
 - explicitly state the distributions of $\hat\eps$ and $\hat y$
   (e.g. for use in S17)
@@ -621,6 +621,26 @@ orthogonal projection onto the subspace of <span class="math inline">\(\mathbb{R
 the columns of <span class="math inline">\(X\)</span>. This subspace contains the possible output vectors
 of the linear system and the least squares procedure finds the point <span class="math inline">\(\hat y\)</span>
 in this subspace which is closest to the observed data <span class="math inline">\(y\in\mathbb{R}^n\)</span>.</p>
+<p>One final property of <span class="math inline">\(H\)</span> which we will need later is that the trace
+of <span class="math inline">\(H\)</span> is equal to the number of parameters in the model plus one</p>
+<div class="lemma">
+<p><span id="lem:unlabeled-div-18" class="lemma"><strong>Lemma 4.4  </strong></span>We have
+<span class="math display" id="eq:tr-H">\[\begin{equation}
+  \mathop{\mathrm{tr}}(H) = p+1.  \tag{4.6}
+\end{equation}\]</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-19" class="proof"><em>Proof</em>. </span>Using the property of the trace that <span class="math inline">\(\mathop{\mathrm{tr}}(ABC) = \mathop{\mathrm{tr}}(BCA)\)</span> (see section <a href="Sx1-matrices.html#trace">A.2.5</a>),
+we find
+<span class="math display">\[\begin{align*}
+  \mathop{\mathrm{tr}}(H)
+  &amp;= \mathop{\mathrm{tr}}\bigl( X (X^\top X)^{-1} X^\top \bigr) \\
+  &amp;= \mathop{\mathrm{tr}}\bigl( (X^\top X)^{-1} X^\top X \bigr) \\
+  &amp;= \mathop{\mathrm{tr}}(I) \\
+  &amp;= p+1.
+\end{align*}\]</span>
+This completes the proof.</p>
+</div>
 </div>
 <div id="Cochran" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Cochran’s theorem<a href="S04-model.html#Cochran" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -641,7 +661,7 @@ version of <a href="https://en.wikipedia.org/wiki/Cochran%27s_theorem">Cochran�
 </ol>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-18" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(H\)</span> is symmetric, we can diagonalise <span class="math inline">\(H\)</span> (see <a href="Sx1-matrices.html#thm:spectral">A.2</a>
+<p><span id="unlabeled-div-20" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(H\)</span> is symmetric, we can diagonalise <span class="math inline">\(H\)</span> (see <a href="Sx1-matrices.html#thm:spectral">A.2</a>
 in the appendix): there is an orthogonal matrix <span class="math inline">\(U\)</span> such that
 <span class="math inline">\(D := U H U^\top\)</span> is diagonal, and the diagonal elements of <span class="math inline">\(D\)</span> are
 the eigenvalues of <span class="math inline">\(H\)</span>. Since <span class="math inline">\(H\)</span> is idempotent, these diagonal elements
@@ -722,7 +742,7 @@ We will see that an unbiased estimator for <span class="math inline">\(\sigma^2\
 given by
 <span class="math display" id="eq:hat-sigma-squared">\[\begin{equation}
   \hat\sigma^2
-  := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \tag{4.6}
+  := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \tag{4.7}
 \end{equation}\]</span>
 where <span class="math inline">\(\hat y_i\)</span> are the fitted values from equation <a href="S02-multiple.html#eq:fitted-values">(2.5)</a>.
 As for the one-dimensional case in <a href="S01-simple.html#eq:reg-sigma-est">(1.4)</a>, the estimate
@@ -731,13 +751,13 @@ but the denominator is decreased by one for each component of the
 vector <span class="math inline">\(\beta\)</span>. Using Cochran’s theorem, we can now show that the estimator
 <span class="math inline">\(\hat\sigma^2\)</span> is unbiased.</p>
 <div class="lemma">
-<p><span id="lem:sigma-hat-unbiased" class="lemma"><strong>Lemma 4.4  </strong></span>We have
+<p><span id="lem:sigma-hat-unbiased" class="lemma"><strong>Lemma 4.5  </strong></span>We have
 <span class="math display">\[\begin{equation*}
   \mathbb{E}(\hat\sigma^2) = \sigma^2.
 \end{equation*}\]</span></p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-19" class="proof"><em>Proof</em>. </span>We first note that
+<p><span id="unlabeled-div-21" class="proof"><em>Proof</em>. </span>We first note that
 <span class="math display">\[\begin{align*}
   (n - p - 1) \hat\sigma^2
   &amp;= (y - \hat y)^\top (y - \hat y) \\
@@ -762,7 +782,7 @@ the sum equal zero.</p>
 <span class="math display" id="eq:sigma-hat-chi-squared">\[\begin{equation}
   \frac{1}{\sigma^2} (n - p - 1) \hat\sigma^2
   = \frac{1}{\sigma^2} \varepsilon^\top (I-H) \varepsilon
-  \sim \chi^2(n - p - 1).  \tag{4.7}
+  \sim \chi^2(n - p - 1).  \tag{4.8}
 \end{equation}\]</span>
 Since the expectation of a <span class="math inline">\(\chi^2(\nu)\)</span> distribution equals <span class="math inline">\(\nu\)</span>
 (see appendix <a href="Sx2-probability.html#chi-square">B.5.1</a>), we find
