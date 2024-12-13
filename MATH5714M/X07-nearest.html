@@ -181,11 +181,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="X04-practice.html"><a href="X04-practice.html"><i class="fa fa-check"></i><b>4</b> Kernel Density Estimation in Practice</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="X04-practice.html"><a href="X04-practice.html#integrated-error"><i class="fa fa-check"></i><b>4.1</b> Integrated Error</a></li>
+<li class="chapter" data-level="4.1" data-path="X04-practice.html"><a href="X04-practice.html#IMSE"><i class="fa fa-check"></i><b>4.1</b> Integrated Error</a></li>
 <li class="chapter" data-level="4.2" data-path="X04-practice.html"><a href="X04-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>4.2</b> Choice of Kernel</a></li>
 <li class="chapter" data-level="4.3" data-path="X04-practice.html"><a href="X04-practice.html#bwsel"><i class="fa fa-check"></i><b>4.3</b> Bandwidth Selection</a></li>
 <li class="chapter" data-level="4.4" data-path="X04-practice.html"><a href="X04-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>4.4</b> Higher Dimensions</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
 <li class="chapter" data-level="5" data-path="X05-smoothing.html"><a href="X05-smoothing.html"><i class="fa fa-check"></i><b>5</b> Kernel Smoothing</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="X05-smoothing.html"><a href="X05-smoothing.html#the-nadaraya-watson-estimator"><i class="fa fa-check"></i><b>5.1</b> The Nadaraya-Watson Estimator</a></li>
@@ -226,6 +227,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2" data-path="X09-examples.html"><a href="X09-examples.html#kernel-regression"><i class="fa fa-check"></i><b>9.2</b> Kernel Regression</a></li>
 <li class="chapter" data-level="9.3" data-path="X09-examples.html"><a href="X09-examples.html#k-nearest-neighbour-regression"><i class="fa fa-check"></i><b>9.3</b> <em>k</em>-Nearest Neighbour Regression</a></li>
 </ul></li>
+<li class="divider"></li>
+<li class="chapter"><span><b>THE END</b></span></li>
+
 </ul>
 
       </nav>
@@ -334,25 +338,25 @@ to perform <span class="math inline">\(k\)</span>-NN regression is
 <p><span id="exm:unlabeled-div-12" class="example"><strong>Example 7.1  </strong></span>Here we compute a <span class="math inline">\(k\)</span>-NN estimate for the mean of the <code>faithful</code> dataset,
 which we have already encountered in examples <a href="X05-smoothing.html#exm:faithful">5.1</a> and <a href="X05-smoothing.html#exm:faithless">5.2</a>.
 We start by storing the data in the variables <code>x</code> and <code>y</code>:</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="X07-nearest.html#cb50-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> faithful<span class="sc">$</span>eruptions</span>
-<span id="cb50-2"><a href="X07-nearest.html#cb50-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> faithful<span class="sc">$</span>waiting</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="X07-nearest.html#cb58-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> faithful<span class="sc">$</span>eruptions</span>
+<span id="cb58-2"><a href="X07-nearest.html#cb58-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> faithful<span class="sc">$</span>waiting</span></code></pre></div>
 <p>Now we use <code>knn.reg()</code> to compute the <span class="math inline">\(k\)</span>-NN estimate on a grid
 of values. The help page for <code>knn.reg()</code> explains that we need to
 convert the input to either a matrix or a data frame; here we use
 data frames. The grid of input values where we want to estimate
 the <span class="math inline">\(k\)</span>-NN estimate is passed in via the optional argument <code>test = ...</code>.
 Here we use the arbitrarily chosen value <span class="math inline">\(k = 50\)</span>.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="X07-nearest.html#cb51-1" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
-<span id="cb51-2"><a href="X07-nearest.html#cb51-2" tabindex="-1"></a></span>
-<span id="cb51-3"><a href="X07-nearest.html#cb51-3" tabindex="-1"></a>x.test <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">1.5</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">500</span>)</span>
-<span id="cb51-4"><a href="X07-nearest.html#cb51-4" tabindex="-1"></a></span>
-<span id="cb51-5"><a href="X07-nearest.html#cb51-5" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="fu">data.frame</span>(<span class="at">x=</span>x),</span>
-<span id="cb51-6"><a href="X07-nearest.html#cb51-6" tabindex="-1"></a>             <span class="at">y =</span> y,</span>
-<span id="cb51-7"><a href="X07-nearest.html#cb51-7" tabindex="-1"></a>             <span class="at">test =</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x.test),</span>
-<span id="cb51-8"><a href="X07-nearest.html#cb51-8" tabindex="-1"></a>             <span class="at">k =</span> <span class="dv">50</span>)</span>
-<span id="cb51-9"><a href="X07-nearest.html#cb51-9" tabindex="-1"></a></span>
-<span id="cb51-10"><a href="X07-nearest.html#cb51-10" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex=</span>.<span class="dv">5</span>)</span>
-<span id="cb51-11"><a href="X07-nearest.html#cb51-11" tabindex="-1"></a><span class="fu">lines</span>(x.test, m<span class="sc">$</span>pred, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="X07-nearest.html#cb59-1" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
+<span id="cb59-2"><a href="X07-nearest.html#cb59-2" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="X07-nearest.html#cb59-3" tabindex="-1"></a>x.test <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">1.5</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">500</span>)</span>
+<span id="cb59-4"><a href="X07-nearest.html#cb59-4" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="X07-nearest.html#cb59-5" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="fu">data.frame</span>(<span class="at">x=</span>x),</span>
+<span id="cb59-6"><a href="X07-nearest.html#cb59-6" tabindex="-1"></a>             <span class="at">y =</span> y,</span>
+<span id="cb59-7"><a href="X07-nearest.html#cb59-7" tabindex="-1"></a>             <span class="at">test =</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x.test),</span>
+<span id="cb59-8"><a href="X07-nearest.html#cb59-8" tabindex="-1"></a>             <span class="at">k =</span> <span class="dv">50</span>)</span>
+<span id="cb59-9"><a href="X07-nearest.html#cb59-9" tabindex="-1"></a></span>
+<span id="cb59-10"><a href="X07-nearest.html#cb59-10" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex=</span>.<span class="dv">5</span>)</span>
+<span id="cb59-11"><a href="X07-nearest.html#cb59-11" tabindex="-1"></a><span class="fu">lines</span>(x.test, m<span class="sc">$</span>pred, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/faithful-kNN-1.png" width="672" /></p>
 <p>The estimated mean curve looks reasonable.</p>
 </div>

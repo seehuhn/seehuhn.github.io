@@ -181,11 +181,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="X04-practice.html"><a href="X04-practice.html"><i class="fa fa-check"></i><b>4</b> Kernel Density Estimation in Practice</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="X04-practice.html"><a href="X04-practice.html#integrated-error"><i class="fa fa-check"></i><b>4.1</b> Integrated Error</a></li>
+<li class="chapter" data-level="4.1" data-path="X04-practice.html"><a href="X04-practice.html#IMSE"><i class="fa fa-check"></i><b>4.1</b> Integrated Error</a></li>
 <li class="chapter" data-level="4.2" data-path="X04-practice.html"><a href="X04-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>4.2</b> Choice of Kernel</a></li>
 <li class="chapter" data-level="4.3" data-path="X04-practice.html"><a href="X04-practice.html#bwsel"><i class="fa fa-check"></i><b>4.3</b> Bandwidth Selection</a></li>
 <li class="chapter" data-level="4.4" data-path="X04-practice.html"><a href="X04-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>4.4</b> Higher Dimensions</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
 <li class="chapter" data-level="5" data-path="X05-smoothing.html"><a href="X05-smoothing.html"><i class="fa fa-check"></i><b>5</b> Kernel Smoothing</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="X05-smoothing.html"><a href="X05-smoothing.html#the-nadaraya-watson-estimator"><i class="fa fa-check"></i><b>5.1</b> The Nadaraya-Watson Estimator</a></li>
@@ -226,6 +227,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2" data-path="X09-examples.html"><a href="X09-examples.html#kernel-regression"><i class="fa fa-check"></i><b>9.2</b> Kernel Regression</a></li>
 <li class="chapter" data-level="9.3" data-path="X09-examples.html"><a href="X09-examples.html#k-nearest-neighbour-regression"><i class="fa fa-check"></i><b>9.3</b> <em>k</em>-Nearest Neighbour Regression</a></li>
 </ul></li>
+<li class="divider"></li>
+<li class="chapter"><span><b>THE END</b></span></li>
+
 </ul>
 
       </nav>
@@ -268,10 +272,10 @@ we can choose the <span class="math inline">\(h\)</span> which minimises
 <p>We will consider the
 <a href="https://teaching.seehuhn.de/data/buffalo/">snow fall dataset</a>
 again:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="X09-examples.html#cb52-1" tabindex="-1"></a><span class="co"># data from https://teaching.seehuhn.de/data/buffalo/</span></span>
-<span id="cb52-2"><a href="X09-examples.html#cb52-2" tabindex="-1"></a>buffalo <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/buffalo.csv&quot;</span>)</span>
-<span id="cb52-3"><a href="X09-examples.html#cb52-3" tabindex="-1"></a>x <span class="ot">&lt;-</span> buffalo<span class="sc">$</span>snowfall</span>
-<span id="cb52-4"><a href="X09-examples.html#cb52-4" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(x)</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="X09-examples.html#cb60-1" tabindex="-1"></a><span class="co"># data from https://teaching.seehuhn.de/data/buffalo/</span></span>
+<span id="cb60-2"><a href="X09-examples.html#cb60-2" tabindex="-1"></a>buffalo <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/buffalo.csv&quot;</span>)</span>
+<span id="cb60-3"><a href="X09-examples.html#cb60-3" tabindex="-1"></a>x <span class="ot">&lt;-</span> buffalo<span class="sc">$</span>snowfall</span>
+<span id="cb60-4"><a href="X09-examples.html#cb60-4" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(x)</span></code></pre></div>
 <p>In order to speed up the computation of the <span class="math inline">\(f_h^{(i)}\)</span>, we implement
 the kernel density estimate “by hand”. Thus, instead of using the built-in
 function <code>density</code>, we use the formula
@@ -317,47 +321,47 @@ equal to 0 before taking the sum.</li>
 </ul>
 <p>Using these ideas, we can implement the function <span class="math inline">\(\mathrm{cv}(h)\)</span>
 in R as follows:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="X09-examples.html#cb53-1" tabindex="-1"></a>cv.h <span class="ot">&lt;-</span> <span class="cf">function</span>(h) {</span>
-<span id="cb53-2"><a href="X09-examples.html#cb53-2" tabindex="-1"></a>    x.min <span class="ot">&lt;-</span> <span class="fu">min</span>(x) <span class="sc">-</span> <span class="dv">3</span><span class="sc">*</span>h</span>
-<span id="cb53-3"><a href="X09-examples.html#cb53-3" tabindex="-1"></a>    x.max <span class="ot">&lt;-</span> <span class="fu">max</span>(x) <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>h</span>
-<span id="cb53-4"><a href="X09-examples.html#cb53-4" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb53-5"><a href="X09-examples.html#cb53-5" tabindex="-1"></a>    dx <span class="ot">&lt;-</span> (x.max <span class="sc">-</span> x.min) <span class="sc">/</span> (m <span class="sc">-</span> <span class="dv">1</span>)</span>
-<span id="cb53-6"><a href="X09-examples.html#cb53-6" tabindex="-1"></a>    x.tilde <span class="ot">&lt;-</span> <span class="fu">seq</span>(x.min, x.max, <span class="at">length.out =</span> m)</span>
-<span id="cb53-7"><a href="X09-examples.html#cb53-7" tabindex="-1"></a></span>
-<span id="cb53-8"><a href="X09-examples.html#cb53-8" tabindex="-1"></a>    K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x.tilde, <span class="st">&quot;-&quot;</span>), <span class="at">sd =</span> h)</span>
-<span id="cb53-9"><a href="X09-examples.html#cb53-9" tabindex="-1"></a>    f.hat <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(K)</span>
-<span id="cb53-10"><a href="X09-examples.html#cb53-10" tabindex="-1"></a>    A <span class="ot">&lt;-</span> <span class="fu">sum</span>(f.hat<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> dx)</span>
-<span id="cb53-11"><a href="X09-examples.html#cb53-11" tabindex="-1"></a></span>
-<span id="cb53-12"><a href="X09-examples.html#cb53-12" tabindex="-1"></a>    K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x, <span class="st">&quot;-&quot;</span>), <span class="at">sd =</span> h)</span>
-<span id="cb53-13"><a href="X09-examples.html#cb53-13" tabindex="-1"></a>    <span class="fu">diag</span>(K) <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb53-14"><a href="X09-examples.html#cb53-14" tabindex="-1"></a>    B <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">sum</span>(K) <span class="sc">/</span> (n<span class="dv">-1</span>) <span class="sc">/</span> n</span>
-<span id="cb53-15"><a href="X09-examples.html#cb53-15" tabindex="-1"></a></span>
-<span id="cb53-16"><a href="X09-examples.html#cb53-16" tabindex="-1"></a>    <span class="fu">return</span>(A <span class="sc">-</span> B)</span>
-<span id="cb53-17"><a href="X09-examples.html#cb53-17" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="X09-examples.html#cb61-1" tabindex="-1"></a>cv.h <span class="ot">&lt;-</span> <span class="cf">function</span>(h) {</span>
+<span id="cb61-2"><a href="X09-examples.html#cb61-2" tabindex="-1"></a>    x.min <span class="ot">&lt;-</span> <span class="fu">min</span>(x) <span class="sc">-</span> <span class="dv">3</span><span class="sc">*</span>h</span>
+<span id="cb61-3"><a href="X09-examples.html#cb61-3" tabindex="-1"></a>    x.max <span class="ot">&lt;-</span> <span class="fu">max</span>(x) <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>h</span>
+<span id="cb61-4"><a href="X09-examples.html#cb61-4" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb61-5"><a href="X09-examples.html#cb61-5" tabindex="-1"></a>    dx <span class="ot">&lt;-</span> (x.max <span class="sc">-</span> x.min) <span class="sc">/</span> (m <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb61-6"><a href="X09-examples.html#cb61-6" tabindex="-1"></a>    x.tilde <span class="ot">&lt;-</span> <span class="fu">seq</span>(x.min, x.max, <span class="at">length.out =</span> m)</span>
+<span id="cb61-7"><a href="X09-examples.html#cb61-7" tabindex="-1"></a></span>
+<span id="cb61-8"><a href="X09-examples.html#cb61-8" tabindex="-1"></a>    K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x.tilde, <span class="st">&quot;-&quot;</span>), <span class="at">sd =</span> h)</span>
+<span id="cb61-9"><a href="X09-examples.html#cb61-9" tabindex="-1"></a>    f.hat <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(K)</span>
+<span id="cb61-10"><a href="X09-examples.html#cb61-10" tabindex="-1"></a>    A <span class="ot">&lt;-</span> <span class="fu">sum</span>(f.hat<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> dx)</span>
+<span id="cb61-11"><a href="X09-examples.html#cb61-11" tabindex="-1"></a></span>
+<span id="cb61-12"><a href="X09-examples.html#cb61-12" tabindex="-1"></a>    K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x, <span class="st">&quot;-&quot;</span>), <span class="at">sd =</span> h)</span>
+<span id="cb61-13"><a href="X09-examples.html#cb61-13" tabindex="-1"></a>    <span class="fu">diag</span>(K) <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb61-14"><a href="X09-examples.html#cb61-14" tabindex="-1"></a>    B <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">sum</span>(K) <span class="sc">/</span> (n<span class="dv">-1</span>) <span class="sc">/</span> n</span>
+<span id="cb61-15"><a href="X09-examples.html#cb61-15" tabindex="-1"></a></span>
+<span id="cb61-16"><a href="X09-examples.html#cb61-16" tabindex="-1"></a>    <span class="fu">return</span>(A <span class="sc">-</span> B)</span>
+<span id="cb61-17"><a href="X09-examples.html#cb61-17" tabindex="-1"></a>}</span></code></pre></div>
 <p>Finally, we evaluate the function <code>cv.h()</code> on a grid of <span class="math inline">\(h\)</span>-values
 to find a good value of <span class="math inline">\(h\)</span>:</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="X09-examples.html#cb54-1" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">3</span>, <span class="at">length.out =</span> <span class="dv">41</span>)</span>
-<span id="cb54-2"><a href="X09-examples.html#cb54-2" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(h))</span>
-<span id="cb54-3"><a href="X09-examples.html#cb54-3" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(h)) {</span>
-<span id="cb54-4"><a href="X09-examples.html#cb54-4" tabindex="-1"></a>    cv[i] <span class="ot">&lt;-</span> <span class="fu">cv.h</span>(h[i])</span>
-<span id="cb54-5"><a href="X09-examples.html#cb54-5" tabindex="-1"></a>}</span>
-<span id="cb54-6"><a href="X09-examples.html#cb54-6" tabindex="-1"></a><span class="fu">plot</span>(h, cv, <span class="at">log=</span><span class="st">&quot;x&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>)</span>
-<span id="cb54-7"><a href="X09-examples.html#cb54-7" tabindex="-1"></a></span>
-<span id="cb54-8"><a href="X09-examples.html#cb54-8" tabindex="-1"></a>best.h <span class="ot">&lt;-</span> h[<span class="fu">which.min</span>(cv)]</span>
-<span id="cb54-9"><a href="X09-examples.html#cb54-9" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.h)</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="X09-examples.html#cb62-1" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">3</span>, <span class="at">length.out =</span> <span class="dv">41</span>)</span>
+<span id="cb62-2"><a href="X09-examples.html#cb62-2" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(h))</span>
+<span id="cb62-3"><a href="X09-examples.html#cb62-3" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(h)) {</span>
+<span id="cb62-4"><a href="X09-examples.html#cb62-4" tabindex="-1"></a>    cv[i] <span class="ot">&lt;-</span> <span class="fu">cv.h</span>(h[i])</span>
+<span id="cb62-5"><a href="X09-examples.html#cb62-5" tabindex="-1"></a>}</span>
+<span id="cb62-6"><a href="X09-examples.html#cb62-6" tabindex="-1"></a><span class="fu">plot</span>(h, cv, <span class="at">log=</span><span class="st">&quot;x&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>)</span>
+<span id="cb62-7"><a href="X09-examples.html#cb62-7" tabindex="-1"></a></span>
+<span id="cb62-8"><a href="X09-examples.html#cb62-8" tabindex="-1"></a>best.h <span class="ot">&lt;-</span> h[<span class="fu">which.min</span>(cv)]</span>
+<span id="cb62-9"><a href="X09-examples.html#cb62-9" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.h)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/cv-KDE-1.png" width="672" /></p>
 <p>The optimal bandwidth is <span class="math inline">\(h = 12.59\)</span>.
 The kernel density estimate using this <span class="math inline">\(h\)</span> is shown in the following figure.</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="X09-examples.html#cb55-1" tabindex="-1"></a>x.min <span class="ot">&lt;-</span> <span class="fu">min</span>(x) <span class="sc">-</span> <span class="dv">3</span><span class="sc">*</span>best.h</span>
-<span id="cb55-2"><a href="X09-examples.html#cb55-2" tabindex="-1"></a>x.max <span class="ot">&lt;-</span> <span class="fu">max</span>(x) <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>best.h</span>
-<span id="cb55-3"><a href="X09-examples.html#cb55-3" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb55-4"><a href="X09-examples.html#cb55-4" tabindex="-1"></a>x.tilde <span class="ot">&lt;-</span> <span class="fu">seq</span>(x.min, x.max, <span class="at">length.out =</span> m)</span>
-<span id="cb55-5"><a href="X09-examples.html#cb55-5" tabindex="-1"></a></span>
-<span id="cb55-6"><a href="X09-examples.html#cb55-6" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x.tilde, <span class="st">&quot;-&quot;</span>), <span class="at">sd =</span> best.h)</span>
-<span id="cb55-7"><a href="X09-examples.html#cb55-7" tabindex="-1"></a>f.hat <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(K)</span>
-<span id="cb55-8"><a href="X09-examples.html#cb55-8" tabindex="-1"></a></span>
-<span id="cb55-9"><a href="X09-examples.html#cb55-9" tabindex="-1"></a><span class="fu">plot</span>(x.tilde, f.hat, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
-<span id="cb55-10"><a href="X09-examples.html#cb55-10" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;snowfall [in]&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;density&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="X09-examples.html#cb63-1" tabindex="-1"></a>x.min <span class="ot">&lt;-</span> <span class="fu">min</span>(x) <span class="sc">-</span> <span class="dv">3</span><span class="sc">*</span>best.h</span>
+<span id="cb63-2"><a href="X09-examples.html#cb63-2" tabindex="-1"></a>x.max <span class="ot">&lt;-</span> <span class="fu">max</span>(x) <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>best.h</span>
+<span id="cb63-3"><a href="X09-examples.html#cb63-3" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb63-4"><a href="X09-examples.html#cb63-4" tabindex="-1"></a>x.tilde <span class="ot">&lt;-</span> <span class="fu">seq</span>(x.min, x.max, <span class="at">length.out =</span> m)</span>
+<span id="cb63-5"><a href="X09-examples.html#cb63-5" tabindex="-1"></a></span>
+<span id="cb63-6"><a href="X09-examples.html#cb63-6" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x.tilde, <span class="st">&quot;-&quot;</span>), <span class="at">sd =</span> best.h)</span>
+<span id="cb63-7"><a href="X09-examples.html#cb63-7" tabindex="-1"></a>f.hat <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(K)</span>
+<span id="cb63-8"><a href="X09-examples.html#cb63-8" tabindex="-1"></a></span>
+<span id="cb63-9"><a href="X09-examples.html#cb63-9" tabindex="-1"></a><span class="fu">plot</span>(x.tilde, f.hat, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
+<span id="cb63-10"><a href="X09-examples.html#cb63-10" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;snowfall [in]&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;density&quot;</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/cv-KDE-best-1.png" width="672" /></p>
 </div>
 <div id="kernel-regression" class="section level2 hasAnchor" number="9.2">
@@ -370,8 +374,8 @@ The kernel density estimate using this <span class="math inline">\(h\)</span> is
 </div>
 <p>To illustrate cross-validation for the different smoothing methods,
 we use the <code>faithful</code> dataset again.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="X09-examples.html#cb56-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> faithful<span class="sc">$</span>eruptions</span>
-<span id="cb56-2"><a href="X09-examples.html#cb56-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> faithful<span class="sc">$</span>waiting</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="X09-examples.html#cb64-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> faithful<span class="sc">$</span>eruptions</span>
+<span id="cb64-2"><a href="X09-examples.html#cb64-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> faithful<span class="sc">$</span>waiting</span></code></pre></div>
 <p>We compare the methods using the leave-one-out mean squared error
 <span class="math display">\[\begin{equation*}
   r(h)
@@ -403,15 +407,15 @@ of <code>K</code> is multiplied with the corresponding element of <code>y</code
 <p>Combining these ideas, we get the following function
 to compute the leave-one-out estimate for the mean squared error of
 the Nadaraya-Watson estimator:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="X09-examples.html#cb57-1" tabindex="-1"></a>r.NW <span class="ot">&lt;-</span> <span class="cf">function</span>(h) {</span>
-<span id="cb57-2"><a href="X09-examples.html#cb57-2" tabindex="-1"></a>    K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x, <span class="st">&quot;-&quot;</span>), <span class="at">sd =</span> h)</span>
-<span id="cb57-3"><a href="X09-examples.html#cb57-3" tabindex="-1"></a></span>
-<span id="cb57-4"><a href="X09-examples.html#cb57-4" tabindex="-1"></a>    <span class="co"># compute a leave-one-out estimate</span></span>
-<span id="cb57-5"><a href="X09-examples.html#cb57-5" tabindex="-1"></a>    <span class="fu">diag</span>(K) <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb57-6"><a href="X09-examples.html#cb57-6" tabindex="-1"></a></span>
-<span id="cb57-7"><a href="X09-examples.html#cb57-7" tabindex="-1"></a>    m.hat <span class="ot">&lt;-</span> <span class="fu">colSums</span>(K<span class="sc">*</span>y) <span class="sc">/</span> <span class="fu">colSums</span>(K)</span>
-<span id="cb57-8"><a href="X09-examples.html#cb57-8" tabindex="-1"></a>    <span class="fu">mean</span>((m.hat <span class="sc">-</span> y)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb57-9"><a href="X09-examples.html#cb57-9" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="X09-examples.html#cb65-1" tabindex="-1"></a>r.NW <span class="ot">&lt;-</span> <span class="cf">function</span>(h) {</span>
+<span id="cb65-2"><a href="X09-examples.html#cb65-2" tabindex="-1"></a>    K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x, <span class="st">&quot;-&quot;</span>), <span class="at">sd =</span> h)</span>
+<span id="cb65-3"><a href="X09-examples.html#cb65-3" tabindex="-1"></a></span>
+<span id="cb65-4"><a href="X09-examples.html#cb65-4" tabindex="-1"></a>    <span class="co"># compute a leave-one-out estimate</span></span>
+<span id="cb65-5"><a href="X09-examples.html#cb65-5" tabindex="-1"></a>    <span class="fu">diag</span>(K) <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb65-6"><a href="X09-examples.html#cb65-6" tabindex="-1"></a></span>
+<span id="cb65-7"><a href="X09-examples.html#cb65-7" tabindex="-1"></a>    m.hat <span class="ot">&lt;-</span> <span class="fu">colSums</span>(K<span class="sc">*</span>y) <span class="sc">/</span> <span class="fu">colSums</span>(K)</span>
+<span id="cb65-8"><a href="X09-examples.html#cb65-8" tabindex="-1"></a>    <span class="fu">mean</span>((m.hat <span class="sc">-</span> y)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb65-9"><a href="X09-examples.html#cb65-9" tabindex="-1"></a>}</span></code></pre></div>
 <p>We will also consider local linear smoothing, <em>i.e.</em> local polynomial
 smoothing where the degree <span class="math inline">\(p\)</span> of the polynomials is <span class="math inline">\(p=1\)</span>.
 As we have seen in the section about <a href="X06-locpoly.html#polynomial-regression-with-weights">Polynomial Regression with Weights</a>,
@@ -469,44 +473,44 @@ As before, for a leave-one-out estimate we need to compute these sums over all
 <span class="math inline">\(j\neq i\)</span>. Since each of the seven terms listed above contains the term
 <span class="math inline">\(K_h(x-x_j)\)</span> inside the sum, we can achieve this by setting the corresponing
 elements of the matrix <code>K</code> to zero.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="X09-examples.html#cb58-1" tabindex="-1"></a>r.LL <span class="ot">&lt;-</span> <span class="cf">function</span>(h) {</span>
-<span id="cb58-2"><a href="X09-examples.html#cb58-2" tabindex="-1"></a>    dx <span class="ot">&lt;-</span> <span class="fu">outer</span>(x, x, <span class="st">&quot;-&quot;</span>)</span>
-<span id="cb58-3"><a href="X09-examples.html#cb58-3" tabindex="-1"></a>    K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(dx, <span class="at">sd =</span> h)</span>
-<span id="cb58-4"><a href="X09-examples.html#cb58-4" tabindex="-1"></a></span>
-<span id="cb58-5"><a href="X09-examples.html#cb58-5" tabindex="-1"></a>    <span class="co"># compute a leave-one-out estimate</span></span>
-<span id="cb58-6"><a href="X09-examples.html#cb58-6" tabindex="-1"></a>    <span class="fu">diag</span>(K) <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb58-7"><a href="X09-examples.html#cb58-7" tabindex="-1"></a></span>
-<span id="cb58-8"><a href="X09-examples.html#cb58-8" tabindex="-1"></a>    T1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(y<span class="sc">*</span>K)</span>
-<span id="cb58-9"><a href="X09-examples.html#cb58-9" tabindex="-1"></a>    T2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>dx<span class="sc">*</span>K)</span>
-<span id="cb58-10"><a href="X09-examples.html#cb58-10" tabindex="-1"></a>    T3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>y<span class="sc">*</span>K)</span>
-<span id="cb58-11"><a href="X09-examples.html#cb58-11" tabindex="-1"></a>    T4 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(dx<span class="sc">*</span>K)</span>
-<span id="cb58-12"><a href="X09-examples.html#cb58-12" tabindex="-1"></a>    B1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(K)</span>
-<span id="cb58-13"><a href="X09-examples.html#cb58-13" tabindex="-1"></a>    B2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>K)</span>
-<span id="cb58-14"><a href="X09-examples.html#cb58-14" tabindex="-1"></a>    B3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>K)</span>
-<span id="cb58-15"><a href="X09-examples.html#cb58-15" tabindex="-1"></a>    m.hat <span class="ot">&lt;-</span> (T1<span class="sc">*</span>T2 <span class="sc">-</span> T3<span class="sc">*</span>T4) <span class="sc">/</span> (B1<span class="sc">*</span>B2 <span class="sc">-</span> B3<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb58-16"><a href="X09-examples.html#cb58-16" tabindex="-1"></a></span>
-<span id="cb58-17"><a href="X09-examples.html#cb58-17" tabindex="-1"></a>    <span class="fu">mean</span>((m.hat <span class="sc">-</span> y)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb58-18"><a href="X09-examples.html#cb58-18" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="X09-examples.html#cb66-1" tabindex="-1"></a>r.LL <span class="ot">&lt;-</span> <span class="cf">function</span>(h) {</span>
+<span id="cb66-2"><a href="X09-examples.html#cb66-2" tabindex="-1"></a>    dx <span class="ot">&lt;-</span> <span class="fu">outer</span>(x, x, <span class="st">&quot;-&quot;</span>)</span>
+<span id="cb66-3"><a href="X09-examples.html#cb66-3" tabindex="-1"></a>    K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(dx, <span class="at">sd =</span> h)</span>
+<span id="cb66-4"><a href="X09-examples.html#cb66-4" tabindex="-1"></a></span>
+<span id="cb66-5"><a href="X09-examples.html#cb66-5" tabindex="-1"></a>    <span class="co"># compute a leave-one-out estimate</span></span>
+<span id="cb66-6"><a href="X09-examples.html#cb66-6" tabindex="-1"></a>    <span class="fu">diag</span>(K) <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb66-7"><a href="X09-examples.html#cb66-7" tabindex="-1"></a></span>
+<span id="cb66-8"><a href="X09-examples.html#cb66-8" tabindex="-1"></a>    T1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(y<span class="sc">*</span>K)</span>
+<span id="cb66-9"><a href="X09-examples.html#cb66-9" tabindex="-1"></a>    T2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>dx<span class="sc">*</span>K)</span>
+<span id="cb66-10"><a href="X09-examples.html#cb66-10" tabindex="-1"></a>    T3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>y<span class="sc">*</span>K)</span>
+<span id="cb66-11"><a href="X09-examples.html#cb66-11" tabindex="-1"></a>    T4 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(dx<span class="sc">*</span>K)</span>
+<span id="cb66-12"><a href="X09-examples.html#cb66-12" tabindex="-1"></a>    B1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(K)</span>
+<span id="cb66-13"><a href="X09-examples.html#cb66-13" tabindex="-1"></a>    B2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>K)</span>
+<span id="cb66-14"><a href="X09-examples.html#cb66-14" tabindex="-1"></a>    B3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>K)</span>
+<span id="cb66-15"><a href="X09-examples.html#cb66-15" tabindex="-1"></a>    m.hat <span class="ot">&lt;-</span> (T1<span class="sc">*</span>T2 <span class="sc">-</span> T3<span class="sc">*</span>T4) <span class="sc">/</span> (B1<span class="sc">*</span>B2 <span class="sc">-</span> B3<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb66-16"><a href="X09-examples.html#cb66-16" tabindex="-1"></a></span>
+<span id="cb66-17"><a href="X09-examples.html#cb66-17" tabindex="-1"></a>    <span class="fu">mean</span>((m.hat <span class="sc">-</span> y)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb66-18"><a href="X09-examples.html#cb66-18" tabindex="-1"></a>}</span></code></pre></div>
 <p>Now we evaluate the function <code>r.NW()</code> and <code>r.LL()</code> on a grid of <span class="math inline">\(h\)</span>-values
 to find the optimal <span class="math inline">\(h\)</span> for each method.</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="X09-examples.html#cb59-1" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="sc">-</span><span class="fl">1.4</span>, <span class="fl">0.1</span>, <span class="at">length.out =</span> <span class="dv">61</span>)</span>
-<span id="cb59-2"><a href="X09-examples.html#cb59-2" tabindex="-1"></a>mse.nw <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(h))</span>
-<span id="cb59-3"><a href="X09-examples.html#cb59-3" tabindex="-1"></a>mse.ll <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(h))</span>
-<span id="cb59-4"><a href="X09-examples.html#cb59-4" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(h)) {</span>
-<span id="cb59-5"><a href="X09-examples.html#cb59-5" tabindex="-1"></a>    mse.nw[i] <span class="ot">&lt;-</span> <span class="fu">r.NW</span>(h[i])</span>
-<span id="cb59-6"><a href="X09-examples.html#cb59-6" tabindex="-1"></a>    mse.ll[i] <span class="ot">&lt;-</span> <span class="fu">r.LL</span>(h[i])</span>
-<span id="cb59-7"><a href="X09-examples.html#cb59-7" tabindex="-1"></a>}</span>
-<span id="cb59-8"><a href="X09-examples.html#cb59-8" tabindex="-1"></a><span class="fu">plot</span>(h, mse.nw, <span class="at">log=</span><span class="st">&quot;x&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">range</span>(mse.nw, mse.ll),</span>
-<span id="cb59-9"><a href="X09-examples.html#cb59-9" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;leave-one-out MSE&quot;</span>)</span>
-<span id="cb59-10"><a href="X09-examples.html#cb59-10" tabindex="-1"></a><span class="fu">lines</span>(h, mse.ll, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
-<span id="cb59-11"><a href="X09-examples.html#cb59-11" tabindex="-1"></a></span>
-<span id="cb59-12"><a href="X09-examples.html#cb59-12" tabindex="-1"></a>best.h.NW <span class="ot">&lt;-</span> h[<span class="fu">which.min</span>(mse.nw)]</span>
-<span id="cb59-13"><a href="X09-examples.html#cb59-13" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.h.NW)</span>
-<span id="cb59-14"><a href="X09-examples.html#cb59-14" tabindex="-1"></a>best.h.LL <span class="ot">&lt;-</span> h[<span class="fu">which.min</span>(mse.ll)]</span>
-<span id="cb59-15"><a href="X09-examples.html#cb59-15" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.h.LL, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
-<span id="cb59-16"><a href="X09-examples.html#cb59-16" tabindex="-1"></a></span>
-<span id="cb59-17"><a href="X09-examples.html#cb59-17" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;NW&quot;</span>, <span class="st">&quot;LL&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>),</span>
-<span id="cb59-18"><a href="X09-examples.html#cb59-18" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="X09-examples.html#cb67-1" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="sc">-</span><span class="fl">1.4</span>, <span class="fl">0.1</span>, <span class="at">length.out =</span> <span class="dv">61</span>)</span>
+<span id="cb67-2"><a href="X09-examples.html#cb67-2" tabindex="-1"></a>mse.nw <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(h))</span>
+<span id="cb67-3"><a href="X09-examples.html#cb67-3" tabindex="-1"></a>mse.ll <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(h))</span>
+<span id="cb67-4"><a href="X09-examples.html#cb67-4" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(h)) {</span>
+<span id="cb67-5"><a href="X09-examples.html#cb67-5" tabindex="-1"></a>    mse.nw[i] <span class="ot">&lt;-</span> <span class="fu">r.NW</span>(h[i])</span>
+<span id="cb67-6"><a href="X09-examples.html#cb67-6" tabindex="-1"></a>    mse.ll[i] <span class="ot">&lt;-</span> <span class="fu">r.LL</span>(h[i])</span>
+<span id="cb67-7"><a href="X09-examples.html#cb67-7" tabindex="-1"></a>}</span>
+<span id="cb67-8"><a href="X09-examples.html#cb67-8" tabindex="-1"></a><span class="fu">plot</span>(h, mse.nw, <span class="at">log=</span><span class="st">&quot;x&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">range</span>(mse.nw, mse.ll),</span>
+<span id="cb67-9"><a href="X09-examples.html#cb67-9" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;leave-one-out MSE&quot;</span>)</span>
+<span id="cb67-10"><a href="X09-examples.html#cb67-10" tabindex="-1"></a><span class="fu">lines</span>(h, mse.ll, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb67-11"><a href="X09-examples.html#cb67-11" tabindex="-1"></a></span>
+<span id="cb67-12"><a href="X09-examples.html#cb67-12" tabindex="-1"></a>best.h.NW <span class="ot">&lt;-</span> h[<span class="fu">which.min</span>(mse.nw)]</span>
+<span id="cb67-13"><a href="X09-examples.html#cb67-13" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.h.NW)</span>
+<span id="cb67-14"><a href="X09-examples.html#cb67-14" tabindex="-1"></a>best.h.LL <span class="ot">&lt;-</span> h[<span class="fu">which.min</span>(mse.ll)]</span>
+<span id="cb67-15"><a href="X09-examples.html#cb67-15" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.h.LL, <span class="at">col=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb67-16"><a href="X09-examples.html#cb67-16" tabindex="-1"></a></span>
+<span id="cb67-17"><a href="X09-examples.html#cb67-17" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;NW&quot;</span>, <span class="st">&quot;LL&quot;</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb67-18"><a href="X09-examples.html#cb67-18" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/cv-loclin-1.png" width="672" /></p>
 <p>As expected, the optimal bandwidth for local linear regression is
 larger than for the Nadaraya Watson estimator.</p>
@@ -524,23 +528,23 @@ optimal <span class="math inline">\(k\)</span> for <span class="math inline">\(k
 make any savings, so we resort to simply fitting <span class="math inline">\(n\)</span> different models in the
 naive way. For this reason, the code in this section is much slower to
 run than the code in the previous sections.</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="X09-examples.html#cb60-1" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">70</span></span>
-<span id="cb60-2"><a href="X09-examples.html#cb60-2" tabindex="-1"></a>mse.knn <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(k))</span>
-<span id="cb60-3"><a href="X09-examples.html#cb60-3" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(k)) {</span>
-<span id="cb60-4"><a href="X09-examples.html#cb60-4" tabindex="-1"></a>    y.pred <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(x))</span>
-<span id="cb60-5"><a href="X09-examples.html#cb60-5" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(x)) {</span>
-<span id="cb60-6"><a href="X09-examples.html#cb60-6" tabindex="-1"></a>        m <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> x[<span class="sc">-</span>i]),</span>
-<span id="cb60-7"><a href="X09-examples.html#cb60-7" tabindex="-1"></a>                     <span class="at">y =</span> y[<span class="sc">-</span>i],</span>
-<span id="cb60-8"><a href="X09-examples.html#cb60-8" tabindex="-1"></a>                     <span class="at">test =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x[i]),</span>
-<span id="cb60-9"><a href="X09-examples.html#cb60-9" tabindex="-1"></a>                     <span class="at">k =</span> k[j])</span>
-<span id="cb60-10"><a href="X09-examples.html#cb60-10" tabindex="-1"></a>        y.pred[i] <span class="ot">&lt;-</span> m<span class="sc">$</span>pred</span>
-<span id="cb60-11"><a href="X09-examples.html#cb60-11" tabindex="-1"></a>    }</span>
-<span id="cb60-12"><a href="X09-examples.html#cb60-12" tabindex="-1"></a>    mse.knn[j] <span class="ot">&lt;-</span> <span class="fu">mean</span>((y <span class="sc">-</span> y.pred)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb60-13"><a href="X09-examples.html#cb60-13" tabindex="-1"></a>}</span>
-<span id="cb60-14"><a href="X09-examples.html#cb60-14" tabindex="-1"></a><span class="fu">plot</span>(k, mse.knn, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
-<span id="cb60-15"><a href="X09-examples.html#cb60-15" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;leave-one-out MSE&quot;</span>)</span>
-<span id="cb60-16"><a href="X09-examples.html#cb60-16" tabindex="-1"></a>best.k <span class="ot">&lt;-</span> k[<span class="fu">which.min</span>(mse.knn)]</span>
-<span id="cb60-17"><a href="X09-examples.html#cb60-17" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.k)</span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="X09-examples.html#cb68-1" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">70</span></span>
+<span id="cb68-2"><a href="X09-examples.html#cb68-2" tabindex="-1"></a>mse.knn <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(k))</span>
+<span id="cb68-3"><a href="X09-examples.html#cb68-3" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(k)) {</span>
+<span id="cb68-4"><a href="X09-examples.html#cb68-4" tabindex="-1"></a>    y.pred <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(x))</span>
+<span id="cb68-5"><a href="X09-examples.html#cb68-5" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(x)) {</span>
+<span id="cb68-6"><a href="X09-examples.html#cb68-6" tabindex="-1"></a>        m <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> x[<span class="sc">-</span>i]),</span>
+<span id="cb68-7"><a href="X09-examples.html#cb68-7" tabindex="-1"></a>                     <span class="at">y =</span> y[<span class="sc">-</span>i],</span>
+<span id="cb68-8"><a href="X09-examples.html#cb68-8" tabindex="-1"></a>                     <span class="at">test =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> x[i]),</span>
+<span id="cb68-9"><a href="X09-examples.html#cb68-9" tabindex="-1"></a>                     <span class="at">k =</span> k[j])</span>
+<span id="cb68-10"><a href="X09-examples.html#cb68-10" tabindex="-1"></a>        y.pred[i] <span class="ot">&lt;-</span> m<span class="sc">$</span>pred</span>
+<span id="cb68-11"><a href="X09-examples.html#cb68-11" tabindex="-1"></a>    }</span>
+<span id="cb68-12"><a href="X09-examples.html#cb68-12" tabindex="-1"></a>    mse.knn[j] <span class="ot">&lt;-</span> <span class="fu">mean</span>((y <span class="sc">-</span> y.pred)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb68-13"><a href="X09-examples.html#cb68-13" tabindex="-1"></a>}</span>
+<span id="cb68-14"><a href="X09-examples.html#cb68-14" tabindex="-1"></a><span class="fu">plot</span>(k, mse.knn, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>,</span>
+<span id="cb68-15"><a href="X09-examples.html#cb68-15" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;leave-one-out MSE&quot;</span>)</span>
+<span id="cb68-16"><a href="X09-examples.html#cb68-16" tabindex="-1"></a>best.k <span class="ot">&lt;-</span> k[<span class="fu">which.min</span>(mse.knn)]</span>
+<span id="cb68-17"><a href="X09-examples.html#cb68-17" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.k)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/cv-knn-1.png" width="672" /></p>
 <p>We note the that leave-one-out mean squared error for kNN is smaller
 than it is for Nadaraya-Watson or local linear regression, in the
@@ -550,37 +554,37 @@ densities of <span class="math inline">\(x\)</span>-values, it makes sense that 
 the bandwidth “adaptively” performs better.</p>
 <p>To conclude, we show the optimal regression curves for the three smoothing
 methods together in one plot.</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="X09-examples.html#cb61-1" tabindex="-1"></a>x.tilde <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">1.5</span>, <span class="fl">5.5</span>, <span class="at">length.out =</span> <span class="dv">501</span>)</span>
-<span id="cb61-2"><a href="X09-examples.html#cb61-2" tabindex="-1"></a></span>
-<span id="cb61-3"><a href="X09-examples.html#cb61-3" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x.tilde, <span class="st">&quot;-&quot;</span>), <span class="at">sd =</span> best.h.NW)</span>
-<span id="cb61-4"><a href="X09-examples.html#cb61-4" tabindex="-1"></a>m.NW <span class="ot">&lt;-</span> <span class="fu">colSums</span>(K<span class="sc">*</span>y) <span class="sc">/</span> <span class="fu">colSums</span>(K)</span>
-<span id="cb61-5"><a href="X09-examples.html#cb61-5" tabindex="-1"></a></span>
-<span id="cb61-6"><a href="X09-examples.html#cb61-6" tabindex="-1"></a>dx <span class="ot">&lt;-</span> <span class="fu">outer</span>(x, x.tilde, <span class="st">&quot;-&quot;</span>)</span>
-<span id="cb61-7"><a href="X09-examples.html#cb61-7" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(dx, <span class="at">sd =</span> best.h.LL)</span>
-<span id="cb61-8"><a href="X09-examples.html#cb61-8" tabindex="-1"></a>T1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(y<span class="sc">*</span>K)</span>
-<span id="cb61-9"><a href="X09-examples.html#cb61-9" tabindex="-1"></a>T2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>dx<span class="sc">*</span>K)</span>
-<span id="cb61-10"><a href="X09-examples.html#cb61-10" tabindex="-1"></a>T3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>y<span class="sc">*</span>K)</span>
-<span id="cb61-11"><a href="X09-examples.html#cb61-11" tabindex="-1"></a>T4 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(dx<span class="sc">*</span>K)</span>
-<span id="cb61-12"><a href="X09-examples.html#cb61-12" tabindex="-1"></a>B1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(K)</span>
-<span id="cb61-13"><a href="X09-examples.html#cb61-13" tabindex="-1"></a>B2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>K)</span>
-<span id="cb61-14"><a href="X09-examples.html#cb61-14" tabindex="-1"></a>B3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>K)</span>
-<span id="cb61-15"><a href="X09-examples.html#cb61-15" tabindex="-1"></a>m.LL <span class="ot">&lt;-</span> (T1<span class="sc">*</span>T2 <span class="sc">-</span> T3<span class="sc">*</span>T4) <span class="sc">/</span> (B1<span class="sc">*</span>B2 <span class="sc">-</span> B3<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb61-16"><a href="X09-examples.html#cb61-16" tabindex="-1"></a></span>
-<span id="cb61-17"><a href="X09-examples.html#cb61-17" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="fu">data.frame</span>(x),</span>
-<span id="cb61-18"><a href="X09-examples.html#cb61-18" tabindex="-1"></a>             <span class="at">y =</span> y[<span class="sc">-</span>i],</span>
-<span id="cb61-19"><a href="X09-examples.html#cb61-19" tabindex="-1"></a>             <span class="at">test =</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x.tilde),</span>
-<span id="cb61-20"><a href="X09-examples.html#cb61-20" tabindex="-1"></a>             <span class="at">k =</span> best.k)</span>
-<span id="cb61-21"><a href="X09-examples.html#cb61-21" tabindex="-1"></a>m.kNN <span class="ot">&lt;-</span> m<span class="sc">$</span>pred</span>
-<span id="cb61-22"><a href="X09-examples.html#cb61-22" tabindex="-1"></a></span>
-<span id="cb61-23"><a href="X09-examples.html#cb61-23" tabindex="-1"></a>colours <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#2C9CDA&quot;</span>, <span class="st">&quot;#811631&quot;</span>, <span class="st">&quot;#E0CA1D&quot;</span>)</span>
-<span id="cb61-24"><a href="X09-examples.html#cb61-24" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">xlim =</span> <span class="fu">range</span>(x.tilde), <span class="at">cex =</span> .<span class="dv">5</span>,</span>
-<span id="cb61-25"><a href="X09-examples.html#cb61-25" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;eruption time [mins]&quot;</span>,</span>
-<span id="cb61-26"><a href="X09-examples.html#cb61-26" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;time to next eruption [mins]&quot;</span>)</span>
-<span id="cb61-27"><a href="X09-examples.html#cb61-27" tabindex="-1"></a><span class="fu">lines</span>(x.tilde, m.NW, <span class="at">col =</span> colours[<span class="dv">1</span>])</span>
-<span id="cb61-28"><a href="X09-examples.html#cb61-28" tabindex="-1"></a><span class="fu">lines</span>(x.tilde, m.LL, <span class="at">col =</span> colours[<span class="dv">2</span>])</span>
-<span id="cb61-29"><a href="X09-examples.html#cb61-29" tabindex="-1"></a><span class="fu">lines</span>(x.tilde, m.kNN, <span class="at">col =</span> colours[<span class="dv">3</span>])</span>
-<span id="cb61-30"><a href="X09-examples.html#cb61-30" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;NW&quot;</span>, <span class="st">&quot;LL&quot;</span>, <span class="st">&quot;kNN&quot;</span>), <span class="at">col =</span> colours,</span>
-<span id="cb61-31"><a href="X09-examples.html#cb61-31" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="X09-examples.html#cb69-1" tabindex="-1"></a>x.tilde <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">1.5</span>, <span class="fl">5.5</span>, <span class="at">length.out =</span> <span class="dv">501</span>)</span>
+<span id="cb69-2"><a href="X09-examples.html#cb69-2" tabindex="-1"></a></span>
+<span id="cb69-3"><a href="X09-examples.html#cb69-3" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x.tilde, <span class="st">&quot;-&quot;</span>), <span class="at">sd =</span> best.h.NW)</span>
+<span id="cb69-4"><a href="X09-examples.html#cb69-4" tabindex="-1"></a>m.NW <span class="ot">&lt;-</span> <span class="fu">colSums</span>(K<span class="sc">*</span>y) <span class="sc">/</span> <span class="fu">colSums</span>(K)</span>
+<span id="cb69-5"><a href="X09-examples.html#cb69-5" tabindex="-1"></a></span>
+<span id="cb69-6"><a href="X09-examples.html#cb69-6" tabindex="-1"></a>dx <span class="ot">&lt;-</span> <span class="fu">outer</span>(x, x.tilde, <span class="st">&quot;-&quot;</span>)</span>
+<span id="cb69-7"><a href="X09-examples.html#cb69-7" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(dx, <span class="at">sd =</span> best.h.LL)</span>
+<span id="cb69-8"><a href="X09-examples.html#cb69-8" tabindex="-1"></a>T1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(y<span class="sc">*</span>K)</span>
+<span id="cb69-9"><a href="X09-examples.html#cb69-9" tabindex="-1"></a>T2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>dx<span class="sc">*</span>K)</span>
+<span id="cb69-10"><a href="X09-examples.html#cb69-10" tabindex="-1"></a>T3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>y<span class="sc">*</span>K)</span>
+<span id="cb69-11"><a href="X09-examples.html#cb69-11" tabindex="-1"></a>T4 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(dx<span class="sc">*</span>K)</span>
+<span id="cb69-12"><a href="X09-examples.html#cb69-12" tabindex="-1"></a>B1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(K)</span>
+<span id="cb69-13"><a href="X09-examples.html#cb69-13" tabindex="-1"></a>B2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>K)</span>
+<span id="cb69-14"><a href="X09-examples.html#cb69-14" tabindex="-1"></a>B3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>K)</span>
+<span id="cb69-15"><a href="X09-examples.html#cb69-15" tabindex="-1"></a>m.LL <span class="ot">&lt;-</span> (T1<span class="sc">*</span>T2 <span class="sc">-</span> T3<span class="sc">*</span>T4) <span class="sc">/</span> (B1<span class="sc">*</span>B2 <span class="sc">-</span> B3<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb69-16"><a href="X09-examples.html#cb69-16" tabindex="-1"></a></span>
+<span id="cb69-17"><a href="X09-examples.html#cb69-17" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="fu">data.frame</span>(x),</span>
+<span id="cb69-18"><a href="X09-examples.html#cb69-18" tabindex="-1"></a>             <span class="at">y =</span> y[<span class="sc">-</span>i],</span>
+<span id="cb69-19"><a href="X09-examples.html#cb69-19" tabindex="-1"></a>             <span class="at">test =</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x.tilde),</span>
+<span id="cb69-20"><a href="X09-examples.html#cb69-20" tabindex="-1"></a>             <span class="at">k =</span> best.k)</span>
+<span id="cb69-21"><a href="X09-examples.html#cb69-21" tabindex="-1"></a>m.kNN <span class="ot">&lt;-</span> m<span class="sc">$</span>pred</span>
+<span id="cb69-22"><a href="X09-examples.html#cb69-22" tabindex="-1"></a></span>
+<span id="cb69-23"><a href="X09-examples.html#cb69-23" tabindex="-1"></a>colours <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#2C9CDA&quot;</span>, <span class="st">&quot;#811631&quot;</span>, <span class="st">&quot;#E0CA1D&quot;</span>)</span>
+<span id="cb69-24"><a href="X09-examples.html#cb69-24" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">xlim =</span> <span class="fu">range</span>(x.tilde), <span class="at">cex =</span> .<span class="dv">5</span>,</span>
+<span id="cb69-25"><a href="X09-examples.html#cb69-25" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;eruption time [mins]&quot;</span>,</span>
+<span id="cb69-26"><a href="X09-examples.html#cb69-26" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;time to next eruption [mins]&quot;</span>)</span>
+<span id="cb69-27"><a href="X09-examples.html#cb69-27" tabindex="-1"></a><span class="fu">lines</span>(x.tilde, m.NW, <span class="at">col =</span> colours[<span class="dv">1</span>])</span>
+<span id="cb69-28"><a href="X09-examples.html#cb69-28" tabindex="-1"></a><span class="fu">lines</span>(x.tilde, m.LL, <span class="at">col =</span> colours[<span class="dv">2</span>])</span>
+<span id="cb69-29"><a href="X09-examples.html#cb69-29" tabindex="-1"></a><span class="fu">lines</span>(x.tilde, m.kNN, <span class="at">col =</span> colours[<span class="dv">3</span>])</span>
+<span id="cb69-30"><a href="X09-examples.html#cb69-30" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;NW&quot;</span>, <span class="st">&quot;LL&quot;</span>, <span class="st">&quot;kNN&quot;</span>), <span class="at">col =</span> colours,</span>
+<span id="cb69-31"><a href="X09-examples.html#cb69-31" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/xv-summary-1.png" width="672" /></p>
 
 </div>

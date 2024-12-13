@@ -181,11 +181,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="X04-practice.html"><a href="X04-practice.html"><i class="fa fa-check"></i><b>4</b> Kernel Density Estimation in Practice</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="X04-practice.html"><a href="X04-practice.html#integrated-error"><i class="fa fa-check"></i><b>4.1</b> Integrated Error</a></li>
+<li class="chapter" data-level="4.1" data-path="X04-practice.html"><a href="X04-practice.html#IMSE"><i class="fa fa-check"></i><b>4.1</b> Integrated Error</a></li>
 <li class="chapter" data-level="4.2" data-path="X04-practice.html"><a href="X04-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>4.2</b> Choice of Kernel</a></li>
 <li class="chapter" data-level="4.3" data-path="X04-practice.html"><a href="X04-practice.html#bwsel"><i class="fa fa-check"></i><b>4.3</b> Bandwidth Selection</a></li>
 <li class="chapter" data-level="4.4" data-path="X04-practice.html"><a href="X04-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>4.4</b> Higher Dimensions</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
 <li class="chapter" data-level="5" data-path="X05-smoothing.html"><a href="X05-smoothing.html"><i class="fa fa-check"></i><b>5</b> Kernel Smoothing</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="X05-smoothing.html"><a href="X05-smoothing.html#the-nadaraya-watson-estimator"><i class="fa fa-check"></i><b>5.1</b> The Nadaraya-Watson Estimator</a></li>
@@ -226,6 +227,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2" data-path="X09-examples.html"><a href="X09-examples.html#kernel-regression"><i class="fa fa-check"></i><b>9.2</b> Kernel Regression</a></li>
 <li class="chapter" data-level="9.3" data-path="X09-examples.html"><a href="X09-examples.html#k-nearest-neighbour-regression"><i class="fa fa-check"></i><b>9.3</b> <em>k</em>-Nearest Neighbour Regression</a></li>
 </ul></li>
+<li class="divider"></li>
+<li class="chapter"><span><b>THE END</b></span></li>
+
 </ul>
 
       </nav>
@@ -382,10 +386,10 @@ the execution times using the R package <code>microbenchmark</code>:</p>
 <span id="cb28-6"><a href="I01-KDE.html#cb28-6" tabindex="-1"></a>  <span class="at">KDE3 =</span> <span class="fu">KDE3</span>(x.tilde, snowfall, K, h),</span>
 <span id="cb28-7"><a href="I01-KDE.html#cb28-7" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
-##  expr      min        lq      mean    median       uq      max neval
-##  KDE1 1393.549 1466.2830 1549.8281 1482.8265 1506.217 7365.445  1000
-##  KDE2  198.276  256.6190  321.4801  263.5480  269.944 5091.134  1000
-##  KDE3  179.539  221.4205  287.3054  226.5045  231.035 7940.552  1000</code></pre>
+##  expr      min        lq      mean    median        uq      max neval
+##  KDE1 1406.300 1465.6885 1568.2099 1487.3365 1512.4285 7235.434  1000
+##  KDE2  199.342  261.1700  330.4143  268.6320  279.8250 5500.847  1000
+##  KDE3  180.359  224.0445  300.1203  230.1125  238.4765 8724.677  1000</code></pre>
 <p>The output summarises the execution times for 1000 runs of each of the
 three functions. The columns correspond to the fastest measured time,
 lower quartile, mean, median, upper quartile and slowest time, respectively.
@@ -404,8 +408,8 @@ as we used above.</p>
 <span id="cb30-5"><a href="I01-KDE.html#cb30-5" tabindex="-1"></a>}</span>
 <span id="cb30-6"><a href="I01-KDE.html#cb30-6" tabindex="-1"></a><span class="fu">microbenchmark</span>(<span class="at">density =</span> <span class="fu">KDE.builtin</span>(x.tilde, snowfall, <span class="st">&quot;triangular&quot;</span>, h), <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
-##     expr     min      lq     mean  median      uq      max neval
-##  density 158.711 169.248 187.9556 172.528 177.612 4555.756  1000</code></pre>
+##     expr     min     lq     mean median       uq      max neval
+##  density 160.187 171.38 190.1813 175.07 180.4615 4465.884  1000</code></pre>
 <p>The result shows that <code>density()</code> is faster than <code>KDE3()</code>, but by
 a factor of less than 2. The reason is that <code>density()</code> uses a
 more efficient algorithm for computing an approximation to

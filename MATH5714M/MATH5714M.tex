@@ -1,11 +1,13 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-%
 \documentclass[
   a4paper,
 ]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
@@ -36,8 +38,6 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
-\usepackage{xcolor}
-\usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -106,9 +106,11 @@
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{5}
 \usepackage[]{natbib}
 \bibliographystyle{plainnat}
+\usepackage{comment}
+\specialcomment{myanswers}{\smallbreak\begingroup\leftskip=\leftmargini\noindent Solution: }%
+  {\medbreak\endgroup}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -930,10 +932,10 @@ the execution times using the R package \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min       lq      mean    median        uq      max neval
-##  KDE1 1404.619 1474.832 1655.5360 1499.7800 1590.7385 12811.11  1000
-##  KDE2  198.932  263.097  381.7879  272.0965  302.0265 11838.38  1000
-##  KDE3  179.211  225.213  355.5306  233.1465  255.8195 20415.62  1000
+##  expr      min        lq      mean   median        uq      max neval
+##  KDE1 1406.587 1474.1140 1544.5090 1491.026 1514.6835 6971.271  1000
+##  KDE2  198.891  261.9490  374.3523  268.878  277.6315 8570.189  1000
+##  KDE3  179.826  224.3315  285.7878  229.518  236.1190 5788.011  1000
 \end{verbatim}
 
 The output summarises the execution times for 1000 runs of each of the
@@ -962,8 +964,8 @@ as we used above.
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr     min      lq     mean  median       uq      max neval
-##  density 158.014 168.879 186.3707 172.364 176.4845 4362.072  1000
+##     expr     min      lq     mean   median       uq      max neval
+##  density 159.326 170.888 189.9202 174.4755 179.2315 4674.738  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by
@@ -1479,7 +1481,7 @@ In this section we conclude our discussion of kernel density estimation
 by considering different aspects which are important when using the method
 in practice.
 
-\subsection{Integrated Error}\label{integrated-error}
+\subsection{Integrated Error}\label{IMSE}
 
 From equation~\eqref{eq:f-hat-MSE} we know
 \begin{equation*}
@@ -1567,11 +1569,11 @@ Calculations similar to the ones in the example give the following
 values:
 
 \begin{longtable}[]{@{}
-  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1300}}
-  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.5100}}
-  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1400}}
-  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1400}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.0800}}@{}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1017}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.4322}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1017}}
+  >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2203}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1441}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedleft
 kernel
@@ -1773,6 +1775,343 @@ For all of these choices, the kernel density estimator is given by
 (using \(K_H\) for the third option) for all \(x\in\mathbb{R}^p\).
 Bandwidth selection in the multivariate case is a difficult problem
 and we will not discuss this here.
+
+\clearpage
+
+\section*{Problem Sheet 1}\label{P01}
+\addcontentsline{toc}{section}{Problem Sheet 1}
+
+This problem sheet is for self-study only.
+It is not assessed.
+
+\textbf{1.} Consider the following function:
+\begin{equation*}
+K(x)
+= \begin{cases}
+  \frac23 (1 - |x|^3) & \mbox{if $|x|\leq 1$, and} \\
+  0 & \text{otherwise}.
+\end{cases}
+\end{equation*}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Show that this function integrates to 1 over its domain.
+\end{enumerate}
+
+\begin{myanswers}
+We have
+\begin{align*}
+    \int_{-\infty}^{\infty} K(x) , dx
+    &= \frac23 \int_{-1}^1 (1 - |x|^3) , dx \\
+    &= \frac43  \int_0^1 (1 - x^3) , dx \\
+    &= \frac43  \left[ x - \frac{x^4}{4} \right]_0^1 \\
+    &= \frac43  \left( 1 - \frac{1}{4} \right) \\
+    &= 1.
+  \end{align*}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Show that \(K\) satisfies the conditions of a kernel.
+\end{enumerate}
+
+\begin{myanswers}
+We have already seen that \(K\) integrates to 1 over its domain.
+Since \(|x| = |-x|\) for all \(x\in\mathbb{R}\), the function \(K\) is symmetric.
+Finally, since \(|x|^3 \leq 1\) for all \(x\in\mathbb{R}\) with \(|x|\leq 1\), we have
+\(K(x) \geq 0\) for all \(x\in\mathbb{R}\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Compute the moments \(\mu_0(K)\), \(\mu_1(K)\) and
+  \(\mu_2(K)\) of~\(K\).
+\end{enumerate}
+
+\begin{myanswers}
+The \(k\)th moment of \(K\) is given by
+\begin{equation*}
+  \mu_k(K)
+  = \int_{-\infty}^\infty x^k K(x) \,dx
+  = \frac23 \int_{-1}^1 x^k \bigl( 1 - |x|^3 \bigr) \,dx.
+\end{equation*}
+For \(k = 0\), we know \(\mu_0(K) = 1\), from part~a.
+For \(k = 1\), we have \(\mu_1(K) = 0\), since \(K\) is symmetric.
+For \(k = 2\), we find
+\begin{align*}
+  \mu_2(K)
+  &= \frac23 \int_{-1}^1 x^2 (1 - |x|^3) \,dx \\
+  &= \frac43 \int_0^1 x^2 (1 - x^3) \,dx \\
+  &= \frac43 \left[ \frac{x^3}{3} - \frac{x^6}{6} \right]_0^1 \\
+  &= \frac43 \left( \frac13 - \frac16 \right) \\
+  &= \frac29.
+\end{align*}
+
+\end{myanswers}
+
+\textbf{2.} Consider a normal density with mean μ and variance σ², given by:
+\begin{equation*}
+f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
+\end{equation*}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Calculate f'(x) and f'\,'(x) for this density.
+\end{enumerate}
+
+\begin{myanswers}
+Using the chain rule:
+\begin{align*}
+  f'(x)
+  &= \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right) \cdot \left(-\frac{x-\mu}{\sigma^2}\right) \\
+  &= -f(x)\cdot\frac{x-\mu}{\sigma^2}
+\end{align*}
+Taking derivatives again, using the product rule:
+\begin{align*}
+  f''(x)
+  &= -f'(x)\cdot\frac{x-\mu}{\sigma^2} - f(x)\cdot\frac{1}{\sigma^2} \\
+  &= f(x)\cdot\frac{(x-\mu)^2}{\sigma^4} - f(x)\cdot\frac{1}{\sigma^2} \\
+  &= f(x)\cdot\left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right)
+\end{align*}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Using the formula
+  \begin{equation*}
+    \mathop{\mathrm{bias}}(\hat f_h(x))
+    \approx \frac{\mu_2(K)}{2} f''(x) h^2,
+  \end{equation*}
+  show that for fixed \(K\) and \(h\), the bias satisfies the following proportionality:
+  \begin{equation*}
+    \mathop{\mathrm{bias}}(\hat f_h(x))
+    \propto \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+   \left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right).
+  \end{equation*}
+\end{enumerate}
+
+\begin{myanswers}
+Substituting our expression for \(f''(x)\) into the bias formula we get
+\begin{align*}
+  \mathop{\mathrm{bias}}(\hat f_h(x))
+  &\approx \frac{\mu_2(K)}{2} f''(x) h^2 \\
+  &= \frac{\mu_2(K)}{2} \cdot f(x)\cdot\left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right) h^2 \\
+  &=
+  \frac{\mu_2(K)h^2}{2\sqrt{2\pi\sigma^2}} \cdot
+  \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+  \left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right).
+\end{align*}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  For which values of \(x\) is the bias positive, negative, or zero?
+  Why does this make sense intuitively?
+\end{enumerate}
+
+\begin{myanswers}
+The exponential term is always positive, so the sign depends on
+the sign of the term
+\((x-\mu)^2 / \sigma^4 - 1/\sigma^2\).
+This equals zero when \((x-\mu)^2 = \sigma^2\), or when \(x = \mu \pm \sigma\).
+The bias
+is negative when \(|x-\mu| < \sigma\),
+is positive when \(|x-\mu| > \sigma\).
+
+This makes sense because the positive bandwidth \(h\) smoothes the density, so
+the bias is negative when the density is concave (near the maxiumum) and
+positive when it is convex (towards the tails).
+
+\end{myanswers}
+
+\textbf{3.} Consider the variance of a kernel density estimate \(\hat f_h(x)\) based
+on a sample \(X_1, \ldots, X_n\) with common density~\(f\):
+\begin{equation*}
+  \mathop{\mathrm{Var}}(\hat f_h(x))
+  = \frac{1}{n^2} \sum_{i,j=1}^n \mathbb{E}\Bigl( K_h(x - X_i)K_h(x - X_j) \Bigr)
+\end{equation*}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Let \(n=3\). Write out all terms in the sum explicitly and identify which
+  terms involve the only one random variable \(X_i\) and which involve
+  more than one random variable.
+\end{enumerate}
+
+\begin{myanswers}
+For \(n=3\), expanding the double sum gives 9 terms:
+
+Terms with same random variable (\(i=j\)):
+\begin{align*}
+& \mathbb{E}(K_h(x - X_1)K_h(x - X_1)) \\
+& \mathbb{E}(K_h(x - X_2)K_h(x - X_2)) \\
+& \mathbb{E}(K_h(x - X_3)K_h(x - X_3))
+\end{align*}
+
+Terms with different random variables (\(i\neq j\)):
+\begin{align*}
+& \mathbb{E}(K_h(x - X_1)K_h(x - X_2)) \\
+& \mathbb{E}(K_h(x - X_1)K_h(x - X_3)) \\
+& \mathbb{E}(K_h(x - X_2)K_h(x - X_1)) \\
+& \mathbb{E}(K_h(x - X_2)K_h(x - X_3)) \\
+& \mathbb{E}(K_h(x - X_3)K_h(x - X_1)) \\
+& \mathbb{E}(K_h(x - X_3)K_h(x - X_2))
+\end{align*}
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  For general \(n\), how many terms in the sum have \(i=j\) and how many have~\(i\neq j\)?
+\end{enumerate}
+
+\begin{myanswers}
+When \(i=j\), we are choosing the same index from \(\{1,\ldots,n\}\) once, giving \(n\) terms.
+When \(i\neq j\), we are choosing two different indices from \(\{1,\ldots,n\}\), giving \(n(n-1)\) terms.
+The total number of terms is thus \(n + n(n-1) = n^2\), as expected.
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Using these counts and the independence of the \(X_i\), show that:
+  \begin{equation*}
+    \mathop{\mathrm{Var}}(\hat f_h(x))
+    = \frac{1}{n} \mathbb{E}\Bigl( K_h(x - X_1)^2 \Bigr)
+   + \frac{n-1}{n} \mathbb{E}\Bigl( \hat f_h(x) \Bigr)^2.
+  \end{equation*}
+\end{enumerate}
+
+\begin{myanswers}
+Using part b, we can split the sum into two parts:
+\begin{align*}
+  \mathop{\mathrm{Var}}(\hat f_h(x))
+  &= \frac{1}{n^2}
+    \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1)K_h(x - X_2) \bigr) \Bigr) \\
+  &= \frac{1}{n} \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)
+    + \frac{n-1}{n} \mathbb{E}\bigl( K_h(x - X_1) \bigr) \, \mathbb{E}\bigl( K_h(x - X_2) \bigr),
+\end{align*}
+where we used the independence of the \(X_i\) in the last step.
+Since \(\mathbb{E}\bigl( K_h(x - X_1) \bigr) = \mathbb{E}\bigl( K_h(x - X_2) \bigr) = \mathbb{E}(\hat
+f_h(x))\), this gives the required result.
+
+\end{myanswers}
+
+\textbf{4.} Consider the following data:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{89.6}\NormalTok{, }\FloatTok{82.5}\NormalTok{, }\FloatTok{70.9}\NormalTok{, }\FloatTok{83.8}\NormalTok{, }\FloatTok{92.4}\NormalTok{, }\FloatTok{86.5}\NormalTok{, }\FloatTok{77.3}\NormalTok{, }\FloatTok{89.2}\NormalTok{,}
+       \FloatTok{93.1}\NormalTok{, }\FloatTok{84.7}\NormalTok{, }\FloatTok{78.5}\NormalTok{, }\FloatTok{88.3}\NormalTok{, }\FloatTok{85.6}\NormalTok{, }\FloatTok{90.4}\NormalTok{, }\FloatTok{76.8}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Determine the sample standard deviation of these data.
+\end{enumerate}
+
+\begin{myanswers}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sigma }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(x)}
+\NormalTok{sigma}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 6.410126
+\end{verbatim}
+
+\end{myanswers}
+
+The R ouputs shows that the standard deviation is~\(6.410126\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Using the ``plug-in rule'' from section \ref{bwsel}, what bandwidth would you
+  choose for a kernel density estimate of these data using the triangular kernel?
+\end{enumerate}
+
+\begin{myanswers}
+
+The plug-in rule assumes that the density is normal, to get
+\begin{equation*}
+  R(f'')
+  = \frac{3}{8\sigma^5\sqrt{\pi}}.
+\end{equation*}
+Substituting the sample standard deviation into this formula gives
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{R.fpp }\OtherTok{\textless{}{-}} \DecValTok{3} \SpecialCharTok{/}\NormalTok{ (}\DecValTok{8} \SpecialCharTok{*}\NormalTok{ sigma}\SpecialCharTok{\^{}}\DecValTok{5} \SpecialCharTok{*} \FunctionTok{sqrt}\NormalTok{(pi))}
+\NormalTok{R.fpp}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.954895e-05
+\end{verbatim}
+
+We also need the sample size, and the roughness and second moment of the kernel:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(x)}
+\NormalTok{R.K }\OtherTok{\textless{}{-}} \DecValTok{2}\SpecialCharTok{/}\DecValTok{3}
+\NormalTok{mu2.K }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{/}\DecValTok{6}
+\end{Highlighting}
+\end{Shaded}
+
+Using these quantities and the formula from section \ref{IMSE} gives
+the result:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{h }\OtherTok{\textless{}{-}}\NormalTok{ (R.K }\SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{*}\NormalTok{ mu2.K}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ R.fpp))}\SpecialCharTok{\^{}}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\DecValTok{5}\NormalTok{)}
+\NormalTok{h}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 9.607254
+\end{verbatim}
+
+\end{myanswers}
 
 \clearpage
 
