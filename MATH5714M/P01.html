@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Problem Sheet 1 | MATH5714 Linear Regression, Robustness and Smoothing</title>
+  <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2024/25" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Problem Sheet 1 | MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2024/25" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Problem Sheet 1 | MATH5714 Linear Regression, Robustness and Smoothing" />
+  
+  <meta name="twitter:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2024/25" />
+  
+
+<meta name="author" content="Jochen Voss" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="X04-practice.html"/>
+<link rel="next" href="X05-smoothing.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="jvstyle.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">MATH5714M Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="X01-KDE.html"><a href="X01-KDE.html"><i class="fa fa-check"></i><b>1</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms"><i class="fa fa-check"></i><b>1.1</b> Histograms</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="X01-KDE.html"><a href="X01-KDE.html#probability-densities"><i class="fa fa-check"></i><b>1.1.1</b> Probability Densities</a></li>
+<li class="chapter" data-level="1.1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#histograms-1"><i class="fa fa-check"></i><b>1.1.2</b> Histograms</a></li>
+<li class="chapter" data-level="1.1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#choice-of-buckets"><i class="fa fa-check"></i><b>1.1.3</b> Choice of Buckets</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation"><i class="fa fa-check"></i><b>1.2</b> Kernel Density Estimation</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="X01-KDE.html"><a href="X01-KDE.html#motivation"><i class="fa fa-check"></i><b>1.2.1</b> Motivation</a></li>
+<li class="chapter" data-level="1.2.2" data-path="X01-KDE.html"><a href="X01-KDE.html#definition-of-a-kernel-density-estimator"><i class="fa fa-check"></i><b>1.2.2</b> Definition of a Kernel Density Estimator</a></li>
+<li class="chapter" data-level="1.2.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernels"><i class="fa fa-check"></i><b>1.2.3</b> Kernels</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="X01-KDE.html"><a href="X01-KDE.html#kernel-density-estimation-in-r"><i class="fa fa-check"></i><b>1.3</b> Kernel Density Estimation in R</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I01-KDE.html"><a href="I01-KDE.html"><i class="fa fa-check"></i>Interlude: Kernel Density Estimation in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I01-KDE.html"><a href="I01-KDE.html#direct-implementation"><i class="fa fa-check"></i>Direct Implementation</a></li>
+<li class="chapter" data-level="" data-path="I01-KDE.html"><a href="I01-KDE.html#speed-improvements"><i class="fa fa-check"></i>Speed Improvements</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="X02-Bias.html"><a href="X02-Bias.html"><i class="fa fa-check"></i><b>2</b> The Bias of Kernel Density Estimates</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="X02-Bias.html"><a href="X02-Bias.html#a-statistical-model"><i class="fa fa-check"></i><b>2.1</b> A Statistical Model</a></li>
+<li class="chapter" data-level="2.2" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-of-the-estimate"><i class="fa fa-check"></i><b>2.2</b> The Bias of the Estimate</a></li>
+<li class="chapter" data-level="2.3" data-path="X02-Bias.html"><a href="X02-Bias.html#moments-of-kernels"><i class="fa fa-check"></i><b>2.3</b> Moments of Kernels</a></li>
+<li class="chapter" data-level="2.4" data-path="X02-Bias.html"><a href="X02-Bias.html#the-bias-for-small-bandwidth"><i class="fa fa-check"></i><b>2.4</b> The Bias for Small Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="X03-Var.html"><a href="X03-Var.html"><i class="fa fa-check"></i><b>3</b> The Variance of Kernel Density Estimates</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="X03-Var.html"><a href="X03-Var.html#variance"><i class="fa fa-check"></i><b>3.1</b> Variance</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="X03-Var.html"><a href="X03-Var.html#second-moment"><i class="fa fa-check"></i><b>3.1.1</b> Second Moment</a></li>
+<li class="chapter" data-level="3.1.2" data-path="X03-Var.html"><a href="X03-Var.html#the-roughness-of-a-kernel"><i class="fa fa-check"></i><b>3.1.2</b> The Roughness of a Kernel</a></li>
+<li class="chapter" data-level="3.1.3" data-path="X03-Var.html"><a href="X03-Var.html#the-variance-for-small-bandwidth"><i class="fa fa-check"></i><b>3.1.3</b> The Variance for Small Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="X03-Var.html"><a href="X03-Var.html#mean-squared-error"><i class="fa fa-check"></i><b>3.2</b> Mean Squared Error</a></li>
+<li class="chapter" data-level="3.3" data-path="X03-Var.html"><a href="X03-Var.html#optimal-bandwidth"><i class="fa fa-check"></i><b>3.3</b> Optimal Bandwidth</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="X04-practice.html"><a href="X04-practice.html"><i class="fa fa-check"></i><b>4</b> Kernel Density Estimation in Practice</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="X04-practice.html"><a href="X04-practice.html#IMSE"><i class="fa fa-check"></i><b>4.1</b> Integrated Error</a></li>
+<li class="chapter" data-level="4.2" data-path="X04-practice.html"><a href="X04-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>4.2</b> Choice of Kernel</a></li>
+<li class="chapter" data-level="4.3" data-path="X04-practice.html"><a href="X04-practice.html#bwsel"><i class="fa fa-check"></i><b>4.3</b> Bandwidth Selection</a></li>
+<li class="chapter" data-level="4.4" data-path="X04-practice.html"><a href="X04-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>4.4</b> Higher Dimensions</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
+<li class="chapter" data-level="5" data-path="X05-smoothing.html"><a href="X05-smoothing.html"><i class="fa fa-check"></i><b>5</b> Kernel Smoothing</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="X05-smoothing.html"><a href="X05-smoothing.html#the-nadaraya-watson-estimator"><i class="fa fa-check"></i><b>5.1</b> The Nadaraya-Watson Estimator</a></li>
+<li class="chapter" data-level="5.2" data-path="X05-smoothing.html"><a href="X05-smoothing.html#estimation-error"><i class="fa fa-check"></i><b>5.2</b> Estimation Error</a>
+<ul>
+<li class="chapter" data-level="" data-path="X05-smoothing.html"><a href="X05-smoothing.html#denominator"><i class="fa fa-check"></i>Denominator</a></li>
+<li class="chapter" data-level="" data-path="X05-smoothing.html"><a href="X05-smoothing.html#numerator"><i class="fa fa-check"></i>Numerator</a></li>
+<li class="chapter" data-level="" data-path="X05-smoothing.html"><a href="X05-smoothing.html#mean-squared-error-1"><i class="fa fa-check"></i>Mean Squared Error</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="X06-locpoly.html"><a href="X06-locpoly.html"><i class="fa fa-check"></i><b>6</b> Local Polynomial Regression</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="X06-locpoly.html"><a href="X06-locpoly.html#linear-regression-with-weights"><i class="fa fa-check"></i><b>6.1</b> Linear Regression with Weights</a></li>
+<li class="chapter" data-level="6.2" data-path="X06-locpoly.html"><a href="X06-locpoly.html#polynomial-regression"><i class="fa fa-check"></i><b>6.2</b> Polynomial Regression</a></li>
+<li class="chapter" data-level="6.3" data-path="X06-locpoly.html"><a href="X06-locpoly.html#polynomial-regression-with-weights"><i class="fa fa-check"></i><b>6.3</b> Polynomial Regression with Weights</a></li>
+<li class="chapter" data-level="6.4" data-path="X06-locpoly.html"><a href="X06-locpoly.html#special-cases"><i class="fa fa-check"></i><b>6.4</b> Special Cases</a>
+<ul>
+<li class="chapter" data-level="" data-path="X06-locpoly.html"><a href="X06-locpoly.html#p-0"><i class="fa fa-check"></i><span class="math inline">\(p = 0\)</span></a></li>
+<li class="chapter" data-level="" data-path="X06-locpoly.html"><a href="X06-locpoly.html#p-1"><i class="fa fa-check"></i><span class="math inline">\(p = 1\)</span></a></li>
+<li class="chapter" data-level="" data-path="X06-locpoly.html"><a href="X06-locpoly.html#p-2"><i class="fa fa-check"></i><span class="math inline">\(p = 2\)</span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="X07-nearest.html"><a href="X07-nearest.html"><i class="fa fa-check"></i><b>7</b> <em>k</em>-Nearest Neighbour Regression</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="X07-nearest.html"><a href="X07-nearest.html#definition-of-the-estimator"><i class="fa fa-check"></i><b>7.1</b> Definition of the Estimator</a></li>
+<li class="chapter" data-level="7.2" data-path="X07-nearest.html"><a href="X07-nearest.html#properties"><i class="fa fa-check"></i><b>7.2</b> Properties</a></li>
+<li class="chapter" data-level="7.3" data-path="X07-nearest.html"><a href="X07-nearest.html#numerical-experiment"><i class="fa fa-check"></i><b>7.3</b> Numerical Experiment</a></li>
+<li class="chapter" data-level="7.4" data-path="X07-nearest.html"><a href="X07-nearest.html#variants-of-the-method"><i class="fa fa-check"></i><b>7.4</b> Variants of the Method</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="X08-xval.html"><a href="X08-xval.html"><i class="fa fa-check"></i><b>8</b> Cross-validation</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="X08-xval.html"><a href="X08-xval.html#regression"><i class="fa fa-check"></i><b>8.1</b> Regression</a></li>
+<li class="chapter" data-level="8.2" data-path="X08-xval.html"><a href="X08-xval.html#kernel-density-estimation-1"><i class="fa fa-check"></i><b>8.2</b> Kernel Density Estimation</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="X09-examples.html"><a href="X09-examples.html"><i class="fa fa-check"></i><b>9</b> Examples</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="X09-examples.html"><a href="X09-examples.html#kernel-density-estimation-2"><i class="fa fa-check"></i><b>9.1</b> Kernel Density Estimation</a></li>
+<li class="chapter" data-level="9.2" data-path="X09-examples.html"><a href="X09-examples.html#kernel-regression"><i class="fa fa-check"></i><b>9.2</b> Kernel Regression</a></li>
+<li class="chapter" data-level="9.3" data-path="X09-examples.html"><a href="X09-examples.html#k-nearest-neighbour-regression"><i class="fa fa-check"></i><b>9.3</b> <em>k</em>-Nearest Neighbour Regression</a></li>
+</ul></li>
+<li class="divider"></li>
+<li class="chapter"><span><b>THE END</b></span></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MATH5714 Linear Regression, Robustness and Smoothing</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="P01" class="section level1 unnumbered hasAnchor">
+<h1>Problem Sheet 1<a href="P01.html#P01" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<style>
+.fold-btn {
+  float: right;
+  margin: -12px 0 0 0;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function() {
+  $folds = $(".myanswers");
+  $folds.wrapInner("<div class=\"fold-blck\">"); // wrap a div container around content
+  $folds.prepend("<button class=\"fold-btn\">Show solution</button>");  // add a button
+  $(".fold-blck").toggle();  // fold all blocks
+  $(".fold-btn").on("click", function() {  // add onClick event
+    $(this).text($(this).text() === "Hide solution" ? "Show solution" : "Hide solution");
+    $(this).next(".fold-blck").toggle("linear");  // "swing" is the default easing function. This can be further customized in its speed or the overall animation itself.
+  })
+});
+</script>
+<!--
+<style>.myanswers { display: none !important; }</style>
+\excludecomment{myanswers}
+-->
+<div class="mysummary">
+<p>This problem sheet is for self-study only.
+It is not assessed.</p>
+</div>
+<div class="myq">
+<p><strong>1.</strong> Consider the following function:
+<span class="math display">\[\begin{equation*}
+K(x)
+= \begin{cases}
+  \frac23 (1 - |x|^3) &amp; \mbox{if $|x|\leq 1$, and} \\
+  0 &amp; \text{otherwise}.
+\end{cases}
+\end{equation*}\]</span></p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Show that this function integrates to 1 over its domain.</li>
+</ol>
+<div class="myanswers">
+<p>We have
+<span class="math display">\[\begin{align*}
+    \int_{-\infty}^{\infty} K(x) , dx
+    &amp;= \frac23 \int_{-1}^1 (1 - |x|^3) , dx \\
+    &amp;= \frac43  \int_0^1 (1 - x^3) , dx \\
+    &amp;= \frac43  \left[ x - \frac{x^4}{4} \right]_0^1 \\
+    &amp;= \frac43  \left( 1 - \frac{1}{4} \right) \\
+    &amp;= 1.
+  \end{align*}\]</span></p>
+</div>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Show that <span class="math inline">\(K\)</span> satisfies the conditions of a kernel.</li>
+</ol>
+<div class="myanswers">
+<p>We have already seen that <span class="math inline">\(K\)</span> integrates to 1 over its domain.
+Since <span class="math inline">\(|x| = |-x|\)</span> for all <span class="math inline">\(x\in\mathbb{R}\)</span>, the function <span class="math inline">\(K\)</span> is symmetric.
+Finally, since <span class="math inline">\(|x|^3 \leq 1\)</span> for all <span class="math inline">\(x\in\mathbb{R}\)</span> with <span class="math inline">\(|x|\leq 1\)</span>, we have
+<span class="math inline">\(K(x) \geq 0\)</span> for all <span class="math inline">\(x\in\mathbb{R}\)</span>.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Compute the moments <span class="math inline">\(\mu_0(K)\)</span>, <span class="math inline">\(\mu_1(K)\)</span> and
+<span class="math inline">\(\mu_2(K)\)</span> of <span class="math inline">\(K\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>The <span class="math inline">\(k\)</span>th moment of <span class="math inline">\(K\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  \mu_k(K)
+  = \int_{-\infty}^\infty x^k K(x) \,dx
+  = \frac23 \int_{-1}^1 x^k \bigl( 1 - |x|^3 \bigr) \,dx.
+\end{equation*}\]</span>
+For <span class="math inline">\(k = 0\)</span>, we know <span class="math inline">\(\mu_0(K) = 1\)</span>, from part a.
+For <span class="math inline">\(k = 1\)</span>, we have <span class="math inline">\(\mu_1(K) = 0\)</span>, since <span class="math inline">\(K\)</span> is symmetric.
+For <span class="math inline">\(k = 2\)</span>, we find
+<span class="math display">\[\begin{align*}
+  \mu_2(K)
+  &amp;= \frac23 \int_{-1}^1 x^2 (1 - |x|^3) \,dx \\
+  &amp;= \frac43 \int_0^1 x^2 (1 - x^3) \,dx \\
+  &amp;= \frac43 \left[ \frac{x^3}{3} - \frac{x^6}{6} \right]_0^1 \\
+  &amp;= \frac43 \left( \frac13 - \frac16 \right) \\
+  &amp;= \frac29.
+\end{align*}\]</span></p>
+</div>
+</div>
+</div>
+<div class="myq">
+<p><strong>2.</strong> Consider a normal density with mean μ and variance σ², given by:
+<span class="math display">\[\begin{equation*}
+f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
+\end{equation*}\]</span></p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Calculate f’(x) and f’’(x) for this density.</li>
+</ol>
+<div class="myanswers">
+<p>Using the chain rule:
+<span class="math display">\[\begin{align*}
+  f&#39;(x)
+  &amp;= \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right) \cdot \left(-\frac{x-\mu}{\sigma^2}\right) \\
+  &amp;= -f(x)\cdot\frac{x-\mu}{\sigma^2}
+\end{align*}\]</span>
+Taking derivatives again, using the product rule:
+<span class="math display">\[\begin{align*}
+  f&#39;&#39;(x)
+  &amp;= -f&#39;(x)\cdot\frac{x-\mu}{\sigma^2} - f(x)\cdot\frac{1}{\sigma^2} \\
+  &amp;= f(x)\cdot\frac{(x-\mu)^2}{\sigma^4} - f(x)\cdot\frac{1}{\sigma^2} \\
+  &amp;= f(x)\cdot\left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right)
+\end{align*}\]</span></p>
+</div>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Using the formula
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{bias}}(\hat f_h(x))
+  \approx \frac{\mu_2(K)}{2} f&#39;&#39;(x) h^2,
+\end{equation*}\]</span>
+show that for fixed <span class="math inline">\(K\)</span> and <span class="math inline">\(h\)</span>, the bias satisfies the following proportionality:
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{bias}}(\hat f_h(x))
+  \propto \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+\left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right).
+\end{equation*}\]</span></li>
+</ol>
+<div class="myanswers">
+<p>Substituting our expression for <span class="math inline">\(f&#39;&#39;(x)\)</span> into the bias formula we get
+<span class="math display">\[\begin{align*}
+  \mathop{\mathrm{bias}}(\hat f_h(x))
+  &amp;\approx \frac{\mu_2(K)}{2} f&#39;&#39;(x) h^2 \\
+  &amp;= \frac{\mu_2(K)}{2} \cdot f(x)\cdot\left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right) h^2 \\
+  &amp;=
+  \frac{\mu_2(K)h^2}{2\sqrt{2\pi\sigma^2}} \cdot
+  \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+  \left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right).
+\end{align*}\]</span></p>
+</div>
+</div>
+<div class="subq">
+<ol start="3" style="list-style-type: lower-alpha">
+<li>For which values of <span class="math inline">\(x\)</span> is the bias positive, negative, or zero?
+Why does this make sense intuitively?</li>
+</ol>
+<div class="myanswers">
+<p>The exponential term is always positive, so the sign depends on
+the sign of the term
+<span class="math inline">\((x-\mu)^2 / \sigma^4 - 1/\sigma^2\)</span>.
+This equals zero when <span class="math inline">\((x-\mu)^2 = \sigma^2\)</span>, or when <span class="math inline">\(x = \mu \pm \sigma\)</span>.
+The bias
+is negative when <span class="math inline">\(|x-\mu| &lt; \sigma\)</span>,
+is positive when <span class="math inline">\(|x-\mu| &gt; \sigma\)</span>.</p>
+<p>This makes sense because the positive bandwidth <span class="math inline">\(h\)</span> smoothes the density, so
+the bias is negative when the density is concave (near the maxiumum) and
+positive when it is convex (towards the tails).</p>
+</div>
+</div>
+</div>
+<div class="myq">
+<p><strong>3.</strong> Consider the variance of a kernel density estimate <span class="math inline">\(\hat f_h(x)\)</span> based
+on a sample <span class="math inline">\(X_1, \ldots, X_n\)</span> with common density <span class="math inline">\(f\)</span>:
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Var}}(\hat f_h(x))
+  = \frac{1}{n^2} \sum_{i,j=1}^n \mathbb{E}\Bigl( K_h(x - X_i)K_h(x - X_j) \Bigr)
+\end{equation*}\]</span></p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Let <span class="math inline">\(n=3\)</span>. Write out all terms in the sum explicitly and identify which
+terms involve the only one random variable <span class="math inline">\(X_i\)</span> and which involve
+more than one random variable.</li>
+</ol>
+<div class="myanswers">
+<p>For <span class="math inline">\(n=3\)</span>, expanding the double sum gives 9 terms:</p>
+<p>Terms with same random variable (<span class="math inline">\(i=j\)</span>):
+<span class="math display">\[\begin{align*}
+&amp; \mathbb{E}(K_h(x - X_1)K_h(x - X_1)) \\
+&amp; \mathbb{E}(K_h(x - X_2)K_h(x - X_2)) \\
+&amp; \mathbb{E}(K_h(x - X_3)K_h(x - X_3))
+\end{align*}\]</span></p>
+<p>Terms with different random variables (<span class="math inline">\(i\neq j\)</span>):
+<span class="math display">\[\begin{align*}
+&amp; \mathbb{E}(K_h(x - X_1)K_h(x - X_2)) \\
+&amp; \mathbb{E}(K_h(x - X_1)K_h(x - X_3)) \\
+&amp; \mathbb{E}(K_h(x - X_2)K_h(x - X_1)) \\
+&amp; \mathbb{E}(K_h(x - X_2)K_h(x - X_3)) \\
+&amp; \mathbb{E}(K_h(x - X_3)K_h(x - X_1)) \\
+&amp; \mathbb{E}(K_h(x - X_3)K_h(x - X_2))
+\end{align*}\]</span></p>
+</div>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>For general <span class="math inline">\(n\)</span>, how many terms in the sum have <span class="math inline">\(i=j\)</span> and how many have <span class="math inline">\(i\neq j\)</span>?</li>
+</ol>
+<div class="myanswers">
+<p>When <span class="math inline">\(i=j\)</span>, we are choosing the same index from <span class="math inline">\(\{1,\ldots,n\}\)</span> once, giving <span class="math inline">\(n\)</span> terms.
+When <span class="math inline">\(i\neq j\)</span>, we are choosing two different indices from <span class="math inline">\(\{1,\ldots,n\}\)</span>, giving <span class="math inline">\(n(n-1)\)</span> terms.
+The total number of terms is thus <span class="math inline">\(n + n(n-1) = n^2\)</span>, as expected.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Using these counts and the independence of the <span class="math inline">\(X_i\)</span>, show that:
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{Var}}(\hat f_h(x))
+  = \frac{1}{n} \mathbb{E}\Bigl( K_h(x - X_1)^2 \Bigr)
++ \frac{n-1}{n} \mathbb{E}\Bigl( \hat f_h(x) \Bigr)^2.
+\end{equation*}\]</span></li>
+</ol>
+<div class="myanswers">
+<p>Using part b, we can split the sum into two parts:
+<span class="math display">\[\begin{align*}
+  \mathop{\mathrm{Var}}(\hat f_h(x))
+  &amp;= \frac{1}{n^2}
+    \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1)K_h(x - X_2) \bigr) \Bigr) \\
+  &amp;= \frac{1}{n} \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)
+    + \frac{n-1}{n} \mathbb{E}\bigl( K_h(x - X_1) \bigr) \, \mathbb{E}\bigl( K_h(x - X_2) \bigr),
+\end{align*}\]</span>
+where we used the independence of the <span class="math inline">\(X_i\)</span> in the last step.
+Since <span class="math inline">\(\mathbb{E}\bigl( K_h(x - X_1) \bigr) = \mathbb{E}\bigl( K_h(x - X_2) \bigr) = \mathbb{E}(\hat
+f_h(x))\)</span>, this gives the required result.</p>
+</div>
+</div>
+</div>
+<div class="myq">
+<p><strong>4.</strong> Consider the following data:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="P01.html#cb39-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">89.6</span>, <span class="fl">82.5</span>, <span class="fl">70.9</span>, <span class="fl">83.8</span>, <span class="fl">92.4</span>, <span class="fl">86.5</span>, <span class="fl">77.3</span>, <span class="fl">89.2</span>,</span>
+<span id="cb39-2"><a href="P01.html#cb39-2" tabindex="-1"></a>       <span class="fl">93.1</span>, <span class="fl">84.7</span>, <span class="fl">78.5</span>, <span class="fl">88.3</span>, <span class="fl">85.6</span>, <span class="fl">90.4</span>, <span class="fl">76.8</span>)</span></code></pre></div>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Determine the sample standard deviation of these data.</li>
+</ol>
+<div class="myanswers">
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="P01.html#cb40-1" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">sd</span>(x)</span>
+<span id="cb40-2"><a href="P01.html#cb40-2" tabindex="-1"></a>sigma</span></code></pre></div>
+<pre><code>## [1] 6.410126</code></pre>
+</div>
+<p>The R ouputs shows that the standard deviation is <span class="math inline">\(6.410126\)</span>.</p>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Using the “plug-in rule” from section <a href="X04-practice.html#bwsel">4.3</a>, what bandwidth would you
+choose for a kernel density estimate of these data using the triangular kernel?</li>
+</ol>
+<div class="myanswers">
+<p>The plug-in rule assumes that the density is normal, to get
+<span class="math display">\[\begin{equation*}
+  R(f&#39;&#39;)
+  = \frac{3}{8\sigma^5\sqrt{\pi}}.
+\end{equation*}\]</span>
+Substituting the sample standard deviation into this formula gives</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="P01.html#cb42-1" tabindex="-1"></a>R.fpp <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">/</span> (<span class="dv">8</span> <span class="sc">*</span> sigma<span class="sc">^</span><span class="dv">5</span> <span class="sc">*</span> <span class="fu">sqrt</span>(pi))</span>
+<span id="cb42-2"><a href="P01.html#cb42-2" tabindex="-1"></a>R.fpp</span></code></pre></div>
+<pre><code>## [1] 1.954895e-05</code></pre>
+<p>We also need the sample size, and the roughness and second moment of the kernel:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="P01.html#cb44-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(x)</span>
+<span id="cb44-2"><a href="P01.html#cb44-2" tabindex="-1"></a>R.K <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb44-3"><a href="P01.html#cb44-3" tabindex="-1"></a>mu2.K <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span></code></pre></div>
+<p>Using these quantities and the formula from section <a href="X04-practice.html#IMSE">4.1</a> gives
+the result:</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="P01.html#cb45-1" tabindex="-1"></a>h <span class="ot">&lt;-</span> (R.K <span class="sc">/</span> (n <span class="sc">*</span> mu2.K<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> R.fpp))<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>)</span>
+<span id="cb45-2"><a href="P01.html#cb45-2" tabindex="-1"></a>h</span></code></pre></div>
+<pre><code>## [1] 9.607254</code></pre>
+</div>
+</div>
+</div>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="X04-practice.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="X05-smoothing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["MATH5714M.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
