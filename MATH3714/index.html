@@ -147,6 +147,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
 <li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
 </ul></li>
+<li class="part"><span><b>I Theory</b></span></li>
 <li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
@@ -232,6 +233,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.1" data-path="S08-influence.html"><a href="S08-influence.html#deleting"><i class="fa fa-check"></i><b>8.1</b> Deleting Observations</a></li>
 <li class="chapter" data-level="8.2" data-path="S08-influence.html"><a href="S08-influence.html#influence"><i class="fa fa-check"></i><b>8.2</b> Cook’s Distance</a></li>
 </ul></li>
+<li class="part"><span><b>II Linear Regression in Practice</b></span></li>
 <li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a>
 <ul>
 <li class="chapter" data-level="9.1" data-path="S09-plots.html"><a href="S09-plots.html#residual-plots"><i class="fa fa-check"></i><b>9.1</b> Residual Plots</a></li>
@@ -298,6 +300,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="16.3" data-path="S16-ridge.html"><a href="S16-ridge.html#standardisation"><i class="fa fa-check"></i><b>16.3</b> Standardisation</a></li>
 </ul></li>
+<li class="part"><span><b>III Robust Regression</b></span></li>
 <li class="chapter" data-level="17" data-path="S17-robust.html"><a href="S17-robust.html"><i class="fa fa-check"></i><b>17</b> Robust Regression</a>
 <ul>
 <li class="chapter" data-level="17.1" data-path="S17-robust.html"><a href="S17-robust.html#outliers"><i class="fa fa-check"></i><b>17.1</b> Outliers</a>
@@ -394,14 +397,14 @@ here is described by the equation
   y_i
   = \alpha + \beta x_i + \varepsilon_i
 \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, and the aim is to find values for
-the intercept <span class="math inline">\(\alpha\)</span> and the slope <span class="math inline">\(\beta\)</span> such that the residuals
-<span class="math inline">\(\varepsilon_i\)</span> are as small as possible. This procedure, called simple
-linear regression, is illustrated in figure <a href="index.html#fig:scatter-plot">0.1</a>.
-The variables <span class="math inline">\(x_i\)</span> are called <strong>input</strong>, “features”, or
-sometimes also “explanatory variables” or “independent variables”.
-The variables <span class="math inline">\(y_i\)</span> are called <strong>output</strong> or “response”, or sometimes the
-“dependent variables”. The values <span class="math inline">\(\varepsilon_i\)</span> are called the <strong>residuals</strong> or errors.</p>
+for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, and the aim is to find values for the
+intercept <span class="math inline">\(\alpha\)</span> and the slope <span class="math inline">\(\beta\)</span> such that the fitted line is as close
+as possible to the data points. This procedure, called simple linear
+regression, is illustrated in figure <a href="index.html#fig:scatter-plot">0.1</a>. The variables
+<span class="math inline">\(x_i\)</span> are called <strong>input</strong>, “features”, or sometimes also “explanatory
+variables” or “independent variables”. The variables <span class="math inline">\(y_i\)</span> are called
+<strong>output</strong> or “response”, or sometimes the “dependent variables”. The values
+<span class="math inline">\(\varepsilon_i\)</span> are called the <strong>errors</strong> or <strong>noise terms</strong>.</p>
 
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:scatter-plot"></span>
 <img src="MATH3714_files/figure-html/scatter-plot-1.png" alt="An illustration of linear regression. Each of the black circles in the plot stands for one paired sample \((x_i, y_i)\). The regression line \(x \mapsto \alpha + \beta x\), with intercept \(\alpha\) and slope \(\beta\), aims to predict the value of \(y\) using the observed value \(x\). For the marked sample \((x_i, y_i)\), the predicted \(y\)-value is \(\hat y_i\)." width="672" />
@@ -414,14 +417,14 @@ we will consider multiple linear regression, where the response <span class="ma
 is allowed to depend on several input variables. The corresponding
 model is now
 <span class="math display">\[\begin{equation*}
-  y_i = \alpha + \beta_1 x_{i1} + \cdots + \beta_p x_{ip} + \varepsilon_i
+  y_i = \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip} + \varepsilon_i
 \end{equation*}\]</span>
 for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, where <span class="math inline">\(n\)</span> is still the number
 of observations, and <span class="math inline">\(p\)</span> is now the number of inputs we observe for
 each sample.
-The aim is now to find values for the intercept <span class="math inline">\(\alpha\)</span> and the
-slopes <span class="math inline">\(\beta_1, \ldots, \beta_p\)</span> such that the residuals <span class="math inline">\(\varepsilon_i\)</span>
-are as small as possible.
+The aim is now to find values for the intercept <span class="math inline">\(\beta_0\)</span> and the
+slopes <span class="math inline">\(\beta_1, \ldots, \beta_p\)</span> such that the fitted hyperplane
+is as close as possible to the data points.
 Note that for multiple linear regression, we still consider a
 single response for each sample, only the number of inputs has been
 increased.</p>
@@ -437,6 +440,8 @@ We will use statistical hypothesis tests to answer such questions.</li>
 <li>How well does the model fit the data?</li>
 <li>How to deal with outliers in the data?</li>
 </ol>
+<p>In the next section, we will begin by reviewing simple linear regression in
+detail, before moving on to the multiple regression case.</p>
 
 </div>
             </section>

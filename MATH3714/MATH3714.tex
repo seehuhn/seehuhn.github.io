@@ -179,14 +179,14 @@ here is described by the equation
   y_i
   = \alpha + \beta x_i + \varepsilon_i
 \end{equation*}
-for all \(i \in \{1, 2, \ldots, n\}\), and the aim is to find values for
-the intercept \(\alpha\) and the slope \(\beta\) such that the residuals
-\(\varepsilon_i\) are as small as possible. This procedure, called simple
-linear regression, is illustrated in figure~\ref{fig:scatter-plot}.
-The variables \(x_i\) are called \textbf{input}, ``features'', or
-sometimes also ``explanatory variables'' or ``independent variables''.
-The variables \(y_i\) are called \textbf{output} or ``response'', or sometimes the
-``dependent variables''. The values \(\varepsilon_i\) are called the \textbf{residuals} or errors.
+for all \(i \in \{1, 2, \ldots, n\}\), and the aim is to find values for the
+intercept \(\alpha\) and the slope \(\beta\) such that the fitted line is as close
+as possible to the data points. This procedure, called simple linear
+regression, is illustrated in figure~\ref{fig:scatter-plot}. The variables
+\(x_i\) are called \textbf{input}, ``features'', or sometimes also ``explanatory
+variables'' or ``independent variables''. The variables \(y_i\) are called
+\textbf{output} or ``response'', or sometimes the ``dependent variables''. The values
+\(\varepsilon_i\) are called the \textbf{errors} or \textbf{noise terms}.
 
 
 
@@ -204,14 +204,14 @@ we will consider multiple linear regression, where the response~\(y\)
 is allowed to depend on several input variables. The corresponding
 model is now
 \begin{equation*}
-  y_i = \alpha + \beta_1 x_{i1} + \cdots + \beta_p x_{ip} + \varepsilon_i
+  y_i = \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip} + \varepsilon_i
 \end{equation*}
 for all \(i \in \{1, 2, \ldots, n\}\), where \(n\) is still the number
 of observations, and \(p\) is now the number of inputs we observe for
 each sample.
-The aim is now to find values for the intercept \(\alpha\) and the
-slopes \(\beta_1, \ldots, \beta_p\) such that the residuals \(\varepsilon_i\)
-are as small as possible.
+The aim is now to find values for the intercept \(\beta_0\) and the
+slopes \(\beta_1, \ldots, \beta_p\) such that the fitted hyperplane
+is as close as possible to the data points.
 Note that for multiple linear regression, we still consider a
 single response for each sample, only the number of inputs has been
 increased.
@@ -236,12 +236,15 @@ will answer questions like the following:
   How to deal with outliers in the data?
 \end{enumerate}
 
+In the next section, we will begin by reviewing simple linear regression in
+detail, before moving on to the multiple regression case.
+
 \clearpage
 
 \section{Simple Linear Regression}\label{S01-simple}
 
 As a reminder, we consider simple linear regression in this section.
-My hope is, that all of you have seen this material before at some
+My hope is that all of you have seen this material before at some
 stage, \emph{e.g.}~in school or in some first or second year modules.
 
 In preparation for notation introduced in the next section, we rename the
@@ -253,7 +256,7 @@ parameters \(\alpha\) and \(\beta\) from the introduction to the new names
 In simple linear regression, the aim is to find a regression line \(y =
 \beta_0 + \beta_1 x\), such that the line is ``close'' to given data points
 \((x_1, y_1), \ldots, (x_n, y_n) \in\mathbb{R}^2\) for \(i \in \{1, 2, \ldots,
-n\}\). The ususal way to find \(\beta_0\) and \(\beta_1\), and thus the regression
+n\}\). The usual way to find \(\beta_0\) and \(\beta_1\), and thus the regression
 line, is by minimising the \textbf{residual sum of squares}:
 \begin{equation}
   r(\beta_0, \beta_1)
@@ -382,9 +385,9 @@ are i.i.d.~random variables with \(\mathbb{E}(\varepsilon_i) = 0\) and
   more complicated models which also allow for randomness of \(x\), but
   we won't consider such models here.)
 \item
-  The random variables \(\varepsilon_i\) are called \textbf{residuals} or
-  \textbf{errors}. In a scatter plot, the residuals correspond to the
-  vertical distance between the samples and the regression line.
+  The random variables \(\varepsilon_i\) are errors or
+  noise terms. In a scatter plot, the errors correspond to the
+  vertical distance between the samples and the true regression line.
   Often one assumes that \(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\) for all
   \(i \in \{1, 2, \ldots, n\}\).
 \item
@@ -418,14 +421,25 @@ In this setup, we can consider the estimates \(\hat\beta_0\) and \(\hat\beta_1\)
 from the previous subsection as statistical parameter estimates for the
 model parameters \(\beta_0\) and~\(\beta_1\).
 
-In order to fit a linear model we also need to estimate the residual
-variance~\(\sigma^2\). This can be done using the estimator
+In order to fit a linear model we also need to estimate the error
+variance~\(\sigma^2\). We can't use the usual formula for estimating
+a variance, since the errors \(\varepsilon_i\) are not observed. Instead we
+consider the \textbf{residuals}
+\begin{equation*}
+  \hat\varepsilon_i
+  = y_i - (\hat\beta_0 + \hat\beta_1 x_i).
+\end{equation*}
+These are the vertical distances between the data points \((x_i, y_i)\) and the
+fitted regression line. (In contrast, the errors \(\varepsilon_i\) are the vertical
+distances between the data points and the unknown, true regression line).
+Using the residuals, we can estimate \(\sigma^2\) by
 \begin{equation}
   \hat\sigma^2
   = \frac{1}{n-2} \sum_{i=1}^n \hat\varepsilon_i^2
   = \frac{1}{n-2} \sum_{i=1}^n (y_i - \hat\beta_0 - \hat\beta_1 x_i)^2.
   \label{eq:reg-sigma-est}
 \end{equation}
+
 To understand the form of this estimator, we have to remember that
 \(\sigma^2\) is the variance of the \(\varepsilon_i\). Thus, using the standard
 estimator for the variance, we could estimate \(\sigma^2\) as
@@ -435,15 +449,14 @@ estimator for the variance, we could estimate \(\sigma^2\) as
   \approx \frac{1}{n-1} \sum_{i=1}^n \bigl(\hat\varepsilon_i - \overline{\hat\varepsilon}\bigr)^2,
   \label{eq:resid-var-est}
 \end{equation}
-
 where \(\bar\varepsilon\) and \(\overline{\hat\varepsilon}\) are the averages of the
-\(\varepsilon_i\) and the \(\hat\varepsilon_i\), respectively. One can show that
+\(\varepsilon_i\) and the \(\hat\varepsilon_i\), respectively. We will later see that
 \(\overline{\hat\varepsilon} = 0\). The estimates of \(\beta_0\) and \(\beta_1\) are
 sensitive to fluctuations in the data, with the effect that the
 estimated regression line is, on average, slightly closer to the data
 points than the true regression line would be. This causes the sample
 variance of the \(\hat\varepsilon_i\), on average, to be slightly smaller than
-the true residual variance \(\sigma^2\) and the thus the
+the true error variance \(\sigma^2\) and the thus the
 estimator~\eqref{eq:resid-var-est} is slightly biased. A more
 detailed analysis reveals that an unbiased estimator can be obtained
 if one replaces the pre-factor \(1/(n-1)\) in equation~\eqref{eq:resid-var-est}
@@ -459,7 +472,7 @@ include the following:
   The estimators \(\hat\beta_0\), \(\hat\beta_1\) and \(\hat\sigma^2\)
   are unbiased: This means that when we plug in random data
   \((x_i, Y_i)\) from the model~\eqref{eq:regression}, on
-  average we get the correc answer: \(\mathbb{E}(\hat\beta_0) = \beta_0\),
+  average we get the correct answer: \(\mathbb{E}(\hat\beta_0) = \beta_0\),
   \(\mathbb{E}(\hat\beta_1) = \beta_1\), \(\mathbb{E}(\hat\sigma^2) = \sigma^2\).
 \item
   One can ask about the average distance between the estimated
@@ -531,7 +544,7 @@ In the next section we will see that the minimum of \(r\) is attained
 for
 \begin{equation*}
   \hat\beta
-  = (X X^\top)^{-1} X^\top y
+  = (X^\top X)^{-1} X^\top y
 \end{equation*}
 and one can check that the components of this vector \(\hat\beta = (\hat\beta_0,
 \hat\beta_1)\) coincide with the estimates we obtained above.
@@ -549,6 +562,10 @@ and one can check that the components of this vector \(\hat\beta = (\hat\beta_0,
 \item
   The problem can be conveniently written in matrix/vector notation.
 \end{itemize}
+
+\clearpage
+
+\part{Theory}\label{part-theory}
 
 \clearpage
 
@@ -1810,6 +1827,8 @@ exclude cases like this.
 \section*{Problem Sheet 1}\label{P01}
 \addcontentsline{toc}{section}{Problem Sheet 1}
 
+\excludecomment{myanswers}
+
 This problem sheet covers material from Sections 1-3 of the course. You should
 attempt all these questions and write up your solutions in advance of the
 workshop in week~2. Your solutions are not assessed. Instead, the answers
@@ -2118,7 +2137,7 @@ we get \(\mathbb{E}\bigl(\|\varepsilon\|^2\bigr) = n (\sigma^2 + \mu^2)\).
 \section{Properties of the Least Squares Estimate}\label{S04-model}
 
 Like in the one-dimensional case, we can build a \textbf{statistical model}
-for the data. Here we assume that the residuals are random. More
+for the data. Here we assume that the errors are random. More
 precisely we have
 \begin{equation}
   Y = X \beta + \varepsilon.  \label{eq:lmstats}
@@ -3946,7 +3965,7 @@ interval is given by \(\hat\beta_i\):
 \end{Shaded}
 
 To find the half-width of the interval, we need to first construct the
-covariance matrix \(C\) and the estimated residual variance \(\hat\sigma^2\).
+covariance matrix \(C\) and the estimated error variance \(\hat\sigma^2\).
 We will also need the corresponding quantile of the \(t\)-distribution.
 
 \begin{Shaded}
@@ -4364,6 +4383,8 @@ and thus also at \(\alpha=0.05\).
 
 \section*{Problem Sheet 2}\label{P02}
 \addcontentsline{toc}{section}{Problem Sheet 2}
+
+\excludecomment{myanswers}
 
 This problem sheet covers material from Sections 4-7 of the course. You should
 attempt all these questions and write up your solutions in advance of the
@@ -5154,6 +5175,10 @@ large.
   Cook's distance provides a numerical measure for the influence of each
   observation.
 \end{itemize}
+
+\clearpage
+
+\part{Linear Regression in Practice}\label{part-linear-regression-in-practice}
 
 \clearpage
 
@@ -6447,6 +6472,8 @@ sections in turn:
 
 \section*{Problem Sheet 3}\label{P03}
 \addcontentsline{toc}{section}{Problem Sheet 3}
+
+\excludecomment{myanswers}
 
 You should attempt all these questions and write up your solutions in advance
 of the workshop in week~6 where the answers will be discussed.
@@ -8597,6 +8624,8 @@ be addressed:
 \section*{Problem Sheet 4}\label{P04}
 \addcontentsline{toc}{section}{Problem Sheet 4}
 
+\excludecomment{myanswers}
+
 You should attempt all these questions and write up your solutions in advance
 of the workshop in week~8 where the answers will be discussed.
 
@@ -9364,6 +9393,10 @@ and ridge regression estimates.
   Often it is advantageous to standardise the data before performing
   ridge regression.
 \end{itemize}
+
+\clearpage
+
+\part{Robust Regression}\label{part-robust-regression}
 
 \clearpage
 
@@ -10461,6 +10494,8 @@ compared to ordinary least squares regression.
 
 \section*{Problem Sheet 5}\label{P05}
 \addcontentsline{toc}{section}{Problem Sheet 5}
+
+\excludecomment{myanswers}
 
 You should attempt all these questions and write up your solutions in advance
 of the workshop in week 11 where the answers will be discussed.

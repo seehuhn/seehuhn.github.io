@@ -147,6 +147,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.2" data-path="S01-simple.html"><a href="S01-simple.html#linear-regression-as-a-parameter-estimation-problem"><i class="fa fa-check"></i><b>1.2</b> Linear Regression as a Parameter Estimation Problem</a></li>
 <li class="chapter" data-level="1.3" data-path="S01-simple.html"><a href="S01-simple.html#sec:simple-mat"><i class="fa fa-check"></i><b>1.3</b> Matrix Notation</a></li>
 </ul></li>
+<li class="part"><span><b>I Theory</b></span></li>
 <li class="chapter" data-level="2" data-path="S02-multiple.html"><a href="S02-multiple.html"><i class="fa fa-check"></i><b>2</b> Least Squares Estimates</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
@@ -232,6 +233,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.1" data-path="S08-influence.html"><a href="S08-influence.html#deleting"><i class="fa fa-check"></i><b>8.1</b> Deleting Observations</a></li>
 <li class="chapter" data-level="8.2" data-path="S08-influence.html"><a href="S08-influence.html#influence"><i class="fa fa-check"></i><b>8.2</b> Cook’s Distance</a></li>
 </ul></li>
+<li class="part"><span><b>II Linear Regression in Practice</b></span></li>
 <li class="chapter" data-level="9" data-path="S09-plots.html"><a href="S09-plots.html"><i class="fa fa-check"></i><b>9</b> Diagnostic Plots</a>
 <ul>
 <li class="chapter" data-level="9.1" data-path="S09-plots.html"><a href="S09-plots.html#residual-plots"><i class="fa fa-check"></i><b>9.1</b> Residual Plots</a></li>
@@ -298,6 +300,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="16.3" data-path="S16-ridge.html"><a href="S16-ridge.html#standardisation"><i class="fa fa-check"></i><b>16.3</b> Standardisation</a></li>
 </ul></li>
+<li class="part"><span><b>III Robust Regression</b></span></li>
 <li class="chapter" data-level="17" data-path="S17-robust.html"><a href="S17-robust.html"><i class="fa fa-check"></i><b>17</b> Robust Regression</a>
 <ul>
 <li class="chapter" data-level="17.1" data-path="S17-robust.html"><a href="S17-robust.html#outliers"><i class="fa fa-check"></i><b>17.1</b> Outliers</a>
@@ -383,7 +386,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="S01-simple" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">Section 1</span> Simple Linear Regression<a href="S01-simple.html#S01-simple" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>As a reminder, we consider simple linear regression in this section.
-My hope is, that all of you have seen this material before at some
+My hope is that all of you have seen this material before at some
 stage, <em>e.g.</em> in school or in some first or second year modules.</p>
 <p>In preparation for notation introduced in the next section, we rename the
 parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> from the introduction to the new names
@@ -399,7 +402,7 @@ parameters <span class="math inline">\(\alpha\)</span> and <span class="math inl
 <p>In simple linear regression, the aim is to find a regression line <span class="math inline">\(y =
 \beta_0 + \beta_1 x\)</span>, such that the line is “close” to given data points
 <span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n) \in\mathbb{R}^2\)</span> for <span class="math inline">\(i \in \{1, 2, \ldots,
-n\}\)</span>. The ususal way to find <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>, and thus the regression
+n\}\)</span>. The usual way to find <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>, and thus the regression
 line, is by minimising the <strong>residual sum of squares</strong>:
 <span class="math display" id="eq:RSS">\[\begin{equation}
   r(\beta_0, \beta_1)
@@ -518,9 +521,9 @@ are i.i.d. random variables with <span class="math inline">\(\mathbb{E}(\vareps
 random quantities in the model are <span class="math inline">\(\varepsilon_i\)</span> and <span class="math inline">\(Y_i\)</span>. (There are
 more complicated models which also allow for randomness of <span class="math inline">\(x\)</span>, but
 we won’t consider such models here.)</li>
-<li>The random variables <span class="math inline">\(\varepsilon_i\)</span> are called <strong>residuals</strong> or
-<strong>errors</strong>. In a scatter plot, the residuals correspond to the
-vertical distance between the samples and the regression line.
+<li>The random variables <span class="math inline">\(\varepsilon_i\)</span> are errors or
+noise terms. In a scatter plot, the errors correspond to the
+vertical distance between the samples and the true regression line.
 Often one assumes that <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span> for all
 <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>.</li>
 <li>The values <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\sigma^2\)</span> are parameters of
@@ -546,15 +549,25 @@ distributed.</li>
 <p>In this setup, we can consider the estimates <span class="math inline">\(\hat\beta_0\)</span> and <span class="math inline">\(\hat\beta_1\)</span>
 from the previous subsection as statistical parameter estimates for the
 model parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
-<p>In order to fit a linear model we also need to estimate the residual
-variance <span class="math inline">\(\sigma^2\)</span>. This can be done using the estimator
+<p>In order to fit a linear model we also need to estimate the error
+variance <span class="math inline">\(\sigma^2\)</span>. We can’t use the usual formula for estimating
+a variance, since the errors <span class="math inline">\(\varepsilon_i\)</span> are not observed. Instead we
+consider the <strong>residuals</strong>
+<span class="math display">\[\begin{equation*}
+  \hat\varepsilon_i
+  = y_i - (\hat\beta_0 + \hat\beta_1 x_i).
+\end{equation*}\]</span>
+These are the vertical distances between the data points <span class="math inline">\((x_i, y_i)\)</span> and the
+fitted regression line. (In contrast, the errors <span class="math inline">\(\varepsilon_i\)</span> are the vertical
+distances between the data points and the unknown, true regression line).
+Using the residuals, we can estimate <span class="math inline">\(\sigma^2\)</span> by
 <span class="math display" id="eq:reg-sigma-est">\[\begin{equation}
   \hat\sigma^2
   = \frac{1}{n-2} \sum_{i=1}^n \hat\varepsilon_i^2
   = \frac{1}{n-2} \sum_{i=1}^n (y_i - \hat\beta_0 - \hat\beta_1 x_i)^2.
   \tag{1.4}
-\end{equation}\]</span>
-To understand the form of this estimator, we have to remember that
+\end{equation}\]</span></p>
+<p>To understand the form of this estimator, we have to remember that
 <span class="math inline">\(\sigma^2\)</span> is the variance of the <span class="math inline">\(\varepsilon_i\)</span>. Thus, using the standard
 estimator for the variance, we could estimate <span class="math inline">\(\sigma^2\)</span> as
 <span class="math display" id="eq:resid-var-est">\[\begin{equation}
@@ -562,15 +575,15 @@ estimator for the variance, we could estimate <span class="math inline">\(\sigma
   \approx \frac{1}{n-1} \sum_{i=1}^n \bigl(\varepsilon_i - \bar\varepsilon\bigr)^2
   \approx \frac{1}{n-1} \sum_{i=1}^n \bigl(\hat\varepsilon_i - \overline{\hat\varepsilon}\bigr)^2,
   \tag{1.5}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\bar\varepsilon\)</span> and <span class="math inline">\(\overline{\hat\varepsilon}\)</span> are the averages of the
-<span class="math inline">\(\varepsilon_i\)</span> and the <span class="math inline">\(\hat\varepsilon_i\)</span>, respectively. One can show that
+\end{equation}\]</span>
+where <span class="math inline">\(\bar\varepsilon\)</span> and <span class="math inline">\(\overline{\hat\varepsilon}\)</span> are the averages of the
+<span class="math inline">\(\varepsilon_i\)</span> and the <span class="math inline">\(\hat\varepsilon_i\)</span>, respectively. We will later see that
 <span class="math inline">\(\overline{\hat\varepsilon} = 0\)</span>. The estimates of <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> are
 sensitive to fluctuations in the data, with the effect that the
 estimated regression line is, on average, slightly closer to the data
 points than the true regression line would be. This causes the sample
 variance of the <span class="math inline">\(\hat\varepsilon_i\)</span>, on average, to be slightly smaller than
-the true residual variance <span class="math inline">\(\sigma^2\)</span> and the thus the
+the true error variance <span class="math inline">\(\sigma^2\)</span> and the thus the
 estimator <a href="S01-simple.html#eq:resid-var-est">(1.5)</a> is slightly biased. A more
 detailed analysis reveals that an unbiased estimator can be obtained
 if one replaces the pre-factor <span class="math inline">\(1/(n-1)\)</span> in equation <a href="S01-simple.html#eq:resid-var-est">(1.5)</a>
@@ -583,7 +596,7 @@ include the following:</p>
 <li><p>The estimators <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span> and <span class="math inline">\(\hat\sigma^2\)</span>
 are unbiased: This means that when we plug in random data
 <span class="math inline">\((x_i, Y_i)\)</span> from the model <a href="S01-simple.html#eq:regression">(1.3)</a>, on
-average we get the correc answer: <span class="math inline">\(\mathbb{E}(\hat\beta_0) = \beta_0\)</span>,
+average we get the correct answer: <span class="math inline">\(\mathbb{E}(\hat\beta_0) = \beta_0\)</span>,
 <span class="math inline">\(\mathbb{E}(\hat\beta_1) = \beta_1\)</span>, <span class="math inline">\(\mathbb{E}(\hat\sigma^2) = \sigma^2\)</span>.</p></li>
 <li><p>One can ask about the average distance between the estimated
 parameters <span class="math inline">\(\hat\beta_0\)</span>, <span class="math inline">\(\hat\beta_1\)</span> and <span class="math inline">\(\hat\sigma^2\)</span>
@@ -650,7 +663,7 @@ In the next section we will see that the minimum of <span class="math inline">\(
 for
 <span class="math display">\[\begin{equation*}
   \hat\beta
-  = (X X^\top)^{-1} X^\top y
+  = (X^\top X)^{-1} X^\top y
 \end{equation*}\]</span>
 and one can check that the components of this vector <span class="math inline">\(\hat\beta = (\hat\beta_0,
 \hat\beta_1)\)</span> coincide with the estimates we obtained above.</p>
@@ -665,6 +678,10 @@ and one can check that the components of this vector <span class="math inline">\
 </div>
 
 </div>
+</div>
+
+
+
 </div>
             </section>
 

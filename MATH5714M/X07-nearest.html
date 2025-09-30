@@ -339,25 +339,25 @@ to perform <span class="math inline">\(k\)</span>-NN regression is
 <p><span id="exm:unlabeled-div-12" class="example"><strong>Example 7.1  </strong></span>Here we compute a <span class="math inline">\(k\)</span>-NN estimate for the mean of the <code>faithful</code> dataset,
 which we have already encountered in examples <a href="X05-smoothing.html#exm:faithful">5.1</a> and <a href="X05-smoothing.html#exm:faithless">5.2</a>.
 We start by storing the data in the variables <code>x</code> and <code>y</code>:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="X07-nearest.html#cb56-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> faithful<span class="sc">$</span>eruptions</span>
-<span id="cb56-2"><a href="X07-nearest.html#cb56-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> faithful<span class="sc">$</span>waiting</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="X07-nearest.html#cb58-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> faithful<span class="sc">$</span>eruptions</span>
+<span id="cb58-2"><a href="X07-nearest.html#cb58-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> faithful<span class="sc">$</span>waiting</span></code></pre></div>
 <p>Now we use <code>knn.reg()</code> to compute the <span class="math inline">\(k\)</span>-NN estimate on a grid
 of values. The help page for <code>knn.reg()</code> explains that we need to
 convert the input to either a matrix or a data frame; here we use
 data frames. The grid of input values where we want to estimate
 the <span class="math inline">\(k\)</span>-NN estimate is passed in via the optional argument <code>test = ...</code>.
 Here we use the arbitrarily chosen value <span class="math inline">\(k = 50\)</span>.</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="X07-nearest.html#cb57-1" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
-<span id="cb57-2"><a href="X07-nearest.html#cb57-2" tabindex="-1"></a></span>
-<span id="cb57-3"><a href="X07-nearest.html#cb57-3" tabindex="-1"></a>x.test <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">1.5</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">500</span>)</span>
-<span id="cb57-4"><a href="X07-nearest.html#cb57-4" tabindex="-1"></a></span>
-<span id="cb57-5"><a href="X07-nearest.html#cb57-5" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="fu">data.frame</span>(<span class="at">x=</span>x),</span>
-<span id="cb57-6"><a href="X07-nearest.html#cb57-6" tabindex="-1"></a>             <span class="at">y =</span> y,</span>
-<span id="cb57-7"><a href="X07-nearest.html#cb57-7" tabindex="-1"></a>             <span class="at">test =</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x.test),</span>
-<span id="cb57-8"><a href="X07-nearest.html#cb57-8" tabindex="-1"></a>             <span class="at">k =</span> <span class="dv">50</span>)</span>
-<span id="cb57-9"><a href="X07-nearest.html#cb57-9" tabindex="-1"></a></span>
-<span id="cb57-10"><a href="X07-nearest.html#cb57-10" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex=</span>.<span class="dv">5</span>)</span>
-<span id="cb57-11"><a href="X07-nearest.html#cb57-11" tabindex="-1"></a><span class="fu">lines</span>(x.test, m<span class="sc">$</span>pred, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="X07-nearest.html#cb59-1" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
+<span id="cb59-2"><a href="X07-nearest.html#cb59-2" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="X07-nearest.html#cb59-3" tabindex="-1"></a>x.test <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">1.5</span>, <span class="dv">5</span>, <span class="at">length.out =</span> <span class="dv">500</span>)</span>
+<span id="cb59-4"><a href="X07-nearest.html#cb59-4" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="X07-nearest.html#cb59-5" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="fu">data.frame</span>(<span class="at">x=</span>x),</span>
+<span id="cb59-6"><a href="X07-nearest.html#cb59-6" tabindex="-1"></a>             <span class="at">y =</span> y,</span>
+<span id="cb59-7"><a href="X07-nearest.html#cb59-7" tabindex="-1"></a>             <span class="at">test =</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x.test),</span>
+<span id="cb59-8"><a href="X07-nearest.html#cb59-8" tabindex="-1"></a>             <span class="at">k =</span> <span class="dv">50</span>)</span>
+<span id="cb59-9"><a href="X07-nearest.html#cb59-9" tabindex="-1"></a></span>
+<span id="cb59-10"><a href="X07-nearest.html#cb59-10" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex=</span>.<span class="dv">5</span>)</span>
+<span id="cb59-11"><a href="X07-nearest.html#cb59-11" tabindex="-1"></a><span class="fu">lines</span>(x.test, m<span class="sc">$</span>pred, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/faithful-kNN-1.png" width="672" /></p>
 <p>The estimated mean curve looks reasonable.</p>
 </div>
