@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Problem Sheet 1 | MATH5714 Linear Regression, Robustness and Smoothing</title>
+  <title>Section 6 Spline Smoothing | MATH5714 Linear Regression, Robustness and Smoothing</title>
   <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2025/26" />
   <meta name="generator" content="bookdown 0.44 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Problem Sheet 1 | MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta property="og:title" content="Section 6 Spline Smoothing | MATH5714 Linear Regression, Robustness and Smoothing" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2025/26" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Problem Sheet 1 | MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta name="twitter:title" content="Section 6 Spline Smoothing | MATH5714 Linear Regression, Robustness and Smoothing" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2025/26" />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="X03-practice.html"/>
-<link rel="next" href="X04-smoothing.html"/>
+<link rel="prev" href="X05-locpoly.html"/>
+<link rel="next" href="X07-nearest.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -248,284 +248,256 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="P01" class="section level1 unnumbered hasAnchor">
-<h1>Problem Sheet 1<a href="P01.html#P01" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<style>
-.fold-btn {
-  float: right;
-  margin: -12px 0 0 0;
-}
-</style>
-<script type="text/javascript">
-$(document).ready(function() {
-  $folds = $(".myanswers");
-  $folds.wrapInner("<div class=\"fold-blck\">"); // wrap a div container around content
-  $folds.prepend("<button class=\"fold-btn\">Show solution</button>");  // add a button
-  $(".fold-blck").toggle();  // fold all blocks
-  $(".fold-btn").on("click", function() {  // add onClick event
-    $(this).text($(this).text() === "Hide solution" ? "Show solution" : "Hide solution");
-    $(this).next(".fold-blck").toggle("linear");  // "swing" is the default easing function. This can be further customized in its speed or the overall animation itself.
-  })
-});
-</script>
-<!--
-<style>.myanswers { display: none !important; }</style>
-\excludecomment{myanswers}
--->
+<div id="X06-splines" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Section 6</span> Spline Smoothing<a href="X06-splines.html#X06-splines" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In the previous sections we have seen how kernel methods and <span class="math inline">\(k\)</span>-nearest
+neighbour methods can be used to estimate the regression function <span class="math inline">\(m\colon
+\mathbb{R}\to \mathbb{R}\)</span> from data <span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n)\)</span>. While these methods
+work well in many situations, they have some limitations:</p>
+<ul>
+<li>The choice of bandwidth <span class="math inline">\(h\)</span> or neighbourhood size <span class="math inline">\(k\)</span> can be difficult.</li>
+<li>Kernel methods can suffer from boundary effects, where the estimate
+is biased near the edges of the data range.</li>
+<li>All methods are local, averaging nearby observations, which can lead
+to increased variance.</li>
+</ul>
+<p>In this section we introduce an alternative approach based on <strong>spline
+smoothing</strong>. Instead of local averaging, we fit a smooth function globally
+to the entire dataset, using a penalty term to control the smoothness.</p>
+<div id="smoothing-splines" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Smoothing Splines<a href="X06-splines.html#smoothing-splines" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The key idea of spline smoothing is to find a function <span class="math inline">\(m\)</span> which balances
+two competing goals:</p>
+<ol style="list-style-type: decimal">
+<li>The function should fit the data well, <em>i.e.</em> the residual sum of
+squares <span class="math inline">\(\sum_{i=1}^n \bigl( y_i - m(x_i) \bigr)^2\)</span> should be small.</li>
+<li>The function should be smooth, <em>i.e.</em> it should not have too much
+curvature.</li>
+</ol>
+<p>To measure the curvature of a function <span class="math inline">\(m\)</span>, we use the integral of the
+squared second derivative:
+<span class="math display">\[\begin{equation*}
+  \int_{-\infty}^\infty \bigl( m&#39;&#39;(x) \bigr)^2 \,dx.
+\end{equation*}\]</span>
+This integral is large if <span class="math inline">\(m\)</span> has high curvature, and small if <span class="math inline">\(m\)</span> is
+nearly linear. (For a linear function <span class="math inline">\(m(x) = a + bx\)</span> we have <span class="math inline">\(m&#39;&#39;(x) = 0\)</span>
+and thus the integral equals zero.)</p>
+<div class="definition">
+<p><span id="def:smoothing-spline" class="definition"><strong>Definition 6.1  </strong></span>The <strong>smoothing spline</strong> estimate for the regression function <span class="math inline">\(m\)</span> is the
+function <span class="math inline">\(\hat m_\lambda\)</span> which minimizes
+<span class="math display" id="eq:spline-penalty">\[\begin{equation}
+  \sum_{i=1}^n \bigl( y_i - m(x_i) \bigr)^2 + \lambda \int_{-\infty}^\infty \bigl( m&#39;&#39;(x) \bigr)^2 \,dx
+  \tag{6.1}
+\end{equation}\]</span>
+over all twice differentiable functions <span class="math inline">\(m\colon \mathbb{R}\to \mathbb{R}\)</span>.
+The parameter <span class="math inline">\(\lambda \geq 0\)</span> is called the <strong>smoothing parameter</strong>.</p>
+</div>
+<p>The smoothing parameter <span class="math inline">\(\lambda\)</span> controls the trade-off between fitting
+the data and smoothness:</p>
+<ul>
+<li>For <span class="math inline">\(\lambda = 0\)</span>, only the residual sum of squares matters, and the
+solution is the interpolating function which passes through all data
+points.</li>
+<li>For <span class="math inline">\(\lambda \to \infty\)</span>, only the smoothness matters, and the solution
+is the linear regression line (which has zero curvature).</li>
+<li>For intermediate values of <span class="math inline">\(\lambda\)</span>, the solution balances fit and
+smoothness.</li>
+</ul>
+<p>This is similar to ridge regression (see <a href="https://seehuhn.github.io/MATH3714/S16-ridge.html">section 16 of the level 3
+notes</a>), where a penalty
+term <span class="math inline">\(\lambda \|\beta\|^2\)</span> is added to the residual sum of squares to
+control the size of the coefficients.</p>
+</div>
+<div id="cubic-splines" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Cubic Splines<a href="X06-splines.html#cubic-splines" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Before we can state the solution to the optimization problem in
+definition <a href="X06-splines.html#def:smoothing-spline">6.1</a>, we need to introduce the concept
+of a <strong>cubic spline</strong>.</p>
+<div class="definition">
+<p><span id="def:cubic-spline" class="definition"><strong>Definition 6.2  </strong></span>A <strong>cubic spline</strong> with knots <span class="math inline">\(\kappa_1 &lt; \kappa_2 &lt; \cdots &lt; \kappa_k\)</span> is
+a function <span class="math inline">\(s\colon \mathbb{R}\to \mathbb{R}\)</span> such that</p>
+<ul>
+<li><span class="math inline">\(s\)</span> is a cubic polynomial on each interval <span class="math inline">\((-\infty, \kappa_1)\)</span>,
+<span class="math inline">\((\kappa_1, \kappa_2)\)</span>, …, <span class="math inline">\((\kappa_{k-1}, \kappa_k)\)</span>, and
+<span class="math inline">\((\kappa_k, \infty)\)</span>, and</li>
+<li><span class="math inline">\(s\)</span> is twice continuously differentiable, <em>i.e.</em> <span class="math inline">\(s\)</span>, <span class="math inline">\(s&#39;\)</span> and <span class="math inline">\(s&#39;&#39;\)</span>
+are all continuous.</li>
+</ul>
+<p>A <strong>natural cubic spline</strong> is a cubic spline which is linear on the
+intervals <span class="math inline">\((-\infty, \kappa_1)\)</span> and <span class="math inline">\((\kappa_k, \infty)\)</span>.</p>
+</div>
+<p>The points <span class="math inline">\(\kappa_1, \ldots, \kappa_k\)</span> are called <strong>knots</strong>. At each
+knot, the function <span class="math inline">\(s\)</span> transitions from one cubic polynomial to another,
+but the transition is smooth because <span class="math inline">\(s\)</span>, <span class="math inline">\(s&#39;\)</span> and <span class="math inline">\(s&#39;&#39;\)</span> are all continuous.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-13" class="example"><strong>Example 6.1  </strong></span>TODO: add a simple example showing a cubic spline with 2-3 knots</p>
+</div>
+<p>The following theorem shows that the solution to the smoothing spline
+problem is always a natural cubic spline.</p>
+<div class="theorem">
+<p><span id="thm:spline-solution" class="theorem"><strong>Theorem 6.1  </strong></span>The solution <span class="math inline">\(\hat m_\lambda\)</span> to the optimization problem in
+definition <a href="X06-splines.html#def:smoothing-spline">6.1</a> is a natural cubic spline with
+knots at the data points <span class="math inline">\(x_1, \ldots, x_n\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-14" class="proof"><em>Proof</em>. </span>We sketch the main idea of the proof, showing that the solution must be
+a cubic spline. (The full proof, including the boundary conditions which
+make the spline “natural”, is more technical.)</p>
+<p>Suppose <span class="math inline">\(\hat m_\lambda\)</span> is the solution but <span class="math inline">\(\hat m_\lambda\)</span> is not a
+cubic polynomial on some interval <span class="math inline">\([x_i, x_{i+1}]\)</span>. We will show that
+this leads to a contradiction.</p>
+<p>Let <span class="math inline">\(p\)</span> be the cubic polynomial which interpolates <span class="math inline">\(\hat m_\lambda\)</span>,
+<span class="math inline">\(\hat m_\lambda&#39;\)</span>, <span class="math inline">\(\hat m_\lambda&#39;&#39;\)</span> at <span class="math inline">\(x_i\)</span> and <span class="math inline">\(\hat m_\lambda&#39;&#39;\)</span>
+at <span class="math inline">\(x_{i+1}\)</span>. (Such a polynomial exists and is unique.) Now consider
+the function <span class="math inline">\(\tilde m\)</span> which equals <span class="math inline">\(\hat m_\lambda\)</span> outside
+<span class="math inline">\([x_i, x_{i+1}]\)</span> and equals <span class="math inline">\(p\)</span> on <span class="math inline">\([x_i, x_{i+1}]\)</span>.</p>
+<p>Since <span class="math inline">\(\tilde m\)</span> agrees with <span class="math inline">\(\hat m_\lambda\)</span> at all data points, the
+residual sum of squares is the same for both functions. However, the
+penalty term is smaller for <span class="math inline">\(\tilde m\)</span>:
+<span class="math display">\[\begin{equation*}
+  \int_{-\infty}^\infty \bigl( \tilde m&#39;&#39;(x) \bigr)^2 \,dx
+  &lt; \int_{-\infty}^\infty \bigl( \hat m_\lambda&#39;&#39;(x) \bigr)^2 \,dx.
+\end{equation*}\]</span>
+This is because <span class="math inline">\(p&#39;&#39;\)</span> is linear (the second derivative of a cubic
+polynomial), and among all functions with given values at the endpoints
+of an interval, the linear function has the smallest integral of the
+square.</p>
+<p>This contradicts the assumption that <span class="math inline">\(\hat m_\lambda\)</span> minimizes
+equation <a href="X06-splines.html#eq:spline-penalty">(6.1)</a>. Therefore, <span class="math inline">\(\hat m_\lambda\)</span> must be
+a cubic polynomial on each interval <span class="math inline">\([x_i, x_{i+1}]\)</span>.</p>
+<p>A similar argument shows that <span class="math inline">\(\hat m_\lambda\)</span> must be twice continuously
+differentiable at the knots, completing the proof that <span class="math inline">\(\hat m_\lambda\)</span>
+is a cubic spline.</p>
+</div>
+<p>The theorem shows that the smoothing spline has knots at <em>all</em> data
+points <span class="math inline">\(x_1, \ldots, x_n\)</span>. This might seem surprising, since a spline
+with <span class="math inline">\(n\)</span> knots has <span class="math inline">\(n + 4\)</span> degrees of freedom (four coefficients for each
+of the <span class="math inline">\(n+1\)</span> pieces, minus <span class="math inline">\(3n\)</span> constraints from continuity and
+smoothness, giving <span class="math inline">\(4(n+1) - 3n = n + 4\)</span>). However, the penalty term
+<span class="math inline">\(\lambda \int (m&#39;&#39;)^2 dx\)</span> prevents overfitting by penalizing functions
+with high curvature.</p>
+</div>
+<div id="degrees-of-freedom" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Degrees of Freedom<a href="X06-splines.html#degrees-of-freedom" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As with linear regression, we can write the smoothing spline estimate in
+matrix form. Let <span class="math inline">\(y = (y_1, \ldots, y_n)^\top\)</span> be the vector of
+responses, and let <span class="math inline">\(\hat y = (\hat m_\lambda(x_1), \ldots,
+\hat m_\lambda(x_n))^\top\)</span> be the vector of fitted values. Then we can
+write
+<span class="math display" id="eq:smoother-matrix">\[\begin{equation}
+  \hat y
+  = S_\lambda y,  \tag{6.2}
+\end{equation}\]</span>
+where <span class="math inline">\(S_\lambda \in \mathbb{R}^{n\times n}\)</span> is the <strong>smoother matrix</strong>. This is
+analogous to the hat matrix <span class="math inline">\(H = X(X^\top X)^{-1}X^\top\)</span> in linear
+regression (see <a href="https://seehuhn.github.io/MATH3714/S02-multiple.html">section 2 of the level 3
+notes</a>).</p>
+<p>The smoother matrix <span class="math inline">\(S_\lambda\)</span> depends on the smoothing parameter
+<span class="math inline">\(\lambda\)</span> and on the data points <span class="math inline">\(x_1, \ldots, x_n\)</span>, but not on the
+responses <span class="math inline">\(y_1, \ldots, y_n\)</span>. We will not give the explicit formula for
+<span class="math inline">\(S_\lambda\)</span> here, but note that it can be computed efficiently.</p>
+<div class="definition">
+<p><span id="def:df-spline" class="definition"><strong>Definition 6.3  </strong></span>The <strong>effective degrees of freedom</strong> of the smoothing spline estimate is
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{df}}\nolimits(\lambda)
+  = \mathop{\mathrm{tr}}\nolimits(S_\lambda),
+\end{equation*}\]</span>
+where <span class="math inline">\(\mathop{\mathrm{tr}}\nolimits\)</span> denotes the trace of a matrix (the sum of the diagonal
+elements).</p>
+</div>
+<p>The effective degrees of freedom measure the complexity of the fitted
+model:</p>
+<ul>
+<li>For <span class="math inline">\(\lambda = 0\)</span>, the smoother matrix is <span class="math inline">\(S_0 = I\)</span> (the identity
+matrix), and we have <span class="math inline">\(\mathop{\mathrm{df}}\nolimits(0) = n\)</span>. This corresponds to interpolation,
+where we use all <span class="math inline">\(n\)</span> data points.</li>
+<li>For <span class="math inline">\(\lambda \to \infty\)</span>, the smoother matrix converges to the hat
+matrix of linear regression, and we have <span class="math inline">\(\mathop{\mathrm{df}}\nolimits(\infty) = 2\)</span>. This
+corresponds to fitting a straight line.</li>
+<li>For intermediate values of <span class="math inline">\(\lambda\)</span>, we have <span class="math inline">\(2 &lt; \mathop{\mathrm{df}}\nolimits(\lambda) &lt; n\)</span>.</li>
+</ul>
+<p>The effective degrees of freedom provide an alternative way to specify
+the amount of smoothing: instead of choosing <span class="math inline">\(\lambda\)</span> directly, we can
+choose a target value for <span class="math inline">\(\mathop{\mathrm{df}}\nolimits(\lambda)\)</span> and then find the corresponding
+<span class="math inline">\(\lambda\)</span>.</p>
+</div>
+<div id="smoothing-splines-in-r" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Smoothing Splines in R<a href="X06-splines.html#smoothing-splines-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Smoothing splines can be computed in R using the built-in function
+<a href="https://rdrr.io/r/stats/smooth.spline.html"><code>smooth.spline()</code></a>. The
+function takes the following arguments:</p>
+<ul>
+<li><code>x</code> and <code>y</code>: the data points.</li>
+<li><code>spar</code>: the smoothing parameter. This is related to <span class="math inline">\(\lambda\)</span> but uses
+a different scale. If not specified, a default value is chosen.</li>
+<li><code>df</code>: the target degrees of freedom. If specified, the function finds
+the value of <code>spar</code> which gives the desired degrees of freedom.</li>
+</ul>
+<p>The return value is an object which contains the fitted spline. The most
+important components are:</p>
+<ul>
+<li><code>$x</code> and <code>$y</code>: the fitted spline evaluated at the data points (or at a
+grid of points if the optional argument <code>all.knots = FALSE</code> is used).</li>
+<li><code>$df</code>: the effective degrees of freedom of the fitted spline.</li>
+<li><code>$lambda</code>: the smoothing parameter <span class="math inline">\(\lambda\)</span> (on a different scale than
+<code>spar</code>).</li>
+</ul>
+<div class="example">
+<p><span id="exm:unlabeled-div-15" class="example"><strong>Example 6.2  </strong></span>TODO: add example using faithful dataset, comparing to kernel methods</p>
+</div>
+</div>
+<div id="comparison-with-kernel-methods" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Comparison with Kernel Methods<a href="X06-splines.html#comparison-with-kernel-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Both smoothing splines and kernel methods can be used to estimate the
+regression function <span class="math inline">\(m\)</span> from data. The two approaches have different
+strengths and weaknesses.</p>
+<p><strong>Advantages of smoothing splines:</strong></p>
+<ul>
+<li><strong>Global method:</strong> The spline is fitted to the entire dataset at once,
+which can give better results at the boundaries of the data range.</li>
+<li><strong>Automatic smoothness:</strong> The solution is guaranteed to be twice
+continuously differentiable.</li>
+<li><strong>Efficient computation:</strong> The spline can be computed by solving a
+system of linear equations, without the need to perform local fits at
+many points.</li>
+</ul>
+<p><strong>Advantages of kernel methods:</strong></p>
+<ul>
+<li><strong>Local adaptation:</strong> Kernel methods can adapt to local features of the
+data, for example by using different bandwidths in different regions
+(as in <span class="math inline">\(k\)</span>-NN methods).</li>
+<li><strong>Geometric interpretation:</strong> The weighted average interpretation of
+kernel methods is easier to understand than the penalized least squares
+formulation.</li>
+<li><strong>Robustness:</strong> Kernel methods can be made robust to outliers by using
+robust kernels or by trimming extreme values.</li>
+</ul>
+<p>In practice, the choice between smoothing splines and kernel methods
+often depends on the specific application and the properties of the data.</p>
+<div class="example">
+<p><span id="exm:unlabeled-div-16" class="example"><strong>Example 6.3  </strong></span>TODO: add comparison example showing spline vs. NW vs. local linear</p>
+</div>
 <div class="mysummary">
-<p>This problem sheet is for self-study only.
-It is not assessed.</p>
-</div>
-<div class="myq">
-<p><strong>1.</strong> Consider the following function:
-<span class="math display">\[\begin{equation*}
-K(x)
-= \begin{cases}
-  \frac23 (1 - |x|^3) &amp; \mbox{if $|x|\leq 1$, and} \\
-  0 &amp; \text{otherwise}.
-\end{cases}
-\end{equation*}\]</span></p>
-<div class="subq">
-<ol style="list-style-type: lower-alpha">
-<li>Show that this function integrates to 1 over its domain.</li>
-</ol>
-<div class="myanswers">
-<p>We have
-<span class="math display">\[\begin{align*}
-    \int_{-\infty}^{\infty} K(x) , dx
-    &amp;= \frac23 \int_{-1}^1 (1 - |x|^3) , dx \\
-    &amp;= \frac43  \int_0^1 (1 - x^3) , dx \\
-    &amp;= \frac43  \left[ x - \frac{x^4}{4} \right]_0^1 \\
-    &amp;= \frac43  \left( 1 - \frac{1}{4} \right) \\
-    &amp;= 1.
-  \end{align*}\]</span></p>
-</div>
-</div>
-<div class="subq">
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Show that <span class="math inline">\(K\)</span> satisfies the conditions of a kernel.</li>
-</ol>
-<div class="myanswers">
-<p>We have already seen that <span class="math inline">\(K\)</span> integrates to 1 over its domain.
-Since <span class="math inline">\(|x| = |-x|\)</span> for all <span class="math inline">\(x\in\mathbb{R}\)</span>, the function <span class="math inline">\(K\)</span> is symmetric.
-Finally, since <span class="math inline">\(|x|^3 \leq 1\)</span> for all <span class="math inline">\(x\in\mathbb{R}\)</span> with <span class="math inline">\(|x|\leq 1\)</span>, we have
-<span class="math inline">\(K(x) \geq 0\)</span> for all <span class="math inline">\(x\in\mathbb{R}\)</span>.</p>
-</div>
-</div>
-<div class="subq">
-<ol start="3" style="list-style-type: lower-alpha">
-<li>Compute the moments <span class="math inline">\(\mu_0(K)\)</span>, <span class="math inline">\(\mu_1(K)\)</span> and
-<span class="math inline">\(\mu_2(K)\)</span> of <span class="math inline">\(K\)</span>.</li>
-</ol>
-<div class="myanswers">
-<p>The <span class="math inline">\(k\)</span>th moment of <span class="math inline">\(K\)</span> is given by
-<span class="math display">\[\begin{equation*}
-  \mu_k(K)
-  = \int_{-\infty}^\infty x^k K(x) \,dx
-  = \frac23 \int_{-1}^1 x^k \bigl( 1 - |x|^3 \bigr) \,dx.
-\end{equation*}\]</span>
-For <span class="math inline">\(k = 0\)</span>, we know <span class="math inline">\(\mu_0(K) = 1\)</span>, from part a.
-For <span class="math inline">\(k = 1\)</span>, we have <span class="math inline">\(\mu_1(K) = 0\)</span>, since <span class="math inline">\(K\)</span> is symmetric.
-For <span class="math inline">\(k = 2\)</span>, we find
-<span class="math display">\[\begin{align*}
-  \mu_2(K)
-  &amp;= \frac23 \int_{-1}^1 x^2 (1 - |x|^3) \,dx \\
-  &amp;= \frac43 \int_0^1 x^2 (1 - x^3) \,dx \\
-  &amp;= \frac43 \left[ \frac{x^3}{3} - \frac{x^6}{6} \right]_0^1 \\
-  &amp;= \frac43 \left( \frac13 - \frac16 \right) \\
-  &amp;= \frac29.
-\end{align*}\]</span></p>
-</div>
-</div>
-</div>
-<div class="myq">
-<p><strong>2.</strong> Consider a normal density with mean μ and variance σ², given by:
-<span class="math display">\[\begin{equation*}
-f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
-\end{equation*}\]</span></p>
-<div class="subq">
-<ol style="list-style-type: lower-alpha">
-<li>Calculate f’(x) and f’’(x) for this density.</li>
-</ol>
-<div class="myanswers">
-<p>Using the chain rule:
-<span class="math display">\[\begin{align*}
-  f&#39;(x)
-  &amp;= \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right) \cdot \left(-\frac{x-\mu}{\sigma^2}\right) \\
-  &amp;= -f(x)\cdot\frac{x-\mu}{\sigma^2}
-\end{align*}\]</span>
-Taking derivatives again, using the product rule:
-<span class="math display">\[\begin{align*}
-  f&#39;&#39;(x)
-  &amp;= -f&#39;(x)\cdot\frac{x-\mu}{\sigma^2} - f(x)\cdot\frac{1}{\sigma^2} \\
-  &amp;= f(x)\cdot\frac{(x-\mu)^2}{\sigma^4} - f(x)\cdot\frac{1}{\sigma^2} \\
-  &amp;= f(x)\cdot\left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right)
-\end{align*}\]</span></p>
-</div>
-</div>
-<div class="subq">
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Using the formula
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{bias}}(\hat f_h(x))
-  \approx \frac{\mu_2(K)}{2} f&#39;&#39;(x) h^2,
-\end{equation*}\]</span>
-show that for fixed <span class="math inline">\(K\)</span> and <span class="math inline">\(h\)</span>, the bias satisfies the following proportionality:
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{bias}}(\hat f_h(x))
-  \propto \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
-\left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right).
-\end{equation*}\]</span></li>
-</ol>
-<div class="myanswers">
-<p>Substituting our expression for <span class="math inline">\(f&#39;&#39;(x)\)</span> into the bias formula we get
-<span class="math display">\[\begin{align*}
-  \mathop{\mathrm{bias}}(\hat f_h(x))
-  &amp;\approx \frac{\mu_2(K)}{2} f&#39;&#39;(x) h^2 \\
-  &amp;= \frac{\mu_2(K)}{2} \cdot f(x)\cdot\left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right) h^2 \\
-  &amp;=
-  \frac{\mu_2(K)h^2}{2\sqrt{2\pi\sigma^2}} \cdot
-  \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
-  \left(\frac{(x-\mu)^2}{\sigma^4} - \frac{1}{\sigma^2}\right).
-\end{align*}\]</span></p>
-</div>
-</div>
-<div class="subq">
-<ol start="3" style="list-style-type: lower-alpha">
-<li>For which values of <span class="math inline">\(x\)</span> is the bias positive, negative, or zero?
-Why does this make sense intuitively?</li>
-</ol>
-<div class="myanswers">
-<p>The exponential term is always positive, so the sign depends on
-the sign of the term
-<span class="math inline">\((x-\mu)^2 / \sigma^4 - 1/\sigma^2\)</span>.
-This equals zero when <span class="math inline">\((x-\mu)^2 = \sigma^2\)</span>, or when <span class="math inline">\(x = \mu \pm \sigma\)</span>.
-The bias
-is negative when <span class="math inline">\(|x-\mu| &lt; \sigma\)</span>,
-is positive when <span class="math inline">\(|x-\mu| &gt; \sigma\)</span>.</p>
-<p>This makes sense because the positive bandwidth <span class="math inline">\(h\)</span> smoothes the density, so
-the bias is negative when the density is concave (near the maxiumum) and
-positive when it is convex (towards the tails).</p>
-</div>
-</div>
-</div>
-<div class="myq">
-<p><strong>3.</strong> Consider the variance of a kernel density estimate <span class="math inline">\(\hat f_h(x)\)</span> based
-on a sample <span class="math inline">\(X_1, \ldots, X_n\)</span> with common density <span class="math inline">\(f\)</span>:
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{Var}}(\hat f_h(x))
-  = \frac{1}{n^2} \sum_{i,j=1}^n \mathbb{E}\Bigl( K_h(x - X_i)K_h(x - X_j) \Bigr)
-\end{equation*}\]</span></p>
-<div class="subq">
-<ol style="list-style-type: lower-alpha">
-<li>Let <span class="math inline">\(n=3\)</span>. Write out all terms in the sum explicitly and identify which
-terms involve the only one random variable <span class="math inline">\(X_i\)</span> and which involve
-more than one random variable.</li>
-</ol>
-<div class="myanswers">
-<p>For <span class="math inline">\(n=3\)</span>, expanding the double sum gives 9 terms:</p>
-<p>Terms with same random variable (<span class="math inline">\(i=j\)</span>):
-<span class="math display">\[\begin{align*}
-&amp; \mathbb{E}(K_h(x - X_1)K_h(x - X_1)) \\
-&amp; \mathbb{E}(K_h(x - X_2)K_h(x - X_2)) \\
-&amp; \mathbb{E}(K_h(x - X_3)K_h(x - X_3))
-\end{align*}\]</span></p>
-<p>Terms with different random variables (<span class="math inline">\(i\neq j\)</span>):
-<span class="math display">\[\begin{align*}
-&amp; \mathbb{E}(K_h(x - X_1)K_h(x - X_2)) \\
-&amp; \mathbb{E}(K_h(x - X_1)K_h(x - X_3)) \\
-&amp; \mathbb{E}(K_h(x - X_2)K_h(x - X_1)) \\
-&amp; \mathbb{E}(K_h(x - X_2)K_h(x - X_3)) \\
-&amp; \mathbb{E}(K_h(x - X_3)K_h(x - X_1)) \\
-&amp; \mathbb{E}(K_h(x - X_3)K_h(x - X_2))
-\end{align*}\]</span></p>
-</div>
-</div>
-<div class="subq">
-<ol start="2" style="list-style-type: lower-alpha">
-<li>For general <span class="math inline">\(n\)</span>, how many terms in the sum have <span class="math inline">\(i=j\)</span> and how many have <span class="math inline">\(i\neq j\)</span>?</li>
-</ol>
-<div class="myanswers">
-<p>When <span class="math inline">\(i=j\)</span>, we are choosing the same index from <span class="math inline">\(\{1,\ldots,n\}\)</span> once, giving <span class="math inline">\(n\)</span> terms.
-When <span class="math inline">\(i\neq j\)</span>, we are choosing two different indices from <span class="math inline">\(\{1,\ldots,n\}\)</span>, giving <span class="math inline">\(n(n-1)\)</span> terms.
-The total number of terms is thus <span class="math inline">\(n + n(n-1) = n^2\)</span>, as expected.</p>
-</div>
-</div>
-<div class="subq">
-<ol start="3" style="list-style-type: lower-alpha">
-<li>Using these counts and the independence of the <span class="math inline">\(X_i\)</span>, show that:
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{Var}}(\hat f_h(x))
-  = \frac{1}{n} \mathbb{E}\Bigl( K_h(x - X_1)^2 \Bigr)
-+ \frac{n-1}{n} \mathbb{E}\Bigl( \hat f_h(x) \Bigr)^2.
-\end{equation*}\]</span></li>
-</ol>
-<div class="myanswers">
-<p>Using part b, we can split the sum into two parts:
-<span class="math display">\[\begin{align*}
-  \mathop{\mathrm{Var}}(\hat f_h(x))
-  &amp;= \frac{1}{n^2}
-    \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1)K_h(x - X_2) \bigr) \Bigr) \\
-  &amp;= \frac{1}{n} \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)
-    + \frac{n-1}{n} \mathbb{E}\bigl( K_h(x - X_1) \bigr) \, \mathbb{E}\bigl( K_h(x - X_2) \bigr),
-\end{align*}\]</span>
-where we used the independence of the <span class="math inline">\(X_i\)</span> in the last step.
-Since <span class="math inline">\(\mathbb{E}\bigl( K_h(x - X_1) \bigr) = \mathbb{E}\bigl( K_h(x - X_2) \bigr) = \mathbb{E}(\hat
-f_h(x))\)</span>, this gives the required result.</p>
-</div>
-</div>
-</div>
-<div class="myq">
-<p><strong>4.</strong> Consider the following data:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="P01.html#cb36-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">89.6</span>, <span class="fl">82.5</span>, <span class="fl">70.9</span>, <span class="fl">83.8</span>, <span class="fl">92.4</span>, <span class="fl">86.5</span>, <span class="fl">77.3</span>, <span class="fl">89.2</span>,</span>
-<span id="cb36-2"><a href="P01.html#cb36-2" tabindex="-1"></a>       <span class="fl">93.1</span>, <span class="fl">84.7</span>, <span class="fl">78.5</span>, <span class="fl">88.3</span>, <span class="fl">85.6</span>, <span class="fl">90.4</span>, <span class="fl">76.8</span>)</span></code></pre></div>
-<div class="subq">
-<ol style="list-style-type: lower-alpha">
-<li>Determine the sample standard deviation of these data.</li>
-</ol>
-<div class="myanswers">
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="P01.html#cb37-1" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">sd</span>(x)</span>
-<span id="cb37-2"><a href="P01.html#cb37-2" tabindex="-1"></a>sigma</span></code></pre></div>
-<pre><code>## [1] 6.410126</code></pre>
-<p>The R ouputs shows that the standard deviation is <span class="math inline">\(6.410126\)</span>.</p>
-</div>
-</div>
-<div class="subq">
-<ol start="2" style="list-style-type: lower-alpha">
-<li>Using the “plug-in rule” from section <a href="X03-practice.html#bwsel">3.3</a>, what bandwidth would you
-choose for a kernel density estimate of these data using the triangular kernel?</li>
-</ol>
-<div class="myanswers">
-<p>The plug-in rule assumes that the density is normal, to get
-<span class="math display">\[\begin{equation*}
-  R(f&#39;&#39;)
-  = \frac{3}{8\sigma^5\sqrt{\pi}}.
-\end{equation*}\]</span>
-Substituting the sample standard deviation into this formula gives</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="P01.html#cb39-1" tabindex="-1"></a>R.fpp <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">/</span> (<span class="dv">8</span> <span class="sc">*</span> sigma<span class="sc">^</span><span class="dv">5</span> <span class="sc">*</span> <span class="fu">sqrt</span>(pi))</span>
-<span id="cb39-2"><a href="P01.html#cb39-2" tabindex="-1"></a>R.fpp</span></code></pre></div>
-<pre><code>## [1] 1.954895e-05</code></pre>
-<p>We also need the sample size, and the roughness and second moment of the kernel:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="P01.html#cb41-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(x)</span>
-<span id="cb41-2"><a href="P01.html#cb41-2" tabindex="-1"></a>R.K <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">/</span><span class="dv">3</span></span>
-<span id="cb41-3"><a href="P01.html#cb41-3" tabindex="-1"></a>mu2.K <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span></span></code></pre></div>
-<p>Using these quantities and the formula from section <a href="X02-error.html#IMSE">2.5</a> gives
-the result:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="P01.html#cb42-1" tabindex="-1"></a>h <span class="ot">&lt;-</span> (R.K <span class="sc">/</span> (n <span class="sc">*</span> mu2.K<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> R.fpp))<span class="sc">^</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>)</span>
-<span id="cb42-2"><a href="P01.html#cb42-2" tabindex="-1"></a>h</span></code></pre></div>
-<pre><code>## [1] 9.607254</code></pre>
-</div>
-</div>
+<p><strong>Summary</strong></p>
+<ul>
+<li>Smoothing splines balance fit and smoothness using a penalty term.</li>
+<li>The solution is a natural cubic spline with knots at the data points.</li>
+<li>The smoothing parameter <span class="math inline">\(\lambda\)</span> controls the trade-off between fit and
+smoothness.</li>
+<li>Effective degrees of freedom measure model complexity.</li>
+<li>Smoothing splines are a global alternative to local kernel methods.</li>
+</ul>
 </div>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="X03-practice.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="X04-smoothing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="X05-locpoly.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="X07-nearest.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

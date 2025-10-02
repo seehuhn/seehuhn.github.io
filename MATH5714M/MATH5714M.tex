@@ -152,6 +152,7 @@
 \newcommand{\bias}{\mathop{\mathrm{bias}}}
 \newcommand{\CN}{\mathcal{N}}
 \newcommand{\CU}{\mathcal{U}}
+\newcommand{\df}{\mathop{\mathrm{df}}\nolimits}
 \newcommand{\downto}{\downarrow}
 \newcommand{\ds}{\displaystyle}
 \newcommand{\E}{\mathbb{E}}
@@ -160,6 +161,7 @@
 \newcommand{\N}{\mathbb{N}}
 \renewcommand{\phi}{\varphi}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\tr}{\mathop{\mathrm{tr}}\nolimits}
 \newcommand{\Var}{\mathop{\mathrm{Var}}}
 
 \section*{Preface}\label{home}
@@ -167,95 +169,92 @@
 
 The MATH5714M module includes all the material from \href{https://seehuhn.github.io/MATH3714/}{MATH3714 (Linear
 Regression and Robustness)}, plus
-additional material on ``Smoothing''.
+additional material on smoothing.
 
-From MATH3714 (and from previous modules) we know how to fit a regression line through
-points \((x_1, y_1), \ldots, (x_n, y_n) \in\mathbb{R}^2\). The underlying model
-there is described by the equation
+The level 3 component covers linear regression and its extensions. In simple
+linear regression, we fit a line through data points \((x_1, y_1), \ldots, (x_n,
+y_n) \in\mathbb{R}^2\) using the model
 \begin{equation*}
-  y_i
-  = \alpha + \beta x_i + \varepsilon_i
+  y_i = \alpha + \beta x_i + \varepsilon_i
 \end{equation*}
-for all \(i \in \{1, 2, \ldots, n\}\), and the aim is to find values for the
+for all \(i \in \{1, 2, \ldots, n\}\), where the aim is to find values for the
 intercept \(\alpha\) and the slope \(\beta\) such that the fitted line is as
-close as possible to the data points. This procedure, linear regression, and its extensions
-are discussed in the level 3 component of the module.
+close as possible to the data points.
 
-In the level 5 component of this module, we will discuss ``smoothing'' which is a
-technique which can be used when linear models are no longer appropriate for
-the data. An example of such a situation is illustrated in figure\\
-\ref{fig:accel}. The red line in this figure is obtained using one of the
-smoothing techniques which we will discuss in the level 5 part of the module.
+However, linear models are not always appropriate. Figure~\ref{fig:accel}
+illustrates an example where a straight line model would be inadequate. For
+such data, we need more flexible methods that can capture non-linear patterns.
 
 
 
 \begin{figure}
-
-{\centering \includegraphics{MATH5714M_files/figure-latex/accel-1} 
-
-}
-
-\caption{An illustration of a dataset where a linear (straight line) model is not appropriate. The data represents a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets (the \texttt{mcycle} dataset from the \texttt{MASS} R package).}\label{fig:accel}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:accel}An illustration of a dataset where a linear (straight line) model is not appropriate. The data represents a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets (the \texttt{mcycle} dataset from the \texttt{MASS} R package).}]{MATH5714M_files/figure-latex/accel-1.pdf}}
+\caption{\label{fig:accel}An illustration of a dataset where a linear (straight line) model is not appropriate. The data represents a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets (the \texttt{mcycle} dataset from the \texttt{MASS} R package).}
 \end{figure}
+
+The level 5 component introduces techniques for fitting smooth curves through
+data---methods collectively known as \textbf{smoothing}. Unlike linear regression,
+which imposes a straight line on all the data, smoothing methods work locally:
+they estimate the relationship at different points using nearby observations,
+then blend these local estimates together to create a smooth curve. The red
+curve in Figure~\ref{fig:accel} shows such a smoothed fit, which captures the
+complex pattern in the data without assuming any particular functional form.
+
+We will approach these smoothing methods gradually. We begin with the simpler
+problem of ``kernel density estimation'': given a sample from an unknown
+distribution, how can we estimate the probability density? This introduces
+fundamental concepts (kernels, bandwidth selection, and the bias-variance
+trade-off) that apply throughout all smoothing methods. We then extend these
+ideas to regression smoothing, where we estimate the relationship between
+variables rather than a probability distribution.
 
 \clearpage
 
 \section{Kernel Density Estimation}\label{X01-KDE}
 
-In this section we discuss the topic of ``Kernel Density Estimation''.
-Here we suppose we are given data \(x_1,\ldots, x_n \in\mathbb{R}^d\) from an
-unknown probability density, say \(f\). Our objective is to estimate
-the density~\(f\). This section lays the foundations for many of the
-following topics.
+In this section, we suppose we are given data \(x_1,\ldots, x_n \in\mathbb{R}\) from an
+unknown probability density \(f\), and our goal is to estimate \(f\) from the data.
 
-\subsection{Histograms}\label{histograms}
+\subsection{Probability Densities}\label{probability-densities}
 
-\subsubsection{Probability Densities}\label{probability-densities}
-
-Before we consider how to estimate a density, let us just remember what a
+Before we consider how to estimate a density, let us recall what a
 density is. A random variable \(X \in \mathbb{R}\) has \textbf{density} \(f\colon
 \mathbb{R}\to [0, \infty)\) if
 \begin{equation*}
   P\bigl(X \in [a,b]\bigr)
   = \int_a^b f(x) \,dx
 \end{equation*}
-for all \(a, b\in\mathbb{R}\) with \(a < b\). Densities are sometimes also called
-``probability densities'' or even ``probability density functions''.
+for all \(a, b\in\mathbb{R}\) with \(a < b\). Densities are also called
+``probability densities'' or ``probability density functions''.
 
-A density \(f\) is large in regions where \(X\) is very likely to take
-values, and small in regions where \(X\) is less likely to take values.
-If \(f(x) = 0\) for all \(x\) in a region, that means that \(X\) never takes
-values there. Graphically, the integral \(\int_a^b f(x) \,dx\) can be
-interpreted as the area under the graph of~\(f\). This is illustrated
-in figure~\ref{fig:density}.
+Graphically, the integral \(\int_a^b f(x) \,dx\) can be interpreted as the area
+under the graph of~\(f\). This is illustrated in figure~\ref{fig:density}.
 
 
 
 \begin{figure}
-
-{\centering \includegraphics{MATH5714M_files/figure-latex/density-1} 
-
-}
-
-\caption{An illustration of how the area under the graph of a density can be interpreted as a probability.}\label{fig:density}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:density}An illustration of how the area under the graph of a density can be interpreted as a probability.}]{MATH5714M_files/figure-latex/density-1.pdf}}
+\caption{\label{fig:density}An illustration of how the area under the graph of a density can be interpreted as a probability.}
 \end{figure}
 
-A function \(f\) is the density of some random variable~\(X\),
+A function \(f\) is the density of a random variable~\(X\)
 if and only if \(f \geq 0\) and
 \begin{equation*}
   \int_{-\infty}^\infty f(x) \,dx = 1.
 \end{equation*}
+In the following, we will see how to estimate \(f\) from data.
 
-\subsubsection{Histograms}\label{histograms-1}
+\subsection{Histograms}\label{histograms}
 
-In the univariate case, \emph{i.e.}~for \(d = 1\), a commonly used technique
-to approximate the density of a sample is to plot a histogram. To
-illustrate this, we use the \texttt{faithful} dataset built in R, which
-contains waiting times between eruptions and the duration of the
-eruption for the Old Faithful geyser in the Yellowstone National Park.
-(You can type \texttt{help(faithful)} in R to learn more about this data
-set.) Here we focus on the waiting times only. A simple histogram
-for this dataset is shown in figure~\ref{fig:hist}.
+A commonly used technique to approximate the density of a sample is to
+plot a histogram. To illustrate this, we use the \texttt{faithful} dataset
+built into R, which contains waiting times between eruptions and the
+duration of the eruption for the Old Faithful geyser in the Yellowstone
+National Park. (You can type \texttt{help(faithful)} in R to learn more about
+this dataset.) Here we focus on the waiting times only. A simple
+histogram for this dataset is shown in figure~\ref{fig:hist}.
 
 
 
@@ -273,12 +272,8 @@ for this dataset is shown in figure~\ref{fig:hist}.
 \caption{\label{fig:hist}This figure shows how a histogram can be used to approximate a probability density. From the plot one can see that the density of the waiting times distribution seems to be bi-modal with peaks around 53 and 80 minutes.}
 \end{figure}
 
-The histograms splits the range of the data into ``buckets'', and for
-every bucket \([a, b]\) it shows a bar where the height is proportional
-the number of samples in the bucket. I am ignoring the case that a
-sample may fall exactly on the boundary between two buckets here; in
-reality all but one buckets need to be half-open intervals, for
-example \([40, 45]\), \((45, 50]\), \ldots, \((95, 100]\).
+The histogram splits the data range into ``buckets'', with bar heights
+proportional to the number of samples in each bucket.
 
 As we have seen, the area under the graph of the density \(f\) over the
 interval \([a, b]\) corresponds to the probability~\(P\bigl(X \in
@@ -305,179 +300,50 @@ and thus we choose
   h_{a,b}
   = \frac{1}{(b - a) n} n_{a,b}.
 \end{equation*}
-As expected, the height of the bar for the bucket \([a,b]\) is proportional
-to the number \(n_{a,b}\) of samples in the bucket.
 
-\subsubsection{Choice of Buckets}\label{choice-of-buckets}
-
-Histograms are only meaningful if the buckets are chosen well. If
-the buckets are too large, not much of the structure of \(f\) can be
-resolved. If the buckets are too small, the estimate \(P\bigl(X \in
-[a,b]\bigr) \approx n_{a,b}/n\) will be poor and the histogram will
-no longer resemble the shape of~\(f\). This is for example demonstrated
-in figure~\ref{fig:broken-hist}.
-
-
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{50}\NormalTok{)}
-\FunctionTok{hist}\NormalTok{(x, }\AttributeTok{probability =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{main =} \ConstantTok{NULL}\NormalTok{,}
-     \AttributeTok{breaks =} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{2.5}\NormalTok{, }\FloatTok{2.5}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{500}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}
-\centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:broken-hist}This figure demonstrates the consequences of choosing a too small bucket size.}]{MATH5714M_files/figure-latex/broken-hist-1.pdf}}
-\caption{\label{fig:broken-hist}This figure demonstrates the consequences of choosing a too small bucket size.}
-\end{figure}
-
-Finally, even if reasonable bucket sizes are chosen, the result can
-depend quite strongly on the exact locations of these buckets. To illustrate
-this effect, we consider a
-\href{https://teaching.seehuhn.de/data/buffalo/}{dataset about the annual amount of snow}
-falling in Buffalo, New York for different years. Figures \ref{fig:buffalo1}
-and~\ref{fig:buffalo2} show the same data in two different ways,
-allowing to come to different conclusions about the distribution.
-
-
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# downloaded from https://teaching.seehuhn.de/data/buffalo/}
-\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/buffalo.csv"}\NormalTok{)}
-\NormalTok{snowfall }\OtherTok{\textless{}{-}}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{snowfall}
-\FunctionTok{hist}\NormalTok{(snowfall, }\AttributeTok{probability =} \ConstantTok{TRUE}\NormalTok{,}
-     \AttributeTok{breaks =} \FunctionTok{seq}\NormalTok{(}\FloatTok{24.30}\NormalTok{, }\FloatTok{208.22}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{20}\NormalTok{),}
-     \AttributeTok{main =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"snowfall [in]"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}
-\centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:buffalo1}The annual amount of snowfall in Buffalo, New York, in inches. The histogram makes it plausible that there is one main peak in the distribution.}]{MATH5714M_files/figure-latex/buffalo1-1.pdf}}
-\caption{\label{fig:buffalo1}The annual amount of snowfall in Buffalo, New York, in inches. The histogram makes it plausible that there is one main peak in the distribution.}
-\end{figure}
-
-
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{hist}\NormalTok{(snowfall, }\AttributeTok{probability =} \ConstantTok{TRUE}\NormalTok{,}
-     \AttributeTok{breaks =} \FunctionTok{seq}\NormalTok{(}\FloatTok{22.85}\NormalTok{, }\FloatTok{204.92}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{20}\NormalTok{),}
-     \AttributeTok{main =} \ConstantTok{NULL}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"snowfall [in]"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}
-\centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:buffalo2}Continued from \ref{fig:buffalo1}, this histogram shows the dataset in a way that three peaks are visible.}]{MATH5714M_files/figure-latex/buffalo2-1.pdf}}
-\caption{\label{fig:buffalo2}Continued from \ref{fig:buffalo1}, this histogram shows the dataset in a way that three peaks are visible.}
-\end{figure}
-
-As a further illustration of the effect of bucket width, the code in
-figure~\ref{fig:snow-hist-col} shows how histograms with different
-bucket widths can be generated in~R. Here we simply specify numeric
-values for the \texttt{break} argument to \texttt{hist()}, which R uses as the
-\emph{approximate} number of buckets in the plot.
-
-
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{))}
-
-\ControlFlowTok{for}\NormalTok{ (breaks }\ControlFlowTok{in} \FunctionTok{c}\NormalTok{(}\DecValTok{80}\NormalTok{, }\DecValTok{40}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{10}\NormalTok{)) \{}
-  \FunctionTok{hist}\NormalTok{(snowfall,}
-       \AttributeTok{prob =} \ConstantTok{TRUE}\NormalTok{,}
-       \AttributeTok{breaks =}\NormalTok{ breaks,}
-       \AttributeTok{xlim =} \FunctionTok{c}\NormalTok{(}\DecValTok{25}\NormalTok{,}\DecValTok{200}\NormalTok{),}
-       \AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.03}\NormalTok{),}
-       \AttributeTok{xlab =} \FunctionTok{paste}\NormalTok{(}\StringTok{"breaks ="}\NormalTok{, breaks),}
-       \AttributeTok{main =} \ConstantTok{NULL}\NormalTok{)}
-\NormalTok{\}}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}
-\centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:snow-hist-col}This figure illustrates how the bucket size in a histogram can be controlled in R.}]{MATH5714M_files/figure-latex/snow-hist-col-1.pdf}}
-\caption{\label{fig:snow-hist-col}This figure illustrates how the bucket size in a histogram can be controlled in R.}
-\end{figure}
-
-\subsection{Kernel Density Estimation}\label{kernel-density-estimation}
-
-Kernel density estimation allows to estimate the density \(f\) for given
-data while avoiding some of the disadvantages of histograms.
-Again, we suppose that we are given data \(x_1, \ldots, x_n \in \mathbb{R}\)
-and that we want to estimate the density \(f\).
-
-\subsubsection{Motivation}\label{motivation}
-
-Similar to the argument in the previous subsection, for \(x\) in a ``small''
-interval \([a,b]\) we can estimate \(f(x)\) as
-\begin{equation*}
-  f(x)
-  \approx \frac{1}{b-a} \int_a^b f(y) \,dy
-  = \frac{1}{b-a} P\bigl( X\in [a,b] \bigr)
-  \approx \frac{1}{b-a} \frac{n_{a,b}}{n},
-\end{equation*}
-where \(n_{a,b}\) denotes the number of samples in the interval \([a, b]\).
-This equation contains two approximation. The first one,
-\(f(x) \approx 1/(ba) \int_a^b f(y) \,dy\), is more accurate if the
-interval is small, because then \(f\) will be nearly constant over the
-interval. The second approximation will be more accurate if the
-interval is large, because then the interval \([a,b]\) covers more samples
-and the estimate of the probability is based on more data. We will later
-discuss in detail how these two concerns can be optimally balanced.
-
-A mathematical ``trick'' to write more clearly how \(n_{a,b}\) depends on the
-data is to write the value as
+We can write the count \(n_{a,b}\) as a sum over the data:
 \begin{equation*}
   n_{a,b}
   = \sum_{i=1}^n I_{[a,b]}(x_i),
 \end{equation*}
-where
-\begin{equation*}
-  I_{[a,b]}(x)
-  = \begin{cases}
-    1 & \mbox{if $x \in [a,b]$, and} \\
-    0 & \mbox{otherwise.}
-  \end{cases}
-\end{equation*}
-The function \(I_{[a,b]}\) is called the \textbf{indicator function} of the
-set~\([a, b]\).
+where \(I_{[a,b]}(x) = 1\) if \(x \in [a,b]\) and \(I_{[a,b]}(x) = 0\) otherwise.
+Substituting this into the formula for the histogram, we get
+\begin{equation}
+  h_{a,b}
+  = \frac{1}{n} \sum_{i=1}^n \frac{1}{b - a} I_{[a,b]}(x_i).
+  \label{eq:histogram-indicator}
+\end{equation}
+This shows that the histogram can be written as an average of indicator
+functions.
 
-Using the indicator function notation, the estimate for \(f(x)\)
-can be written as
-\begin{align*}
-  f(x)
-  \approx \frac{1}{n(b-a)} n_{a,b}
-  = \frac{1}{n} \sum_{i=1}^n \frac{1}{b-a} I_{[a,b]}(x_i)
-\end{align*}
-whenever \(x \in [a,b]\) and when \(b-a\) is ``not too large and not too small''.
-For symmetry we choose the interval \([a, b]\) centred around \(x\),
-say \([a, b] = [x - h, x + h]\) where \(h\) can be chosen to control the
-width of the interval. In this case we have \(b - a = x + h - x + h
-= 2h\) and thus
-\begin{align*}
-  f(x)
-  &\approx \frac{1}{n} \sum_{i=1}^n \frac{1}{2h} I_{[x-h,x+h]}(x_i) \\
-  &= \frac{1}{n} \sum_{i=1}^n \frac{1}{2h} I_{[-h,+h]}(x_i-x) \\
-  &= \frac{1}{n} \sum_{i=1}^n \frac{1}{2h} I_{[-1,+1]}\Bigl(\frac{x_i-x}{h}\Bigr)
-\end{align*}
-for all \(x \in \mathbb{R}\). This is an example of a kernel density estimate.
-The function \(K(x) = 1/2 \, I_{[-1,+1]}(x)\) on the right-hand side is
-called the kernel of the estimate, and the parameter \(h\) is called the
-\textbf{bandwidth} or the smoothing parameter.
+Histograms have several limitations:
 
-\subsubsection{Definition of a Kernel Density Estimator}\label{definition-of-a-kernel-density-estimator}
+\begin{itemize}
+\tightlist
+\item
+  Histograms are only meaningful if the buckets are chosen well. If
+  the buckets are too large, not much of the structure of \(f\) can be
+  resolved. If the buckets are too small, the estimate \(P\bigl(X \in
+  [a,b]\bigr) \approx n_{a,b}/n\) will be poor and the histogram will
+  no longer resemble the shape of~\(f\).
+\item
+  Even if reasonable bucket sizes are chosen, the result can depend quite
+  strongly on the exact locations of these buckets.
+\item
+  Histograms have sharp edges at bucket boundaries, creating
+  discontinuities in the density estimate even when the true density \(f\)
+  is smooth.
+\end{itemize}
 
-The general kernel density estimate is a generalisation of the idea
-from the previous subsection. We first define the class of functions
-which we use to replace the function \(1/2 \, I_{[-1,+1]}\).
+Kernel density estimation addresses these issues by using smooth weight
+functions, called ``kernels'', that gradually decrease as we move away from~\(x\).
+Each sample \(x_i\) contributes to the estimate at \(x\) with a weight that depends
+on the distance \(|x - x_i|\). Nearby samples get higher weight, distant samples
+get lower weight, and the transition is smooth.
+
+\subsection{Kernels}\label{kernels}
+
+To make this idea precise, we first define what we mean by a kernel.
 
 \begin{definition}
 \protect\hypertarget{def:kernel}{}\label{def:kernel}
@@ -496,19 +362,113 @@ A \textbf{kernel} is a function \(K\colon \mathbb{R}\to \mathbb{R}\) such that
 
 \end{definition}
 
-Of these three properties, the first one is the most important one.
-The second condition, symmetry, ensures that \(K\) is centred around \(0\)
-and the third definition, positivity, makes \(K\) a probability density.
+The first condition ensures that \(K\) must decay as \(|x|\) becomes large.
+The second condition, symmetry, ensures that \(K\) is centred around \(0\),
+and the third condition, positivity, makes \(K\) a probability density.
 (While most authors list all three properties shown above, sometimes
 the third condition is omitted.)
 
-It is easy to check that \(K(x) = 1/2 \, I_{[-1,+1]}(x)\) satisfies all
-three conditions of definition~\ref{def:kernel}. This function \(K\)
-is sometimes called the ``uniform kernel'', because it is the density
-of the uniform distribution~\(\mathcal{U}[-1,+1]\).
+There are many different kernels in use. Some examples are listed
+below; a more exhaustive list is available
+\href{https://en.wikipedia.org/wiki/Kernel_(statistics)\#Kernel_functions_in_common_use}{on Wikipedia}.
 
-Based on the concept of a kernel, we now can define
-what a Kernel Density Estimate is.
+\begin{itemize}
+\item
+  Uniform Kernel:
+  \begin{equation*}
+    K(x)
+    = \begin{cases}
+        1/2 & \mbox{if $-1 \leq x \leq 1$} \\
+        0 & \mbox{otherwise}
+      \end{cases}
+  \end{equation*}
+
+  \pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/kUniform-1.pdf}}
+\item
+  Triangular Kernel:
+  \begin{equation}
+    K(x)
+    = \begin{cases}
+        1-|x| & \mbox{if $-1 \leq x \leq 1$} \\
+        0 & \mbox{otherwise}
+      \end{cases}  \label{eq:triangular}
+  \end{equation}
+
+  \pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/kTriangular-1.pdf}}
+\item
+  Epanechnikov Kernel:
+  \begin{equation*}
+    K(x)
+    = \begin{cases}
+        \frac34 (1-x^2) & \mbox{if $-1 \leq x \leq 1$} \\
+        0 & \mbox{otherwise}
+      \end{cases}
+  \end{equation*}
+
+  \pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/kEpanechnikov-1.pdf}}
+\item
+  Gaussian Kernel:
+  \begin{equation*}
+    K(x)
+    = \frac{1}{\sqrt{2\pi}} \exp\bigl(-x^2/2\bigr)
+  \end{equation*}
+
+  \pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/kGaussian-1.pdf}}
+\end{itemize}
+
+The ``width'' of the kernel determines how smooth the resulting estimate is.
+A narrow kernel gives more weight to nearby samples and produces a more
+detailed (but potentially noisier) estimate, while a wider kernel averages
+over more distant samples and produces a smoother estimate.
+
+To control the width, we use a \textbf{bandwidth parameter} \(h > 0\)
+and define the \textbf{rescaled kernel} \(K_h\) by
+\begin{equation*}
+  K_h(y)
+  = \frac{1}{h} K(y/h)
+\end{equation*}
+for all \(y\in \mathbb{R}\).
+The bandwidth parameter \(h\) controls the width: small \(h\) gives a narrow
+kernel, large \(h\) gives a wide kernel.
+
+\begin{lemma}
+\protect\hypertarget{lem:Kh-kernel}{}\label{lem:Kh-kernel}If \(K\) is a kernel, then \(K_h\) is also a kernel.
+\end{lemma}
+
+\begin{proof}
+We need to verify the three properties from definition~\ref{def:kernel}.
+Using the substitution \(z = y/h\) we find
+\begin{align*}
+  \int_{-\infty}^\infty K_h(y) \,dy
+  &= \int_{-\infty}^\infty \frac{1}{h} K(y/h) \,dy \\
+  &= \int_{-\infty}^\infty \frac{1}{h} K(z) \,h \,dz \\
+  &= \int_{-\infty}^\infty K(z) \,dz \\
+  &= 1.
+\end{align*}
+For the second property, we have
+\begin{equation*}
+  K_h(-y)
+  = \frac{1}{h} K(-y/h)
+  = \frac{1}{h} K(y/h)
+  = K_h(y),
+\end{equation*}
+where we used the symmetry of \(K\).
+Finally, since \(K(y/h) \geq 0\) for all \(y\), we also have \(K_h(y) = \frac{1}{h} K(y/h) \geq 0\)
+for all \(y\).
+\end{proof}
+
+\begin{remark}
+Note that the choice of kernel \(K\) and bandwidth \(h\) is not unique.
+For a given kernel shape, different authors use different normalisations.
+For example, we could replace our triangular kernel~\(K\)
+from equation~\eqref{eq:triangular} with \(\tilde K(x) = K(x/\sqrt{6})\),
+which has variance~1. If we simultaneously replace \(h\) with \(\tilde h = h/\sqrt{6}\),
+then the rescaled kernel remains unchanged: \(\tilde K_{\tilde h} = K_h\).
+\end{remark}
+
+\subsection{Kernel Density Estimation}\label{kernel-density-estimation}
+
+We can now define the kernel density estimate.
 
 \begin{definition}
 \protect\hypertarget{def:KDE}{}\label{def:KDE}For a kernel~\(K\), bandwidth~\(h > 0\) and \(x \in \mathbb{R}\), the
@@ -517,75 +477,22 @@ what a Kernel Density Estimate is.
   \hat f_h(x)
   = \frac{1}{n} \sum_{i=1}^n K_h(x - x_i),
 \end{equation*}
-where \(K_h\) is given by
-\begin{equation*}
-  K_h(y)
-  = \frac{1}{h} K(y/h)
-\end{equation*}
-for all \(y\in \mathbb{R}\).
+where \(K_h\) is the rescaled kernel defined above.
 \end{definition}
 
-For \(K(x) = 1/2 \, I_{[-1,+1]}(x)\) this definition recovers the
-approximation we discussed in the previous section. In later sections
-we will see how the kernel \(K\) can be chosen for the estimator \(\hat
-f\) to have ``good'' properties. As a simple example we note that if \(K\)
-is continuous, then the rescaled kernel \(K_h\) and thus also the
-estimate \(f_h\) are continuous functions.
+Note the similarity to the histogram formula~\eqref{eq:histogram-indicator}:
+both are averages of weight functions applied to the data.
+The key difference is that the kernel \(K_h(x - x_i)\) is centred around each
+data point~\(x_i\), whereas the indicator function \(I_{[a,b]}(x_i)\) is fixed
+at the bucket location \([a,b]\).
 
 Similar to the bucket width in histograms, the bandwidth parameter~\(h\)
-controls how smooth the density estimate~\(\hat f_h\) is, as a function
-of~\(x\).
+controls how smooth the density estimate~\(\hat f_h\) is: small \(h\) gives
+narrow kernels that put weight only on very nearby samples, while large \(h\)
+gives wide kernels that average over more distant samples.
 
-\subsubsection{Kernels}\label{kernels}
-
-There are many different kernels in use. Some examples are listed
-below. A more exhautive list can, for example, be found
-\href{https://en.wikipedia.org/wiki/Kernel_(statistics)\#Kernel_functions_in_common_use}{on Wikipedia}.
-
-\paragraph{Uniform Kernel}\label{uniform-kernel}
-
-\begin{equation*}
-  K(x)
-  = \begin{cases}
-      1/2 & \mbox{if $-1 \leq x \leq 1$} \\
-      0 & \mbox{otherwise}
-    \end{cases}
-\end{equation*}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/kUniform-1.pdf}}
-
-\paragraph{Triangular Kernel}\label{triangular}
-
-\begin{equation*}
-  K(x)
-  = \begin{cases}
-      1-|x| & \mbox{if $-1 \leq x \leq 1$} \\
-      0 & \mbox{otherwise}
-    \end{cases}
-\end{equation*}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/kTriangular-1.pdf}}
-
-\paragraph{Epanechnikov Kernel}\label{epanechnikov-kernel}
-
-\begin{equation*}
-  K(x)
-  = \begin{cases}
-      \frac34 (1-x^2) & \mbox{if $-1 \leq x \leq 1$} \\
-      0 & \mbox{otherwise}
-    \end{cases}
-\end{equation*}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/kEpanechnikov-1.pdf}}
-
-\paragraph{Gaussian Kernel}\label{gaussian-kernel}
-
-\begin{equation*}
-  K(x)
-  = \frac{1}{\sqrt{2\pi}} \exp\bigl(-x^2/2\bigr)
-\end{equation*}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/kGaussian-1.pdf}}
+Later sections will discuss how to choose the kernel \(K\) for good properties.
+Note that if \(K\) is continuous, then \(K_h\) and \(\hat f_h\) are also continuous.
 
 \subsection{Kernel Density Estimation in R}\label{kernel-density-estimation-in-r}
 
@@ -605,12 +512,23 @@ which can be used to control details of the estimate:
   \(K_h\) has variance~1.
 \item
   \texttt{kernel\ =\ ...} can be used to choose the kernel.
-  Choices incluse \texttt{"rectangular"} (the uniform kernel), \texttt{"triangular"},
+  Choices include \texttt{"rectangular"} (the uniform kernel), \texttt{"triangular"},
   \texttt{"epanechnikov"} and \texttt{"gaussian"}. The default value is \texttt{"gaussian"}.
 \end{itemize}
 
-Details about how to call \texttt{density()} can be found by using the
-\href{https://rdrr.io/r/stats/density.html}{command \texttt{help(density)}} in R.
+See \href{https://rdrr.io/r/stats/density.html}{\texttt{help(density)}} for details.
+
+To illustrate the use of \texttt{density()}, we use a
+\href{https://teaching.seehuhn.de/data/buffalo/}{dataset about the annual amount of snow}
+falling in Buffalo, New York for different years:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# downloaded from https://teaching.seehuhn.de/data/buffalo/}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/buffalo.csv"}\NormalTok{)}
+\NormalTok{snowfall }\OtherTok{\textless{}{-}}\NormalTok{ x}\SpecialCharTok{$}\NormalTok{snowfall}
+\end{Highlighting}
+\end{Shaded}
 
 The return value of \texttt{density} is an R object which contains information
 about the kernel density estimate.
@@ -642,8 +560,8 @@ the heuristic. The returned object can also directly be used
 as an argument to \texttt{plot()} and \texttt{lines()}, to add the graph of \(\hat f_h\)
 to a plot.
 
-The following code illustrates the use \texttt{density()} with different bandwidth
-bandwidth parameter. The result is shown in figure~\ref{fig:snow-dens-col}.
+The following code illustrates the use of \texttt{density()} with different bandwidth
+parameters. The result is shown in figure~\ref{fig:snow-dens-col}.
 
 
 
@@ -672,25 +590,27 @@ bandwidth parameter. The result is shown in figure~\ref{fig:snow-dens-col}.
 \begin{itemize}
 \tightlist
 \item
-  Histograms can be scaled so that they approximate densities.
+  Histograms approximate densities using indicator functions on fixed buckets.
 \item
-  Some care is needed when choosing buckets for a histogram.
+  Kernel density estimates replace fixed buckets with smooth kernels centred on each data point.
 \item
-  Kernel density estimates can be used to estimate densities from data.
+  The bandwidth parameter controls the smoothness of the kernel density estimate.
 \item
-  A variety of different kernel functions are commonly used.
+  In R, the \texttt{density()} function computes kernel density estimates.
 \end{itemize}
 
 \clearpage
 
-\section*{Interlude: Kernel Density Estimation in R}\label{I01-KDE}
-\addcontentsline{toc}{section}{Interlude: Kernel Density Estimation in R}
+\section*{Interlude: Vectorisation in R}\label{I01-vectorise}
+\addcontentsline{toc}{section}{Interlude: Vectorisation in R}
 
-In the previous section we have already seen how the function \texttt{density()}
-can be used compute kernel density estimates in R. In the current section
-we will compare different methods to compute these estimates ``by hand''.
+In this section we explore techniques for writing efficient R code, using kernel
+density estimation as an example. We start with a straightforward implementation
+using for-loops, then show how to speed it up by replacing loops with operations
+on entire vectors and matrices at once. These techniques apply to many
+computational problems in statistics.
 
-For out experiments we will use the same ``snowfall'' dataset as in the
+For our experiments we will use the same ``snowfall'' dataset as in the
 previous section.
 
 \begin{Shaded}
@@ -713,8 +633,7 @@ is
 \end{equation*}
 Our aim is to implement this formula in~R.
 
-To compute the estimate we need to choose a kernel function.
-For our experiment we use the triangular kernel from section~\ref{triangular}:
+We use the triangular kernel from equation~\eqref{eq:triangular}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -722,8 +641,7 @@ For our experiment we use the triangular kernel from section~\ref{triangular}:
 \end{Highlighting}
 \end{Shaded}
 
-The use of \texttt{pmax()} here allows to evaluate our newly defined function~\texttt{K()}
-for several \(x\)-values in parallel:
+The use of \texttt{pmax()} allows us to evaluate \texttt{K()} for several \(x\)-values in parallel:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -736,10 +654,14 @@ for several \(x\)-values in parallel:
 \end{verbatim}
 
 With this in place, we can now easily compute the kernel density estimate.
-The triangular kernel used by the function density is scaled by a factor
-\(1/\sqrt{6}\) compared to our formula, so here we use \(h = 4\sqrt{6}\)
-to get output comparable to the density output for \texttt{bw=4} (bottom left
-panel in figure~\ref{fig:snow-dens-col}).
+As mentioned in the previous section, the choice of kernel normalization and
+bandwidth is not unique: rescaling the kernel and adjusting the bandwidth can
+give the same \(K_h\). The R function \texttt{density()} uses a specific convention:
+the \texttt{bw} parameter is defined to be the standard deviation of the smoothing kernel.
+For the triangular kernel, this means that \texttt{density()} uses a rescaled version
+with variance~1, which differs from our kernel in equation~\eqref{eq:triangular}
+by a factor of \(1/\sqrt{6}\). Thus, to get output comparable to \texttt{bw=4}
+(bottom left panel in figure~\ref{fig:snow-dens-col}), we use \(h = 4\sqrt{6}\):
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -753,11 +675,9 @@ panel in figure~\ref{fig:snow-dens-col}).
 ## [1] 0.0108237
 \end{verbatim}
 
-Typically we want to evaluate this function on a grid of \(x\)-values,
-for example to plot the estimated density \(\hat f\) as a function.
-Since \(x_1, \ldots, x_n\) is used to denote the input data, we need
-choose a different name for the \(x\)-values where we evaluate \(\hat f_h\).
-Here we use the \(\tilde x_1, \ldots \tilde x_m\) to denote these points:
+To plot the estimated density, we typically evaluate \(\hat f_h\) on a grid of \(x\)-values.
+Since \(x_1, \ldots, x_n\) denotes the input data, we use \(\tilde x_1, \ldots, \tilde x_m\)
+for the evaluation points:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -769,8 +689,7 @@ Here we use the \(\tilde x_1, \ldots \tilde x_m\) to denote these points:
 \end{Highlighting}
 \end{Shaded}
 
-Plotting \texttt{f.hat} as a function \texttt{x.tilde} (figure~\ref{fig:snow-dens-col2}) shows that we get a similar result
-as we did in figure~\ref{fig:snow-dens-col}.
+Figure~\ref{fig:snow-dens-col2} shows the result is similar to figure~\ref{fig:snow-dens-col}.
 
 
 
@@ -788,18 +707,14 @@ as we did in figure~\ref{fig:snow-dens-col}.
 \caption{\label{fig:snow-dens-col2}Manually computed kernel density estimate for the snowfall data, corresponding to \texttt{bw=4} in \texttt{density()}.}
 \end{figure}
 
-We will see in the next section that the code shown above is slower than
-the built-in function \texttt{density()}, but on the other hand using our own code
-we can control all details of the computation and there is no uncertainty
-about what exactly the code does.
+This code is slower than \texttt{density()} (as we will see below), but gives us full
+control over the computation.
 
-\subsection*{Speed Improvements}\label{speed-improvements}
-\addcontentsline{toc}{subsection}{Speed Improvements}
+\subsection*{Vectorization}\label{vectorization}
+\addcontentsline{toc}{subsection}{Vectorization}
 
-In this sub-section we will see how we can speed up our implementation
-of the kernel density estimate.
-To allow for easier speed comparisons, we encapsulate the code from
-above into a function:
+We now explore how to speed up our implementation.
+First, we encapsulate the code above into a function:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -813,22 +728,15 @@ above into a function:
 \end{Highlighting}
 \end{Shaded}
 
-A common source of inefficiency in R code is the use of loops, like
-the \texttt{for}-loop in the function \texttt{KDE1()}. The loop in our code
-is used to compute the differences \(\tilde x_j - x_i\) for all \(j\).
-We have already avoided a second loop by using the fact that
-R interprets \texttt{x.tilde{[}j{]}\ -\ x} a vector operation, by using \texttt{pmax()}
-in our implementation of \texttt{K}, and by using \texttt{mean()} to evaluate
-the sum in the formula for~\(\hat f_h\).
+A common source of inefficiency in R is the use of loops.
+The \texttt{for}-loop in \texttt{KDE1()} computes differences \(\tilde x_j - x_i\) for all \(j\).
+We have already avoided a second loop by treating \texttt{x.tilde{[}j{]}\ -\ x} as a vector
+operation, using \texttt{pmax()} in \texttt{K}, and using \texttt{mean()} for the sum. This approach
+of replacing explicit loops with operations on entire vectors is called \textbf{vectorisation}.
 
-To also avoid the loop over \texttt{j} we can use the function \texttt{outer()}. This
-function takes two vectors as inputs and then applies a function to all pairs
-of elements from the two vectors. The result is a matrix where the rows
-correspond to the elements of the first vector and the columns to the elements
-of the second vector. The function to apply can either be an arithmetic
-operation like \texttt{"+"} or \texttt{"*"}, or an R-function which takes two numbers as
-arguments. For example, the following code computes all pairwise differences
-between the elements of two vectors:
+To eliminate the loop over \texttt{j}, we use \texttt{outer()}, which applies a function to all
+pairs of elements from two vectors. The result is a matrix with rows corresponding
+to the first vector and columns to the second. For example:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -845,13 +753,9 @@ between the elements of two vectors:
 ## [3,]    2    1
 \end{verbatim}
 
-Details about how to call \texttt{outer()} can be found by using the
-\href{https://rdrr.io/r/base/outer.html}{command \texttt{help(outer)}} in R.
-
-We can use \texttt{outer(x.tilde,\ x,\ "-")} to compute all the \(\tilde x_j - x_i\)
-at once. The result is a matrix with \(m\) rows and \(n\) columns, and
-our implementation of the function \texttt{K()} can be applied to this matrix
-to compute the kernel values for all values at once:
+We use \texttt{outer(x.tilde,\ x,\ "-")} to compute all \(\tilde x_j - x_i\) at once,
+giving an \(m \times n\) matrix to which we apply \texttt{K()}. This fully vectorised
+implementation avoids all explicit loops:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -862,9 +766,7 @@ to compute the kernel values for all values at once:
 \end{Highlighting}
 \end{Shaded}
 
-We will see at the end of this section that the function \texttt{KDE2()} is
-significantly faster than \texttt{KDE1()}, and we can easily check that both
-functions return the same result:
+We can verify that both functions return the same result:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -886,7 +788,7 @@ functions return the same result:
 ## [1] 0.0078239091 0.0108236983 0.0007448277
 \end{verbatim}
 
-There is a another, minor optimisation we can make. Instead of dividing the
+There is another, minor optimisation we can make. Instead of dividing the
 \(m\times n\) matrix elements of \texttt{dx} by~\texttt{h}, we can achieve the same effect by
 dividing the vectors \texttt{x} and \texttt{x.tilde}, \emph{i.e.} only \(m+n\) numbers, by~\(h\).
 This reduces the number of operations required. Similarly, instead of
@@ -902,8 +804,7 @@ means by \(h\):
 \end{Highlighting}
 \end{Shaded}
 
-Again, the new function \texttt{KDE3()} returns the same result as the original
-implementation:
+Again, \texttt{KDE3()} returns the same result:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -915,8 +816,7 @@ implementation:
 ## [1] 0.0078239091 0.0108236983 0.0007448277
 \end{verbatim}
 
-To verify that our modifications really made the code faster, we measure
-the execution times using the R package \texttt{microbenchmark}:
+We measure execution times using \texttt{microbenchmark}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -932,30 +832,23 @@ the execution times using the R package \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min        lq      mean    median       uq      max neval
-##  KDE1 1427.743 1494.4910 1567.5546 1511.2805 1532.149 7359.623  1000
-##  KDE2  189.871  250.9405  343.0117  258.7305  266.500 8197.376  1000
-##  KDE3  171.339  214.7990  270.8871  219.8215  225.541 5979.030  1000
+##  expr     min       lq     mean  median       uq      max neval
+##  KDE1 835.129 884.9030 952.8551 902.369 923.6275 5157.636  1000
+##  KDE2 110.413 156.0665 234.9346 160.638 169.0840 5590.883  1000
+##  KDE3  98.810 131.6920 165.6060 135.874 142.3315 4323.983  1000
 \end{verbatim}
 
-The output summarises the execution times for 1000 runs of each of the
-three functions. The columns correspond to the fastest measured time,
-lower quartile, mean, median, upper quartile and slowest time, respectively.
-(Different runs take different times, due to the fact that the computer
-is busy with other tasks in the background.) We can see that the introduction
-of \texttt{outer()} in \texttt{KDE2()} made a big difference, and that the further
-optimisation in \texttt{KDE3()} improved speed further.
+The output shows execution times for 1000 runs. The introduction
+of \texttt{outer()} in \texttt{KDE2()} gives a substantial speedup, and \texttt{KDE3()} improves further.
 
-Finally, we compare the speed of our implementation to the built-in
-function \texttt{density()}. To get comparable output we use the arguments
-\texttt{from}, \texttt{to}, and \texttt{n} to specify the same grid \(\tilde x\)
-as we used above.
+Finally, we compare to \texttt{density()}, using arguments \texttt{from}, \texttt{to}, and \texttt{n}
+to specify the same grid \(\tilde x\):
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{KDE.builtin }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x.tilde, x, K, h) \{}
+\NormalTok{KDE.builtin }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x.tilde, x, kernel\_name, h) \{}
     \FunctionTok{density}\NormalTok{(x,}
-      \AttributeTok{kernel =}\NormalTok{ K, }\AttributeTok{bw =}\NormalTok{ h }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(}\DecValTok{6}\NormalTok{),}
+      \AttributeTok{kernel =}\NormalTok{ kernel\_name, }\AttributeTok{bw =}\NormalTok{ h }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(}\DecValTok{6}\NormalTok{),}
       \AttributeTok{from =} \FunctionTok{min}\NormalTok{(x.tilde), }\AttributeTok{to =} \FunctionTok{max}\NormalTok{(x.tilde), }\AttributeTok{n =} \FunctionTok{length}\NormalTok{(x.tilde))}\SpecialCharTok{$}\NormalTok{y}
 \NormalTok{\}}
 \FunctionTok{microbenchmark}\NormalTok{(}\AttributeTok{density =} \FunctionTok{KDE.builtin}\NormalTok{(x.tilde, snowfall, }\StringTok{"triangular"}\NormalTok{, h), }\AttributeTok{times =} \DecValTok{1000}\NormalTok{)}
@@ -964,17 +857,15 @@ as we used above.
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr    min     lq     mean   median      uq      max neval
-##  density 157.44 167.28 184.7889 171.3185 175.726 4192.578  1000
+##     expr    min      lq     mean   median      uq      max neval
+##  density 92.209 99.3225 112.8166 102.3975 105.985 3175.532  1000
 \end{verbatim}
 
-The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by
-a factor of less than~2. The reason is that \texttt{density()} uses a
-more efficient algorithm for computing an approximation to
-the kernel density estimate, based on Fast Fourier Transform.
-By comparing the output of \texttt{KDE.builtin()} we can see that the
-approximation used by \texttt{density()} gives nearly the same result as our
-exact implementation of the method:
+The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
+of less than~2. The reason is that \texttt{density()} uses a more efficient
+algorithm based on Fast Fourier Transform to compute an approximation to the
+kernel density estimate. By comparing the outputs of \texttt{KDE3()} and \texttt{KDE.builtin()}
+we can see that the approximation is very accurate:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -988,9 +879,23 @@ exact implementation of the method:
 ## [1] 1.935582e-05
 \end{verbatim}
 
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  Vectorisation is the technique of replacing explicit loops with operations on entire vectors.
+\item
+  Vectorised code dramatically improves performance in R.
+\item
+  The \texttt{outer()} function enables fully vectorised implementations for pairwise operations.
+\item
+  Further speedups can be achieved by reducing the number of operations on large matrices.
+\end{itemize}
+
 \clearpage
 
-\section{The Bias of Kernel Density Estimates}\label{X02-Bias}
+\section{The Error of Kernel Density Estimates}\label{X02-error}
 
 In the previous section we introduced the kernel density estimate
 \begin{equation}
@@ -1035,7 +940,9 @@ this problem is called a ``non-parametric'' estimation problem.
 Our estimate for the density \(f\) is the function \(\hat f_h\colon \mathbb{R}\to \mathbb{R}\),
 where \(\hat f_h(x)\) is given by~\eqref{eq:KDE-est} for every \(x \in\mathbb{R}\).
 
-\subsection{The Bias of the Estimate}\label{the-bias-of-the-estimate}
+\subsection{Bias}\label{X02-error-bias}
+
+\subsubsection{The Bias of the Estimate}\label{the-bias-of-the-estimate}
 
 As ususal, the \textbf{bias} of our estimate is the difference between
 what the estimator gives on average and the truth. For our estimation
@@ -1073,7 +980,7 @@ we can write this expectation as an integral to get
 \end{align*}
 where we used the symmetry of \(K_h\) and the substitution \(z = y - x\).
 
-\subsection{Moments of Kernels}\label{moments-of-kernels}
+\subsubsection{Moments of Kernels}\label{moments-of-kernels}
 
 To understand how the bias changes as \(h\) varies, we will need to
 consider properties of \(K\) and \(K_h\) in more detail.
@@ -1087,7 +994,7 @@ for \(k \in \mathbb{N}_0 = \{0, 1, 2, \ldots\}\), is given by
 \end{equation*}
 \end{definition}
 
-The second moment \(\mu_2\) is sometimes also called the \emph{variance}
+The second moment \(\mu_2\) is sometimes also called the \textbf{variance}
 of the kernel~\(K\).
 
 Using the properties of \(K\), we find the following results:
@@ -1140,7 +1047,7 @@ Using the substitution \(y = x/h\) we find
 This completes the proof.
 \end{proof}
 
-It is easy to check that if \(K\) is a kernel, then \(K_h\) is also a kernel which
+By lemma~\ref{lem:Kh-kernel}, if \(K\) is a kernel, then \(K_h\) is also a kernel which
 implies that \(K_h\) is a probability density. If \(Y\) is a random variable with
 density \(K_h\), written as \(Y \sim K_h\) in short, then we find
 \begin{equation*}
@@ -1159,7 +1066,7 @@ and
 \end{equation}
 Thus, \(Y\) is centred and the variance of \(Y\) is proportional to~\(h^2\).
 
-\subsection{The Bias for Small Bandwidth}\label{the-bias-for-small-bandwidth}
+\subsubsection{The Bias for Small Bandwidth}\label{the-bias-for-small-bandwidth}
 
 Considering again the formula
 \begin{equation*}
@@ -1200,44 +1107,19 @@ for small \(h\). Considering the bias again, this gives
 which shows that the bias of the estimator descreases quadratically
 as \(h\) gets smaller.
 
-In contrast, we will see in the next section that the variance of the
-estimator \emph{increases} as \(h \downarrow 0\). We will need to balance these
-two effects to find the optimal value of~\(h\).
+In contrast, the variance of the estimator (computed below) \emph{increases}
+as \(h \downarrow 0\). We will need to balance these two effects to find the
+optimal value of~\(h\).
 
-\textbf{Summary}
+\subsection{Variance}\label{X02-error-var}
 
-\begin{itemize}
-\tightlist
-\item
-  We have introduced a statistical model for density estimation.
-\item
-  The bias for kernel density estimation can be written as an integral.
-\item
-  We learned how the moments of a kernel are defined.
-\item
-  The bias for small bandwidth depends on the second moment of the
-  kernel and the second derivative of the density.
-\end{itemize}
-
-\clearpage
-
-\section{The Variance of Kernel Density Estimates}\label{X03-Var}
-
-In the previous section we considered the bias of the estimator
-\begin{equation*}
-  \hat f_h(x)
-  = \frac{1}{n} \sum_{i=1}^n K_h(x - x_i).
-\end{equation*}
-We found
+We now turn to computing the variance of the estimator. Recall from above that
 \begin{equation}
   \mathbb{E}\bigl( \hat f_h(x) \bigr)
   = \mathbb{E}\bigl( K_h(x - X_i) \bigr)  \label{eq:E-hat-f-K-h}
 \end{equation}
-for all \(i \in \{1, \ldots, n\}\) (we used \(i=1\)), and we used this relation
-to compute the bias. In this section, we will use similar arguments to compute
-the variance and the mean squared error of the estimator.
-
-\subsection{Variance}\label{variance}
+for all \(i \in \{1, \ldots, n\}\). We will use similar arguments to derive
+the variance.
 
 We use the formula
 \begin{equation*}
@@ -1282,9 +1164,8 @@ Since \((n-1)/n - 1 = -1/n\) we get
 
 \subsubsection{The Roughness of a Kernel}\label{the-roughness-of-a-kernel}
 
-Similar to what we did in the last section, we will use Taylor expansion
-of \(f\) around the point \(x\) to understand the behaviour of the variance
-for small~\(h\). Some more care is needed here, because this time the
+Similar to the bias analysis, we will use Taylor expansion of \(f\) around
+the point \(x\) to understand the behaviour of the variance for small~\(h\). Some more care is needed here, because this time the
 result also depends on the sample size~\(n\) and we will consider the joint
 limit of \(n \to \infty\) and \(h\to 0\). For the first term in
 equation~\eqref{eq:Var-hat-f-2} we find
@@ -1331,7 +1212,7 @@ for small \(h\).
 \subsubsection{The Variance for Small Bandwidth}\label{the-variance-for-small-bandwidth}
 
 Here we consider the term \(\mathbb{E}\bigl( \hat f_h(x) \bigr)^2\) in the formula
-for the variance. From the previous section we know
+for the variance. From the bias analysis above we know
 \begin{equation*}
     \mathbb{E}\bigl( \hat f_h(x) \bigr)
     \approx f(x) + \frac12 h^2 \mu_2(K) f''(x)
@@ -1406,6 +1287,79 @@ with the understanding that the constants in the definition of \(o(h^4)\)
 do not depend on \(n\) and that \(o(1/nh)\) really means ``\(o(1/h)\), where the
 constants are proportional to \(1/n\).''
 
+\subsection{Integrated Error}\label{IMSE}
+
+From equation~\eqref{eq:f-hat-MSE} we know
+\begin{equation*}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  \approx \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f''(x)^2 h^4.
+\end{equation*}
+This gives the mean squared error when trying to estimate the density
+\(f(x)\) at a fixed point~\(x\). Usually we are interested in estimating
+the function \(f\) rather than individual points \(f(x)\). In this case,
+we consider the \textbf{integrated mean squared error (IMSE)}:
+\begin{equation*}
+  \mathrm{IMSE}\bigl( \hat f_h \bigr)
+  := \int_{-\infty}^\infty \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr) \,dx.
+\end{equation*}
+Using our result from above we find
+\begin{align*}
+  \mathrm{IMSE}\bigl( \hat f_h \bigr)
+  &\approx \int \Bigl( \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f''(x)^2 h^4 \Bigr) \,dx \\
+  &= \frac{1}{nh} R(K) \int f(x) \,dx + \frac{h^4}{4} \mu_2(K)^2 \int f''(x)^2 \,dx \\
+  &= \frac{1}{nh} R(K) + \frac{1}{4} \mu_2(K)^2 R(f'') h^4,
+\end{align*}
+where we (mis-)use the definition of roughness as an abbreviation to express
+the integral over~\(f''\).
+
+As before, we can use differentiation to find the optimal value of \(h\).
+Here we get
+\begin{equation*}
+  h_\mathrm{opt}
+  = \Bigl( \frac{R(K)}{n \mu_2(K)^2 R(f'')} \Bigr)^{1/5}.
+\end{equation*}
+and the corresponding error is
+\begin{equation}
+  \mathrm{IMSE}_\mathrm{opt}
+  = \frac54 \; \frac{1}{n^{4/5}}
+      \; \Bigl( R(K)^2 \mu_2(K) \Bigr)^{2/5}
+      \; R(f'')^{1/5}.  \label{eq:IMSE-opt}
+\end{equation}
+Thus, in order to minimise the error we still need to choose
+\(h \propto n^{-1/5}\) and we should choose a kernel \(K\) which minimises
+the value~\(R(K)^2 \mu_2(K)\).
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We introduced a statistical model for density estimation where data are
+  i.i.d. samples from the unknown density~\(f\).
+\item
+  Kernel moments \(\mu_k(K) = \int x^k K(x) dx\) characterise kernel properties
+  and scale with bandwidth: \(\mu_k(K_h) = h^k \mu_k(K)\).
+\item
+  For small bandwidth \(h\), the bias is approximately
+  \(\frac{\mu_2(K) f''(x)}{2} h^2\), decreasing quadratically as \(h \to 0\).
+\item
+  The variance for small \(h\) is approximately \(\frac{f(x) R(K)}{nh}\),
+  where \(R(K) = \int K(x)^2 dx\) is the kernel roughness, and increases
+  as \(h \to 0\).
+\item
+  The mean squared error (MSE) combines both bias and variance. The integrated
+  mean squared error (IMSE) integrates the MSE over all points and provides a
+  global measure of estimation quality.
+\end{itemize}
+
+\clearpage
+
+\section{Kernel Density Estimation in Practice}\label{X03-practice}
+
+In this section we conclude our discussion of kernel density estimation
+by considering different aspects which are important when using the method
+in practice.
+
 \subsection{Optimal Bandwidth}\label{optimal-bandwidth}
 
 The two terms on the right-hand side of \eqref{eq:f-hat-MSE} are balanced in
@@ -1460,68 +1414,6 @@ This expression clearly shows the contribution of \(n\), \(K\) and \(f\):
   this term, but we can see that \(x\) where \(f\) is large or has
   high curvature have higher estimation error.
 \end{itemize}
-
-\textbf{Summary}
-
-\begin{itemize}
-\tightlist
-\item
-  We found the variance of the kernel density estimate.
-\item
-  We studied the mean squared error for small \(h\).
-\item
-  We derived a formula for the optimal value of the bandwidth~\(h\).
-\end{itemize}
-
-\clearpage
-
-\section{Kernel Density Estimation in Practice}\label{X04-practice}
-
-In this section we conclude our discussion of kernel density estimation
-by considering different aspects which are important when using the method
-in practice.
-
-\subsection{Integrated Error}\label{IMSE}
-
-From equation~\eqref{eq:f-hat-MSE} we know
-\begin{equation*}
-  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
-  \approx \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f''(x)^2 h^4.
-\end{equation*}
-This gives the mean squared error when trying to estimate the density
-\(f(x)\) at a fixed point~\(x\). Usually we are interested in estimating
-the function \(f\) rather than individual points \(f(x)\). In this case,
-we consider the \textbf{integrated mean squared error (IMSE)}:
-\begin{equation*}
-  \mathrm{IMSE}\bigl( \hat f_h \bigr)
-  := \int_{-\infty}^\infty \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr) \,dx.
-\end{equation*}
-Using our result from above we find
-\begin{align*}
-  \mathrm{IMSE}\bigl( \hat f_h \bigr)
-  &\approx \int \Bigl( \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f''(x)^2 h^4 \Bigr) \,dx \\
-  &= \frac{1}{nh} R(K) \int f(x) \,dx + \frac{h^4}{4} \mu_2(K)^2 \int f''(x)^2 \,dx \\
-  &= \frac{1}{nh} R(K) + \frac{1}{4} \mu_2(K)^2 R(f'') h^4,
-\end{align*}
-where we (mis-)use the definition of roughness as an abbreviation to express
-the integral over~\(f''\).
-
-As before, we can use differentiation to find the optimal value of \(h\).
-Here we get
-\begin{equation*}
-  h_\mathrm{opt}
-  = \Bigl( \frac{R(K)}{n \mu_2(K)^2 R(f'')} \Bigr)^{1/5}.
-\end{equation*}
-and the corresponding error is
-\begin{equation}
-  \mathrm{IMSE}_\mathrm{opt}
-  = \frac54 \; \frac{1}{n^{4/5}}
-      \; \Bigl( R(K)^2 \mu_2(K) \Bigr)^{2/5}
-      \; R(f'')^{1/5}.  \label{eq:IMSE-opt}
-\end{equation}
-Thus, in order to minimise the error we still need to choose
-\(h \propto n^{-1/5}\) and we should choose a kernel \(K\) which minimises
-the value~\(R(K)^2 \mu_2(K)\).
 
 \subsection{Choice of Kernel}\label{choice-of-kernel}
 
@@ -2115,7 +2007,7 @@ the result:
 
 \clearpage
 
-\section{Kernel Smoothing}\label{X05-smoothing}
+\section{Kernel Smoothing}\label{X04-smoothing}
 
 We now consider the statistical model
 \begin{equation*}
@@ -2303,7 +2195,7 @@ as \(h \downarrow 0\).
 
 We start by considering the numerator \(\hat r_h(x)\). The arguments used here
 will be very similar to the arguments used in the section about the
-\hyperref[X03-Var]{variance of kernel density estimates}.
+\hyperref[X02-error-var]{variance of kernel density estimates}.
 
 The expectation of \(\hat r_h(x)\) is
 \begin{align*}
@@ -2525,7 +2417,7 @@ So finally we have
 
 \clearpage
 
-\section{Local Polynomial Regression}\label{X06-locpoly}
+\section{Local Polynomial Regression}\label{X05-locpoly}
 
 Local polynomial regression is a generalisation of the
 Nadaraya-Watson estimator. The method combines the two ideas of
@@ -2778,7 +2670,7 @@ estimator.
 
 For \(p=1\) the polynomial is a straight line, allowing to model the
 value as well as the slope of the mean line. The resulting estimator
-is called the \emph{local linear estimator}.
+is called the \textbf{local linear estimator}.
 This sometimes gives
 a better fit than the Nadaraya-Watson estimator, for example at the boundaries
 of the domain.
@@ -2808,16 +2700,6 @@ and of \texttt{locpoly(..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is near identica
 \FunctionTok{lines}\NormalTok{(m1, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
 
 \FunctionTok{library}\NormalTok{(KernSmooth)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## KernSmooth 2.23 loaded
-## Copyright M. P. Wand 1997-2009
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{locpoly}\NormalTok{(x, y, }\AttributeTok{degree =} \DecValTok{1}\NormalTok{, }\AttributeTok{bandwidth =} \FloatTok{0.11}\NormalTok{)}
 \FunctionTok{lines}\NormalTok{(m2, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
 \end{Highlighting}
@@ -2881,6 +2763,328 @@ In contrast, the local polynomial estimate (blue line) has much lower bias.
 \item
   The local polynomial regression estimator is a generalization of the
   Nadaraya-Watson estimator.
+\end{itemize}
+
+\clearpage
+
+\section{Spline Smoothing}\label{X06-splines}
+
+In the previous sections we have seen how kernel methods and \(k\)-nearest
+neighbour methods can be used to estimate the regression function \(m\colon
+\mathbb{R}\to \mathbb{R}\) from data \((x_1, y_1), \ldots, (x_n, y_n)\). While these methods
+work well in many situations, they have some limitations:
+
+\begin{itemize}
+\tightlist
+\item
+  The choice of bandwidth \(h\) or neighbourhood size \(k\) can be difficult.
+\item
+  Kernel methods can suffer from boundary effects, where the estimate
+  is biased near the edges of the data range.
+\item
+  All methods are local, averaging nearby observations, which can lead
+  to increased variance.
+\end{itemize}
+
+In this section we introduce an alternative approach based on \textbf{spline
+smoothing}. Instead of local averaging, we fit a smooth function globally
+to the entire dataset, using a penalty term to control the smoothness.
+
+\subsection{Smoothing Splines}\label{smoothing-splines}
+
+The key idea of spline smoothing is to find a function \(m\) which balances
+two competing goals:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The function should fit the data well, \emph{i.e.}~the residual sum of
+  squares \(\sum_{i=1}^n \bigl( y_i - m(x_i) \bigr)^2\) should be small.
+\item
+  The function should be smooth, \emph{i.e.}~it should not have too much
+  curvature.
+\end{enumerate}
+
+To measure the curvature of a function~\(m\), we use the integral of the
+squared second derivative:
+\begin{equation*}
+  \int_{-\infty}^\infty \bigl( m''(x) \bigr)^2 \,dx.
+\end{equation*}
+This integral is large if \(m\) has high curvature, and small if \(m\) is
+nearly linear. (For a linear function \(m(x) = a + bx\) we have \(m''(x) = 0\)
+and thus the integral equals zero.)
+
+\begin{definition}
+\protect\hypertarget{def:smoothing-spline}{}\label{def:smoothing-spline}The \textbf{smoothing spline} estimate for the regression function \(m\) is the
+function \(\hat m_\lambda\) which minimizes
+\begin{equation}
+  \sum_{i=1}^n \bigl( y_i - m(x_i) \bigr)^2 + \lambda \int_{-\infty}^\infty \bigl( m''(x) \bigr)^2 \,dx
+  \label{eq:spline-penalty}
+\end{equation}
+over all twice differentiable functions \(m\colon \mathbb{R}\to \mathbb{R}\).
+The parameter \(\lambda \geq 0\) is called the \textbf{smoothing parameter}.
+\end{definition}
+
+The smoothing parameter \(\lambda\) controls the trade-off between fitting
+the data and smoothness:
+
+\begin{itemize}
+\tightlist
+\item
+  For \(\lambda = 0\), only the residual sum of squares matters, and the
+  solution is the interpolating function which passes through all data
+  points.
+\item
+  For \(\lambda \to \infty\), only the smoothness matters, and the solution
+  is the linear regression line (which has zero curvature).
+\item
+  For intermediate values of \(\lambda\), the solution balances fit and
+  smoothness.
+\end{itemize}
+
+This is similar to ridge regression (see \href{https://seehuhn.github.io/MATH3714/S16-ridge.html}{section 16 of the level 3
+notes}), where a penalty
+term \(\lambda \|\beta\|^2\) is added to the residual sum of squares to
+control the size of the coefficients.
+
+\subsection{Cubic Splines}\label{cubic-splines}
+
+Before we can state the solution to the optimization problem in
+definition~\ref{def:smoothing-spline}, we need to introduce the concept
+of a \textbf{cubic spline}.
+
+\begin{definition}
+\protect\hypertarget{def:cubic-spline}{}\label{def:cubic-spline}A \textbf{cubic spline} with knots \(\kappa_1 < \kappa_2 < \cdots < \kappa_k\) is
+a function \(s\colon \mathbb{R}\to \mathbb{R}\) such that
+
+\begin{itemize}
+\tightlist
+\item
+  \(s\) is a cubic polynomial on each interval \((-\infty, \kappa_1)\),
+  \((\kappa_1, \kappa_2)\), \ldots, \((\kappa_{k-1}, \kappa_k)\), and
+  \((\kappa_k, \infty)\), and
+\item
+  \(s\) is twice continuously differentiable, \emph{i.e.}~\(s\), \(s'\) and \(s''\)
+  are all continuous.
+\end{itemize}
+
+A \textbf{natural cubic spline} is a cubic spline which is linear on the
+intervals \((-\infty, \kappa_1)\) and \((\kappa_k, \infty)\).
+\end{definition}
+
+The points \(\kappa_1, \ldots, \kappa_k\) are called \textbf{knots}. At each
+knot, the function \(s\) transitions from one cubic polynomial to another,
+but the transition is smooth because \(s\), \(s'\) and \(s''\) are all continuous.
+
+\begin{example}
+TODO: add a simple example showing a cubic spline with 2-3 knots
+\end{example}
+
+The following theorem shows that the solution to the smoothing spline
+problem is always a natural cubic spline.
+
+\begin{theorem}
+\protect\hypertarget{thm:spline-solution}{}\label{thm:spline-solution}The solution \(\hat m_\lambda\) to the optimization problem in
+definition~\ref{def:smoothing-spline} is a natural cubic spline with
+knots at the data points \(x_1, \ldots, x_n\).
+\end{theorem}
+
+\begin{proof}
+We sketch the main idea of the proof, showing that the solution must be
+a cubic spline. (The full proof, including the boundary conditions which
+make the spline ``natural'', is more technical.)
+
+Suppose \(\hat m_\lambda\) is the solution but \(\hat m_\lambda\) is not a
+cubic polynomial on some interval \([x_i, x_{i+1}]\). We will show that
+this leads to a contradiction.
+
+Let \(p\) be the cubic polynomial which interpolates \(\hat m_\lambda\),
+\(\hat m_\lambda'\), \(\hat m_\lambda''\) at \(x_i\) and \(\hat m_\lambda''\)
+at \(x_{i+1}\). (Such a polynomial exists and is unique.) Now consider
+the function \(\tilde m\) which equals \(\hat m_\lambda\) outside
+\([x_i, x_{i+1}]\) and equals \(p\) on \([x_i, x_{i+1}]\).
+
+Since \(\tilde m\) agrees with \(\hat m_\lambda\) at all data points, the
+residual sum of squares is the same for both functions. However, the
+penalty term is smaller for \(\tilde m\):
+\begin{equation*}
+  \int_{-\infty}^\infty \bigl( \tilde m''(x) \bigr)^2 \,dx
+  < \int_{-\infty}^\infty \bigl( \hat m_\lambda''(x) \bigr)^2 \,dx.
+\end{equation*}
+This is because \(p''\) is linear (the second derivative of a cubic
+polynomial), and among all functions with given values at the endpoints
+of an interval, the linear function has the smallest integral of the
+square.
+
+This contradicts the assumption that \(\hat m_\lambda\) minimizes
+equation~\eqref{eq:spline-penalty}. Therefore, \(\hat m_\lambda\) must be
+a cubic polynomial on each interval \([x_i, x_{i+1}]\).
+
+A similar argument shows that \(\hat m_\lambda\) must be twice continuously
+differentiable at the knots, completing the proof that \(\hat m_\lambda\)
+is a cubic spline.
+\end{proof}
+
+The theorem shows that the smoothing spline has knots at \emph{all} data
+points \(x_1, \ldots, x_n\). This might seem surprising, since a spline
+with \(n\) knots has \(n + 4\) degrees of freedom (four coefficients for each
+of the \(n+1\) pieces, minus \(3n\) constraints from continuity and
+smoothness, giving \(4(n+1) - 3n = n + 4\)). However, the penalty term
+\(\lambda \int (m'')^2 dx\) prevents overfitting by penalizing functions
+with high curvature.
+
+\subsection{Degrees of Freedom}\label{degrees-of-freedom}
+
+As with linear regression, we can write the smoothing spline estimate in
+matrix form. Let \(y = (y_1, \ldots, y_n)^\top\) be the vector of
+responses, and let \(\hat y = (\hat m_\lambda(x_1), \ldots,
+\hat m_\lambda(x_n))^\top\) be the vector of fitted values. Then we can
+write
+\begin{equation}
+  \hat y
+  = S_\lambda y,  \label{eq:smoother-matrix}
+\end{equation}
+where \(S_\lambda \in \mathbb{R}^{n\times n}\) is the \textbf{smoother matrix}. This is
+analogous to the hat matrix \(H = X(X^\top X)^{-1}X^\top\) in linear
+regression (see \href{https://seehuhn.github.io/MATH3714/S02-multiple.html}{section 2 of the level 3
+notes}).
+
+The smoother matrix \(S_\lambda\) depends on the smoothing parameter
+\(\lambda\) and on the data points \(x_1, \ldots, x_n\), but not on the
+responses \(y_1, \ldots, y_n\). We will not give the explicit formula for
+\(S_\lambda\) here, but note that it can be computed efficiently.
+
+\begin{definition}
+\protect\hypertarget{def:df-spline}{}\label{def:df-spline}The \textbf{effective degrees of freedom} of the smoothing spline estimate is
+\begin{equation*}
+  \mathop{\mathrm{df}}\nolimits(\lambda)
+  = \mathop{\mathrm{tr}}\nolimits(S_\lambda),
+\end{equation*}
+where \(\mathop{\mathrm{tr}}\nolimits\) denotes the trace of a matrix (the sum of the diagonal
+elements).
+\end{definition}
+
+The effective degrees of freedom measure the complexity of the fitted
+model:
+
+\begin{itemize}
+\tightlist
+\item
+  For \(\lambda = 0\), the smoother matrix is \(S_0 = I\) (the identity
+  matrix), and we have \(\mathop{\mathrm{df}}\nolimits(0) = n\). This corresponds to interpolation,
+  where we use all \(n\) data points.
+\item
+  For \(\lambda \to \infty\), the smoother matrix converges to the hat
+  matrix of linear regression, and we have \(\mathop{\mathrm{df}}\nolimits(\infty) = 2\). This
+  corresponds to fitting a straight line.
+\item
+  For intermediate values of \(\lambda\), we have \(2 < \mathop{\mathrm{df}}\nolimits(\lambda) < n\).
+\end{itemize}
+
+The effective degrees of freedom provide an alternative way to specify
+the amount of smoothing: instead of choosing \(\lambda\) directly, we can
+choose a target value for \(\mathop{\mathrm{df}}\nolimits(\lambda)\) and then find the corresponding
+\(\lambda\).
+
+\subsection{Smoothing Splines in R}\label{smoothing-splines-in-r}
+
+Smoothing splines can be computed in R using the built-in function
+\href{https://rdrr.io/r/stats/smooth.spline.html}{\texttt{smooth.spline()}}. The
+function takes the following arguments:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{x} and \texttt{y}: the data points.
+\item
+  \texttt{spar}: the smoothing parameter. This is related to \(\lambda\) but uses
+  a different scale. If not specified, a default value is chosen.
+\item
+  \texttt{df}: the target degrees of freedom. If specified, the function finds
+  the value of \texttt{spar} which gives the desired degrees of freedom.
+\end{itemize}
+
+The return value is an object which contains the fitted spline. The most
+important components are:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{\$x} and \texttt{\$y}: the fitted spline evaluated at the data points (or at a
+  grid of points if the optional argument \texttt{all.knots\ =\ FALSE} is used).
+\item
+  \texttt{\$df}: the effective degrees of freedom of the fitted spline.
+\item
+  \texttt{\$lambda}: the smoothing parameter \(\lambda\) (on a different scale than
+  \texttt{spar}).
+\end{itemize}
+
+\begin{example}
+TODO: add example using faithful dataset, comparing to kernel methods
+\end{example}
+
+\subsection{Comparison with Kernel Methods}\label{comparison-with-kernel-methods}
+
+Both smoothing splines and kernel methods can be used to estimate the
+regression function \(m\) from data. The two approaches have different
+strengths and weaknesses.
+
+\textbf{Advantages of smoothing splines:}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Global method:} The spline is fitted to the entire dataset at once,
+  which can give better results at the boundaries of the data range.
+\item
+  \textbf{Automatic smoothness:} The solution is guaranteed to be twice
+  continuously differentiable.
+\item
+  \textbf{Efficient computation:} The spline can be computed by solving a
+  system of linear equations, without the need to perform local fits at
+  many points.
+\end{itemize}
+
+\textbf{Advantages of kernel methods:}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Local adaptation:} Kernel methods can adapt to local features of the
+  data, for example by using different bandwidths in different regions
+  (as in \(k\)-NN methods).
+\item
+  \textbf{Geometric interpretation:} The weighted average interpretation of
+  kernel methods is easier to understand than the penalized least squares
+  formulation.
+\item
+  \textbf{Robustness:} Kernel methods can be made robust to outliers by using
+  robust kernels or by trimming extreme values.
+\end{itemize}
+
+In practice, the choice between smoothing splines and kernel methods
+often depends on the specific application and the properties of the data.
+
+\begin{example}
+TODO: add comparison example showing spline vs.~NW vs.~local linear
+\end{example}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  Smoothing splines balance fit and smoothness using a penalty term.
+\item
+  The solution is a natural cubic spline with knots at the data points.
+\item
+  The smoothing parameter \(\lambda\) controls the trade-off between fit and
+  smoothness.
+\item
+  Effective degrees of freedom measure model complexity.
+\item
+  Smoothing splines are a global alternative to local kernel methods.
 \end{itemize}
 
 \clearpage
