@@ -458,12 +458,12 @@ for all \(y\).
 \end{proof}
 
 \begin{remark}
-Note that the choice of kernel \(K\) and bandwidth \(h\) is not unique.
-For a given kernel shape, different authors use different normalisations.
-For example, we could replace our triangular kernel~\(K\)
-from equation~\eqref{eq:triangular} with \(\tilde K(x) = K(x/\sqrt{6})\),
-which has variance~1. If we simultaneously replace \(h\) with \(\tilde h = h/\sqrt{6}\),
-then the rescaled kernel remains unchanged: \(\tilde K_{\tilde h} = K_h\).
+Note that the choice of kernel \(K\) and bandwidth \(h\) is not unique. For a given
+kernel shape, different authors use different normalisations. For example, we
+could replace our triangular kernel~\(K\) from equation~\eqref{eq:triangular}
+with \(\tilde K(x) = K(x/\sqrt{6}) / \sqrt{6}\), which has variance~1. If we
+simultaneously replace \(h\) with \(\tilde h = h/\sqrt{6}\), then the rescaled
+kernel remains unchanged: \(\tilde K_{\tilde h} = K_h\).
 \end{remark}
 
 \subsection{Kernel Density Estimation}\label{kernel-density-estimation}
@@ -832,10 +832,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr     min       lq     mean  median       uq      max neval
-##  KDE1 835.129 884.9030 952.8551 902.369 923.6275 5157.636  1000
-##  KDE2 110.413 156.0665 234.9346 160.638 169.0840 5590.883  1000
-##  KDE3  98.810 131.6920 165.6060 135.874 142.3315 4323.983  1000
+##  expr      min       lq      mean   median        uq       max neval
+##  KDE1 1431.556 1491.498 1580.8987 1505.130 1519.9520 11026.376  1000
+##  KDE2  189.953  256.660  362.5206  260.678  265.3110  6393.089  1000
+##  KDE3  170.683  218.161  263.0217  221.810  225.0695  5795.924  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -857,8 +857,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr    min      lq     mean   median      uq      max neval
-##  density 92.209 99.3225 112.8166 102.3975 105.985 3175.532  1000
+##     expr     min       lq     mean  median      uq      max neval
+##  density 157.276 166.5625 183.7524 170.355 174.455 4384.745  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -922,7 +922,7 @@ denotes that the random variable \(X\) has density~\(f\).
 
 It is important to not confuse \(x\) (the point where we are evaluating
 the densities during our analysis) with the data \(x_i\). A statistical
-model describes the data, so here we get random variables \(X_1, \ldots, x_n\)
+model describes the data, so here we get random variables \(X_1, \ldots, X_n\)
 to describe the behaviour of \(x_1, \ldots, x_n\), but it does not descibe \(x\).
 The number \(x\) is not part of the data, so will never be modelled by a
 random variable.
@@ -2700,6 +2700,16 @@ and of \texttt{locpoly(..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is near identica
 \FunctionTok{lines}\NormalTok{(m1, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
 
 \FunctionTok{library}\NormalTok{(KernSmooth)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## KernSmooth 2.23 loaded
+## Copyright M. P. Wand 1997-2009
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{locpoly}\NormalTok{(x, y, }\AttributeTok{degree =} \DecValTok{1}\NormalTok{, }\AttributeTok{bandwidth =} \FloatTok{0.11}\NormalTok{)}
 \FunctionTok{lines}\NormalTok{(m2, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
 \end{Highlighting}

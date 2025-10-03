@@ -370,10 +370,10 @@ means by <span class="math inline">\(h\)</span>:</p>
 <span id="cb25-6"><a href="I01-vectorise.html#cb25-6" tabindex="-1"></a>  <span class="at">KDE3 =</span> <span class="fu">KDE3</span>(x.tilde, snowfall, K, h),</span>
 <span id="cb25-7"><a href="I01-vectorise.html#cb25-7" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
-##  expr     min       lq     mean  median       uq      max neval
-##  KDE1 832.710 879.2860 935.0785 893.841 911.1430 5360.217  1000
-##  KDE2 110.946 156.5790 227.7493 162.729 169.9860 4158.548  1000
-##  KDE3  99.343 131.7945 178.1924 136.858 142.0855 6286.284  1000</code></pre>
+##  expr      min        lq      mean   median        uq      max neval
+##  KDE1 1437.173 1494.4910 1613.9005 1513.863 1534.6505 8576.134  1000
+##  KDE2  189.871  250.2640  310.9987  255.963  262.8305 5710.357  1000
+##  KDE3  170.437  213.1795  253.5531  218.366  223.1630 5409.089  1000</code></pre>
 <p>The output shows execution times for 1000 runs. The introduction
 of <code>outer()</code> in <code>KDE2()</code> gives a substantial speedup, and <code>KDE3()</code> improves further.</p>
 <p>Finally, we compare to <code>density()</code>, using arguments <code>from</code>, <code>to</code>, and <code>n</code>
@@ -385,8 +385,8 @@ to specify the same grid <span class="math inline">\(\tilde x\)</span>:</p>
 <span id="cb27-5"><a href="I01-vectorise.html#cb27-5" tabindex="-1"></a>}</span>
 <span id="cb27-6"><a href="I01-vectorise.html#cb27-6" tabindex="-1"></a><span class="fu">microbenchmark</span>(<span class="at">density =</span> <span class="fu">KDE.builtin</span>(x.tilde, snowfall, <span class="st">&quot;triangular&quot;</span>, h), <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
-##     expr   min      lq     mean  median      uq      max neval
-##  density 92.25 99.5275 111.3965 102.377 105.001 2841.136  1000</code></pre>
+##     expr     min      lq     mean   median      uq      max neval
+##  density 158.137 169.371 186.9665 172.2615 176.382 4519.266  1000</code></pre>
 <p>The result shows that <code>density()</code> is faster than <code>KDE3()</code>, but by a factor
 of less than 2. The reason is that <code>density()</code> uses a more efficient
 algorithm based on Fast Fourier Transform to compute an approximation to the
