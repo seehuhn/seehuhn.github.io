@@ -571,9 +571,9 @@ and one can check that the components of this vector \(\hat\beta = (\hat\beta_0,
 \subsection{Data and Models}\label{data-and-models}
 
 For multiple linear regression we assume that there are \(p\) inputs and
-one output. If we have a sample of \(n\) obervations, we have \(np\)
+one output. If we have a sample of \(n\) observations, we have \(np\)
 inputs and \(n\) outputs in total. Here we denote the \(i\)th observation
-of the \(j\)th input by \(x_{ij}\) and the corresponding output by~\(y_j\).
+of the \(j\)th input by \(x_{ij}\) and the corresponding output by~\(y_i\).
 
 As an example, we consider the \texttt{mtcars} dataset built into R. This is
 a small dataset, which contains information about 32 automobiles
@@ -645,12 +645,11 @@ affects fuel consumption:
 
 \pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/mtcars-hp-mpg-plot-1.pdf}}
 
-We can see that cars with stronger engines tend to use more fuel
-(\emph{i.e.}~a gallon of fuel lasts for fewer miles; the curve goes down),
-but leaving out the other inputs omits a lot of information. It is
-not easy to make a plot which takes all inputs into account. Is is
-also not immediately obvious which of the variables are most
-important.
+We can see that cars with stronger engines tend to use more fuel (\emph{i.e.}~a
+gallon of fuel lasts for fewer miles; the curve goes down), but leaving out the
+other inputs omits a lot of information. It is not easy to make a plot which
+takes all inputs into account. It is also not immediately obvious which of the
+variables are most important.
 
 In linear regression, we assume that the output depends on the inputs in a
 linear way. We write this as
@@ -772,14 +771,14 @@ the formula for \(r(\beta)\) we find: (1) \(y^\top y\) does not depend on \(\bet
 so we have \(\frac{\partial}{\partial \beta_i} y^\top y = 0\) for all \(i\), (2) we have
 \begin{equation*}
     \frac{\partial}{\partial \beta_i} \beta^\top X^\top y
-    = \frac{\partial}{\partial \beta_i} \sum_{j=1}^{p+1} \beta_j (X^\top y)_j
+    = \frac{\partial}{\partial \beta_i} \sum_{j=0}^p \beta_j (X^\top y)_j
     = (X^\top y)_i
   \end{equation*}
 and (3) finally
 \begin{equation*}
     \frac{\partial}{\partial \beta_i} \beta^\top X^\top X \beta
-    = \frac{\partial}{\partial \beta_i} \sum_{j,k=1}^{p+1} \beta_j (X^\top X)_{j,k} \beta_k
-    = 2 \sum_{k=1}^{p+1} (X^\top X)_{i,k} \beta_k
+    = \frac{\partial}{\partial \beta_i} \sum_{j,k=0}^p \beta_j (X^\top X)_{j,k} \beta_k
+    = 2 \sum_{k=0}^p (X^\top X)_{i,k} \beta_k
     = 2 \bigl( (X^\top X) \beta \bigr)_i.
   \end{equation*}
 (Some care is needed, when checking that the middle equality sign in
@@ -813,7 +812,7 @@ matrix})
 to be positive definite (see appendix~\ref{positive-definite}).
 Using equation~\eqref{eq:normal-first} we find
 \begin{equation*}
-    \frac{\partial}{\partial\beta_i \partial\beta_j} r(\beta)
+    \frac{\partial^2}{\partial\beta_i \partial\beta_j} r(\beta)
     = 2 (X^\top X)_{i,j}
   \end{equation*}
 And thus the Hessian matrix is \(H = 2 X^\top X\). Using results from
@@ -847,14 +846,7 @@ Let us again consider our model
   y = X \beta + \varepsilon,
 \end{equation*}
 using the matrix notation introduced above. Here we can think of
-\(X\beta\) as the \textbf{true values}, while \(\varepsilon\) are the errors. The
-design matrix \(X\) (containing the inputs) and the response \(y\) are
-known to us, while the true coefficients \(\beta\) and the errors \(\varepsilon\)
-are unknown. Solving for \(\varepsilon\) we find that the errors satisfy
-\begin{equation*}
-  \varepsilon= y - X\beta.
-\end{equation*}
-
+\(X\beta\) as the \textbf{true values}, while \(\varepsilon\) are the errors.
 Using the least squares estimate \(\hat\beta\) we can estimate the true
 values as
 \begin{equation}
@@ -880,69 +872,14 @@ Finally, we can estimate the errors using the residuals
 \end{equation}
 where \(I\) is the \(n\times n\) identity matrix.
 
-\subsection{Models Without Intercept}\label{models-without-intercept}
-
-Sometimes, it is useful to fit a model without an intercept. This
-means that we assume that the output \(y\) is a linear function of the
-inputs \(x_1, \ldots, x_p\) but that the output is zero when all inputs
-are zero. We write this as
-\begin{equation*}
-  y_i
-  = \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i
-\end{equation*}
-for all \(i \in \{1, \ldots, n\}\).
-
-When we write this model in matrix notation, we need to leave out
-the intercept column in the design matrix \(X\). For this case we get
-\begin{equation*}
-  y = \begin{pmatrix}
-    y_1 \\ y_2 \\ \vdots \\ y_n
-  \end{pmatrix}
-  \in \mathbb{R}^n,
-  \qquad
-  \varepsilon= \begin{pmatrix}
-    \varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n
-  \end{pmatrix}
-  \in \mathbb{R}^n,
-  \qquad
-  \beta = \begin{pmatrix}
-    \beta_1 \\
-    \vdots \\
-    \beta_p
-  \end{pmatrix}
-  \in\mathbb{R}^p
-\end{equation*}
-as well as the matrix
-\begin{equation*}
-  X = \begin{pmatrix}
-    x_{1,1} & \cdots & x_{1,p} \\
-    x_{2,1} & \cdots & x_{2,p} \\
-    \vdots & & \vdots \\
-    x_{n,1} & \cdots & x_{n,p} \\
-  \end{pmatrix}
-  \in \mathbb{R}^{n\times p}.
-\end{equation*}
-The vectors \(y\) and \(\varepsilon\) are unchanged, but the vector \(\beta\)
-is now shorter and the matrix \(X\) is narrower.
-
-Most of the results in this module carry over to this case, for example
-the least squares estimate for \(\beta\) is still given by
-\begin{equation*}
-  \hat\beta
-  = (X^\top X)^{-1} X^\top y.
-\end{equation*}
-However, some results need to be adjusted and to be sure one has to carefully
-check the details of the derivations when results are needed for models without
-intercept.
-
 \subsection{Example}\label{example}
 
 To conclude this section, we demonstrate how these methods can be used
 in R. For this we consider the \texttt{mtcars} example from the beginning of
-the section again. I will first show how to do the analysis ``by hand'',
+the section again. We will first see how to do the analysis ``by hand'',
 and later show how the same result can be obtained using R's built-in functions.
 
-We first split \texttt{mtcars} into the respons column \texttt{y} (the first column)
+We first split \texttt{mtcars} into the response column \texttt{y} (the first column)
 and the design matrix \texttt{X} (a column of ones, followed by columns 2 to 11
 of \texttt{mtcars}):
 
@@ -1043,6 +980,61 @@ This result \texttt{3.410605e-13} stands for the number \(3.410605 \cdot 10^{-13
 which is extremely small. The difference between our results and R's result
 is caused by rounding errors.
 
+\subsection{Models Without Intercept}\label{models-without-intercept}
+
+Sometimes, it is useful to fit a model without an intercept. This
+means that we assume that the output \(y\) is a linear function of the
+inputs \(x_1, \ldots, x_p\) but that the output is zero when all inputs
+are zero. We write this as
+\begin{equation*}
+  y_i
+  = \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i
+\end{equation*}
+for all \(i \in \{1, \ldots, n\}\).
+
+When we write this model in matrix notation, we need to leave out
+the intercept column in the design matrix \(X\). For this case we get
+\begin{equation*}
+  y = \begin{pmatrix}
+    y_1 \\ y_2 \\ \vdots \\ y_n
+  \end{pmatrix}
+  \in \mathbb{R}^n,
+  \qquad
+  \varepsilon= \begin{pmatrix}
+    \varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n
+  \end{pmatrix}
+  \in \mathbb{R}^n,
+  \qquad
+  \beta = \begin{pmatrix}
+    \beta_1 \\
+    \vdots \\
+    \beta_p
+  \end{pmatrix}
+  \in\mathbb{R}^p
+\end{equation*}
+as well as the matrix
+\begin{equation*}
+  X = \begin{pmatrix}
+    x_{1,1} & \cdots & x_{1,p} \\
+    x_{2,1} & \cdots & x_{2,p} \\
+    \vdots & & \vdots \\
+    x_{n,1} & \cdots & x_{n,p} \\
+  \end{pmatrix}
+  \in \mathbb{R}^{n\times p}.
+\end{equation*}
+The vectors \(y\) and \(\varepsilon\) are unchanged, but the vector \(\beta\)
+is now shorter and the matrix \(X\) is narrower.
+
+Most of the results in this module carry over to this case, for example
+the least squares estimate for \(\beta\) is still given by
+\begin{equation*}
+  \hat\beta
+  = (X^\top X)^{-1} X^\top y.
+\end{equation*}
+However, some results need to be adjusted and to be sure one has to carefully
+check the details of the derivations when results are needed for models without
+intercept.
+
 \textbf{Summary}
 
 \begin{itemize}
@@ -1057,6 +1049,10 @@ is caused by rounding errors.
   The least squares estimate can be computed by solving the normal equations.
 \item
   The hat matrix transforms responses into fitted values.
+\item
+  Residuals estimate the errors as \(\hat\varepsilon= y - \hat y\).
+\item
+  Models can be fitted without an intercept term when appropriate.
 \end{itemize}
 
 \clearpage
@@ -1451,9 +1447,6 @@ Then the expectation of \(Z\) is the (non-random) vector
   \end{equation*}
 \end{definition}
 
-The same convention is sometimes used for random matrices \(M\),
-as \(\mathbb{E}(M)_{ij} = \mathbb{E}(M_{ij})\).
-
 \begin{example}
 The random vector~\(\varepsilon\) in \eqref{eq:lmstat0} has
 \begin{equation*}
@@ -1463,7 +1456,7 @@ for all \(i \in \{1, \ldots, n\}\) and thus \(\mathbb{E}(\varepsilon) = 0 \in \m
 where \(0\) here denotes the zero-vector \((0, \ldots, 0) \in \mathbb{R}^n\).
 \end{example}
 
-Since the expectation of a random vector is defined in term of the
+Since the expectation of a random vector is defined in terms of the
 usual expectation, most rules we know for expectations still hold.
 For example, if \(Y\) and \(Z\) are two random vectors, we have
 \(\mathbb{E}(Y+Z) = \mathbb{E}(Y) + \mathbb{E}(Z)\).
@@ -1548,7 +1541,7 @@ section~\ref{Sx1-matrices} in the appendix.
     = \bigl( (Z - \mu) (Z - \mu)^\top \bigr)_{ij}
     = (Z - \mu)_i (Z - \mu)_j.
   \end{equation*}
-  Taking expectations gives \(\mathbb{E}(M_{ij}) = E\bigl( (Z - \mu)_i (Z - \mu)_j
+  Taking expectations gives \(\mathbb{E}(M_{ij}) = \mathbb{E}\bigl( (Z - \mu)_i (Z - \mu)_j
   \bigr) = \mathop{\mathrm{Cov}}(Z_i, Z_j)\) and thus we can write
   \begin{equation}
     \mathop{\mathrm{Cov}}(Z)
@@ -1585,7 +1578,7 @@ diagonal and we find
 where \(I\) is the \(n\times n\) identity matrix.
 \end{example}
 
-An important results about covariance matrices is given in the following
+An important result about covariance matrices is given in the following
 lemma, which describes how the covariance matrix changes under affine
 transformations.
 
@@ -1628,9 +1621,10 @@ This completes the proof.
 
 \subsection{The Multivariate Normal Distribution}\label{the-multivariate-normal-distribution}
 
-Since we assume that the random errors \(\varepsilon_i\) are normally
-distributed, we will need to understand how vectors of normal distributed
-random variables behave.
+With the concepts of expectation and covariance in hand, we can now turn to
+the distribution of random vectors. Since we assume that the random errors
+\(\varepsilon_i\) are normally distributed, we will need to understand how vectors of
+normally distributed random variables behave.
 
 \begin{definition}
 A random vector \(Z\in\mathbb{R}^n\) follows a \textbf{multivariate normal distribution},
@@ -1638,12 +1632,10 @@ if \(u^\top Z\) is normally distributed or constant for every
 vector~\(u\in\mathbb{R}^n\).
 \end{definition}
 
-This definition is takes its slightly surprising form to avoid
-some boundary cases which I will discuss in an example, below.
-To understand the
-definition, a good start is to consider the cases where \(u\)
-is one of the standard basis vectors, say \(u_i = 1\) and \(u_j = 0\)
-for all \(j\neq i\). In this case we have
+This definition takes its slightly surprising form to avoid some boundary cases
+which I will discuss in an example, below. To understand the definition, a good
+start is to consider the cases where \(u\) is one of the standard basis vectors,
+say \(u_i = 1\) and \(u_j = 0\) for all \(j\neq i\). In this case we have
 \begin{equation*}
   u^\top Z
   = \sum_{k=1}^n u_k Z_k
@@ -1669,10 +1661,10 @@ For \(u\in\mathbb{R}^n\) we have
   u^\top \varepsilon
   = \sum_{i=1}^n u_i \varepsilon_i.
 \end{equation*}
-Since this is a sum of independent, one-dimensional, normally distributed
-random variables, \(u^\top \varepsilon\) is also normally distribution, for
-every~\(u\). (The independence of the \(\varepsilon_i\) is important in this
-argument.) Thus, \(\varepsilon\) is a normally distributed random vector.
+Using the fact that a sum of independent, one-dimensional, normally
+distributed random variables is also normally distributed, we see that
+\(u^\top \varepsilon\) is normally distributed for every~\(u\). Thus, \(\varepsilon\) is a
+normally distributed random vector.
 We have already seen \(\mathbb{E}(\varepsilon) = 0\) and \(\mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I\),
 and thus \(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\).
 \end{example}
@@ -1815,6 +1807,9 @@ exclude cases like this.
 \item
   The covariance matrix of random vectors plays the role of the
   variance for numeric random variables.
+\item
+  We have learned the rules for computing the expectation and covariance
+  of linear transformations of random vectors.
 \item
   We learned about the definition of the multivariate normal distribution.
 \end{itemize}
@@ -5381,7 +5376,7 @@ Sometimes, different plot types are also used.
   For example, if two or more regressors are highly correlated, we say that
   multicollinearity is present. When this occurs, the least squares estimate
   \(\hat\beta\) becomes numerically unstable. (We will learn more about this
-  effect in chapter~\ref{S13-multicoll}.)
+  effect in chapter~\ref{S15-multicoll}.)
 \item
   Data are often collected in time order. Even if time is not an explanatory
   variable, a plot of \(y\) against time can be of interest. It can reveal
@@ -5419,574 +5414,7 @@ in the model.
 
 \clearpage
 
-\section{Improving the Model Fit}\label{S10-improving}
-
-The \hyperref[S09-plots]{diagnostic plots} introduced in section~\ref{S09-plots}
-can often reveal if the data do not fit the modelling assumptions.
-In cases where the assumptions are violated, sometimes a linear
-model can still be used if the data is transformed first.
-
-\subsection{Linearising the Mean}\label{linearising-the-mean}
-
-If the model mean is a non-linear function of the inputs, we
-can sometimes transform the variables to achieve a linear relationship.
-We list some examples of non-linear models which can be transformed
-to linear models:
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.5195}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2597}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2208}}@{}}
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-nonlinear model
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-transformation
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-linear Model
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\(y \approx \beta_0 x^{\beta_1}\) & \(x'=\log(x)\), \(y'=\log(y)\) & \(y' \approx \log(\beta_0) + \beta_1 x'\) \\
-\(y \approx \beta_0 e^{\beta_1 x}\) & \(y'=\log y\) & \(y' \approx \log \beta_0 +\beta_1 x\) \\
-\(y \approx \beta_0+\beta_1\log x\) & \(x'=\log x\) & \(y \approx \beta_0+\beta_1 x'\) \\
-\(y \approx \frac{x}{\beta_0 x-\beta_1}\) & \(x'=1/x\), \(y'=1/y\) & \(y' \approx \beta_0-\beta_1 x'\) \\
-\end{longtable}
-
-In all such cases we also would need to check the residuals of the transformed
-models, to see whether linear regression can be used for the transformed model.
-
-\subsection{Stabilising the Variance}\label{stabilising-the-variance}
-
-The assumption of constant variance is a basic requirement of regression
-analysis. A common reason for the violation of this assumption is for the
-response variable \(y\) to follow a distribution in which the variance depends
-on \(y\) or \(\mathbb{E}(y)\) and thus on~\(x\).
-
-\begin{example}
-The error in our model
-\begin{equation*}
-  Y
-  = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
-  = x^\top \beta + \varepsilon
-\end{equation*}
-is sometimes called \textbf{additive error}, since it is added to the model
-mean~\(x^\top\beta\). Sometimes the error is instead given in percentages of the
-quantity of interest. In these cases we speak of \textbf{multiplicative error}.
-This can, for example, be modelled as
-\begin{equation*}
-  Y
-  = \bigl(\beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p\bigr) \exp(\varepsilon)
-  = x^\top \beta \exp(\varepsilon).
-\end{equation*}
-For \(\varepsilon= 0\) we have \(\exp(0) = 1\) and thus \(Y = x^\top \beta\). Similarly,
-for small \(\varepsilon\) we have \(Y \approx x^\top \beta\), but the variance is now
-proportional to \((x^\top\beta)^2\) instead of being constant. Also, since the
-exponential is nonlinear we only have \(\mathbb{E}(Y) \approx x^\top\beta\) instead of
-strict equality.
-\end{example}
-
-Some commonly-used variance stabilising transformations are:
-
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.6000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4000}}@{}}
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-variance
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-transformation
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\(\sigma^2 = \text{constant}\) & no transformation \\
-\(\sigma^2 \propto y\) & \(y' = \sqrt{y}\) \\
-\(\sigma^2 \propto y^2\) & \(y' = \log y\) \\
-\(\sigma^2 \propto y^3\) & \(y' = \frac{1}{\sqrt{y}}\) \\
-\(\sigma^2 \propto y^4\) & \(y' = \frac{1}{y}\) \\
-\(\sigma^2 \propto y(1-y)\) where \(y \in [0,1]\) & \(y' = \arcsin(\sqrt{y})\) \\
-\end{longtable}
-
-Of course we do not have accurate knowledge of the relationship, but it can be
-diagnosed from the residual plots and transformations can be selected by
-experimenting with different choices. Any of these transformations will also
-affect the mean and we need to check the model fit for the transformed data, to
-see whether the transformed data can still reasonably be described by a linear
-model.
-
-\begin{example}
-The last transformation in the table above corresponds to the case of binomial
-sampling: If \(x = p\) and \(Y \sim B(n, p) / n\) then we have \(\mathbb{E}(Y)
-= n p / n = x\) and a linear model may be appropriate. But we also have \(\mathop{\mathrm{Var}}(Y)
-= p (1 - p) / n \propto \mathbb{E}(Y) \bigl( 1- \mathbb{E}(Y) \bigr)\), so the assumption of
-constant variance is violated.
-
-We try to apply the transformation suggested in the table. The
-function \(\arcsin\) is the inverse of the sine function. In R
-this function is available as \texttt{asin()}. To get some intuition about
-this transformation, we plot the function \(y \mapsto \arcsin(\sqrt{y})\):
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{l=}\DecValTok{101}\NormalTok{)}
-\FunctionTok{plot}\NormalTok{(y, }\FunctionTok{asin}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(y)), }\AttributeTok{type =} \StringTok{"l"}\NormalTok{,}
-     \AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(y }\SpecialCharTok{*}\NormalTok{ minute))}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/arcsin-transform-1.pdf}}
-
-We can see that the transformation is approximately linear for most
-of the interval, but has a steeper slope near the edges. The effect of
-this is to increase the size of fluctations for small and large
-\(y\)-values. We now consider residual plots for the original and transformed
-data, for a simulated dataset:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{500}
-\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
-\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{rbinom}\NormalTok{(n, }\DecValTok{100}\NormalTok{, x) }\SpecialCharTok{/} \DecValTok{100}
-
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
-
-\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1))}
-
-\NormalTok{y.prime }\OtherTok{\textless{}{-}} \FunctionTok{asin}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(y))}
-\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2))}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/binomial-sampling-1.pdf}}
-
-The plot shows that the variance has indeed improved, while linearity
-has suffered (an S-shaped curve is now visible). Neither model is perfect and
-whether the transformation
-is beneficial or not depends on the particular circumstances.
-\end{example}
-
-\begin{example}
-\protect\hypertarget{exm:electric}{}\label{exm:electric}An electric utility company is interested in developing a model relating the
-peak hour demand (\(y\), measured in kW) to total energy usage during the month
-(\(x\), in kWh). A scatter plot of the data is shown below:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# data at https://teaching.seehuhn.de/2022/MATH3714/electric.dat}
-\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}\StringTok{"data/electric.dat"}\NormalTok{, }\AttributeTok{header=}\ConstantTok{FALSE}\NormalTok{)}
-\FunctionTok{plot}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{V1, d}\SpecialCharTok{$}\NormalTok{V2,}
-     \AttributeTok{xlab=}\StringTok{"energy usage [kWh]"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"energy demand [kW]"}\NormalTok{)}
-\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(V2 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ d)}
-\FunctionTok{abline}\NormalTok{(m1)}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric1-1.pdf}}
-
-A linear relationship looks plausible, but we can see that the spread
-of points around the regression line widens as energy usage increases.
-this is more clearly visible in a residual plot:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1),}
-     \AttributeTok{xlab =} \StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residuals"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric2-1.pdf}}
-
-We try a transformation of the data to stabilise the variance.
-From the ``wedge'' shape on the left hand side of the plot, it is clear
-that the variance \(\sigma^2\) increases as \(y\) increases.
-Thus we can try transformations like \(y' = \log(y)\) or
-\(y' = \sqrt{y}\). Taking the logarithm for illustration, we get
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(V2) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ d)}
-\FunctionTok{plot}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{V1, }\FunctionTok{log}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{V2),}
-     \AttributeTok{xlab=}\StringTok{"energy usage [kWh]"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"log{-}transformed y"}\NormalTok{)}
-\FunctionTok{abline}\NormalTok{(m2)}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric3-1.pdf}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2),}
-     \AttributeTok{xlab =} \StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residuals for log{-}transform"}\NormalTok{)}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric4-1.pdf}}
-
-The spread of residuals now looks somewhat more reasonable.
-\end{example}
-
-\subsection{The Power Transform}\label{power-transform}
-
-A family of transformations for the response variable \(y\) is given by the
-\textbf{power transform}. These transformations only apply to strictly positive data,
-\emph{i.e.}~\(y > 0\), and are defined by
-\begin{equation*}
-  y^{(\lambda)}
-  = \begin{cases}
-      \frac{\displaystyle y^\lambda-1}{\displaystyle\lambda g^{\lambda-1}} & \mbox{if $\lambda\ne 0$} \\
-      g\log y & \mbox{if $\lambda=0$}
-    \end{cases}
-\end{equation*}
-where \(g = (\prod_{i=1}^n y_i)^{1/n}\) is the geometric mean.
-
-The geometric mean is a constant (it does not depend on \(i\)) and is not needed
-for the power transform, but it is usually included to make values for
-different \(\lambda\) more comparable. For \(\lambda = 1\) the transform is \(y' = y
-- 1\). This is a simple shift which has no effect on the fitted model, it just
-decreases the intercept by \(1\) and leaves the residuals unchanged. Thus, this
-case is that same as applying no transformation.
-
-Using Taylor approximation on the numerator in the definition
-of~\(y^{(\lambda)}\) we get
-\begin{equation*}
-  y^\lambda
-  = \exp\bigl( \log(y^\lambda) \bigr)
-  = \exp\bigl( \lambda \log(y) \bigr)
-  \approx 1 + \lambda\log(y) + O\Bigl(\bigl(\lambda\log(y)\bigr)^2\Bigr),
-\end{equation*}
-where the \(O(\cdots)\) stands for terms which are negligible as
-\(\lambda\) converges to \(0\). Thus the formula given for \(\lambda \neq 0\)
-converges to the case for \(\lambda = 0\) as \(\lambda\) converges to \(0\).
-This makes the transformation continuous as a function of \(\lambda\).
-
-A heuristic rule to find a range of \(\lambda\) for which the power
-transform is appropriate is based on how the the residual sum of
-squares changes with~\(\lambda\): Let
-\begin{equation*}
-  r(\lambda)
-  = \sum_{i=1}^n \bigl( y^{(\lambda)}_i - \hat y^{(\lambda)}_i \bigr)^2,
-\end{equation*}
-where \(\hat y^{(\lambda)}_i\) denotes the fitted value for the model
-using the transformed data \(y^{(\lambda)}_i\). It is easy to plot
-this function numerically. We want to choose \(\lambda\) close to
-where the function has its minimum. The heuristic rule is to consider
-all values of \(\lambda\) with
-\begin{equation}
-  r(\lambda)
-  \leq r(\lambda_\mathrm{min}) \Bigl( 1 + \frac{t_{n-p-1}(\alpha/2)^2}{n-p-1} \Bigr),
-      \label{eq:power-cutoff}
-\end{equation}
-where \(\lambda_\mathrm{min}\) is the value of \(\lambda\) where the residual
-sum of squares has its minimum and \(t_{n-p-1}(\alpha/2)\) is the
-\((1-\alpha/2)\)-quantile of the \(t(n-p-1)\)-distribution. One can show that this
-is an approximate \((1-\alpha)\) confidence interval for \(\lambda\). If we want to
-interpret the model, it is usually better to select a ``simple'' \(\lambda\),
-\emph{e.g.}~\(\lambda=0.5\) rather than using the
-``optimal'' value~\(\lambda_\mathrm{min}\).
-
-\begin{example}
-Continuing from example~\ref{exm:electric} above, we can try a power
-transform for the data. We start by plotting \(r(\lambda)\) as a function
-of \(\lambda\), together with the cutoff suggested by equation~\eqref{eq:power-cutoff}:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{x }\OtherTok{\textless{}{-}}\NormalTok{ d}\SpecialCharTok{$}\NormalTok{V1}
-\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ d}\SpecialCharTok{$}\NormalTok{V2}
-\NormalTok{gm }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(}\FunctionTok{mean}\NormalTok{(}\FunctionTok{log}\NormalTok{(y))) }\CommentTok{\# more stable way to compute geometric mean}
-\NormalTok{lambda }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{101}\NormalTok{)}
-\NormalTok{rss }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(lambda))}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(lambda)) \{}
-\NormalTok{    li }\OtherTok{\textless{}{-}}\NormalTok{ lambda[i]}
-\NormalTok{    y.prime }\OtherTok{\textless{}{-}}\NormalTok{ (y}\SpecialCharTok{\^{}}\NormalTok{li }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (li }\SpecialCharTok{*}\NormalTok{ gm}\SpecialCharTok{\^{}}\NormalTok{(li}\DecValTok{{-}1}\NormalTok{))}
-\NormalTok{    mi }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
-\NormalTok{    rss[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{resid}\NormalTok{(mi)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
-\NormalTok{\}}
-\FunctionTok{plot}\NormalTok{(lambda, rss, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{)}
-
-\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(d) }\CommentTok{\# 53}
-\NormalTok{p }\OtherTok{\textless{}{-}} \DecValTok{1}
-\NormalTok{cutoff }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(rss) }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{))}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =}\NormalTok{ cutoff)}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric5-1.pdf}}
-
-This suggests the range of reasonable \(\lambda\) values to be
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{range}\NormalTok{(lambda[}\FunctionTok{which}\NormalTok{(rss }\SpecialCharTok{\textless{}=}\NormalTok{ cutoff)])}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# [1] 0.298 0.784}
-\end{Highlighting}
-\end{Shaded}
-
-The value \(\lambda = 1\) (no transformation) is not contained in the interval,
-suggesting that a transformation may be helpful.
-Choosing a ``simple'' value inside the interval and close to the minimum,
-we try \(\lambda = 0.5\). This leads to the following transformation:
-\begin{equation*}
-  y'
-  = 2\sqrt{g} (\sqrt{y}-1).
-\end{equation*}
-Up to the shift and scaling, this just takes the square root of the data.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{y.prime }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(y)}
-\FunctionTok{plot}\NormalTok{(x, y.prime,}
-     \AttributeTok{xlab=}\StringTok{"energy usage [kWh]"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"sqrt{-}transformed y"}\NormalTok{)}
-\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
-\FunctionTok{abline}\NormalTok{(m3)}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric6-1.pdf}}
-
-To see whether the variance of the residuals has improved, we consider
-a residual plot:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m3), }\FunctionTok{resid}\NormalTok{(m3),}
-     \AttributeTok{xlab =} \StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residuals for sqrt{-}transform"}\NormalTok{)}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric7-1.pdf}}
-
-We see that the spread of the residuals has indeed improved, when compared to
-fitting the original data.
-\end{example}
-
-\subsection{Candidate Models}\label{candidate-models}
-
-Here we assume that we are given data with input variables \(x_1, \ldots, x_p\).
-The standard model which we have discussed so far adds an intercept to these
-inputs, so that there are \(q = p+1\) model parameters in total. We can modify
-this model in various ways:
-
-\begin{itemize}
-\item
-  When we discussed hypothesis tests, we allowed for the possibility that
-  some inputs do not influence the output. A reasonable approach would
-  be to fit a model with these inputs omitted. Since each input
-  may either be included in or excluded from the model, independent of
-  the others, and similarly the intercept may be included or not,
-  there are \(2^{p+1}\) possible models to consider.
-\item
-  In the section about \hyperref[S10-improving]{Improving the Model Fit} we have seen that
-  sometimes it is useful to transform input variables before using them
-  in the model. This can either happen individually, \emph{e.g.}~\(x_2' = \log
-  x_2\), or collectively, \emph{e.g.}~\(x^\ast = x_1 x_2\). The number of
-  models we may obtain in this way is unlimited.
-\end{itemize}
-
-If we want to compare these candidate models in a systematic way,
-we need to use efficient methods for comparison, since a often a large
-number of models needs to be considered.
-
-\subsection{Misspecified Models}\label{misspecified-models}
-
-The model is said to be \textbf{misspecified}, if the data we are using
-comes from a different model than the one we use to estimate
-the coefficients.
-
-\subsubsection{Missing Variables}\label{missing-variables}
-
-Assume that the data comes from the model
-\begin{equation*}
-  Y = \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon,
-\end{equation*}
-(we can include the intercept as \(x_1 = 1\) if needed),
-but we are only using the first \(q\) variables \(x_1, \ldots, x_q\),
-where \(q < p\), to estimate the coefficients. Then the least squares
-estimate of \(\beta = (\beta_1, \ldots, \beta_q)\) is given by
-\begin{equation*}
-  \hat\beta
-  = (X^\top X)^{-1} X^\top y
-\end{equation*}
-where \(X \in \mathbb{R}^{n\times q}\),
-and our estimate for the error variance \(\sigma^2\) is
-\begin{equation*}
-  \hat\sigma^2
-  = \frac{1}{n-q} y^\top (I - H) y,
-\end{equation*}
-where \(H = X (X^\top X)^{-1} X^\top\) is the hat matrix computed
-without using \(x_{q+1}, \ldots, x_p\).
-
-If we write \(\tilde X \in \mathbb{R}^{n\times (p-q)}\) for the matrix with columns
-\(x_{q+1}, \ldots, x_p\) and \(\tilde\beta = (\beta_{q+1}, \ldots, \beta_p) \in
-\mathbb{R}^{p-q}\), then the full model can be written as
-\begin{equation*}
-  Y
-  = X \beta + \tilde X \tilde\beta + \varepsilon
-\end{equation*}
-and we get
-\begin{align*}
-  \hat\beta
-  &= (X^\top X)^{-1} X^\top Y \\
-  &= (X^\top X)^{-1} X^\top (X \beta + \tilde X \tilde\beta + \varepsilon) \\
-  &= (X^\top X)^{-1} X^\top X \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon\\
-  &= \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon.
-\end{align*}
-Thus, we have
-\begin{equation*}
-  \mathbb{E}(\hat\beta)
-  = \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta
-\end{equation*}
-and
-\begin{equation*}
-  \mathop{\mathrm{bias}}(\hat\beta)
-  = (X^\top X)^{-1} X^\top \tilde X \tilde\beta.
-\end{equation*}
-This shows that now the estimate is biased in general. There are two
-special cases when omitting variables does not introduce a bias:
-The first is when all of the omitted coefficients equal zero, \emph{i.e.}~when
-we have \(\tilde\beta = 0\). The second case is when the omitted inputs are
-orthogonal to the included inputs, since then we have \(X^\top \tilde X = 0\).
-
-Using the formula for \(\hat\beta\) we find
-\begin{align*}
-  \mathop{\mathrm{Cov}}( \hat\beta )
-  &= \mathop{\mathrm{Cov}}\Bigl( \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon\Bigr) \\
-  &= \mathop{\mathrm{Cov}}\Bigl( (X^\top X)^{-1} X^\top \varepsilon\Bigr) \\
-  &= \sigma^2 (X^\top X)^{-1} X^\top I X (X^\top X)^{-1} \\
-  &= \sigma^2 (X^\top X)^{-1}.
-\end{align*}
-Thus, the variance of \(\hat\beta\) is not affected by the omitted variables.
-Similar to our derivation in the section \hyperref[var-est-bias]{Estimating the Error Variance}
-one can show that
-\begin{equation*}
-  \mathbb{E}\bigl( \hat\sigma^2 \bigr)
-  = \sigma^2 + \frac{\tilde\beta^\top \tilde X^\top (I - H) \tilde X \tilde \beta}{n-q}.
-\end{equation*}
-Thus, the estimate of the error variance is in general also biased.
-
-This shows that our estimates can become biased if some of the inputs
-are missing from our model. As in the previous section, it may happen
-that the MSE of the parameter estimates in the reduced model
-is smaller than the MSE in the correct model; this is the case if the
-variance of the estimates decreases enough to compensate for the
-introduced bias.
-
-\subsubsection{Unnecessary Variables}\label{unnecessary-variables}
-
-If the data comes from a model with fewer inputs than the ones we are using,
-the model is not ``misspecified'' in the strict sense. It is just the case that
-some of the true \(\beta_j\) exactly equal zero. In this case, our previous
-results show that the least squares estimate is unbiased.
-
-Including additional variables into a model still can cause problems:
-One can show that each unnecessary variable added increases the variance of the
-estimates \(\hat\beta_j\). Instead of giving a proof of this fact,
-we illustrate the effect using a numerical example.
-
-\begin{example}
-Here we consider the \texttt{stackloss} dataset with an added column of
-noise. We have seen that
-\begin{equation*}
-  \mathop{\mathrm{Var}}( \hat\beta_j )
-  = \sigma^2 \bigl( X^\top X \bigr)^{-1}_{jj}.
-\end{equation*}
-While we don't know the true value of \(\sigma^2\), we can determine
-the relative change in variance when adding a column, since this process
-does not change \(\sigma^2\) and thus \(\sigma^2\) will cancel when we
-determine the relative change in variance.
-
-We first compute the diagonal elements of \(\bigl( X^\top X \bigr)^{-1}\)
-for the original dataset:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{X1 }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
-\NormalTok{d1 }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(}\FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X1) }\SpecialCharTok{\%*\%}\NormalTok{ X1))}
-\NormalTok{d1}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#  (Intercept)     Air.Flow   Water.Temp   Acid.Conc. }
-\NormalTok{\# 13.452726695  0.001728874  0.012875424  0.002322167}
-\end{Highlighting}
-\end{Shaded}
-
-Now we add a column of noise and re-compute the values:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20211115}\NormalTok{)}
-\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(X1)}
-\NormalTok{X2 }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(X1, }\FunctionTok{rnorm}\NormalTok{(n))}
-\NormalTok{d2 }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(}\FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X2) }\SpecialCharTok{\%*\%}\NormalTok{ X2))}
-\NormalTok{d2}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#  (Intercept)     Air.Flow   Water.Temp   Acid.Conc.              }
-\NormalTok{\# 14.397515774  0.001730570  0.015195467  0.002796487  0.064828744}
-\end{Highlighting}
-\end{Shaded}
-
-Finally, we determine the change in variance in percent:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{round}\NormalTok{(}\DecValTok{100} \SpecialCharTok{*}\NormalTok{ (d2[}\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ d1) }\SpecialCharTok{/}\NormalTok{ d1, }\DecValTok{3}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# (Intercept)    Air.Flow  Water.Temp  Acid.Conc. }
-\NormalTok{\#       7.023       0.098      18.019      20.426}
-\end{Highlighting}
-\end{Shaded}
-
-We see that the variances of the \(\hat\beta_j\) increased by up to \(20\%\)
-when we added the unnecessary input.
-\end{example}
-
-The example illustrates that it is important to keep the model as small
-as possible.
-
-\textbf{Summary}
-
-\begin{itemize}
-\tightlist
-\item
-  We have seen different transformations which can be used
-  to transform a nonlinear model into a linear one.
-\item
-  We have discussed transformations which can stabilise the
-  variance of the errors in the model.
-\item
-  We have seen that models where inputs are missing can be biased.
-\item
-  We have seen that models which include too many variables can
-  have increased variance of the estimated regression coefficients.
-\end{itemize}
-
-\clearpage
-
-\section{Measures for Model Fit}\label{S11-diagnostics}
+\section{Measures for Model Fit}\label{S10-diagnostics}
 
 \subsection{The Coefficient of Multiple Determination}\label{R-squared}
 
@@ -6467,6 +5895,374 @@ sections in turn:
 
 \clearpage
 
+\section{Improving the Model Fit}\label{S11-improving}
+
+The \hyperref[S09-plots]{diagnostic plots} introduced in section~\ref{S09-plots}
+can often reveal if the data do not fit the modelling assumptions.
+In cases where the assumptions are violated, sometimes a linear
+model can still be used if the data is transformed first.
+
+\subsection{Linearising the Mean}\label{linearising-the-mean}
+
+If the model mean is a non-linear function of the inputs, we
+can sometimes transform the variables to achieve a linear relationship.
+We list some examples of non-linear models which can be transformed
+to linear models:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3750}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3750}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+nonlinear model
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+transformation
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+linear Model
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(y \approx \beta_0 x^{\beta_1}\) & \(x'=\log(x)\), \(y'=\log(y)\) & \(y' \approx \log(\beta_0) + \beta_1 x'\) \\
+\(y \approx \beta_0 e^{\beta_1 x}\) & \(y'=\log y\) & \(y' \approx \log \beta_0 +\beta_1 x\) \\
+\(y \approx \beta_0+\beta_1\log x\) & \(x'=\log x\) & \(y \approx \beta_0+\beta_1 x'\) \\
+\(y \approx \frac{x}{\beta_0 x-\beta_1}\) & \(x'=1/x\), \(y'=1/y\) & \(y' \approx \beta_0-\beta_1 x'\) \\
+\end{longtable}
+
+In all such cases we also would need to check the residuals of the transformed
+models, to see whether linear regression can be used for the transformed model.
+
+\subsection{Stabilising the Variance}\label{stabilising-the-variance}
+
+The assumption of constant variance is a basic requirement of regression
+analysis. A common reason for the violation of this assumption is for the
+response variable \(y\) to follow a distribution in which the variance depends
+on \(y\) or \(\mathbb{E}(y)\) and thus on~\(x\).
+
+\begin{example}
+The error in our model
+\begin{equation*}
+  Y
+  = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon
+  = x^\top \beta + \varepsilon
+\end{equation*}
+is sometimes called \textbf{additive error}, since it is added to the model
+mean~\(x^\top\beta\). Sometimes the error is instead given in percentages of the
+quantity of interest. In these cases we speak of \textbf{multiplicative error}.
+This can, for example, be modelled as
+\begin{equation*}
+  Y
+  = \bigl(\beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p\bigr) \exp(\varepsilon)
+  = x^\top \beta \exp(\varepsilon).
+\end{equation*}
+For \(\varepsilon= 0\) we have \(\exp(0) = 1\) and thus \(Y = x^\top \beta\). Similarly,
+for small \(\varepsilon\) we have \(Y \approx x^\top \beta\), but the variance is now
+proportional to \((x^\top\beta)^2\) instead of being constant. Also, since the
+exponential is nonlinear we only have \(\mathbb{E}(Y) \approx x^\top\beta\) instead of
+strict equality.
+\end{example}
+
+Some commonly-used variance stabilising transformations are:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.6429}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.3571}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+variance
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+transformation
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(\sigma^2 = \text{constant}\) & no transformation \\
+\(\sigma^2 \propto y\) & \(y' = \sqrt{y}\) \\
+\(\sigma^2 \propto y^2\) & \(y' = \log y\) \\
+\(\sigma^2 \propto y^3\) & \(y' = \frac{1}{\sqrt{y}}\) \\
+\(\sigma^2 \propto y^4\) & \(y' = \frac{1}{y}\) \\
+\(\sigma^2 \propto y(1-y)\) where \(y \in [0,1]\) & \(y' = \arcsin(\sqrt{y})\) \\
+\end{longtable}
+
+Of course we do not have accurate knowledge of the relationship, but it can be
+diagnosed from the residual plots and transformations can be selected by
+experimenting with different choices. Any of these transformations will also
+affect the mean and we need to check the model fit for the transformed data, to
+see whether the transformed data can still reasonably be described by a linear
+model.
+
+\begin{example}
+The last transformation in the table above corresponds to the case of binomial
+sampling: If \(x = p\) and \(Y \sim B(n, p) / n\) then we have \(\mathbb{E}(Y)
+= n p / n = x\) and a linear model may be appropriate. But we also have \(\mathop{\mathrm{Var}}(Y)
+= p (1 - p) / n \propto \mathbb{E}(Y) \bigl( 1- \mathbb{E}(Y) \bigr)\), so the assumption of
+constant variance is violated.
+
+We try to apply the transformation suggested in the table. The
+function \(\arcsin\) is the inverse of the sine function. In R
+this function is available as \texttt{asin()}. To get some intuition about
+this transformation, we plot the function \(y \mapsto \arcsin(\sqrt{y})\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{l=}\DecValTok{101}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(y, }\FunctionTok{asin}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(y)), }\AttributeTok{type =} \StringTok{"l"}\NormalTok{,}
+     \AttributeTok{ylab =} \FunctionTok{expression}\NormalTok{(y }\SpecialCharTok{*}\NormalTok{ minute))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/arcsin-transform-1.pdf}}
+
+We can see that the transformation is approximately linear for most
+of the interval, but has a steeper slope near the edges. The effect of
+this is to increase the size of fluctations for small and large
+\(y\)-values. We now consider residual plots for the original and transformed
+data, for a simulated dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{500}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{rbinom}\NormalTok{(n, }\DecValTok{100}\NormalTok{, x) }\SpecialCharTok{/} \DecValTok{100}
+
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1))}
+
+\NormalTok{y.prime }\OtherTok{\textless{}{-}} \FunctionTok{asin}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(y))}
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/binomial-sampling-1.pdf}}
+
+The plot shows that the variance has indeed improved, while linearity
+has suffered (an S-shaped curve is now visible). Neither model is perfect and
+whether the transformation
+is beneficial or not depends on the particular circumstances.
+\end{example}
+
+\begin{example}
+\protect\hypertarget{exm:electric}{}\label{exm:electric}An electric utility company is interested in developing a model relating the
+peak hour demand (\(y\), measured in kW) to total energy usage during the month
+(\(x\), in kWh). A scatter plot of the data is shown below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data at https://teaching.seehuhn.de/2022/MATH3714/electric.dat}
+\NormalTok{d }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}\StringTok{"data/electric.dat"}\NormalTok{, }\AttributeTok{header=}\ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{V1, d}\SpecialCharTok{$}\NormalTok{V2,}
+     \AttributeTok{xlab=}\StringTok{"energy usage [kWh]"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"energy demand [kW]"}\NormalTok{)}
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(V2 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{abline}\NormalTok{(m1)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric1-1.pdf}}
+
+A linear relationship looks plausible, but we can see that the spread
+of points around the regression line widens as energy usage increases.
+this is more clearly visible in a residual plot:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m1), }\FunctionTok{resid}\NormalTok{(m1),}
+     \AttributeTok{xlab =} \StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residuals"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric2-1.pdf}}
+
+We try a transformation of the data to stabilise the variance.
+From the ``wedge'' shape on the left hand side of the plot, it is clear
+that the variance \(\sigma^2\) increases as \(y\) increases.
+Thus we can try transformations like \(y' = \log(y)\) or
+\(y' = \sqrt{y}\). Taking the logarithm for illustration, we get
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(}\FunctionTok{log}\NormalTok{(V2) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ d)}
+\FunctionTok{plot}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{V1, }\FunctionTok{log}\NormalTok{(d}\SpecialCharTok{$}\NormalTok{V2),}
+     \AttributeTok{xlab=}\StringTok{"energy usage [kWh]"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"log{-}transformed y"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(m2)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric3-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m2), }\FunctionTok{resid}\NormalTok{(m2),}
+     \AttributeTok{xlab =} \StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residuals for log{-}transform"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric4-1.pdf}}
+
+The spread of residuals now looks somewhat more reasonable.
+\end{example}
+
+\subsection{The Power Transform}\label{power-transform}
+
+A family of transformations for the response variable \(y\) is given by the
+\textbf{power transform}. These transformations only apply to strictly positive data,
+\emph{i.e.}~\(y > 0\), and are defined by
+\begin{equation*}
+  y^{(\lambda)}
+  = \begin{cases}
+      \frac{\displaystyle y^\lambda-1}{\displaystyle\lambda g^{\lambda-1}} & \mbox{if $\lambda\ne 0$} \\
+      g\log y & \mbox{if $\lambda=0$}
+    \end{cases}
+\end{equation*}
+where \(g = (\prod_{i=1}^n y_i)^{1/n}\) is the geometric mean.
+
+The geometric mean is a constant (it does not depend on \(i\)) and is not needed
+for the power transform, but it is usually included to make values for
+different \(\lambda\) more comparable. For \(\lambda = 1\) the transform is \(y' = y
+- 1\). This is a simple shift which has no effect on the fitted model, it just
+decreases the intercept by \(1\) and leaves the residuals unchanged. Thus, this
+case is that same as applying no transformation.
+
+Using Taylor approximation on the numerator in the definition
+of~\(y^{(\lambda)}\) we get
+\begin{equation*}
+  y^\lambda
+  = \exp\bigl( \log(y^\lambda) \bigr)
+  = \exp\bigl( \lambda \log(y) \bigr)
+  \approx 1 + \lambda\log(y) + O\Bigl(\bigl(\lambda\log(y)\bigr)^2\Bigr),
+\end{equation*}
+where the \(O(\cdots)\) stands for terms which are negligible as
+\(\lambda\) converges to \(0\). Thus the formula given for \(\lambda \neq 0\)
+converges to the case for \(\lambda = 0\) as \(\lambda\) converges to \(0\).
+This makes the transformation continuous as a function of \(\lambda\).
+
+A heuristic rule to find a range of \(\lambda\) for which the power
+transform is appropriate is based on how the the residual sum of
+squares changes with~\(\lambda\): Let
+\begin{equation*}
+  r(\lambda)
+  = \sum_{i=1}^n \bigl( y^{(\lambda)}_i - \hat y^{(\lambda)}_i \bigr)^2,
+\end{equation*}
+where \(\hat y^{(\lambda)}_i\) denotes the fitted value for the model
+using the transformed data \(y^{(\lambda)}_i\). It is easy to plot
+this function numerically. We want to choose \(\lambda\) close to
+where the function has its minimum. The heuristic rule is to consider
+all values of \(\lambda\) with
+\begin{equation}
+  r(\lambda)
+  \leq r(\lambda_\mathrm{min}) \Bigl( 1 + \frac{t_{n-p-1}(\alpha/2)^2}{n-p-1} \Bigr),
+      \label{eq:power-cutoff}
+\end{equation}
+where \(\lambda_\mathrm{min}\) is the value of \(\lambda\) where the residual
+sum of squares has its minimum and \(t_{n-p-1}(\alpha/2)\) is the
+\((1-\alpha/2)\)-quantile of the \(t(n-p-1)\)-distribution. One can show that this
+is an approximate \((1-\alpha)\) confidence interval for \(\lambda\). If we want to
+interpret the model, it is usually better to select a ``simple'' \(\lambda\),
+\emph{e.g.}~\(\lambda=0.5\) rather than using the
+``optimal'' value~\(\lambda_\mathrm{min}\).
+
+\begin{example}
+Continuing from example~\ref{exm:electric} above, we can try a power
+transform for the data. We start by plotting \(r(\lambda)\) as a function
+of \(\lambda\), together with the cutoff suggested by equation~\eqref{eq:power-cutoff}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}}\NormalTok{ d}\SpecialCharTok{$}\NormalTok{V1}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ d}\SpecialCharTok{$}\NormalTok{V2}
+\NormalTok{gm }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(}\FunctionTok{mean}\NormalTok{(}\FunctionTok{log}\NormalTok{(y))) }\CommentTok{\# more stable way to compute geometric mean}
+\NormalTok{lambda }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{101}\NormalTok{)}
+\NormalTok{rss }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{length}\NormalTok{(lambda))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(lambda)) \{}
+\NormalTok{    li }\OtherTok{\textless{}{-}}\NormalTok{ lambda[i]}
+\NormalTok{    y.prime }\OtherTok{\textless{}{-}}\NormalTok{ (y}\SpecialCharTok{\^{}}\NormalTok{li }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (li }\SpecialCharTok{*}\NormalTok{ gm}\SpecialCharTok{\^{}}\NormalTok{(li}\DecValTok{{-}1}\NormalTok{))}
+\NormalTok{    mi }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\NormalTok{    rss[i] }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{resid}\NormalTok{(mi)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{\}}
+\FunctionTok{plot}\NormalTok{(lambda, rss, }\AttributeTok{type=}\StringTok{"l"}\NormalTok{)}
+
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(d) }\CommentTok{\# 53}
+\NormalTok{p }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{cutoff }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(rss) }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{/}\NormalTok{ (n }\SpecialCharTok{{-}}\NormalTok{ p }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{))}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =}\NormalTok{ cutoff)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric5-1.pdf}}
+
+This suggests the range of reasonable \(\lambda\) values to be
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{range}\NormalTok{(lambda[}\FunctionTok{which}\NormalTok{(rss }\SpecialCharTok{\textless{}=}\NormalTok{ cutoff)])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# [1] 0.298 0.784}
+\end{Highlighting}
+\end{Shaded}
+
+The value \(\lambda = 1\) (no transformation) is not contained in the interval,
+suggesting that a transformation may be helpful.
+Choosing a ``simple'' value inside the interval and close to the minimum,
+we try \(\lambda = 0.5\). This leads to the following transformation:
+\begin{equation*}
+  y'
+  = 2\sqrt{g} (\sqrt{y}-1).
+\end{equation*}
+Up to the shift and scaling, this just takes the square root of the data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y.prime }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(y)}
+\FunctionTok{plot}\NormalTok{(x, y.prime,}
+     \AttributeTok{xlab=}\StringTok{"energy usage [kWh]"}\NormalTok{, }\AttributeTok{ylab=}\StringTok{"sqrt{-}transformed y"}\NormalTok{)}
+\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y.prime }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{abline}\NormalTok{(m3)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric6-1.pdf}}
+
+To see whether the variance of the residuals has improved, we consider
+a residual plot:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(m3), }\FunctionTok{resid}\NormalTok{(m3),}
+     \AttributeTok{xlab =} \StringTok{"fitted values"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"residuals for sqrt{-}transform"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/electric7-1.pdf}}
+
+We see that the spread of the residuals has indeed improved, when compared to
+fitting the original data.
+\end{example}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We have seen different transformations which can be used
+  to transform a nonlinear model into a linear one.
+\item
+  We have discussed transformations which can stabilise the
+  variance of the errors in the model.
+\end{itemize}
+
+\clearpage
+
 \section*{Problem Sheet 3}\label{P03}
 \addcontentsline{toc}{section}{Problem Sheet 3}
 
@@ -6838,18 +6634,336 @@ as required. This completes the proof.
 
 \clearpage
 
-\section{Automatic Model Selection}\label{S12-automatic}
+\section{Model Selection}\label{S12-selection}
 
-For a model with \(p\) input variables, there are
-\(2^p\) different choices for which variables to include in the
-model (or \(2^{p+1}\), if we also have to decide whether to include the intercept).
-This value increases quickly with \(p\): for \(p = 10\) we
-have \(1024\) models to consider, for \(p = 20\) there are \(1048576\) possible
-models, and for large \(p\) it becomes infeasible to simply try all possible
-models to find the best one. In this section we consider algorithms
-for automatically finding a good selection inputs when \(p\) is large.
+\subsection{Candidate Models}\label{candidate-models}
 
-\subsection{Exhaustive Search}\label{exhaustive-search}
+Here we assume that we are given data with input variables \(x_1, \ldots, x_p\).
+The standard model which we have discussed so far adds an intercept to these
+inputs, so that there are \(q = p+1\) model parameters in total. We can modify
+this model in various ways:
+
+\begin{itemize}
+\item
+  When we discussed hypothesis tests, we allowed for the possibility that
+  some inputs do not influence the output. A reasonable approach would
+  be to fit a model with these inputs omitted. Since each input
+  may either be included in or excluded from the model, independent of
+  the others, and similarly the intercept may be included or not,
+  there are \(2^{p+1}\) possible models to consider.
+\item
+  In the section about \hyperref[S11-improving]{Improving the Model Fit} we have seen that
+  sometimes it is useful to transform input variables before using them
+  in the model. This can either happen individually, \emph{e.g.}~\(x_2' = \log
+  x_2\), or collectively, \emph{e.g.}~\(x^\ast = x_1 x_2\). The number of
+  models we may obtain in this way is unlimited.
+\end{itemize}
+
+If we want to compare these candidate models in a systematic way,
+we need to use efficient methods for comparison, since often a large
+number of models needs to be considered.
+
+\subsection{Misspecified Models}\label{misspecified-models}
+
+The model is said to be \textbf{misspecified}, if the data we are using
+comes from a different model than the one we use to estimate
+the coefficients.
+
+\subsubsection{Missing Variables}\label{missing-variables}
+
+Assume that the data comes from the model
+\begin{equation*}
+  Y = \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon,
+\end{equation*}
+(we can include the intercept as \(x_1 = 1\) if needed),
+but we are only using the first \(q\) variables \(x_1, \ldots, x_q\),
+where \(q < p\), to estimate the coefficients. Then the least squares
+estimate of \(\beta = (\beta_1, \ldots, \beta_q)\) is given by
+\begin{equation*}
+  \hat\beta
+  = (X^\top X)^{-1} X^\top y
+\end{equation*}
+where \(X \in \mathbb{R}^{n\times q}\),
+and our estimate for the error variance \(\sigma^2\) is
+\begin{equation*}
+  \hat\sigma^2
+  = \frac{1}{n-q} y^\top (I - H) y,
+\end{equation*}
+where \(H = X (X^\top X)^{-1} X^\top\) is the hat matrix computed
+without using \(x_{q+1}, \ldots, x_p\).
+
+If we write \(\tilde X \in \mathbb{R}^{n\times (p-q)}\) for the matrix with columns
+\(x_{q+1}, \ldots, x_p\) and \(\tilde\beta = (\beta_{q+1}, \ldots, \beta_p) \in
+\mathbb{R}^{p-q}\), then the full model can be written as
+\begin{equation*}
+  Y
+  = X \beta + \tilde X \tilde\beta + \varepsilon
+\end{equation*}
+and we get
+\begin{align*}
+  \hat\beta
+  &= (X^\top X)^{-1} X^\top Y \\
+  &= (X^\top X)^{-1} X^\top (X \beta + \tilde X \tilde\beta + \varepsilon) \\
+  &= (X^\top X)^{-1} X^\top X \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon\\
+  &= \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon.
+\end{align*}
+Thus, we have
+\begin{equation*}
+  \mathbb{E}(\hat\beta)
+  = \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta
+\end{equation*}
+and
+\begin{equation*}
+  \mathop{\mathrm{bias}}(\hat\beta)
+  = (X^\top X)^{-1} X^\top \tilde X \tilde\beta.
+\end{equation*}
+This shows that now the estimate is biased in general. There are two
+special cases when omitting variables does not introduce a bias:
+The first is when all of the omitted coefficients equal zero, \emph{i.e.}~when
+we have \(\tilde\beta = 0\). The second case is when the omitted inputs are
+orthogonal to the included inputs, since then we have \(X^\top \tilde X = 0\).
+
+Using the formula for \(\hat\beta\) we find
+\begin{align*}
+  \mathop{\mathrm{Cov}}( \hat\beta )
+  &= \mathop{\mathrm{Cov}}\Bigl( \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon\Bigr) \\
+  &= \mathop{\mathrm{Cov}}\Bigl( (X^\top X)^{-1} X^\top \varepsilon\Bigr) \\
+  &= \sigma^2 (X^\top X)^{-1} X^\top I X (X^\top X)^{-1} \\
+  &= \sigma^2 (X^\top X)^{-1}.
+\end{align*}
+Thus, the variance of \(\hat\beta\) is not affected by the omitted variables.
+Similar to our derivation in the section \hyperref[var-est-bias]{Estimating the Error Variance}
+one can show that
+\begin{equation*}
+  \mathbb{E}\bigl( \hat\sigma^2 \bigr)
+  = \sigma^2 + \frac{\tilde\beta^\top \tilde X^\top (I - H) \tilde X \tilde \beta}{n-q}.
+\end{equation*}
+Thus, the estimate of the error variance is in general also biased.
+
+This shows that our estimates can become biased if some of the inputs
+are missing from our model. As in the previous section, it may happen
+that the MSE of the parameter estimates in the reduced model
+is smaller than the MSE in the correct model; this is the case if the
+variance of the estimates decreases enough to compensate for the
+introduced bias.
+
+\subsubsection{Unnecessary Variables}\label{unnecessary-variables}
+
+If the data comes from a model with fewer inputs than the ones we are using,
+the model is not ``misspecified'' in the strict sense. It is just the case that
+some of the true \(\beta_j\) exactly equal zero. In this case, our previous
+results show that the least squares estimate is unbiased.
+
+Including additional variables into a model still can cause problems:
+One can show that each unnecessary variable added increases the variance of the
+estimates \(\hat\beta_j\). Instead of giving a proof of this fact,
+we illustrate the effect using a numerical example.
+
+\begin{example}
+Here we consider the \texttt{stackloss} dataset with an added column of
+noise. We have seen that
+\begin{equation*}
+  \mathop{\mathrm{Var}}( \hat\beta_j )
+  = \sigma^2 \bigl( X^\top X \bigr)^{-1}_{jj}.
+\end{equation*}
+While we don't know the true value of \(\sigma^2\), we can determine
+the relative change in variance when adding a column, since this process
+does not change \(\sigma^2\) and thus \(\sigma^2\) will cancel when we
+determine the relative change in variance.
+
+We first compute the diagonal elements of \(\bigl( X^\top X \bigr)^{-1}\)
+for the original dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X1 }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(stack.loss }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ stackloss)}
+\NormalTok{d1 }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(}\FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X1) }\SpecialCharTok{\%*\%}\NormalTok{ X1))}
+\NormalTok{d1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#  (Intercept)     Air.Flow   Water.Temp   Acid.Conc. }
+\NormalTok{\# 13.452726695  0.001728874  0.012875424  0.002322167}
+\end{Highlighting}
+\end{Shaded}
+
+Now we add a column of noise and re-compute the values:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20211115}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(X1)}
+\NormalTok{X2 }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(X1, }\FunctionTok{rnorm}\NormalTok{(n))}
+\NormalTok{d2 }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(}\FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X2) }\SpecialCharTok{\%*\%}\NormalTok{ X2))}
+\NormalTok{d2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#  (Intercept)     Air.Flow   Water.Temp   Acid.Conc.              }
+\NormalTok{\# 14.397515774  0.001730570  0.015195467  0.002796487  0.064828744}
+\end{Highlighting}
+\end{Shaded}
+
+Finally, we determine the change in variance in percent:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{round}\NormalTok{(}\DecValTok{100} \SpecialCharTok{*}\NormalTok{ (d2[}\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ d1) }\SpecialCharTok{/}\NormalTok{ d1, }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# (Intercept)    Air.Flow  Water.Temp  Acid.Conc. }
+\NormalTok{\#       7.023       0.098      18.019      20.426}
+\end{Highlighting}
+\end{Shaded}
+
+We see that the variances of the \(\hat\beta_j\) increased by up to \(20\%\)
+when we added the unnecessary input.
+\end{example}
+
+The example illustrates that it is important to keep the model as small
+as possible.
+
+\subsection{Choosing Between Models}\label{choosing-between-models}
+
+\subsubsection{Criteria for Model Selection}\label{criteria-for-model-selection}
+
+When comparing different models, we need a criterion to decide which
+is ``best''. Several options exist:
+
+\begin{itemize}
+\item
+  \textbf{\(R^2\)} (coefficient of determination): Measures the proportion of
+  variance explained by the model. However, \(R^2\) always increases when
+  variables are added, even if they are irrelevant. This makes it
+  unsuitable for model selection.
+\item
+  \textbf{Adjusted \(R^2\)} (written \(R^2_\mathrm{adj}\)): Adjusts \(R^2\) to
+  penalize model complexity. This is the criterion we will use
+  throughout this section and the next.
+\item
+  \textbf{AIC} (Akaike Information Criterion) and \textbf{BIC} (Bayesian
+  Information Criterion): Alternative criteria that also penalize
+  model complexity, discussed in section~\ref{S10-diagnostics}.
+\end{itemize}
+
+In the following subsections, we describe algorithms that use these
+criteria to select models efficiently.
+
+\subsubsection{Exhaustive Search}\label{exhaustive-search}
+
+For a model with \(p\) input variables, there are \(2^p\) different choices for
+which variables to include in the model (or \(2^{p+1}\), if we also have to
+decide whether to include the intercept). This value increases quickly with
+\(p\): for \(p = 10\) we have \(1024\) models to consider, for \(p = 20\) there are
+\(1048576\) possible models, and for large \(p\) it becomes infeasible to simply
+try all possible models to find the best one.
+
+If \(p\) is small enough, we can simply fit all \(2^p\) models and choose the one
+with the best performance (e.g., highest \(R^2_\mathrm{adj}\)). This guarantees
+finding the optimal model. However, for \(p \geq 20\) this becomes
+computationally infeasible (\(2^{20} > 1\) million models).
+
+\subsubsection{Stepwise Forward Selection}\label{stepwise-forward-selection}
+
+Here the idea is to start with a minimal model, and then add variables one by
+one, until no further (large enough) improvements can be achieved.
+
+Start with only intercept term: \(y=\beta_0 + \varepsilon\), then
+consider each of \(p\) models:
+\begin{equation*}
+  y
+  = \beta_0 + \beta_j x_j + \varepsilon,
+\end{equation*}
+for \(j \in \{1, \ldots, p\}\).
+
+Choose the model with the smallest residual sum of squares, provided that the
+``significance of the fitted model'' achieves a specified threshold. The process
+continues by adding more variables, one at a time, until either
+
+\begin{itemize}
+\tightlist
+\item
+  All variables are in the model.
+\item
+  The significance level can not be achieved by any variable not in the model.
+\end{itemize}
+
+The ``significance of the model'' can be examined by considering a
+\(t\)-test as in lemma~\ref{lem:t-test}.
+
+\subsubsection{Stepwise Backward Selection}\label{stepwise-backward-selection}
+
+Here the idea is to start with the full model, and to remove variables
+one by one until no good enough candidates for removal are left.
+
+In each step we consider the test statistic \(|T_j|\) for the tests
+\begin{equation*}
+  H_0\colon \beta_j = 0
+  \quad \textit{vs.} \quad
+  H_1\colon \beta_j \neq 0
+\end{equation*}
+for \(j \in \{1, \ldots, p\}\), again as in lemma~\ref{lem:t-test}.
+The method selects \(x_j\) corresponding to the smallest \(|T_j|\).
+If this is below a given threshold, then remove \(x_j\) and re-fit the model.
+Repeat until either:
+
+\begin{itemize}
+\tightlist
+\item
+  No variables are left in the model.
+\item
+  The smallest \(|T_j|\) is above the threshold.
+\end{itemize}
+
+\subsubsection{Hybrid Methods}\label{hybrid-methods}
+
+Either start with a full model or just intercept. At each stage consider:
+
+\begin{itemize}
+\tightlist
+\item
+  removing least significant variable already in the model,
+\item
+  adding most significant variable not currently in the model,
+\end{itemize}
+
+with significance levels set to avoid a cyclical behaviour.
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  Model selection requires choosing a criterion such as \(R^2_\mathrm{adj}\),
+  AIC, or BIC to compare models.
+\item
+  Stepwise methods (forward, backward, hybrid) provide computationally
+  efficient heuristics for large \(p\).
+\item
+  These methods do not guarantee finding the optimal model.
+\item
+  Exhaustive search can find the optimal model when \(p\) is small to moderate.
+\end{itemize}
+
+\clearpage
+
+\section{Exhaustive Model Search}\label{S13-exhaustive}
+
+\subsection{Exhaustive Search}\label{exhaustive-search-1}
+
+The stepwise methods from the previous section provide efficient
+heuristics, but they may not find the model with truly maximal
+\(R^2_\mathrm{adj}\). When \(p\) is small to moderate, exhaustive search
+allows us to evaluate all possible models systematically. Here we
+present an efficient algorithm that can often find the optimal model
+without having to fit all \(2^p\) models.
 
 Efficient algorithms are available to find the best model out of the
 \(2^p\) possible models for small to moderate \(p\). Here we present
@@ -7324,89 +7438,700 @@ again. At the end of the list we recognise the values \texttt{0.4799} and
 \texttt{0.4785} from our previous analysis.
 \end{example}
 
-\subsection{Other Methods}\label{other-methods}
+\textbf{Summary}
 
-There are other, approximate methods available which can be used
-when the number \(p\) of model parameters is too large for an exhaustives
-search.
+\begin{itemize}
+\tightlist
+\item
+  Exhaustive search finds the model with truly maximal \(R^2_\mathrm{adj}\),
+  unlike stepwise heuristics which may miss the optimal combination.
+\item
+  An efficient algorithm can find the optimal model without fitting all
+  \(2^p\) models, by using algebraic properties of the residual sum of squares.
+\item
+  The \texttt{regsubsets()} function from the \texttt{leaps} package implements this
+  algorithm in R.
+\item
+  For very large \(p\), even exhaustive search becomes infeasible, and
+  stepwise methods remain the practical choice.
+\end{itemize}
 
-\subsubsection{Stepwise Forward Selection}\label{stepwise-forward-selection}
+\clearpage
 
-Here the idea is to start with a minimal model, and then add variables one by
-one, until no further (large enough) improvements can be achieved.
+\section{Factors}\label{S14-factors}
 
-Start with only intercept term: \(y=\beta_0 + \varepsilon\), then
-consider each of \(p\) models:
+In this section we will learn how to fit linear models when some or all
+of the inputs are categorical. Such inputs are sometimes called ``factors''.
+These can be
+binary (\emph{e.g.}~sex recorded as male/female)
+or ordered (\emph{e.g.}~quality recorded as poor/medium/good)
+or unordered (\emph{e.g.}~marital status recorded as single/married/divorced/widowed).
+
+\subsection{Indicator Variables}\label{indicator-variables}
+
+Our aim here is to include categorical input variables within the
+usual regression model
 \begin{equation*}
   y
-  = \beta_0 + \beta_j x_j + \varepsilon,
+  = X\beta + \varepsilon.
 \end{equation*}
-for \(j \in \{1, \ldots, p\}\).
 
-Choose the model with the smallest residual sum of squares, provided that the
-``significance of the fitted model'' achieves a specified threshold. The process
-continues by adding more variables, one at a time, until either
-
-\begin{itemize}
-\tightlist
-\item
-  All variables are in the model.
-\item
-  The significance level can not be achieved by any variable not in the model.
-\end{itemize}
-
-The ``significance of the model'' can be examined by considering a
-\(t\)-test as in lemma~\ref{lem:t-test}.
-
-\subsubsection{Stepwise Backward Selection}\label{stepwise-backward-selection}
-
-Here the idea is to start with the full model, and to remove variables
-one by one until no good enough candidates for removal are left.
-
-In each step we consider the test statistic \(|T_j|\) for the tests
+Assume that \(x_j \in \{a_1, \ldots, a_k\}\) is a factor which has \(k\) possible
+values. The possible values of the factor, \(a_1, \ldots, a_k\) are also called
+the \textbf{levels} of the factor. The easiest way to include a factor in a
+regression model is via \textbf{indicator variables}. For this we represent \(x_j\)
+using \(k-1\) columns in the design matrix, say \(\tilde x_1, \ldots, \tilde
+x_{k-1}\), where
 \begin{equation*}
-  H_0\colon \beta_j = 0
-  \quad \textit{vs.} \quad
-  H_1\colon \beta_j \neq 0
+  \tilde x_{\ell i}
+  = \begin{cases}
+    1 & \mbox{if $x_{ji} = a_\ell$ and} \\
+    0 & \mbox{otherwise,}
+  \end{cases}
 \end{equation*}
-for \(j \in \{1, \ldots, p\}\), again as in lemma~\ref{lem:t-test}.
-The method selects \(x_j\) corresponding to the smallest \(|T_j|\).
-If this is below a given threshold, then remove \(x_j\) and re-fit the model.
-Repeat until either:
+for all \(\ell \in \{1, \ldots, k-1\}\) and \(i \in \{1, \ldots, n\}\).
+Using this convention, \(x_{ji} = k\) is represented by setting
+\(\tilde x_{1,i} = \cdots = \tilde x_{k-1,i} = 0\). The value \(a_k\)
+which is not represented as a separate column is called the
+\textbf{reference level}. The regression coefficients corresponding to the
+columns \(\tilde x_1, \ldots, \tilde x_{k-1}\) can be interpreted
+as the effect of level \(a_\ell\), relative to the effect
+of level \(a_k\). Since the indicator is constant \(1\) for all samples
+corresponding to a given factor, regression coefficients representing factors
+lead to changes of the intercept, rather than of slopes.
 
-\begin{itemize}
-\tightlist
-\item
-  No variables are left in the model.
-\item
-  The smallest \(|T_j|\) is above the threshold.
-\end{itemize}
+We are using only \(k-1\) columns to represent a factor
+with \(k\) levels in order to avoid collinearity. If we would use \(k\) columns,
+defined as above, we would get
+\begin{equation*}
+  \sum_{\ell=1}^k \tilde x_{\ell i}
+  = \mathbf{1},
+\end{equation*}
+and in a model with an intercept we would have exact collinearity of
+the corresponding columns in the design matrix~\(X\) and thus
+the matrix \(X^\top X\) would not be invertible.
 
-\subsubsection{Hybrid Methods}\label{hybrid-methods}
+\begin{example}
 
-Either start with a full model or just intercept. At each stage consider:
+Consider a dataset consisting of a numerical input variable
+and a binary factor for gender (\texttt{female}, \texttt{male}).
+Assume we are given data
+\((1, \mathrm{male})\), \((2, \mathrm{female})\), \((3, \mathrm{female})\).
+Then we can encode this data using the following design matrix:
 
-\begin{itemize}
-\tightlist
-\item
-  removing least significant variable already in the model,
-\item
-  adding most significant variable not currently in the model,
-\end{itemize}
+\begin{longtable}[]{@{}ccc@{}}
+\toprule\noalign{}
+intercept & \(x_1\) & \(1_\mathrm{\{female\}}(x_2)\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & 1 & 0 \\
+1 & 2 & 1 \\
+1 & 3 & 1 \\
+\end{longtable}
 
-with significance levels set to avoid a cyclical behaviour.
+\end{example}
+
+In R there is a dedicated type \texttt{factor} for categorical variables.
+If factors appear in the input of linear regression problem, the
+function \texttt{lm()} will automatically create the indicator variables
+for us.
+
+\begin{example}
+Here we simulated data which could describe the effect of some
+medical treatment.
+In the simulated data we have two groups, one which has been ``treated''
+and a control group. There is a ``value'' which decreases with age,
+and is lower for the group which has been treated (the intercept is 10
+instead of 12).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{age1 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{18}\NormalTok{, }\DecValTok{40}\NormalTok{)}
+\NormalTok{group1 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{value=}\DecValTok{10} \SpecialCharTok{{-}} \FloatTok{0.2} \SpecialCharTok{*}\NormalTok{ age1 }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd=}\FloatTok{0.5}\NormalTok{),}
+    \AttributeTok{age=}\NormalTok{age1,}
+    \AttributeTok{treated=}\StringTok{"yes"}\NormalTok{)}
+\NormalTok{age2 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{18}\NormalTok{, }\DecValTok{80}\NormalTok{)}
+\NormalTok{group2 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{value=}\DecValTok{12} \SpecialCharTok{{-}} \FloatTok{0.2} \SpecialCharTok{*}\NormalTok{ age2 }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd=}\FloatTok{0.5}\NormalTok{),}
+    \AttributeTok{age=}\NormalTok{age2,}
+    \AttributeTok{treated=}\StringTok{"no"}\NormalTok{)}
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(group1, group2)}
+
+\NormalTok{data}\SpecialCharTok{$}\NormalTok{treated }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{treated, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"no"}\NormalTok{, }\StringTok{"yes"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+The last line of the code tells R explicitely that the \texttt{treated} column
+represents a factor with levels ``no'' and ``yes''. Internally, this column will
+now be represented by numbers 1 (for ``no'') and 2 (for ``yes''), but this numeric representation
+is mostly hidden from the user. Now we fit a regression model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(value }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ data)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = value \textasciitilde{} ., data = data)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#      Min       1Q   Median       3Q      Max }
+\NormalTok{\# {-}1.76041 {-}0.22188  0.04535  0.23802  1.29250 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept) 11.525306   0.282369   40.82  \textless{} 2e{-}16 ***}
+\NormalTok{\# age         {-}0.189367   0.005557  {-}34.08  \textless{} 2e{-}16 ***}
+\NormalTok{\# treatedyes  {-}1.845246   0.180890  {-}10.20 1.68e{-}13 ***}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 0.5452 on 47 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.9635,  Adjusted R{-}squared:  0.962 }
+\NormalTok{\# F{-}statistic: 620.5 on 2 and 47 DF,  p{-}value: \textless{} 2.2e{-}16}
+\end{Highlighting}
+\end{Shaded}
+
+We see that R used ``no'' as the reference factor, here. The
+regression coefficient \texttt{treatedyes} gives the relative change
+of the ``yes'', compared to ``no''. The true value is
+the difference of the means: \(10 - 12 = -2\), and the estimated
+value \texttt{-1.89} is reasonably close to this. The fitted values
+for this model are
+\begin{equation*}
+  \hat y
+  = \begin{cases}
+    \beta_0 + \beta_1 x_1 & \mbox{if not treated, and} \\
+    (\beta_0 + \beta_2) + \beta_1 x_1 & \mbox{if treated}.
+  \end{cases}
+\end{equation*}
+
+To get a better
+idea of the model fit, we plot the data together with
+separate regression lines for ``yes'' (red) and ``no'' (black):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(value }\SpecialCharTok{\textasciitilde{}}\NormalTok{ age, }\AttributeTok{data =}\NormalTok{ data,}
+     \AttributeTok{col =} \FunctionTok{ifelse}\NormalTok{(treated }\SpecialCharTok{==} \StringTok{"yes"}\NormalTok{, }\StringTok{"red"}\NormalTok{, }\StringTok{"black"}\NormalTok{))}
+
+\CommentTok{\# regression line for the reference level \textasciigrave{}treatment == "no"\textasciigrave{}}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{])}
+
+\CommentTok{\# regression line for the level \textasciigrave{}treatment = "yes"\textasciigrave{}:}
+\CommentTok{\# here we need to add the coefficient for \textasciigrave{}treatedyes\textasciigrave{}}
+\CommentTok{\# to the intercept}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{3}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{], }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+
+\FunctionTok{legend}\NormalTok{(}\StringTok{"bottomleft"}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\StringTok{"no"}\NormalTok{, }\StringTok{"yes"}\NormalTok{),}
+       \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{), }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\CommentTok{\# also show a boxplot for comparison}
+\FunctionTok{boxplot}\NormalTok{(value }\SpecialCharTok{\textasciitilde{}}\NormalTok{ treated, }\AttributeTok{data =}\NormalTok{ data,}
+        \AttributeTok{border =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/factors-1.pdf}}
+
+We can see that the two regression lines, corresponding to the two levels
+are parallel. They have the same slope but different intercepts.
+
+The last command shows a boxplot of \texttt{value} for comparison.
+The boxplot does not allow to conclude that the treatment had an effect,
+whereas the linear model, which accounts for age, shows the effect
+of the treatment as a difference in intercepts. The \texttt{***}
+in the \texttt{treatedyes} row of the \texttt{summary(m)} output shows that the
+difference in intercepts is statistically significant.
+\end{example}
+
+\subsection{Interactions}\label{interactions}
+
+In some situations, the strength of the dependency of the response \(y\) to an
+input \(x_1\) might depend on another input, say \(x_2\). The simplest such
+situation would be, if the coefficient \(\beta_1\), corresponding on \(x_1\) is
+itself proportional to \(x_2\), say \(\beta_1 = \gamma x_2\). In this case we have
+\(y = \cdots + \beta_1 x_1 = \cdots + \gamma x_1 x_2\). Traditionally, inputs
+added to a model which are the product of two or more of the original inputs
+are called \textbf{interactions}. As a general rule, an interaction is only included
+if the ``main effects'' are also included in the model, so in any variable
+selection procedure, we would not drop \(x_1\) or \(x_2\) if \(x_1 x_2\) is still in
+the model. An exception to this is when one can directly interpret the
+interaction term without the main effect.
+
+In R, interactions (\emph{i.e.}~products of inputs) are represented by the
+symbol~\texttt{:} and \texttt{*} can be used to include two variables together with their
+product. Note also, that if a variable is known to be a factor, and it is
+included as an interaction term, then R will make sure to only remove the
+interaction term in a backward variable selection procedure whilst the main
+effects are also included.
+
+\begin{example}
+
+Consider the following toy dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x1 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\NormalTok{x2 }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{3}
+\end{Highlighting}
+\end{Shaded}
+
+In \texttt{lm()} and related functions we can write \texttt{x1:x2} as a shorthand
+for \texttt{I(x1*x2)}. The column \texttt{x1:x2} in the R output corresponds
+to the mathematical expression \(x_1 x_2\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x1}\SpecialCharTok{:}\NormalTok{x2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#   (Intercept) x1 x1:x2}
+\NormalTok{\# 1           1  2     2}
+\NormalTok{\# 2           1  2     4}
+\NormalTok{\# 3           1  2     6}
+\NormalTok{\# attr(,"assign")}
+\NormalTok{\# [1] 0 1 2}
+\end{Highlighting}
+\end{Shaded}
+
+We can write \texttt{x1*x2} as a shorthand for the model with the
+three terms \texttt{x1\ +\ x2\ +\ x1:x2}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1}\SpecialCharTok{*}\NormalTok{x2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#   (Intercept) x1 x2 x1:x2}
+\NormalTok{\# 1           1  2  1     2}
+\NormalTok{\# 2           1  2  2     4}
+\NormalTok{\# 3           1  2  3     6}
+\NormalTok{\# attr(,"assign")}
+\NormalTok{\# [1] 0 1 2 3}
+\end{Highlighting}
+\end{Shaded}
+
+\end{example}
+
+Interactions also work for factors. In this case, products with all of
+the corresponding indicator variables are added to the model. while
+the base effect of factor variables is to have different intercepts for
+the different groups, using interactions with a factor allows to have
+different slopes for the different groups.
+
+\begin{example}
+The classical example of an interaction is to consider how the
+yield~\(y\) of a crop is related to temperature~\(x_1\) and rainfall~\(x_2\).
+All these variables are continuous, but we might categorize rainfall as ``wet''
+and ``dry''. Then a simplistic view could be that, for high rainfall, the yield
+will be positively correlated with temperature, whereas for low rainfall the
+correlation may be slightly negative, because in hot weather, plants need more
+water, and if it is very hot and dry, the plants may even die.
+
+We generate a toy dataset in R to represent such a situation:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{T }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{35}\NormalTok{)}
+\NormalTok{wet }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{yield=}\DecValTok{40} \SpecialCharTok{+} \DecValTok{7}\SpecialCharTok{*}\NormalTok{T }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd =} \DecValTok{10}\NormalTok{),}
+    \AttributeTok{temperature=}\NormalTok{T,}
+    \AttributeTok{rainfall=}\StringTok{"high"}\NormalTok{)}
+\NormalTok{T }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{35}\NormalTok{)}
+\NormalTok{dry }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{yield=}\DecValTok{120} \SpecialCharTok{{-}} \DecValTok{2}\SpecialCharTok{*}\NormalTok{T }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd =} \DecValTok{10}\NormalTok{),}
+    \AttributeTok{temperature=}\NormalTok{T,}
+    \AttributeTok{rainfall=}\StringTok{"low"}\NormalTok{)}
+\NormalTok{crops }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(wet, dry)}
+\NormalTok{crops}\SpecialCharTok{$}\NormalTok{rainfall }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(crops}\SpecialCharTok{$}\NormalTok{rainfall, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"low"}\NormalTok{, }\StringTok{"high"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+Now we fit a model, including \texttt{temperature}, \texttt{rainfall} and
+an interaction term:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(yield }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature}\SpecialCharTok{*}\NormalTok{rainfall, }\AttributeTok{data =}\NormalTok{ crops)}
+\FunctionTok{summary}\NormalTok{(m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = yield \textasciitilde{} temperature * rainfall, data = crops)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#      Min       1Q   Median       3Q      Max }
+\NormalTok{\# {-}22.8996  {-}6.3555   0.0346   5.9355  25.0553 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#                          Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept)              114.2722     9.0929  12.567  \textless{} 2e{-}16 ***}
+\NormalTok{\# temperature               {-}1.8873     0.3617  {-}5.219 4.21e{-}06 ***}
+\NormalTok{\# rainfallhigh             {-}71.5892    13.0342  {-}5.492 1.66e{-}06 ***}
+\NormalTok{\# temperature:rainfallhigh   8.7043     0.5299  16.428  \textless{} 2e{-}16 ***}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 10.42 on 46 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.9814,  Adjusted R{-}squared:  0.9802 }
+\NormalTok{\# F{-}statistic: 810.2 on 3 and 46 DF,  p{-}value: \textless{} 2.2e{-}16}
+\end{Highlighting}
+\end{Shaded}
+
+The fitted values for this model are
+\begin{equation*}
+  \hat y
+  = \begin{cases}
+    \beta_0 + \beta_1 x_1 & \mbox{for low rainfall, and} \\
+    (\beta_0 + \beta_2) + (\beta_1 + \beta_3) x_1 & \mbox{for high rainfall}.
+  \end{cases}
+\end{equation*}
+Finally, we can generate a plot of the data together
+with the two regression lines.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(yield }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature, }\AttributeTok{data=}\NormalTok{crops,}
+     \AttributeTok{col =} \FunctionTok{ifelse}\NormalTok{(rainfall }\SpecialCharTok{==} \StringTok{"low"}\NormalTok{, }\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{))}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{])}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{3}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{4}\NormalTok{],}
+       \AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\StringTok{"dry"}\NormalTok{, }\StringTok{"wet"}\NormalTok{),}
+       \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{), }\AttributeTok{pch =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/interactions-1.pdf}}
+
+As expected, the two lines have different intercepts and different slopes.
+\end{example}
+
+\subsection{Example}\label{interactions-example}
+
+\begin{example}
+Researchers in Food Science studied how big people's mouths tend to be.
+It transpires that mouth volume is related to more easily measured quantities
+like height and weight. Here we have data which gives
+the mouth volume (in cubic centimetres), age, sex (female = 0, male = 1),
+height (in metres) and weight (in kilos) for 61 volunteers.
+The first few samples are as shown:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# data from https://teaching.seehuhn.de/2022/MATH3714/mouth{-}volume.txt}
+\NormalTok{dd }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}\StringTok{"data/mouth{-}volume.txt"}\NormalTok{, }\AttributeTok{header =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(dd)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#   Mouth\_Volume Age Sex Height  Weight}
+\NormalTok{\# 1       56.659  29   1  1.730  70.455}
+\NormalTok{\# 2       47.938  24   0  1.632  60.000}
+\NormalTok{\# 3       60.995  45   0  1.727 102.273}
+\NormalTok{\# 4       68.917  23   0  1.641  78.636}
+\NormalTok{\# 5       60.956  27   0  1.600  57.273}
+\NormalTok{\# 6       76.204  23   1  1.746  66.818}
+\end{Highlighting}
+\end{Shaded}
+
+Normally it is important to check that categorical variables are correctly
+recognised as factors, when importing data into R. As an exception,
+the fact that \texttt{sex} is stored as an integer variable (instead of a factor)
+here does not matter, since the default factor coding would be identical
+to the coding in the present data.
+
+Our aim is to fit a model which describes mouth volume in terms of the
+other variables. We start by fitting a basic model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{summary}\NormalTok{(m1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} ., data = dd)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}33.242 {-}10.721  {-}3.223   8.800  43.218 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#             Estimate Std. Error t value Pr(\textgreater{}|t|)  }
+\NormalTok{\# (Intercept)   0.9882    45.2736   0.022   0.9827  }
+\NormalTok{\# Age           0.3617     0.2607   1.387   0.1709  }
+\NormalTok{\# Sex           5.5030     5.9385   0.927   0.3581  }
+\NormalTok{\# Height       15.8980    29.1952   0.545   0.5882  }
+\NormalTok{\# Weight        0.2640     0.1400   1.885   0.0646 .}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 15.04 on 56 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.2588,  Adjusted R{-}squared:  0.2059 }
+\NormalTok{\# F{-}statistic: 4.888 on 4 and 56 DF,  p{-}value: 0.001882}
+\end{Highlighting}
+\end{Shaded}
+
+Since no coefficient is significantly different from zero (at \(5\%\)-level),
+and since the \(R^2\) value is not close to\textasciitilde{}\(1\),
+model fit seems poor. To improve model fit, we try to include all
+pairwise interaction terms:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{summary}\NormalTok{(m2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} .\^{}2, data = dd)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}35.528  {-}8.168  {-}1.995   6.704  44.136 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#                 Estimate Std. Error t value Pr(\textgreater{}|t|)}
+\NormalTok{\# (Intercept)    2.875e+02  2.337e+02   1.230    0.225}
+\NormalTok{\# Age           {-}8.370e+00  6.352e+00  {-}1.318    0.194}
+\NormalTok{\# Sex           {-}9.318e+01  1.325e+02  {-}0.703    0.485}
+\NormalTok{\# Height        {-}1.540e+02  1.505e+02  {-}1.023    0.311}
+\NormalTok{\# Weight         5.889e{-}01  2.713e+00   0.217    0.829}
+\NormalTok{\# Age:Sex       {-}9.023e{-}01  1.035e+00  {-}0.872    0.388}
+\NormalTok{\# Age:Height     5.374e+00  4.062e+00   1.323    0.192}
+\NormalTok{\# Age:Weight    {-}1.754e{-}03  2.027e{-}02  {-}0.087    0.931}
+\NormalTok{\# Sex:Height     5.989e+01  7.536e+01   0.795    0.431}
+\NormalTok{\# Sex:Weight     3.110e{-}01  4.177e{-}01   0.744    0.460}
+\NormalTok{\# Height:Weight {-}2.680e{-}01  1.755e+00  {-}0.153    0.879}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 15.22 on 50 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.3219,  Adjusted R{-}squared:  0.1863 }
+\NormalTok{\# F{-}statistic: 2.374 on 10 and 50 DF,  p{-}value: 0.0218}
+\end{Highlighting}
+\end{Shaded}
+
+None of the interaction terms look useful when used in combination.
+We try to select a subset of variables to get a better fit.
+We use the \texttt{regsubsets()} function from section~\ref{S13-exhaustive}
+to find the optimal model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(leaps)}
+\NormalTok{r3 }\OtherTok{\textless{}{-}} \FunctionTok{regsubsets}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{data =}\NormalTok{ dd, }\AttributeTok{nvmax =} \DecValTok{10}\NormalTok{)}
+\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(r3)}
+\NormalTok{s}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# Subset selection object}
+\NormalTok{\# Call: regsubsets.formula(Mouth\_Volume \textasciitilde{} .\^{}2, data = dd, nvmax = 10)}
+\NormalTok{\# 10 Variables  (and intercept)}
+\NormalTok{\#               Forced in Forced out}
+\NormalTok{\# Age               FALSE      FALSE}
+\NormalTok{\# Sex               FALSE      FALSE}
+\NormalTok{\# Height            FALSE      FALSE}
+\NormalTok{\# Weight            FALSE      FALSE}
+\NormalTok{\# Age:Sex           FALSE      FALSE}
+\NormalTok{\# Age:Height        FALSE      FALSE}
+\NormalTok{\# Age:Weight        FALSE      FALSE}
+\NormalTok{\# Sex:Height        FALSE      FALSE}
+\NormalTok{\# Sex:Weight        FALSE      FALSE}
+\NormalTok{\# Height:Weight     FALSE      FALSE}
+\NormalTok{\# 1 subsets of each size up to 10}
+\NormalTok{\# Selection Algorithm: exhaustive}
+\NormalTok{\#           Age Sex Height Weight Age:Sex Age:Height Age:Weight Sex:Height}
+\NormalTok{\# 1  ( 1 )  " " " " " "    " "    " "     " "        " "        " "       }
+\NormalTok{\# 2  ( 1 )  " " " " " "    " "    " "     " "        "*"        " "       }
+\NormalTok{\# 3  ( 1 )  " " "*" " "    " "    " "     " "        "*"        "*"       }
+\NormalTok{\# 4  ( 1 )  " " "*" " "    " "    " "     " "        "*"        "*"       }
+\NormalTok{\# 5  ( 1 )  "*" " " "*"    " "    "*"     "*"        " "        " "       }
+\NormalTok{\# 6  ( 1 )  "*" " " "*"    " "    "*"     "*"        " "        "*"       }
+\NormalTok{\# 7  ( 1 )  "*" "*" "*"    " "    "*"     "*"        " "        "*"       }
+\NormalTok{\# 8  ( 1 )  "*" "*" "*"    "*"    "*"     "*"        " "        "*"       }
+\NormalTok{\# 9  ( 1 )  "*" "*" "*"    "*"    "*"     "*"        " "        "*"       }
+\NormalTok{\# 10  ( 1 ) "*" "*" "*"    "*"    "*"     "*"        "*"        "*"       }
+\NormalTok{\#           Sex:Weight Height:Weight}
+\NormalTok{\# 1  ( 1 )  " "        "*"          }
+\NormalTok{\# 2  ( 1 )  "*"        " "          }
+\NormalTok{\# 3  ( 1 )  " "        " "          }
+\NormalTok{\# 4  ( 1 )  "*"        " "          }
+\NormalTok{\# 5  ( 1 )  "*"        " "          }
+\NormalTok{\# 6  ( 1 )  "*"        " "          }
+\NormalTok{\# 7  ( 1 )  "*"        " "          }
+\NormalTok{\# 8  ( 1 )  "*"        " "          }
+\NormalTok{\# 9  ( 1 )  "*"        "*"          }
+\NormalTok{\# 10  ( 1 ) "*"        "*"}
+\end{Highlighting}
+\end{Shaded}
+
+The table shows the optimal model for every number of variables,
+for \(p\) ranging from \(1\) to~\(10\). To choose the number of variables
+we can use the adjusted \(R^2\)-value:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s}\SpecialCharTok{$}\NormalTok{which[}\FunctionTok{which.max}\NormalTok{(s}\SpecialCharTok{$}\NormalTok{adjr2),]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\#   (Intercept)           Age           Sex        Height        Weight }
+\NormalTok{\#          TRUE          TRUE         FALSE          TRUE         FALSE }
+\NormalTok{\#       Age:Sex    Age:Height    Age:Weight    Sex:Height    Sex:Weight }
+\NormalTok{\#          TRUE          TRUE         FALSE         FALSE          TRUE }
+\NormalTok{\# Height:Weight }
+\NormalTok{\#         FALSE}
+\end{Highlighting}
+\end{Shaded}
+
+The optimal model consists of the five variables listed. For further
+examination, we fit the corresponding model using \texttt{lm()}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume}
+         \SpecialCharTok{\textasciitilde{}}\NormalTok{ Age }\SpecialCharTok{+}\NormalTok{ Height }\SpecialCharTok{+}\NormalTok{ Age}\SpecialCharTok{:}\NormalTok{Sex }\SpecialCharTok{+}\NormalTok{ Age}\SpecialCharTok{:}\NormalTok{Height }\SpecialCharTok{+}\NormalTok{ Sex}\SpecialCharTok{:}\NormalTok{Weight,}
+         \AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{summary}\NormalTok{(m3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} Age + Height + Age:Sex + Age:Height + }
+\NormalTok{\#     Sex:Weight, data = dd)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}36.590  {-}9.577  {-}1.545   7.728  42.779 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)  }
+\NormalTok{\# (Intercept)  265.6236   122.3362   2.171   0.0342 *}
+\NormalTok{\# Age           {-}8.4905     4.0559  {-}2.093   0.0409 *}
+\NormalTok{\# Height      {-}134.0835    72.8589  {-}1.840   0.0711 .}
+\NormalTok{\# Age:Sex       {-}0.8633     0.4944  {-}1.746   0.0864 .}
+\NormalTok{\# Age:Height     5.3644     2.4047   2.231   0.0298 *}
+\NormalTok{\# Sex:Weight     0.4059     0.1659   2.446   0.0177 *}
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 14.65 on 55 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.3096,  Adjusted R{-}squared:  0.2468 }
+\NormalTok{\# F{-}statistic: 4.932 on 5 and 55 DF,  p{-}value: 0.0008437}
+\end{Highlighting}
+\end{Shaded}
+
+This looks much better: now most variables are significantly different from
+zero and the adjusted \(R^2\) value has (slightly) improved. Nevertheless,
+the structure of the model seems hard to explain and the model seems
+difficult to interpret. For comparison, we consider the second-best
+model, with \(p=2\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m4 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Age}\SpecialCharTok{:}\NormalTok{Weight }\SpecialCharTok{+}\NormalTok{ Sex}\SpecialCharTok{:}\NormalTok{Weight, }\AttributeTok{data =}\NormalTok{ dd)}
+\FunctionTok{summary}\NormalTok{(m4)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\# }
+\NormalTok{\# Call:}
+\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} Age:Weight + Sex:Weight, data = dd)}
+\NormalTok{\# }
+\NormalTok{\# Residuals:}
+\NormalTok{\#     Min      1Q  Median      3Q     Max }
+\NormalTok{\# {-}34.161 {-}10.206  {-}3.738   9.087  43.747 }
+\NormalTok{\# }
+\NormalTok{\# Coefficients:}
+\NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)    }
+\NormalTok{\# (Intercept) 43.678187   4.788206   9.122 8.35e{-}13 ***}
+\NormalTok{\# Age:Weight   0.005554   0.002372   2.342   0.0226 *  }
+\NormalTok{\# Weight:Sex   0.127360   0.048640   2.618   0.0113 *  }
+\NormalTok{\# {-}{-}{-}}
+\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
+\NormalTok{\# }
+\NormalTok{\# Residual standard error: 14.72 on 58 degrees of freedom}
+\NormalTok{\# Multiple R{-}squared:  0.2651,  Adjusted R{-}squared:  0.2398 }
+\NormalTok{\# F{-}statistic: 10.46 on 2 and 58 DF,  p{-}value: 0.000132}
+\end{Highlighting}
+\end{Shaded}
+
+The adjusted \(R^2\)-value of this model is only slightly reduced,
+and all regression coefficients are significantly
+different from zero.
+
+\begin{equation*}
+  \textrm{mouth volume}
+  = 43.68
+    + \begin{cases}
+      0.0056 \, \mathrm{age} \times \mathrm{weight}
+          & \mbox{for females} \\
+      (0.0056 \, \mathrm{age} + 0.1274) \, \mathrm{weight}
+          & \mbox{for males.}
+  \end{cases}
+\end{equation*}
+
+This model is still not trivial to interpret, but it does show
+that mouth volume increases with weight and age, and that the
+dependency on weight is stronger for males.
+\end{example}
 
 \textbf{Summary}
 
 \begin{itemize}
 \tightlist
 \item
-  We discussed different algorithms to perform model selection in practice.
+  Indicator variables can be used to represent categorical inputs
+  in linear regression models.
+\item
+  The levels of a factor correspond to different intercepts for
+  the regression line.
+\item
+  If interaction terms are used, the levels also affect the slope.
 \end{itemize}
 
 \clearpage
 
-\section{Multicollinearity}\label{S13-multicoll}
+\section{Multicollinearity}\label{S15-multicoll}
 
 \begin{definition}
 In linear regression, \textbf{Multicollinearity} denotes the situation
@@ -7751,869 +8476,6 @@ be addressed:
 \item
   Singular value decomposition can used to better understand linear
   dependencies in the inputs.
-\end{itemize}
-
-\clearpage
-
-\section{Factors}\label{S14-factors}
-
-In this section we will learn how to fit linear models when some or all
-of the inputs are categorical. Such inputs are sometimes called ``factors''.
-These can be
-binary (\emph{e.g.}~sex recorded as male/female)
-or ordered (\emph{e.g.}~quality recorded as poor/medium/good)
-or unordered (\emph{e.g.}~marital status recorded as single/married/divorced/widowed).
-
-\subsection{Indicator Variables}\label{indicator-variables}
-
-Our aim here is to include categorical input variables within the
-usual regression model
-\begin{equation*}
-  y
-  = X\beta + \varepsilon.
-\end{equation*}
-
-Assume that \(x_j \in \{a_1, \ldots, a_k\}\) is a factor which has \(k\) possible
-values. The possible values of the factor, \(a_1, \ldots, a_k\) are also called
-the \textbf{levels} of the factor. The easiest way to include a factor in a
-regression model is via \textbf{indicator variables}. For this we represent \(x_j\)
-using \(k-1\) columns in the design matrix, say \(\tilde x_1, \ldots, \tilde
-x_{k-1}\), where
-\begin{equation*}
-  \tilde x_{\ell i}
-  = \begin{cases}
-    1 & \mbox{if $x_{ji} = a_\ell$ and} \\
-    0 & \mbox{otherwise,}
-  \end{cases}
-\end{equation*}
-for all \(\ell \in \{1, \ldots, k-1\}\) and \(i \in \{1, \ldots, n\}\).
-Using this convention, \(x_{ji} = k\) is represented by setting
-\(\tilde x_{1,i} = \cdots = \tilde x_{k-1,i} = 0\). The value \(a_k\)
-which is not represented as a separate column is called the
-\textbf{reference level}. The regression coefficients corresponding to the
-columns \(\tilde x_1, \ldots, \tilde x_{k-1}\) can be interpreted
-as the effect of level \(a_\ell\), relative to the effect
-of level \(a_k\). Since the indicator is constant \(1\) for all samples
-corresponding to a given factor, regression coefficients representing factors
-lead to changes of the intercept, rather than of slopes.
-
-We are using only \(k-1\) columns to represent a factor
-with \(k\) levels in order to avoid collinearity. If we would use \(k\) columns,
-defined as above, we would get
-\begin{equation*}
-  \sum_{\ell=1}^k \tilde x_{\ell i}
-  = \mathbf{1},
-\end{equation*}
-and in a model with an intercept we would have exact collinearity of
-the corresponding columns in the design matrix~\(X\) and thus
-the matrix \(X^\top X\) would not be invertible.
-
-\begin{example}
-
-Consider a dataset consisting of a numerical input variable
-and a binary factor for gender (\texttt{female}, \texttt{male}).
-Assume we are given data
-\((1, \mathrm{male})\), \((2, \mathrm{female})\), \((3, \mathrm{female})\).
-Then we can encode this data using the following design matrix:
-
-\begin{longtable}[]{@{}ccc@{}}
-\toprule\noalign{}
-intercept & \(x_1\) & \(1_\mathrm{\{female\}}(x_2)\) \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-1 & 1 & 0 \\
-1 & 2 & 1 \\
-1 & 3 & 1 \\
-\end{longtable}
-
-\end{example}
-
-In R there is a dedicated type \texttt{factor} for categorical variables.
-If factors appear in the input of linear regression problem, the
-function \texttt{lm()} will automatically create the indicator variables
-for us.
-
-\begin{example}
-Here we simulated data which could describe the effect of some
-medical treatment.
-In the simulated data we have two groups, one which has been ``treated''
-and a control group. There is a ``value'' which decreases with age,
-and is lower for the group which has been treated (the intercept is 10
-instead of 12).
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{age1 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{18}\NormalTok{, }\DecValTok{40}\NormalTok{)}
-\NormalTok{group1 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
-    \AttributeTok{value=}\DecValTok{10} \SpecialCharTok{{-}} \FloatTok{0.2} \SpecialCharTok{*}\NormalTok{ age1 }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd=}\FloatTok{0.5}\NormalTok{),}
-    \AttributeTok{age=}\NormalTok{age1,}
-    \AttributeTok{treated=}\StringTok{"yes"}\NormalTok{)}
-\NormalTok{age2 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{18}\NormalTok{, }\DecValTok{80}\NormalTok{)}
-\NormalTok{group2 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
-    \AttributeTok{value=}\DecValTok{12} \SpecialCharTok{{-}} \FloatTok{0.2} \SpecialCharTok{*}\NormalTok{ age2 }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd=}\FloatTok{0.5}\NormalTok{),}
-    \AttributeTok{age=}\NormalTok{age2,}
-    \AttributeTok{treated=}\StringTok{"no"}\NormalTok{)}
-\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(group1, group2)}
-
-\NormalTok{data}\SpecialCharTok{$}\NormalTok{treated }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{treated, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"no"}\NormalTok{, }\StringTok{"yes"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-The last line of the code tells R explicitely that the \texttt{treated} column
-represents a factor with levels ``no'' and ``yes''. Internally, this column will
-now be represented by numbers 1 (for ``no'') and 2 (for ``yes''), but this numeric representation
-is mostly hidden from the user. Now we fit a regression model:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(value }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ data)}
-\FunctionTok{summary}\NormalTok{(m)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = value \textasciitilde{} ., data = data)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#      Min       1Q   Median       3Q      Max }
-\NormalTok{\# {-}1.10716 {-}0.25190  0.02052  0.26478  0.95544 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)    }
-\NormalTok{\# (Intercept) 12.093662   0.237162   50.99   \textless{}2e{-}16 ***}
-\NormalTok{\# age         {-}0.199445   0.004527  {-}44.06   \textless{}2e{-}16 ***}
-\NormalTok{\# treatedyes  {-}2.154692   0.147914  {-}14.57   \textless{}2e{-}16 ***}
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 0.4343 on 47 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.978,   Adjusted R{-}squared:  0.977 }
-\NormalTok{\# F{-}statistic:  1043 on 2 and 47 DF,  p{-}value: \textless{} 2.2e{-}16}
-\end{Highlighting}
-\end{Shaded}
-
-We see that R used ``no'' as the reference factor, here. The
-regression coefficient \texttt{treatedyes} gives the relative change
-of the ``yes'', compared to ``no''. The true value is
-the difference of the means: \(10 - 12 = -2\), and the estimated
-value \texttt{-1.89} is reasonably close to this. The fitted values
-for this model are
-\begin{equation*}
-  \hat y
-  = \begin{cases}
-    \beta_0 + \beta_1 x_1 & \mbox{if not treated, and} \\
-    (\beta_0 + \beta_2) + \beta_1 x_1 & \mbox{if treated}.
-  \end{cases}
-\end{equation*}
-
-To get a better
-idea of the model fit, we plot the data together with
-separate regression lines for ``yes'' (red) and ``no'' (black):
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
-\FunctionTok{plot}\NormalTok{(value }\SpecialCharTok{\textasciitilde{}}\NormalTok{ age, }\AttributeTok{data =}\NormalTok{ data,}
-     \AttributeTok{col =} \FunctionTok{ifelse}\NormalTok{(treated }\SpecialCharTok{==} \StringTok{"yes"}\NormalTok{, }\StringTok{"red"}\NormalTok{, }\StringTok{"black"}\NormalTok{))}
-
-\CommentTok{\# regression line for the reference level \textasciigrave{}treatment == "no"\textasciigrave{}}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{])}
-
-\CommentTok{\# regression line for the level \textasciigrave{}treatment = "yes"\textasciigrave{}:}
-\CommentTok{\# here we need to add the coefficient for \textasciigrave{}treatedyes\textasciigrave{}}
-\CommentTok{\# to the intercept}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{3}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{], }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
-
-\FunctionTok{legend}\NormalTok{(}\StringTok{"bottomleft"}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\StringTok{"no"}\NormalTok{, }\StringTok{"yes"}\NormalTok{),}
-       \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{), }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
-
-\CommentTok{\# also show a boxplot for comparison}
-\FunctionTok{boxplot}\NormalTok{(value }\SpecialCharTok{\textasciitilde{}}\NormalTok{ treated, }\AttributeTok{data =}\NormalTok{ data,}
-        \AttributeTok{border =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/factors-1.pdf}}
-
-We can see that the two regression lines, corresponding to the two levels
-are parallel. They have the same slope but different intercepts.
-
-The last command shows a boxplot of \texttt{value} for comparison.
-The boxplot does not allow to conclude that the treatment had an effect,
-whereas the linear model, which accounts for age, shows the effect
-of the treatment as a difference in intercepts. The \texttt{***}
-in the \texttt{treatedyes} row of the \texttt{summary(m)} output shows that the
-difference in intercepts is statistically significant.
-\end{example}
-
-\subsection{Interactions}\label{interactions}
-
-In some situations, the strength of the dependency of the response \(y\) to an
-input \(x_1\) might depend on another input, say \(x_2\). The simplest such
-situation would be, if the coefficient \(\beta_1\), corresponding on \(x_1\) is
-itself proportional to \(x_2\), say \(\beta_1 = \gamma x_2\). In this case we have
-\(y = \cdots + \beta_1 x_1 = \cdots + \gamma x_1 x_2\). Traditionally, inputs
-added to a model which are the product of two or more of the original inputs
-are called \textbf{interactions}. As a general rule, an interaction is only included
-if the ``main effects'' are also included in the model, so in any variable
-selection procedure, we would not drop \(x_1\) or \(x_2\) if \(x_1 x_2\) is still in
-the model. An exception to this is when one can directly interpret the
-interaction term without the main effect.
-
-In R, interactions (\emph{i.e.}~products of inputs) are represented by the
-symbol~\texttt{:} and \texttt{*} can be used to include two variables together with their
-product. Note also, that if a variable is known to be a factor, and it is
-included as an interaction term, then R will make sure to only remove the
-interaction term in a backward variable selection procedure whilst the main
-effects are also included.
-
-\begin{example}
-
-Consider the following toy dataset:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{x1 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{)}
-\NormalTok{x2 }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{3}
-\end{Highlighting}
-\end{Shaded}
-
-In \texttt{lm()} and related functions we can write \texttt{x1:x2} as a shorthand
-for \texttt{I(x1*x2)}. The column \texttt{x1:x2} in the R output corresponds
-to the mathematical expression \(x_1 x_2\).
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ x1}\SpecialCharTok{:}\NormalTok{x2)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#   (Intercept) x1 x1:x2}
-\NormalTok{\# 1           1  2     2}
-\NormalTok{\# 2           1  2     4}
-\NormalTok{\# 3           1  2     6}
-\NormalTok{\# attr(,"assign")}
-\NormalTok{\# [1] 0 1 2}
-\end{Highlighting}
-\end{Shaded}
-
-We can write \texttt{x1*x2} as a shorthand for the model with the
-three terms \texttt{x1\ +\ x2\ +\ x1:x2}:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1}\SpecialCharTok{*}\NormalTok{x2)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#   (Intercept) x1 x2 x1:x2}
-\NormalTok{\# 1           1  2  1     2}
-\NormalTok{\# 2           1  2  2     4}
-\NormalTok{\# 3           1  2  3     6}
-\NormalTok{\# attr(,"assign")}
-\NormalTok{\# [1] 0 1 2 3}
-\end{Highlighting}
-\end{Shaded}
-
-\end{example}
-
-Interactions also work for factors. In this case, products with all of
-the corresponding indicator variables are added to the model. while
-the base effect of factor variables is to have different intercepts for
-the different groups, using interactions with a factor allows to have
-different slopes for the different groups.
-
-\begin{example}
-The classical example of an interaction is to consider how the
-yield~\(y\) of a crop is related to temperature~\(x_1\) and rainfall~\(x_2\).
-All these variables are continuous, but we might categorize rainfall as ``wet''
-and ``dry''. Then a simplistic view could be that, for high rainfall, the yield
-will be positively correlated with temperature, whereas for low rainfall the
-correlation may be slightly negative, because in hot weather, plants need more
-water, and if it is very hot and dry, the plants may even die.
-
-We generate a toy dataset in R to represent such a situation:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{T }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{35}\NormalTok{)}
-\NormalTok{wet }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
-    \AttributeTok{yield=}\DecValTok{40} \SpecialCharTok{+} \DecValTok{7}\SpecialCharTok{*}\NormalTok{T }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd =} \DecValTok{10}\NormalTok{),}
-    \AttributeTok{temperature=}\NormalTok{T,}
-    \AttributeTok{rainfall=}\StringTok{"high"}\NormalTok{)}
-\NormalTok{T }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\DecValTok{25}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{35}\NormalTok{)}
-\NormalTok{dry }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
-    \AttributeTok{yield=}\DecValTok{120} \SpecialCharTok{{-}} \DecValTok{2}\SpecialCharTok{*}\NormalTok{T }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{25}\NormalTok{, }\AttributeTok{sd =} \DecValTok{10}\NormalTok{),}
-    \AttributeTok{temperature=}\NormalTok{T,}
-    \AttributeTok{rainfall=}\StringTok{"low"}\NormalTok{)}
-\NormalTok{crops }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(wet, dry)}
-\NormalTok{crops}\SpecialCharTok{$}\NormalTok{rainfall }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(crops}\SpecialCharTok{$}\NormalTok{rainfall, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"low"}\NormalTok{, }\StringTok{"high"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-Now we fit a model, including \texttt{temperature}, \texttt{rainfall} and
-an interaction term:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(yield }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature}\SpecialCharTok{*}\NormalTok{rainfall, }\AttributeTok{data =}\NormalTok{ crops)}
-\FunctionTok{summary}\NormalTok{(m)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = yield \textasciitilde{} temperature * rainfall, data = crops)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#     Min      1Q  Median      3Q     Max }
-\NormalTok{\# {-}22.974  {-}4.755  {-}2.629   5.730  23.549 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#                          Estimate Std. Error t value Pr(\textgreater{}|t|)    }
-\NormalTok{\# (Intercept)              128.8375     8.1067  15.893  \textless{} 2e{-}16 ***}
-\NormalTok{\# temperature               {-}2.4446     0.3260  {-}7.499 1.64e{-}09 ***}
-\NormalTok{\# rainfallhigh             {-}89.6818    10.9727  {-}8.173 1.65e{-}10 ***}
-\NormalTok{\# temperature:rainfallhigh   9.2693     0.4339  21.363  \textless{} 2e{-}16 ***}
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 9.642 on 46 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.986,   Adjusted R{-}squared:  0.9851 }
-\NormalTok{\# F{-}statistic:  1081 on 3 and 46 DF,  p{-}value: \textless{} 2.2e{-}16}
-\end{Highlighting}
-\end{Shaded}
-
-The fitted values for this model are
-\begin{equation*}
-  \hat y
-  = \begin{cases}
-    \beta_0 + \beta_1 x_1 & \mbox{for low rainfall, and} \\
-    (\beta_0 + \beta_2) + (\beta_1 + \beta_3) x_1 & \mbox{for high rainfall}.
-  \end{cases}
-\end{equation*}
-Finally, we can generate a plot of the data together
-with the two regression lines.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(yield }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temperature, }\AttributeTok{data=}\NormalTok{crops,}
-     \AttributeTok{col =} \FunctionTok{ifelse}\NormalTok{(rainfall }\SpecialCharTok{==} \StringTok{"low"}\NormalTok{, }\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{))}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{])}
-\FunctionTok{abline}\NormalTok{(}\AttributeTok{a =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{3}\NormalTok{], }\AttributeTok{b =} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{coef}\NormalTok{(m)[}\DecValTok{4}\NormalTok{],}
-       \AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
-\FunctionTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\StringTok{"dry"}\NormalTok{, }\StringTok{"wet"}\NormalTok{),}
-       \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{), }\AttributeTok{pch =} \DecValTok{1}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/interactions-1.pdf}}
-
-As expected, the two lines have different intercepts and different slopes.
-\end{example}
-
-\textbf{Summary}
-
-\begin{itemize}
-\tightlist
-\item
-  Indicator variables can be used to represent categorical inputs
-  in linear regression models.
-\item
-  The levels of a factor correspond to different intercepts for
-  the regression line.
-\item
-  If interaction terms are used, the levels also affect the slope.
-\end{itemize}
-
-\clearpage
-
-\section{Examples}\label{S15-examples}
-
-In this section we illustrate the results of the previous sections
-with the help of an example.
-
-\subsection{Use of Interaction Terms in Modelling}\label{interactions-example}
-
-\begin{example}
-Researchers in Food Science studied how big people's mouths tend to be.
-It transpires that mouth volume is related to more easily measured quantities
-like height and weight. Here we have data which gives
-the mouth volume (in cubic centimetres), age, sex (female = 0, male = 1),
-height (in metres) and weight (in kilos) for 61 volunteers.
-The first few samples are as shown:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# data from https://teaching.seehuhn.de/2022/MATH3714/mouth{-}volume.txt}
-\NormalTok{dd }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}\StringTok{"data/mouth{-}volume.txt"}\NormalTok{, }\AttributeTok{header =} \ConstantTok{TRUE}\NormalTok{)}
-\FunctionTok{head}\NormalTok{(dd)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#   Mouth\_Volume Age Sex Height  Weight}
-\NormalTok{\# 1       56.659  29   1  1.730  70.455}
-\NormalTok{\# 2       47.938  24   0  1.632  60.000}
-\NormalTok{\# 3       60.995  45   0  1.727 102.273}
-\NormalTok{\# 4       68.917  23   0  1.641  78.636}
-\NormalTok{\# 5       60.956  27   0  1.600  57.273}
-\NormalTok{\# 6       76.204  23   1  1.746  66.818}
-\end{Highlighting}
-\end{Shaded}
-
-Normally it is important to check that categorical variables are correctly
-recognised as factors, when importing data into R. As an exception,
-the fact that \texttt{sex} is stored as an integer variable (instead of a factor)
-here does not matter, since the default factor coding would be identical
-to the coding in the present data.
-
-Our aim is to fit a model which describes mouth volume in terms of the
-other variables. We start by fitting a basic model:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m1 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ dd)}
-\FunctionTok{summary}\NormalTok{(m1)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} ., data = dd)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#     Min      1Q  Median      3Q     Max }
-\NormalTok{\# {-}33.242 {-}10.721  {-}3.223   8.800  43.218 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#             Estimate Std. Error t value Pr(\textgreater{}|t|)  }
-\NormalTok{\# (Intercept)   0.9882    45.2736   0.022   0.9827  }
-\NormalTok{\# Age           0.3617     0.2607   1.387   0.1709  }
-\NormalTok{\# Sex           5.5030     5.9385   0.927   0.3581  }
-\NormalTok{\# Height       15.8980    29.1952   0.545   0.5882  }
-\NormalTok{\# Weight        0.2640     0.1400   1.885   0.0646 .}
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 15.04 on 56 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.2588,  Adjusted R{-}squared:  0.2059 }
-\NormalTok{\# F{-}statistic: 4.888 on 4 and 56 DF,  p{-}value: 0.001882}
-\end{Highlighting}
-\end{Shaded}
-
-Since no coefficient is significantly different from zero (at \(5\%\)-level),
-and since the \(R^2\) value is not close to\textasciitilde{}\(1\),
-model fit seems poor. To improve model fit, we try to include all
-pairwise interaction terms:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{data =}\NormalTok{ dd)}
-\FunctionTok{summary}\NormalTok{(m2)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} .\^{}2, data = dd)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#     Min      1Q  Median      3Q     Max }
-\NormalTok{\# {-}35.528  {-}8.168  {-}1.995   6.704  44.136 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#                 Estimate Std. Error t value Pr(\textgreater{}|t|)}
-\NormalTok{\# (Intercept)    2.875e+02  2.337e+02   1.230    0.225}
-\NormalTok{\# Age           {-}8.370e+00  6.352e+00  {-}1.318    0.194}
-\NormalTok{\# Sex           {-}9.318e+01  1.325e+02  {-}0.703    0.485}
-\NormalTok{\# Height        {-}1.540e+02  1.505e+02  {-}1.023    0.311}
-\NormalTok{\# Weight         5.889e{-}01  2.713e+00   0.217    0.829}
-\NormalTok{\# Age:Sex       {-}9.023e{-}01  1.035e+00  {-}0.872    0.388}
-\NormalTok{\# Age:Height     5.374e+00  4.062e+00   1.323    0.192}
-\NormalTok{\# Age:Weight    {-}1.754e{-}03  2.027e{-}02  {-}0.087    0.931}
-\NormalTok{\# Sex:Height     5.989e+01  7.536e+01   0.795    0.431}
-\NormalTok{\# Sex:Weight     3.110e{-}01  4.177e{-}01   0.744    0.460}
-\NormalTok{\# Height:Weight {-}2.680e{-}01  1.755e+00  {-}0.153    0.879}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 15.22 on 50 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.3219,  Adjusted R{-}squared:  0.1863 }
-\NormalTok{\# F{-}statistic: 2.374 on 10 and 50 DF,  p{-}value: 0.0218}
-\end{Highlighting}
-\end{Shaded}
-
-None of the interaction terms look useful when used in combination.
-We try to select a subset of variables to get a better fit:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(leaps)}
-\NormalTok{r3 }\OtherTok{\textless{}{-}} \FunctionTok{regsubsets}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{data =}\NormalTok{ dd, }\AttributeTok{nvmax =} \DecValTok{10}\NormalTok{)}
-\NormalTok{s }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(r3)}
-\NormalTok{s}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# Subset selection object}
-\NormalTok{\# Call: regsubsets.formula(Mouth\_Volume \textasciitilde{} .\^{}2, data = dd, nvmax = 10)}
-\NormalTok{\# 10 Variables  (and intercept)}
-\NormalTok{\#               Forced in Forced out}
-\NormalTok{\# Age               FALSE      FALSE}
-\NormalTok{\# Sex               FALSE      FALSE}
-\NormalTok{\# Height            FALSE      FALSE}
-\NormalTok{\# Weight            FALSE      FALSE}
-\NormalTok{\# Age:Sex           FALSE      FALSE}
-\NormalTok{\# Age:Height        FALSE      FALSE}
-\NormalTok{\# Age:Weight        FALSE      FALSE}
-\NormalTok{\# Sex:Height        FALSE      FALSE}
-\NormalTok{\# Sex:Weight        FALSE      FALSE}
-\NormalTok{\# Height:Weight     FALSE      FALSE}
-\NormalTok{\# 1 subsets of each size up to 10}
-\NormalTok{\# Selection Algorithm: exhaustive}
-\NormalTok{\#           Age Sex Height Weight Age:Sex Age:Height Age:Weight Sex:Height}
-\NormalTok{\# 1  ( 1 )  " " " " " "    " "    " "     " "        " "        " "       }
-\NormalTok{\# 2  ( 1 )  " " " " " "    " "    " "     " "        "*"        " "       }
-\NormalTok{\# 3  ( 1 )  " " "*" " "    " "    " "     " "        "*"        "*"       }
-\NormalTok{\# 4  ( 1 )  " " "*" " "    " "    " "     " "        "*"        "*"       }
-\NormalTok{\# 5  ( 1 )  "*" " " "*"    " "    "*"     "*"        " "        " "       }
-\NormalTok{\# 6  ( 1 )  "*" " " "*"    " "    "*"     "*"        " "        "*"       }
-\NormalTok{\# 7  ( 1 )  "*" "*" "*"    " "    "*"     "*"        " "        "*"       }
-\NormalTok{\# 8  ( 1 )  "*" "*" "*"    "*"    "*"     "*"        " "        "*"       }
-\NormalTok{\# 9  ( 1 )  "*" "*" "*"    "*"    "*"     "*"        " "        "*"       }
-\NormalTok{\# 10  ( 1 ) "*" "*" "*"    "*"    "*"     "*"        "*"        "*"       }
-\NormalTok{\#           Sex:Weight Height:Weight}
-\NormalTok{\# 1  ( 1 )  " "        "*"          }
-\NormalTok{\# 2  ( 1 )  "*"        " "          }
-\NormalTok{\# 3  ( 1 )  " "        " "          }
-\NormalTok{\# 4  ( 1 )  "*"        " "          }
-\NormalTok{\# 5  ( 1 )  "*"        " "          }
-\NormalTok{\# 6  ( 1 )  "*"        " "          }
-\NormalTok{\# 7  ( 1 )  "*"        " "          }
-\NormalTok{\# 8  ( 1 )  "*"        " "          }
-\NormalTok{\# 9  ( 1 )  "*"        "*"          }
-\NormalTok{\# 10  ( 1 ) "*"        "*"}
-\end{Highlighting}
-\end{Shaded}
-
-The table shows the optimal model for every number of variables,
-for \(p\) ranging from \(1\) to~\(10\). To choose the number of variables
-we can use the adjusted \(R^2\)-value:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{s}\SpecialCharTok{$}\NormalTok{which[}\FunctionTok{which.max}\NormalTok{(s}\SpecialCharTok{$}\NormalTok{adjr2),]}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#   (Intercept)           Age           Sex        Height        Weight }
-\NormalTok{\#          TRUE          TRUE         FALSE          TRUE         FALSE }
-\NormalTok{\#       Age:Sex    Age:Height    Age:Weight    Sex:Height    Sex:Weight }
-\NormalTok{\#          TRUE          TRUE         FALSE         FALSE          TRUE }
-\NormalTok{\# Height:Weight }
-\NormalTok{\#         FALSE}
-\end{Highlighting}
-\end{Shaded}
-
-The optimal model consists of the five variables listed. For further
-examination, we fit the corresponding model using \texttt{lm()}:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m3 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume}
-         \SpecialCharTok{\textasciitilde{}}\NormalTok{ Age }\SpecialCharTok{+}\NormalTok{ Height }\SpecialCharTok{+}\NormalTok{ Age}\SpecialCharTok{:}\NormalTok{Sex }\SpecialCharTok{+}\NormalTok{ Age}\SpecialCharTok{:}\NormalTok{Height }\SpecialCharTok{+}\NormalTok{ Sex}\SpecialCharTok{:}\NormalTok{Weight,}
-         \AttributeTok{data =}\NormalTok{ dd)}
-\FunctionTok{summary}\NormalTok{(m3)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} Age + Height + Age:Sex + Age:Height + }
-\NormalTok{\#     Sex:Weight, data = dd)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#     Min      1Q  Median      3Q     Max }
-\NormalTok{\# {-}36.590  {-}9.577  {-}1.545   7.728  42.779 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)  }
-\NormalTok{\# (Intercept)  265.6236   122.3362   2.171   0.0342 *}
-\NormalTok{\# Age           {-}8.4905     4.0559  {-}2.093   0.0409 *}
-\NormalTok{\# Height      {-}134.0835    72.8589  {-}1.840   0.0711 .}
-\NormalTok{\# Age:Sex       {-}0.8633     0.4944  {-}1.746   0.0864 .}
-\NormalTok{\# Age:Height     5.3644     2.4047   2.231   0.0298 *}
-\NormalTok{\# Sex:Weight     0.4059     0.1659   2.446   0.0177 *}
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 14.65 on 55 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.3096,  Adjusted R{-}squared:  0.2468 }
-\NormalTok{\# F{-}statistic: 4.932 on 5 and 55 DF,  p{-}value: 0.0008437}
-\end{Highlighting}
-\end{Shaded}
-
-This looks much better: now most variables are significantly different from
-zero and the adjusted \(R^2\) value has (slightly) improved. Nevertheless,
-the structure of the model seems hard to explain and the model seems
-difficult to interpret. For comparison, we consider the second-best
-model, with \(p=2\):
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{m4 }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Mouth\_Volume }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Age}\SpecialCharTok{:}\NormalTok{Weight }\SpecialCharTok{+}\NormalTok{ Sex}\SpecialCharTok{:}\NormalTok{Weight, }\AttributeTok{data =}\NormalTok{ dd)}
-\FunctionTok{summary}\NormalTok{(m4)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# }
-\NormalTok{\# Call:}
-\NormalTok{\# lm(formula = Mouth\_Volume \textasciitilde{} Age:Weight + Sex:Weight, data = dd)}
-\NormalTok{\# }
-\NormalTok{\# Residuals:}
-\NormalTok{\#     Min      1Q  Median      3Q     Max }
-\NormalTok{\# {-}34.161 {-}10.206  {-}3.738   9.087  43.747 }
-\NormalTok{\# }
-\NormalTok{\# Coefficients:}
-\NormalTok{\#              Estimate Std. Error t value Pr(\textgreater{}|t|)    }
-\NormalTok{\# (Intercept) 43.678187   4.788206   9.122 8.35e{-}13 ***}
-\NormalTok{\# Age:Weight   0.005554   0.002372   2.342   0.0226 *  }
-\NormalTok{\# Weight:Sex   0.127360   0.048640   2.618   0.0113 *  }
-\NormalTok{\# {-}{-}{-}}
-\NormalTok{\# Signif. codes:  0 \textquotesingle{}***\textquotesingle{} 0.001 \textquotesingle{}**\textquotesingle{} 0.01 \textquotesingle{}*\textquotesingle{} 0.05 \textquotesingle{}.\textquotesingle{} 0.1 \textquotesingle{} \textquotesingle{} 1}
-\NormalTok{\# }
-\NormalTok{\# Residual standard error: 14.72 on 58 degrees of freedom}
-\NormalTok{\# Multiple R{-}squared:  0.2651,  Adjusted R{-}squared:  0.2398 }
-\NormalTok{\# F{-}statistic: 10.46 on 2 and 58 DF,  p{-}value: 0.000132}
-\end{Highlighting}
-\end{Shaded}
-
-The adjusted \(R^2\)-value of this model is only slightly reduced,
-and all regression coefficients are significantly
-different from zero.
-
-\begin{equation*}
-  \textrm{mouth volume}
-  = 43.68
-    + \begin{cases}
-      0.0056 \, \mathrm{age} \times \mathrm{weight}
-          & \mbox{for females} \\
-      (0.0056 \, \mathrm{age} + 0.1274) \, \mathrm{weight}
-          & \mbox{for males.}
-  \end{cases}
-\end{equation*}
-
-This model is still not trivial to interpret, but it does show
-that mouth volume increases with weight and age, and that the
-dependency on weight is stronger for males.
-\end{example}
-
-\subsection{Alternative Factor Codings}\label{codings}
-
-The above coding of factors using indicator variables is the default procedure
-in R. There are other choices of coding. It transpires that any mapping to
-vectors which (together with the intercept, if present) span a \(k\) dimensional
-space, will work for a factor with \(k\) levels. The choice of coding will not
-affect fitted values and the goodness of fit, but it will affect the estimates
-\(\hat\beta\), so the coding needs to be known before any interpretation of the
-parameters.
-
-Differnt choices of factor codings are built into R. Here we illustrate some
-of these choices using a factor which represents week days:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{days }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"Mon"}\NormalTok{, }\StringTok{"Tue"}\NormalTok{, }\StringTok{"Wed"}\NormalTok{, }\StringTok{"Thu"}\NormalTok{, }\StringTok{"Fri"}\NormalTok{, }\StringTok{"Sat"}\NormalTok{, }\StringTok{"Sun"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\item
-  \textbf{Indicator variables.} This is the default coding:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{contr.treatment}\NormalTok{(days)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#     Tue Wed Thu Fri Sat Sun}
-\NormalTok{\# Mon   0   0   0   0   0   0}
-\NormalTok{\# Tue   1   0   0   0   0   0}
-\NormalTok{\# Wed   0   1   0   0   0   0}
-\NormalTok{\# Thu   0   0   1   0   0   0}
-\NormalTok{\# Fri   0   0   0   1   0   0}
-\NormalTok{\# Sat   0   0   0   0   1   0}
-\NormalTok{\# Sun   0   0   0   0   0   1}
-\end{Highlighting}
-\end{Shaded}
-
-  The seven rows correspond to the weekdays, the six columns show how each
-  weekday is encoded. The regression coefficients can be interpreted as the
-  change of intercept relative to the reference level (in this case Monday).
-\item
-  \textbf{Deviation coding} uses ``sum to zero'' contrasts:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{contr.sum}\NormalTok{(days)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#     [,1] [,2] [,3] [,4] [,5] [,6]}
-\NormalTok{\# Mon    1    0    0    0    0    0}
-\NormalTok{\# Tue    0    1    0    0    0    0}
-\NormalTok{\# Wed    0    0    1    0    0    0}
-\NormalTok{\# Thu    0    0    0    1    0    0}
-\NormalTok{\# Fri    0    0    0    0    1    0}
-\NormalTok{\# Sat    0    0    0    0    0    1}
-\NormalTok{\# Sun   {-}1   {-}1   {-}1   {-}1   {-}1   {-}1}
-\end{Highlighting}
-\end{Shaded}
-
-  This constrasts each level with the final level. For example,
-  \(\hat\beta_1\) is the amount the intercept is increased for Mondays
-  and decreased for Sundays. This coding can sometimes reduce collinearity
-  in the design matrix.
-\item
-  \textbf{Helmert coding} contrasts the second level with the first, the third with
-  the average of the first two, and so on:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{contr.helmert}\NormalTok{(days)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#     [,1] [,2] [,3] [,4] [,5] [,6]}
-\NormalTok{\# Mon   {-}1   {-}1   {-}1   {-}1   {-}1   {-}1}
-\NormalTok{\# Tue    1   {-}1   {-}1   {-}1   {-}1   {-}1}
-\NormalTok{\# Wed    0    2   {-}1   {-}1   {-}1   {-}1}
-\NormalTok{\# Thu    0    0    3   {-}1   {-}1   {-}1}
-\NormalTok{\# Fri    0    0    0    4   {-}1   {-}1}
-\NormalTok{\# Sat    0    0    0    0    5   {-}1}
-\NormalTok{\# Sun    0    0    0    0    0    6}
-\end{Highlighting}
-\end{Shaded}
-\end{itemize}
-
-We can set the coding for each factor separately, using the
-optional \texttt{contrasts.arg} argument to \texttt{lm()} and \texttt{model.matrix()}:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20211127}\NormalTok{)}
-\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{20}
-
-\NormalTok{x1 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n)}
-
-\NormalTok{day.names }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Mon"}\NormalTok{, }\StringTok{"Tue"}\NormalTok{, }\StringTok{"Wed"}\NormalTok{, }\StringTok{"Thu"}\NormalTok{, }\StringTok{"Fri"}\NormalTok{, }\StringTok{"Sat"}\NormalTok{, }\StringTok{"Sun"}\NormalTok{)}
-\NormalTok{x2 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(day.names, }\AttributeTok{size =}\NormalTok{ n, }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{)}
-\CommentTok{\# Explicitly specify the levels, in case a day is missing}
-\CommentTok{\# from the sample and to fix the order of days:}
-\NormalTok{x2 }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(x2, }\AttributeTok{levels =}\NormalTok{ day.names)}
-
-\NormalTok{dd }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(x1, x2)}
-
-\NormalTok{X1 }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ dd)}
-\FunctionTok{head}\NormalTok{(X1)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#   (Intercept)         x1 x2Tue x2Wed x2Thu x2Fri x2Sat x2Sun}
-\NormalTok{\# 1           1 0.41745367     1     0     0     0     0     0}
-\NormalTok{\# 2           1 0.88671893     0     0     1     0     0     0}
-\NormalTok{\# 3           1 0.41924327     0     0     1     0     0     0}
-\NormalTok{\# 4           1 0.31986826     0     0     0     0     0     1}
-\NormalTok{\# 5           1 0.27863787     0     0     0     0     0     0}
-\NormalTok{\# 6           1 0.03346104     0     1     0     0     0     0}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{kappa}\NormalTok{(X1, }\AttributeTok{exact =} \ConstantTok{TRUE}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# [1] 10.37243}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{X2 }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ dd,}
-                   \AttributeTok{contrasts.arg =} \FunctionTok{list}\NormalTok{(}\AttributeTok{x2 =}\NormalTok{ contr.sum))}
-\FunctionTok{head}\NormalTok{(X2)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\#   (Intercept)         x1 x21 x22 x23 x24 x25 x26}
-\NormalTok{\# 1           1 0.41745367   0   1   0   0   0   0}
-\NormalTok{\# 2           1 0.88671893   0   0   0   1   0   0}
-\NormalTok{\# 3           1 0.41924327   0   0   0   1   0   0}
-\NormalTok{\# 4           1 0.31986826  {-}1  {-}1  {-}1  {-}1  {-}1  {-}1}
-\NormalTok{\# 5           1 0.27863787   1   0   0   0   0   0}
-\NormalTok{\# 6           1 0.03346104   0   0   1   0   0   0}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{kappa}\NormalTok{(X2, }\AttributeTok{exact =} \ConstantTok{TRUE}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{\# [1] 6.677298}
-\end{Highlighting}
-\end{Shaded}
-
-\textbf{Summary}
-
-\begin{itemize}
-\tightlist
-\item
-  We have seen how interaction terms can be used to improve model
-  fit.
-\item
-  We have seen how different factor codings can be used in R.
 \end{itemize}
 
 \clearpage
@@ -10119,7 +9981,7 @@ leading to a more robust estimator.
 
 \pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/psi-huber-1.pdf}}
 
-\subsubsection{Hampel's Method}\label{hampels-method}
+\subsubsection{Hampel's Method}\label{hampel}
 
 Here we have tuning parameters \(0 < a < b < c\), and the objective function
 is
@@ -10180,7 +10042,7 @@ consequence of this fact is that the function~\(s\) may have several local minim
 and care must be used when choosing the starting point of iterative
 minimisation methods.
 
-\subsubsection{Tukey's Bisquare Method}\label{tukeys-bisquare-method}
+\subsubsection{Tukey's Bisquare Method}\label{bisquare}
 
 Here we have only one tuning parameter, \(a > 0\), and the objective
 function is
@@ -10362,7 +10224,7 @@ principle:
   choice the method is \(95\%\) efficient for large~\(n\), compared
   to least squares regression.
 \item
-  Similarly, the parameter \(a\) in \hyperref[tukeys-bisquare-method]{Tukey's Bisquare Method} controls
+  Similarly, the parameter \(a\) in \hyperref[bisquare]{Tukey's Bisquare Method} controls
   the trade-off between robustness and efficiency, with smaller \(a\) leading
   to a more robust method. In the literature it is suggested that
   \(a = 4.685 \sigma\) leads to \(95\%\) efficiency for large~\(n\), compared to
@@ -10378,7 +10240,7 @@ Since the M-estimator only addresses \(y\)-space outliers, the breakdown point
 of M-estimation is still~\(1/n\). We now consider two estimators which have a
 higher breakdown point, but lower efficiency.
 
-\subsubsection{Least Median of Squares}\label{least-median-of-squares}
+\subsubsection{Least Median of Squares}\label{LMS}
 
 Rather than minimise the sum of the residual sum of squares (or a weighted
 version of it), this estimator minimises the median of squared residuals. The
@@ -10401,9 +10263,6 @@ In the limit, the relative efficiency compared to ordinary least squares is
   \longrightarrow 0
 \end{equation*}
 as \(n\to\infty\).
-
-In R, the LMS estimate can be computed using the function
-\texttt{lqs(...,\ method\ =\ "lms")} function from the \texttt{MASS} library.
 
 \begin{example}
 The following code computes an LMS regression estimate. We
@@ -10435,7 +10294,7 @@ by the red circles in the plot.
 \pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/lms-1.pdf}}
 \end{example}
 
-\subsubsection{Least Trimmed Squares}\label{least-trimmed-squares}
+\subsubsection{Least Trimmed Squares}\label{LTS}
 
 This takes as its objective function the sum of \(h\) smallest squared residuals
 and was proposed as a remedy to the low asymptotic efficiency of LMS. The least
@@ -10453,9 +10312,7 @@ value must satisfy \(n/2 < k \leq n\). For a given \(k\) the method can tolerate
 squares method. The breakdown point of the method is \((n - k +1)/n\).
 
 Computing the LTS estimate is a non-trivial problem, which involves fitting the
-least-squares estimate to a carefully chosen subset of the samples. In R, the
-LTS estimate can be computed using the function \texttt{lqs(...,\ method\ =\ "lts")}
-function from the \texttt{MASS} library.
+least-squares estimate to a carefully chosen subset of the samples.
 
 \begin{example}
 The following code computes an LTS regression estimate. The
@@ -10486,6 +10343,150 @@ compared to ordinary least squares regression.
 \item
   We have introduced the Least Trimmed Squares estimator.
 \end{itemize}
+
+\clearpage
+
+\section*{Interlude: Robust Regression in R}\label{I04-robust}
+\addcontentsline{toc}{section}{Interlude: Robust Regression in R}
+
+This section explains how to use the robust regression methods discussed in
+sections \ref{S17-robust}, \ref{S18-m-est} and \ref{S19-efficiency} in~R.
+
+\subsection*{M-Estimators}\label{m-estimators}
+\addcontentsline{toc}{subsection}{M-Estimators}
+
+The \texttt{rlm()} function from the \texttt{MASS} package implements the iteratively
+reweighted least squares algorithm from section~\ref{S18-m-est}. The
+function takes a formula interface similar to \texttt{lm()}, and the \texttt{psi} argument
+specifies which \(\psi\)-function to use:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(MASS)}
+
+\NormalTok{rlm1 }\OtherTok{\textless{}{-}} \FunctionTok{rlm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{psi =}\NormalTok{ psi.huber)      }\CommentTok{\# Huber\textquotesingle{}s method}
+\NormalTok{rlm2 }\OtherTok{\textless{}{-}} \FunctionTok{rlm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{psi =}\NormalTok{ psi.bisquare)   }\CommentTok{\# Tukey\textquotesingle{}s bisquare}
+\NormalTok{rlm3 }\OtherTok{\textless{}{-}} \FunctionTok{rlm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{psi =}\NormalTok{ psi.hampel)     }\CommentTok{\# Hampel\textquotesingle{}s method}
+\end{Highlighting}
+\end{Shaded}
+
+The available \texttt{psi} functions correspond to the objective functions discussed
+in section~\ref{S18-m-est}:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{psi.huber} implements Huber's \(t\)-function from section~\ref{Huber}.
+\item
+  \texttt{psi.bisquare} implements Tukey's bisquare method.
+\item
+  \texttt{psi.hampel} implements Hampel's method.
+\end{itemize}
+
+Information can be extracted from the fitted model object:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{coef(rlm1)} returns the estimated regression coefficients \(\hat\beta\).
+\item
+  \texttt{rlm1\$resid} returns the residuals.
+\item
+  \texttt{rlm1\$w} returns the weights assigned to each observation.
+\end{itemize}
+
+The fitted line can be plotted using \texttt{abline(rlm1)}.
+
+\subsection*{LAV Estimation}\label{lav-estimation}
+\addcontentsline{toc}{subsection}{LAV Estimation}
+
+The \texttt{rq()} function from the \texttt{quantreg} package computes the least absolute
+values (LAV) estimator from section~\ref{exm:LAV}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(quantreg)}
+
+\NormalTok{rq1 }\OtherTok{\textless{}{-}} \FunctionTok{rq}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\end{Highlighting}
+\end{Shaded}
+
+The \texttt{rq()} function uses specialized algorithms (interior point methods) which
+are more efficient and have better convergence properties than the
+general-purpose \texttt{optim()} approach shown in section~\ref{exm:LAV}. For
+pedagogical purposes, section~\ref{exm:LAV} shows the \texttt{optim()}
+implementation to illustrate what the LAV estimator actually minimises, but for
+practical work the \texttt{rq()} function should be used.
+
+Coefficients can be extracted using \texttt{coef(rq1)} and residuals using \texttt{resid(rq1)}.
+The fitted line can be plotted using \texttt{abline(rq1)}.
+
+\subsection*{High Breakdown Point Methods}\label{high-breakdown-point-methods}
+\addcontentsline{toc}{subsection}{High Breakdown Point Methods}
+
+The \texttt{lqs()} function from the \texttt{MASS} package implements both the least median
+of squares (LMS) and least trimmed squares (LTS) estimators from
+section~\ref{S19-efficiency}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(MASS)}
+
+\NormalTok{lms1 }\OtherTok{\textless{}{-}} \FunctionTok{lqs}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{method =} \StringTok{"lms"}\NormalTok{)}
+\NormalTok{lts1 }\OtherTok{\textless{}{-}} \FunctionTok{lqs}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{method =} \StringTok{"lts"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+For the LTS estimator, the \texttt{quantile} argument can be used to specify
+the value of \(h\) (the number of observations to use in the objective function):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lts1 }\OtherTok{\textless{}{-}} \FunctionTok{lqs}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{method =} \StringTok{"lts"}\NormalTok{, }\AttributeTok{quantile =} \FunctionTok{floor}\NormalTok{(n}\SpecialCharTok{/}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+As discussed in section~\ref{LTS}, the value of \(h\) controls the trade-off
+between robustness and efficiency. Smaller values of \(h\) give higher breakdown
+points but lower efficiency.
+
+Coefficients can be extracted using \texttt{coef(lms1)} or \texttt{coef(lts1)}, and the
+fitted lines can be plotted using \texttt{abline(lms1)} or \texttt{abline(lts1)}.
+
+\subsection*{Summary}\label{summary}
+\addcontentsline{toc}{subsection}{Summary}
+
+The following table summarises the R functions for robust regression:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1231}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4923}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1538}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2308}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Method
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Function
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Package
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Section
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+LAV & \texttt{rq(y\ \textasciitilde{}\ x)} & \texttt{quantreg} & \ref{exm:LAV} \\
+Huber & \texttt{rlm(y\ \textasciitilde{}\ x,\ psi\ =\ psi.huber)} & \texttt{MASS} & \ref{Huber} \\
+Bisquare & \texttt{rlm(y\ \textasciitilde{}\ x,\ psi\ =\ psi.bisquare)} & \texttt{MASS} & \ref{bisquare} \\
+Hampel & \texttt{rlm(y\ \textasciitilde{}\ x,\ psi\ =\ psi.hampel)} & \texttt{MASS} & \ref{hampel} \\
+LMS & \texttt{lqs(y\ \textasciitilde{}\ x,\ method\ =\ "lms")} & \texttt{MASS} & \ref{LMS} \\
+LTS & \texttt{lqs(y\ \textasciitilde{}\ x,\ method\ =\ "lts")} & \texttt{MASS} & \ref{LTS} \\
+\end{longtable}
+
+All of these functions return model objects that work with \texttt{coef()}, \texttt{resid()},
+and \texttt{abline()}.
 
 \clearpage
 
@@ -10847,6 +10848,192 @@ half of the corresponing third of the data, so the breakdown point
 of the method is \(1/2 \cdot 1/3 = 1/6\).
 
 \end{myanswers}
+
+\clearpage
+
+\section{Examples}\label{S20-examples}
+
+In this section we compare the robust regression methods from sections
+\ref{S17-robust}, \ref{S18-m-est} and \ref{S19-efficiency} by applying
+them to synthetic data. We will see how methods with different breakdown
+points behave in the presence of outliers, how the weights assigned by
+different M-estimators differ in practice, and how robust methods produce
+cleaner residual patterns than least squares regression.
+
+\subsection{Comparing Robust Methods}\label{comparing-robust-methods}
+
+\begin{example}
+We compare several robust estimators on a synthetic dataset with outliers.
+This example illustrates how methods with high breakdown points resist
+contamination, whilst methods with low breakdown points can be severely
+affected.
+
+We start by generating data from a linear relationship with three
+outliers:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20251006}\NormalTok{)}
+
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{30}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \DecValTok{2} \SpecialCharTok{+} \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n, }\AttributeTok{sd =} \FloatTok{0.5}\NormalTok{)}
+
+\CommentTok{\# Add three contaminants:}
+\NormalTok{outliers }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{25}\NormalTok{)}
+\NormalTok{x[outliers] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{9}\NormalTok{, }\FloatTok{8.5}\NormalTok{, }\FloatTok{9.5}\NormalTok{)}
+\NormalTok{y[outliers] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{1.5}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{2.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Now we fit several different regression methods to this data:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(MASS)     }\CommentTok{\# for rlm() and lqs()}
+\FunctionTok{library}\NormalTok{(quantreg) }\CommentTok{\# for rq()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+# Loading required package: SparseM
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm1   }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)                           }\CommentTok{\# LSQ}
+\NormalTok{rq1   }\OtherTok{\textless{}{-}} \FunctionTok{rq}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)                           }\CommentTok{\# LAV}
+\NormalTok{rlm1  }\OtherTok{\textless{}{-}} \FunctionTok{rlm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{psi =}\NormalTok{ psi.huber)         }\CommentTok{\# Huber}
+\NormalTok{rlm2  }\OtherTok{\textless{}{-}} \FunctionTok{rlm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{psi =}\NormalTok{ psi.bisquare)      }\CommentTok{\# Bisquare}
+\NormalTok{rlm3  }\OtherTok{\textless{}{-}} \FunctionTok{rlm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{psi =}\NormalTok{ psi.hampel)        }\CommentTok{\# Hampel}
+\NormalTok{lms1  }\OtherTok{\textless{}{-}} \FunctionTok{lqs}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{method =} \StringTok{"lms"}\NormalTok{)          }\CommentTok{\# LMS}
+\NormalTok{lts1  }\OtherTok{\textless{}{-}} \FunctionTok{lqs}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{method =} \StringTok{"lts"}\NormalTok{)          }\CommentTok{\# LTS}
+\end{Highlighting}
+\end{Shaded}
+
+The left plot in figure~\ref{fig:robcomp} shows the fitted lines
+from all seven methods. As expected, only those methods with high
+breakdown point (LMS and LTS) have resisted the gross outliers.
+The least squares, LAV and M-estimator lines all pass between the
+bulk of the data and the outliers, demonstrating their susceptibility
+to contamination.
+
+The right plot shows how the LTS estimator behaves for different
+values of the quantile parameter \(h\) (called \texttt{quantile} in R).
+For smaller values of \(h\), the method uses only the observations
+with smallest residuals and has higher breakdown point. As \(h\)
+increases towards \(n = 30\), the method gradually converges to the
+least squares estimate.
+
+\begin{figure}
+\includegraphics[width=0.48\linewidth]{MATH3714_files/figure-latex/robcomp-1} \includegraphics[width=0.48\linewidth]{MATH3714_files/figure-latex/robcomp-2} \caption{On the left we compare several methods. As expected, only those with high breakdown point have resisted the gross outliers. On the right plot, we compare different values of the quantile parameter $h$ for the LTS estimator.}\label{fig:robcomp}
+\end{figure}
+
+We see that for small \(h\) the LTS line passes through the bulk of the
+data and ignores the outliers, whilst for larger \(h\) it is increasingly
+influenced by the outliers until it converges to the least squares line.
+\end{example}
+
+\subsection{Residual Analysis}\label{residual-analysis}
+
+\begin{example}
+
+Continuing with the same dataset, we now examine the residual patterns
+from different methods. When outliers influence the fitted line, the
+residuals from the remaining observations often exhibit systematic patterns.
+
+Figure~\ref{fig:robresid} shows the residuals from three methods,
+excluding the three known outliers. The least squares residuals (left plot)
+show a clear curved pattern: residuals are positive for small and large
+\(x\)-values, and negative for intermediate values. This pattern indicates
+that the outliers have pulled the regression line away from the bulk of
+the data.
+
+The LAV and Huber methods (centre and right plots) show much less
+pronounced patterns. The residuals are more evenly scattered around
+zero, indicating that these methods have been less influenced by the
+outliers. This demonstrates one advantage of robust methods: they
+not only provide better parameter estimates in the presence of outliers,
+but also produce more reliable residual plots for model diagnostics.
+
+\begin{figure}
+\includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robresid-1} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robresid-2} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robresid-3} \caption{Residuals from non-outlier observations for three methods (left: LSQ; centre: LAV; right: Huber). The least squares residuals show a clear pattern due to the influence of the outliers.}\label{fig:robresid}
+\end{figure}
+
+\end{example}
+
+\subsection{Weight Comparisons}\label{weight-comparisons}
+
+\begin{example}
+
+We now examine the weights assigned by different M-estimators.
+Recall from section~\ref{S18-m-est} that M-estimators assign weights
+to observations based on the magnitude of their residuals, with larger
+residuals receiving smaller weights.
+
+Figure~\ref{fig:robweights} shows the weights assigned by three
+different M-estimators: Huber, Bisquare and Hampel. The left plot
+shows the weights for all 30 observations. We can clearly see that
+observations 5, 15 and 25 (the outliers) receive very low weights
+from all three methods, confirming that these are correctly identified
+as outliers.
+
+The centre and right plots compare the weights pairwise between methods.
+Most observations lie on or near the diagonal line, indicating that
+different methods assign similar weights to these observations.
+However, for the outliers (points far from the diagonal), the methods
+differ:
+
+\begin{itemize}
+\tightlist
+\item
+  The Bisquare and Hampel methods assign more extreme weights than
+  the Huber method, with some observations receiving weights very close
+  to zero.
+\item
+  The Huber method assigns intermediate weights even to the outliers,
+  which reflects the fact that the Huber \(\psi\)-function does not
+  completely down-weight large residuals.
+\end{itemize}
+
+These differences reflect the different shapes of the weight functions
+\(w(\varepsilon) = \psi(\varepsilon) / \varepsilon\) discussed in section~\ref{S18-m-est}.
+The Bisquare and Hampel methods are ``redescending'' M-estimators, meaning
+that sufficiently large residuals receive weight zero. The Huber method
+is not redescending, so all observations retain some influence.
+
+\begin{figure}
+\includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robweights-1} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robweights-2} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robweights-3} \caption{Comparisons of weights assigned by different M-estimators. The left plot shows weights for all observations. The centre and right plots compare weights pairwise between methods, with outliers shown as red points.}\label{fig:robweights}
+\end{figure}
+
+\end{example}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We have compared several robust regression methods on synthetic data
+  with outliers.
+\item
+  Methods with high breakdown points (LMS, LTS) resist outliers,
+  whilst methods with low breakdown points (least squares, LAV, M-estimators)
+  can be severely affected.
+\item
+  Robust methods produce cleaner residual patterns than least squares
+  when outliers are present, making diagnostics more reliable.
+\item
+  M-estimators assign weights to observations based on residual magnitude,
+  with different methods (Huber, Bisquare, Hampel) assigning weights
+  differently.
+\item
+  Redescending M-estimators (Bisquare, Hampel) assign zero weight to
+  sufficiently large residuals, whilst the Huber method retains some
+  influence for all observations.
+\item
+  The choice of robust method involves a trade-off between breakdown point
+  and efficiency, as discussed in sections \ref{S17-robust}--\ref{S19-efficiency}.
+\end{itemize}
 
 \clearpage
 

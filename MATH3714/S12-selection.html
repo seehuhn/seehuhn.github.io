@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness</title>
+  <title>Section 12 Model Selection | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
   <meta name="generator" content="bookdown 0.44 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Section 12 Model Selection | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Section 12 Model Selection | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="I01-lm.html"/>
-<link rel="next" href="P01.html"/>
+<link rel="prev" href="P03.html"/>
+<link rel="next" href="S13-exhaustive.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -397,374 +397,253 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="S03-cov" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">Section 3</span> Random Vectors and Covariance<a href="S03-cov.html#S03-cov" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Like in the one-dimensional case, we can build a <strong>statistical model</strong>
-for the data where we assume that the errors are random. More
-precisely we will assume
-<span class="math display">\[\begin{equation}
-  Y_i
-  = \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i
-\end{equation}\]</span>
-for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, where <span class="math inline">\(\varepsilon_1, \ldots, \varepsilon_n\)</span>
-are now independent and identically distributed (i.i.d.)
-random variables with <span class="math inline">\(\mathbb{E}(\varepsilon_i) = 0\)</span> and
-<span class="math inline">\(\mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\)</span>.
-As in <a href="S02-multiple.html#eq:lmmodel">(2.2)</a>, the statistical model can be written in vector
-form as
-<span class="math display" id="eq:lmstat0">\[\begin{equation}
-  Y = X \beta + \varepsilon.  \tag{3.1}
-\end{equation}\]</span>
-This is a vector-valued equation which contains two “random vectors”, <span class="math inline">\(Y\)</span>
-and <span class="math inline">\(\varepsilon\)</span>.</p>
-<p>A <strong>random vector</strong> is a vector <span class="math inline">\(Z = (Z_1, \ldots, Z_n)\)</span>
-where each component <span class="math inline">\(Z_i\)</span> is a random variable.</p>
-<div id="expectation" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> Expectation<a href="S03-cov.html#expectation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bHbq8AFxRzo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>The expectation of a random vector is taken for each component separately.
-This is formalised in the following definition.</p>
-<div class="definition">
-<p><span id="def:unlabeled-div-3" class="definition"><strong>Definition 3.1  </strong></span>Let <span class="math inline">\(Z = (Z_1, \ldots, Z_n) \in \mathbb{R}^n\)</span> be a random vector.
-Then the expectation of <span class="math inline">\(Z\)</span> is the (non-random) vector
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(Z)
-    = \begin{pmatrix}
-      \mathbb{E}(Z_1) \\ \vdots \\ \mathbb{E}(Z_n)
-    \end{pmatrix}
-    \in \mathbb{R}^n.
-  \end{equation*}\]</span></p>
-</div>
-<div class="example">
-<p><span id="exm:unlabeled-div-4" class="example"><strong>Example 3.1  </strong></span>The random vector <span class="math inline">\(\varepsilon\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(\varepsilon)_i = \mathbb{E}(\varepsilon_i) = 0
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> and thus <span class="math inline">\(\mathbb{E}(\varepsilon) = 0 \in \mathbb{R}^n\)</span>,
-where <span class="math inline">\(0\)</span> here denotes the zero-vector <span class="math inline">\((0, \ldots, 0) \in \mathbb{R}^n\)</span>.</p>
-</div>
-<p>Since the expectation of a random vector is defined in terms of the
-usual expectation, most rules we know for expectations still hold.
-For example, if <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span> are two random vectors, we have
-<span class="math inline">\(\mathbb{E}(Y+Z) = \mathbb{E}(Y) + \mathbb{E}(Z)\)</span>.</p>
-<div class="example">
-<p><span id="exm:E-of-Y" class="example"><strong>Example 3.2  </strong></span>The random vector <span class="math inline">\(Y\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(Y)_i
-    = \mathbb{E}(Y_i)
-    = \mathbb{E}\bigl( (X\beta)_i + \varepsilon_i \bigr)
-    = (X\beta)_i + \mathbb{E}(\varepsilon_i)
-    = (X\beta)_i
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> and thus <span class="math inline">\(\mathbb{E}(Y) = X\beta \in \mathbb{R}^n\)</span>.
-We often will write the above derivation in vector form
-as
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(Y)
-    = \mathbb{E}(X\beta + \varepsilon)
-    = X\beta + \mathbb{E}(\varepsilon)
-    = X\beta.
-  \end{equation*}\]</span></p>
-</div>
-<div class="example">
-<p><span id="exm:unlabeled-div-5" class="example"><strong>Example 3.3  </strong></span>If <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span> is a matrix and <span class="math inline">\(Z \in \mathbb{R}^n\)</span> is a random
-vector, then we find the expectation of <span class="math inline">\(AZ\in\mathbb{R}^m\)</span> as
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(AZ)_i
-    = \mathbb{E}(AZ_i)
-    = \mathbb{E}\bigl( \sum_{j=1}^n a_{ij} Z_j \bigr)
-    = \sum_{j=1}^n \mathbb{E}\bigl( a_{ij} Z_j \bigr)
-    = \sum_{j=1}^n a_{ij} \mathbb{E}(Z_j)
-    = \sum_{j=1}^n a_{ij} \mathbb{E}(Z)_j
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, m\}\)</span> and thus we have <span class="math inline">\(\mathbb{E}(AZ) = A \mathbb{E}(Z)\)</span>.</p>
-</div>
-</div>
-<div id="sec:covariance" class="section level2 hasAnchor" number="3.2">
-<h2><span class="header-section-number">3.2</span> Covariance Matrix<a href="S03-cov.html#sec:covariance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/NJGqepkU2Yk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>The variance of random variables is replaced with the concept of
-a “covariance matrix” for random vectors.</p>
-<div class="definition">
-<p><span id="def:unlabeled-div-6" class="definition"><strong>Definition 3.2  </strong></span>Let <span class="math inline">\(Z = (Z_1, \ldots, Z_n) \in \mathbb{R}^n\)</span> be a random vector.
-Then the covariance matrix of <span class="math inline">\(Z\)</span> is the matrix <span class="math inline">\(\mathop{\mathrm{Cov}}(Z) \in \mathbb{R}^{n\times n}\)</span>
-given by
-<span class="math display">\[\begin{equation*}
-    \mathop{\mathrm{Cov}}(Z)_{ij}
-    = \mathop{\mathrm{Cov}}(Z_i, Z_j),
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i, j \in \{1, \ldots, n\}\)</span>,
-where <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j)\)</span> denotes the usual covariance between random
-variables.</p>
-</div>
-<p>We collect some basic properties of covariance matrices here. Most of these
-arguments use concepts and rules from linear algebra, as summarised in
-section <a href="Sx1-matrices.html#Sx1-matrices">A</a> in the appendix.</p>
+<div id="S12-selection" class="section level1 hasAnchor" number="12">
+<h1><span class="header-section-number">Section 12</span> Model Selection<a href="S12-selection.html#S12-selection" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="candidate-models" class="section level2 hasAnchor" number="12.1">
+<h2><span class="header-section-number">12.1</span> Candidate Models<a href="S12-selection.html#candidate-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Here we assume that we are given data with input variables <span class="math inline">\(x_1, \ldots, x_p\)</span>.
+The standard model which we have discussed so far adds an intercept to these
+inputs, so that there are <span class="math inline">\(q = p+1\)</span> model parameters in total. We can modify
+this model in various ways:</p>
 <ul>
-<li><p>Since <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j) = \mathop{\mathrm{Cov}}(Z_j, Z_i)\)</span>, covariance matrices are
-symmetric.</p></li>
-<li><p>The diagonal elements of <span class="math inline">\(\mathop{\mathrm{Cov}}(Z)\)</span> are
-<span class="math display" id="eq:Cov-diag-elem">\[\begin{equation}
-  \mathop{\mathrm{Cov}}(Z)_{ii}
-  = \mathop{\mathrm{Cov}}(Z_i, Z_i)
-  = \mathop{\mathrm{Var}}(Z_i).  \tag{3.2}
-\end{equation}\]</span></p></li>
-<li><p>If the elements <span class="math inline">\(Z_i\)</span> of <span class="math inline">\(Z\)</span> are (statistically) independent,
-we have <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j) = 0\)</span> and thus <span class="math inline">\(\mathop{\mathrm{Cov}}(Z)_{ij} = 0\)</span>
-for <span class="math inline">\(i \neq j\)</span>. Thus, if <span class="math inline">\(Z\)</span> is a vector of independent random variables,
-the covariance matrix of <span class="math inline">\(Z\)</span> is diagonal.</p></li>
-<li><p>Let <span class="math inline">\(\mu = \mathbb{E}(Z) \in \mathbb{R}^n\)</span>. If we interpret <span class="math inline">\(\mu\)</span> as a column vector,
-then <span class="math inline">\(M = (Z - \mu) (Z - \mu)^\top\)</span> is an <span class="math inline">\(n\times n\)</span> matrix and we have
-<span class="math display">\[\begin{equation*}
-  M_{ij}
-  = \bigl( (Z - \mu) (Z - \mu)^\top \bigr)_{ij}
-  = (Z - \mu)_i (Z - \mu)_j.
-\end{equation*}\]</span>
-Taking expectations gives <span class="math inline">\(\mathbb{E}(M_{ij}) = \mathbb{E}\bigl( (Z - \mu)_i (Z - \mu)_j
-\bigr) = \mathop{\mathrm{Cov}}(Z_i, Z_j)\)</span> and thus we can write
-<span class="math display" id="eq:cov-prod">\[\begin{equation}
-  \mathop{\mathrm{Cov}}(Z)
-  = \mathbb{E}\bigl( (Z - \mu) (Z - \mu)^\top \bigr).  \tag{3.3}
-\end{equation}\]</span></p></li>
-<li><p>Covariance matrices are positive semi-definite. To see this, let
-<span class="math inline">\(C = \mathop{\mathrm{Cov}}(Z)\)</span> and <span class="math inline">\(u \in\mathbb{R}^n\)</span> be a vector. We have to show that
-<span class="math inline">\(u^\top C u \geq 0\)</span>. Writing <span class="math inline">\(\bar Z := Z - \mathbb{E}(Z)\)</span> as an abbreviation,
-we get
-<span class="math display">\[\begin{align*}
-  u^\top C u
-  &amp;= u^\top \mathbb{E}\bigl( \bar Z \bar Z^\top \bigr) u \\
-  &amp;= \mathbb{E}\bigl( u^\top \bar Z \bar Z^\top u \bigr) \\
-  &amp;= \mathbb{E}\bigl( (\bar Z^\top u)^\top \bar Z^\top u \bigr) \\
-  &amp;= \mathbb{E}\bigl( \|\bar Z^\top u\|^2 \bigr),
-\end{align*}\]</span>
-where <span class="math inline">\(\|\bar Z^\top u\|\)</span> denotes the Euclidean length of the
-vector <span class="math inline">\(\bar Z^\top u\)</span>. Since <span class="math inline">\(\|\bar Z^\top u\|^2 \geq 0\)</span>
-we find <span class="math inline">\(u^\top C u \geq 0\)</span>. This shows that the covariance matrix <span class="math inline">\(C\)</span>
-is positive semi-definite. (Note that, nevertheless,
-individual <em>elements</em> of the matrix <span class="math inline">\(C\)</span> can be negative numbers.)</p></li>
+<li><p>When we discussed hypothesis tests, we allowed for the possibility that
+some inputs do not influence the output. A reasonable approach would
+be to fit a model with these inputs omitted. Since each input
+may either be included in or excluded from the model, independent of
+the others, and similarly the intercept may be included or not,
+there are <span class="math inline">\(2^{p+1}\)</span> possible models to consider.</p></li>
+<li><p>In the section about <a href="S11-improving.html#S11-improving">Improving the Model Fit</a> we have seen that
+sometimes it is useful to transform input variables before using them
+in the model. This can either happen individually, <em>e.g.</em> <span class="math inline">\(x_2&#39; = \log
+x_2\)</span>, or collectively, <em>e.g.</em> <span class="math inline">\(x^\ast = x_1 x_2\)</span>. The number of
+models we may obtain in this way is unlimited.</p></li>
 </ul>
-<div class="example">
-<p><span id="exm:unlabeled-div-7" class="example"><strong>Example 3.4  </strong></span>The random vector <span class="math inline">\(\varepsilon\)</span> in equation <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has <span class="math inline">\(\mathbb{E}(\varepsilon) = 0\)</span>.
-We have
-<span class="math inline">\(\mathop{\mathrm{Cov}}(\varepsilon)_{ii} = \mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\)</span> for all <span class="math inline">\(i\in\{1, \ldots, n\}\)</span>.
-Since we assumed the <span class="math inline">\(\varepsilon_i\)</span> to be independent, the covariance matrix is
-diagonal and we find
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I,
-\end{equation*}\]</span>
-where <span class="math inline">\(I\)</span> is the <span class="math inline">\(n\times n\)</span> identity matrix.</p>
+<p>If we want to compare these candidate models in a systematic way,
+we need to use efficient methods for comparison, since often a large
+number of models needs to be considered.</p>
 </div>
-<p>An important result about covariance matrices is given in the following
-lemma, which describes how the covariance matrix changes under affine
-transformations.</p>
-<div class="lemma">
-<p><span id="lem:Cov-is-quadratic" class="lemma"><strong>Lemma 3.1  </strong></span>Let <span class="math inline">\(Z\in\mathbb{R}^n\)</span> be a random vector, <span class="math inline">\(A\in\mathbb{R}^{m\times n}\)</span> a matrix
-and <span class="math inline">\(b\in\mathbb{R}^m\)</span> a vector. Then
+<div id="misspecified-models" class="section level2 hasAnchor" number="12.2">
+<h2><span class="header-section-number">12.2</span> Misspecified Models<a href="S12-selection.html#misspecified-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The model is said to be <strong>misspecified</strong>, if the data we are using
+comes from a different model than the one we use to estimate
+the coefficients.</p>
+<div id="missing-variables" class="section level3 hasAnchor" number="12.2.1">
+<h3><span class="header-section-number">12.2.1</span> Missing Variables<a href="S12-selection.html#missing-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Assume that the data comes from the model
 <span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{Cov}}(AZ+b)
-  = A \mathop{\mathrm{Cov}}(Z) A^\top.
-\end{equation*}\]</span></p>
-</div>
-<div class="proof">
-<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>As in equation <a href="S03-cov.html#eq:cov-prod">(3.3)</a>, we can write <span class="math inline">\(\mathop{\mathrm{Cov}}(AZ+b)\)</span>
-as
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{Cov}}(AZ+b)
-  = \mathbb{E}\bigl( (AZ + b - \mu) (AZ + b - \mu)^\top \bigr),
+  Y = \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon,
 \end{equation*}\]</span>
-where <span class="math inline">\(\mu = \mathbb{E}(AZ + b) = \mathbb{E}(AZ) + b\)</span>. Thus,
-<span class="math inline">\(AZ + b - \mu = AZ - \mathbb{E}(AZ)\)</span> and we find
+(we can include the intercept as <span class="math inline">\(x_1 = 1\)</span> if needed),
+but we are only using the first <span class="math inline">\(q\)</span> variables <span class="math inline">\(x_1, \ldots, x_q\)</span>,
+where <span class="math inline">\(q &lt; p\)</span>, to estimate the coefficients. Then the least squares
+estimate of <span class="math inline">\(\beta = (\beta_1, \ldots, \beta_q)\)</span> is given by
+<span class="math display">\[\begin{equation*}
+  \hat\beta
+  = (X^\top X)^{-1} X^\top y
+\end{equation*}\]</span>
+where <span class="math inline">\(X \in \mathbb{R}^{n\times q}\)</span>,
+and our estimate for the error variance <span class="math inline">\(\sigma^2\)</span> is
+<span class="math display">\[\begin{equation*}
+  \hat\sigma^2
+  = \frac{1}{n-q} y^\top (I - H) y,
+\end{equation*}\]</span>
+where <span class="math inline">\(H = X (X^\top X)^{-1} X^\top\)</span> is the hat matrix computed
+without using <span class="math inline">\(x_{q+1}, \ldots, x_p\)</span>.</p>
+<p>If we write <span class="math inline">\(\tilde X \in \mathbb{R}^{n\times (p-q)}\)</span> for the matrix with columns
+<span class="math inline">\(x_{q+1}, \ldots, x_p\)</span> and <span class="math inline">\(\tilde\beta = (\beta_{q+1}, \ldots, \beta_p) \in
+\mathbb{R}^{p-q}\)</span>, then the full model can be written as
+<span class="math display">\[\begin{equation*}
+  Y
+  = X \beta + \tilde X \tilde\beta + \varepsilon
+\end{equation*}\]</span>
+and we get
 <span class="math display">\[\begin{align*}
-  \mathop{\mathrm{Cov}}(AZ+b)
-  &amp;= \mathbb{E}\bigl( (AZ - \mathbb{E}(AZ)) (AZ - \mathbb{E}(AZ))^\top \bigr) \\
-  &amp;= \mathop{\mathrm{Cov}}(AZ).
+  \hat\beta
+  &amp;= (X^\top X)^{-1} X^\top Y \\
+  &amp;= (X^\top X)^{-1} X^\top (X \beta + \tilde X \tilde\beta + \varepsilon) \\
+  &amp;= (X^\top X)^{-1} X^\top X \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon\\
+  &amp;= \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon.
 \end{align*}\]</span>
-This shows that the covariance matrix ignores non-random shifts.</p>
-<p>Furthermore, we have <span class="math inline">\(AZ - \mathbb{E}(AZ) = AZ - A\mathbb{E}(Z) = A\bigl(Z - \mathbb{E}(Z)\bigr)\)</span>.
-Using equation <a href="S03-cov.html#eq:cov-prod">(3.3)</a> again, we find
+Thus, we have
+<span class="math display">\[\begin{equation*}
+  \mathbb{E}(\hat\beta)
+  = \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta
+\end{equation*}\]</span>
+and
+<span class="math display">\[\begin{equation*}
+  \mathop{\mathrm{bias}}(\hat\beta)
+  = (X^\top X)^{-1} X^\top \tilde X \tilde\beta.
+\end{equation*}\]</span>
+This shows that now the estimate is biased in general. There are two
+special cases when omitting variables does not introduce a bias:
+The first is when all of the omitted coefficients equal zero, <em>i.e.</em> when
+we have <span class="math inline">\(\tilde\beta = 0\)</span>. The second case is when the omitted inputs are
+orthogonal to the included inputs, since then we have <span class="math inline">\(X^\top \tilde X = 0\)</span>.</p>
+<p>Using the formula for <span class="math inline">\(\hat\beta\)</span> we find
 <span class="math display">\[\begin{align*}
-  \mathop{\mathrm{Cov}}(AZ)
-  &amp;= \mathbb{E}\Bigl( \bigl(AZ - \mathbb{E}(AZ)\bigr) \bigl(AZ - \mathbb{E}(AZ)\bigr)^\top \Bigr) \\
-  &amp;= \mathbb{E}\Bigl( A \bigl(Z - \mathbb{E}(Z)\bigr) \bigl(Z - \mathbb{E}(Z)\bigr)^\top A^\top \Bigr) \\
-  &amp;= A \mathbb{E}\Bigl( \bigl(Z - \mathbb{E}(Z)\bigr) \bigl(Z - \mathbb{E}(Z)\bigr)^\top \Bigr) A^\top \\
-  &amp;= A \mathop{\mathrm{Cov}}(Z) A^\top.
+  \mathop{\mathrm{Cov}}( \hat\beta )
+  &amp;= \mathop{\mathrm{Cov}}\Bigl( \beta + (X^\top X)^{-1} X^\top \tilde X \tilde\beta + (X^\top X)^{-1} X^\top \varepsilon\Bigr) \\
+  &amp;= \mathop{\mathrm{Cov}}\Bigl( (X^\top X)^{-1} X^\top \varepsilon\Bigr) \\
+  &amp;= \sigma^2 (X^\top X)^{-1} X^\top I X (X^\top X)^{-1} \\
+  &amp;= \sigma^2 (X^\top X)^{-1}.
 \end{align*}\]</span>
-This completes the proof.</p>
-</div>
-</div>
-<div id="the-multivariate-normal-distribution" class="section level2 hasAnchor" number="3.3">
-<h2><span class="header-section-number">3.3</span> The Multivariate Normal Distribution<a href="S03-cov.html#the-multivariate-normal-distribution" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bgBrgPL77W8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>With the concepts of expectation and covariance in hand, we can now turn to
-the distribution of random vectors. Since we assume that the random errors
-<span class="math inline">\(\varepsilon_i\)</span> are normally distributed, we will need to understand how vectors of
-normally distributed random variables behave.</p>
-<div class="definition">
-<p><span id="def:unlabeled-div-9" class="definition"><strong>Definition 3.3  </strong></span>A random vector <span class="math inline">\(Z\in\mathbb{R}^n\)</span> follows a <strong>multivariate normal distribution</strong>,
-if <span class="math inline">\(u^\top Z\)</span> is normally distributed or constant for every
-vector <span class="math inline">\(u\in\mathbb{R}^n\)</span>.</p>
-</div>
-<p>This definition takes its slightly surprising form to avoid some boundary cases
-which I will discuss in an example, below. To understand the definition, a good
-start is to consider the cases where <span class="math inline">\(u\)</span> is one of the standard basis vectors,
-say <span class="math inline">\(u_i = 1\)</span> and <span class="math inline">\(u_j = 0\)</span> for all <span class="math inline">\(j\neq i\)</span>. In this case we have
+Thus, the variance of <span class="math inline">\(\hat\beta\)</span> is not affected by the omitted variables.
+Similar to our derivation in the section <a href="S04-model.html#var-est-bias">Estimating the Error Variance</a>
+one can show that
 <span class="math display">\[\begin{equation*}
-  u^\top Z
-  = \sum_{k=1}^n u_k Z_k
-  = Z_i.
+  \mathbb{E}\bigl( \hat\sigma^2 \bigr)
+  = \sigma^2 + \frac{\tilde\beta^\top \tilde X^\top (I - H) \tilde X \tilde \beta}{n-q}.
 \end{equation*}\]</span>
-Thus, if <span class="math inline">\(Z\)</span> follows a multivariate normal distribution, each of the
-components <span class="math inline">\(Z_i\)</span> is normally distributed. Example <a href="S03-cov.html#exm:not-normal">3.8</a>,
-below, shows that the converse is not true.</p>
-<p>One can show that a multivariate normal distribution is completely determined
-by the mean <span class="math inline">\(\mu = \mathbb{E}(Z)\)</span> and the covariance <span class="math inline">\(\Sigma = \mathop{\mathrm{Cov}}(Z)\)</span>. The
-distribution of such a <span class="math inline">\(Z\)</span> is denoted by <span class="math inline">\(\mathcal{N}(\mu, \Sigma)\)</span>. Also, for every
-<span class="math inline">\(\mu\in\mathbb{R}^n\)</span> and every positive semi-definite matrix <span class="math inline">\(\Sigma\in\mathbb{R}^{n\times n}\)</span>
-there is a random vector <span class="math inline">\(Z\)</span> which follows a multivariate normal distribution
-with this mean and covariance.</p>
+Thus, the estimate of the error variance is in general also biased.</p>
+<p>This shows that our estimates can become biased if some of the inputs
+are missing from our model. As in the previous section, it may happen
+that the MSE of the parameter estimates in the reduced model
+is smaller than the MSE in the correct model; this is the case if the
+variance of the estimates decreases enough to compensate for the
+introduced bias.</p>
+</div>
+<div id="unnecessary-variables" class="section level3 hasAnchor" number="12.2.2">
+<h3><span class="header-section-number">12.2.2</span> Unnecessary Variables<a href="S12-selection.html#unnecessary-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>If the data comes from a model with fewer inputs than the ones we are using,
+the model is not “misspecified” in the strict sense. It is just the case that
+some of the true <span class="math inline">\(\beta_j\)</span> exactly equal zero. In this case, our previous
+results show that the least squares estimate is unbiased.</p>
+<p>Including additional variables into a model still can cause problems:
+One can show that each unnecessary variable added increases the variance of the
+estimates <span class="math inline">\(\hat\beta_j\)</span>. Instead of giving a proof of this fact,
+we illustrate the effect using a numerical example.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-10" class="example"><strong>Example 3.5  </strong></span>Consider the vector <span class="math inline">\(\varepsilon\)</span> from the model <a href="S03-cov.html#eq:lmstat0">(3.1)</a>.
-This vector has components <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span> and by
-assumption, the components <span class="math inline">\(\varepsilon_i\)</span> are independent.
-For <span class="math inline">\(u\in\mathbb{R}^n\)</span> we have
+<p><span id="exm:unlabeled-div-47" class="example"><strong>Example 12.1  </strong></span>Here we consider the <code>stackloss</code> dataset with an added column of
+noise. We have seen that
 <span class="math display">\[\begin{equation*}
-  u^\top \varepsilon
-  = \sum_{i=1}^n u_i \varepsilon_i.
+  \mathop{\mathrm{Var}}( \hat\beta_j )
+  = \sigma^2 \bigl( X^\top X \bigr)^{-1}_{jj}.
 \end{equation*}\]</span>
-Using the fact that a sum of independent, one-dimensional, normally
-distributed random variables is also normally distributed, we see that
-<span class="math inline">\(u^\top \varepsilon\)</span> is normally distributed for every <span class="math inline">\(u\)</span>. Thus, <span class="math inline">\(\varepsilon\)</span> is a
-normally distributed random vector.
-We have already seen <span class="math inline">\(\mathbb{E}(\varepsilon) = 0\)</span> and <span class="math inline">\(\mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I\)</span>,
-and thus <span class="math inline">\(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\)</span>.</p>
+While we don’t know the true value of <span class="math inline">\(\sigma^2\)</span>, we can determine
+the relative change in variance when adding a column, since this process
+does not change <span class="math inline">\(\sigma^2\)</span> and thus <span class="math inline">\(\sigma^2\)</span> will cancel when we
+determine the relative change in variance.</p>
+<p>We first compute the diagonal elements of <span class="math inline">\(\bigl( X^\top X \bigr)^{-1}\)</span>
+for the original dataset:</p>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="S12-selection.html#cb175-1" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
+<span id="cb175-2"><a href="S12-selection.html#cb175-2" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X1) <span class="sc">%*%</span> X1))</span>
+<span id="cb175-3"><a href="S12-selection.html#cb175-3" tabindex="-1"></a>d1</span></code></pre></div>
+<pre class="routput"><code> (Intercept)     Air.Flow   Water.Temp   Acid.Conc. 
+13.452726695  0.001728874  0.012875424  0.002322167 </code></pre>
+<p>Now we add a column of noise and re-compute the values:</p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="S12-selection.html#cb177-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211115</span>)</span>
+<span id="cb177-2"><a href="S12-selection.html#cb177-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X1)</span>
+<span id="cb177-3"><a href="S12-selection.html#cb177-3" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X1, <span class="fu">rnorm</span>(n))</span>
+<span id="cb177-4"><a href="S12-selection.html#cb177-4" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">solve</span>(<span class="fu">t</span>(X2) <span class="sc">%*%</span> X2))</span>
+<span id="cb177-5"><a href="S12-selection.html#cb177-5" tabindex="-1"></a>d2</span></code></pre></div>
+<pre class="routput"><code> (Intercept)     Air.Flow   Water.Temp   Acid.Conc.              
+14.397515774  0.001730570  0.015195467  0.002796487  0.064828744 </code></pre>
+<p>Finally, we determine the change in variance in percent:</p>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="S12-selection.html#cb179-1" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> (d2[<span class="sc">-</span><span class="dv">5</span>] <span class="sc">-</span> d1) <span class="sc">/</span> d1, <span class="dv">3</span>)</span></code></pre></div>
+<pre class="routput"><code>(Intercept)    Air.Flow  Water.Temp  Acid.Conc. 
+      7.023       0.098      18.019      20.426 </code></pre>
+<p>We see that the variances of the <span class="math inline">\(\hat\beta_j\)</span> increased by up to <span class="math inline">\(20\%\)</span>
+when we added the unnecessary input.</p>
 </div>
-<p>Without proof we state here some properties of the multivariate normal
-distribution:</p>
+<p>The example illustrates that it is important to keep the model as small
+as possible.</p>
+</div>
+</div>
+<div id="choosing-between-models" class="section level2 hasAnchor" number="12.3">
+<h2><span class="header-section-number">12.3</span> Choosing Between Models<a href="S12-selection.html#choosing-between-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="criteria-for-model-selection" class="section level3 hasAnchor" number="12.3.1">
+<h3><span class="header-section-number">12.3.1</span> Criteria for Model Selection<a href="S12-selection.html#criteria-for-model-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When comparing different models, we need a criterion to decide which
+is “best”. Several options exist:</p>
 <ul>
-<li><p>If <span class="math inline">\(Z \sim \mathcal{N}(\mu, \Sigma)\)</span> and <span class="math inline">\(a \in \mathbb{R}^n\)</span>, then
-<span class="math inline">\(Z + a \sim \mathcal{N}(\mu + a, \Sigma)\)</span>.</p></li>
-<li><p>If <span class="math inline">\(Z \sim \mathcal{N}(\mu, \Sigma)\)</span> and <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span>, then
-<span class="math inline">\(AZ \sim \mathcal{N}(A\mu, A\Sigma A^\top)\)</span>.</p></li>
-<li><p>If <span class="math inline">\(Z_1 \sim \mathcal{N}(\mu_1, \Sigma_1)\)</span> and <span class="math inline">\(Z_2 \sim \mathcal{N}(\mu_2, \Sigma_2)\)</span>
-are independent, then
-<span class="math inline">\(Z_1 + Z_2 \sim \mathcal{N}(\mu_1 + \mu_2, \Sigma_1 + \Sigma_2)\)</span>.</p></li>
+<li><p><strong><span class="math inline">\(R^2\)</span></strong> (coefficient of determination): Measures the proportion of
+variance explained by the model. However, <span class="math inline">\(R^2\)</span> always increases when
+variables are added, even if they are irrelevant. This makes it
+unsuitable for model selection.</p></li>
+<li><p><strong>Adjusted <span class="math inline">\(R^2\)</span></strong> (written <span class="math inline">\(R^2_\mathrm{adj}\)</span>): Adjusts <span class="math inline">\(R^2\)</span> to
+penalize model complexity. This is the criterion we will use
+throughout this section and the next.</p></li>
+<li><p><strong>AIC</strong> (Akaike Information Criterion) and <strong>BIC</strong> (Bayesian
+Information Criterion): Alternative criteria that also penalize
+model complexity, discussed in section <a href="S10-diagnostics.html#S10-diagnostics">10</a>.</p></li>
 </ul>
-<div class="example">
-<p><span id="exm:unlabeled-div-11" class="example"><strong>Example 3.6  </strong></span>Let <span class="math inline">\(Z = (Z_1, Z_2)\)</span> where <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span> are independently standard
-normal distributed. Let
+<p>In the following subsections, we describe algorithms that use these
+criteria to select models efficiently.</p>
+</div>
+<div id="exhaustive-search" class="section level3 hasAnchor" number="12.3.2">
+<h3><span class="header-section-number">12.3.2</span> Exhaustive Search<a href="S12-selection.html#exhaustive-search" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For a model with <span class="math inline">\(p\)</span> input variables, there are <span class="math inline">\(2^p\)</span> different choices for
+which variables to include in the model (or <span class="math inline">\(2^{p+1}\)</span>, if we also have to
+decide whether to include the intercept). This value increases quickly with
+<span class="math inline">\(p\)</span>: for <span class="math inline">\(p = 10\)</span> we have <span class="math inline">\(1024\)</span> models to consider, for <span class="math inline">\(p = 20\)</span> there are
+<span class="math inline">\(1048576\)</span> possible models, and for large <span class="math inline">\(p\)</span> it becomes infeasible to simply
+try all possible models to find the best one.</p>
+<p>If <span class="math inline">\(p\)</span> is small enough, we can simply fit all <span class="math inline">\(2^p\)</span> models and choose the one
+with the best performance (e.g., highest <span class="math inline">\(R^2_\mathrm{adj}\)</span>). This guarantees
+finding the optimal model. However, for <span class="math inline">\(p \geq 20\)</span> this becomes
+computationally infeasible (<span class="math inline">\(2^{20} &gt; 1\)</span> million models).</p>
+</div>
+<div id="stepwise-forward-selection" class="section level3 hasAnchor" number="12.3.3">
+<h3><span class="header-section-number">12.3.3</span> Stepwise Forward Selection<a href="S12-selection.html#stepwise-forward-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Here the idea is to start with a minimal model, and then add variables one by
+one, until no further (large enough) improvements can be achieved.</p>
+<p>Start with only intercept term: <span class="math inline">\(y=\beta_0 + \varepsilon\)</span>, then
+consider each of <span class="math inline">\(p\)</span> models:
 <span class="math display">\[\begin{equation*}
-  A := \begin{pmatrix}
-    2 &amp; -1 \\
-    2 &amp; 1
-  \end{pmatrix}
-  \qquad \mbox{and} \qquad
-  b := \begin{pmatrix}
-    3 \\ 4
-  \end{pmatrix}.
+  y
+  = \beta_0 + \beta_j x_j + \varepsilon,
 \end{equation*}\]</span>
-Then <span class="math inline">\(AZ + b \sim \mathcal{N}(b, \Sigma)\)</span> where
-<span class="math display">\[\begin{equation*}
-  \Sigma
-  = A \mathop{\mathrm{Cov}}(Z) A^\top
-  = \begin{pmatrix}
-      2 &amp; -1 \\
-      2 &amp; 1
-    \end{pmatrix}
-    \begin{pmatrix}
-      1 &amp; 0 \\
-      0 &amp; 1
-    \end{pmatrix}
-    \begin{pmatrix}
-      2 &amp; 2 \\
-      -1 &amp; 1
-    \end{pmatrix}
-  = \begin{pmatrix}
-      5 &amp; 3 \\
-      3 &amp; 5
-    \end{pmatrix}
-\end{equation*}\]</span></p>
-<p>We can use R to plot a sample of this two-dimensional normal distribution.
-(The grey cross indicates the mean.)</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="S03-cov.html#cb36-1" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">500</span></span>
-<span id="cb36-2"><a href="S03-cov.html#cb36-2" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">rnorm</span>(N), <span class="fu">rnorm</span>(N))</span>
-<span id="cb36-3"><a href="S03-cov.html#cb36-3" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">2</span>, <span class="dv">2</span>)</span>
-<span id="cb36-4"><a href="S03-cov.html#cb36-4" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)</span>
-<span id="cb36-5"><a href="S03-cov.html#cb36-5" tabindex="-1"></a>V <span class="ot">&lt;-</span> A <span class="sc">%*%</span> Z <span class="sc">+</span> b</span>
-<span id="cb36-6"><a href="S03-cov.html#cb36-6" tabindex="-1"></a><span class="fu">plot</span>(V[<span class="dv">1</span>,], V[<span class="dv">2</span>,], <span class="at">asp =</span> <span class="dv">1</span>, <span class="at">cex =</span> .<span class="dv">5</span>,</span>
-<span id="cb36-7"><a href="S03-cov.html#cb36-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(V[<span class="dv">1</span>]),</span>
-<span id="cb36-8"><a href="S03-cov.html#cb36-8" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(V[<span class="dv">2</span>]))</span>
-<span id="cb36-9"><a href="S03-cov.html#cb36-9" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span>
-<span id="cb36-10"><a href="S03-cov.html#cb36-10" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/MVN-plot-1.png" width="672" /></p>
+for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>.</p>
+<p>Choose the model with the smallest residual sum of squares, provided that the
+“significance of the fitted model” achieves a specified threshold. The process
+continues by adding more variables, one at a time, until either</p>
+<ul>
+<li>All variables are in the model.</li>
+<li>The significance level can not be achieved by any variable not in the model.</li>
+</ul>
+<p>The “significance of the model” can be examined by considering a
+<span class="math inline">\(t\)</span>-test as in lemma <a href="S05-single.html#lem:t-test">5.4</a>.</p>
 </div>
-<div class="example">
-<p><span id="exm:unlabeled-div-12" class="example"><strong>Example 3.7  </strong></span>The random vector <span class="math inline">\(Y\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> satisfies <span class="math inline">\(Y = X \beta + \varepsilon\)</span>
-and since <span class="math inline">\(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\)</span> we have
-<span class="math inline">\(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\)</span>.</p>
-</div>
-<div class="example">
-<p><span id="exm:not-normal" class="example"><strong>Example 3.8  </strong></span>Let <span class="math inline">\(Y \sim \mathcal{N}(0, 1)\)</span> be a random variable. Define a random vector
-<span class="math inline">\(Z = (Z_1, Z_2)\)</span> as <span class="math inline">\(Z_1 = Y\)</span> and
+<div id="stepwise-backward-selection" class="section level3 hasAnchor" number="12.3.4">
+<h3><span class="header-section-number">12.3.4</span> Stepwise Backward Selection<a href="S12-selection.html#stepwise-backward-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Here the idea is to start with the full model, and to remove variables
+one by one until no good enough candidates for removal are left.</p>
+<p>In each step we consider the test statistic <span class="math inline">\(|T_j|\)</span> for the tests
 <span class="math display">\[\begin{equation*}
-  Z_2 = \begin{cases}
-    Y &amp; \mbox{if $|Y|&lt;1$, and}\\
-    -Y &amp; \mbox{otherwise.}
-  \end{cases}
+  H_0\colon \beta_j = 0
+  \quad \textit{vs.} \quad
+  H_1\colon \beta_j \neq 0
 \end{equation*}\]</span>
-Clearly <span class="math inline">\(Z_1\)</span> is standard normally distributed.
-Since <span class="math inline">\(\mathcal{N}(0,1)\)</span> is symmetric, both <span class="math inline">\(Y\)</span> and <span class="math inline">\(-Y\)</span> are standard normally
-distributed and it follows that <span class="math inline">\(Z_2\)</span> is also standard normally distributed.
-Nevertheless, the random vector <span class="math inline">\(Z\)</span> does not follow a multivariate
-normal distribution. Instead of giving a proof of this fact,
-we illustrate this here using an R experiment. We start by verifying
-that <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span> are normally distributed.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="S03-cov.html#cb37-1" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb37-2"><a href="S03-cov.html#cb37-2" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N)</span>
-<span id="cb37-3"><a href="S03-cov.html#cb37-3" tabindex="-1"></a>Z1 <span class="ot">&lt;-</span> Y</span>
-<span id="cb37-4"><a href="S03-cov.html#cb37-4" tabindex="-1"></a>Z2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">abs</span>(Y)<span class="sc">&lt;</span><span class="dv">1</span>, Y, <span class="sc">-</span>Y)</span>
-<span id="cb37-5"><a href="S03-cov.html#cb37-5" tabindex="-1"></a></span>
-<span id="cb37-6"><a href="S03-cov.html#cb37-6" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb37-7"><a href="S03-cov.html#cb37-7" tabindex="-1"></a><span class="fu">hist</span>(Z1, <span class="at">main=</span><span class="cn">NULL</span>, <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">1</span>]))</span>
-<span id="cb37-8"><a href="S03-cov.html#cb37-8" tabindex="-1"></a><span class="fu">hist</span>(Z2, <span class="at">main=</span><span class="cn">NULL</span>, <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">2</span>]))</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/not-a-normal-hist-1.png" width="672" /></p>
-<p>The histograms make it plausible that the components are indeed normally
-distributed. Now we use a scatter plot to show the joint distribution
-of <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span>:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="S03-cov.html#cb38-1" tabindex="-1"></a><span class="fu">plot</span>(Z1, Z2, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">asp=</span><span class="dv">1</span>,</span>
-<span id="cb38-2"><a href="S03-cov.html#cb38-2" tabindex="-1"></a>     <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">1</span>]),</span>
-<span id="cb38-3"><a href="S03-cov.html#cb38-3" tabindex="-1"></a>     <span class="at">ylab=</span><span class="fu">expression</span>(Z[<span class="dv">2</span>]))</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/not-a-normal-scatter-1.png" width="672" /></p>
-<p>This plot looks peculiar! Most people would not call this a normal distribution
-and the formal definition of a multivariate normal distribution is made to
-exclude cases like this.</p>
+for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>, again as in lemma <a href="S05-single.html#lem:t-test">5.4</a>.
+The method selects <span class="math inline">\(x_j\)</span> corresponding to the smallest <span class="math inline">\(|T_j|\)</span>.
+If this is below a given threshold, then remove <span class="math inline">\(x_j\)</span> and re-fit the model.
+Repeat until either:</p>
+<ul>
+<li>No variables are left in the model.</li>
+<li>The smallest <span class="math inline">\(|T_j|\)</span> is above the threshold.</li>
+</ul>
 </div>
+<div id="hybrid-methods" class="section level3 hasAnchor" number="12.3.5">
+<h3><span class="header-section-number">12.3.5</span> Hybrid Methods<a href="S12-selection.html#hybrid-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Either start with a full model or just intercept. At each stage consider:</p>
+<ul>
+<li>removing least significant variable already in the model,</li>
+<li>adding most significant variable not currently in the model,</li>
+</ul>
+<p>with significance levels set to avoid a cyclical behaviour.</p>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>We learned the rules for computing the expectation of a random vector.</li>
-<li>The covariance matrix of random vectors plays the role of the
-variance for numeric random variables.</li>
-<li>We have learned the rules for computing the expectation and covariance
-of linear transformations of random vectors.</li>
-<li>We learned about the definition of the multivariate normal distribution.</li>
+<li>Model selection requires choosing a criterion such as <span class="math inline">\(R^2_\mathrm{adj}\)</span>,
+AIC, or BIC to compare models.</li>
+<li>Stepwise methods (forward, backward, hybrid) provide computationally
+efficient heuristics for large <span class="math inline">\(p\)</span>.</li>
+<li>These methods do not guarantee finding the optimal model.</li>
+<li>Exhaustive search can find the optimal model when <span class="math inline">\(p\)</span> is small to moderate.</li>
 </ul>
 </div>
 
+</div>
 </div>
 </div>
             </section>
@@ -772,8 +651,8 @@ of linear transformations of random vectors.</li>
           </div>
         </div>
       </div>
-<a href="I01-lm.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="P01.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="P03.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="S13-exhaustive.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness</title>
+  <title>Section 20 Examples | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
   <meta name="generator" content="bookdown 0.44 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Section 20 Examples | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 3 Random Vectors and Covariance | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Section 20 Examples | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="I01-lm.html"/>
-<link rel="next" href="P01.html"/>
+<link rel="prev" href="P05.html"/>
+<link rel="next" href="Sx1-matrices.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -397,383 +397,164 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="S03-cov" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">Section 3</span> Random Vectors and Covariance<a href="S03-cov.html#S03-cov" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Like in the one-dimensional case, we can build a <strong>statistical model</strong>
-for the data where we assume that the errors are random. More
-precisely we will assume
-<span class="math display">\[\begin{equation}
-  Y_i
-  = \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i
-\end{equation}\]</span>
-for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, where <span class="math inline">\(\varepsilon_1, \ldots, \varepsilon_n\)</span>
-are now independent and identically distributed (i.i.d.)
-random variables with <span class="math inline">\(\mathbb{E}(\varepsilon_i) = 0\)</span> and
-<span class="math inline">\(\mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\)</span>.
-As in <a href="S02-multiple.html#eq:lmmodel">(2.2)</a>, the statistical model can be written in vector
-form as
-<span class="math display" id="eq:lmstat0">\[\begin{equation}
-  Y = X \beta + \varepsilon.  \tag{3.1}
-\end{equation}\]</span>
-This is a vector-valued equation which contains two “random vectors”, <span class="math inline">\(Y\)</span>
-and <span class="math inline">\(\varepsilon\)</span>.</p>
-<p>A <strong>random vector</strong> is a vector <span class="math inline">\(Z = (Z_1, \ldots, Z_n)\)</span>
-where each component <span class="math inline">\(Z_i\)</span> is a random variable.</p>
-<div id="expectation" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> Expectation<a href="S03-cov.html#expectation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bHbq8AFxRzo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>The expectation of a random vector is taken for each component separately.
-This is formalised in the following definition.</p>
-<div class="definition">
-<p><span id="def:unlabeled-div-3" class="definition"><strong>Definition 3.1  </strong></span>Let <span class="math inline">\(Z = (Z_1, \ldots, Z_n) \in \mathbb{R}^n\)</span> be a random vector.
-Then the expectation of <span class="math inline">\(Z\)</span> is the (non-random) vector
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(Z)
-    = \begin{pmatrix}
-      \mathbb{E}(Z_1) \\ \vdots \\ \mathbb{E}(Z_n)
-    \end{pmatrix}
-    \in \mathbb{R}^n.
-  \end{equation*}\]</span></p>
-</div>
+<div id="S20-examples" class="section level1 hasAnchor" number="20">
+<h1><span class="header-section-number">Section 20</span> Examples<a href="S20-examples.html#S20-examples" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this section we compare the robust regression methods from sections
+<a href="S17-robust.html#S17-robust">17</a>, <a href="S18-m-est.html#S18-m-est">18</a> and <a href="S19-efficiency.html#S19-efficiency">19</a> by applying
+them to synthetic data. We will see how methods with different breakdown
+points behave in the presence of outliers, how the weights assigned by
+different M-estimators differ in practice, and how robust methods produce
+cleaner residual patterns than least squares regression.</p>
+<div id="comparing-robust-methods" class="section level2 hasAnchor" number="20.1">
+<h2><span class="header-section-number">20.1</span> Comparing Robust Methods<a href="S20-examples.html#comparing-robust-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="example">
-<p><span id="exm:unlabeled-div-4" class="example"><strong>Example 3.1  </strong></span>The random vector <span class="math inline">\(\varepsilon\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(\varepsilon)_i = \mathbb{E}(\varepsilon_i) = 0
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> and thus <span class="math inline">\(\mathbb{E}(\varepsilon) = 0 \in \mathbb{R}^n\)</span>,
-where <span class="math inline">\(0\)</span> here denotes the zero-vector <span class="math inline">\((0, \ldots, 0) \in \mathbb{R}^n\)</span>.</p>
+<p><span id="exm:unlabeled-div-76" class="example"><strong>Example 20.1  </strong></span>We compare several robust estimators on a synthetic dataset with outliers.
+This example illustrates how methods with high breakdown points resist
+contamination, whilst methods with low breakdown points can be severely
+affected.</p>
+<p>We start by generating data from a linear relationship with three
+outliers:</p>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb291-1"><a href="S20-examples.html#cb291-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20251006</span>)</span>
+<span id="cb291-2"><a href="S20-examples.html#cb291-2" tabindex="-1"></a></span>
+<span id="cb291-3"><a href="S20-examples.html#cb291-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb291-4"><a href="S20-examples.html#cb291-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb291-5"><a href="S20-examples.html#cb291-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.5</span>)</span>
+<span id="cb291-6"><a href="S20-examples.html#cb291-6" tabindex="-1"></a></span>
+<span id="cb291-7"><a href="S20-examples.html#cb291-7" tabindex="-1"></a><span class="co"># Add three contaminants:</span></span>
+<span id="cb291-8"><a href="S20-examples.html#cb291-8" tabindex="-1"></a>outliers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">25</span>)</span>
+<span id="cb291-9"><a href="S20-examples.html#cb291-9" tabindex="-1"></a>x[outliers] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">9</span>, <span class="fl">8.5</span>, <span class="fl">9.5</span>)</span>
+<span id="cb291-10"><a href="S20-examples.html#cb291-10" tabindex="-1"></a>y[outliers] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">2.5</span>)</span></code></pre></div>
+<p>Now we fit several different regression methods to this data:</p>
+<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="S20-examples.html#cb292-1" tabindex="-1"></a><span class="fu">library</span>(MASS)     <span class="co"># for rlm() and lqs()</span></span>
+<span id="cb292-2"><a href="S20-examples.html#cb292-2" tabindex="-1"></a><span class="fu">library</span>(quantreg) <span class="co"># for rq()</span></span></code></pre></div>
+<pre><code>Loading required package: SparseM</code></pre>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="S20-examples.html#cb294-1" tabindex="-1"></a>lm1   <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)                           <span class="co"># LSQ</span></span>
+<span id="cb294-2"><a href="S20-examples.html#cb294-2" tabindex="-1"></a>rq1   <span class="ot">&lt;-</span> <span class="fu">rq</span>(y <span class="sc">~</span> x)                           <span class="co"># LAV</span></span>
+<span id="cb294-3"><a href="S20-examples.html#cb294-3" tabindex="-1"></a>rlm1  <span class="ot">&lt;-</span> <span class="fu">rlm</span>(y <span class="sc">~</span> x, <span class="at">psi =</span> psi.huber)         <span class="co"># Huber</span></span>
+<span id="cb294-4"><a href="S20-examples.html#cb294-4" tabindex="-1"></a>rlm2  <span class="ot">&lt;-</span> <span class="fu">rlm</span>(y <span class="sc">~</span> x, <span class="at">psi =</span> psi.bisquare)      <span class="co"># Bisquare</span></span>
+<span id="cb294-5"><a href="S20-examples.html#cb294-5" tabindex="-1"></a>rlm3  <span class="ot">&lt;-</span> <span class="fu">rlm</span>(y <span class="sc">~</span> x, <span class="at">psi =</span> psi.hampel)        <span class="co"># Hampel</span></span>
+<span id="cb294-6"><a href="S20-examples.html#cb294-6" tabindex="-1"></a>lms1  <span class="ot">&lt;-</span> <span class="fu">lqs</span>(y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">&quot;lms&quot;</span>)          <span class="co"># LMS</span></span>
+<span id="cb294-7"><a href="S20-examples.html#cb294-7" tabindex="-1"></a>lts1  <span class="ot">&lt;-</span> <span class="fu">lqs</span>(y <span class="sc">~</span> x, <span class="at">method =</span> <span class="st">&quot;lts&quot;</span>)          <span class="co"># LTS</span></span></code></pre></div>
+<p>The left plot in figure <a href="S20-examples.html#fig:robcomp">20.1</a> shows the fitted lines
+from all seven methods. As expected, only those methods with high
+breakdown point (LMS and LTS) have resisted the gross outliers.
+The least squares, LAV and M-estimator lines all pass between the
+bulk of the data and the outliers, demonstrating their susceptibility
+to contamination.</p>
+<p>The right plot shows how the LTS estimator behaves for different
+values of the quantile parameter <span class="math inline">\(h\)</span> (called <code>quantile</code> in R).
+For smaller values of <span class="math inline">\(h\)</span>, the method uses only the observations
+with smallest residuals and has higher breakdown point. As <span class="math inline">\(h\)</span>
+increases towards <span class="math inline">\(n = 30\)</span>, the method gradually converges to the
+least squares estimate.</p>
+<div class="figure"><span style="display:block;" id="fig:robcomp"></span>
+<img src="MATH3714_files/figure-html/robcomp-1.png" alt="On the left we compare several methods. As expected, only those with high breakdown point have resisted the gross outliers. On the right plot, we compare different values of the quantile parameter $h$ for the LTS estimator." width="48%" /><img src="MATH3714_files/figure-html/robcomp-2.png" alt="On the left we compare several methods. As expected, only those with high breakdown point have resisted the gross outliers. On the right plot, we compare different values of the quantile parameter $h$ for the LTS estimator." width="48%" />
+<p class="caption">
+Figure 20.1: On the left we compare several methods. As expected, only those with high breakdown point have resisted the gross outliers. On the right plot, we compare different values of the quantile parameter <span class="math inline">\(h\)</span> for the LTS estimator.
+</p>
 </div>
-<p>Since the expectation of a random vector is defined in terms of the
-usual expectation, most rules we know for expectations still hold.
-For example, if <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span> are two random vectors, we have
-<span class="math inline">\(\mathbb{E}(Y+Z) = \mathbb{E}(Y) + \mathbb{E}(Z)\)</span>.</p>
+<p>We see that for small <span class="math inline">\(h\)</span> the LTS line passes through the bulk of the
+data and ignores the outliers, whilst for larger <span class="math inline">\(h\)</span> it is increasingly
+influenced by the outliers until it converges to the least squares line.</p>
+</div>
+</div>
+<div id="residual-analysis" class="section level2 hasAnchor" number="20.2">
+<h2><span class="header-section-number">20.2</span> Residual Analysis<a href="S20-examples.html#residual-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="example">
-<p><span id="exm:E-of-Y" class="example"><strong>Example 3.2  </strong></span>The random vector <span class="math inline">\(Y\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(Y)_i
-    = \mathbb{E}(Y_i)
-    = \mathbb{E}\bigl( (X\beta)_i + \varepsilon_i \bigr)
-    = (X\beta)_i + \mathbb{E}(\varepsilon_i)
-    = (X\beta)_i
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span> and thus <span class="math inline">\(\mathbb{E}(Y) = X\beta \in \mathbb{R}^n\)</span>.
-We often will write the above derivation in vector form
-as
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(Y)
-    = \mathbb{E}(X\beta + \varepsilon)
-    = X\beta + \mathbb{E}(\varepsilon)
-    = X\beta.
-  \end{equation*}\]</span></p>
+<p><span id="exm:unlabeled-div-77" class="example"><strong>Example 20.2  </strong></span>Continuing with the same dataset, we now examine the residual patterns
+from different methods. When outliers influence the fitted line, the
+residuals from the remaining observations often exhibit systematic patterns.</p>
+<p>Figure <a href="S20-examples.html#fig:robresid">20.2</a> shows the residuals from three methods,
+excluding the three known outliers. The least squares residuals (left plot)
+show a clear curved pattern: residuals are positive for small and large
+<span class="math inline">\(x\)</span>-values, and negative for intermediate values. This pattern indicates
+that the outliers have pulled the regression line away from the bulk of
+the data.</p>
+<p>The LAV and Huber methods (centre and right plots) show much less
+pronounced patterns. The residuals are more evenly scattered around
+zero, indicating that these methods have been less influenced by the
+outliers. This demonstrates one advantage of robust methods: they
+not only provide better parameter estimates in the presence of outliers,
+but also produce more reliable residual plots for model diagnostics.</p>
+<div class="figure"><span style="display:block;" id="fig:robresid"></span>
+<img src="MATH3714_files/figure-html/robresid-1.png" alt="Residuals from non-outlier observations for three methods (left: LSQ; centre: LAV; right: Huber). The least squares residuals show a clear pattern due to the influence of the outliers." width="32%" /><img src="MATH3714_files/figure-html/robresid-2.png" alt="Residuals from non-outlier observations for three methods (left: LSQ; centre: LAV; right: Huber). The least squares residuals show a clear pattern due to the influence of the outliers." width="32%" /><img src="MATH3714_files/figure-html/robresid-3.png" alt="Residuals from non-outlier observations for three methods (left: LSQ; centre: LAV; right: Huber). The least squares residuals show a clear pattern due to the influence of the outliers." width="32%" />
+<p class="caption">
+Figure 20.2: Residuals from non-outlier observations for three methods (left: LSQ; centre: LAV; right: Huber). The least squares residuals show a clear pattern due to the influence of the outliers.
+</p>
 </div>
+</div>
+</div>
+<div id="weight-comparisons" class="section level2 hasAnchor" number="20.3">
+<h2><span class="header-section-number">20.3</span> Weight Comparisons<a href="S20-examples.html#weight-comparisons" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="example">
-<p><span id="exm:unlabeled-div-5" class="example"><strong>Example 3.3  </strong></span>If <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span> is a matrix and <span class="math inline">\(Z \in \mathbb{R}^n\)</span> is a random
-vector, then we find the expectation of <span class="math inline">\(AZ\in\mathbb{R}^m\)</span> as
-<span class="math display">\[\begin{equation*}
-    \mathbb{E}(AZ)_i
-    = \mathbb{E}(AZ_i)
-    = \mathbb{E}\bigl( \sum_{j=1}^n a_{ij} Z_j \bigr)
-    = \sum_{j=1}^n \mathbb{E}\bigl( a_{ij} Z_j \bigr)
-    = \sum_{j=1}^n a_{ij} \mathbb{E}(Z_j)
-    = \sum_{j=1}^n a_{ij} \mathbb{E}(Z)_j
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, \ldots, m\}\)</span> and thus we have <span class="math inline">\(\mathbb{E}(AZ) = A \mathbb{E}(Z)\)</span>.</p>
-</div>
-</div>
-<div id="sec:covariance" class="section level2 hasAnchor" number="3.2">
-<h2><span class="header-section-number">3.2</span> Covariance Matrix<a href="S03-cov.html#sec:covariance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/NJGqepkU2Yk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>The variance of random variables is replaced with the concept of
-a “covariance matrix” for random vectors.</p>
-<div class="definition">
-<p><span id="def:unlabeled-div-6" class="definition"><strong>Definition 3.2  </strong></span>Let <span class="math inline">\(Z = (Z_1, \ldots, Z_n) \in \mathbb{R}^n\)</span> be a random vector.
-Then the covariance matrix of <span class="math inline">\(Z\)</span> is the matrix <span class="math inline">\(\mathop{\mathrm{Cov}}(Z) \in \mathbb{R}^{n\times n}\)</span>
-given by
-<span class="math display">\[\begin{equation*}
-    \mathop{\mathrm{Cov}}(Z)_{ij}
-    = \mathop{\mathrm{Cov}}(Z_i, Z_j),
-  \end{equation*}\]</span>
-for all <span class="math inline">\(i, j \in \{1, \ldots, n\}\)</span>,
-where <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j)\)</span> denotes the usual covariance between random
-variables.</p>
-</div>
-<p>We collect some basic properties of covariance matrices here. Most of these
-arguments use concepts and rules from linear algebra, as summarised in
-section <a href="Sx1-matrices.html#Sx1-matrices">A</a> in the appendix.</p>
+<p><span id="exm:unlabeled-div-78" class="example"><strong>Example 20.3  </strong></span>We now examine the weights assigned by different M-estimators.
+Recall from section <a href="S18-m-est.html#S18-m-est">18</a> that M-estimators assign weights
+to observations based on the magnitude of their residuals, with larger
+residuals receiving smaller weights.</p>
+<p>Figure <a href="S20-examples.html#fig:robweights">20.3</a> shows the weights assigned by three
+different M-estimators: Huber, Bisquare and Hampel. The left plot
+shows the weights for all 30 observations. We can clearly see that
+observations 5, 15 and 25 (the outliers) receive very low weights
+from all three methods, confirming that these are correctly identified
+as outliers.</p>
+<p>The centre and right plots compare the weights pairwise between methods.
+Most observations lie on or near the diagonal line, indicating that
+different methods assign similar weights to these observations.
+However, for the outliers (points far from the diagonal), the methods
+differ:</p>
 <ul>
-<li><p>Since <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j) = \mathop{\mathrm{Cov}}(Z_j, Z_i)\)</span>, covariance matrices are
-symmetric.</p></li>
-<li><p>The diagonal elements of <span class="math inline">\(\mathop{\mathrm{Cov}}(Z)\)</span> are
-<span class="math display" id="eq:Cov-diag-elem">\[\begin{equation}
-  \mathop{\mathrm{Cov}}(Z)_{ii}
-  = \mathop{\mathrm{Cov}}(Z_i, Z_i)
-  = \mathop{\mathrm{Var}}(Z_i).  \tag{3.2}
-\end{equation}\]</span></p></li>
-<li><p>If the elements <span class="math inline">\(Z_i\)</span> of <span class="math inline">\(Z\)</span> are (statistically) independent,
-we have <span class="math inline">\(\mathop{\mathrm{Cov}}(Z_i, Z_j) = 0\)</span> and thus <span class="math inline">\(\mathop{\mathrm{Cov}}(Z)_{ij} = 0\)</span>
-for <span class="math inline">\(i \neq j\)</span>. Thus, if <span class="math inline">\(Z\)</span> is a vector of independent random variables,
-the covariance matrix of <span class="math inline">\(Z\)</span> is diagonal.</p></li>
-<li><p>Let <span class="math inline">\(\mu = \mathbb{E}(Z) \in \mathbb{R}^n\)</span>. If we interpret <span class="math inline">\(\mu\)</span> as a column vector,
-then <span class="math inline">\(M = (Z - \mu) (Z - \mu)^\top\)</span> is an <span class="math inline">\(n\times n\)</span> matrix and we have
-<span class="math display">\[\begin{equation*}
-  M_{ij}
-  = \bigl( (Z - \mu) (Z - \mu)^\top \bigr)_{ij}
-  = (Z - \mu)_i (Z - \mu)_j.
-\end{equation*}\]</span>
-Taking expectations gives <span class="math inline">\(\mathbb{E}(M_{ij}) = \mathbb{E}\bigl( (Z - \mu)_i (Z - \mu)_j
-\bigr) = \mathop{\mathrm{Cov}}(Z_i, Z_j)\)</span> and thus we can write
-<span class="math display" id="eq:cov-prod">\[\begin{equation}
-  \mathop{\mathrm{Cov}}(Z)
-  = \mathbb{E}\bigl( (Z - \mu) (Z - \mu)^\top \bigr).  \tag{3.3}
-\end{equation}\]</span></p></li>
-<li><p>Covariance matrices are positive semi-definite. To see this, let
-<span class="math inline">\(C = \mathop{\mathrm{Cov}}(Z)\)</span> and <span class="math inline">\(u \in\mathbb{R}^n\)</span> be a vector. We have to show that
-<span class="math inline">\(u^\top C u \geq 0\)</span>. Writing <span class="math inline">\(\bar Z := Z - \mathbb{E}(Z)\)</span> as an abbreviation,
-we get
-<span class="math display">\[\begin{align*}
-  u^\top C u
-  &amp;= u^\top \mathbb{E}\bigl( \bar Z \bar Z^\top \bigr) u \\
-  &amp;= \mathbb{E}\bigl( u^\top \bar Z \bar Z^\top u \bigr) \\
-  &amp;= \mathbb{E}\bigl( (\bar Z^\top u)^\top \bar Z^\top u \bigr) \\
-  &amp;= \mathbb{E}\bigl( \|\bar Z^\top u\|^2 \bigr),
-\end{align*}\]</span>
-where <span class="math inline">\(\|\bar Z^\top u\|\)</span> denotes the Euclidean length of the
-vector <span class="math inline">\(\bar Z^\top u\)</span>. Since <span class="math inline">\(\|\bar Z^\top u\|^2 \geq 0\)</span>
-we find <span class="math inline">\(u^\top C u \geq 0\)</span>. This shows that the covariance matrix <span class="math inline">\(C\)</span>
-is positive semi-definite. (Note that, nevertheless,
-individual <em>elements</em> of the matrix <span class="math inline">\(C\)</span> can be negative numbers.)</p></li>
+<li>The Bisquare and Hampel methods assign more extreme weights than
+the Huber method, with some observations receiving weights very close
+to zero.</li>
+<li>The Huber method assigns intermediate weights even to the outliers,
+which reflects the fact that the Huber <span class="math inline">\(\psi\)</span>-function does not
+completely down-weight large residuals.</li>
 </ul>
-<div class="example">
-<p><span id="exm:unlabeled-div-7" class="example"><strong>Example 3.4  </strong></span>The random vector <span class="math inline">\(\varepsilon\)</span> in equation <a href="S03-cov.html#eq:lmstat0">(3.1)</a> has <span class="math inline">\(\mathbb{E}(\varepsilon) = 0\)</span>.
-We have
-<span class="math inline">\(\mathop{\mathrm{Cov}}(\varepsilon)_{ii} = \mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\)</span> for all <span class="math inline">\(i\in\{1, \ldots, n\}\)</span>.
-Since we assumed the <span class="math inline">\(\varepsilon_i\)</span> to be independent, the covariance matrix is
-diagonal and we find
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I,
-\end{equation*}\]</span>
-where <span class="math inline">\(I\)</span> is the <span class="math inline">\(n\times n\)</span> identity matrix.</p>
+<p>These differences reflect the different shapes of the weight functions
+<span class="math inline">\(w(\varepsilon) = \psi(\varepsilon) / \varepsilon\)</span> discussed in section <a href="S18-m-est.html#S18-m-est">18</a>.
+The Bisquare and Hampel methods are “redescending” M-estimators, meaning
+that sufficiently large residuals receive weight zero. The Huber method
+is not redescending, so all observations retain some influence.</p>
+<div class="figure"><span style="display:block;" id="fig:robweights"></span>
+<img src="MATH3714_files/figure-html/robweights-1.png" alt="Comparisons of weights assigned by different M-estimators. The left plot shows weights for all observations. The centre and right plots compare weights pairwise between methods, with outliers shown as red points." width="32%" /><img src="MATH3714_files/figure-html/robweights-2.png" alt="Comparisons of weights assigned by different M-estimators. The left plot shows weights for all observations. The centre and right plots compare weights pairwise between methods, with outliers shown as red points." width="32%" /><img src="MATH3714_files/figure-html/robweights-3.png" alt="Comparisons of weights assigned by different M-estimators. The left plot shows weights for all observations. The centre and right plots compare weights pairwise between methods, with outliers shown as red points." width="32%" />
+<p class="caption">
+Figure 20.3: Comparisons of weights assigned by different M-estimators. The left plot shows weights for all observations. The centre and right plots compare weights pairwise between methods, with outliers shown as red points.
+</p>
 </div>
-<p>An important result about covariance matrices is given in the following
-lemma, which describes how the covariance matrix changes under affine
-transformations.</p>
-<div class="lemma">
-<p><span id="lem:Cov-is-quadratic" class="lemma"><strong>Lemma 3.1  </strong></span>Let <span class="math inline">\(Z\in\mathbb{R}^n\)</span> be a random vector, <span class="math inline">\(A\in\mathbb{R}^{m\times n}\)</span> a matrix
-and <span class="math inline">\(b\in\mathbb{R}^m\)</span> a vector. Then
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{Cov}}(AZ+b)
-  = A \mathop{\mathrm{Cov}}(Z) A^\top.
-\end{equation*}\]</span></p>
-</div>
-<div class="proof">
-<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>As in equation <a href="S03-cov.html#eq:cov-prod">(3.3)</a>, we can write <span class="math inline">\(\mathop{\mathrm{Cov}}(AZ+b)\)</span>
-as
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{Cov}}(AZ+b)
-  = \mathbb{E}\bigl( (AZ + b - \mu) (AZ + b - \mu)^\top \bigr),
-\end{equation*}\]</span>
-where <span class="math inline">\(\mu = \mathbb{E}(AZ + b) = \mathbb{E}(AZ) + b\)</span>. Thus,
-<span class="math inline">\(AZ + b - \mu = AZ - \mathbb{E}(AZ)\)</span> and we find
-<span class="math display">\[\begin{align*}
-  \mathop{\mathrm{Cov}}(AZ+b)
-  &amp;= \mathbb{E}\bigl( (AZ - \mathbb{E}(AZ)) (AZ - \mathbb{E}(AZ))^\top \bigr) \\
-  &amp;= \mathop{\mathrm{Cov}}(AZ).
-\end{align*}\]</span>
-This shows that the covariance matrix ignores non-random shifts.</p>
-<p>Furthermore, we have <span class="math inline">\(AZ - \mathbb{E}(AZ) = AZ - A\mathbb{E}(Z) = A\bigl(Z - \mathbb{E}(Z)\bigr)\)</span>.
-Using equation <a href="S03-cov.html#eq:cov-prod">(3.3)</a> again, we find
-<span class="math display">\[\begin{align*}
-  \mathop{\mathrm{Cov}}(AZ)
-  &amp;= \mathbb{E}\Bigl( \bigl(AZ - \mathbb{E}(AZ)\bigr) \bigl(AZ - \mathbb{E}(AZ)\bigr)^\top \Bigr) \\
-  &amp;= \mathbb{E}\Bigl( A \bigl(Z - \mathbb{E}(Z)\bigr) \bigl(Z - \mathbb{E}(Z)\bigr)^\top A^\top \Bigr) \\
-  &amp;= A \mathbb{E}\Bigl( \bigl(Z - \mathbb{E}(Z)\bigr) \bigl(Z - \mathbb{E}(Z)\bigr)^\top \Bigr) A^\top \\
-  &amp;= A \mathop{\mathrm{Cov}}(Z) A^\top.
-\end{align*}\]</span>
-This completes the proof.</p>
-</div>
-</div>
-<div id="the-multivariate-normal-distribution" class="section level2 hasAnchor" number="3.3">
-<h2><span class="header-section-number">3.3</span> The Multivariate Normal Distribution<a href="S03-cov.html#the-multivariate-normal-distribution" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bgBrgPL77W8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>With the concepts of expectation and covariance in hand, we can now turn to
-the distribution of random vectors. Since we assume that the random errors
-<span class="math inline">\(\varepsilon_i\)</span> are normally distributed, we will need to understand how vectors of
-normally distributed random variables behave.</p>
-<div class="definition">
-<p><span id="def:unlabeled-div-9" class="definition"><strong>Definition 3.3  </strong></span>A random vector <span class="math inline">\(Z\in\mathbb{R}^n\)</span> follows a <strong>multivariate normal distribution</strong>,
-if <span class="math inline">\(u^\top Z\)</span> is normally distributed or constant for every
-vector <span class="math inline">\(u\in\mathbb{R}^n\)</span>.</p>
-</div>
-<p>This definition takes its slightly surprising form to avoid some boundary cases
-which I will discuss in an example, below. To understand the definition, a good
-start is to consider the cases where <span class="math inline">\(u\)</span> is one of the standard basis vectors,
-say <span class="math inline">\(u_i = 1\)</span> and <span class="math inline">\(u_j = 0\)</span> for all <span class="math inline">\(j\neq i\)</span>. In this case we have
-<span class="math display">\[\begin{equation*}
-  u^\top Z
-  = \sum_{k=1}^n u_k Z_k
-  = Z_i.
-\end{equation*}\]</span>
-Thus, if <span class="math inline">\(Z\)</span> follows a multivariate normal distribution, each of the
-components <span class="math inline">\(Z_i\)</span> is normally distributed. Example <a href="S03-cov.html#exm:not-normal">3.8</a>,
-below, shows that the converse is not true.</p>
-<p>One can show that a multivariate normal distribution is completely determined
-by the mean <span class="math inline">\(\mu = \mathbb{E}(Z)\)</span> and the covariance <span class="math inline">\(\Sigma = \mathop{\mathrm{Cov}}(Z)\)</span>. The
-distribution of such a <span class="math inline">\(Z\)</span> is denoted by <span class="math inline">\(\mathcal{N}(\mu, \Sigma)\)</span>. Also, for every
-<span class="math inline">\(\mu\in\mathbb{R}^n\)</span> and every positive semi-definite matrix <span class="math inline">\(\Sigma\in\mathbb{R}^{n\times n}\)</span>
-there is a random vector <span class="math inline">\(Z\)</span> which follows a multivariate normal distribution
-with this mean and covariance.</p>
-<div class="example">
-<p><span id="exm:unlabeled-div-10" class="example"><strong>Example 3.5  </strong></span>Consider the vector <span class="math inline">\(\varepsilon\)</span> from the model <a href="S03-cov.html#eq:lmstat0">(3.1)</a>.
-This vector has components <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span> and by
-assumption, the components <span class="math inline">\(\varepsilon_i\)</span> are independent.
-For <span class="math inline">\(u\in\mathbb{R}^n\)</span> we have
-<span class="math display">\[\begin{equation*}
-  u^\top \varepsilon
-  = \sum_{i=1}^n u_i \varepsilon_i.
-\end{equation*}\]</span>
-Using the fact that a sum of independent, one-dimensional, normally
-distributed random variables is also normally distributed, we see that
-<span class="math inline">\(u^\top \varepsilon\)</span> is normally distributed for every <span class="math inline">\(u\)</span>. Thus, <span class="math inline">\(\varepsilon\)</span> is a
-normally distributed random vector.
-We have already seen <span class="math inline">\(\mathbb{E}(\varepsilon) = 0\)</span> and <span class="math inline">\(\mathop{\mathrm{Cov}}(\varepsilon) = \sigma^2 I\)</span>,
-and thus <span class="math inline">\(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\)</span>.</p>
-</div>
-<p>Without proof we state here some properties of the multivariate normal
-distribution:</p>
-<ul>
-<li><p>If <span class="math inline">\(Z \sim \mathcal{N}(\mu, \Sigma)\)</span> and <span class="math inline">\(a \in \mathbb{R}^n\)</span>, then
-<span class="math inline">\(Z + a \sim \mathcal{N}(\mu + a, \Sigma)\)</span>.</p></li>
-<li><p>If <span class="math inline">\(Z \sim \mathcal{N}(\mu, \Sigma)\)</span> and <span class="math inline">\(A \in \mathbb{R}^{m\times n}\)</span>, then
-<span class="math inline">\(AZ \sim \mathcal{N}(A\mu, A\Sigma A^\top)\)</span>.</p></li>
-<li><p>If <span class="math inline">\(Z_1 \sim \mathcal{N}(\mu_1, \Sigma_1)\)</span> and <span class="math inline">\(Z_2 \sim \mathcal{N}(\mu_2, \Sigma_2)\)</span>
-are independent, then
-<span class="math inline">\(Z_1 + Z_2 \sim \mathcal{N}(\mu_1 + \mu_2, \Sigma_1 + \Sigma_2)\)</span>.</p></li>
-</ul>
-<div class="example">
-<p><span id="exm:unlabeled-div-11" class="example"><strong>Example 3.6  </strong></span>Let <span class="math inline">\(Z = (Z_1, Z_2)\)</span> where <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span> are independently standard
-normal distributed. Let
-<span class="math display">\[\begin{equation*}
-  A := \begin{pmatrix}
-    2 &amp; -1 \\
-    2 &amp; 1
-  \end{pmatrix}
-  \qquad \mbox{and} \qquad
-  b := \begin{pmatrix}
-    3 \\ 4
-  \end{pmatrix}.
-\end{equation*}\]</span>
-Then <span class="math inline">\(AZ + b \sim \mathcal{N}(b, \Sigma)\)</span> where
-<span class="math display">\[\begin{equation*}
-  \Sigma
-  = A \mathop{\mathrm{Cov}}(Z) A^\top
-  = \begin{pmatrix}
-      2 &amp; -1 \\
-      2 &amp; 1
-    \end{pmatrix}
-    \begin{pmatrix}
-      1 &amp; 0 \\
-      0 &amp; 1
-    \end{pmatrix}
-    \begin{pmatrix}
-      2 &amp; 2 \\
-      -1 &amp; 1
-    \end{pmatrix}
-  = \begin{pmatrix}
-      5 &amp; 3 \\
-      3 &amp; 5
-    \end{pmatrix}
-\end{equation*}\]</span></p>
-<p>We can use R to plot a sample of this two-dimensional normal distribution.
-(The grey cross indicates the mean.)</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="S03-cov.html#cb36-1" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">500</span></span>
-<span id="cb36-2"><a href="S03-cov.html#cb36-2" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">rnorm</span>(N), <span class="fu">rnorm</span>(N))</span>
-<span id="cb36-3"><a href="S03-cov.html#cb36-3" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">2</span>, <span class="dv">2</span>)</span>
-<span id="cb36-4"><a href="S03-cov.html#cb36-4" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)</span>
-<span id="cb36-5"><a href="S03-cov.html#cb36-5" tabindex="-1"></a>V <span class="ot">&lt;-</span> A <span class="sc">%*%</span> Z <span class="sc">+</span> b</span>
-<span id="cb36-6"><a href="S03-cov.html#cb36-6" tabindex="-1"></a><span class="fu">plot</span>(V[<span class="dv">1</span>,], V[<span class="dv">2</span>,], <span class="at">asp =</span> <span class="dv">1</span>, <span class="at">cex =</span> .<span class="dv">5</span>,</span>
-<span id="cb36-7"><a href="S03-cov.html#cb36-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(V[<span class="dv">1</span>]),</span>
-<span id="cb36-8"><a href="S03-cov.html#cb36-8" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(V[<span class="dv">2</span>]))</span>
-<span id="cb36-9"><a href="S03-cov.html#cb36-9" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span>
-<span id="cb36-10"><a href="S03-cov.html#cb36-10" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/MVN-plot-1.png" width="672" /></p>
-</div>
-<div class="example">
-<p><span id="exm:unlabeled-div-12" class="example"><strong>Example 3.7  </strong></span>The random vector <span class="math inline">\(Y\)</span> in <a href="S03-cov.html#eq:lmstat0">(3.1)</a> satisfies <span class="math inline">\(Y = X \beta + \varepsilon\)</span>
-and since <span class="math inline">\(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\)</span> we have
-<span class="math inline">\(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\)</span>.</p>
-</div>
-<div class="example">
-<p><span id="exm:not-normal" class="example"><strong>Example 3.8  </strong></span>Let <span class="math inline">\(Y \sim \mathcal{N}(0, 1)\)</span> be a random variable. Define a random vector
-<span class="math inline">\(Z = (Z_1, Z_2)\)</span> as <span class="math inline">\(Z_1 = Y\)</span> and
-<span class="math display">\[\begin{equation*}
-  Z_2 = \begin{cases}
-    Y &amp; \mbox{if $|Y|&lt;1$, and}\\
-    -Y &amp; \mbox{otherwise.}
-  \end{cases}
-\end{equation*}\]</span>
-Clearly <span class="math inline">\(Z_1\)</span> is standard normally distributed.
-Since <span class="math inline">\(\mathcal{N}(0,1)\)</span> is symmetric, both <span class="math inline">\(Y\)</span> and <span class="math inline">\(-Y\)</span> are standard normally
-distributed and it follows that <span class="math inline">\(Z_2\)</span> is also standard normally distributed.
-Nevertheless, the random vector <span class="math inline">\(Z\)</span> does not follow a multivariate
-normal distribution. Instead of giving a proof of this fact,
-we illustrate this here using an R experiment. We start by verifying
-that <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span> are normally distributed.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="S03-cov.html#cb37-1" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb37-2"><a href="S03-cov.html#cb37-2" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N)</span>
-<span id="cb37-3"><a href="S03-cov.html#cb37-3" tabindex="-1"></a>Z1 <span class="ot">&lt;-</span> Y</span>
-<span id="cb37-4"><a href="S03-cov.html#cb37-4" tabindex="-1"></a>Z2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">abs</span>(Y)<span class="sc">&lt;</span><span class="dv">1</span>, Y, <span class="sc">-</span>Y)</span>
-<span id="cb37-5"><a href="S03-cov.html#cb37-5" tabindex="-1"></a></span>
-<span id="cb37-6"><a href="S03-cov.html#cb37-6" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb37-7"><a href="S03-cov.html#cb37-7" tabindex="-1"></a><span class="fu">hist</span>(Z1, <span class="at">main=</span><span class="cn">NULL</span>, <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">1</span>]))</span>
-<span id="cb37-8"><a href="S03-cov.html#cb37-8" tabindex="-1"></a><span class="fu">hist</span>(Z2, <span class="at">main=</span><span class="cn">NULL</span>, <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">2</span>]))</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/not-a-normal-hist-1.png" width="672" /></p>
-<p>The histograms make it plausible that the components are indeed normally
-distributed. Now we use a scatter plot to show the joint distribution
-of <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_2\)</span>:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="S03-cov.html#cb38-1" tabindex="-1"></a><span class="fu">plot</span>(Z1, Z2, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">asp=</span><span class="dv">1</span>,</span>
-<span id="cb38-2"><a href="S03-cov.html#cb38-2" tabindex="-1"></a>     <span class="at">xlab=</span><span class="fu">expression</span>(Z[<span class="dv">1</span>]),</span>
-<span id="cb38-3"><a href="S03-cov.html#cb38-3" tabindex="-1"></a>     <span class="at">ylab=</span><span class="fu">expression</span>(Z[<span class="dv">2</span>]))</span></code></pre></div>
-<p><img src="MATH3714_files/figure-html/not-a-normal-scatter-1.png" width="672" /></p>
-<p>This plot looks peculiar! Most people would not call this a normal distribution
-and the formal definition of a multivariate normal distribution is made to
-exclude cases like this.</p>
 </div>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>We learned the rules for computing the expectation of a random vector.</li>
-<li>The covariance matrix of random vectors plays the role of the
-variance for numeric random variables.</li>
-<li>We have learned the rules for computing the expectation and covariance
-of linear transformations of random vectors.</li>
-<li>We learned about the definition of the multivariate normal distribution.</li>
+<li>We have compared several robust regression methods on synthetic data
+with outliers.</li>
+<li>Methods with high breakdown points (LMS, LTS) resist outliers,
+whilst methods with low breakdown points (least squares, LAV, M-estimators)
+can be severely affected.</li>
+<li>Robust methods produce cleaner residual patterns than least squares
+when outliers are present, making diagnostics more reliable.</li>
+<li>M-estimators assign weights to observations based on residual magnitude,
+with different methods (Huber, Bisquare, Hampel) assigning weights
+differently.</li>
+<li>Redescending M-estimators (Bisquare, Hampel) assign zero weight to
+sufficiently large residuals, whilst the Huber method retains some
+influence for all observations.</li>
+<li>The choice of robust method involves a trade-off between breakdown point
+and efficiency, as discussed in sections <a href="S17-robust.html#S17-robust">17</a>–<a href="S19-efficiency.html#S19-efficiency">19</a>.</li>
 </ul>
 </div>
 
 </div>
 </div>
+
+
+
             </section>
 
           </div>
         </div>
       </div>
-<a href="I01-lm.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="P01.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="P05.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Sx1-matrices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

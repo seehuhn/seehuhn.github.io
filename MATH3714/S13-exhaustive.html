@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Section 12 Automatic Model Selection | MATH3714 Linear Regression and Robustness</title>
+  <title>Section 13 Exhaustive Model Search | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
   <meta name="generator" content="bookdown 0.44 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Section 12 Automatic Model Selection | MATH3714 Linear Regression and Robustness" />
+  <meta property="og:title" content="Section 13 Exhaustive Model Search | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Section 12 Automatic Model Selection | MATH3714 Linear Regression and Robustness" />
+  <meta name="twitter:title" content="Section 13 Exhaustive Model Search | MATH3714 Linear Regression and Robustness" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="P03.html"/>
-<link rel="next" href="S13-multicoll.html"/>
+<link rel="prev" href="S12-selection.html"/>
+<link rel="next" href="S14-factors.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -153,8 +153,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.1" data-path="S02-multiple.html"><a href="S02-multiple.html#data-and-models"><i class="fa fa-check"></i><b>2.1</b> Data and Models</a></li>
 <li class="chapter" data-level="2.2" data-path="S02-multiple.html"><a href="S02-multiple.html#the-normal-equations"><i class="fa fa-check"></i><b>2.2</b> The Normal Equations</a></li>
 <li class="chapter" data-level="2.3" data-path="S02-multiple.html"><a href="S02-multiple.html#fitted-values"><i class="fa fa-check"></i><b>2.3</b> Fitted Values</a></li>
-<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#models-without-intercept"><i class="fa fa-check"></i><b>2.4</b> Models Without Intercept</a></li>
-<li class="chapter" data-level="2.5" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.5</b> Example</a></li>
+<li class="chapter" data-level="2.4" data-path="S02-multiple.html"><a href="S02-multiple.html#example"><i class="fa fa-check"></i><b>2.4</b> Example</a></li>
+<li class="chapter" data-level="2.5" data-path="S02-multiple.html"><a href="S02-multiple.html#models-without-intercept"><i class="fa fa-check"></i><b>2.5</b> Models Without Intercept</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="I01-lm.html"><a href="I01-lm.html"><i class="fa fa-check"></i>Interlude: Linear Regression in R</a>
 <ul>
@@ -240,53 +240,54 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2" data-path="S09-plots.html"><a href="S09-plots.html#q-q-plots"><i class="fa fa-check"></i><b>9.2</b> Q-Q Plots</a></li>
 <li class="chapter" data-level="9.3" data-path="S09-plots.html"><a href="S09-plots.html#other-plot-types"><i class="fa fa-check"></i><b>9.3</b> Other Plot Types</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="S10-improving.html"><a href="S10-improving.html"><i class="fa fa-check"></i><b>10</b> Improving the Model Fit</a>
+<li class="chapter" data-level="10" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html"><i class="fa fa-check"></i><b>10</b> Measures for Model Fit</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="S10-improving.html"><a href="S10-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>10.1</b> Linearising the Mean</a></li>
-<li class="chapter" data-level="10.2" data-path="S10-improving.html"><a href="S10-improving.html#stabilising-the-variance"><i class="fa fa-check"></i><b>10.2</b> Stabilising the Variance</a></li>
-<li class="chapter" data-level="10.3" data-path="S10-improving.html"><a href="S10-improving.html#power-transform"><i class="fa fa-check"></i><b>10.3</b> The Power Transform</a></li>
-<li class="chapter" data-level="10.4" data-path="S10-improving.html"><a href="S10-improving.html#candidate-models"><i class="fa fa-check"></i><b>10.4</b> Candidate Models</a></li>
-<li class="chapter" data-level="10.5" data-path="S10-improving.html"><a href="S10-improving.html#misspecified-models"><i class="fa fa-check"></i><b>10.5</b> Misspecified Models</a>
-<ul>
-<li class="chapter" data-level="10.5.1" data-path="S10-improving.html"><a href="S10-improving.html#missing-variables"><i class="fa fa-check"></i><b>10.5.1</b> Missing Variables</a></li>
-<li class="chapter" data-level="10.5.2" data-path="S10-improving.html"><a href="S10-improving.html#unnecessary-variables"><i class="fa fa-check"></i><b>10.5.2</b> Unnecessary Variables</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="11" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html"><i class="fa fa-check"></i><b>11</b> Measures for Model Fit</a>
-<ul>
-<li class="chapter" data-level="11.1" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#R-squared"><i class="fa fa-check"></i><b>11.1</b> The Coefficient of Multiple Determination</a></li>
-<li class="chapter" data-level="11.2" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#error-var"><i class="fa fa-check"></i><b>11.2</b> Error Variance</a></li>
-<li class="chapter" data-level="11.3" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#PRESS"><i class="fa fa-check"></i><b>11.3</b> Prediction Error Sum of Squares</a></li>
-<li class="chapter" data-level="11.4" data-path="S11-diagnostics.html"><a href="S11-diagnostics.html#AIC"><i class="fa fa-check"></i><b>11.4</b> Akaike’s Information Criterion</a></li>
+<li class="chapter" data-level="10.1" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#R-squared"><i class="fa fa-check"></i><b>10.1</b> The Coefficient of Multiple Determination</a></li>
+<li class="chapter" data-level="10.2" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#error-var"><i class="fa fa-check"></i><b>10.2</b> Error Variance</a></li>
+<li class="chapter" data-level="10.3" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#PRESS"><i class="fa fa-check"></i><b>10.3</b> Prediction Error Sum of Squares</a></li>
+<li class="chapter" data-level="10.4" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#AIC"><i class="fa fa-check"></i><b>10.4</b> Akaike’s Information Criterion</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="I03-lm-output.html"><a href="I03-lm-output.html"><i class="fa fa-check"></i>Interlude: Understanding the <code>lm()</code> Output</a></li>
+<li class="chapter" data-level="11" data-path="S11-improving.html"><a href="S11-improving.html"><i class="fa fa-check"></i><b>11</b> Improving the Model Fit</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="S11-improving.html"><a href="S11-improving.html#linearising-the-mean"><i class="fa fa-check"></i><b>11.1</b> Linearising the Mean</a></li>
+<li class="chapter" data-level="11.2" data-path="S11-improving.html"><a href="S11-improving.html#stabilising-the-variance"><i class="fa fa-check"></i><b>11.2</b> Stabilising the Variance</a></li>
+<li class="chapter" data-level="11.3" data-path="S11-improving.html"><a href="S11-improving.html#power-transform"><i class="fa fa-check"></i><b>11.3</b> The Power Transform</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
-<li class="chapter" data-level="12" data-path="S12-automatic.html"><a href="S12-automatic.html"><i class="fa fa-check"></i><b>12</b> Automatic Model Selection</a>
+<li class="chapter" data-level="12" data-path="S12-selection.html"><a href="S12-selection.html"><i class="fa fa-check"></i><b>12</b> Model Selection</a>
 <ul>
-<li class="chapter" data-level="12.1" data-path="S12-automatic.html"><a href="S12-automatic.html#exhaustive-search"><i class="fa fa-check"></i><b>12.1</b> Exhaustive Search</a></li>
-<li class="chapter" data-level="12.2" data-path="S12-automatic.html"><a href="S12-automatic.html#search-algorithm"><i class="fa fa-check"></i><b>12.2</b> Search Algorithm</a></li>
-<li class="chapter" data-level="12.3" data-path="S12-automatic.html"><a href="S12-automatic.html#other-methods"><i class="fa fa-check"></i><b>12.3</b> Other Methods</a>
+<li class="chapter" data-level="12.1" data-path="S12-selection.html"><a href="S12-selection.html#candidate-models"><i class="fa fa-check"></i><b>12.1</b> Candidate Models</a></li>
+<li class="chapter" data-level="12.2" data-path="S12-selection.html"><a href="S12-selection.html#misspecified-models"><i class="fa fa-check"></i><b>12.2</b> Misspecified Models</a>
 <ul>
-<li class="chapter" data-level="12.3.1" data-path="S12-automatic.html"><a href="S12-automatic.html#stepwise-forward-selection"><i class="fa fa-check"></i><b>12.3.1</b> Stepwise Forward Selection</a></li>
-<li class="chapter" data-level="12.3.2" data-path="S12-automatic.html"><a href="S12-automatic.html#stepwise-backward-selection"><i class="fa fa-check"></i><b>12.3.2</b> Stepwise Backward Selection</a></li>
-<li class="chapter" data-level="12.3.3" data-path="S12-automatic.html"><a href="S12-automatic.html#hybrid-methods"><i class="fa fa-check"></i><b>12.3.3</b> Hybrid Methods</a></li>
+<li class="chapter" data-level="12.2.1" data-path="S12-selection.html"><a href="S12-selection.html#missing-variables"><i class="fa fa-check"></i><b>12.2.1</b> Missing Variables</a></li>
+<li class="chapter" data-level="12.2.2" data-path="S12-selection.html"><a href="S12-selection.html#unnecessary-variables"><i class="fa fa-check"></i><b>12.2.2</b> Unnecessary Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="S12-selection.html"><a href="S12-selection.html#choosing-between-models"><i class="fa fa-check"></i><b>12.3</b> Choosing Between Models</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="S12-selection.html"><a href="S12-selection.html#criteria-for-model-selection"><i class="fa fa-check"></i><b>12.3.1</b> Criteria for Model Selection</a></li>
+<li class="chapter" data-level="12.3.2" data-path="S12-selection.html"><a href="S12-selection.html#exhaustive-search"><i class="fa fa-check"></i><b>12.3.2</b> Exhaustive Search</a></li>
+<li class="chapter" data-level="12.3.3" data-path="S12-selection.html"><a href="S12-selection.html#stepwise-forward-selection"><i class="fa fa-check"></i><b>12.3.3</b> Stepwise Forward Selection</a></li>
+<li class="chapter" data-level="12.3.4" data-path="S12-selection.html"><a href="S12-selection.html#stepwise-backward-selection"><i class="fa fa-check"></i><b>12.3.4</b> Stepwise Backward Selection</a></li>
+<li class="chapter" data-level="12.3.5" data-path="S12-selection.html"><a href="S12-selection.html#hybrid-methods"><i class="fa fa-check"></i><b>12.3.5</b> Hybrid Methods</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="13" data-path="S13-multicoll.html"><a href="S13-multicoll.html"><i class="fa fa-check"></i><b>13</b> Multicollinearity</a>
+<li class="chapter" data-level="13" data-path="S13-exhaustive.html"><a href="S13-exhaustive.html"><i class="fa fa-check"></i><b>13</b> Exhaustive Model Search</a>
 <ul>
-<li class="chapter" data-level="13.1" data-path="S13-multicoll.html"><a href="S13-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>13.1</b> Consequences of Multicollinearity</a></li>
-<li class="chapter" data-level="13.2" data-path="S13-multicoll.html"><a href="S13-multicoll.html#detecting-multicollinearity"><i class="fa fa-check"></i><b>13.2</b> Detecting Multicollinearity</a></li>
-<li class="chapter" data-level="13.3" data-path="S13-multicoll.html"><a href="S13-multicoll.html#mitigations"><i class="fa fa-check"></i><b>13.3</b> Mitigations</a></li>
+<li class="chapter" data-level="13.1" data-path="S13-exhaustive.html"><a href="S13-exhaustive.html#exhaustive-search-1"><i class="fa fa-check"></i><b>13.1</b> Exhaustive Search</a></li>
+<li class="chapter" data-level="13.2" data-path="S13-exhaustive.html"><a href="S13-exhaustive.html#search-algorithm"><i class="fa fa-check"></i><b>13.2</b> Search Algorithm</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="S14-factors.html"><a href="S14-factors.html"><i class="fa fa-check"></i><b>14</b> Factors</a>
 <ul>
 <li class="chapter" data-level="14.1" data-path="S14-factors.html"><a href="S14-factors.html#indicator-variables"><i class="fa fa-check"></i><b>14.1</b> Indicator Variables</a></li>
 <li class="chapter" data-level="14.2" data-path="S14-factors.html"><a href="S14-factors.html#interactions"><i class="fa fa-check"></i><b>14.2</b> Interactions</a></li>
+<li class="chapter" data-level="14.3" data-path="S14-factors.html"><a href="S14-factors.html#interactions-example"><i class="fa fa-check"></i><b>14.3</b> Example</a></li>
 </ul></li>
-<li class="chapter" data-level="15" data-path="S15-examples.html"><a href="S15-examples.html"><i class="fa fa-check"></i><b>15</b> Examples</a>
+<li class="chapter" data-level="15" data-path="S15-multicoll.html"><a href="S15-multicoll.html"><i class="fa fa-check"></i><b>15</b> Multicollinearity</a>
 <ul>
-<li class="chapter" data-level="15.1" data-path="S15-examples.html"><a href="S15-examples.html#interactions-example"><i class="fa fa-check"></i><b>15.1</b> Use of Interaction Terms in Modelling</a></li>
-<li class="chapter" data-level="15.2" data-path="S15-examples.html"><a href="S15-examples.html#codings"><i class="fa fa-check"></i><b>15.2</b> Alternative Factor Codings</a></li>
+<li class="chapter" data-level="15.1" data-path="S15-multicoll.html"><a href="S15-multicoll.html#consequences-of-multicollinearity"><i class="fa fa-check"></i><b>15.1</b> Consequences of Multicollinearity</a></li>
+<li class="chapter" data-level="15.2" data-path="S15-multicoll.html"><a href="S15-multicoll.html#detecting-multicollinearity"><i class="fa fa-check"></i><b>15.2</b> Detecting Multicollinearity</a></li>
+<li class="chapter" data-level="15.3" data-path="S15-multicoll.html"><a href="S15-multicoll.html#mitigations"><i class="fa fa-check"></i><b>15.3</b> Mitigations</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P04.html"><a href="P04.html"><i class="fa fa-check"></i>Problem Sheet 4</a></li>
 <li class="chapter" data-level="16" data-path="S16-ridge.html"><a href="S16-ridge.html"><i class="fa fa-check"></i><b>16</b> Ridge Regression</a>
@@ -319,8 +320,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.3.1" data-path="S18-m-est.html"><a href="S18-m-est.html#least-squares-method"><i class="fa fa-check"></i><b>18.3.1</b> Least Squares Method</a></li>
 <li class="chapter" data-level="18.3.2" data-path="S18-m-est.html"><a href="S18-m-est.html#least-absolute-values"><i class="fa fa-check"></i><b>18.3.2</b> Least Absolute Values</a></li>
 <li class="chapter" data-level="18.3.3" data-path="S18-m-est.html"><a href="S18-m-est.html#Huber"><i class="fa fa-check"></i><b>18.3.3</b> Huber’s <span class="math inline">\(t\)</span>-function</a></li>
-<li class="chapter" data-level="18.3.4" data-path="S18-m-est.html"><a href="S18-m-est.html#hampels-method"><i class="fa fa-check"></i><b>18.3.4</b> Hampel’s Method</a></li>
-<li class="chapter" data-level="18.3.5" data-path="S18-m-est.html"><a href="S18-m-est.html#tukeys-bisquare-method"><i class="fa fa-check"></i><b>18.3.5</b> Tukey’s Bisquare Method</a></li>
+<li class="chapter" data-level="18.3.4" data-path="S18-m-est.html"><a href="S18-m-est.html#hampel"><i class="fa fa-check"></i><b>18.3.4</b> Hampel’s Method</a></li>
+<li class="chapter" data-level="18.3.5" data-path="S18-m-est.html"><a href="S18-m-est.html#bisquare"><i class="fa fa-check"></i><b>18.3.5</b> Tukey’s Bisquare Method</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="S19-efficiency.html"><a href="S19-efficiency.html"><i class="fa fa-check"></i><b>19</b> Efficiency of Robust Estimators</a>
@@ -328,11 +329,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="19.1" data-path="S19-efficiency.html"><a href="S19-efficiency.html#efficiency"><i class="fa fa-check"></i><b>19.1</b> Efficiency</a></li>
 <li class="chapter" data-level="19.2" data-path="S19-efficiency.html"><a href="S19-efficiency.html#robust-estimators"><i class="fa fa-check"></i><b>19.2</b> Robust estimators</a>
 <ul>
-<li class="chapter" data-level="19.2.1" data-path="S19-efficiency.html"><a href="S19-efficiency.html#least-median-of-squares"><i class="fa fa-check"></i><b>19.2.1</b> Least Median of Squares</a></li>
-<li class="chapter" data-level="19.2.2" data-path="S19-efficiency.html"><a href="S19-efficiency.html#least-trimmed-squares"><i class="fa fa-check"></i><b>19.2.2</b> Least Trimmed Squares</a></li>
+<li class="chapter" data-level="19.2.1" data-path="S19-efficiency.html"><a href="S19-efficiency.html#LMS"><i class="fa fa-check"></i><b>19.2.1</b> Least Median of Squares</a></li>
+<li class="chapter" data-level="19.2.2" data-path="S19-efficiency.html"><a href="S19-efficiency.html#LTS"><i class="fa fa-check"></i><b>19.2.2</b> Least Trimmed Squares</a></li>
 </ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html"><i class="fa fa-check"></i>Interlude: Robust Regression in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html#m-estimators"><i class="fa fa-check"></i>M-Estimators</a></li>
+<li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html#lav-estimation"><i class="fa fa-check"></i>LAV Estimation</a></li>
+<li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html#high-breakdown-point-methods"><i class="fa fa-check"></i>High Breakdown Point Methods</a></li>
+<li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html#summary"><i class="fa fa-check"></i>Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P05.html"><a href="P05.html"><i class="fa fa-check"></i>Problem Sheet 5</a></li>
+<li class="chapter" data-level="20" data-path="S20-examples.html"><a href="S20-examples.html"><i class="fa fa-check"></i><b>20</b> Examples</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="S20-examples.html"><a href="S20-examples.html#comparing-robust-methods"><i class="fa fa-check"></i><b>20.1</b> Comparing Robust Methods</a></li>
+<li class="chapter" data-level="20.2" data-path="S20-examples.html"><a href="S20-examples.html#residual-analysis"><i class="fa fa-check"></i><b>20.2</b> Residual Analysis</a></li>
+<li class="chapter" data-level="20.3" data-path="S20-examples.html"><a href="S20-examples.html#weight-comparisons"><i class="fa fa-check"></i><b>20.3</b> Weight Comparisons</a></li>
+</ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="Sx1-matrices.html"><a href="Sx1-matrices.html"><i class="fa fa-check"></i><b>A</b> Linear Algebra Reminders</a>
 <ul>
@@ -383,27 +397,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="S12-automatic" class="section level1 hasAnchor" number="12">
-<h1><span class="header-section-number">Section 12</span> Automatic Model Selection<a href="S12-automatic.html#S12-automatic" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="S13-exhaustive" class="section level1 hasAnchor" number="13">
+<h1><span class="header-section-number">Section 13</span> Exhaustive Model Search<a href="S13-exhaustive.html#S13-exhaustive" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <!--
 * explain the `nvmax` argument to `regsubsets()`
 -->
-<p>For a model with <span class="math inline">\(p\)</span> input variables, there are
-<span class="math inline">\(2^p\)</span> different choices for which variables to include in the
-model (or <span class="math inline">\(2^{p+1}\)</span>, if we also have to decide whether to include the intercept).
-This value increases quickly with <span class="math inline">\(p\)</span>: for <span class="math inline">\(p = 10\)</span> we
-have <span class="math inline">\(1024\)</span> models to consider, for <span class="math inline">\(p = 20\)</span> there are <span class="math inline">\(1048576\)</span> possible
-models, and for large <span class="math inline">\(p\)</span> it becomes infeasible to simply try all possible
-models to find the best one. In this section we consider algorithms
-for automatically finding a good selection inputs when <span class="math inline">\(p\)</span> is large.</p>
+<div id="exhaustive-search-1" class="section level2 hasAnchor" number="13.1">
+<h2><span class="header-section-number">13.1</span> Exhaustive Search<a href="S13-exhaustive.html#exhaustive-search-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The stepwise methods from the previous section provide efficient
+heuristics, but they may not find the model with truly maximal
+<span class="math inline">\(R^2_\mathrm{adj}\)</span>. When <span class="math inline">\(p\)</span> is small to moderate, exhaustive search
+allows us to evaluate all possible models systematically. Here we
+present an efficient algorithm that can often find the optimal model
+without having to fit all <span class="math inline">\(2^p\)</span> models.</p>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/pOWYr9RiZWU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </div>
 </div>
-<div id="exhaustive-search" class="section level2 hasAnchor" number="12.1">
-<h2><span class="header-section-number">12.1</span> Exhaustive Search<a href="S12-automatic.html#exhaustive-search" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Efficient algorithms are available to find the best model out of the
 <span class="math inline">\(2^p\)</span> possible models for small to moderate <span class="math inline">\(p\)</span>. Here we present
 a method which can often find the model with the largest <span class="math inline">\(R^2_\mathrm{adj}\)</span>
@@ -423,7 +435,7 @@ find the <span class="math inline">\(J\)</span> which <em>minimises</em>
 \end{equation*}\]</span>
 where <span class="math inline">\(|J|\)</span> is the number of variables in <span class="math inline">\(J\)</span> and the
 <span class="math inline">\(\hat y_i\)</span> are the fitted values for the model with inputs <span class="math inline">\(j \in J\)</span>.
-We have seen that these criteria are equivalent in section <a href="S11-diagnostics.html#error-var">11.2</a>.</p></li>
+We have seen that these criteria are equivalent in section <a href="S10-diagnostics.html#error-var">10.2</a>.</p></li>
 <li><p>For <span class="math inline">\(J \subseteq \{1, \ldots p\}\)</span>, define
 <span class="math display">\[\begin{equation*}
   r(J)
@@ -445,8 +457,8 @@ Thus we have <span class="math inline">\(r(J) \leq r(K)\)</span> whenever <span 
 We can use this result to exclude certain models without having to fit them.</p></li>
 </ul>
 </div>
-<div id="search-algorithm" class="section level2 hasAnchor" number="12.2">
-<h2><span class="header-section-number">12.2</span> Search Algorithm<a href="S12-automatic.html#search-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="search-algorithm" class="section level2 hasAnchor" number="13.2">
+<h2><span class="header-section-number">13.2</span> Search Algorithm<a href="S13-exhaustive.html#search-algorithm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/B0vNhThH8Dc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
@@ -517,37 +529,37 @@ Often, large savings are achieved by the early exits in step C.
 Only in the worst case, when all of the comparisons with <span class="math inline">\(\varphi_j\)</span> in step
 C fail, this algorithms needs to fit all <span class="math inline">\(2^p\)</span> models.</p>
 <div class="example">
-<p><span id="exm:qsar-search" class="example"><strong>Example 12.1  </strong></span>To demonstrate the steps of the algorithm, we implement the method
+<p><span id="exm:qsar-search" class="example"><strong>Example 13.1  </strong></span>To demonstrate the steps of the algorithm, we implement the method
 “by hand”. We use the QSAR dataset, which we have already seen
 in section <a href="S07-examples.html#S07-examples">7</a>:</p>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="S12-automatic.html#cb181-1" tabindex="-1"></a><span class="co"># data from https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity</span></span>
-<span id="cb181-2"><a href="S12-automatic.html#cb181-2" tabindex="-1"></a>qsar <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/qsar_aquatic_toxicity.csv&quot;</span>,</span>
-<span id="cb181-3"><a href="S12-automatic.html#cb181-3" tabindex="-1"></a>                 <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb181-4"><a href="S12-automatic.html#cb181-4" tabindex="-1"></a>fields <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb181-5"><a href="S12-automatic.html#cb181-5" tabindex="-1"></a>    <span class="st">&quot;TPSA&quot;</span>,</span>
-<span id="cb181-6"><a href="S12-automatic.html#cb181-6" tabindex="-1"></a>    <span class="st">&quot;SAacc&quot;</span>,</span>
-<span id="cb181-7"><a href="S12-automatic.html#cb181-7" tabindex="-1"></a>    <span class="st">&quot;H050&quot;</span>,</span>
-<span id="cb181-8"><a href="S12-automatic.html#cb181-8" tabindex="-1"></a>    <span class="st">&quot;MLOGP&quot;</span>,</span>
-<span id="cb181-9"><a href="S12-automatic.html#cb181-9" tabindex="-1"></a>    <span class="st">&quot;RDCHI&quot;</span>,</span>
-<span id="cb181-10"><a href="S12-automatic.html#cb181-10" tabindex="-1"></a>    <span class="st">&quot;GATS1p&quot;</span>,</span>
-<span id="cb181-11"><a href="S12-automatic.html#cb181-11" tabindex="-1"></a>    <span class="st">&quot;nN&quot;</span>,</span>
-<span id="cb181-12"><a href="S12-automatic.html#cb181-12" tabindex="-1"></a>    <span class="st">&quot;C040&quot;</span>,</span>
-<span id="cb181-13"><a href="S12-automatic.html#cb181-13" tabindex="-1"></a>    <span class="st">&quot;LC50&quot;</span></span>
-<span id="cb181-14"><a href="S12-automatic.html#cb181-14" tabindex="-1"></a>)</span>
-<span id="cb181-15"><a href="S12-automatic.html#cb181-15" tabindex="-1"></a><span class="fu">names</span>(qsar) <span class="ot">&lt;-</span> fields</span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="S13-exhaustive.html#cb181-1" tabindex="-1"></a><span class="co"># data from https://archive.ics.uci.edu/ml/datasets/QSAR+aquatic+toxicity</span></span>
+<span id="cb181-2"><a href="S13-exhaustive.html#cb181-2" tabindex="-1"></a>qsar <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/qsar_aquatic_toxicity.csv&quot;</span>,</span>
+<span id="cb181-3"><a href="S13-exhaustive.html#cb181-3" tabindex="-1"></a>                 <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb181-4"><a href="S13-exhaustive.html#cb181-4" tabindex="-1"></a>fields <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb181-5"><a href="S13-exhaustive.html#cb181-5" tabindex="-1"></a>    <span class="st">&quot;TPSA&quot;</span>,</span>
+<span id="cb181-6"><a href="S13-exhaustive.html#cb181-6" tabindex="-1"></a>    <span class="st">&quot;SAacc&quot;</span>,</span>
+<span id="cb181-7"><a href="S13-exhaustive.html#cb181-7" tabindex="-1"></a>    <span class="st">&quot;H050&quot;</span>,</span>
+<span id="cb181-8"><a href="S13-exhaustive.html#cb181-8" tabindex="-1"></a>    <span class="st">&quot;MLOGP&quot;</span>,</span>
+<span id="cb181-9"><a href="S13-exhaustive.html#cb181-9" tabindex="-1"></a>    <span class="st">&quot;RDCHI&quot;</span>,</span>
+<span id="cb181-10"><a href="S13-exhaustive.html#cb181-10" tabindex="-1"></a>    <span class="st">&quot;GATS1p&quot;</span>,</span>
+<span id="cb181-11"><a href="S13-exhaustive.html#cb181-11" tabindex="-1"></a>    <span class="st">&quot;nN&quot;</span>,</span>
+<span id="cb181-12"><a href="S13-exhaustive.html#cb181-12" tabindex="-1"></a>    <span class="st">&quot;C040&quot;</span>,</span>
+<span id="cb181-13"><a href="S13-exhaustive.html#cb181-13" tabindex="-1"></a>    <span class="st">&quot;LC50&quot;</span></span>
+<span id="cb181-14"><a href="S13-exhaustive.html#cb181-14" tabindex="-1"></a>)</span>
+<span id="cb181-15"><a href="S13-exhaustive.html#cb181-15" tabindex="-1"></a><span class="fu">names</span>(qsar) <span class="ot">&lt;-</span> fields</span></code></pre></div>
 <p>To make it easy to add/remove columns automatically, we first construct
 the design matrix, remove columns as needed, and then use the resulting
 matrix in the call to <code>lm()</code> (instead of specifying the terms to include
 by name).</p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="S12-automatic.html#cb182-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar)</span>
-<span id="cb182-2"><a href="S12-automatic.html#cb182-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, <span class="sc">-</span><span class="dv">1</span>] <span class="co"># remove the intercept, since lm() will re-add it later</span></span>
-<span id="cb182-3"><a href="S12-automatic.html#cb182-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
-<span id="cb182-4"><a href="S12-automatic.html#cb182-4" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
-<span id="cb182-5"><a href="S12-automatic.html#cb182-5" tabindex="-1"></a></span>
-<span id="cb182-6"><a href="S12-automatic.html#cb182-6" tabindex="-1"></a>y <span class="ot">&lt;-</span> qsar<span class="sc">$</span>LC50</span>
-<span id="cb182-7"><a href="S12-automatic.html#cb182-7" tabindex="-1"></a></span>
-<span id="cb182-8"><a href="S12-automatic.html#cb182-8" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X) <span class="co"># full model</span></span>
-<span id="cb182-9"><a href="S12-automatic.html#cb182-9" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="S13-exhaustive.html#cb182-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar)</span>
+<span id="cb182-2"><a href="S13-exhaustive.html#cb182-2" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, <span class="sc">-</span><span class="dv">1</span>] <span class="co"># remove the intercept, since lm() will re-add it later</span></span>
+<span id="cb182-3"><a href="S13-exhaustive.html#cb182-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(X)</span>
+<span id="cb182-4"><a href="S13-exhaustive.html#cb182-4" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
+<span id="cb182-5"><a href="S13-exhaustive.html#cb182-5" tabindex="-1"></a></span>
+<span id="cb182-6"><a href="S13-exhaustive.html#cb182-6" tabindex="-1"></a>y <span class="ot">&lt;-</span> qsar<span class="sc">$</span>LC50</span>
+<span id="cb182-7"><a href="S13-exhaustive.html#cb182-7" tabindex="-1"></a></span>
+<span id="cb182-8"><a href="S13-exhaustive.html#cb182-8" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X) <span class="co"># full model</span></span>
+<span id="cb182-9"><a href="S13-exhaustive.html#cb182-9" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="routput"><code>
 Call:
 lm(formula = y ~ X)
@@ -577,103 +589,103 @@ F-statistic:  63.5 on 8 and 537 DF,  p-value: &lt; 2.2e-16</code></pre>
 shows that the new method of calling <code>lm()</code> gives the same results
 as before. Now we follow the steps of the algorithm.</p>
 <p><strong>A.</strong> The values <span class="math inline">\(\varphi_1, \ldots, \varphi_p\)</span> can be computed as follows:</p>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="S12-automatic.html#cb184-1" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p) <span class="co"># pre-allocate an empty vector</span></span>
-<span id="cb184-2"><a href="S12-automatic.html#cb184-2" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) {</span>
-<span id="cb184-3"><a href="S12-automatic.html#cb184-3" tabindex="-1"></a>    idx <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span>p)[<span class="sc">-</span>j] <span class="co"># all variables except x[j]</span></span>
-<span id="cb184-4"><a href="S12-automatic.html#cb184-4" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[,idx])</span>
-<span id="cb184-5"><a href="S12-automatic.html#cb184-5" tabindex="-1"></a>    phi[j] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb184-6"><a href="S12-automatic.html#cb184-6" tabindex="-1"></a>}</span>
-<span id="cb184-7"><a href="S12-automatic.html#cb184-7" tabindex="-1"></a></span>
-<span id="cb184-8"><a href="S12-automatic.html#cb184-8" tabindex="-1"></a><span class="co"># change the order of columns in X, so that the phi_j are decreasing</span></span>
-<span id="cb184-9"><a href="S12-automatic.html#cb184-9" tabindex="-1"></a>jj <span class="ot">&lt;-</span> <span class="fu">order</span>(phi, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb184-10"><a href="S12-automatic.html#cb184-10" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, jj]</span>
-<span id="cb184-11"><a href="S12-automatic.html#cb184-11" tabindex="-1"></a>phi <span class="ot">&lt;-</span> phi[jj]</span>
-<span id="cb184-12"><a href="S12-automatic.html#cb184-12" tabindex="-1"></a><span class="fu">plot</span>(phi, <span class="at">xlab =</span> <span class="st">&quot;j&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(varphi[j]))</span></code></pre></div>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="S13-exhaustive.html#cb184-1" tabindex="-1"></a>phi <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p) <span class="co"># pre-allocate an empty vector</span></span>
+<span id="cb184-2"><a href="S13-exhaustive.html#cb184-2" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>p) {</span>
+<span id="cb184-3"><a href="S13-exhaustive.html#cb184-3" tabindex="-1"></a>    idx <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span>p)[<span class="sc">-</span>j] <span class="co"># all variables except x[j]</span></span>
+<span id="cb184-4"><a href="S13-exhaustive.html#cb184-4" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[,idx])</span>
+<span id="cb184-5"><a href="S13-exhaustive.html#cb184-5" tabindex="-1"></a>    phi[j] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb184-6"><a href="S13-exhaustive.html#cb184-6" tabindex="-1"></a>}</span>
+<span id="cb184-7"><a href="S13-exhaustive.html#cb184-7" tabindex="-1"></a></span>
+<span id="cb184-8"><a href="S13-exhaustive.html#cb184-8" tabindex="-1"></a><span class="co"># change the order of columns in X, so that the phi_j are decreasing</span></span>
+<span id="cb184-9"><a href="S13-exhaustive.html#cb184-9" tabindex="-1"></a>jj <span class="ot">&lt;-</span> <span class="fu">order</span>(phi, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb184-10"><a href="S13-exhaustive.html#cb184-10" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[, jj]</span>
+<span id="cb184-11"><a href="S13-exhaustive.html#cb184-11" tabindex="-1"></a>phi <span class="ot">&lt;-</span> phi[jj]</span>
+<span id="cb184-12"><a href="S13-exhaustive.html#cb184-12" tabindex="-1"></a><span class="fu">plot</span>(phi, <span class="at">xlab =</span> <span class="st">&quot;j&quot;</span>, <span class="at">ylab =</span> <span class="fu">expression</span>(varphi[j]))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/exhaustiveA-1.png" width="672" /></p>
 <p>The plot shows the residual sum of squares for the model with input <span class="math inline">\(x_j\)</span>
 omitted, for <span class="math inline">\(j\)</span> ranging from 1 to 8.</p>
 <p><strong>B.</strong> Next, we compute the residual
 sum of squares of the model which consists only of the intercept.
 This is the case <span class="math inline">\(q = 0\)</span>.</p>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="S12-automatic.html#cb185-1" tabindex="-1"></a>all.q <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span>p</span>
-<span id="cb185-2"><a href="S12-automatic.html#cb185-2" tabindex="-1"></a>best.rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># For storing the best RSS for q = 0, ..., p,</span></span>
-<span id="cb185-3"><a href="S12-automatic.html#cb185-3" tabindex="-1"></a>best.model <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, p <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># and the corresponding models.</span></span>
-<span id="cb185-4"><a href="S12-automatic.html#cb185-4" tabindex="-1"></a></span>
-<span id="cb185-5"><a href="S12-automatic.html#cb185-5" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span>)</span>
-<span id="cb185-6"><a href="S12-automatic.html#cb185-6" tabindex="-1"></a>best.rss[<span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb185-7"><a href="S12-automatic.html#cb185-7" tabindex="-1"></a>best.model[[<span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">integer</span>(<span class="dv">0</span>) <span class="co"># a vector of length 0 (no columns)</span></span>
-<span id="cb185-8"><a href="S12-automatic.html#cb185-8" tabindex="-1"></a></span>
-<span id="cb185-9"><a href="S12-automatic.html#cb185-9" tabindex="-1"></a>count <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># number of models fitted so far</span></span></code></pre></div>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="S13-exhaustive.html#cb185-1" tabindex="-1"></a>all.q <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span>p</span>
+<span id="cb185-2"><a href="S13-exhaustive.html#cb185-2" tabindex="-1"></a>best.rss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(p <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># For storing the best RSS for q = 0, ..., p,</span></span>
+<span id="cb185-3"><a href="S13-exhaustive.html#cb185-3" tabindex="-1"></a>best.model <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">&quot;list&quot;</span>, p <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># and the corresponding models.</span></span>
+<span id="cb185-4"><a href="S13-exhaustive.html#cb185-4" tabindex="-1"></a></span>
+<span id="cb185-5"><a href="S13-exhaustive.html#cb185-5" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span>)</span>
+<span id="cb185-6"><a href="S13-exhaustive.html#cb185-6" tabindex="-1"></a>best.rss[<span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb185-7"><a href="S13-exhaustive.html#cb185-7" tabindex="-1"></a>best.model[[<span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">integer</span>(<span class="dv">0</span>) <span class="co"># a vector of length 0 (no columns)</span></span>
+<span id="cb185-8"><a href="S13-exhaustive.html#cb185-8" tabindex="-1"></a></span>
+<span id="cb185-9"><a href="S13-exhaustive.html#cb185-9" tabindex="-1"></a>count <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co"># number of models fitted so far</span></span></code></pre></div>
 <p><strong>C.</strong> Now we consider <span class="math inline">\(q \in \{1, \ldots, p-2\}\)</span>. The algorithm groups
 these cases by the position <span class="math inline">\(k\)</span> of the first column omitted in the model,
 starting with <span class="math inline">\(k = q+1\)</span> and then decreasing <span class="math inline">\(k\)</span> in each step.
 We use the function <code>combn</code> from the <code>sets</code> package
 to get all possible choices of
 <span class="math inline">\(q - k + 1\)</span> columns out of <span class="math inline">\(\{k+1, \ldots, p\}\)</span>.</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="S12-automatic.html#cb186-1" tabindex="-1"></a><span class="fu">library</span>(sets) <span class="co"># this defines &quot;combn()&quot;</span></span>
-<span id="cb186-2"><a href="S12-automatic.html#cb186-2" tabindex="-1"></a><span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(p<span class="dv">-2</span>)) {</span>
-<span id="cb186-3"><a href="S12-automatic.html#cb186-3" tabindex="-1"></a>    best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="cn">Inf</span></span>
-<span id="cb186-4"><a href="S12-automatic.html#cb186-4" tabindex="-1"></a></span>
-<span id="cb186-5"><a href="S12-automatic.html#cb186-5" tabindex="-1"></a>    <span class="co"># Consider all sets of q columns, ...</span></span>
-<span id="cb186-6"><a href="S12-automatic.html#cb186-6" tabindex="-1"></a>    <span class="cf">for</span> (k <span class="cf">in</span> (q<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="dv">1</span>) {</span>
-<span id="cb186-7"><a href="S12-automatic.html#cb186-7" tabindex="-1"></a>        <span class="co"># ... where the first omitted column is k.</span></span>
-<span id="cb186-8"><a href="S12-automatic.html#cb186-8" tabindex="-1"></a></span>
-<span id="cb186-9"><a href="S12-automatic.html#cb186-9" tabindex="-1"></a>        <span class="co"># We have to include 1, ..., k-1, and ...</span></span>
-<span id="cb186-10"><a href="S12-automatic.html#cb186-10" tabindex="-1"></a>        a <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(k<span class="dv">-1</span>)</span>
-<span id="cb186-11"><a href="S12-automatic.html#cb186-11" tabindex="-1"></a></span>
-<span id="cb186-12"><a href="S12-automatic.html#cb186-12" tabindex="-1"></a>        <span class="co"># ... for the remaining q - (k-1) inputs, we try all</span></span>
-<span id="cb186-13"><a href="S12-automatic.html#cb186-13" tabindex="-1"></a>        <span class="co"># possible combinations.</span></span>
-<span id="cb186-14"><a href="S12-automatic.html#cb186-14" tabindex="-1"></a>        bb <span class="ot">&lt;-</span> <span class="fu">combn</span>((k<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>p, q <span class="sc">-</span> k <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb186-15"><a href="S12-automatic.html#cb186-15" tabindex="-1"></a>        <span class="cf">for</span> (l <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">ncol</span>(bb))) {</span>
-<span id="cb186-16"><a href="S12-automatic.html#cb186-16" tabindex="-1"></a>            b <span class="ot">&lt;-</span> bb[, l]</span>
-<span id="cb186-17"><a href="S12-automatic.html#cb186-17" tabindex="-1"></a>            included <span class="ot">&lt;-</span> <span class="fu">c</span>(a, b)</span>
-<span id="cb186-18"><a href="S12-automatic.html#cb186-18" tabindex="-1"></a></span>
-<span id="cb186-19"><a href="S12-automatic.html#cb186-19" tabindex="-1"></a>            m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[, included])</span>
-<span id="cb186-20"><a href="S12-automatic.html#cb186-20" tabindex="-1"></a>            count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb186-21"><a href="S12-automatic.html#cb186-21" tabindex="-1"></a>            rss <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb186-22"><a href="S12-automatic.html#cb186-22" tabindex="-1"></a></span>
-<span id="cb186-23"><a href="S12-automatic.html#cb186-23" tabindex="-1"></a>            <span class="cf">if</span> (rss <span class="sc">&lt;</span> best.rss[q <span class="sc">+</span> <span class="dv">1</span>]) {</span>
-<span id="cb186-24"><a href="S12-automatic.html#cb186-24" tabindex="-1"></a>                best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> rss</span>
-<span id="cb186-25"><a href="S12-automatic.html#cb186-25" tabindex="-1"></a>                best.model[[q <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> included</span>
-<span id="cb186-26"><a href="S12-automatic.html#cb186-26" tabindex="-1"></a>            }</span>
-<span id="cb186-27"><a href="S12-automatic.html#cb186-27" tabindex="-1"></a>        }</span>
-<span id="cb186-28"><a href="S12-automatic.html#cb186-28" tabindex="-1"></a></span>
-<span id="cb186-29"><a href="S12-automatic.html#cb186-29" tabindex="-1"></a>        <span class="cf">if</span> (k <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> best.rss[q] <span class="sc">&lt;=</span> phi[k<span class="dv">-1</span>]) {</span>
-<span id="cb186-30"><a href="S12-automatic.html#cb186-30" tabindex="-1"></a>            <span class="co"># If we reach this point, we know that we found the best</span></span>
-<span id="cb186-31"><a href="S12-automatic.html#cb186-31" tabindex="-1"></a>            <span class="co"># arrangement and we can exit the loop over k early.</span></span>
-<span id="cb186-32"><a href="S12-automatic.html#cb186-32" tabindex="-1"></a>            <span class="co"># This is what makes the algorithm efficient.</span></span>
-<span id="cb186-33"><a href="S12-automatic.html#cb186-33" tabindex="-1"></a>            <span class="cf">break</span></span>
-<span id="cb186-34"><a href="S12-automatic.html#cb186-34" tabindex="-1"></a>        }</span>
-<span id="cb186-35"><a href="S12-automatic.html#cb186-35" tabindex="-1"></a>    }</span>
-<span id="cb186-36"><a href="S12-automatic.html#cb186-36" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="S13-exhaustive.html#cb186-1" tabindex="-1"></a><span class="fu">library</span>(sets) <span class="co"># this defines &quot;combn()&quot;</span></span>
+<span id="cb186-2"><a href="S13-exhaustive.html#cb186-2" tabindex="-1"></a><span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(p<span class="dv">-2</span>)) {</span>
+<span id="cb186-3"><a href="S13-exhaustive.html#cb186-3" tabindex="-1"></a>    best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="cn">Inf</span></span>
+<span id="cb186-4"><a href="S13-exhaustive.html#cb186-4" tabindex="-1"></a></span>
+<span id="cb186-5"><a href="S13-exhaustive.html#cb186-5" tabindex="-1"></a>    <span class="co"># Consider all sets of q columns, ...</span></span>
+<span id="cb186-6"><a href="S13-exhaustive.html#cb186-6" tabindex="-1"></a>    <span class="cf">for</span> (k <span class="cf">in</span> (q<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="dv">1</span>) {</span>
+<span id="cb186-7"><a href="S13-exhaustive.html#cb186-7" tabindex="-1"></a>        <span class="co"># ... where the first omitted column is k.</span></span>
+<span id="cb186-8"><a href="S13-exhaustive.html#cb186-8" tabindex="-1"></a></span>
+<span id="cb186-9"><a href="S13-exhaustive.html#cb186-9" tabindex="-1"></a>        <span class="co"># We have to include 1, ..., k-1, and ...</span></span>
+<span id="cb186-10"><a href="S13-exhaustive.html#cb186-10" tabindex="-1"></a>        a <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(k<span class="dv">-1</span>)</span>
+<span id="cb186-11"><a href="S13-exhaustive.html#cb186-11" tabindex="-1"></a></span>
+<span id="cb186-12"><a href="S13-exhaustive.html#cb186-12" tabindex="-1"></a>        <span class="co"># ... for the remaining q - (k-1) inputs, we try all</span></span>
+<span id="cb186-13"><a href="S13-exhaustive.html#cb186-13" tabindex="-1"></a>        <span class="co"># possible combinations.</span></span>
+<span id="cb186-14"><a href="S13-exhaustive.html#cb186-14" tabindex="-1"></a>        bb <span class="ot">&lt;-</span> <span class="fu">combn</span>((k<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>p, q <span class="sc">-</span> k <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb186-15"><a href="S13-exhaustive.html#cb186-15" tabindex="-1"></a>        <span class="cf">for</span> (l <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">ncol</span>(bb))) {</span>
+<span id="cb186-16"><a href="S13-exhaustive.html#cb186-16" tabindex="-1"></a>            b <span class="ot">&lt;-</span> bb[, l]</span>
+<span id="cb186-17"><a href="S13-exhaustive.html#cb186-17" tabindex="-1"></a>            included <span class="ot">&lt;-</span> <span class="fu">c</span>(a, b)</span>
+<span id="cb186-18"><a href="S13-exhaustive.html#cb186-18" tabindex="-1"></a></span>
+<span id="cb186-19"><a href="S13-exhaustive.html#cb186-19" tabindex="-1"></a>            m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[, included])</span>
+<span id="cb186-20"><a href="S13-exhaustive.html#cb186-20" tabindex="-1"></a>            count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb186-21"><a href="S13-exhaustive.html#cb186-21" tabindex="-1"></a>            rss <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb186-22"><a href="S13-exhaustive.html#cb186-22" tabindex="-1"></a></span>
+<span id="cb186-23"><a href="S13-exhaustive.html#cb186-23" tabindex="-1"></a>            <span class="cf">if</span> (rss <span class="sc">&lt;</span> best.rss[q <span class="sc">+</span> <span class="dv">1</span>]) {</span>
+<span id="cb186-24"><a href="S13-exhaustive.html#cb186-24" tabindex="-1"></a>                best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> rss</span>
+<span id="cb186-25"><a href="S13-exhaustive.html#cb186-25" tabindex="-1"></a>                best.model[[q <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> included</span>
+<span id="cb186-26"><a href="S13-exhaustive.html#cb186-26" tabindex="-1"></a>            }</span>
+<span id="cb186-27"><a href="S13-exhaustive.html#cb186-27" tabindex="-1"></a>        }</span>
+<span id="cb186-28"><a href="S13-exhaustive.html#cb186-28" tabindex="-1"></a></span>
+<span id="cb186-29"><a href="S13-exhaustive.html#cb186-29" tabindex="-1"></a>        <span class="cf">if</span> (k <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> best.rss[q] <span class="sc">&lt;=</span> phi[k<span class="dv">-1</span>]) {</span>
+<span id="cb186-30"><a href="S13-exhaustive.html#cb186-30" tabindex="-1"></a>            <span class="co"># If we reach this point, we know that we found the best</span></span>
+<span id="cb186-31"><a href="S13-exhaustive.html#cb186-31" tabindex="-1"></a>            <span class="co"># arrangement and we can exit the loop over k early.</span></span>
+<span id="cb186-32"><a href="S13-exhaustive.html#cb186-32" tabindex="-1"></a>            <span class="co"># This is what makes the algorithm efficient.</span></span>
+<span id="cb186-33"><a href="S13-exhaustive.html#cb186-33" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb186-34"><a href="S13-exhaustive.html#cb186-34" tabindex="-1"></a>        }</span>
+<span id="cb186-35"><a href="S13-exhaustive.html#cb186-35" tabindex="-1"></a>    }</span>
+<span id="cb186-36"><a href="S13-exhaustive.html#cb186-36" tabindex="-1"></a>}</span></code></pre></div>
 <p><strong>D.</strong> We already fitted all models with <span class="math inline">\(p-1\)</span> inputs, when we computed <code>phi</code>.
 Since we sorted the models, the best of these models is last in the list.
 This covers the case <span class="math inline">\(q = p - 1\)</span>.</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="S12-automatic.html#cb187-1" tabindex="-1"></a>best.rss[(p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">min</span>(phi)</span>
-<span id="cb187-2"><a href="S12-automatic.html#cb187-2" tabindex="-1"></a>omitted <span class="ot">&lt;-</span> jj[<span class="fu">length</span>(jj)]</span>
-<span id="cb187-3"><a href="S12-automatic.html#cb187-3" tabindex="-1"></a>best.model[[(p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span>p)[<span class="sc">-</span>omitted]</span>
-<span id="cb187-4"><a href="S12-automatic.html#cb187-4" tabindex="-1"></a>count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="fu">length</span>(phi)</span></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="S13-exhaustive.html#cb187-1" tabindex="-1"></a>best.rss[(p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">min</span>(phi)</span>
+<span id="cb187-2"><a href="S13-exhaustive.html#cb187-2" tabindex="-1"></a>omitted <span class="ot">&lt;-</span> jj[<span class="fu">length</span>(jj)]</span>
+<span id="cb187-3"><a href="S13-exhaustive.html#cb187-3" tabindex="-1"></a>best.model[[(p <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span>p)[<span class="sc">-</span>omitted]</span>
+<span id="cb187-4"><a href="S13-exhaustive.html#cb187-4" tabindex="-1"></a>count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="fu">length</span>(phi)</span></code></pre></div>
 <p><strong>E.</strong> Finally, for <span class="math inline">\(q = p\)</span> we fit the full model:</p>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="S12-automatic.html#cb188-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X)</span>
-<span id="cb188-2"><a href="S12-automatic.html#cb188-2" tabindex="-1"></a>best.rss[p <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb188-3"><a href="S12-automatic.html#cb188-3" tabindex="-1"></a>best.model[[p <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>p</span>
-<span id="cb188-4"><a href="S12-automatic.html#cb188-4" tabindex="-1"></a>count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="S13-exhaustive.html#cb188-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X)</span>
+<span id="cb188-2"><a href="S13-exhaustive.html#cb188-2" tabindex="-1"></a>best.rss[p <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb188-3"><a href="S13-exhaustive.html#cb188-3" tabindex="-1"></a>best.model[[p <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>p</span>
+<span id="cb188-4"><a href="S13-exhaustive.html#cb188-4" tabindex="-1"></a>count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div>
 <p><strong>F.</strong> Now we can find the model with the best <span class="math inline">\(R^2_\mathrm{adj}\)</span>:</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="S12-automatic.html#cb189-1" tabindex="-1"></a><span class="fu">plot</span>(all.q, best.rss <span class="sc">/</span> (n <span class="sc">-</span> all.q <span class="sc">-</span> <span class="dv">1</span>),</span>
-<span id="cb189-2"><a href="S12-automatic.html#cb189-2" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;q&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residual variance&quot;</span>)</span>
-<span id="cb189-3"><a href="S12-automatic.html#cb189-3" tabindex="-1"></a>best.q <span class="ot">&lt;-</span> all.q[<span class="fu">which.min</span>(best.rss <span class="sc">/</span> (n <span class="sc">-</span> all.q <span class="sc">-</span> <span class="dv">1</span>))]</span>
-<span id="cb189-4"><a href="S12-automatic.html#cb189-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.q)</span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="S13-exhaustive.html#cb189-1" tabindex="-1"></a><span class="fu">plot</span>(all.q, best.rss <span class="sc">/</span> (n <span class="sc">-</span> all.q <span class="sc">-</span> <span class="dv">1</span>),</span>
+<span id="cb189-2"><a href="S13-exhaustive.html#cb189-2" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;q&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;residual variance&quot;</span>)</span>
+<span id="cb189-3"><a href="S13-exhaustive.html#cb189-3" tabindex="-1"></a>best.q <span class="ot">&lt;-</span> all.q[<span class="fu">which.min</span>(best.rss <span class="sc">/</span> (n <span class="sc">-</span> all.q <span class="sc">-</span> <span class="dv">1</span>))]</span>
+<span id="cb189-4"><a href="S13-exhaustive.html#cb189-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.q)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/exhaustiveB-1.png" width="672" /></p>
 <p>We see that the model with <span class="math inline">\(q = 6\)</span> variables has the the
 lowest <span class="math inline">\(\hat\sigma^2\)</span> and thus the highest <span class="math inline">\(R^2_\mathrm{adj}\)</span>.
 The values for <span class="math inline">\(q = 7\)</span> and <span class="math inline">\(q = 8\)</span> are very close to
 optimal. The best model uses the following variables:</p>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="S12-automatic.html#cb190-1" tabindex="-1"></a><span class="fu">colnames</span>(X)[best.model[[<span class="dv">6</span> <span class="sc">+</span> <span class="dv">1</span>]]]</span></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="S13-exhaustive.html#cb190-1" tabindex="-1"></a><span class="fu">colnames</span>(X)[best.model[[<span class="dv">6</span> <span class="sc">+</span> <span class="dv">1</span>]]]</span></code></pre></div>
 <pre class="routput"><code>[1] &quot;TPSA&quot;   &quot;SAacc&quot;  &quot;MLOGP&quot;  &quot;nN&quot;     &quot;RDCHI&quot;  &quot;GATS1p&quot;</code></pre>
 <p>We can fit the optimal model from the original data:</p>
-<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="S12-automatic.html#cb192-1" tabindex="-1"></a>m.best <span class="ot">&lt;-</span> <span class="fu">lm</span>(LC50 <span class="sc">~</span> TPSA <span class="sc">+</span> SAacc <span class="sc">+</span> MLOGP <span class="sc">+</span> nN <span class="sc">+</span> RDCHI <span class="sc">+</span> GATS1p,</span>
-<span id="cb192-2"><a href="S12-automatic.html#cb192-2" tabindex="-1"></a>             <span class="at">data =</span> qsar)</span>
-<span id="cb192-3"><a href="S12-automatic.html#cb192-3" tabindex="-1"></a><span class="fu">summary</span>(m.best)</span></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="S13-exhaustive.html#cb192-1" tabindex="-1"></a>m.best <span class="ot">&lt;-</span> <span class="fu">lm</span>(LC50 <span class="sc">~</span> TPSA <span class="sc">+</span> SAacc <span class="sc">+</span> MLOGP <span class="sc">+</span> nN <span class="sc">+</span> RDCHI <span class="sc">+</span> GATS1p,</span>
+<span id="cb192-2"><a href="S13-exhaustive.html#cb192-2" tabindex="-1"></a>             <span class="at">data =</span> qsar)</span>
+<span id="cb192-3"><a href="S13-exhaustive.html#cb192-3" tabindex="-1"></a><span class="fu">summary</span>(m.best)</span></code></pre></div>
 <pre class="routput"><code>
 Call:
 lm(formula = LC50 ~ TPSA + SAacc + MLOGP + nN + RDCHI + GATS1p, 
@@ -701,20 +713,20 @@ F-statistic: 84.82 on 6 and 539 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>This shows that <span class="math inline">\(R^2_\mathrm{adj}\)</span> has indeed marginally improved,
 from <span class="math inline">\(0.4785\)</span> to <span class="math inline">\(0.4799\)</span></p>
 <p>To conclude, we check that the complicated algorithm indeed saved some work:</p>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="S12-automatic.html#cb194-1" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">^</span>p</span>
-<span id="cb194-2"><a href="S12-automatic.html#cb194-2" tabindex="-1"></a><span class="fu">cat</span>(count,</span>
-<span id="cb194-3"><a href="S12-automatic.html#cb194-3" tabindex="-1"></a>    <span class="st">&quot; models fitted (&quot;</span>, <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> count <span class="sc">/</span> total, <span class="dv">1</span>), <span class="st">&quot;%)</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
-<span id="cb194-4"><a href="S12-automatic.html#cb194-4" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="S13-exhaustive.html#cb194-1" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">^</span>p</span>
+<span id="cb194-2"><a href="S13-exhaustive.html#cb194-2" tabindex="-1"></a><span class="fu">cat</span>(count,</span>
+<span id="cb194-3"><a href="S13-exhaustive.html#cb194-3" tabindex="-1"></a>    <span class="st">&quot; models fitted (&quot;</span>, <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> count <span class="sc">/</span> total, <span class="dv">1</span>), <span class="st">&quot;%)</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb194-4"><a href="S13-exhaustive.html#cb194-4" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
 <pre class="routput"><code>88 models fitted (34.4%)</code></pre>
 <p>This shows that we only needed to fit 88 of the 256 models under consideration.</p>
 </div>
 <div class="example">
-<p><span id="exm:unlabeled-div-48" class="example"><strong>Example 12.2  </strong></span>We can perform the analysis from the previous example automatically,
+<p><span id="exm:unlabeled-div-48" class="example"><strong>Example 13.2  </strong></span>We can perform the analysis from the previous example automatically,
 using the function <code>regsubsets()</code> from the <code>leaps</code> package:</p>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="S12-automatic.html#cb196-1" tabindex="-1"></a><span class="fu">library</span>(leaps)</span>
-<span id="cb196-2"><a href="S12-automatic.html#cb196-2" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar,</span>
-<span id="cb196-3"><a href="S12-automatic.html#cb196-3" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;exhaustive&quot;</span>)</span>
-<span id="cb196-4"><a href="S12-automatic.html#cb196-4" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="S13-exhaustive.html#cb196-1" tabindex="-1"></a><span class="fu">library</span>(leaps)</span>
+<span id="cb196-2"><a href="S13-exhaustive.html#cb196-2" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(LC50 <span class="sc">~</span> ., <span class="at">data =</span> qsar,</span>
+<span id="cb196-3"><a href="S13-exhaustive.html#cb196-3" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;exhaustive&quot;</span>)</span>
+<span id="cb196-4"><a href="S13-exhaustive.html#cb196-4" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div>
 <pre class="routput"><code>Subset selection object
 Call: regsubsets.formula(LC50 ~ ., data = qsar, method = &quot;exhaustive&quot;)
 8 Variables  (and intercept)
@@ -741,74 +753,26 @@ Selection Algorithm: exhaustive
 <p>This shows the best model of each size. The only step left is
 to decide which <span class="math inline">\(q\)</span> to use. This choice depends on the cost-complexity
 tradeoff. Here we consider <span class="math inline">\(R^2_\mathrm{adj}\)</span> again:</p>
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="S12-automatic.html#cb198-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(m)<span class="sc">$</span>adjr2, <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="S13-exhaustive.html#cb198-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(m)<span class="sc">$</span>adjr2, <span class="dv">4</span>)</span></code></pre></div>
 <pre class="routput"><code>[1] 0.2855 0.3860 0.4441 0.4588 0.4666 0.4799 0.4795 0.4785</code></pre>
 <p>This gives the <span class="math inline">\(R^2_\mathrm{adj}\)</span> for the optimal model of each size
 again. At the end of the list we recognise the values <code>0.4799</code> and
 <code>0.4785</code> from our previous analysis.</p>
 </div>
-</div>
-<div id="other-methods" class="section level2 hasAnchor" number="12.3">
-<h2><span class="header-section-number">12.3</span> Other Methods<a href="S12-automatic.html#other-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>There are other, approximate methods available which can be used
-when the number <span class="math inline">\(p\)</span> of model parameters is too large for an exhaustives
-search.</p>
-<div id="stepwise-forward-selection" class="section level3 hasAnchor" number="12.3.1">
-<h3><span class="header-section-number">12.3.1</span> Stepwise Forward Selection<a href="S12-automatic.html#stepwise-forward-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Here the idea is to start with a minimal model, and then add variables one by
-one, until no further (large enough) improvements can be achieved.</p>
-<p>Start with only intercept term: <span class="math inline">\(y=\beta_0 + \varepsilon\)</span>, then
-consider each of <span class="math inline">\(p\)</span> models:
-<span class="math display">\[\begin{equation*}
-  y
-  = \beta_0 + \beta_j x_j + \varepsilon,
-\end{equation*}\]</span>
-for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>.</p>
-<p>Choose the model with the smallest residual sum of squares, provided that the
-“significance of the fitted model” achieves a specified threshold. The process
-continues by adding more variables, one at a time, until either</p>
-<ul>
-<li>All variables are in the model.</li>
-<li>The significance level can not be achieved by any variable not in the model.</li>
-</ul>
-<p>The “significance of the model” can be examined by considering a
-<span class="math inline">\(t\)</span>-test as in lemma <a href="S05-single.html#lem:t-test">5.4</a>.</p>
-</div>
-<div id="stepwise-backward-selection" class="section level3 hasAnchor" number="12.3.2">
-<h3><span class="header-section-number">12.3.2</span> Stepwise Backward Selection<a href="S12-automatic.html#stepwise-backward-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Here the idea is to start with the full model, and to remove variables
-one by one until no good enough candidates for removal are left.</p>
-<p>In each step we consider the test statistic <span class="math inline">\(|T_j|\)</span> for the tests
-<span class="math display">\[\begin{equation*}
-  H_0\colon \beta_j = 0
-  \quad \textit{vs.} \quad
-  H_1\colon \beta_j \neq 0
-\end{equation*}\]</span>
-for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>, again as in lemma <a href="S05-single.html#lem:t-test">5.4</a>.
-The method selects <span class="math inline">\(x_j\)</span> corresponding to the smallest <span class="math inline">\(|T_j|\)</span>.
-If this is below a given threshold, then remove <span class="math inline">\(x_j\)</span> and re-fit the model.
-Repeat until either:</p>
-<ul>
-<li>No variables are left in the model.</li>
-<li>The smallest <span class="math inline">\(|T_j|\)</span> is above the threshold.</li>
-</ul>
-</div>
-<div id="hybrid-methods" class="section level3 hasAnchor" number="12.3.3">
-<h3><span class="header-section-number">12.3.3</span> Hybrid Methods<a href="S12-automatic.html#hybrid-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Either start with a full model or just intercept. At each stage consider:</p>
-<ul>
-<li>removing least significant variable already in the model,</li>
-<li>adding most significant variable not currently in the model,</li>
-</ul>
-<p>with significance levels set to avoid a cyclical behaviour.</p>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>We discussed different algorithms to perform model selection in practice.</li>
+<li>Exhaustive search finds the model with truly maximal <span class="math inline">\(R^2_\mathrm{adj}\)</span>,
+unlike stepwise heuristics which may miss the optimal combination.</li>
+<li>An efficient algorithm can find the optimal model without fitting all
+<span class="math inline">\(2^p\)</span> models, by using algebraic properties of the residual sum of squares.</li>
+<li>The <code>regsubsets()</code> function from the <code>leaps</code> package implements this
+algorithm in R.</li>
+<li>For very large <span class="math inline">\(p\)</span>, even exhaustive search becomes infeasible, and
+stepwise methods remain the practical choice.</li>
 </ul>
 </div>
 
-</div>
 </div>
 </div>
             </section>
@@ -816,8 +780,8 @@ Repeat until either:</p>
           </div>
         </div>
       </div>
-<a href="P03.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="S13-multicoll.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="S12-selection.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="S14-factors.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
