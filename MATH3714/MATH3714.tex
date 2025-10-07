@@ -183,10 +183,10 @@ for all \(i \in \{1, 2, \ldots, n\}\), and the aim is to find values for the
 intercept \(\alpha\) and the slope \(\beta\) such that the fitted line is as close
 as possible to the data points. This procedure, called simple linear
 regression, is illustrated in figure~\ref{fig:scatter-plot}. The variables
-\(x_i\) are called \textbf{input}, ``features'', or sometimes also ``explanatory
-variables'' or ``independent variables''. The variables \(y_i\) are called
-\textbf{output} or ``response'', or sometimes the ``dependent variables''. The values
-\(\varepsilon_i\) are called the \textbf{errors} or \textbf{noise terms}.
+\(x_i\) are called \textbf{input}, ``features'', ``predictors'', or sometimes also
+``explanatory variables'' or ``independent variables''. The variables \(y_i\) are
+called \textbf{output} or ``response'', or sometimes the ``dependent variables''. The
+values \(\varepsilon_i\) are called the \textbf{errors} or \textbf{noise terms}.
 
 
 
@@ -575,12 +575,12 @@ one output. If we have a sample of \(n\) observations, we have \(np\)
 inputs and \(n\) outputs in total. Here we denote the \(i\)th observation
 of the \(j\)th input by \(x_{ij}\) and the corresponding output by~\(y_i\).
 
-As an example, we consider the \texttt{mtcars} dataset built into R. This is
-a small dataset, which contains information about 32 automobiles
-(1973-74 models). The table lists fuel consumption \texttt{mpg}, gross horsepower \texttt{hp},
-and 9 other aspects of these cars. Here we consider \texttt{mpg} to be the output,
-and the other listed aspects to be inputs. Type \texttt{help(mtcars)} in R to learn
-more about this dataset:
+As an example, we consider the \texttt{mtcars} dataset built into R. This is a small
+dataset, which contains information about 32 automobiles (1973-74 models). The
+table lists fuel consumption \texttt{mpg}, gross horsepower \texttt{hp}, and 9 other aspects
+of these cars. Here we consider \texttt{mpg} to be the output, and the other listed
+aspects to be inputs. Type \texttt{help(mtcars)} in R to learn more about this
+dataset:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -627,7 +627,7 @@ more about this dataset:
 \end{Shaded}
 
 For this dataset we have \(n = 32\) (number of cars), and \(p = 10\) (number
-of attributes, excluding \texttt{mpg}). The values \(y_1, \ldots, y_{32}\) are listed
+of predictors, excluding \texttt{mpg}). The values \(y_1, \ldots, y_{32}\) are listed
 in the first column of the table, the values \(x_{i,1}\) for \(i \in \{1, \ldots,
 32\}\) are shown in the second column, and the values \(x_{i,10}\) are shown in
 the last column.
@@ -666,9 +666,6 @@ This model describes a hyperplane in the \((p+1)\)-dimensional space of
 the inputs \(x_j\) and the output~\(y\). The hyperplane is easily
 visualized when \(p=1\) (as a line in~\(\mathbb{R}^2\)), and visualisation can be
 attempted for \(p=2\) (as a plane in \(\mathbb{R}^3\)) but is hard for \(p>2\).
-
-We defer making a proper statistical model for multiple linear regression
-until the next section.
 
 \subsection{The Normal Equations}\label{the-normal-equations}
 
@@ -5909,6 +5906,7 @@ can sometimes transform the variables to achieve a linear relationship.
 We list some examples of non-linear models which can be transformed
 to linear models:
 
+{\def\LTcaptype{} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3750}}
   >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2500}}
@@ -5930,6 +5928,7 @@ linear Model
 \(y \approx \beta_0+\beta_1\log x\) & \(x'=\log x\) & \(y \approx \beta_0+\beta_1 x'\) \\
 \(y \approx \frac{x}{\beta_0 x-\beta_1}\) & \(x'=1/x\), \(y'=1/y\) & \(y' \approx \beta_0-\beta_1 x'\) \\
 \end{longtable}
+}
 
 In all such cases we also would need to check the residuals of the transformed
 models, to see whether linear regression can be used for the transformed model.
@@ -5966,6 +5965,7 @@ strict equality.
 
 Some commonly-used variance stabilising transformations are:
 
+{\def\LTcaptype{} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.6429}}
   >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.3571}}@{}}
@@ -5986,6 +5986,7 @@ transformation
 \(\sigma^2 \propto y^4\) & \(y' = \frac{1}{y}\) \\
 \(\sigma^2 \propto y(1-y)\) where \(y \in [0,1]\) & \(y' = \arcsin(\sqrt{y})\) \\
 \end{longtable}
+}
 
 Of course we do not have accurate knowledge of the relationship, but it can be
 diagnosed from the residual plots and transformations can be selected by
@@ -6274,6 +6275,7 @@ of the workshop in week~6 where the answers will be discussed.
 \textbf{9.} Consider the following dataset. Our aim is to predict \(y\) from the
 variables \(x_1\), \(x_2\) and \(x_3\).
 
+{\def\LTcaptype{} % do not increment counter
 \begin{longtable}[]{@{}rrrrr@{}}
 \toprule\noalign{}
 \(i\) & \(x_{1,i}\) & \(x_{2,i}\) & \(x_{3,i}\) & \(y_i\) \\
@@ -6294,6 +6296,7 @@ variables \(x_1\), \(x_2\) and \(x_3\).
 11 & 2.46 & 2.55 & 1.77 & 4.86 \\
 12 & 5.00 & 5.04 & 4.05 & 5.09 \\
 \end{longtable}
+}
 
 These data are also available in machine-readable form at
 
@@ -7519,6 +7522,7 @@ Assume we are given data
 \((1, \mathrm{male})\), \((2, \mathrm{female})\), \((3, \mathrm{female})\).
 Then we can encode this data using the following design matrix:
 
+{\def\LTcaptype{} % do not increment counter
 \begin{longtable}[]{@{}ccc@{}}
 \toprule\noalign{}
 intercept & \(x_1\) & \(1_\mathrm{\{female\}}(x_2)\) \\
@@ -7530,6 +7534,7 @@ intercept & \(x_1\) & \(1_\mathrm{\{female\}}(x_2)\) \\
 1 & 2 & 1 \\
 1 & 3 & 1 \\
 \end{longtable}
+}
 
 \end{example}
 
@@ -8155,6 +8160,7 @@ defined.
 \begin{example}
 Consider the following data:
 
+{\def\LTcaptype{} % do not increment counter
 \begin{longtable}[]{@{}rcl@{}}
 \toprule\noalign{}
 \(y\) & \(x_1\) & \(x_2\) \\
@@ -8166,6 +8172,7 @@ Consider the following data:
 4 & 2 & 2 \\
 6 & 3 & 3 \\
 \end{longtable}
+}
 
 In this case, an exact match with no residuals can be achieved
 as \(y = x_1 + x_2\), \emph{i.e.}~for \(\beta_1 = \beta_2 = 1\). But this solution
@@ -10458,6 +10465,7 @@ fitted lines can be plotted using \texttt{abline(lms1)} or \texttt{abline(lts1)}
 
 The following table summarises the R functions for robust regression:
 
+{\def\LTcaptype{} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1231}}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4923}}
@@ -10484,6 +10492,7 @@ Hampel & \texttt{rlm(y\ \textasciitilde{}\ x,\ psi\ =\ psi.hampel)} & \texttt{MA
 LMS & \texttt{lqs(y\ \textasciitilde{}\ x,\ method\ =\ "lms")} & \texttt{MASS} & \ref{LMS} \\
 LTS & \texttt{lqs(y\ \textasciitilde{}\ x,\ method\ =\ "lts")} & \texttt{MASS} & \ref{LTS} \\
 \end{longtable}
+}
 
 All of these functions return model objects that work with \texttt{coef()}, \texttt{resid()},
 and \texttt{abline()}.
