@@ -1405,27 +1405,16 @@ the \href{https://rdrr.io/r/stats/predict.lm.html}{output of \texttt{help(predic
 
 \section{Random Vectors and Covariance}\label{S03-cov}
 
-Like in the one-dimensional case, we can build a \textbf{statistical model}
-for the data where we assume that the errors are random. More
-precisely we will assume
-\begin{equation}
-  Y_i
-  = \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_p x_{i,p} + \varepsilon_i
-\end{equation}
-for all \(i \in \{1, 2, \ldots, n\}\), where \(\varepsilon_1, \ldots, \varepsilon_n\)
-are now independent and identically distributed (i.i.d.)
-random variables with \(\mathbb{E}(\varepsilon_i) = 0\) and
-\(\mathop{\mathrm{Var}}(\varepsilon_i) = \sigma^2\).
-As in \eqref{eq:lmmodel}, the statistical model can be written in vector
-form as
+A \textbf{random vector} is a vector \(Z = (Z_1, \ldots, Z_n)\)
+where each component \(Z_i\) is a random variable.
+
+When we introduce a statistical model for multiple linear regression in
+the following section, we will assume that the errors are random variables.
+As in \eqref{eq:lmmodel}, the model can be written in vector form as
 \begin{equation}
   Y = X \beta + \varepsilon.  \label{eq:lmstat0}
 \end{equation}
-This is a vector-valued equation which contains two ``random vectors'', \(Y\)
-and~\(\varepsilon\).
-
-A \textbf{random vector} is a vector \(Z = (Z_1, \ldots, Z_n)\)
-where each component \(Z_i\) is a random variable.
+This vector-valued equation contains two random vectors, \(Y\) and~\(\varepsilon\).
 
 \subsection{Expectation}\label{expectation}
 
@@ -1483,7 +1472,7 @@ If \(A \in \mathbb{R}^{m\times n}\) is a matrix and \(Z \in \mathbb{R}^n\) is a 
 vector, then we find the expectation of \(AZ\in\mathbb{R}^m\) as
 \begin{equation*}
     \mathbb{E}(AZ)_i
-    = \mathbb{E}(AZ_i)
+    = \mathbb{E}\bigl( (AZ)_i \bigr)
     = \mathbb{E}\bigl( \sum_{j=1}^n a_{ij} Z_j \bigr)
     = \sum_{j=1}^n \mathbb{E}\bigl( a_{ij} Z_j \bigr)
     = \sum_{j=1}^n a_{ij} \mathbb{E}(Z_j)
@@ -1754,7 +1743,7 @@ and since \(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\) we have
   \end{cases}
 \end{equation*}
 Clearly \(Z_1\) is standard normally distributed.
-Since \(\mathcal{N}(0,1)\) is symmetric, both \(Y\) and \(-Y\) are standard normally
+Since \(\mathcal{N}(0, 1)\) is symmetric, both \(Y\) and \(-Y\) are standard normally
 distributed and it follows that \(Z_2\) is also standard normally distributed.
 Nevertheless, the random vector \(Z\) does not follow a multivariate
 normal distribution. Instead of giving a proof of this fact,
@@ -1800,15 +1789,16 @@ exclude cases like this.
 \begin{itemize}
 \tightlist
 \item
-  We learned the rules for computing the expectation of a random vector.
+  The expectation of a random vector is computed component-wise.
 \item
-  The covariance matrix of random vectors plays the role of the
-  variance for numeric random variables.
+  The covariance matrix of a random vector plays the role of the
+  variance for scalar random variables.
 \item
-  We have learned the rules for computing the expectation and covariance
-  of linear transformations of random vectors.
+  For linear transformations we have \(\mathbb{E}(AZ) = A\mathbb{E}(Z)\) and
+  \(\mathop{\mathrm{Cov}}(AZ+b) = A \mathop{\mathrm{Cov}}(Z) A^\top\).
 \item
-  We learned about the definition of the multivariate normal distribution.
+  A multivariate normal distribution is determined by its mean and
+  covariance matrix and denoted by \(\mathcal{N}(\mu, \Sigma)\).
 \end{itemize}
 
 \clearpage
@@ -2125,9 +2115,10 @@ we get \(\mathbb{E}\bigl(\|\varepsilon\|^2\bigr) = n (\sigma^2 + \mu^2)\).
 
 \section{Properties of the Least Squares Estimate}\label{S04-model}
 
-Like in the one-dimensional case, we can build a \textbf{statistical model}
-for the data. Here we assume that the errors are random. More
-precisely we have
+In the previous section we introduced random vectors and the multivariate
+normal distribution. We now use these tools to build a statistical model
+for multiple linear regression. Like in the one-dimensional case, we assume
+that the errors are random. More precisely we have
 \begin{equation}
   Y = X \beta + \varepsilon.  \label{eq:lmstats}
 \end{equation}
@@ -2143,38 +2134,25 @@ Remarks:
   \(\beta = (\beta_0, \beta_1, \cdots, \beta_p) \in \mathbb{R}^{p+1}\) and
   the error variance~\(\sigma^2\).
 \item
+  Using the notation from the previous section, we have
+  \(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\) and \(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\).
+\item
   The model assumes that the \(x\)-values are fixed and known. The only
   random quantities in the model are \(\varepsilon_i\) and \(Y_i\). This is a modelling
   assumption, there are more general models where the \(x\)-values are also
   random.
-\item
-  Using the notation from the previous section, we have
-  \(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\) and \(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\).
 \end{itemize}
 
-The usual approach in statistics to quantify how well an estimator works
-is to apply it to random samples from the statistical model, where we
-can assume that we know the parameters, and then to study how well the
-parameters are reconstructed by the estimators. Since this approach
-uses random samples as input the the estimator, we obtain random estimates
-and we need to use statistical methods to quantify how close the estimate
-is to the truth.
+Having defined the model, our next task is to understand the properties of
+the least squares estimator \(\hat\beta\) when applied to data from this model.
+We study these properties by treating the estimates as random variables.
 
 \subsection{Mean and Covariance}\label{mean-and-covariance}
 
-The bias of an estimator is the difference between the expected value
-of the estimate and the truth. For the least squares estimator
-we have
-\begin{equation*}
-  \mathop{\mathrm{bias}}(\hat\beta)
-  = \mathbb{E}(\hat\beta) - \beta,
-\end{equation*}
-where
-\begin{equation*}
-  \hat\beta
-  = (X^\top X)^{-1} X^\top Y
-\end{equation*}
-and \(Y\) is the random vector from~\eqref{eq:lmstats}.
+We begin by examining the bias of the estimator. To find \(\mathop{\mathrm{bias}}(\hat\beta) =
+\mathbb{E}(\hat\beta) - \beta\) we need to determine the expectation of \(\hat\beta =
+(X^\top X)^{-1} X^\top Y\), where \(Y\) is the random vector from
+the model~\eqref{eq:lmstats}.
 
 \begin{lemma}
 \protect\hypertarget{lem:hat-beta-dist}{}\label{lem:hat-beta-dist}
@@ -2241,27 +2219,29 @@ The lemma implies that \(\mathbb{E}(\hat\beta) = \beta\), \emph{i.e.}~the estima
 0\) to compute the expectation of~\(\hat\beta\). Thus, the estimator will still
 be unbiased for correlated noise or for noise which is not normally distributed.
 
-We have seen \hyperref[eq:Cov-diag-elem]{earlier} that the diagonal elements
+We have seen earlier in equation~\eqref{eq:Cov-diag-elem} that the diagonal elements
 of a covariance matrix give the variances of the elements of the random vector.
 Setting \(C := (X^\top X)^{-1}\) as a shorthand here, we find that the
-individual estimated coefficients \(\hat\beta_i\) satisfy
+individual estimated coefficients \(\hat\beta_j\) satisfy
 \begin{equation}
-  \hat\beta_i
-  \sim \mathcal{N}\bigl( \beta_i, \sigma^2 C_{ii} \bigr)  \label{eq:beta-hat-i}
+  \hat\beta_j
+  \sim \mathcal{N}\bigl( \beta_j, \sigma^2 C_{jj} \bigr)  \label{eq:beta-hat-j}
 \end{equation}
-for \(i \in \{1, \ldots, n\}\).
+for \(j \in \{0, \ldots, p\}\).
 
-These results about the (co-)variances of the estimator are not very
-useful in practice, because the error variance~\(\sigma^2\) is usually unknown.
-To derive more useful results, we will consider how to estimate this
-variance.
+Before we can use these results in practice, we need to address a problem:
+the error variance~\(\sigma^2\) is usually unknown. We will return to
+estimating \(\sigma^2\) in section~\ref{var-est-bias} below.
 
 \subsection{Properties of the Hat Matrix}\label{hat-matrix}
 
-In this and the following sections we will use various
-properties of the hat matrix \(H = X (X^\top X)^{-1} X^\top\).
+Before we can estimate the error variance \(\sigma^2\), we need to establish some
+important properties of the hat matrix \(H = X (X^\top X)^{-1} X^\top\). These
+properties will be essential tools for deriving the distribution of our
+variance estimator.
 
 \begin{lemma}
+\protect\hypertarget{lem:hat-matrix-props}{}\label{lem:hat-matrix-props}
 
 The hat matrix \(H\) has the following properties:
 
@@ -2269,15 +2249,23 @@ The hat matrix \(H\) has the following properties:
 \def\labelenumi{\arabic{enumi})}
 \tightlist
 \item
-  \(H\) is symmetric, \emph{i.e.}~\(H^\top = H\).
+  \(H^\top = H\)
 \item
-  \(H\) is idempotent, \emph{i.e.}~\(H^2 = H\).
+  \((I-H)^\top = I-H\)
+\item
+  \(H^2 = H\)
+\item
+  \((I-H)^2 = I-H\)
+\item
+  \(HX = X\)
+\item
+  \((I-H)X = 0\)
 \end{enumerate}
 
 \end{lemma}
 
 \begin{proof}
-For the first statement we have
+For property 1 we have
 \begin{align*}
   H^\top
   &= \bigl( X (X^\top X)^{-1} X^\top \bigr)^\top \\
@@ -2286,41 +2274,50 @@ For the first statement we have
   &= H,
 \end{align*}
 where we used that the inverse of a symmetric matrix is symmetric.
-The second statement follow from
+
+Property 2 follows from property 1, since
+\begin{equation*}
+  (I - H)^\top = I^\top - H^\top = I - H.
+\end{equation*}
+
+For property 3 we have
 \begin{align*}
   H^2
   &= \bigl( X (X^\top X)^{-1} X^\top \bigr) \bigl( X (X^\top X)^{-1} X^\top \bigr) \\
   &= X \bigl( (X^\top X)^{-1} X^\top X \bigr) (X^\top X)^{-1} X^\top \\
-  &= X (X^\top X)^{-1} X^\top.
+  &= X (X^\top X)^{-1} X^\top \\
+  &= H.
 \end{align*}
+
+Property 4 follows from property 3, since
+\begin{equation*}
+  (I - H)^2 = I - 2H + H^2 = I - 2H + H = I - H.
+\end{equation*}
+
+For property 5 we have
+\begin{equation*}
+  H X = X (X^\top X)^{-1} X^\top X = X I = X.
+\end{equation*}
+
+Property 6 follows from property 5, since
+\begin{equation*}
+  (I - H) X = IX - HX = X - X = 0.
+\end{equation*}
 This completes the proof.
 \end{proof}
 
-Both properties from the lemma carry over from \(H\) to \(I - H\): we
-have \((I - H)^\top = I^\top - H^\top = I - H\) and
-\begin{align*}
-  (I - H)^2
-  &= (I - H)(I - H) \\
-  &= I^2 - HI - IH + H^2 \\
-  &= I - H - H + H \\
-  &= I - H.
-\end{align*}
-
-For future reference we also state two simple results: we have
-\begin{equation}
-  H X = X (X^\top X)^{-1} X^\top X = X  \label{eq:XH}
-\end{equation}
-and
-\begin{equation}
-  (I - H) X = IX - HX = X - X = 0.  \label{eq:XIH}
-\end{equation}
+\begin{remark}
+Properties 1 and 2 state that \(H\) and \(I - H\) are \textbf{symmetric}.
+Properties 3 and 4 state that \(H\) and \(I - H\) are \textbf{idempotent}.
+\end{remark}
 
 \begin{lemma}
 For every vector \(v \in \mathbb{R}^n\) we have
 \begin{equation}
-  \|y\|^2
-  = \|\hat y\|^2 + \|\hat\varepsilon\|^2.  \label{eq:eps-y-orth}
+  \|v\|^2
+  = \|Hv\|^2 + \|(I-H)v\|^2.  \label{eq:eps-y-orth}
 \end{equation}
+In particular, for the data vector \(y\) we have \(\|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2\).
 \end{lemma}
 
 \begin{proof}
@@ -2355,6 +2352,29 @@ vector \(v = y\) to get \(\|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2\).
 This completes the proof.
 \end{proof}
 
+We can now use the transformation properties of the multivariate normal
+distribution to find the distributions of the fitted values and residuals.
+
+\begin{lemma}
+\protect\hypertarget{lem:hat-y-eps-dist}{}\label{lem:hat-y-eps-dist}Under the model \eqref{eq:lmstats}, the fitted values and residuals satisfy
+\begin{equation}
+  \hat Y \sim \mathcal{N}\bigl( X\beta, \sigma^2 H \bigr)  \label{eq:hat-y-dist}
+\end{equation}
+and
+\begin{equation}
+  \hat\varepsilon\sim \mathcal{N}\bigl( 0, \sigma^2 (I - H) \bigr).  \label{eq:hat-eps-dist}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Since \(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\), we have \(\hat Y = HY \sim \mathcal{N}(HX\beta, H\sigma^2 I H^\top)\)
+by lemma~\ref{lem:Cov-is-quadratic}. Using properties 3 and 5 of
+lemma~\ref{lem:hat-matrix-props}, we find \(\hat Y \sim \mathcal{N}(X\beta, \sigma^2 H)\).
+Similarly, \(\hat\varepsilon= (I - H)Y \sim \mathcal{N}\bigl((I - H)X\beta, \sigma^2(I - H)\bigr)\),
+and using lemma~\ref{lem:hat-matrix-props} again, we obtain
+\(\hat\varepsilon\sim \mathcal{N}\bigl(0, \sigma^2(I - H)\bigr)\).
+\end{proof}
+
 Some authors define:
 
 \begin{itemize}
@@ -2375,14 +2395,12 @@ turns into
   = \mathrm{SS}_\mathrm{R} + \mathrm{SS}_\mathrm{E}.
 \end{equation*}
 
-We note without proof that geometrically, \(H\) can be interpreted as the
-orthogonal projection onto the subspace of \(\mathbb{R}^n\) which is spanned by
-the columns of \(X\). This subspace contains the possible output vectors
+Before proceeding to further properties of \(H\), we note without proof that
+geometrically, \(H\) can be interpreted as the orthogonal projection onto
+the subspace of \(\mathbb{R}^n\) which is spanned by the columns of \(X\). This subspace
+contains the possible output vectors
 of the linear system and the least squares procedure finds the point \(\hat y\)
 in this subspace which is closest to the observed data \(y\in\mathbb{R}^n\).
-
-One final property of \(H\) which we will need later is that the trace
-of \(H\) is equal to the number of parameters in the model plus one
 
 \begin{lemma}
 We have
@@ -2406,6 +2424,16 @@ This completes the proof.
 
 \subsection{Cochran's theorem}\label{Cochran}
 
+To prove that our variance estimator is unbiased, we need to understand the
+distribution of certain expressions involving the error vector. These
+expressions are of the form \(\varepsilon^\top A \varepsilon\) for suitable matrices~\(A\).
+Such expressions are called \textbf{quadratic forms}.
+
+\begin{definition}
+For \(x\in\mathbb{R}^n\) and \(A\in\mathbb{R}^{n\times n}\), the expression
+\(x^\top A x\) is called a \textbf{quadratic form}.
+\end{definition}
+
 Our main tool in this and the following section will be a simplified
 version of \href{https://en.wikipedia.org/wiki/Cochran\%27s_theorem}{Cochran's theorem}:
 
@@ -2427,21 +2455,40 @@ The following statements are true:
 \end{theorem}
 
 \begin{proof}
+We transform the error vector \(\varepsilon\) to a coordinate system where \(H\)
+becomes diagonal. In this new coordinate system, the quadratic forms
+\(\varepsilon^\top H \varepsilon\) and \(\varepsilon^\top (I-H) \varepsilon\) become sums of squares of
+independent standard normals, making their distributions easy to determine.
+
+We start by diagonalising \(H\).
 Since \(H\) is symmetric, we can diagonalise \(H\) (see \ref{thm:spectral}
 in the appendix): there is an orthogonal matrix \(U\) such that
 \(D := U H U^\top\) is diagonal, and the diagonal elements of \(D\) are
-the eigenvalues of \(H\). Since \(H\) is idempotent, these diagonal elements
-can only be \(0\) or~\(1\). Also, since \(U\) is orthogonal, we have \(U^\top U = I\)
-and thus
+the eigenvalues of \(H\).
+
+Next we determine the eigenvalues of \(H\).
+Since \(H\) is idempotent, we have \(H^2 = H\). This implies that every
+eigenvalue \(\lambda\) of \(H\) satisfies \(\lambda^2 = \lambda\), and thus
+\(\lambda \in \{0, 1\}\). Therefore, the diagonal elements of \(D\)
+can only be \(0\) or~\(1\).
+
+Since \(U\) is orthogonal, we have \(U^\top U = I\) and thus
 \begin{equation*}
   U^\top D U
   = U^\top U H U^\top U
   = H.
 \end{equation*}
 The same matrix \(U\) also diagonalises \(I-H\), since
-\(U (I -H) U^\top = U U^\top - U H U^\top = I - D\). Exactly one
-of the diagonal elements \(D_{ii}\) and \((I - D)_{ii}\) is \(1\) and the other
-one is \(0\) for every~\(i\).
+\begin{equation*}
+  U (I -H) U^\top = U U^\top - U H U^\top = I - D.
+\end{equation*}
+Note that exactly one of the diagonal elements \(D_{ii}\) and \((I - D)_{ii}\)
+is \(1\) and the other is \(0\) for every~\(i\). This partitions the index set
+\(\{1, \ldots, n\}\) into two disjoint subsets: the set \(\mathcal{I}_1 = \{ i : D_{ii} = 1 \}\)
+contains exactly \(p+1\) elements (corresponding to \(\mathop{\mathrm{rank}}(H) = p+1\)), and the
+set \(\mathcal{I}_0 = \{ i : D_{ii} = 0 \}\) contains the remaining \(n - p - 1\)
+elements. This partition is the key to understanding both the degrees of
+freedom in the \(\chi^2\) distributions and the independence of the two quadratic forms.
 
 Since \(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\) we find that \(\eta := U \varepsilon\) is normally
 distributed with mean \(U 0 = 0\) and covariance matrix \(\sigma^2 U I U^\top =
@@ -2459,10 +2506,35 @@ and
   = U^\top (I - D) U \varepsilon
   = U^\top (I - D) \eta.
 \end{equation*}
-Since \((D\eta)_i = 0\) if \(D_{ii}=0\) and \(\bigl((I - D) \eta)_i = 0\)
-otherwise, each component of \(\eta\) contributes to exactly one of the
-two vectors \(D\eta\) and \((I-D)\eta\). Thus, \(D\eta\) and \((I-D)\eta\)
-are independent, and thus \(H\varepsilon\) and \((I - H)\varepsilon\) are also independent.
+To prove the independence statement, we examine how the components of \(\eta\)
+contribute to \(D\eta\) and \((I-D)\eta\). Since \(D\) is diagonal, we have
+\begin{equation*}
+  (D\eta)_i
+  = D_{ii} \eta_i
+  = \begin{cases}
+      \eta_i & \text{if } i \in \mathcal{I}_1 \\
+      0      & \text{if } i \in \mathcal{I}_0.
+    \end{cases}
+\end{equation*}
+Similarly,
+\begin{equation*}
+  \bigl((I - D)\eta\bigr)_i
+  = (1 - D_{ii}) \eta_i
+  = \begin{cases}
+      0      & \text{if } i \in \mathcal{I}_1 \\
+      \eta_i & \text{if } i \in \mathcal{I}_0.
+    \end{cases}
+\end{equation*}
+This shows that each component \(\eta_i\) contributes to exactly one of the
+two vectors \(D\eta\) and \((I-D)\eta\): it contributes to \(D\eta\) if \(i \in \mathcal{I}_1\),
+and to \((I-D)\eta\) if \(i \in \mathcal{I}_0\).
+Since the sets \(\mathcal{I}_1\) and \(\mathcal{I}_0\) are disjoint, the vectors
+\(D\eta\) and \((I-D)\eta\) depend on disjoint subsets of the independent random
+variables \(\eta_1, \ldots, \eta_n\). Therefore, \(D\eta\) and \((I-D)\eta\)
+are independent.
+Finally, since \(H\varepsilon= U^\top D\eta\) and \((I-H)\varepsilon= U^\top(I-D)\eta\)
+are deterministic linear transformations of \(D\eta\) and \((I-D)\eta\), it
+follows that \(H\varepsilon\) and \((I - H)\varepsilon\) are also independent.
 This proves the third statement of the theorem.
 
 For the first statement, we note that
@@ -2480,7 +2552,7 @@ to the sum (we skip the proof of this statement here). Thus,
   = \sum_{i=1 \atop D_{ii}=1}^n \bigl(\eta_i/\sigma)^2
 \end{equation*}
 is the sum of the squares of \(p+1\) independent standard normals,
-and thus is \(\chi^2(p+1)\) distributed. This completes the proof of the
+and thus is \(\chi^2(p+1)\)-distributed. This completes the proof of the
 first statement.
 
 Finally, the second statement follows in much of the same way as the
@@ -2489,22 +2561,16 @@ over the \(n - p - 1\) indices \(i\) where \(D_{ii} = 0\).
 This completes the proof.
 \end{proof}
 
-Expressions of the form \(x^\top A x\) for \(x\in\mathbb{R}^n\) and \(A\in\mathbb{R}^{n\times n}\)
-are called \textbf{quadratic forms}.
-
-While the theorem as written only states that \(H \varepsilon\) and \((I - H)\varepsilon\)
-are independent of each other, we can replace one or both of these terms
-the corresponding quadratic forms as still keep the independence. Since
-\((H \varepsilon)^\top (H \varepsilon) = \varepsilon^\top H^\top H \varepsilon= \varepsilon^\top H \varepsilon\),
-the quadratic form \(\varepsilon^\top H \varepsilon\) is a function of \(H \varepsilon\) and a similar
-statement holds with \(H-I\) instead of \(H\).
+Since \(\varepsilon^\top H \varepsilon= (H\varepsilon)^\top (H\varepsilon)\) is a function of \(H\varepsilon\),
+and similarly for \(I-H\), the independence in part 3 of the theorem extends to
+the quadratic forms in parts 1 and 2.
 
 \subsection{Estimating the Error Variance}\label{var-est-bias}
 
-So far we have only considered how to estimate the parameter
-vector~\(\beta\) and we have ignored the parameter~\(\sigma^2\).
-We will see that an unbiased estimator for \(\sigma^2\) is
-given by
+Having established the necessary properties of the hat matrix and Cochran's
+theorem, we can now turn to estimating the error variance~\(\sigma^2\), which
+we have so far ignored. We will see that an unbiased estimator for \(\sigma^2\)
+is given by
 \begin{equation}
   \hat\sigma^2
   := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \label{eq:hat-sigma-squared}
@@ -2543,7 +2609,7 @@ data. This gives
       + \varepsilon^\top (I-H) \varepsilon\\
   &= \varepsilon^\top (I-H) \varepsilon,
 \end{align*}
-where we used equation~\eqref{eq:XIH} to see that the first two terms in
+where we used lemma~\ref{lem:hat-matrix-props} to see that the first two terms in
 the sum equal zero.
 
 Now we can apply Cochran's theorem. This shows that
@@ -2655,7 +2721,7 @@ write \(\hat\sigma^2\) as
   &= \bigl\| (I - H) Y \|^2.
 \end{align*}
 Since \(Y = X\beta + \varepsilon\) and since we know \((I-H)X = 0\) from
-equation~\eqref{eq:XIH}, we find
+lemma~\ref{lem:hat-matrix-props}, we find
 \begin{align*}
   \hat\sigma^2
   &= \frac{1}{n-p-1} \bigl\| (I - H) (X\beta + \varepsilon) \|^2 \\
@@ -3075,7 +3141,7 @@ section. We also need to introduce the \(F\)-distribution, which will take the
 place of the \(t\)-distribution from the previous section.
 
 \begin{definition}
-The \(F\)-distribution with \(\nu_1\) and \(\nu_2\) degrees of freedom is the
+The \textbf{\(F\)-distribution} with \(\nu_1\) and \(\nu_2\) degrees of freedom is the
 distribution of
 \begin{equation*}
   X
@@ -3430,7 +3496,7 @@ where \(U\) and \(V\) are orthogonal matrices and \(D\) is a diagonal matrix:
 
 The R output shows the diagonal elements \(d_{ii}\) of \(D\) and the matrices \(U\)
 and \(V^\top\). Since \(Q\) is symmetric, we have \(U = V\) and thus \(Q = U D U^\top\)
-in this case, \(i.e.\)~we have found a diagonalisation of~\(Q\).
+in this case, \emph{i.e.}~we have found a diagonalisation of~\(Q\).
 
 Using the SVD we can simplify the norm used in the
 definition of the ellipse. We write \(D^{-1/2}\) for the matrix
@@ -4317,7 +4383,7 @@ column from \((X^\top X)^{-1}\):
 \end{Shaded}
 
 From lemma~\ref{lem:simult-test} we know that under \(H_0\)
-the test statistic is \(F_{k, n-p-1}\) distributed, and the
+the test statistic is \(F_{k, n-p-1}\)-distributed, and the
 critical value is the \(1-\alpha\) quantile of this distribution:
 
 \begin{Shaded}
@@ -5857,7 +5923,7 @@ sections in turn:
   Column \textbf{C} shows the standard error of the estimated coefficients.
   The \(i\)th entry is the (estimated) standard deviation of \(\hat\beta_i\),
   computed as \(\sqrt{\hat\sigma^2 C_{ii}}\), where \(C = (X^\top X)^{-1}\).
-  This corresponds to the variance shown in equation~\eqref{eq:beta-hat-i},
+  This corresponds to the variance shown in equation~\eqref{eq:beta-hat-j},
   where the true variance is \(\sigma^2\) replaced with the estimate \(\hat\sigma^2\).
   These quantities are used to compute the t-test statistic in
   equation~\eqref{eq:single-test}.
@@ -6869,7 +6935,7 @@ decide whether to include the intercept). This value increases quickly with
 try all possible models to find the best one.
 
 If \(p\) is small enough, we can simply fit all \(2^p\) models and choose the one
-with the best performance (e.g., highest \(R^2_\mathrm{adj}\)). This guarantees
+with the best performance (\emph{e.g.}, highest \(R^2_\mathrm{adj}\)). This guarantees
 finding the optimal model. However, for \(p \geq 20\) this becomes
 computationally infeasible (\(2^{20} > 1\) million models).
 
@@ -9384,20 +9450,9 @@ panel shows an \(x\)-space outlier with high leverage and high influence.
 \subsubsection{Studentised Residuals}\label{studentised-residuals}
 
 Sometimes, \(y\)-space outliers can be detected by having particularly
-large residuals. We have
+large residuals. From equation~\eqref{eq:hat-eps-dist} we know that
 \begin{equation*}
-  \hat\varepsilon
-  = (I - H) Y
-  = (I - H) (X\beta + \varepsilon)
-  = (I - H) \varepsilon,
-\end{equation*}
-where we used equation~\eqref{eq:XIH} for the last equality sign.
-Thus we have
-\begin{equation*}
-  \mathop{\mathrm{Cov}}(\hat\varepsilon)
-  = \mathop{\mathrm{Cov}}\bigl( (I - H) \varepsilon\bigr)
-  = (I - H) \sigma^2 I (I - H)^\top
-  = \sigma^2 (I - H).
+  \hat\varepsilon\sim \mathcal{N}\bigl( 0, \sigma^2 (I - H) \bigr).
 \end{equation*}
 Considering the diagonal elements of the covariance matrix, we find
 \(\mathop{\mathrm{Var}}(\hat\varepsilon_i) = \sigma^2 (1 - h_{ii})\), where \(h_{ii}\) is the \(i\)th

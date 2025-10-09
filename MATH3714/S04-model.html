@@ -402,14 +402,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!--
 TODO:
 - explain h_{ii} \in [1/n, 1] for S17.  Maybe even (1/n, 1)?
-- explicitly state the distributions of $\hat\eps$ and $\hat y$
-  (e.g. for use in S17)
 - Maybe show var(\hat\beta_j) ~ 1/sqrt(n)
 - identify and cite the source which introducted $\mathrm{SS}_\mathrm{T}$ etc.
 -->
-<p>Like in the one-dimensional case, we can build a <strong>statistical model</strong>
-for the data. Here we assume that the errors are random. More
-precisely we have
+<p>In the previous section we introduced random vectors and the multivariate
+normal distribution. We now use these tools to build a statistical model
+for multiple linear regression. Like in the one-dimensional case, we assume
+that the errors are random. More precisely we have
 <span class="math display" id="eq:lmstats">\[\begin{equation}
   Y = X \beta + \varepsilon.  \tag{4.1}
 \end{equation}\]</span>
@@ -421,20 +420,16 @@ are assumed to be i.i.d. random variables with <span class="math inline">\(\var
 <li><p>The parameters in this model are the regression coefficients
 <span class="math inline">\(\beta = (\beta_0, \beta_1, \cdots, \beta_p) \in \mathbb{R}^{p+1}\)</span> and
 the error variance <span class="math inline">\(\sigma^2\)</span>.</p></li>
+<li><p>Using the notation from the previous section, we have
+<span class="math inline">\(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\)</span> and <span class="math inline">\(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\)</span>.</p></li>
 <li><p>The model assumes that the <span class="math inline">\(x\)</span>-values are fixed and known. The only
 random quantities in the model are <span class="math inline">\(\varepsilon_i\)</span> and <span class="math inline">\(Y_i\)</span>. This is a modelling
 assumption, there are more general models where the <span class="math inline">\(x\)</span>-values are also
 random.</p></li>
-<li><p>Using the notation from the previous section, we have
-<span class="math inline">\(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\)</span> and <span class="math inline">\(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\)</span>.</p></li>
 </ul>
-<p>The usual approach in statistics to quantify how well an estimator works
-is to apply it to random samples from the statistical model, where we
-can assume that we know the parameters, and then to study how well the
-parameters are reconstructed by the estimators. Since this approach
-uses random samples as input the the estimator, we obtain random estimates
-and we need to use statistical methods to quantify how close the estimate
-is to the truth.</p>
+<p>Having defined the model, our next task is to understand the properties of
+the least squares estimator <span class="math inline">\(\hat\beta\)</span> when applied to data from this model.
+We study these properties by treating the estimates as random variables.</p>
 <div id="mean-and-covariance" class="section level2 hasAnchor" number="4.1">
 <h2><span class="header-section-number">4.1</span> Mean and Covariance<a href="S04-model.html#mean-and-covariance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
@@ -443,19 +438,10 @@ is to the truth.</p>
 </iframe>
 </div>
 </div>
-<p>The bias of an estimator is the difference between the expected value
-of the estimate and the truth. For the least squares estimator
-we have
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{bias}}(\hat\beta)
-  = \mathbb{E}(\hat\beta) - \beta,
-\end{equation*}\]</span>
-where
-<span class="math display">\[\begin{equation*}
-  \hat\beta
-  = (X^\top X)^{-1} X^\top Y
-\end{equation*}\]</span>
-and <span class="math inline">\(Y\)</span> is the random vector from <a href="S04-model.html#eq:lmstats">(4.1)</a>.</p>
+<p>We begin by examining the bias of the estimator. To find <span class="math inline">\(\mathop{\mathrm{bias}}(\hat\beta) =
+\mathbb{E}(\hat\beta) - \beta\)</span> we need to determine the expectation of <span class="math inline">\(\hat\beta =
+(X^\top X)^{-1} X^\top Y\)</span>, where <span class="math inline">\(Y\)</span> is the random vector from
+the model <a href="S04-model.html#eq:lmstats">(4.1)</a>.</p>
 <div class="lemma">
 <p><span id="lem:hat-beta-dist" class="lemma"><strong>Lemma 4.1  </strong></span>We have</p>
 <ol style="list-style-type: decimal">
@@ -509,19 +495,18 @@ This completes the proof.</p>
 <span class="math inline">\(\hat\beta\)</span> is unbiased. Note that for this statement we only used <span class="math inline">\(\mathbb{E}(\varepsilon) =
 0\)</span> to compute the expectation of <span class="math inline">\(\hat\beta\)</span>. Thus, the estimator will still
 be unbiased for correlated noise or for noise which is not normally distributed.</p>
-<p>We have seen <a href="S03-cov.html#eq:Cov-diag-elem">earlier</a> that the diagonal elements
+<p>We have seen earlier in equation <a href="S03-cov.html#eq:Cov-diag-elem">(3.2)</a> that the diagonal elements
 of a covariance matrix give the variances of the elements of the random vector.
 Setting <span class="math inline">\(C := (X^\top X)^{-1}\)</span> as a shorthand here, we find that the
-individual estimated coefficients <span class="math inline">\(\hat\beta_i\)</span> satisfy
-<span class="math display" id="eq:beta-hat-i">\[\begin{equation}
-  \hat\beta_i
-  \sim \mathcal{N}\bigl( \beta_i, \sigma^2 C_{ii} \bigr)  \tag{4.2}
+individual estimated coefficients <span class="math inline">\(\hat\beta_j\)</span> satisfy
+<span class="math display" id="eq:beta-hat-j">\[\begin{equation}
+  \hat\beta_j
+  \sim \mathcal{N}\bigl( \beta_j, \sigma^2 C_{jj} \bigr)  \tag{4.2}
 \end{equation}\]</span>
-for <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.</p>
-<p>These results about the (co-)variances of the estimator are not very
-useful in practice, because the error variance <span class="math inline">\(\sigma^2\)</span> is usually unknown.
-To derive more useful results, we will consider how to estimate this
-variance.</p>
+for <span class="math inline">\(j \in \{0, \ldots, p\}\)</span>.</p>
+<p>Before we can use these results in practice, we need to address a problem:
+the error variance <span class="math inline">\(\sigma^2\)</span> is usually unknown. We will return to
+estimating <span class="math inline">\(\sigma^2\)</span> in section <a href="S04-model.html#var-est-bias">4.4</a> below.</p>
 </div>
 <div id="hat-matrix" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Properties of the Hat Matrix<a href="S04-model.html#hat-matrix" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -531,17 +516,23 @@ variance.</p>
 </iframe>
 </div>
 </div>
-<p>In this and the following sections we will use various
-properties of the hat matrix <span class="math inline">\(H = X (X^\top X)^{-1} X^\top\)</span>.</p>
+<p>Before we can estimate the error variance <span class="math inline">\(\sigma^2\)</span>, we need to establish some
+important properties of the hat matrix <span class="math inline">\(H = X (X^\top X)^{-1} X^\top\)</span>. These
+properties will be essential tools for deriving the distribution of our
+variance estimator.</p>
 <div class="lemma">
-<p><span id="lem:unlabeled-div-14" class="lemma"><strong>Lemma 4.2  </strong></span>The hat matrix <span class="math inline">\(H\)</span> has the following properties:</p>
+<p><span id="lem:hat-matrix-props" class="lemma"><strong>Lemma 4.2  </strong></span>The hat matrix <span class="math inline">\(H\)</span> has the following properties:</p>
 <ol style="list-style-type: decimal">
-<li><span class="math inline">\(H\)</span> is symmetric, <em>i.e.</em> <span class="math inline">\(H^\top = H\)</span>.</li>
-<li><span class="math inline">\(H\)</span> is idempotent, <em>i.e.</em> <span class="math inline">\(H^2 = H\)</span>.</li>
+<li><span class="math inline">\(H^\top = H\)</span></li>
+<li><span class="math inline">\((I-H)^\top = I-H\)</span></li>
+<li><span class="math inline">\(H^2 = H\)</span></li>
+<li><span class="math inline">\((I-H)^2 = I-H\)</span></li>
+<li><span class="math inline">\(HX = X\)</span></li>
+<li><span class="math inline">\((I-H)X = 0\)</span></li>
 </ol>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-15" class="proof"><em>Proof</em>. </span>For the first statement we have
+<p><span id="unlabeled-div-14" class="proof"><em>Proof</em>. </span>For property 1 we have
 <span class="math display">\[\begin{align*}
   H^\top
   &amp;= \bigl( X (X^\top X)^{-1} X^\top \bigr)^\top \\
@@ -549,39 +540,44 @@ properties of the hat matrix <span class="math inline">\(H = X (X^\top X)^{-1} X
   &amp;= X (X^\top X)^{-1} X^\top \\
   &amp;= H,
 \end{align*}\]</span>
-where we used that the inverse of a symmetric matrix is symmetric.
-The second statement follow from
+where we used that the inverse of a symmetric matrix is symmetric.</p>
+<p>Property 2 follows from property 1, since
+<span class="math display">\[\begin{equation*}
+  (I - H)^\top = I^\top - H^\top = I - H.
+\end{equation*}\]</span></p>
+<p>For property 3 we have
 <span class="math display">\[\begin{align*}
   H^2
   &amp;= \bigl( X (X^\top X)^{-1} X^\top \bigr) \bigl( X (X^\top X)^{-1} X^\top \bigr) \\
   &amp;= X \bigl( (X^\top X)^{-1} X^\top X \bigr) (X^\top X)^{-1} X^\top \\
-  &amp;= X (X^\top X)^{-1} X^\top.
-\end{align*}\]</span>
+  &amp;= X (X^\top X)^{-1} X^\top \\
+  &amp;= H.
+\end{align*}\]</span></p>
+<p>Property 4 follows from property 3, since
+<span class="math display">\[\begin{equation*}
+  (I - H)^2 = I - 2H + H^2 = I - 2H + H = I - H.
+\end{equation*}\]</span></p>
+<p>For property 5 we have
+<span class="math display">\[\begin{equation*}
+  H X = X (X^\top X)^{-1} X^\top X = X I = X.
+\end{equation*}\]</span></p>
+<p>Property 6 follows from property 5, since
+<span class="math display">\[\begin{equation*}
+  (I - H) X = IX - HX = X - X = 0.
+\end{equation*}\]</span>
 This completes the proof.</p>
 </div>
-<p>Both properties from the lemma carry over from <span class="math inline">\(H\)</span> to <span class="math inline">\(I - H\)</span>: we
-have <span class="math inline">\((I - H)^\top = I^\top - H^\top = I - H\)</span> and
-<span class="math display">\[\begin{align*}
-  (I - H)^2
-  &amp;= (I - H)(I - H) \\
-  &amp;= I^2 - HI - IH + H^2 \\
-  &amp;= I - H - H + H \\
-  &amp;= I - H.
-\end{align*}\]</span></p>
-<p>For future reference we also state two simple results: we have
-<span class="math display" id="eq:XH">\[\begin{equation}
-  H X = X (X^\top X)^{-1} X^\top X = X  \tag{4.3}
-\end{equation}\]</span>
-and
-<span class="math display" id="eq:XIH">\[\begin{equation}
-  (I - H) X = IX - HX = X - X = 0.  \tag{4.4}
-\end{equation}\]</span></p>
+<div class="remark">
+<p><span id="unlabeled-div-15" class="remark"><em>Remark</em>. </span>Properties 1 and 2 state that <span class="math inline">\(H\)</span> and <span class="math inline">\(I - H\)</span> are <strong>symmetric</strong>.
+Properties 3 and 4 state that <span class="math inline">\(H\)</span> and <span class="math inline">\(I - H\)</span> are <strong>idempotent</strong>.</p>
+</div>
 <div class="lemma">
 <p><span id="lem:unlabeled-div-16" class="lemma"><strong>Lemma 4.3  </strong></span>For every vector <span class="math inline">\(v \in \mathbb{R}^n\)</span> we have
 <span class="math display" id="eq:eps-y-orth">\[\begin{equation}
-  \|y\|^2
-  = \|\hat y\|^2 + \|\hat\varepsilon\|^2.  \tag{4.5}
-\end{equation}\]</span></p>
+  \|v\|^2
+  = \|Hv\|^2 + \|(I-H)v\|^2.  \tag{4.3}
+\end{equation}\]</span>
+In particular, for the data vector <span class="math inline">\(y\)</span> we have <span class="math inline">\(\|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2\)</span>.</p>
 </div>
 <div class="proof">
 <p><span id="unlabeled-div-17" class="proof"><em>Proof</em>. </span>We can write <span class="math inline">\(v\)</span> as
@@ -614,6 +610,26 @@ Since <span class="math inline">\(\hat y = Hy\)</span> and <span class="math inl
 vector <span class="math inline">\(v = y\)</span> to get <span class="math inline">\(\|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2\)</span>.
 This completes the proof.</p>
 </div>
+<p>We can now use the transformation properties of the multivariate normal
+distribution to find the distributions of the fitted values and residuals.</p>
+<div class="lemma">
+<p><span id="lem:hat-y-eps-dist" class="lemma"><strong>Lemma 4.4  </strong></span>Under the model <a href="S04-model.html#eq:lmstats">(4.1)</a>, the fitted values and residuals satisfy
+<span class="math display" id="eq:hat-y-dist">\[\begin{equation}
+  \hat Y \sim \mathcal{N}\bigl( X\beta, \sigma^2 H \bigr)  \tag{4.4}
+\end{equation}\]</span>
+and
+<span class="math display" id="eq:hat-eps-dist">\[\begin{equation}
+  \hat\varepsilon\sim \mathcal{N}\bigl( 0, \sigma^2 (I - H) \bigr).  \tag{4.5}
+\end{equation}\]</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-18" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\)</span>, we have <span class="math inline">\(\hat Y = HY \sim \mathcal{N}(HX\beta, H\sigma^2 I H^\top)\)</span>
+by lemma <a href="S03-cov.html#lem:Cov-is-quadratic">3.1</a>. Using properties 3 and 5 of
+lemma <a href="S04-model.html#lem:hat-matrix-props">4.2</a>, we find <span class="math inline">\(\hat Y \sim \mathcal{N}(X\beta, \sigma^2 H)\)</span>.
+Similarly, <span class="math inline">\(\hat\varepsilon= (I - H)Y \sim \mathcal{N}\bigl((I - H)X\beta, \sigma^2(I - H)\bigr)\)</span>,
+and using lemma <a href="S04-model.html#lem:hat-matrix-props">4.2</a> again, we obtain
+<span class="math inline">\(\hat\varepsilon\sim \mathcal{N}\bigl(0, \sigma^2(I - H)\bigr)\)</span>.</p>
+</div>
 <p>Some authors define:</p>
 <ul>
 <li><span class="math inline">\(\mathrm{SS}_\mathrm{T} = \sum_{i=1}^n y_i^2\)</span> (where “T” stands for “total”)</li>
@@ -627,21 +643,20 @@ turns into
   \mathrm{SS}_\mathrm{T}
   = \mathrm{SS}_\mathrm{R} + \mathrm{SS}_\mathrm{E}.
 \end{equation*}\]</span></p>
-<p>We note without proof that geometrically, <span class="math inline">\(H\)</span> can be interpreted as the
-orthogonal projection onto the subspace of <span class="math inline">\(\mathbb{R}^n\)</span> which is spanned by
-the columns of <span class="math inline">\(X\)</span>. This subspace contains the possible output vectors
+<p>Before proceeding to further properties of <span class="math inline">\(H\)</span>, we note without proof that
+geometrically, <span class="math inline">\(H\)</span> can be interpreted as the orthogonal projection onto
+the subspace of <span class="math inline">\(\mathbb{R}^n\)</span> which is spanned by the columns of <span class="math inline">\(X\)</span>. This subspace
+contains the possible output vectors
 of the linear system and the least squares procedure finds the point <span class="math inline">\(\hat y\)</span>
 in this subspace which is closest to the observed data <span class="math inline">\(y\in\mathbb{R}^n\)</span>.</p>
-<p>One final property of <span class="math inline">\(H\)</span> which we will need later is that the trace
-of <span class="math inline">\(H\)</span> is equal to the number of parameters in the model plus one</p>
 <div class="lemma">
-<p><span id="lem:unlabeled-div-18" class="lemma"><strong>Lemma 4.4  </strong></span>We have
+<p><span id="lem:unlabeled-div-19" class="lemma"><strong>Lemma 4.5  </strong></span>We have
 <span class="math display" id="eq:tr-H">\[\begin{equation}
   \mathop{\mathrm{tr}}(H) = p+1.  \tag{4.6}
 \end{equation}\]</span></p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-19" class="proof"><em>Proof</em>. </span>Using the property of the trace that <span class="math inline">\(\mathop{\mathrm{tr}}(ABC) = \mathop{\mathrm{tr}}(BCA)\)</span> (see section <a href="Sx1-matrices.html#trace">A.2.5</a>),
+<p><span id="unlabeled-div-20" class="proof"><em>Proof</em>. </span>Using the property of the trace that <span class="math inline">\(\mathop{\mathrm{tr}}(ABC) = \mathop{\mathrm{tr}}(BCA)\)</span> (see section <a href="Sx1-matrices.html#trace">A.2.5</a>),
 we find
 <span class="math display">\[\begin{align*}
   \mathop{\mathrm{tr}}(H)
@@ -661,6 +676,14 @@ This completes the proof.</p>
 </iframe>
 </div>
 </div>
+<p>To prove that our variance estimator is unbiased, we need to understand the
+distribution of certain expressions involving the error vector. These
+expressions are of the form <span class="math inline">\(\varepsilon^\top A \varepsilon\)</span> for suitable matrices <span class="math inline">\(A\)</span>.
+Such expressions are called <strong>quadratic forms</strong>.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-21" class="definition"><strong>Definition 4.1  </strong></span>For <span class="math inline">\(x\in\mathbb{R}^n\)</span> and <span class="math inline">\(A\in\mathbb{R}^{n\times n}\)</span>, the expression
+<span class="math inline">\(x^\top A x\)</span> is called a <strong>quadratic form</strong>.</p>
+</div>
 <p>Our main tool in this and the following section will be a simplified
 version of <a href="https://en.wikipedia.org/wiki/Cochran%27s_theorem">Cochran’s theorem</a>:</p>
 <div class="theorem">
@@ -672,21 +695,37 @@ version of <a href="https://en.wikipedia.org/wiki/Cochran%27s_theorem">Cochran�
 </ol>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-20" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(H\)</span> is symmetric, we can diagonalise <span class="math inline">\(H\)</span> (see <a href="Sx1-matrices.html#thm:spectral">A.2</a>
+<p><span id="unlabeled-div-22" class="proof"><em>Proof</em>. </span>We transform the error vector <span class="math inline">\(\varepsilon\)</span> to a coordinate system where <span class="math inline">\(H\)</span>
+becomes diagonal. In this new coordinate system, the quadratic forms
+<span class="math inline">\(\varepsilon^\top H \varepsilon\)</span> and <span class="math inline">\(\varepsilon^\top (I-H) \varepsilon\)</span> become sums of squares of
+independent standard normals, making their distributions easy to determine.</p>
+<p>We start by diagonalising <span class="math inline">\(H\)</span>.
+Since <span class="math inline">\(H\)</span> is symmetric, we can diagonalise <span class="math inline">\(H\)</span> (see <a href="Sx1-matrices.html#thm:spectral">A.2</a>
 in the appendix): there is an orthogonal matrix <span class="math inline">\(U\)</span> such that
 <span class="math inline">\(D := U H U^\top\)</span> is diagonal, and the diagonal elements of <span class="math inline">\(D\)</span> are
-the eigenvalues of <span class="math inline">\(H\)</span>. Since <span class="math inline">\(H\)</span> is idempotent, these diagonal elements
-can only be <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>. Also, since <span class="math inline">\(U\)</span> is orthogonal, we have <span class="math inline">\(U^\top U = I\)</span>
-and thus
+the eigenvalues of <span class="math inline">\(H\)</span>.</p>
+<p>Next we determine the eigenvalues of <span class="math inline">\(H\)</span>.
+Since <span class="math inline">\(H\)</span> is idempotent, we have <span class="math inline">\(H^2 = H\)</span>. This implies that every
+eigenvalue <span class="math inline">\(\lambda\)</span> of <span class="math inline">\(H\)</span> satisfies <span class="math inline">\(\lambda^2 = \lambda\)</span>, and thus
+<span class="math inline">\(\lambda \in \{0, 1\}\)</span>. Therefore, the diagonal elements of <span class="math inline">\(D\)</span>
+can only be <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>.</p>
+<p>Since <span class="math inline">\(U\)</span> is orthogonal, we have <span class="math inline">\(U^\top U = I\)</span> and thus
 <span class="math display">\[\begin{equation*}
   U^\top D U
   = U^\top U H U^\top U
   = H.
 \end{equation*}\]</span>
 The same matrix <span class="math inline">\(U\)</span> also diagonalises <span class="math inline">\(I-H\)</span>, since
-<span class="math inline">\(U (I -H) U^\top = U U^\top - U H U^\top = I - D\)</span>. Exactly one
-of the diagonal elements <span class="math inline">\(D_{ii}\)</span> and <span class="math inline">\((I - D)_{ii}\)</span> is <span class="math inline">\(1\)</span> and the other
-one is <span class="math inline">\(0\)</span> for every <span class="math inline">\(i\)</span>.</p>
+<span class="math display">\[\begin{equation*}
+  U (I -H) U^\top = U U^\top - U H U^\top = I - D.
+\end{equation*}\]</span>
+Note that exactly one of the diagonal elements <span class="math inline">\(D_{ii}\)</span> and <span class="math inline">\((I - D)_{ii}\)</span>
+is <span class="math inline">\(1\)</span> and the other is <span class="math inline">\(0\)</span> for every <span class="math inline">\(i\)</span>. This partitions the index set
+<span class="math inline">\(\{1, \ldots, n\}\)</span> into two disjoint subsets: the set <span class="math inline">\(\mathcal{I}_1 = \{ i : D_{ii} = 1 \}\)</span>
+contains exactly <span class="math inline">\(p+1\)</span> elements (corresponding to <span class="math inline">\(\mathop{\mathrm{rank}}(H) = p+1\)</span>), and the
+set <span class="math inline">\(\mathcal{I}_0 = \{ i : D_{ii} = 0 \}\)</span> contains the remaining <span class="math inline">\(n - p - 1\)</span>
+elements. This partition is the key to understanding both the degrees of
+freedom in the <span class="math inline">\(\chi^2\)</span> distributions and the independence of the two quadratic forms.</p>
 <p>Since <span class="math inline">\(\varepsilon\sim \mathcal{N}(0, \sigma^2 I)\)</span> we find that <span class="math inline">\(\eta := U \varepsilon\)</span> is normally
 distributed with mean <span class="math inline">\(U 0 = 0\)</span> and covariance matrix <span class="math inline">\(\sigma^2 U I U^\top =
 \sigma^2 U U^\top = \sigma^2 I\)</span>. Thus <span class="math inline">\(\eta\)</span> has the same distribution as
@@ -703,10 +742,35 @@ and
   = U^\top (I - D) U \varepsilon
   = U^\top (I - D) \eta.
 \end{equation*}\]</span>
-Since <span class="math inline">\((D\eta)_i = 0\)</span> if <span class="math inline">\(D_{ii}=0\)</span> and <span class="math inline">\(\bigl((I - D) \eta)_i = 0\)</span>
-otherwise, each component of <span class="math inline">\(\eta\)</span> contributes to exactly one of the
-two vectors <span class="math inline">\(D\eta\)</span> and <span class="math inline">\((I-D)\eta\)</span>. Thus, <span class="math inline">\(D\eta\)</span> and <span class="math inline">\((I-D)\eta\)</span>
-are independent, and thus <span class="math inline">\(H\varepsilon\)</span> and <span class="math inline">\((I - H)\varepsilon\)</span> are also independent.
+To prove the independence statement, we examine how the components of <span class="math inline">\(\eta\)</span>
+contribute to <span class="math inline">\(D\eta\)</span> and <span class="math inline">\((I-D)\eta\)</span>. Since <span class="math inline">\(D\)</span> is diagonal, we have
+<span class="math display">\[\begin{equation*}
+  (D\eta)_i
+  = D_{ii} \eta_i
+  = \begin{cases}
+      \eta_i &amp; \text{if } i \in \mathcal{I}_1 \\
+      0      &amp; \text{if } i \in \mathcal{I}_0.
+    \end{cases}
+\end{equation*}\]</span>
+Similarly,
+<span class="math display">\[\begin{equation*}
+  \bigl((I - D)\eta\bigr)_i
+  = (1 - D_{ii}) \eta_i
+  = \begin{cases}
+      0      &amp; \text{if } i \in \mathcal{I}_1 \\
+      \eta_i &amp; \text{if } i \in \mathcal{I}_0.
+    \end{cases}
+\end{equation*}\]</span>
+This shows that each component <span class="math inline">\(\eta_i\)</span> contributes to exactly one of the
+two vectors <span class="math inline">\(D\eta\)</span> and <span class="math inline">\((I-D)\eta\)</span>: it contributes to <span class="math inline">\(D\eta\)</span> if <span class="math inline">\(i \in \mathcal{I}_1\)</span>,
+and to <span class="math inline">\((I-D)\eta\)</span> if <span class="math inline">\(i \in \mathcal{I}_0\)</span>.
+Since the sets <span class="math inline">\(\mathcal{I}_1\)</span> and <span class="math inline">\(\mathcal{I}_0\)</span> are disjoint, the vectors
+<span class="math inline">\(D\eta\)</span> and <span class="math inline">\((I-D)\eta\)</span> depend on disjoint subsets of the independent random
+variables <span class="math inline">\(\eta_1, \ldots, \eta_n\)</span>. Therefore, <span class="math inline">\(D\eta\)</span> and <span class="math inline">\((I-D)\eta\)</span>
+are independent.
+Finally, since <span class="math inline">\(H\varepsilon= U^\top D\eta\)</span> and <span class="math inline">\((I-H)\varepsilon= U^\top(I-D)\eta\)</span>
+are deterministic linear transformations of <span class="math inline">\(D\eta\)</span> and <span class="math inline">\((I-D)\eta\)</span>, it
+follows that <span class="math inline">\(H\varepsilon\)</span> and <span class="math inline">\((I - H)\varepsilon\)</span> are also independent.
 This proves the third statement of the theorem.</p>
 <p>For the first statement, we note that
 <span class="math display">\[\begin{align*}
@@ -723,21 +787,16 @@ to the sum (we skip the proof of this statement here). Thus,
   = \sum_{i=1 \atop D_{ii}=1}^n \bigl(\eta_i/\sigma)^2
 \end{equation*}\]</span>
 is the sum of the squares of <span class="math inline">\(p+1\)</span> independent standard normals,
-and thus is <span class="math inline">\(\chi^2(p+1)\)</span> distributed. This completes the proof of the
+and thus is <span class="math inline">\(\chi^2(p+1)\)</span>-distributed. This completes the proof of the
 first statement.</p>
 <p>Finally, the second statement follows in much of the same way as the
 first one, except that <span class="math inline">\(H\)</span> is replaced with <span class="math inline">\(I-H\)</span> and the sum is
 over the <span class="math inline">\(n - p - 1\)</span> indices <span class="math inline">\(i\)</span> where <span class="math inline">\(D_{ii} = 0\)</span>.
 This completes the proof.</p>
 </div>
-<p>Expressions of the form <span class="math inline">\(x^\top A x\)</span> for <span class="math inline">\(x\in\mathbb{R}^n\)</span> and <span class="math inline">\(A\in\mathbb{R}^{n\times n}\)</span>
-are called <strong>quadratic forms</strong>.</p>
-<p>While the theorem as written only states that <span class="math inline">\(H \varepsilon\)</span> and <span class="math inline">\((I - H)\varepsilon\)</span>
-are independent of each other, we can replace one or both of these terms
-the corresponding quadratic forms as still keep the independence. Since
-<span class="math inline">\((H \varepsilon)^\top (H \varepsilon) = \varepsilon^\top H^\top H \varepsilon= \varepsilon^\top H \varepsilon\)</span>,
-the quadratic form <span class="math inline">\(\varepsilon^\top H \varepsilon\)</span> is a function of <span class="math inline">\(H \varepsilon\)</span> and a similar
-statement holds with <span class="math inline">\(H-I\)</span> instead of <span class="math inline">\(H\)</span>.</p>
+<p>Since <span class="math inline">\(\varepsilon^\top H \varepsilon= (H\varepsilon)^\top (H\varepsilon)\)</span> is a function of <span class="math inline">\(H\varepsilon\)</span>,
+and similarly for <span class="math inline">\(I-H\)</span>, the independence in part 3 of the theorem extends to
+the quadratic forms in parts 1 and 2.</p>
 </div>
 <div id="var-est-bias" class="section level2 hasAnchor" number="4.4">
 <h2><span class="header-section-number">4.4</span> Estimating the Error Variance<a href="S04-model.html#var-est-bias" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -747,10 +806,10 @@ statement holds with <span class="math inline">\(H-I\)</span> instead of <span c
 </iframe>
 </div>
 </div>
-<p>So far we have only considered how to estimate the parameter
-vector <span class="math inline">\(\beta\)</span> and we have ignored the parameter <span class="math inline">\(\sigma^2\)</span>.
-We will see that an unbiased estimator for <span class="math inline">\(\sigma^2\)</span> is
-given by
+<p>Having established the necessary properties of the hat matrix and Cochran’s
+theorem, we can now turn to estimating the error variance <span class="math inline">\(\sigma^2\)</span>, which
+we have so far ignored. We will see that an unbiased estimator for <span class="math inline">\(\sigma^2\)</span>
+is given by
 <span class="math display" id="eq:hat-sigma-squared">\[\begin{equation}
   \hat\sigma^2
   := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \tag{4.7}
@@ -762,13 +821,13 @@ but the denominator is decreased by one for each component of the
 vector <span class="math inline">\(\beta\)</span>. Using Cochran’s theorem, we can now show that the estimator
 <span class="math inline">\(\hat\sigma^2\)</span> is unbiased.</p>
 <div class="lemma">
-<p><span id="lem:sigma-hat-unbiased" class="lemma"><strong>Lemma 4.5  </strong></span>We have
+<p><span id="lem:sigma-hat-unbiased" class="lemma"><strong>Lemma 4.6  </strong></span>We have
 <span class="math display">\[\begin{equation*}
   \mathbb{E}(\hat\sigma^2) = \sigma^2.
 \end{equation*}\]</span></p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-21" class="proof"><em>Proof</em>. </span>We first note that
+<p><span id="unlabeled-div-23" class="proof"><em>Proof</em>. </span>We first note that
 <span class="math display">\[\begin{align*}
   (n - p - 1) \hat\sigma^2
   &amp;= (y - \hat y)^\top (y - \hat y) \\
@@ -787,7 +846,7 @@ data. This gives
       + \varepsilon^\top (I-H) \varepsilon\\
   &amp;= \varepsilon^\top (I-H) \varepsilon,
 \end{align*}\]</span>
-where we used equation <a href="S04-model.html#eq:XIH">(4.4)</a> to see that the first two terms in
+where we used lemma <a href="S04-model.html#lem:hat-matrix-props">4.2</a> to see that the first two terms in
 the sum equal zero.</p>
 <p>Now we can apply Cochran’s theorem. This shows that
 <span class="math display" id="eq:sigma-hat-chi-squared">\[\begin{equation}
