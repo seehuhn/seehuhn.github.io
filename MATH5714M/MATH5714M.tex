@@ -355,9 +355,9 @@ A \textbf{kernel} is a function \(K\colon \mathbb{R}\to \mathbb{R}\) such that
 \item
   \(\int_{-\infty}^\infty K(x) \,dx = 1\),
 \item
-  \(K(x) = K(-x)\) (i.e.~\(K\) is \emph{symmetric}) and
+  \(K(x) = K(-x)\) (\emph{i.e.}~\(K\) is symmetric) and
 \item
-  \(K(x) \geq 0\) (i.e.~\(K\) is \emph{positive}) for all \(x\in \mathbb{R}\).
+  \(K(x) \geq 0\) (\emph{i.e.}~\(K\) is positive) for all \(x\in \mathbb{R}\).
 \end{itemize}
 
 \end{definition}
@@ -506,10 +506,11 @@ which can be used to control details of the estimate:
 \item
   \texttt{bw\ =\ ...} can be used to control the bandwidth~\(h\).
   If no numeric value is given, a heuristic is used.
-  Note that for some kernels, \texttt{bw} differs from our \(h\)
-  by a constant factor. The value \texttt{bw=1} always corresponds
-  to the case where the probability distribution with density
-  \(K_h\) has variance~1.
+  R standardizes all kernels to have variance~1, so the \texttt{bw}
+  parameter differs from our bandwidth \(h\) by a kernel-dependent
+  constant factor (see the remark after Lemma~\ref{lem:Kh-kernel}).
+  Specifically, \texttt{bw=1} corresponds to the case where the rescaled
+  kernel \(K_h\) has variance~1.
 \item
   \texttt{kernel\ =\ ...} can be used to choose the kernel.
   Choices include \texttt{"rectangular"} (the uniform kernel), \texttt{"triangular"},
@@ -832,10 +833,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr     min       lq     mean  median       uq      max neval
-##  KDE1 834.022 880.9875 947.4066 897.039 913.6645 5125.492  1000
-##  KDE2 110.413 156.1690 218.7597 161.909 167.9770 4075.851  1000
-##  KDE3  99.425 132.5120 165.0915 137.022 141.4910 3578.726  1000
+##  expr     min       lq     mean   median       uq      max neval
+##  KDE1 832.587 883.5090 945.7695 899.2735 917.0675 5280.021  1000
+##  KDE2 110.577 157.6450 234.0243 165.5785 174.7010 5288.754  1000
+##  KDE3  99.179 132.1225 162.5968 137.9650 143.4795 3615.503  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -857,8 +858,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr    min      lq     mean  median      uq      max neval
-##  density 91.307 101.352 115.4394 103.771 106.928 3496.193  1000
+##     expr   min     lq     mean   median      uq      max neval
+##  density 91.84 102.09 116.4274 104.9395 108.035 3395.702  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -923,7 +924,7 @@ denotes that the random variable \(X\) has density~\(f\).
 It is important to not confuse \(x\) (the point where we are evaluating
 the densities during our analysis) with the data \(x_i\). A statistical
 model describes the data, so here we get random variables \(X_1, \ldots, X_n\)
-to describe the behaviour of \(x_1, \ldots, x_n\), but it does not descibe \(x\).
+to describe the behaviour of \(x_1, \ldots, x_n\), but it does not describe \(x\).
 The number \(x\) is not part of the data, so will never be modelled by a
 random variable.
 
@@ -944,7 +945,7 @@ where \(\hat f_h(x)\) is given by~\eqref{eq:KDE-est} for every \(x \in\mathbb{R}
 
 \subsubsection{The Bias of the Estimate}\label{the-bias-of-the-estimate}
 
-As ususal, the \textbf{bias} of our estimate is the difference between
+As usual, the \textbf{bias} of our estimate is the difference between
 what the estimator gives on average and the truth. For our estimation
 problem we get
 \begin{equation*}
@@ -1084,7 +1085,7 @@ variable concentrates more and more around \(0\) and thus \(x+Y\) concentrates
 more and more around~\(x\). For this reason we
 expect~\(\mathbb{E}\bigl(\hat f_h(x)\bigr) \approx f(x)\) for small~\(h\).
 
-To get a more qualitative version of this argument, we consider the
+To get a more quantitative version of this argument, we consider the
 \href{https://en.wikipedia.org/wiki/Taylor\%27s_theorem}{Taylor approximation}
 of \(f\) around the point~\(x\):
 \begin{equation*}
@@ -1104,7 +1105,7 @@ for small \(h\). Considering the bias again, this gives
   = \mathbb{E}\bigl( \hat f_h(x) \bigr) - f(x)
   \approx \frac{\mu_2(K) f''(x)}{2} h^2  \label{eq:fhatbias}
 \end{equation}
-which shows that the bias of the estimator descreases quadratically
+which shows that the bias of the estimator decreases quadratically
 as \(h\) gets smaller.
 
 In contrast, the variance of the estimator (computed below) \emph{increases}
@@ -1191,7 +1192,7 @@ Finally, we use Taylor approximation to get
       + \frac12 h f''(x) \int z^2 K(z)^2 \,dz
 \end{align*}
 where the first-order term disappears since \(z \mapsto z K(z)^2\) is an
-asymmetric function. As a shorthand we use the following definition.
+antisymmetric function. As a shorthand we use the following definition.
 
 \begin{definition}
 The \textbf{roughness} of a kernel \(K\) is given by
@@ -1274,7 +1275,7 @@ compared to \(f(x) R(K) / h\) as \(h \downarrow 0\). Using
 This is sometimes denoted by \(e_1(h) = o(1/h)\), which indicates that \(e_1(h) /
 (1/h) \to 0\) as \(h \downarrow 0\). The additional terms from the squared bias, say
 \(e_2(h)\), do not depend on \(n\) and are negligible compared to \(\mu_2(K)^2
-f''(x)^2 h^4\). We can write \(e_2(h) = o(h^4)\) as \(n \downarrow 0\), to reflect
+f''(x)^2 h^4\). We can write \(e_2(h) = o(h^4)\) as \(h \downarrow 0\), to reflect
 this fact. We can summarise these results as
 \begin{equation*}
   \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
@@ -1287,80 +1288,7 @@ with the understanding that the constants in the definition of \(o(h^4)\)
 do not depend on \(n\) and that \(o(1/nh)\) really means ``\(o(1/h)\), where the
 constants are proportional to \(1/n\).''
 
-\subsection{Integrated Error}\label{IMSE}
-
-From equation~\eqref{eq:f-hat-MSE} we know
-\begin{equation*}
-  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
-  \approx \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f''(x)^2 h^4.
-\end{equation*}
-This gives the mean squared error when trying to estimate the density
-\(f(x)\) at a fixed point~\(x\). Usually we are interested in estimating
-the function \(f\) rather than individual points \(f(x)\). In this case,
-we consider the \textbf{integrated mean squared error (IMSE)}:
-\begin{equation*}
-  \mathrm{IMSE}\bigl( \hat f_h \bigr)
-  := \int_{-\infty}^\infty \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr) \,dx.
-\end{equation*}
-Using our result from above we find
-\begin{align*}
-  \mathrm{IMSE}\bigl( \hat f_h \bigr)
-  &\approx \int \Bigl( \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f''(x)^2 h^4 \Bigr) \,dx \\
-  &= \frac{1}{nh} R(K) \int f(x) \,dx + \frac{h^4}{4} \mu_2(K)^2 \int f''(x)^2 \,dx \\
-  &= \frac{1}{nh} R(K) + \frac{1}{4} \mu_2(K)^2 R(f'') h^4,
-\end{align*}
-where we (mis-)use the definition of roughness as an abbreviation to express
-the integral over~\(f''\).
-
-As before, we can use differentiation to find the optimal value of \(h\).
-Here we get
-\begin{equation*}
-  h_\mathrm{opt}
-  = \Bigl( \frac{R(K)}{n \mu_2(K)^2 R(f'')} \Bigr)^{1/5}.
-\end{equation*}
-and the corresponding error is
-\begin{equation}
-  \mathrm{IMSE}_\mathrm{opt}
-  = \frac54 \; \frac{1}{n^{4/5}}
-      \; \Bigl( R(K)^2 \mu_2(K) \Bigr)^{2/5}
-      \; R(f'')^{1/5}.  \label{eq:IMSE-opt}
-\end{equation}
-Thus, in order to minimise the error we still need to choose
-\(h \propto n^{-1/5}\) and we should choose a kernel \(K\) which minimises
-the value~\(R(K)^2 \mu_2(K)\).
-
-\textbf{Summary}
-
-\begin{itemize}
-\tightlist
-\item
-  We introduced a statistical model for density estimation where data are
-  i.i.d. samples from the unknown density~\(f\).
-\item
-  Kernel moments \(\mu_k(K) = \int x^k K(x) dx\) characterise kernel properties
-  and scale with bandwidth: \(\mu_k(K_h) = h^k \mu_k(K)\).
-\item
-  For small bandwidth \(h\), the bias is approximately
-  \(\frac{\mu_2(K) f''(x)}{2} h^2\), decreasing quadratically as \(h \to 0\).
-\item
-  The variance for small \(h\) is approximately \(\frac{f(x) R(K)}{nh}\),
-  where \(R(K) = \int K(x)^2 dx\) is the kernel roughness, and increases
-  as \(h \to 0\).
-\item
-  The mean squared error (MSE) combines both bias and variance. The integrated
-  mean squared error (IMSE) integrates the MSE over all points and provides a
-  global measure of estimation quality.
-\end{itemize}
-
-\clearpage
-
-\section{Kernel Density Estimation in Practice}\label{X03-practice}
-
-In this section we conclude our discussion of kernel density estimation
-by considering different aspects which are important when using the method
-in practice.
-
-\subsection{Optimal Bandwidth}\label{optimal-bandwidth}
+\subsection{Optimal Bandwidth for Pointwise MSE}\label{optimal-bandwidth-for-pointwise-mse}
 
 The two terms on the right-hand side of \eqref{eq:f-hat-MSE} are balanced in
 that the first term decreases for large \(h\) while the second term decreases for
@@ -1415,6 +1343,75 @@ This expression clearly shows the contribution of \(n\), \(K\) and \(f\):
   high curvature have higher estimation error.
 \end{itemize}
 
+\subsection{Integrated Error}\label{IMSE}
+
+Equation~\eqref{eq:f-hat-MSE} gives the mean squared error when trying to estimate the density
+\(f(x)\) at a fixed point~\(x\). Usually we are interested in estimating
+the function \(f\) rather than individual points \(f(x)\). In this case,
+we consider the \textbf{integrated mean squared error (IMSE)}:
+\begin{equation*}
+  \mathrm{IMSE}\bigl( \hat f_h \bigr)
+  := \int_{-\infty}^\infty \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr) \,dx.
+\end{equation*}
+Using our result from above we find
+\begin{align*}
+  \mathrm{IMSE}\bigl( \hat f_h \bigr)
+  &\approx \int \Bigl( \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f''(x)^2 h^4 \Bigr) \,dx \\
+  &= \frac{1}{nh} R(K) \int f(x) \,dx + \frac{h^4}{4} \mu_2(K)^2 \int f''(x)^2 \,dx \\
+  &= \frac{1}{nh} R(K) + \frac{1}{4} \mu_2(K)^2 R(f'') h^4,
+\end{align*}
+where we (mis-)use the definition of roughness as an abbreviation to express
+the integral over~\(f''\).
+
+As in the pointwise case above, we can use differentiation to find the optimal value of \(h\).
+Here we get
+\begin{equation*}
+  h_\mathrm{opt}
+  = \Bigl( \frac{R(K)}{n \mu_2(K)^2 R(f'')} \Bigr)^{1/5}.
+\end{equation*}
+and the corresponding error is
+\begin{equation}
+  \mathrm{IMSE}_\mathrm{opt}
+  = \frac54 \; \frac{1}{n^{4/5}}
+      \; \Bigl( R(K)^2 \mu_2(K) \Bigr)^{2/5}
+      \; R(f'')^{1/5}.  \label{eq:IMSE-opt}
+\end{equation}
+Thus, in order to minimise the error we still need to choose
+\(h \propto n^{-1/5}\) and we should choose a kernel \(K\) which minimises
+the value~\(R(K)^2 \mu_2(K)\).
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  We introduced a statistical model for density estimation where data are
+  i.i.d. samples from the unknown density~\(f\).
+\item
+  Kernel moments \(\mu_k(K) = \int x^k K(x) dx\) characterise kernel properties
+  and scale with bandwidth: \(\mu_k(K_h) = h^k \mu_k(K)\).
+\item
+  For small bandwidth \(h\), the bias is approximately
+  \(\frac{\mu_2(K) f''(x)}{2} h^2\), decreasing quadratically as \(h \to 0\).
+\item
+  The variance for small \(h\) is approximately \(\frac{f(x) R(K)}{nh}\),
+  where \(R(K) = \int K(x)^2 dx\) is the kernel roughness, and increases
+  as \(h \to 0\).
+\item
+  The mean squared error (MSE) combines both bias and variance. The integrated
+  mean squared error (IMSE) integrates the MSE over all points and provides a
+  global measure of estimation quality.
+\end{itemize}
+
+\clearpage
+
+\section{Kernel Density Estimation in Practice}\label{X03-practice}
+
+In this section we conclude our discussion of kernel density estimation
+by considering practical aspects of implementing the method. We discuss
+how to choose a kernel, how to select an appropriate bandwidth in practice,
+and how the method extends to higher dimensions.
+
 \subsection{Choice of Kernel}\label{choice-of-kernel}
 
 The integrated error in equation~\eqref{eq:IMSE-opt} is proportional to
@@ -1460,6 +1457,7 @@ Thus, for the uniform kernel we have
 Calculations similar to the ones in the example give the following
 values:
 
+{\def\LTcaptype{} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1017}}
   >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.4322}}
@@ -1486,6 +1484,7 @@ Triangular & \includegraphics[width=4cm,height=\textheight,keepaspectratio,alt={
 Epanechnikov & \includegraphics[width=4cm,height=\textheight,keepaspectratio,alt={Epanechnikov kernel}]{MATH5714M_files/figure-html/kEpanechnikov-1.pdf} & \(\displaystyle\frac15\) & \(\displaystyle\frac35\) & \(0.07200\) \\
 Gaussian & \includegraphics[width=4cm,height=\textheight,keepaspectratio,alt={Gaussian kernel}]{MATH5714M_files/figure-html/kGaussian-1.pdf} & \(1\) & \(\displaystyle\frac{1}{2\sqrt{\pi}}\) & \(0.07958\) \\
 \end{longtable}
+}
 
 The best value in the table is obtained for the Epanechnikov kernel,
 with \(R(K)^2 \mu_2(K) = 9/125 = 0.072\). One can show that this value
@@ -1532,7 +1531,7 @@ sample standard deviation.
 We now demonstrate how this rule of thumb could be used in R to obtain a kernel
 density estimate for the snowfall data. We will use the Epanechnikov kernel.
 For compatibility with the kernels built into R, we rescale this kernel, so
-that \(\mu_2(K) = 1\), i.e.~we consider \(K_{\sqrt{5}}\) in place of \(K\). An easy
+that \(\mu_2(K) = 1\), \emph{i.e.} we consider \(K_{\sqrt{5}}\) in place of \(K\). An easy
 calculation shows that the roughness is then \(R(K) = 3 / (5*\sqrt(5))\).
 
 \begin{Shaded}
@@ -1633,7 +1632,7 @@ There are different possibilities for rescaling these kernels:
 
 \begin{itemize}
 \item
-  If all coordinates live on ``comparable scales'' (e.g., if they are
+  If all coordinates live on ``comparable scales'' (\emph{e.g.}, if they are
   measured in the same units), the formula
   \[ K_h(x) = \frac{1}{h^p} K(x/h) \]
   for all \(x\in\mathbb{R}^p\) can be used, where \(h>0\) is a bandwidth parameter

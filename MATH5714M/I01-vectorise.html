@@ -170,14 +170,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.3.3" data-path="X02-error.html"><a href="X02-error.html#the-variance-for-small-bandwidth"><i class="fa fa-check"></i><b>2.3.3</b> The Variance for Small Bandwidth</a></li>
 </ul></li>
 <li class="chapter" data-level="2.4" data-path="X02-error.html"><a href="X02-error.html#mean-squared-error"><i class="fa fa-check"></i><b>2.4</b> Mean Squared Error</a></li>
-<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.5</b> Integrated Error</a></li>
+<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#optimal-bandwidth-for-pointwise-mse"><i class="fa fa-check"></i><b>2.5</b> Optimal Bandwidth for Pointwise MSE</a></li>
+<li class="chapter" data-level="2.6" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.6</b> Integrated Error</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="X03-practice.html"><a href="X03-practice.html"><i class="fa fa-check"></i><b>3</b> Kernel Density Estimation in Practice</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="X03-practice.html"><a href="X03-practice.html#optimal-bandwidth"><i class="fa fa-check"></i><b>3.1</b> Optimal Bandwidth</a></li>
-<li class="chapter" data-level="3.2" data-path="X03-practice.html"><a href="X03-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>3.2</b> Choice of Kernel</a></li>
-<li class="chapter" data-level="3.3" data-path="X03-practice.html"><a href="X03-practice.html#bwsel"><i class="fa fa-check"></i><b>3.3</b> Bandwidth Selection</a></li>
-<li class="chapter" data-level="3.4" data-path="X03-practice.html"><a href="X03-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>3.4</b> Higher Dimensions</a></li>
+<li class="chapter" data-level="3.1" data-path="X03-practice.html"><a href="X03-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>3.1</b> Choice of Kernel</a></li>
+<li class="chapter" data-level="3.2" data-path="X03-practice.html"><a href="X03-practice.html#bwsel"><i class="fa fa-check"></i><b>3.2</b> Bandwidth Selection</a></li>
+<li class="chapter" data-level="3.3" data-path="X03-practice.html"><a href="X03-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>3.3</b> Higher Dimensions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
 <li class="chapter" data-level="4" data-path="X04-smoothing.html"><a href="X04-smoothing.html"><i class="fa fa-check"></i><b>4</b> Kernel Smoothing</a>
@@ -370,10 +370,10 @@ means by <span class="math inline">\(h\)</span>:</p>
 <span id="cb25-6"><a href="I01-vectorise.html#cb25-6" tabindex="-1"></a>  <span class="at">KDE3 =</span> <span class="fu">KDE3</span>(x.tilde, snowfall, K, h),</span>
 <span id="cb25-7"><a href="I01-vectorise.html#cb25-7" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
-##  expr     min       lq     mean   median       uq      max neval
-##  KDE1 807.987 878.4250 968.8089 894.0050 913.5415 5753.694  1000
-##  KDE2 108.650 156.4355 206.0156 162.2985 168.1410 4186.510  1000
-##  KDE3  97.457 131.7330 162.3908 136.4480 140.9580 3876.263  1000</code></pre>
+##  expr     min       lq     mean  median       uq      max neval
+##  KDE1 829.963 880.9055 963.7066 894.661 916.4525 5988.214  1000
+##  KDE2 110.659 156.0870 196.7779 160.556 167.9155 3954.737  1000
+##  KDE3  99.220 131.7330 191.5768 135.054 139.9945 4037.844  1000</code></pre>
 <p>The output shows execution times for 1000 runs. The introduction
 of <code>outer()</code> in <code>KDE2()</code> gives a substantial speedup, and <code>KDE3()</code> improves further.</p>
 <p>Finally, we compare to <code>density()</code>, using arguments <code>from</code>, <code>to</code>, and <code>n</code>
@@ -385,8 +385,8 @@ to specify the same grid <span class="math inline">\(\tilde x\)</span>:</p>
 <span id="cb27-5"><a href="I01-vectorise.html#cb27-5" tabindex="-1"></a>}</span>
 <span id="cb27-6"><a href="I01-vectorise.html#cb27-6" tabindex="-1"></a><span class="fu">microbenchmark</span>(<span class="at">density =</span> <span class="fu">KDE.builtin</span>(x.tilde, snowfall, <span class="st">&quot;triangular&quot;</span>, h), <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
-##     expr    min     lq     mean  median     uq      max neval
-##  density 90.323 98.359 112.5831 100.655 103.73 3564.909  1000</code></pre>
+##     expr    min       lq     mean median      uq      max neval
+##  density 91.348 100.1015 113.2846 102.91 106.067 3317.515  1000</code></pre>
 <p>The result shows that <code>density()</code> is faster than <code>KDE3()</code>, but by a factor
 of less than 2. The reason is that <code>density()</code> uses a more efficient
 algorithm based on Fast Fourier Transform to compute an approximation to the

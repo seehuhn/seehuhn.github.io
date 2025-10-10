@@ -170,14 +170,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.3.3" data-path="X02-error.html"><a href="X02-error.html#the-variance-for-small-bandwidth"><i class="fa fa-check"></i><b>2.3.3</b> The Variance for Small Bandwidth</a></li>
 </ul></li>
 <li class="chapter" data-level="2.4" data-path="X02-error.html"><a href="X02-error.html#mean-squared-error"><i class="fa fa-check"></i><b>2.4</b> Mean Squared Error</a></li>
-<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.5</b> Integrated Error</a></li>
+<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#optimal-bandwidth-for-pointwise-mse"><i class="fa fa-check"></i><b>2.5</b> Optimal Bandwidth for Pointwise MSE</a></li>
+<li class="chapter" data-level="2.6" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.6</b> Integrated Error</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="X03-practice.html"><a href="X03-practice.html"><i class="fa fa-check"></i><b>3</b> Kernel Density Estimation in Practice</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="X03-practice.html"><a href="X03-practice.html#optimal-bandwidth"><i class="fa fa-check"></i><b>3.1</b> Optimal Bandwidth</a></li>
-<li class="chapter" data-level="3.2" data-path="X03-practice.html"><a href="X03-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>3.2</b> Choice of Kernel</a></li>
-<li class="chapter" data-level="3.3" data-path="X03-practice.html"><a href="X03-practice.html#bwsel"><i class="fa fa-check"></i><b>3.3</b> Bandwidth Selection</a></li>
-<li class="chapter" data-level="3.4" data-path="X03-practice.html"><a href="X03-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>3.4</b> Higher Dimensions</a></li>
+<li class="chapter" data-level="3.1" data-path="X03-practice.html"><a href="X03-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>3.1</b> Choice of Kernel</a></li>
+<li class="chapter" data-level="3.2" data-path="X03-practice.html"><a href="X03-practice.html#bwsel"><i class="fa fa-check"></i><b>3.2</b> Bandwidth Selection</a></li>
+<li class="chapter" data-level="3.3" data-path="X03-practice.html"><a href="X03-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>3.3</b> Higher Dimensions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
 <li class="chapter" data-level="4" data-path="X04-smoothing.html"><a href="X04-smoothing.html"><i class="fa fa-check"></i><b>4</b> Kernel Smoothing</a>
@@ -251,66 +251,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="X03-practice" class="section level1 hasAnchor" number="3">
 <h1><span class="header-section-number">Section 3</span> Kernel Density Estimation in Practice<a href="X03-practice.html#X03-practice" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>In this section we conclude our discussion of kernel density estimation
-by considering different aspects which are important when using the method
-in practice.</p>
-<div id="optimal-bandwidth" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> Optimal Bandwidth<a href="X03-practice.html#optimal-bandwidth" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Ah4ni7XxRtA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>The two terms on the right-hand side of <a href="X02-error.html#eq:f-hat-MSE">(2.11)</a> are balanced in
-that the first term decreases for large <span class="math inline">\(h\)</span> while the second term decreases for
-small <span class="math inline">\(h\)</span>. By taking derivatives with respect to <span class="math inline">\(h\)</span>, we can
-find the optimal value of <span class="math inline">\(h\)</span>. Ignoring the higher order terms, we get
-<span class="math display">\[\begin{equation*}
-  \frac{\partial}{\partial h} \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
-  = -\frac{1}{nh^2} f(x) R(K) + \mu_2(K)^2 f&#39;&#39;(x)^2 h^3
-\end{equation*}\]</span>
-and thus the derivative equals zero, if
-<span class="math display">\[\begin{equation*}
-  \frac{1}{nh^2} f(x) R(K) = \mu_2(K)^2 f&#39;&#39;(x)^2 h^3
-\end{equation*}\]</span>
-or, equivalently,
-<span class="math display">\[\begin{equation*}
-  h
-  = h_\mathrm{opt}
-  := \Bigl( \frac{f(x) R(K)}{n \mu_2(K)^2 f&#39;&#39;(x)^2} \Bigr)^{1/5}.
-\end{equation*}\]</span>
-It is easy to check that this <span class="math inline">\(h\)</span> corresponds to the minimum of the MSE.
-This shows how the optimal bandwidth depends both on the kernel and on
-the target density <span class="math inline">\(f\)</span>. In practice, this formula is hard to use,
-since <span class="math inline">\(f&#39;&#39;\)</span> is unknown. (We don’t even know <span class="math inline">\(f\)</span>!)</p>
-<p>Substituting the optimal value of <span class="math inline">\(h\)</span> back into equation <a href="X02-error.html#eq:f-hat-MSE">(2.11)</a>,
-we get
-<span class="math display">\[\begin{align*}
-  \mathop{\mathrm{MSE}}\nolimits_\mathrm{opt}
-  &amp;= \frac{1}{n} f(x) R(K) \Bigl( \frac{n \mu_2(K)^2 f&#39;&#39;(x)^2}{f(x) R(K)} \Bigr)^{1/5}
-     + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 \Bigl( \frac{f(x) R(K)}{n \mu_2(K)^2 f&#39;&#39;(x)^2} \Bigr)^{4/5} \\
-  &amp;= \frac54 \; \frac{1}{n^{4/5}}
-      \; \Bigl( R(K)^2 \mu_2(K) \Bigr)^{2/5}
-      \; \Bigl( f(x)^2 |f&#39;&#39;(x)| \Bigr)^{2/5}.
-\end{align*}\]</span>
-This expression clearly shows the contribution of <span class="math inline">\(n\)</span>, <span class="math inline">\(K\)</span> and <span class="math inline">\(f\)</span>:</p>
-<ul>
-<li><p>If the bandwidth is chosen optimally, as <span class="math inline">\(n\)</span> increases the bandwidth <span class="math inline">\(h\)</span>
-decreases proportionally to <span class="math inline">\(1/n^{1/5}\)</span> and the MSE decreases
-proportionally to <span class="math inline">\(1 / n^{4/5}\)</span>. For comparison, in a Monte Carlo
-estimate for an expectation, the MSE decreases proportionally to <span class="math inline">\(1/n\)</span>.
-The error in kernel density estimation decreases slightly slower than
-for Monte Carlo estimates.</p></li>
-<li><p>The error is proportional to <span class="math inline">\(\bigl( R(K)^2 \mu_2(K) \bigr)^{2/5}\)</span>.
-Thus we should use kernels where the value <span class="math inline">\(R(K)^2 \mu_2(K)\)</span>
-is small.</p></li>
-<li><p>The error is proportional to <span class="math inline">\(f(x)^2 |f&#39;&#39;(x)|\)</span>. We cannot influence
-this term, but we can see that <span class="math inline">\(x\)</span> where <span class="math inline">\(f\)</span> is large or has
-high curvature have higher estimation error.</p></li>
-</ul>
-</div>
-<div id="choice-of-kernel" class="section level2 hasAnchor" number="3.2">
-<h2><span class="header-section-number">3.2</span> Choice of Kernel<a href="X03-practice.html#choice-of-kernel" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+by considering practical aspects of implementing the method. We discuss
+how to choose a kernel, how to select an appropriate bandwidth in practice,
+and how the method extends to higher dimensions.</p>
+<div id="choice-of-kernel" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Choice of Kernel<a href="X03-practice.html#choice-of-kernel" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/lz8Fy0X3iCs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
@@ -411,8 +356,8 @@ is indeed optimal amongst all kernels. Since the difference in error
 for the kernels listed above is only a few percent, any of these kernels
 would be a reasonable choice.</p>
 </div>
-<div id="bwsel" class="section level2 hasAnchor" number="3.3">
-<h2><span class="header-section-number">3.3</span> Bandwidth Selection<a href="X03-practice.html#bwsel" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="bwsel" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Bandwidth Selection<a href="X03-practice.html#bwsel" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/5zNYHX4p0KM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
@@ -454,7 +399,7 @@ sample standard deviation.</p>
 <p>We now demonstrate how this rule of thumb could be used in R to obtain a kernel
 density estimate for the snowfall data. We will use the Epanechnikov kernel.
 For compatibility with the kernels built into R, we rescale this kernel, so
-that <span class="math inline">\(\mu_2(K) = 1\)</span>, i.e. we consider <span class="math inline">\(K_{\sqrt{5}}\)</span> in place of <span class="math inline">\(K\)</span>. An easy
+that <span class="math inline">\(\mu_2(K) = 1\)</span>, <em>i.e.</em> we consider <span class="math inline">\(K_{\sqrt{5}}\)</span> in place of <span class="math inline">\(K\)</span>. An easy
 calculation shows that the roughness is then <span class="math inline">\(R(K) = 3 / (5*\sqrt(5))\)</span>.</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="X03-practice.html#cb31-1" tabindex="-1"></a><span class="co"># downloaded from https://teaching.seehuhn.de/data/buffalo/</span></span>
 <span id="cb31-2"><a href="X03-practice.html#cb31-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/buffalo.csv&quot;</span>)</span>
@@ -490,8 +435,8 @@ our bandwidth estimate, we get the following estimated density.</p>
 <p>In practice one would just use one of the built-in methods, for example using
 <code>bw="SJ"</code> instead of estimating the bandwidth manually.</p>
 </div>
-<div id="higher-dimensions" class="section level2 hasAnchor" number="3.4">
-<h2><span class="header-section-number">3.4</span> Higher Dimensions<a href="X03-practice.html#higher-dimensions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="higher-dimensions" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Higher Dimensions<a href="X03-practice.html#higher-dimensions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/wtEH4DlRM5M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
@@ -525,7 +470,7 @@ Gaussian kernels, we get
 </div>
 <p>There are different possibilities for rescaling these kernels:</p>
 <ul>
-<li><p>If all coordinates live on “comparable scales” (e.g., if they are
+<li><p>If all coordinates live on “comparable scales” (<em>e.g.</em>, if they are
 measured in the same units), the formula
 <span class="math display">\[ K_h(x) = \frac{1}{h^p} K(x/h) \]</span>
 for all <span class="math inline">\(x\in\mathbb{R}^p\)</span> can be used, where <span class="math inline">\(h&gt;0\)</span> is a bandwidth parameter

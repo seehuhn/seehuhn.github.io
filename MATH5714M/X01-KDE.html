@@ -170,14 +170,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.3.3" data-path="X02-error.html"><a href="X02-error.html#the-variance-for-small-bandwidth"><i class="fa fa-check"></i><b>2.3.3</b> The Variance for Small Bandwidth</a></li>
 </ul></li>
 <li class="chapter" data-level="2.4" data-path="X02-error.html"><a href="X02-error.html#mean-squared-error"><i class="fa fa-check"></i><b>2.4</b> Mean Squared Error</a></li>
-<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.5</b> Integrated Error</a></li>
+<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#optimal-bandwidth-for-pointwise-mse"><i class="fa fa-check"></i><b>2.5</b> Optimal Bandwidth for Pointwise MSE</a></li>
+<li class="chapter" data-level="2.6" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.6</b> Integrated Error</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="X03-practice.html"><a href="X03-practice.html"><i class="fa fa-check"></i><b>3</b> Kernel Density Estimation in Practice</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="X03-practice.html"><a href="X03-practice.html#optimal-bandwidth"><i class="fa fa-check"></i><b>3.1</b> Optimal Bandwidth</a></li>
-<li class="chapter" data-level="3.2" data-path="X03-practice.html"><a href="X03-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>3.2</b> Choice of Kernel</a></li>
-<li class="chapter" data-level="3.3" data-path="X03-practice.html"><a href="X03-practice.html#bwsel"><i class="fa fa-check"></i><b>3.3</b> Bandwidth Selection</a></li>
-<li class="chapter" data-level="3.4" data-path="X03-practice.html"><a href="X03-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>3.4</b> Higher Dimensions</a></li>
+<li class="chapter" data-level="3.1" data-path="X03-practice.html"><a href="X03-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>3.1</b> Choice of Kernel</a></li>
+<li class="chapter" data-level="3.2" data-path="X03-practice.html"><a href="X03-practice.html#bwsel"><i class="fa fa-check"></i><b>3.2</b> Bandwidth Selection</a></li>
+<li class="chapter" data-level="3.3" data-path="X03-practice.html"><a href="X03-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>3.3</b> Higher Dimensions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
 <li class="chapter" data-level="4" data-path="X04-smoothing.html"><a href="X04-smoothing.html"><i class="fa fa-check"></i><b>4</b> Kernel Smoothing</a>
@@ -371,8 +371,8 @@ get lower weight, and the transition is smooth.</p>
 <p><span id="def:kernel" class="definition"><strong>Definition 1.1  </strong></span>A <strong>kernel</strong> is a function <span class="math inline">\(K\colon \mathbb{R}\to \mathbb{R}\)</span> such that</p>
 <ul>
 <li><span class="math inline">\(\int_{-\infty}^\infty K(x) \,dx = 1\)</span>,</li>
-<li><span class="math inline">\(K(x) = K(-x)\)</span> (i.e. <span class="math inline">\(K\)</span> is <em>symmetric</em>) and</li>
-<li><span class="math inline">\(K(x) \geq 0\)</span> (i.e. <span class="math inline">\(K\)</span> is <em>positive</em>) for all <span class="math inline">\(x\in \mathbb{R}\)</span>.</li>
+<li><span class="math inline">\(K(x) = K(-x)\)</span> (<em>i.e.</em> <span class="math inline">\(K\)</span> is symmetric) and</li>
+<li><span class="math inline">\(K(x) \geq 0\)</span> (<em>i.e.</em> <span class="math inline">\(K\)</span> is positive) for all <span class="math inline">\(x\in \mathbb{R}\)</span>.</li>
 </ul>
 </div>
 <p>The first condition ensures that <span class="math inline">\(K\)</span> must decay as <span class="math inline">\(|x|\)</span> becomes large.
@@ -504,10 +504,11 @@ which can be used to control details of the estimate:</p>
 <ul>
 <li><p><code>bw = ...</code> can be used to control the bandwidth <span class="math inline">\(h\)</span>.
 If no numeric value is given, a heuristic is used.
-Note that for some kernels, <code>bw</code> differs from our <span class="math inline">\(h\)</span>
-by a constant factor. The value <code>bw=1</code> always corresponds
-to the case where the probability distribution with density
-<span class="math inline">\(K_h\)</span> has variance 1.</p></li>
+R standardizes all kernels to have variance 1, so the <code>bw</code>
+parameter differs from our bandwidth <span class="math inline">\(h\)</span> by a kernel-dependent
+constant factor (see the remark after Lemma <a href="X01-KDE.html#lem:Kh-kernel">1.1</a>).
+Specifically, <code>bw=1</code> corresponds to the case where the rescaled
+kernel <span class="math inline">\(K_h\)</span> has variance 1.</p></li>
 <li><p><code>kernel = ...</code> can be used to choose the kernel.
 Choices include <code>"rectangular"</code> (the uniform kernel), <code>"triangular"</code>,
 <code>"epanechnikov"</code> and <code>"gaussian"</code>. The default value is <code>"gaussian"</code>.</p></li>

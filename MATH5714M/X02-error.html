@@ -170,14 +170,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.3.3" data-path="X02-error.html"><a href="X02-error.html#the-variance-for-small-bandwidth"><i class="fa fa-check"></i><b>2.3.3</b> The Variance for Small Bandwidth</a></li>
 </ul></li>
 <li class="chapter" data-level="2.4" data-path="X02-error.html"><a href="X02-error.html#mean-squared-error"><i class="fa fa-check"></i><b>2.4</b> Mean Squared Error</a></li>
-<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.5</b> Integrated Error</a></li>
+<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#optimal-bandwidth-for-pointwise-mse"><i class="fa fa-check"></i><b>2.5</b> Optimal Bandwidth for Pointwise MSE</a></li>
+<li class="chapter" data-level="2.6" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.6</b> Integrated Error</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="X03-practice.html"><a href="X03-practice.html"><i class="fa fa-check"></i><b>3</b> Kernel Density Estimation in Practice</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="X03-practice.html"><a href="X03-practice.html#optimal-bandwidth"><i class="fa fa-check"></i><b>3.1</b> Optimal Bandwidth</a></li>
-<li class="chapter" data-level="3.2" data-path="X03-practice.html"><a href="X03-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>3.2</b> Choice of Kernel</a></li>
-<li class="chapter" data-level="3.3" data-path="X03-practice.html"><a href="X03-practice.html#bwsel"><i class="fa fa-check"></i><b>3.3</b> Bandwidth Selection</a></li>
-<li class="chapter" data-level="3.4" data-path="X03-practice.html"><a href="X03-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>3.4</b> Higher Dimensions</a></li>
+<li class="chapter" data-level="3.1" data-path="X03-practice.html"><a href="X03-practice.html#choice-of-kernel"><i class="fa fa-check"></i><b>3.1</b> Choice of Kernel</a></li>
+<li class="chapter" data-level="3.2" data-path="X03-practice.html"><a href="X03-practice.html#bwsel"><i class="fa fa-check"></i><b>3.2</b> Bandwidth Selection</a></li>
+<li class="chapter" data-level="3.3" data-path="X03-practice.html"><a href="X03-practice.html#higher-dimensions"><i class="fa fa-check"></i><b>3.3</b> Higher Dimensions</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="P01.html"><a href="P01.html"><i class="fa fa-check"></i>Problem Sheet 1</a></li>
 <li class="chapter" data-level="4" data-path="X04-smoothing.html"><a href="X04-smoothing.html"><i class="fa fa-check"></i><b>4</b> Kernel Smoothing</a>
@@ -284,7 +284,7 @@ denotes that the random variable <span class="math inline">\(X\)</span> has dens
 <p>It is important to not confuse <span class="math inline">\(x\)</span> (the point where we are evaluating
 the densities during our analysis) with the data <span class="math inline">\(x_i\)</span>. A statistical
 model describes the data, so here we get random variables <span class="math inline">\(X_1, \ldots, X_n\)</span>
-to describe the behaviour of <span class="math inline">\(x_1, \ldots, x_n\)</span>, but it does not descibe <span class="math inline">\(x\)</span>.
+to describe the behaviour of <span class="math inline">\(x_1, \ldots, x_n\)</span>, but it does not describe <span class="math inline">\(x\)</span>.
 The number <span class="math inline">\(x\)</span> is not part of the data, so will never be modelled by a
 random variable.</p>
 <p>While the model is very simple, for example it is much simpler than the
@@ -309,7 +309,7 @@ where <span class="math inline">\(\hat f_h(x)\)</span> is given by <a href="X02
 </div>
 <div id="the-bias-of-the-estimate" class="section level3 hasAnchor" number="2.2.1">
 <h3><span class="header-section-number">2.2.1</span> The Bias of the Estimate<a href="X02-error.html#the-bias-of-the-estimate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>As ususal, the <strong>bias</strong> of our estimate is the difference between
+<p>As usual, the <strong>bias</strong> of our estimate is the difference between
 what the estimator gives on average and the truth. For our estimation
 problem we get
 <span class="math display">\[\begin{equation*}
@@ -449,7 +449,7 @@ Equation <a href="X02-error.html#eq:Kh-var-Y">(2.3)</a> shows that for <span cl
 variable concentrates more and more around <span class="math inline">\(0\)</span> and thus <span class="math inline">\(x+Y\)</span> concentrates
 more and more around <span class="math inline">\(x\)</span>. For this reason we
 expect <span class="math inline">\(\mathbb{E}\bigl(\hat f_h(x)\bigr) \approx f(x)\)</span> for small <span class="math inline">\(h\)</span>.</p>
-<p>To get a more qualitative version of this argument, we consider the
+<p>To get a more quantitative version of this argument, we consider the
 <a href="https://en.wikipedia.org/wiki/Taylor%27s_theorem">Taylor approximation</a>
 of <span class="math inline">\(f\)</span> around the point <span class="math inline">\(x\)</span>:
 <span class="math display">\[\begin{equation*}
@@ -469,7 +469,7 @@ for small <span class="math inline">\(h\)</span>. Considering the bias again, th
   = \mathbb{E}\bigl( \hat f_h(x) \bigr) - f(x)
   \approx \frac{\mu_2(K) f&#39;&#39;(x)}{2} h^2  \tag{2.5}
 \end{equation}\]</span>
-which shows that the bias of the estimator descreases quadratically
+which shows that the bias of the estimator decreases quadratically
 as <span class="math inline">\(h\)</span> gets smaller.</p>
 <p>In contrast, the variance of the estimator (computed below) <em>increases</em>
 as <span class="math inline">\(h \downarrow 0\)</span>. We will need to balance these two effects to find the
@@ -560,7 +560,7 @@ Finally, we use Taylor approximation to get
       + \frac12 h f&#39;&#39;(x) \int z^2 K(z)^2 \,dz
 \end{align*}\]</span>
 where the first-order term disappears since <span class="math inline">\(z \mapsto z K(z)^2\)</span> is an
-asymmetric function. As a shorthand we use the following definition.</p>
+antisymmetric function. As a shorthand we use the following definition.</p>
 <div class="definition">
 <p><span id="def:unlabeled-div-5" class="definition"><strong>Definition 2.2  </strong></span>The <strong>roughness</strong> of a kernel <span class="math inline">\(K\)</span> is given by
 <span class="math display">\[\begin{equation*}
@@ -646,7 +646,7 @@ compared to <span class="math inline">\(f(x) R(K) / h\)</span> as <span class="m
 This is sometimes denoted by <span class="math inline">\(e_1(h) = o(1/h)\)</span>, which indicates that <span class="math inline">\(e_1(h) /
 (1/h) \to 0\)</span> as <span class="math inline">\(h \downarrow 0\)</span>. The additional terms from the squared bias, say
 <span class="math inline">\(e_2(h)\)</span>, do not depend on <span class="math inline">\(n\)</span> and are negligible compared to <span class="math inline">\(\mu_2(K)^2
-f&#39;&#39;(x)^2 h^4\)</span>. We can write <span class="math inline">\(e_2(h) = o(h^4)\)</span> as <span class="math inline">\(n \downarrow 0\)</span>, to reflect
+f&#39;&#39;(x)^2 h^4\)</span>. We can write <span class="math inline">\(e_2(h) = o(h^4)\)</span> as <span class="math inline">\(h \downarrow 0\)</span>, to reflect
 this fact. We can summarise these results as
 <span class="math display">\[\begin{equation*}
   \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
@@ -659,20 +659,65 @@ with the understanding that the constants in the definition of <span class="math
 do not depend on <span class="math inline">\(n\)</span> and that <span class="math inline">\(o(1/nh)\)</span> really means “<span class="math inline">\(o(1/h)\)</span>, where the
 constants are proportional to <span class="math inline">\(1/n\)</span>.”</p>
 </div>
-<div id="IMSE" class="section level2 hasAnchor" number="2.5">
-<h2><span class="header-section-number">2.5</span> Integrated Error<a href="X02-error.html#IMSE" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="optimal-bandwidth-for-pointwise-mse" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> Optimal Bandwidth for Pointwise MSE<a href="X02-error.html#optimal-bandwidth-for-pointwise-mse" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The two terms on the right-hand side of <a href="X02-error.html#eq:f-hat-MSE">(2.11)</a> are balanced in
+that the first term decreases for large <span class="math inline">\(h\)</span> while the second term decreases for
+small <span class="math inline">\(h\)</span>. By taking derivatives with respect to <span class="math inline">\(h\)</span>, we can
+find the optimal value of <span class="math inline">\(h\)</span>. Ignoring the higher order terms, we get
+<span class="math display">\[\begin{equation*}
+  \frac{\partial}{\partial h} \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = -\frac{1}{nh^2} f(x) R(K) + \mu_2(K)^2 f&#39;&#39;(x)^2 h^3
+\end{equation*}\]</span>
+and thus the derivative equals zero, if
+<span class="math display">\[\begin{equation*}
+  \frac{1}{nh^2} f(x) R(K) = \mu_2(K)^2 f&#39;&#39;(x)^2 h^3
+\end{equation*}\]</span>
+or, equivalently,
+<span class="math display">\[\begin{equation*}
+  h
+  = h_\mathrm{opt}
+  := \Bigl( \frac{f(x) R(K)}{n \mu_2(K)^2 f&#39;&#39;(x)^2} \Bigr)^{1/5}.
+\end{equation*}\]</span>
+It is easy to check that this <span class="math inline">\(h\)</span> corresponds to the minimum of the MSE.
+This shows how the optimal bandwidth depends both on the kernel and on
+the target density <span class="math inline">\(f\)</span>. In practice, this formula is hard to use,
+since <span class="math inline">\(f&#39;&#39;\)</span> is unknown. (We don’t even know <span class="math inline">\(f\)</span>!)</p>
+<p>Substituting the optimal value of <span class="math inline">\(h\)</span> back into equation <a href="X02-error.html#eq:f-hat-MSE">(2.11)</a>,
+we get
+<span class="math display">\[\begin{align*}
+  \mathop{\mathrm{MSE}}\nolimits_\mathrm{opt}
+  &amp;= \frac{1}{n} f(x) R(K) \Bigl( \frac{n \mu_2(K)^2 f&#39;&#39;(x)^2}{f(x) R(K)} \Bigr)^{1/5}
+     + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 \Bigl( \frac{f(x) R(K)}{n \mu_2(K)^2 f&#39;&#39;(x)^2} \Bigr)^{4/5} \\
+  &amp;= \frac54 \; \frac{1}{n^{4/5}}
+      \; \Bigl( R(K)^2 \mu_2(K) \Bigr)^{2/5}
+      \; \Bigl( f(x)^2 |f&#39;&#39;(x)| \Bigr)^{2/5}.
+\end{align*}\]</span>
+This expression clearly shows the contribution of <span class="math inline">\(n\)</span>, <span class="math inline">\(K\)</span> and <span class="math inline">\(f\)</span>:</p>
+<ul>
+<li><p>If the bandwidth is chosen optimally, as <span class="math inline">\(n\)</span> increases the bandwidth <span class="math inline">\(h\)</span>
+decreases proportionally to <span class="math inline">\(1/n^{1/5}\)</span> and the MSE decreases
+proportionally to <span class="math inline">\(1 / n^{4/5}\)</span>. For comparison, in a Monte Carlo
+estimate for an expectation, the MSE decreases proportionally to <span class="math inline">\(1/n\)</span>.
+The error in kernel density estimation decreases slightly slower than
+for Monte Carlo estimates.</p></li>
+<li><p>The error is proportional to <span class="math inline">\(\bigl( R(K)^2 \mu_2(K) \bigr)^{2/5}\)</span>.
+Thus we should use kernels where the value <span class="math inline">\(R(K)^2 \mu_2(K)\)</span>
+is small.</p></li>
+<li><p>The error is proportional to <span class="math inline">\(f(x)^2 |f&#39;&#39;(x)|\)</span>. We cannot influence
+this term, but we can see that <span class="math inline">\(x\)</span> where <span class="math inline">\(f\)</span> is large or has
+high curvature have higher estimation error.</p></li>
+</ul>
+</div>
+<div id="IMSE" class="section level2 hasAnchor" number="2.6">
+<h2><span class="header-section-number">2.6</span> Integrated Error<a href="X02-error.html#IMSE" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/03TrU8ZgsGQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </div>
 </div>
-<p>From equation <a href="X02-error.html#eq:f-hat-MSE">(2.11)</a> we know
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
-  \approx \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 h^4.
-\end{equation*}\]</span>
-This gives the mean squared error when trying to estimate the density
+<p>Equation <a href="X02-error.html#eq:f-hat-MSE">(2.11)</a> gives the mean squared error when trying to estimate the density
 <span class="math inline">\(f(x)\)</span> at a fixed point <span class="math inline">\(x\)</span>. Usually we are interested in estimating
 the function <span class="math inline">\(f\)</span> rather than individual points <span class="math inline">\(f(x)\)</span>. In this case,
 we consider the <strong>integrated mean squared error (IMSE)</strong>:
@@ -689,7 +734,7 @@ Using our result from above we find
 \end{align*}\]</span>
 where we (mis-)use the definition of roughness as an abbreviation to express
 the integral over <span class="math inline">\(f&#39;&#39;\)</span>.</p>
-<p>As before, we can use differentiation to find the optimal value of <span class="math inline">\(h\)</span>.
+<p>As in the pointwise case above, we can use differentiation to find the optimal value of <span class="math inline">\(h\)</span>.
 Here we get
 <span class="math display">\[\begin{equation*}
   h_\mathrm{opt}
