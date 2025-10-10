@@ -215,6 +215,9 @@ variables rather than a probability distribution.
 
 In this section, we suppose we are given data \(x_1,\ldots, x_n \in\mathbb{R}\) from an
 unknown probability density \(f\), and our goal is to estimate \(f\) from the data.
+As explained in the preface, this seemingly simpler problem introduces key
+concepts (kernels, bandwidth selection) that we will later apply to regression
+smoothing.
 
 \subsection{Probability Densities}\label{probability-densities}
 
@@ -421,15 +424,15 @@ A narrow kernel gives more weight to nearby samples and produces a more
 detailed (but potentially noisier) estimate, while a wider kernel averages
 over more distant samples and produces a smoother estimate.
 
-To control the width, we use a \textbf{bandwidth parameter} \(h > 0\)
-and define the \textbf{rescaled kernel} \(K_h\) by
+To control the width, we use a \textbf{bandwidth parameter}~\(h > 0\)
+and define the \textbf{rescaled kernel}~\(K_h\) by
 \begin{equation*}
   K_h(y)
   = \frac{1}{h} K(y/h)
 \end{equation*}
 for all \(y\in \mathbb{R}\).
-The bandwidth parameter \(h\) controls the width: small \(h\) gives a narrow
-kernel, large \(h\) gives a wide kernel.
+The bandwidth parameter~\(h\) controls the width: small~\(h\) gives a narrow
+kernel, large~\(h\) gives a wide kernel.
 
 \begin{lemma}
 \protect\hypertarget{lem:Kh-kernel}{}\label{lem:Kh-kernel}If \(K\) is a kernel, then \(K_h\) is also a kernel.
@@ -458,11 +461,11 @@ for all \(y\).
 \end{proof}
 
 \begin{remark}
-Note that the choice of kernel \(K\) and bandwidth \(h\) is not unique. For a given
+Note that the choice of kernel~\(K\) and bandwidth~\(h\) is not unique. For a given
 kernel shape, different authors use different normalisations. For example, we
 could replace our triangular kernel~\(K\) from equation~\eqref{eq:triangular}
 with \(\tilde K(x) = K(x/\sqrt{6}) / \sqrt{6}\), which has variance~1. If we
-simultaneously replace \(h\) with \(\tilde h = h/\sqrt{6}\), then the rescaled
+simultaneously replace~\(h\) with \(\tilde h = h/\sqrt{6}\), then the rescaled
 kernel remains unchanged: \(\tilde K_{\tilde h} = K_h\).
 \end{remark}
 
@@ -487,12 +490,18 @@ data point~\(x_i\), whereas the indicator function \(I_{[a,b]}(x_i)\) is fixed
 at the bucket location \([a,b]\).
 
 Similar to the bucket width in histograms, the bandwidth parameter~\(h\)
-controls how smooth the density estimate~\(\hat f_h\) is: small \(h\) gives
-narrow kernels that put weight only on very nearby samples, while large \(h\)
+controls how smooth the density estimate~\(\hat f_h\) is: small~\(h\) gives
+narrow kernels that put weight only on very nearby samples, while large~\(h\)
 gives wide kernels that average over more distant samples.
 
-Later sections will discuss how to choose the kernel \(K\) for good properties.
-Note that if \(K\) is continuous, then \(K_h\) and \(\hat f_h\) are also continuous.
+Later sections will discuss how to choose the kernel~\(K\) for good properties.
+
+\begin{remark}
+If the kernel~\(K\) is continuous, then the rescaled kernel~\(K_h\) and the
+kernel density estimate~\(\hat f_h\) are also continuous. This is a useful
+property, as it means that kernel density estimates avoid the discontinuities
+that histograms exhibit at bucket boundaries.
+\end{remark}
 
 \subsection{Kernel Density Estimation in R}\label{kernel-density-estimation-in-r}
 
@@ -507,10 +516,10 @@ which can be used to control details of the estimate:
   \texttt{bw\ =\ ...} can be used to control the bandwidth~\(h\).
   If no numeric value is given, a heuristic is used.
   R standardizes all kernels to have variance~1, so the \texttt{bw}
-  parameter differs from our bandwidth \(h\) by a kernel-dependent
+  parameter differs from our bandwidth~\(h\) by a kernel-dependent
   constant factor (see the remark after Lemma~\ref{lem:Kh-kernel}).
   Specifically, \texttt{bw=1} corresponds to the case where the rescaled
-  kernel \(K_h\) has variance~1.
+  kernel~\(K_h\) has variance~1.
 \item
   \texttt{kernel\ =\ ...} can be used to choose the kernel.
   Choices include \texttt{"rectangular"} (the uniform kernel), \texttt{"triangular"},
@@ -582,8 +591,8 @@ parameters. The result is shown in figure~\ref{fig:snow-dens-col}.
 
 \begin{figure}
 \centering
-\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:snow-dens-col}This figure illustrates how the bandwidth of a kernel density estimate can be controlled in R.}]{MATH5714M_files/figure-latex/snow-dens-col-1.pdf}}
-\caption{\label{fig:snow-dens-col}This figure illustrates how the bandwidth of a kernel density estimate can be controlled in R.}
+\pandocbounded{\includegraphics[keepaspectratio,alt={\label{fig:snow-dens-col}This figure illustrates the effect of the bandwidth parameter on the kernel density estimate. Small bandwidths give a more detailed estimate, but also show more noise. Large bandwidths give a smoother estimate, but may miss local structure of the density.}]{MATH5714M_files/figure-latex/snow-dens-col-1.pdf}}
+\caption{\label{fig:snow-dens-col}This figure illustrates the effect of the bandwidth parameter on the kernel density estimate. Small bandwidths give a more detailed estimate, but also show more noise. Large bandwidths give a smoother estimate, but may miss local structure of the density.}
 \end{figure}
 
 \textbf{Summary}
@@ -833,10 +842,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr     min       lq     mean   median       uq      max neval
-##  KDE1 832.587 883.5090 945.7695 899.2735 917.0675 5280.021  1000
-##  KDE2 110.577 157.6450 234.0243 165.5785 174.7010 5288.754  1000
-##  KDE3  99.179 132.1225 162.5968 137.9650 143.4795 3615.503  1000
+##  expr      min        lq      mean   median        uq      max neval
+##  KDE1 1429.137 1494.4705 1576.5119 1516.856 1541.9895 7285.126  1000
+##  KDE2  189.584  240.4035  300.3031  259.817  267.1355 5134.348  1000
+##  KDE3  170.970  208.9975  299.2346  221.523  227.6115 7556.382  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -858,8 +867,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr   min     lq     mean   median      uq      max neval
-##  density 91.84 102.09 116.4274 104.9395 108.035 3395.702  1000
+##     expr     min      lq     mean   median      uq      max neval
+##  density 156.087 164.533 182.3161 168.8995 172.938 4262.524  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -1144,9 +1153,9 @@ matter. For the \(n\) terms where \(i=j\) we can assume that both indices equal
 without changing the value of the expectation. So we get
 \begin{align*}
   \mathbb{E}\bigl( \hat f_h(x)^2 \bigr)
-  &= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 ) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) K_h(x - X_2) \bigr) \Bigr) \\
-  &= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 ) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) \bigr) \mathbb{E}\bigl( K_h(x - X_2) \bigr) \Bigr) \\
-  &= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 ) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) \bigr)^2 \Bigr) \\
+  &= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 \Bigr) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) K_h(x - X_2) \bigr) \Bigr) \\
+  &= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 \Bigr) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) \bigr) \mathbb{E}\bigl( K_h(x - X_2) \bigr) \Bigr) \\
+  &= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 \Bigr) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) \bigr)^2 \Bigr) \\
   &= \frac{1}{n} \mathbb{E}\Bigl( K_h(x - X_1)^2 \Bigr) + \frac{n-1}{n} \mathbb{E}\bigl( \hat f_h(x) \bigr)^2,
 \end{align*}
 where we used equation~\eqref{eq:E-hat-f-K-h} for the last term.
@@ -1154,12 +1163,12 @@ Using this equation, we can write the expectation as
 \begin{align*}
   \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
   &= \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2 \\
-  &= \frac{1}{n} \mathbb{E}\bigl( K_h(x - X_1)^2 ) + \Bigl(\frac{n-1}{n} - 1\Bigr) \mathbb{E}\bigl( \hat f_h(x) \bigr)^2.
+  &= \frac{1}{n} \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr) + \Bigl(\frac{n-1}{n} - 1\Bigr) \mathbb{E}\bigl( \hat f_h(x) \bigr)^2.
 \end{align*}
 Since \((n-1)/n - 1 = -1/n\) we get
 \begin{equation}
   \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
-  = \frac{1}{n} \Bigl( \mathbb{E}\bigl( K_h(x - X_1)^2 ) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2 \Bigr).
+  = \frac{1}{n} \Bigl( \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2 \Bigr).
                                                           \label{eq:Var-hat-f-2}
 \end{equation}
 
@@ -1171,19 +1180,19 @@ result also depends on the sample size~\(n\) and we will consider the joint
 limit of \(n \to \infty\) and \(h\to 0\). For the first term in
 equation~\eqref{eq:Var-hat-f-2} we find
 \begin{align*}
-  \mathbb{E}\bigl( K_h(x - X_1)^2 )
+  \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)
   &= \int K_h(x - y)^2 f(y) \,dy \\
   &= \int K_h(y - x)^2 f(y) \,dy \\
   &= \int \frac{1}{h^2} K\Bigl( \frac{y - x}{h} \Bigr)^2 f(y) \,dy.
 \end{align*}
 Now we use the substitution \(z = (y - x) / h\). This gives
 \begin{align*}
-  \mathbb{E}\bigl( K_h(x - X_1)^2 )
+  \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)
   &= \int \frac{1}{h^2} K(z)^2 f(x + hz) \,h \,dz
 \end{align*}
 Finally, we use Taylor approximation to get
 \begin{align*}
-  \mathbb{E}\bigl( K_h(x - X_1)^2 )
+  \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)
   &\approx \int \frac{1}{h} K(z)^2 \Bigl( f(x) + hz\,f'(x) + \frac12 h^2 z^2 \,f''(x) \Bigr) \,dz \\
   &= \frac{1}{h} f(x) \int K(z)^2 \,dz
       + f'(x) \int z K(z)^2 \,dz
@@ -1226,7 +1235,7 @@ and thus we get
 \end{equation}
 for small \(h\).
 
-Substituting \eqref{eq:Var-frag1} and~\eqref{eq:Var-frag2} into
+Substituting equations \eqref{eq:Var-frag1} and~\eqref{eq:Var-frag2} into
 equation~\eqref{eq:Var-hat-f-2} we finally find
 \begin{equation*}
   \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
@@ -1258,7 +1267,7 @@ It is an easy exercise to show that this can equivalently be written as
   \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
   = \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr) + \mathop{\mathrm{bias}}\bigl( \hat f_h(x) \bigr)^2.
 \end{equation*}
-Substituing equations \eqref{eq:fhatbias} and~\eqref{eq:fhatvar} into
+Substituting equations \eqref{eq:fhatbias} and \eqref{eq:fhatvar} into
 the formula for the MSE, we get
 \begin{equation}
   \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
@@ -1338,9 +1347,9 @@ This expression clearly shows the contribution of \(n\), \(K\) and \(f\):
   Thus we should use kernels where the value \(R(K)^2 \mu_2(K)\)
   is small.
 \item
-  The error is proportional to \(f(x)^2 |f''(x)|\). We cannot influence
-  this term, but we can see that \(x\) where \(f\) is large or has
-  high curvature have higher estimation error.
+  The error is proportional to \(\bigl( f(x)^2 |f''(x)| \bigr)^{2/5}\).
+  We cannot influence this term, but we can see that \(x\) where \(f\) is large
+  or has high curvature have higher estimation error.
 \end{itemize}
 
 \subsection{Integrated Error}\label{IMSE}
