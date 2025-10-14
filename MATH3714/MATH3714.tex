@@ -2115,7 +2115,7 @@ we get \(\mathbb{E}\bigl(\|\varepsilon\|^2\bigr) = n (\sigma^2 + \mu^2)\).
 
 In the previous section we introduced random vectors and the multivariate
 normal distribution. We now use these tools to build a statistical model
-for multiple linear regression. Like in the one-dimensional case, we assume
+for multiple linear regression. As in the one-dimensional case, we assume
 that the errors are random. More precisely we have
 \begin{equation}
   Y = X \beta + \varepsilon.  \label{eq:lmstats}
@@ -2432,8 +2432,8 @@ For \(x\in\mathbb{R}^n\) and \(A\in\mathbb{R}^{n\times n}\), the expression
 \(x^\top A x\) is called a \textbf{quadratic form}.
 \end{definition}
 
-Our main tool in this and the following section will be a simplified
-version of \href{https://en.wikipedia.org/wiki/Cochran\%27s_theorem}{Cochran's theorem}:
+We use a simplified version of \href{https://en.wikipedia.org/wiki/Cochran\%27s_theorem}{Cochran's theorem}
+as our main tool in this and the following section:
 
 \begin{theorem}
 \protect\hypertarget{thm:Cochran}{}\label{thm:Cochran}
@@ -2565,20 +2565,25 @@ the quadratic forms in parts 1 and 2.
 
 \subsection{Estimating the Error Variance}\label{var-est-bias}
 
+Recall from equation~\eqref{eq:beta-hat-j} that the variance of each
+coefficient estimate is \(\sigma^2 C_{jj}\). To use this result in practice---for
+constructing confidence intervals or performing hypothesis tests---we need
+to estimate the unknown parameter~\(\sigma^2\). A natural approach is to examine
+the residuals \(y_i - \hat y_i\), which estimate the unobserved errors~\(\varepsilon_i\).
+
 Having established the necessary properties of the hat matrix and Cochran's
-theorem, we can now turn to estimating the error variance~\(\sigma^2\), which
-we have so far ignored. We will see that an unbiased estimator for \(\sigma^2\)
+theorem, we can now show that an unbiased estimator for \(\sigma^2\)
 is given by
 \begin{equation}
   \hat\sigma^2
   := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \label{eq:hat-sigma-squared}
 \end{equation}
 where \(\hat y_i\) are the fitted values from equation~\eqref{eq:fitted-values}.
-As for the one-dimensional case in~\eqref{eq:reg-sigma-est}, the estimate
-does not have the prefactor \(1/n\), which one might naively expect,
-but the denominator is decreased by one for each component of the
-vector~\(\beta\). Using Cochran's theorem, we can now show that the estimator
-\(\hat\sigma^2\) is unbiased.
+As for the case of simple linear regression, in~\eqref{eq:reg-sigma-est}, the
+estimate does not have the prefactor \(1/n\), which one might expect, but
+the denominator is decreased by one for each component of the vector~\(\beta\).
+Using Cochran's theorem, we can now show that the estimator \(\hat\sigma^2\) is
+unbiased.
 
 \begin{lemma}
 \protect\hypertarget{lem:sigma-hat-unbiased}{}\label{lem:sigma-hat-unbiased}We have
@@ -2632,6 +2637,10 @@ This completes the proof.
 
 The lemma shows that \(\hat\sigma^2\) is an unbiased estimator for \(\sigma^2\).
 
+This concludes our study of the statistical properties of the least squares
+estimator. In the next section we will use these properties to construct
+confidence intervals and hypothesis tests for the regression coefficients.
+
 \textbf{Summary}
 
 \begin{itemize}
@@ -2664,7 +2673,7 @@ We have seen that \(\hat\beta \sim \mathcal{N}(\beta, \sigma^2 C)\), where
   \hat\beta_i
   \sim \mathcal{N}\bigl( \beta_i, \sigma^2 C_{ii} \bigr),
 \end{equation*}
-since the diagonal elements of the covariance matrix contains the
+since the diagonal elements of the covariance matrix contain the
 variances of the elements of a random vector. In practice we will not
 know the value of \(\sigma^2\), so we have to estimate this from data,
 using the estimator
@@ -2817,7 +2826,7 @@ We have to show that \(P(\beta_i \in [U, V]) \geq 1-\alpha\). We have
 and thus \(P(\beta_i \in [U, V]) = 1 - \alpha\). This completes the proof.
 \end{proof}
 
-\subsection{Hypthesis Tests}\label{hypthesis-tests}
+\subsection{Hypothesis Tests}\label{hypothesis-tests}
 
 Very similar to the argument for confidence intervals, we can
 derive a hypothesis test to test the hypothesis
@@ -2838,7 +2847,7 @@ Here we redefine \(T\) as
   := \frac{\hat\beta_i - b}{\sqrt{\hat\sigma^2 C_{ii}}},  \label{eq:single-test}
 \end{equation}
 using \(b\) in place of the \(\beta_i\) above. When \(H_0\) is true, this new
-defintion of \(T\) is the same as~\eqref{eq:single-T}.
+definition of \(T\) is the same as~\eqref{eq:single-T}.
 
 \begin{lemma}
 \protect\hypertarget{lem:t-test}{}\label{lem:t-test}The test which rejects \(H_0\) if and only if \(|T| > t_{n-p-1}(\alpha/2)\)
@@ -2856,7 +2865,6 @@ we know that \(T \sim t(n-p-1)\). Thus we have
   P( \mbox{type I error} )
   &= P\bigl( |T| > t_{n-p-1}(\alpha/2) \bigr) \\
   &= P\bigl(T < -t_{n-p-1}(\alpha/2) \bigr) + P\bigl(T > t_{n-p-1}(\alpha/2) \bigr) \\
-  &= 2 P\bigl(T > t_{n-p-1}(\alpha/2) \bigr) \\
   &= 2 P\bigl(T > t_{n-p-1}(\alpha/2) \bigr) \\
   &= 2 \frac{\alpha}{2} \\
   &= \alpha.
@@ -2988,7 +2996,7 @@ We can estimate the standard errors, \emph{i.e.}~the standard deviations
 These values are also listed in the \texttt{Std.\ Error} column of the \texttt{summary(m)}
 output.
 
-\subsubsection{Hypothesis tests}\label{hypothesis-tests}
+\subsubsection{Hypothesis tests}\label{hypothesis-tests-1}
 
 Let us now test the hypothesis \(H_0\colon \beta_i = 0\). The test statistic
 for this case is the following:
@@ -3027,7 +3035,7 @@ find the corresponding critical value:
 \end{Highlighting}
 \end{Shaded}
 
-Using the critical value \(t\) we can decided whether \(H_0\) should be accepted or
+Using the critical value \(t\) we can decide whether \(H_0\) should be accepted or
 rejected. For example, looking at the intercept \(\beta_0\), we find \(|T_0| =
 |-3.3557234| > 2.109816 = t_{n-p-1}(1-\alpha/2)\) and thus we can reject the
 hypothesis \(H_0\colon \beta_0 = 0\). This means that the intercept is
@@ -3051,7 +3059,7 @@ only show the confidence interval for the intercept \(\beta_0\):
 \end{Highlighting}
 \end{Shaded}
 
-Confidence intervals for the remaining coefficients can be obtained simimlarly.
+Confidence intervals for the remaining coefficients can be obtained similarly.
 
 \textbf{Summary}
 

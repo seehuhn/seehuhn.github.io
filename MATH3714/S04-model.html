@@ -180,13 +180,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="S05-single.html"><a href="S05-single.html#measuring-the-estimation-error"><i class="fa fa-check"></i><b>5.1</b> Measuring the Estimation Error</a></li>
 <li class="chapter" data-level="5.2" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals"><i class="fa fa-check"></i><b>5.2</b> Confidence Intervals</a></li>
-<li class="chapter" data-level="5.3" data-path="S05-single.html"><a href="S05-single.html#hypthesis-tests"><i class="fa fa-check"></i><b>5.3</b> Hypthesis Tests</a></li>
+<li class="chapter" data-level="5.3" data-path="S05-single.html"><a href="S05-single.html#hypothesis-tests"><i class="fa fa-check"></i><b>5.3</b> Hypothesis Tests</a></li>
 <li class="chapter" data-level="5.4" data-path="S05-single.html"><a href="S05-single.html#r-experiments"><i class="fa fa-check"></i><b>5.4</b> R Experiments</a>
 <ul>
 <li class="chapter" data-level="5.4.1" data-path="S05-single.html"><a href="S05-single.html#fitting-the-model"><i class="fa fa-check"></i><b>5.4.1</b> Fitting the model</a></li>
 <li class="chapter" data-level="5.4.2" data-path="S05-single.html"><a href="S05-single.html#estimating-the-variance-of-the-error"><i class="fa fa-check"></i><b>5.4.2</b> Estimating the Variance of the Error</a></li>
 <li class="chapter" data-level="5.4.3" data-path="S05-single.html"><a href="S05-single.html#estimating-the-standard-errors"><i class="fa fa-check"></i><b>5.4.3</b> Estimating the Standard Errors</a></li>
-<li class="chapter" data-level="5.4.4" data-path="S05-single.html"><a href="S05-single.html#hypothesis-tests"><i class="fa fa-check"></i><b>5.4.4</b> Hypothesis tests</a></li>
+<li class="chapter" data-level="5.4.4" data-path="S05-single.html"><a href="S05-single.html#hypothesis-tests-1"><i class="fa fa-check"></i><b>5.4.4</b> Hypothesis tests</a></li>
 <li class="chapter" data-level="5.4.5" data-path="S05-single.html"><a href="S05-single.html#confidence-intervals-1"><i class="fa fa-check"></i><b>5.4.5</b> Confidence Intervals</a></li>
 </ul></li>
 </ul></li>
@@ -407,7 +407,7 @@ TODO:
 -->
 <p>In the previous section we introduced random vectors and the multivariate
 normal distribution. We now use these tools to build a statistical model
-for multiple linear regression. Like in the one-dimensional case, we assume
+for multiple linear regression. As in the one-dimensional case, we assume
 that the errors are random. More precisely we have
 <span class="math display" id="eq:lmstats">\[\begin{equation}
   Y = X \beta + \varepsilon.  \tag{4.1}
@@ -684,8 +684,8 @@ Such expressions are called <strong>quadratic forms</strong>.</p>
 <p><span id="def:unlabeled-div-21" class="definition"><strong>Definition 4.1  </strong></span>For <span class="math inline">\(x\in\mathbb{R}^n\)</span> and <span class="math inline">\(A\in\mathbb{R}^{n\times n}\)</span>, the expression
 <span class="math inline">\(x^\top A x\)</span> is called a <strong>quadratic form</strong>.</p>
 </div>
-<p>Our main tool in this and the following section will be a simplified
-version of <a href="https://en.wikipedia.org/wiki/Cochran%27s_theorem">Cochran’s theorem</a>:</p>
+<p>We use a simplified version of <a href="https://en.wikipedia.org/wiki/Cochran%27s_theorem">Cochran’s theorem</a>
+as our main tool in this and the following section:</p>
 <div class="theorem">
 <p><span id="thm:Cochran" class="theorem"><strong>Theorem 4.1  </strong></span>The following statements are true:</p>
 <ol style="list-style-type: decimal">
@@ -806,20 +806,24 @@ the quadratic forms in parts 1 and 2.</p>
 </iframe>
 </div>
 </div>
+<p>Recall from equation <a href="S04-model.html#eq:beta-hat-j">(4.2)</a> that the variance of each
+coefficient estimate is <span class="math inline">\(\sigma^2 C_{jj}\)</span>. To use this result in practice—for
+constructing confidence intervals or performing hypothesis tests—we need
+to estimate the unknown parameter <span class="math inline">\(\sigma^2\)</span>. A natural approach is to examine
+the residuals <span class="math inline">\(y_i - \hat y_i\)</span>, which estimate the unobserved errors <span class="math inline">\(\varepsilon_i\)</span>.</p>
 <p>Having established the necessary properties of the hat matrix and Cochran’s
-theorem, we can now turn to estimating the error variance <span class="math inline">\(\sigma^2\)</span>, which
-we have so far ignored. We will see that an unbiased estimator for <span class="math inline">\(\sigma^2\)</span>
+theorem, we can now show that an unbiased estimator for <span class="math inline">\(\sigma^2\)</span>
 is given by
 <span class="math display" id="eq:hat-sigma-squared">\[\begin{equation}
   \hat\sigma^2
   := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \tag{4.7}
 \end{equation}\]</span>
 where <span class="math inline">\(\hat y_i\)</span> are the fitted values from equation <a href="S02-multiple.html#eq:fitted-values">(2.5)</a>.
-As for the one-dimensional case in <a href="S01-simple.html#eq:reg-sigma-est">(1.4)</a>, the estimate
-does not have the prefactor <span class="math inline">\(1/n\)</span>, which one might naively expect,
-but the denominator is decreased by one for each component of the
-vector <span class="math inline">\(\beta\)</span>. Using Cochran’s theorem, we can now show that the estimator
-<span class="math inline">\(\hat\sigma^2\)</span> is unbiased.</p>
+As for the case of simple linear regression, in <a href="S01-simple.html#eq:reg-sigma-est">(1.4)</a>, the
+estimate does not have the prefactor <span class="math inline">\(1/n\)</span>, which one might expect, but
+the denominator is decreased by one for each component of the vector <span class="math inline">\(\beta\)</span>.
+Using Cochran’s theorem, we can now show that the estimator <span class="math inline">\(\hat\sigma^2\)</span> is
+unbiased.</p>
 <div class="lemma">
 <p><span id="lem:sigma-hat-unbiased" class="lemma"><strong>Lemma 4.6  </strong></span>We have
 <span class="math display">\[\begin{equation*}
@@ -868,6 +872,9 @@ and thus
 This completes the proof.</p>
 </div>
 <p>The lemma shows that <span class="math inline">\(\hat\sigma^2\)</span> is an unbiased estimator for <span class="math inline">\(\sigma^2\)</span>.</p>
+<p>This concludes our study of the statistical properties of the least squares
+estimator. In the next section we will use these properties to construct
+confidence intervals and hypothesis tests for the regression coefficients.</p>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
