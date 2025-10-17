@@ -2309,6 +2309,32 @@ Properties 1 and 2 state that \(H\) and \(I - H\) are \textbf{symmetric}.
 Properties 3 and 4 state that \(H\) and \(I - H\) are \textbf{idempotent}.
 \end{remark}
 
+We can now use the transformation properties of the multivariate normal
+distribution to find the distributions of the fitted values and residuals.
+
+\begin{lemma}
+\protect\hypertarget{lem:hat-y-eps-dist}{}\label{lem:hat-y-eps-dist}Under the model~\eqref{eq:lmstats}, the fitted values and residuals satisfy
+\begin{equation}
+  \hat Y \sim \mathcal{N}\bigl( X\beta, \sigma^2 H \bigr)  \label{eq:hat-y-dist}
+\end{equation}
+and
+\begin{equation}
+  \hat\varepsilon\sim \mathcal{N}\bigl( 0, \sigma^2 (I - H) \bigr).  \label{eq:hat-eps-dist}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Since \(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\), we have \(\hat Y = HY \sim \mathcal{N}(HX\beta, H\sigma^2 I H^\top)\)
+by lemma~\ref{lem:Cov-is-quadratic}. Using properties 3 and 5 of
+lemma~\ref{lem:hat-matrix-props}, we find \(\hat Y \sim \mathcal{N}(X\beta, \sigma^2 H)\).
+Similarly, \(\hat\varepsilon= (I - H)Y \sim \mathcal{N}\bigl((I - H)X\beta, \sigma^2(I - H)\bigr)\),
+and using lemma~\ref{lem:hat-matrix-props} again, we obtain
+\(\hat\varepsilon\sim \mathcal{N}\bigl(0, \sigma^2(I - H)\bigr)\).
+\end{proof}
+
+The distributions of \(\hat Y\) and \(\hat\varepsilon\) reveal a deeper geometric
+structure, described in the next lemma.
+
 \begin{lemma}
 For every vector \(v \in \mathbb{R}^n\) we have
 \begin{equation}
@@ -2350,29 +2376,6 @@ vector \(v = y\) to get \(\|y\|^2 = \|\hat y\|^2 + \|\hat\varepsilon\|^2\).
 This completes the proof.
 \end{proof}
 
-We can now use the transformation properties of the multivariate normal
-distribution to find the distributions of the fitted values and residuals.
-
-\begin{lemma}
-\protect\hypertarget{lem:hat-y-eps-dist}{}\label{lem:hat-y-eps-dist}Under the model \eqref{eq:lmstats}, the fitted values and residuals satisfy
-\begin{equation}
-  \hat Y \sim \mathcal{N}\bigl( X\beta, \sigma^2 H \bigr)  \label{eq:hat-y-dist}
-\end{equation}
-and
-\begin{equation}
-  \hat\varepsilon\sim \mathcal{N}\bigl( 0, \sigma^2 (I - H) \bigr).  \label{eq:hat-eps-dist}
-\end{equation}
-\end{lemma}
-
-\begin{proof}
-Since \(Y \sim \mathcal{N}(X\beta, \sigma^2 I)\), we have \(\hat Y = HY \sim \mathcal{N}(HX\beta, H\sigma^2 I H^\top)\)
-by lemma~\ref{lem:Cov-is-quadratic}. Using properties 3 and 5 of
-lemma~\ref{lem:hat-matrix-props}, we find \(\hat Y \sim \mathcal{N}(X\beta, \sigma^2 H)\).
-Similarly, \(\hat\varepsilon= (I - H)Y \sim \mathcal{N}\bigl((I - H)X\beta, \sigma^2(I - H)\bigr)\),
-and using lemma~\ref{lem:hat-matrix-props} again, we obtain
-\(\hat\varepsilon\sim \mathcal{N}\bigl(0, \sigma^2(I - H)\bigr)\).
-\end{proof}
-
 Some authors define:
 
 \begin{itemize}
@@ -2399,6 +2402,8 @@ the subspace of \(\mathbb{R}^n\) which is spanned by the columns of \(X\). This 
 contains the possible output vectors
 of the linear system and the least squares procedure finds the point \(\hat y\)
 in this subspace which is closest to the observed data \(y\in\mathbb{R}^n\).
+
+A final algebraic property of the hat matrix concerns its trace.
 
 \begin{lemma}
 We have
@@ -3081,7 +3086,11 @@ Confidence intervals for the remaining coefficients can be obtained similarly.
 
 \section{Estimating Coefficients Simultaneously}\label{S06-simultaneous}
 
-In this section we will study how to assess the uncertainty in two or more
+In section~\ref{S05-single}, we learnt how to construct confidence intervals
+and hypothesis tests for individual regression coefficients using the
+\(t\)-distribution. However, as noted there, it would be unwise to apply
+that procedure to test multiple coefficients on the same data. In this section
+we will study how to assess the uncertainty in two or more
 regression coefficients simultaneously. This is needed since the estimates for
 different coefficients will usually not be independent.
 
@@ -3940,7 +3949,7 @@ of examples.
 
 In this subsection we will illustrate how to compute a simple confidence interval
 for a single regression coefficient. We use a dataset about toxicity of
-chemicals towards aquatic life from the from the UCI Machine Learning
+chemicals towards aquatic life from the UCI Machine Learning
 Repository. The data is available at
 
 \begin{itemize}
@@ -4296,7 +4305,7 @@ shown in the right margin to perform the test. Since the \texttt{Water.Temp} row
 in \texttt{**}, we would reject \(\beta_2 = 0\) even at the stricter \(\alpha=0.01\)
 level, and thus we would also reject this hypothesis at \(\alpha=0.05\) level.
 
-\subsection{Testing Multiple Coefficents}\label{testing-multiple-coefficents}
+\subsection{Testing Multiple Coefficients}\label{testing-multiple-coefficients}
 
 This section illustrates how a group of coefficients can be tested
 simultaneously. We consider a small, synthetic dataset:
@@ -4422,7 +4431,7 @@ F-statistic: 4.007 on 4 and 9 DF,  p-value: 0.03891
 \end{verbatim}
 
 Here we can see that the test statistic is \(4.007\) (a rounded version
-of the value we found above) and the degreen of freedom for the \(F\)-test
+of the value we found above) and the degrees of freedom for the \(F\)-test
 are \(k = 4\) and \(n - p - 1 = 9\). The ``p-value'' listed is the smallest
 significance level at which the test still rejects~\(H_0\).
 We see that \(H_0\) is rejected at significance level \(0.03891\),
@@ -4433,8 +4442,8 @@ and thus also at \(\alpha=0.05\).
 \begin{itemize}
 \tightlist
 \item
-  We have illustrated the results of sections 5 and 6 with the help
-  of examples.
+  We have illustrated the results of sections~\ref{S05-single}
+  and~\ref{S06-simultaneous} with the help of examples.
 \item
   We have learned how to use the \texttt{lm()} output to compute confidence
   intervals and to perform hypothesis tests.
@@ -4829,7 +4838,7 @@ observations omitted. Similarly, \(H_{II}\) is a submatrix of the original
 hat matrix.
 
 \begin{proof}
-Similar to \eqref{eq:X-I-top-y}, we
+Similar to \eqref{eq:X-I-top-y}, we have
 \begin{equation*}
   (X_{(I)}^\top X_{(I)})_{ik}
   = \sum_{j\notin I} X_{ji} X_{jk}
