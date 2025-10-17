@@ -842,10 +842,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min        lq      mean   median        uq      max neval
-##  KDE1 1429.137 1494.4705 1576.5119 1516.856 1541.9895 7285.126  1000
-##  KDE2  189.584  240.4035  300.3031  259.817  267.1355 5134.348  1000
-##  KDE3  170.970  208.9975  299.2346  221.523  227.6115 7556.382  1000
+##  expr      min        lq      mean   median        uq       max neval
+##  KDE1 1427.087 1486.0655 1586.5418 1503.388 1525.2000 10611.702  1000
+##  KDE2  189.953  254.2410  326.3504  259.202  265.6800  5755.539  1000
+##  KDE3  171.052  216.4185  272.1135  220.867  225.4385  6084.769  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -867,8 +867,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr     min      lq     mean   median      uq      max neval
-##  density 156.087 164.533 182.3161 168.8995 172.938 4262.524  1000
+##     expr     min      lq     mean  median      uq      max neval
+##  density 158.752 168.838 185.6986 172.487 177.202 3733.337  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -943,57 +943,17 @@ the associated parameter estimation problem is more challenging.
 The only ``parameter'' in this model is the function \(f \colon\mathbb{R}\to \mathbb{R}\)
 instead of just a vector of numbers. The space of all possible density
 functions \(f\) is infinite dimensional, so this is a more challenging
-estimation problem then the one we consider, for example, for linear
+estimation problem than the one we consider, for example, for linear
 regression. Since \(f\) is not a ``parameter'' in the usual sense, sometimes
 this problem is called a ``non-parametric'' estimation problem.
 
 Our estimate for the density \(f\) is the function \(\hat f_h\colon \mathbb{R}\to \mathbb{R}\),
 where \(\hat f_h(x)\) is given by~\eqref{eq:KDE-est} for every \(x \in\mathbb{R}\).
 
-\subsection{Bias}\label{X02-error-bias}
+\subsection{Moments of Kernels}\label{moments-of-kernels}
 
-\subsubsection{The Bias of the Estimate}\label{the-bias-of-the-estimate}
-
-As usual, the \textbf{bias} of our estimate is the difference between
-what the estimator gives on average and the truth. For our estimation
-problem we get
-\begin{equation*}
-    \mathop{\mathrm{bias}}\bigl(\hat f_h(x)\bigr)
-    = \mathbb{E}\bigl(\hat f_h(x)\bigr) - f(x).
-\end{equation*}
-The expectation on the right-hand side averages over the randomness
-in the data, by using \(X_1, \ldots, X_n\) from the model in place of
-the data.
-
-Substituting in the definition of \(\hat f_h(x)\) from equation~\eqref{eq:KDE-est}
-we find
-\begin{align*}
-    \mathbb{E}\bigl(\hat f_h(x)\bigr)
-    &= \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n K_h(x - X_i) \Bigr) \\
-    &= \frac{1}{n} \sum_{i=1}^n \mathbb{E}\bigl( K_h(x - X_i) \bigr)
-\end{align*}
-and since the \(X_i\) are identically distributed, we can replace
-all \(X_i\) with \(X_1\) (or any other of them) to get
-\begin{align*}
-    \mathbb{E}\bigl(\hat f_h(x)\bigr)
-    &= \frac{1}{n} \sum_{i=1}^n \mathbb{E}\bigl( K_h(x - X_1) \bigr) \\
-    &= \frac{1}{n} n \, \mathbb{E}\bigl( K_h(x - X_1) \bigr) \\
-    &= \mathbb{E}\bigl( K_h(x - X_1) \bigr).
-\end{align*}
-Since the model assumes \(X_1\) (and all the other \(X_i\)) to have density~\(f\),
-we can write this expectation as an integral to get
-\begin{align*}
-    \mathbb{E}\bigl(\hat f_h(x)\bigr)
-    &= \int_{-\infty}^\infty K_h(x - y) \, f(y) \, dy \\
-    &= \int_{-\infty}^\infty f(y) \, K_h(y - x) \, dy \\
-    &= \int_{-\infty}^\infty f(z+x) \, K_h(z) \, dz
-\end{align*}
-where we used the symmetry of \(K_h\) and the substitution \(z = y - x\).
-
-\subsubsection{Moments of Kernels}\label{moments-of-kernels}
-
-To understand how the bias changes as \(h\) varies, we will need to
-consider properties of \(K\) and \(K_h\) in more detail.
+For our analysis we will need to consider properties of \(K\) and \(K_h\) in more
+detail.
 
 \begin{definition}
 The \(k\)th \textbf{moment} of a kernel~\(K\),
@@ -1025,11 +985,7 @@ Using the properties of \(K\), we find the following results:
   for every kernel~\(K\).
 \end{itemize}
 
-The moments of the rescaled kernel \(K_h\), given by
-\begin{equation*}
-    K_h(x - y)
-    = \frac{1}{h} K\Bigl( \frac{x-y}{h} \Bigr),
-\end{equation*}
+The moments of the rescaled kernel \(K_h\)
 can be computed from the moments of \(K\).
 
 \begin{lemma}
@@ -1076,7 +1032,99 @@ and
 \end{equation}
 Thus, \(Y\) is centred and the variance of \(Y\) is proportional to~\(h^2\).
 
-\subsubsection{The Bias for Small Bandwidth}\label{the-bias-for-small-bandwidth}
+\subsection{Mean Squared Error}\label{X02-error-MSE}
+
+In this section we will quantify the error of the kernel density estimate
+\(\hat f_h(x)\) for estimating \(f(x)\) by computing its mean squared error.
+The mean squared error combines two sources of error: bias (systematic error)
+and variance (random error due to sampling). We will see how the bandwidth\\
+\(h\) affects both of these components, and how they must be balanced to minimise
+the overall error.
+
+\subsubsection{Result}\label{result}
+
+The following theorem characterises the mean squared error of the kernel
+density estimate for small bandwidth~\(h\).
+
+\begin{theorem}
+\protect\hypertarget{thm:MSE-KDE}{}\label{thm:MSE-KDE}Let \(X_1, \ldots, X_n\) be i.i.d.~random variables with density \(f\), and
+let \(\hat f_h(x)\) be the kernel density estimate defined in \eqref{eq:KDE-est}.
+Then, as \(h \downarrow 0\), the mean squared error of \(\hat f_h(x)\) is given by
+\begin{equation}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f''(x)^2 h^4
+      + o(1/nh) + o(h^4),  \label{eq:f-hat-MSE}
+\end{equation}
+where \(R(K) = \int K(x)^2 \,dx\) is the roughness of the kernel and
+\(\mu_2(K) = \int x^2 K(x) \,dx\) is the second moment of the kernel.
+\end{theorem}
+
+Here we use
+\href{https://en.wikipedia.org/wiki/Big_O_notation\#Little-o_notation}{little-o notation}:
+the term \(o(1/nh)\) represents error terms of the form \(e_1(h)/n\) where
+\(e_1(h) = o(1/h)\) as \(h \downarrow 0\), meaning that \(e_1(h) / (1/h) \to 0\),
+and the constants in the definition of \(o(1/h)\) do not depend on~\(n\).
+Similarly, \(o(h^4)\) represents error terms \(e_2(h)\) which do not depend
+on~\(n\) and satisfy \(e_2(h) / h^4 \to 0\) as \(h \downarrow 0\). Thus \(o(1/nh)\)
+really means ``\(o(1/h)\), where the constants are proportional to \(1/n\)'\,',
+and the constants in the definition of \(o(h^4)\) do not depend on~\(n\).
+
+The theorem shows that the MSE has two main terms with opposing behaviour:
+the first term \(\frac{1}{nh} f(x) R(K)\) comes from the variance of the
+estimate and decreases as \(h\) increases, while the second term
+\(\frac14 \mu_2(K)^2 f''(x)^2 h^4\) comes from the squared bias and
+increases as \(h\) increases. These competing effects lead to an optimal
+choice of bandwidth that balances bias and variance.
+
+We will not give a complete formal proof of this theorem, but we will
+derive the main components in the following subsections. First we
+compute the bias of the estimate and show that it is approximately
+\(\frac{\mu_2(K) f''(x)}{2} h^2\) for small~\(h\). Then we compute the
+variance and show that it is approximately \(\frac{f(x) R(K)}{nh}\) for
+small~\(h\). Combining these results using the standard identity
+\(\mathop{\mathrm{MSE}}\nolimits= \mathop{\mathrm{Var}}+ \mathop{\mathrm{bias}}^2\) yields the theorem.
+
+\subsubsection{Bias}\label{X02-error-bias}
+
+\paragraph{The Bias of the Estimate}\label{the-bias-of-the-estimate}
+
+As usual, the \textbf{bias} of our estimate is the difference between
+what the estimator gives on average and the truth. For our estimation
+problem we get
+\begin{equation*}
+    \mathop{\mathrm{bias}}\bigl(\hat f_h(x)\bigr)
+    = \mathbb{E}\bigl(\hat f_h(x)\bigr) - f(x).
+\end{equation*}
+The expectation on the right-hand side averages over the randomness
+in the data, by using \(X_1, \ldots, X_n\) from the model in place of
+the data.
+
+Substituting in the definition of \(\hat f_h(x)\) from equation~\eqref{eq:KDE-est}
+we find
+\begin{align*}
+    \mathbb{E}\bigl(\hat f_h(x)\bigr)
+    &= \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n K_h(x - X_i) \Bigr) \\
+    &= \frac{1}{n} \sum_{i=1}^n \mathbb{E}\bigl( K_h(x - X_i) \bigr)
+\end{align*}
+and since the \(X_i\) are identically distributed, we can replace
+all \(X_i\) with \(X_1\) (or any other of them) to get
+\begin{align*}
+    \mathbb{E}\bigl(\hat f_h(x)\bigr)
+    &= \frac{1}{n} \sum_{i=1}^n \mathbb{E}\bigl( K_h(x - X_1) \bigr) \\
+    &= \frac{1}{n} n \, \mathbb{E}\bigl( K_h(x - X_1) \bigr) \\
+    &= \mathbb{E}\bigl( K_h(x - X_1) \bigr).
+\end{align*}
+Since the model assumes \(X_1\) (and all the other \(X_i\)) to have density~\(f\),
+we can write this expectation as an integral to get
+\begin{align*}
+    \mathbb{E}\bigl(\hat f_h(x)\bigr)
+    &= \int_{-\infty}^\infty K_h(x - y) \, f(y) \, dy \\
+    &= \int_{-\infty}^\infty f(y) \, K_h(y - x) \, dy \\
+    &= \int_{-\infty}^\infty f(z+x) \, K_h(z) \, dz
+\end{align*}
+where we used the symmetry of \(K_h\) and the substitution \(z = y - x\).
+
+\paragraph{The Bias for Small Bandwidth}\label{the-bias-for-small-bandwidth}
 
 Considering again the formula
 \begin{equation*}
@@ -1117,13 +1165,10 @@ for small \(h\). Considering the bias again, this gives
 which shows that the bias of the estimator decreases quadratically
 as \(h\) gets smaller.
 
-In contrast, the variance of the estimator (computed below) \emph{increases}
-as \(h \downarrow 0\). We will need to balance these two effects to find the
-optimal value of~\(h\).
+\subsubsection{Variance}\label{X02-error-var}
 
-\subsection{Variance}\label{X02-error-var}
-
-We now turn to computing the variance of the estimator. Recall from above that
+We now turn to computing the variance of the estimator. Recall from the
+bias analysis above that
 \begin{equation}
   \mathbb{E}\bigl( \hat f_h(x) \bigr)
   = \mathbb{E}\bigl( K_h(x - X_i) \bigr)  \label{eq:E-hat-f-K-h}
@@ -1138,7 +1183,7 @@ We use the formula
 \end{equation*}
 and consider the two terms separately.
 
-\subsubsection{Second Moment}\label{second-moment}
+\paragraph{Second Moment}\label{second-moment}
 
 For the second moment term in the definition of the variance we get
 \begin{align*}
@@ -1159,7 +1204,7 @@ without changing the value of the expectation. So we get
   &= \frac{1}{n} \mathbb{E}\Bigl( K_h(x - X_1)^2 \Bigr) + \frac{n-1}{n} \mathbb{E}\bigl( \hat f_h(x) \bigr)^2,
 \end{align*}
 where we used equation~\eqref{eq:E-hat-f-K-h} for the last term.
-Using this equation, we can write the expectation as
+Using this equation, we can write the variance as
 \begin{align*}
   \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
   &= \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2 \\
@@ -1172,7 +1217,7 @@ Since \((n-1)/n - 1 = -1/n\) we get
                                                           \label{eq:Var-hat-f-2}
 \end{equation}
 
-\subsubsection{The Roughness of a Kernel}\label{the-roughness-of-a-kernel}
+\paragraph{The Roughness of a Kernel}\label{the-roughness-of-a-kernel}
 
 Similar to the bias analysis, we will use Taylor expansion of \(f\) around
 the point \(x\) to understand the behaviour of the variance for small~\(h\). Some more care is needed here, because this time the
@@ -1219,7 +1264,7 @@ This gives the result
 \end{equation}
 for small \(h\).
 
-\subsubsection{The Variance for Small Bandwidth}\label{the-variance-for-small-bandwidth}
+\paragraph{The Variance for Small Bandwidth}\label{the-variance-for-small-bandwidth}
 
 Here we consider the term \(\mathbb{E}\bigl( \hat f_h(x) \bigr)^2\) in the formula
 for the variance. From the bias analysis above we know
@@ -1254,48 +1299,28 @@ we find
 \end{equation}
 as~\(h\downarrow 0\).
 
-\subsection{Mean Squared Error}\label{mean-squared-error}
+\paragraph{Combining Bias and Variance}\label{combining-bias-and-variance}
 
-The Mean Squared Error of the estimator \(\hat f_h(x)\) for \(f(x)\) is given
-by
+Recall that the mean squared error can be decomposed as
 \begin{equation*}
   \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
-  = \mathbb{E}\Bigl( \bigl( \hat f_h(x) - f(x) \bigr)^2 \Bigr).
-\end{equation*}
-It is an easy exercise to show that this can equivalently be written as
-\begin{equation*}
-  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = \mathbb{E}\Bigl( \bigl( \hat f_h(x) - f(x) \bigr)^2 \Bigr)
   = \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr) + \mathop{\mathrm{bias}}\bigl( \hat f_h(x) \bigr)^2.
 \end{equation*}
 Substituting equations \eqref{eq:fhatbias} and \eqref{eq:fhatvar} into
-the formula for the MSE, we get
-\begin{equation}
-  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
-  \approx \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f''(x)^2 h^4.
-                           \label{eq:f-hat-MSE}
-\end{equation}
-
-Some care is needed to make sure that the omitted terms from the Taylor
-approximations really don't make a significant contribution in this formula for
-the MSE: The additional contributions from the variance have the form \(e_1(h)
-/ n\), where the error term \(e_1\) does not depend on \(n\) and is negligible
-compared to \(f(x) R(K) / h\) as \(h \downarrow 0\). Using
-\href{https://en.wikipedia.org/wiki/Big_O_notation\#Little-o_notation}{little-o notation},
-This is sometimes denoted by \(e_1(h) = o(1/h)\), which indicates that \(e_1(h) /
-(1/h) \to 0\) as \(h \downarrow 0\). The additional terms from the squared bias, say
-\(e_2(h)\), do not depend on \(n\) and are negligible compared to \(\mu_2(K)^2
-f''(x)^2 h^4\). We can write \(e_2(h) = o(h^4)\) as \(h \downarrow 0\), to reflect
-this fact. We can summarise these results as
+the formula for the MSE, we obtain the main two terms in theorem~\ref{thm:MSE-KDE}:
 \begin{equation*}
   \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
-  = \frac{1}{nh} f(x) R(K)
-      + \frac14 \mu_2(K)^2 f''(x)^2 h^4
-      + o(1/nh) + o(h^4)
+  \approx \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f''(x)^2 h^4.
 \end{equation*}
-as \(h \downarrow 0\),
-with the understanding that the constants in the definition of \(o(h^4)\)
-do not depend on \(n\) and that \(o(1/nh)\) really means ``\(o(1/h)\), where the
-constants are proportional to \(1/n\).''
+The additional error terms \(o(1/nh)\) and \(o(h^4)\) in the theorem statement
+account for the higher-order terms neglected in the Taylor approximations
+used to derive the bias and variance.
+
+These two main terms have opposing behaviour: the variance term
+\(\frac{1}{nh} f(x) R(K)\) \emph{increases} as \(h \downarrow 0\), whilst the squared
+bias term \(\frac14 \mu_2(K)^2 f''(x)^2 h^4\) \emph{decreases} as \(h \downarrow 0\).
+We will need to balance these two effects to find the optimal value of~\(h\).
 
 \subsection{Optimal Bandwidth for Pointwise MSE}\label{optimal-bandwidth-for-pointwise-mse}
 
@@ -2306,7 +2331,7 @@ Combining these equations we find
 \end{equation*}
 as \(n\to\infty\), \(h\downarrow 0\) and \(nh\to\infty\).
 
-\subsubsection*{Mean Squared Error}\label{mean-squared-error-1}
+\subsubsection*{Mean Squared Error}\label{mean-squared-error}
 \addcontentsline{toc}{subsubsection}{Mean Squared Error}
 
 To turn our results about \(\hat r_h\) and our previous results about

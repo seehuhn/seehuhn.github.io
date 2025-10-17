@@ -157,21 +157,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2" data-path="X02-error.html"><a href="X02-error.html"><i class="fa fa-check"></i><b>2</b> The Error of Kernel Density Estimates</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="X02-error.html"><a href="X02-error.html#a-statistical-model"><i class="fa fa-check"></i><b>2.1</b> A Statistical Model</a></li>
-<li class="chapter" data-level="2.2" data-path="X02-error.html"><a href="X02-error.html#X02-error-bias"><i class="fa fa-check"></i><b>2.2</b> Bias</a>
+<li class="chapter" data-level="2.2" data-path="X02-error.html"><a href="X02-error.html#moments-of-kernels"><i class="fa fa-check"></i><b>2.2</b> Moments of Kernels</a></li>
+<li class="chapter" data-level="2.3" data-path="X02-error.html"><a href="X02-error.html#X02-error-MSE"><i class="fa fa-check"></i><b>2.3</b> Mean Squared Error</a>
 <ul>
-<li class="chapter" data-level="2.2.1" data-path="X02-error.html"><a href="X02-error.html#the-bias-of-the-estimate"><i class="fa fa-check"></i><b>2.2.1</b> The Bias of the Estimate</a></li>
-<li class="chapter" data-level="2.2.2" data-path="X02-error.html"><a href="X02-error.html#moments-of-kernels"><i class="fa fa-check"></i><b>2.2.2</b> Moments of Kernels</a></li>
-<li class="chapter" data-level="2.2.3" data-path="X02-error.html"><a href="X02-error.html#the-bias-for-small-bandwidth"><i class="fa fa-check"></i><b>2.2.3</b> The Bias for Small Bandwidth</a></li>
+<li class="chapter" data-level="2.3.1" data-path="X02-error.html"><a href="X02-error.html#result"><i class="fa fa-check"></i><b>2.3.1</b> Result</a></li>
+<li class="chapter" data-level="2.3.2" data-path="X02-error.html"><a href="X02-error.html#X02-error-bias"><i class="fa fa-check"></i><b>2.3.2</b> Bias</a></li>
+<li class="chapter" data-level="2.3.3" data-path="X02-error.html"><a href="X02-error.html#X02-error-var"><i class="fa fa-check"></i><b>2.3.3</b> Variance</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="X02-error.html"><a href="X02-error.html#X02-error-var"><i class="fa fa-check"></i><b>2.3</b> Variance</a>
-<ul>
-<li class="chapter" data-level="2.3.1" data-path="X02-error.html"><a href="X02-error.html#second-moment"><i class="fa fa-check"></i><b>2.3.1</b> Second Moment</a></li>
-<li class="chapter" data-level="2.3.2" data-path="X02-error.html"><a href="X02-error.html#the-roughness-of-a-kernel"><i class="fa fa-check"></i><b>2.3.2</b> The Roughness of a Kernel</a></li>
-<li class="chapter" data-level="2.3.3" data-path="X02-error.html"><a href="X02-error.html#the-variance-for-small-bandwidth"><i class="fa fa-check"></i><b>2.3.3</b> The Variance for Small Bandwidth</a></li>
-</ul></li>
-<li class="chapter" data-level="2.4" data-path="X02-error.html"><a href="X02-error.html#mean-squared-error"><i class="fa fa-check"></i><b>2.4</b> Mean Squared Error</a></li>
-<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#optimal-bandwidth-for-pointwise-mse"><i class="fa fa-check"></i><b>2.5</b> Optimal Bandwidth for Pointwise MSE</a></li>
-<li class="chapter" data-level="2.6" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.6</b> Integrated Error</a></li>
+<li class="chapter" data-level="2.4" data-path="X02-error.html"><a href="X02-error.html#optimal-bandwidth-for-pointwise-mse"><i class="fa fa-check"></i><b>2.4</b> Optimal Bandwidth for Pointwise MSE</a></li>
+<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.5</b> Integrated Error</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="X03-practice.html"><a href="X03-practice.html"><i class="fa fa-check"></i><b>3</b> Kernel Density Estimation in Practice</a>
 <ul>
@@ -187,7 +181,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="" data-path="X04-smoothing.html"><a href="X04-smoothing.html#denominator"><i class="fa fa-check"></i>Denominator</a></li>
 <li class="chapter" data-level="" data-path="X04-smoothing.html"><a href="X04-smoothing.html#numerator"><i class="fa fa-check"></i>Numerator</a></li>
-<li class="chapter" data-level="" data-path="X04-smoothing.html"><a href="X04-smoothing.html#mean-squared-error-1"><i class="fa fa-check"></i>Mean Squared Error</a></li>
+<li class="chapter" data-level="" data-path="X04-smoothing.html"><a href="X04-smoothing.html#mean-squared-error"><i class="fa fa-check"></i>Mean Squared Error</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="X05-locpoly.html"><a href="X05-locpoly.html"><i class="fa fa-check"></i><b>5</b> Local Polynomial Regression</a>
@@ -293,67 +287,22 @@ the associated parameter estimation problem is more challenging.
 The only “parameter” in this model is the function <span class="math inline">\(f \colon\mathbb{R}\to \mathbb{R}\)</span>
 instead of just a vector of numbers. The space of all possible density
 functions <span class="math inline">\(f\)</span> is infinite dimensional, so this is a more challenging
-estimation problem then the one we consider, for example, for linear
+estimation problem than the one we consider, for example, for linear
 regression. Since <span class="math inline">\(f\)</span> is not a “parameter” in the usual sense, sometimes
 this problem is called a “non-parametric” estimation problem.</p>
 <p>Our estimate for the density <span class="math inline">\(f\)</span> is the function <span class="math inline">\(\hat f_h\colon \mathbb{R}\to \mathbb{R}\)</span>,
 where <span class="math inline">\(\hat f_h(x)\)</span> is given by <a href="X02-error.html#eq:KDE-est">(2.1)</a> for every <span class="math inline">\(x \in\mathbb{R}\)</span>.</p>
 </div>
-<div id="X02-error-bias" class="section level2 hasAnchor" number="2.2">
-<h2><span class="header-section-number">2.2</span> Bias<a href="X02-error.html#X02-error-bias" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/2Xl5hrRCTK0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<div id="the-bias-of-the-estimate" class="section level3 hasAnchor" number="2.2.1">
-<h3><span class="header-section-number">2.2.1</span> The Bias of the Estimate<a href="X02-error.html#the-bias-of-the-estimate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>As usual, the <strong>bias</strong> of our estimate is the difference between
-what the estimator gives on average and the truth. For our estimation
-problem we get
-<span class="math display">\[\begin{equation*}
-    \mathop{\mathrm{bias}}\bigl(\hat f_h(x)\bigr)
-    = \mathbb{E}\bigl(\hat f_h(x)\bigr) - f(x).
-\end{equation*}\]</span>
-The expectation on the right-hand side averages over the randomness
-in the data, by using <span class="math inline">\(X_1, \ldots, X_n\)</span> from the model in place of
-the data.</p>
-<p>Substituting in the definition of <span class="math inline">\(\hat f_h(x)\)</span> from equation <a href="X02-error.html#eq:KDE-est">(2.1)</a>
-we find
-<span class="math display">\[\begin{align*}
-    \mathbb{E}\bigl(\hat f_h(x)\bigr)
-    &amp;= \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n K_h(x - X_i) \Bigr) \\
-    &amp;= \frac{1}{n} \sum_{i=1}^n \mathbb{E}\bigl( K_h(x - X_i) \bigr)
-\end{align*}\]</span>
-and since the <span class="math inline">\(X_i\)</span> are identically distributed, we can replace
-all <span class="math inline">\(X_i\)</span> with <span class="math inline">\(X_1\)</span> (or any other of them) to get
-<span class="math display">\[\begin{align*}
-    \mathbb{E}\bigl(\hat f_h(x)\bigr)
-    &amp;= \frac{1}{n} \sum_{i=1}^n \mathbb{E}\bigl( K_h(x - X_1) \bigr) \\
-    &amp;= \frac{1}{n} n \, \mathbb{E}\bigl( K_h(x - X_1) \bigr) \\
-    &amp;= \mathbb{E}\bigl( K_h(x - X_1) \bigr).
-\end{align*}\]</span>
-Since the model assumes <span class="math inline">\(X_1\)</span> (and all the other <span class="math inline">\(X_i\)</span>) to have density <span class="math inline">\(f\)</span>,
-we can write this expectation as an integral to get
-<span class="math display">\[\begin{align*}
-    \mathbb{E}\bigl(\hat f_h(x)\bigr)
-    &amp;= \int_{-\infty}^\infty K_h(x - y) \, f(y) \, dy \\
-    &amp;= \int_{-\infty}^\infty f(y) \, K_h(y - x) \, dy \\
-    &amp;= \int_{-\infty}^\infty f(z+x) \, K_h(z) \, dz
-\end{align*}\]</span>
-where we used the symmetry of <span class="math inline">\(K_h\)</span> and the substitution <span class="math inline">\(z = y - x\)</span>.</p>
-</div>
-<div id="moments-of-kernels" class="section level3 hasAnchor" number="2.2.2">
-<h3><span class="header-section-number">2.2.2</span> Moments of Kernels<a href="X02-error.html#moments-of-kernels" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="moments-of-kernels" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Moments of Kernels<a href="X02-error.html#moments-of-kernels" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/jSjBq_4US3E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </div>
 </div>
-<p>To understand how the bias changes as <span class="math inline">\(h\)</span> varies, we will need to
-consider properties of <span class="math inline">\(K\)</span> and <span class="math inline">\(K_h\)</span> in more detail.</p>
+<p>For our analysis we will need to consider properties of <span class="math inline">\(K\)</span> and <span class="math inline">\(K_h\)</span> in more
+detail.</p>
 <div class="definition">
 <p><span id="def:unlabeled-div-4" class="definition"><strong>Definition 2.1  </strong></span>The <span class="math inline">\(k\)</span>th <strong>moment</strong> of a kernel <span class="math inline">\(K\)</span>,
 for <span class="math inline">\(k \in \mathbb{N}_0 = \{0, 1, 2, \ldots\}\)</span>, is given by
@@ -378,11 +327,7 @@ antisymmetric and we have
 \end{equation*}\]</span>
 for every kernel <span class="math inline">\(K\)</span>.</p></li>
 </ul>
-<p>The moments of the rescaled kernel <span class="math inline">\(K_h\)</span>, given by
-<span class="math display">\[\begin{equation*}
-    K_h(x - y)
-    = \frac{1}{h} K\Bigl( \frac{x-y}{h} \Bigr),
-\end{equation*}\]</span>
+<p>The moments of the rescaled kernel <span class="math inline">\(K_h\)</span>
 can be computed from the moments of <span class="math inline">\(K\)</span>.</p>
 <div class="lemma">
 <p><span id="lem:Kh-scal" class="lemma"><strong>Lemma 2.1  </strong></span>Let <span class="math inline">\(K\)</span> be a kernel, <span class="math inline">\(k \in \mathbb{N}_0\)</span> and <span class="math inline">\(h &gt; 0\)</span>. Then
@@ -426,8 +371,106 @@ and
 \end{equation}\]</span>
 Thus, <span class="math inline">\(Y\)</span> is centred and the variance of <span class="math inline">\(Y\)</span> is proportional to <span class="math inline">\(h^2\)</span>.</p>
 </div>
-<div id="the-bias-for-small-bandwidth" class="section level3 hasAnchor" number="2.2.3">
-<h3><span class="header-section-number">2.2.3</span> The Bias for Small Bandwidth<a href="X02-error.html#the-bias-for-small-bandwidth" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="X02-error-MSE" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Mean Squared Error<a href="X02-error.html#X02-error-MSE" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bxiJ4wb71aU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<p>In this section we will quantify the error of the kernel density estimate
+<span class="math inline">\(\hat f_h(x)\)</span> for estimating <span class="math inline">\(f(x)\)</span> by computing its mean squared error.
+The mean squared error combines two sources of error: bias (systematic error)
+and variance (random error due to sampling). We will see how the bandwidth<br />
+<span class="math inline">\(h\)</span> affects both of these components, and how they must be balanced to minimise
+the overall error.</p>
+<div id="result" class="section level3 hasAnchor" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> Result<a href="X02-error.html#result" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The following theorem characterises the mean squared error of the kernel
+density estimate for small bandwidth <span class="math inline">\(h\)</span>.</p>
+<div class="theorem">
+<p><span id="thm:MSE-KDE" class="theorem"><strong>Theorem 2.1  </strong></span>Let <span class="math inline">\(X_1, \ldots, X_n\)</span> be i.i.d. random variables with density <span class="math inline">\(f\)</span>, and
+let <span class="math inline">\(\hat f_h(x)\)</span> be the kernel density estimate defined in <a href="X02-error.html#eq:KDE-est">(2.1)</a>.
+Then, as <span class="math inline">\(h \downarrow 0\)</span>, the mean squared error of <span class="math inline">\(\hat f_h(x)\)</span> is given by
+<span class="math display" id="eq:f-hat-MSE">\[\begin{equation}
+  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 h^4
+      + o(1/nh) + o(h^4),  \tag{2.4}
+\end{equation}\]</span>
+where <span class="math inline">\(R(K) = \int K(x)^2 \,dx\)</span> is the roughness of the kernel and
+<span class="math inline">\(\mu_2(K) = \int x^2 K(x) \,dx\)</span> is the second moment of the kernel.</p>
+</div>
+<p>Here we use
+<a href="https://en.wikipedia.org/wiki/Big_O_notation#Little-o_notation">little-o notation</a>:
+the term <span class="math inline">\(o(1/nh)\)</span> represents error terms of the form <span class="math inline">\(e_1(h)/n\)</span> where
+<span class="math inline">\(e_1(h) = o(1/h)\)</span> as <span class="math inline">\(h \downarrow 0\)</span>, meaning that <span class="math inline">\(e_1(h) / (1/h) \to 0\)</span>,
+and the constants in the definition of <span class="math inline">\(o(1/h)\)</span> do not depend on <span class="math inline">\(n\)</span>.
+Similarly, <span class="math inline">\(o(h^4)\)</span> represents error terms <span class="math inline">\(e_2(h)\)</span> which do not depend
+on <span class="math inline">\(n\)</span> and satisfy <span class="math inline">\(e_2(h) / h^4 \to 0\)</span> as <span class="math inline">\(h \downarrow 0\)</span>. Thus <span class="math inline">\(o(1/nh)\)</span>
+really means ``<span class="math inline">\(o(1/h)\)</span>, where the constants are proportional to <span class="math inline">\(1/n\)</span>’’,
+and the constants in the definition of <span class="math inline">\(o(h^4)\)</span> do not depend on <span class="math inline">\(n\)</span>.</p>
+<p>The theorem shows that the MSE has two main terms with opposing behaviour:
+the first term <span class="math inline">\(\frac{1}{nh} f(x) R(K)\)</span> comes from the variance of the
+estimate and decreases as <span class="math inline">\(h\)</span> increases, while the second term
+<span class="math inline">\(\frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 h^4\)</span> comes from the squared bias and
+increases as <span class="math inline">\(h\)</span> increases. These competing effects lead to an optimal
+choice of bandwidth that balances bias and variance.</p>
+<p>We will not give a complete formal proof of this theorem, but we will
+derive the main components in the following subsections. First we
+compute the bias of the estimate and show that it is approximately
+<span class="math inline">\(\frac{\mu_2(K) f&#39;&#39;(x)}{2} h^2\)</span> for small <span class="math inline">\(h\)</span>. Then we compute the
+variance and show that it is approximately <span class="math inline">\(\frac{f(x) R(K)}{nh}\)</span> for
+small <span class="math inline">\(h\)</span>. Combining these results using the standard identity
+<span class="math inline">\(\mathop{\mathrm{MSE}}\nolimits= \mathop{\mathrm{Var}}+ \mathop{\mathrm{bias}}^2\)</span> yields the theorem.</p>
+</div>
+<div id="X02-error-bias" class="section level3 hasAnchor" number="2.3.2">
+<h3><span class="header-section-number">2.3.2</span> Bias<a href="X02-error.html#X02-error-bias" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="videowrap">
+<div class="videowrapper">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/2Xl5hrRCTK0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+<div id="the-bias-of-the-estimate" class="section level4 hasAnchor" number="2.3.2.1">
+<h4><span class="header-section-number">2.3.2.1</span> The Bias of the Estimate<a href="X02-error.html#the-bias-of-the-estimate" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>As usual, the <strong>bias</strong> of our estimate is the difference between
+what the estimator gives on average and the truth. For our estimation
+problem we get
+<span class="math display">\[\begin{equation*}
+    \mathop{\mathrm{bias}}\bigl(\hat f_h(x)\bigr)
+    = \mathbb{E}\bigl(\hat f_h(x)\bigr) - f(x).
+\end{equation*}\]</span>
+The expectation on the right-hand side averages over the randomness
+in the data, by using <span class="math inline">\(X_1, \ldots, X_n\)</span> from the model in place of
+the data.</p>
+<p>Substituting in the definition of <span class="math inline">\(\hat f_h(x)\)</span> from equation <a href="X02-error.html#eq:KDE-est">(2.1)</a>
+we find
+<span class="math display">\[\begin{align*}
+    \mathbb{E}\bigl(\hat f_h(x)\bigr)
+    &amp;= \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n K_h(x - X_i) \Bigr) \\
+    &amp;= \frac{1}{n} \sum_{i=1}^n \mathbb{E}\bigl( K_h(x - X_i) \bigr)
+\end{align*}\]</span>
+and since the <span class="math inline">\(X_i\)</span> are identically distributed, we can replace
+all <span class="math inline">\(X_i\)</span> with <span class="math inline">\(X_1\)</span> (or any other of them) to get
+<span class="math display">\[\begin{align*}
+    \mathbb{E}\bigl(\hat f_h(x)\bigr)
+    &amp;= \frac{1}{n} \sum_{i=1}^n \mathbb{E}\bigl( K_h(x - X_1) \bigr) \\
+    &amp;= \frac{1}{n} n \, \mathbb{E}\bigl( K_h(x - X_1) \bigr) \\
+    &amp;= \mathbb{E}\bigl( K_h(x - X_1) \bigr).
+\end{align*}\]</span>
+Since the model assumes <span class="math inline">\(X_1\)</span> (and all the other <span class="math inline">\(X_i\)</span>) to have density <span class="math inline">\(f\)</span>,
+we can write this expectation as an integral to get
+<span class="math display">\[\begin{align*}
+    \mathbb{E}\bigl(\hat f_h(x)\bigr)
+    &amp;= \int_{-\infty}^\infty K_h(x - y) \, f(y) \, dy \\
+    &amp;= \int_{-\infty}^\infty f(y) \, K_h(y - x) \, dy \\
+    &amp;= \int_{-\infty}^\infty f(z+x) \, K_h(z) \, dz
+\end{align*}\]</span>
+where we used the symmetry of <span class="math inline">\(K_h\)</span> and the substitution <span class="math inline">\(z = y - x\)</span>.</p>
+</div>
+<div id="the-bias-for-small-bandwidth" class="section level4 hasAnchor" number="2.3.2.2">
+<h4><span class="header-section-number">2.3.2.2</span> The Bias for Small Bandwidth<a href="X02-error.html#the-bias-for-small-bandwidth" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/gbDryZC3XIQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
@@ -443,7 +486,7 @@ we see that we can interpret this integral as an expectation
 with respect to a random variable <span class="math inline">\(Y \sim K_h\)</span>:
 <span class="math display" id="eq:hf2">\[\begin{equation}
     \mathbb{E}\bigl(\hat f_h(x)\bigr)
-    = \mathbb{E}\bigl( f(x+Y) \bigr).  \tag{2.4}
+    = \mathbb{E}\bigl( f(x+Y) \bigr).  \tag{2.5}
 \end{equation}\]</span>
 Equation <a href="X02-error.html#eq:Kh-var-Y">(2.3)</a> shows that for <span class="math inline">\(h \downarrow 0\)</span> the random
 variable concentrates more and more around <span class="math inline">\(0\)</span> and thus <span class="math inline">\(x+Y\)</span> concentrates
@@ -456,7 +499,7 @@ of <span class="math inline">\(f\)</span> around the point <span class="math in
   f(x + y)
   \approx f(x) + y f&#39;(x) + \frac{y^2}{2} f&#39;&#39;(x).
 \end{equation*}\]</span>
-Substituting this into equation <a href="X02-error.html#eq:hf2">(2.4)</a> we find
+Substituting this into equation <a href="X02-error.html#eq:hf2">(2.5)</a> we find
 <span class="math display">\[\begin{align*}
     \mathbb{E}\bigl(\hat f_h(x)\bigr)
     &amp;\approx \mathbb{E}\Bigl( f(x) + Y f&#39;(x) + \frac{Y^2}{2} f&#39;&#39;(x) \Bigr) \\
@@ -467,21 +510,19 @@ for small <span class="math inline">\(h\)</span>. Considering the bias again, th
 <span class="math display" id="eq:fhatbias">\[\begin{equation}
   \mathop{\mathrm{bias}}\bigl( \hat f_h(x) \bigr)
   = \mathbb{E}\bigl( \hat f_h(x) \bigr) - f(x)
-  \approx \frac{\mu_2(K) f&#39;&#39;(x)}{2} h^2  \tag{2.5}
+  \approx \frac{\mu_2(K) f&#39;&#39;(x)}{2} h^2  \tag{2.6}
 \end{equation}\]</span>
 which shows that the bias of the estimator decreases quadratically
 as <span class="math inline">\(h\)</span> gets smaller.</p>
-<p>In contrast, the variance of the estimator (computed below) <em>increases</em>
-as <span class="math inline">\(h \downarrow 0\)</span>. We will need to balance these two effects to find the
-optimal value of <span class="math inline">\(h\)</span>.</p>
 </div>
 </div>
-<div id="X02-error-var" class="section level2 hasAnchor" number="2.3">
-<h2><span class="header-section-number">2.3</span> Variance<a href="X02-error.html#X02-error-var" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We now turn to computing the variance of the estimator. Recall from above that
+<div id="X02-error-var" class="section level3 hasAnchor" number="2.3.3">
+<h3><span class="header-section-number">2.3.3</span> Variance<a href="X02-error.html#X02-error-var" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We now turn to computing the variance of the estimator. Recall from the
+bias analysis above that
 <span class="math display" id="eq:E-hat-f-K-h">\[\begin{equation}
   \mathbb{E}\bigl( \hat f_h(x) \bigr)
-  = \mathbb{E}\bigl( K_h(x - X_i) \bigr)  \tag{2.6}
+  = \mathbb{E}\bigl( K_h(x - X_i) \bigr)  \tag{2.7}
 \end{equation}\]</span>
 for all <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>. We will use similar arguments to derive
 the variance.</p>
@@ -497,8 +538,8 @@ the variance.</p>
   = \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2
 \end{equation*}\]</span>
 and consider the two terms separately.</p>
-<div id="second-moment" class="section level3 hasAnchor" number="2.3.1">
-<h3><span class="header-section-number">2.3.1</span> Second Moment<a href="X02-error.html#second-moment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="second-moment" class="section level4 hasAnchor" number="2.3.3.1">
+<h4><span class="header-section-number">2.3.3.1</span> Second Moment<a href="X02-error.html#second-moment" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>For the second moment term in the definition of the variance we get
 <span class="math display">\[\begin{align*}
   \mathbb{E}\bigl( \hat f_h(x)^2 \bigr)
@@ -517,8 +558,8 @@ without changing the value of the expectation. So we get
   &amp;= \frac{1}{n^2} \Bigl( n \mathbb{E}\bigl( K_h(x - X_1)^2 \Bigr) + n(n-1) \mathbb{E}\bigl( K_h(x - X_1) \bigr)^2 \Bigr) \\
   &amp;= \frac{1}{n} \mathbb{E}\Bigl( K_h(x - X_1)^2 \Bigr) + \frac{n-1}{n} \mathbb{E}\bigl( \hat f_h(x) \bigr)^2,
 \end{align*}\]</span>
-where we used equation <a href="X02-error.html#eq:E-hat-f-K-h">(2.6)</a> for the last term.
-Using this equation, we can write the expectation as
+where we used equation <a href="X02-error.html#eq:E-hat-f-K-h">(2.7)</a> for the last term.
+Using this equation, we can write the variance as
 <span class="math display">\[\begin{align*}
   \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
   &amp;= \mathbb{E}\bigl( \hat f_h(x)^2 \bigr) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2 \\
@@ -528,16 +569,16 @@ Since <span class="math inline">\((n-1)/n - 1 = -1/n\)</span> we get
 <span class="math display" id="eq:Var-hat-f-2">\[\begin{equation}
   \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
   = \frac{1}{n} \Bigl( \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr) - \mathbb{E}\bigl( \hat f_h(x) \bigr)^2 \Bigr).
-                                                          \tag{2.7}
+                                                          \tag{2.8}
 \end{equation}\]</span></p>
 </div>
-<div id="the-roughness-of-a-kernel" class="section level3 hasAnchor" number="2.3.2">
-<h3><span class="header-section-number">2.3.2</span> The Roughness of a Kernel<a href="X02-error.html#the-roughness-of-a-kernel" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="the-roughness-of-a-kernel" class="section level4 hasAnchor" number="2.3.3.2">
+<h4><span class="header-section-number">2.3.3.2</span> The Roughness of a Kernel<a href="X02-error.html#the-roughness-of-a-kernel" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Similar to the bias analysis, we will use Taylor expansion of <span class="math inline">\(f\)</span> around
 the point <span class="math inline">\(x\)</span> to understand the behaviour of the variance for small <span class="math inline">\(h\)</span>. Some more care is needed here, because this time the
 result also depends on the sample size <span class="math inline">\(n\)</span> and we will consider the joint
 limit of <span class="math inline">\(n \to \infty\)</span> and <span class="math inline">\(h\to 0\)</span>. For the first term in
-equation <a href="X02-error.html#eq:Var-hat-f-2">(2.7)</a> we find
+equation <a href="X02-error.html#eq:Var-hat-f-2">(2.8)</a> we find
 <span class="math display">\[\begin{align*}
   \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)
   &amp;= \int K_h(x - y)^2 f(y) \,dy \\
@@ -572,12 +613,12 @@ antisymmetric function. As a shorthand we use the following definition.</p>
 <span class="math display" id="eq:Var-frag1">\[\begin{equation}
   \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)
   \approx \frac{1}{h} f(x) R(K) + \frac12 h f&#39;&#39;(x) \int z^2 K(z)^2 \,dz
-                             \tag{2.8}
+                             \tag{2.9}
 \end{equation}\]</span>
 for small <span class="math inline">\(h\)</span>.</p>
 </div>
-<div id="the-variance-for-small-bandwidth" class="section level3 hasAnchor" number="2.3.3">
-<h3><span class="header-section-number">2.3.3</span> The Variance for Small Bandwidth<a href="X02-error.html#the-variance-for-small-bandwidth" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="the-variance-for-small-bandwidth" class="section level4 hasAnchor" number="2.3.3.3">
+<h4><span class="header-section-number">2.3.3.3</span> The Variance for Small Bandwidth<a href="X02-error.html#the-variance-for-small-bandwidth" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Here we consider the term <span class="math inline">\(\mathbb{E}\bigl( \hat f_h(x) \bigr)^2\)</span> in the formula
 for the variance. From the bias analysis above we know
 <span class="math display">\[\begin{equation*}
@@ -588,11 +629,11 @@ and thus we get
 <span class="math display" id="eq:Var-frag2">\[\begin{equation}
     \mathbb{E}\bigl( \hat f_h(x) \bigr)^2
     \approx f(x)^2 + h^2 \mu_2(K) f(x) f&#39;&#39;(x) + \frac14 h^4 \mu_2(K)^2 f&#39;&#39;(x)^2
-                             \tag{2.9}
+                             \tag{2.10}
 \end{equation}\]</span>
 for small <span class="math inline">\(h\)</span>.</p>
-<p>Substituting equations <a href="X02-error.html#eq:Var-frag1">(2.8)</a> and <a href="X02-error.html#eq:Var-frag2">(2.9)</a> into
-equation <a href="X02-error.html#eq:Var-hat-f-2">(2.7)</a> we finally find
+<p>Substituting equations <a href="X02-error.html#eq:Var-frag1">(2.9)</a> and <a href="X02-error.html#eq:Var-frag2">(2.10)</a> into
+equation <a href="X02-error.html#eq:Var-hat-f-2">(2.8)</a> we finally find
 <span class="math display">\[\begin{equation*}
   \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
   = \frac{1}{n} \Bigl(
@@ -606,62 +647,37 @@ Omitting one more term and keeping only the leading term
 we find
 <span class="math display" id="eq:fhatvar">\[\begin{equation}
   \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr)
-  \approx \frac{1}{nh} f(x) R(K)     \tag{2.10}
+  \approx \frac{1}{nh} f(x) R(K)     \tag{2.11}
 \end{equation}\]</span>
 as <span class="math inline">\(h\downarrow 0\)</span>.</p>
 </div>
-</div>
-<div id="mean-squared-error" class="section level2 hasAnchor" number="2.4">
-<h2><span class="header-section-number">2.4</span> Mean Squared Error<a href="X02-error.html#mean-squared-error" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="videowrap">
-<div class="videowrapper">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bxiJ4wb71aU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-</iframe>
-</div>
-</div>
-<p>The Mean Squared Error of the estimator <span class="math inline">\(\hat f_h(x)\)</span> for <span class="math inline">\(f(x)\)</span> is given
-by
+<div id="combining-bias-and-variance" class="section level4 hasAnchor" number="2.3.3.4">
+<h4><span class="header-section-number">2.3.3.4</span> Combining Bias and Variance<a href="X02-error.html#combining-bias-and-variance" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Recall that the mean squared error can be decomposed as
 <span class="math display">\[\begin{equation*}
   \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
-  = \mathbb{E}\Bigl( \bigl( \hat f_h(x) - f(x) \bigr)^2 \Bigr).
-\end{equation*}\]</span>
-It is an easy exercise to show that this can equivalently be written as
-<span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
+  = \mathbb{E}\Bigl( \bigl( \hat f_h(x) - f(x) \bigr)^2 \Bigr)
   = \mathop{\mathrm{Var}}\bigl( \hat f_h(x) \bigr) + \mathop{\mathrm{bias}}\bigl( \hat f_h(x) \bigr)^2.
 \end{equation*}\]</span>
-Substituting equations <a href="X02-error.html#eq:fhatbias">(2.5)</a> and <a href="X02-error.html#eq:fhatvar">(2.10)</a> into
-the formula for the MSE, we get
-<span class="math display" id="eq:f-hat-MSE">\[\begin{equation}
-  \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
-  \approx \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 h^4.
-                           \tag{2.11}
-\end{equation}\]</span></p>
-<p>Some care is needed to make sure that the omitted terms from the Taylor
-approximations really don’t make a significant contribution in this formula for
-the MSE: The additional contributions from the variance have the form <span class="math inline">\(e_1(h)
-/ n\)</span>, where the error term <span class="math inline">\(e_1\)</span> does not depend on <span class="math inline">\(n\)</span> and is negligible
-compared to <span class="math inline">\(f(x) R(K) / h\)</span> as <span class="math inline">\(h \downarrow 0\)</span>. Using
-<a href="https://en.wikipedia.org/wiki/Big_O_notation#Little-o_notation">little-o notation</a>,
-This is sometimes denoted by <span class="math inline">\(e_1(h) = o(1/h)\)</span>, which indicates that <span class="math inline">\(e_1(h) /
-(1/h) \to 0\)</span> as <span class="math inline">\(h \downarrow 0\)</span>. The additional terms from the squared bias, say
-<span class="math inline">\(e_2(h)\)</span>, do not depend on <span class="math inline">\(n\)</span> and are negligible compared to <span class="math inline">\(\mu_2(K)^2
-f&#39;&#39;(x)^2 h^4\)</span>. We can write <span class="math inline">\(e_2(h) = o(h^4)\)</span> as <span class="math inline">\(h \downarrow 0\)</span>, to reflect
-this fact. We can summarise these results as
+Substituting equations <a href="X02-error.html#eq:fhatbias">(2.6)</a> and <a href="X02-error.html#eq:fhatvar">(2.11)</a> into
+the formula for the MSE, we obtain the main two terms in theorem <a href="X02-error.html#thm:MSE-KDE">2.1</a>:
 <span class="math display">\[\begin{equation*}
   \mathop{\mathrm{MSE}}\nolimits\bigl( \hat f_h(x) \bigr)
-  = \frac{1}{nh} f(x) R(K)
-      + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 h^4
-      + o(1/nh) + o(h^4)
+  \approx \frac{1}{nh} f(x) R(K) + \frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 h^4.
 \end{equation*}\]</span>
-as <span class="math inline">\(h \downarrow 0\)</span>,
-with the understanding that the constants in the definition of <span class="math inline">\(o(h^4)\)</span>
-do not depend on <span class="math inline">\(n\)</span> and that <span class="math inline">\(o(1/nh)\)</span> really means “<span class="math inline">\(o(1/h)\)</span>, where the
-constants are proportional to <span class="math inline">\(1/n\)</span>.”</p>
+The additional error terms <span class="math inline">\(o(1/nh)\)</span> and <span class="math inline">\(o(h^4)\)</span> in the theorem statement
+account for the higher-order terms neglected in the Taylor approximations
+used to derive the bias and variance.</p>
+<p>These two main terms have opposing behaviour: the variance term
+<span class="math inline">\(\frac{1}{nh} f(x) R(K)\)</span> <em>increases</em> as <span class="math inline">\(h \downarrow 0\)</span>, whilst the squared
+bias term <span class="math inline">\(\frac14 \mu_2(K)^2 f&#39;&#39;(x)^2 h^4\)</span> <em>decreases</em> as <span class="math inline">\(h \downarrow 0\)</span>.
+We will need to balance these two effects to find the optimal value of <span class="math inline">\(h\)</span>.</p>
 </div>
-<div id="optimal-bandwidth-for-pointwise-mse" class="section level2 hasAnchor" number="2.5">
-<h2><span class="header-section-number">2.5</span> Optimal Bandwidth for Pointwise MSE<a href="X02-error.html#optimal-bandwidth-for-pointwise-mse" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The two terms on the right-hand side of <a href="X02-error.html#eq:f-hat-MSE">(2.11)</a> are balanced in
+</div>
+</div>
+<div id="optimal-bandwidth-for-pointwise-mse" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Optimal Bandwidth for Pointwise MSE<a href="X02-error.html#optimal-bandwidth-for-pointwise-mse" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The two terms on the right-hand side of <a href="X02-error.html#eq:f-hat-MSE">(2.4)</a> are balanced in
 that the first term decreases for large <span class="math inline">\(h\)</span> while the second term decreases for
 small <span class="math inline">\(h\)</span>. By taking derivatives with respect to <span class="math inline">\(h\)</span>, we can
 find the optimal value of <span class="math inline">\(h\)</span>. Ignoring the higher order terms, we get
@@ -683,7 +699,7 @@ It is easy to check that this <span class="math inline">\(h\)</span> corresponds
 This shows how the optimal bandwidth depends both on the kernel and on
 the target density <span class="math inline">\(f\)</span>. In practice, this formula is hard to use,
 since <span class="math inline">\(f&#39;&#39;\)</span> is unknown. (We don’t even know <span class="math inline">\(f\)</span>!)</p>
-<p>Substituting the optimal value of <span class="math inline">\(h\)</span> back into equation <a href="X02-error.html#eq:f-hat-MSE">(2.11)</a>,
+<p>Substituting the optimal value of <span class="math inline">\(h\)</span> back into equation <a href="X02-error.html#eq:f-hat-MSE">(2.4)</a>,
 we get
 <span class="math display">\[\begin{align*}
   \mathop{\mathrm{MSE}}\nolimits_\mathrm{opt}
@@ -709,15 +725,15 @@ We cannot influence this term, but we can see that <span class="math inline">\(x
 or has high curvature have higher estimation error.</p></li>
 </ul>
 </div>
-<div id="IMSE" class="section level2 hasAnchor" number="2.6">
-<h2><span class="header-section-number">2.6</span> Integrated Error<a href="X02-error.html#IMSE" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="IMSE" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> Integrated Error<a href="X02-error.html#IMSE" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
 <div class="videowrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/03TrU8ZgsGQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </div>
 </div>
-<p>Equation <a href="X02-error.html#eq:f-hat-MSE">(2.11)</a> gives the mean squared error when trying to estimate the density
+<p>Equation <a href="X02-error.html#eq:f-hat-MSE">(2.4)</a> gives the mean squared error when trying to estimate the density
 <span class="math inline">\(f(x)\)</span> at a fixed point <span class="math inline">\(x\)</span>. Usually we are interested in estimating
 the function <span class="math inline">\(f\)</span> rather than individual points <span class="math inline">\(f(x)\)</span>. In this case,
 we consider the <strong>integrated mean squared error (IMSE)</strong>:
