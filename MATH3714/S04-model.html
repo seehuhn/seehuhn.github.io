@@ -571,6 +571,12 @@ This completes the proof.</p>
 <p><span id="unlabeled-div-15" class="remark"><em>Remark</em>. </span>Properties 1 and 2 state that <span class="math inline">\(H\)</span> and <span class="math inline">\(I - H\)</span> are <strong>symmetric</strong>.
 Properties 3 and 4 state that <span class="math inline">\(H\)</span> and <span class="math inline">\(I - H\)</span> are <strong>idempotent</strong>.</p>
 </div>
+<p>Before proceeding to further properties of <span class="math inline">\(H\)</span>, we note without proof that
+geometrically, <span class="math inline">\(H\)</span> can be interpreted as the orthogonal projection onto
+the subspace of <span class="math inline">\(\mathbb{R}^n\)</span> which is spanned by the columns of <span class="math inline">\(X\)</span>. This subspace
+contains the possible output vectors
+of the linear system and the least squares procedure finds the point <span class="math inline">\(\hat y\)</span>
+in this subspace which is closest to the observed data <span class="math inline">\(y\in\mathbb{R}^n\)</span>.</p>
 <p>We can now use the transformation properties of the multivariate normal
 distribution to find the distributions of the fitted values and residuals.</p>
 <div class="lemma">
@@ -645,12 +651,6 @@ turns into
   \mathrm{SS}_\mathrm{T}
   = \mathrm{SS}_\mathrm{R} + \mathrm{SS}_\mathrm{E}.
 \end{equation*}\]</span></p>
-<p>Before proceeding to further properties of <span class="math inline">\(H\)</span>, we note without proof that
-geometrically, <span class="math inline">\(H\)</span> can be interpreted as the orthogonal projection onto
-the subspace of <span class="math inline">\(\mathbb{R}^n\)</span> which is spanned by the columns of <span class="math inline">\(X\)</span>. This subspace
-contains the possible output vectors
-of the linear system and the least squares procedure finds the point <span class="math inline">\(\hat y\)</span>
-in this subspace which is closest to the observed data <span class="math inline">\(y\in\mathbb{R}^n\)</span>.</p>
 <p>A final algebraic property of the hat matrix concerns its trace.</p>
 <div class="lemma">
 <p><span id="lem:unlabeled-div-19" class="lemma"><strong>Lemma 4.5  </strong></span>We have
@@ -819,9 +819,9 @@ theorem, we can now show that an unbiased estimator for <span class="math inline
 is given by
 <span class="math display" id="eq:hat-sigma-squared">\[\begin{equation}
   \hat\sigma^2
-  := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \tag{4.7}
+  := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2
+  = \frac{1}{n-p-1} \sum_{i=1}^n \hat\varepsilon_i^2, \tag{4.7}.
 \end{equation}\]</span>
-where <span class="math inline">\(\hat y_i\)</span> are the fitted values from equation <a href="S02-multiple.html#eq:fitted-values">(2.5)</a>.
 As for the case of simple linear regression, in <a href="S01-simple.html#eq:reg-sigma-est">(1.4)</a>, the
 estimate does not have the prefactor <span class="math inline">\(1/n\)</span>, which one might expect, but
 the denominator is decreased by one for each component of the vector <span class="math inline">\(\beta\)</span>.
@@ -834,27 +834,21 @@ unbiased.</p>
 \end{equation*}\]</span></p>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-23" class="proof"><em>Proof</em>. </span>We first note that
+<p><span id="unlabeled-div-23" class="proof"><em>Proof</em>. </span>We first note that for data from the model we have
+<span class="math display">\[\begin{equation*}
+  \hat\varepsilon
+  = (I-H) y
+  = (I-H) (X\beta + \varepsilon)
+  = (I-H) \varepsilon,
+\end{equation*}\]</span>
+where we used property 6 of lemma <a href="S04-model.html#lem:hat-matrix-props">4.2</a> to see that
+<span class="math inline">\((I-H)X\beta = 0\)</span>. Using this relation, we get
 <span class="math display">\[\begin{align*}
   (n - p - 1) \hat\sigma^2
-  &amp;= (y - \hat y)^\top (y - \hat y) \\
-  &amp;= (y - H y)^\top (y - H y) \\
-  &amp;= y^\top (I - H)^\top (I - H) y \\
-  &amp;= y^\top (I - H) y.
-\end{align*}\]</span>
-To determine the bias, we need to use <span class="math inline">\(Y = X\beta + \varepsilon\)</span> in place of the
-data. This gives
-<span class="math display">\[\begin{align*}
-  (n - p - 1) \hat\sigma^2
-  &amp;= Y^\top (I-H) Y \\
-  &amp;= (X\beta + \varepsilon)^\top (I-H) (X\beta + \varepsilon) \\
-  &amp;= \beta^\top X^\top (I-H) X \beta
-      + 2 \varepsilon^\top (I-H) X \beta
-      + \varepsilon^\top (I-H) \varepsilon\\
-  &amp;= \varepsilon^\top (I-H) \varepsilon,
-\end{align*}\]</span>
-where we used lemma <a href="S04-model.html#lem:hat-matrix-props">4.2</a> to see that the first two terms in
-the sum equal zero.</p>
+  &amp;= \hat\varepsilon^\top \hat\varepsilon\\
+  &amp;= \varepsilon^\top (I - H)^\top (I - H) \varepsilon\\
+  &amp;= \varepsilon^\top (I - H) \varepsilon.
+\end{align*}\]</span></p>
 <p>Now we can apply Cochran’s theorem. This shows that
 <span class="math display" id="eq:sigma-hat-chi-squared">\[\begin{equation}
   \frac{1}{\sigma^2} (n - p - 1) \hat\sigma^2

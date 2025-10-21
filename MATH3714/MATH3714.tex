@@ -2309,6 +2309,13 @@ Properties 1 and 2 state that \(H\) and \(I - H\) are \textbf{symmetric}.
 Properties 3 and 4 state that \(H\) and \(I - H\) are \textbf{idempotent}.
 \end{remark}
 
+Before proceeding to further properties of \(H\), we note without proof that
+geometrically, \(H\) can be interpreted as the orthogonal projection onto
+the subspace of \(\mathbb{R}^n\) which is spanned by the columns of \(X\). This subspace
+contains the possible output vectors
+of the linear system and the least squares procedure finds the point \(\hat y\)
+in this subspace which is closest to the observed data \(y\in\mathbb{R}^n\).
+
 We can now use the transformation properties of the multivariate normal
 distribution to find the distributions of the fitted values and residuals.
 
@@ -2395,13 +2402,6 @@ turns into
   \mathrm{SS}_\mathrm{T}
   = \mathrm{SS}_\mathrm{R} + \mathrm{SS}_\mathrm{E}.
 \end{equation*}
-
-Before proceeding to further properties of \(H\), we note without proof that
-geometrically, \(H\) can be interpreted as the orthogonal projection onto
-the subspace of \(\mathbb{R}^n\) which is spanned by the columns of \(X\). This subspace
-contains the possible output vectors
-of the linear system and the least squares procedure finds the point \(\hat y\)
-in this subspace which is closest to the observed data \(y\in\mathbb{R}^n\).
 
 A final algebraic property of the hat matrix concerns its trace.
 
@@ -2581,9 +2581,9 @@ theorem, we can now show that an unbiased estimator for \(\sigma^2\)
 is given by
 \begin{equation}
   \hat\sigma^2
-  := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2, \label{eq:hat-sigma-squared}
+  := \frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2
+  = \frac{1}{n-p-1} \sum_{i=1}^n \hat\varepsilon_i^2, \label{eq:hat-sigma-squared}.
 \end{equation}
-where \(\hat y_i\) are the fitted values from equation~\eqref{eq:fitted-values}.
 As for the case of simple linear regression, in~\eqref{eq:reg-sigma-est}, the
 estimate does not have the prefactor \(1/n\), which one might expect, but
 the denominator is decreased by one for each component of the vector~\(\beta\).
@@ -2598,27 +2598,21 @@ unbiased.
 \end{lemma}
 
 \begin{proof}
-We first note that
+We first note that for data from the model we have
+\begin{equation*}
+  \hat\varepsilon
+  = (I-H) y
+  = (I-H) (X\beta + \varepsilon)
+  = (I-H) \varepsilon,
+\end{equation*}
+where we used property 6 of lemma~\ref{lem:hat-matrix-props} to see that
+\((I-H)X\beta = 0\). Using this relation, we get
 \begin{align*}
   (n - p - 1) \hat\sigma^2
-  &= (y - \hat y)^\top (y - \hat y) \\
-  &= (y - H y)^\top (y - H y) \\
-  &= y^\top (I - H)^\top (I - H) y \\
-  &= y^\top (I - H) y.
+  &= \hat\varepsilon^\top \hat\varepsilon\\
+  &= \varepsilon^\top (I - H)^\top (I - H) \varepsilon\\
+  &= \varepsilon^\top (I - H) \varepsilon.
 \end{align*}
-To determine the bias, we need to use \(Y = X\beta + \varepsilon\) in place of the
-data. This gives
-\begin{align*}
-  (n - p - 1) \hat\sigma^2
-  &= Y^\top (I-H) Y \\
-  &= (X\beta + \varepsilon)^\top (I-H) (X\beta + \varepsilon) \\
-  &= \beta^\top X^\top (I-H) X \beta
-      + 2 \varepsilon^\top (I-H) X \beta
-      + \varepsilon^\top (I-H) \varepsilon\\
-  &= \varepsilon^\top (I-H) \varepsilon,
-\end{align*}
-where we used lemma~\ref{lem:hat-matrix-props} to see that the first two terms in
-the sum equal zero.
 
 Now we can apply Cochran's theorem. This shows that
 \begin{equation}
@@ -3139,11 +3133,13 @@ we get
   \sim \mathcal{N}\bigl( K \beta, \sigma^2 K (X^\top X)^{-1} K^\top \bigr).
 \end{equation*}
 
-Given an invertible matrix \(Q\), we define the shorthand notation
+Given an invertible, positive definite matrix \(Q\), we define the shorthand
+notation
 \begin{equation*}
   \| v \|_Q^2
   := v^\top Q^{-1} v.
 \end{equation*}
+This is called the \textbf{Mahalanobis norm} when \(Q\) is a covariance matrix.
 Using this notation for \(Q = K(X^\top X)^{-1} K^\top\), we define
 \begin{equation}
   F
