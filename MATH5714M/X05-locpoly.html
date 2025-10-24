@@ -158,14 +158,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="X02-error.html"><a href="X02-error.html#a-statistical-model"><i class="fa fa-check"></i><b>2.1</b> A Statistical Model</a></li>
 <li class="chapter" data-level="2.2" data-path="X02-error.html"><a href="X02-error.html#moments-of-kernels"><i class="fa fa-check"></i><b>2.2</b> Moments of Kernels</a></li>
-<li class="chapter" data-level="2.3" data-path="X02-error.html"><a href="X02-error.html#X02-error-MSE"><i class="fa fa-check"></i><b>2.3</b> Mean Squared Error</a>
+<li class="chapter" data-level="2.3" data-path="X02-error.html"><a href="X02-error.html#the-roughness-of-kernels"><i class="fa fa-check"></i><b>2.3</b> The Roughness of Kernels</a></li>
+<li class="chapter" data-level="2.4" data-path="X02-error.html"><a href="X02-error.html#X02-error-MSE"><i class="fa fa-check"></i><b>2.4</b> Mean Squared Error</a>
 <ul>
-<li class="chapter" data-level="2.3.1" data-path="X02-error.html"><a href="X02-error.html#result"><i class="fa fa-check"></i><b>2.3.1</b> Result</a></li>
-<li class="chapter" data-level="2.3.2" data-path="X02-error.html"><a href="X02-error.html#X02-error-bias"><i class="fa fa-check"></i><b>2.3.2</b> Bias</a></li>
-<li class="chapter" data-level="2.3.3" data-path="X02-error.html"><a href="X02-error.html#X02-error-var"><i class="fa fa-check"></i><b>2.3.3</b> Variance</a></li>
+<li class="chapter" data-level="2.4.1" data-path="X02-error.html"><a href="X02-error.html#result"><i class="fa fa-check"></i><b>2.4.1</b> Result</a></li>
+<li class="chapter" data-level="2.4.2" data-path="X02-error.html"><a href="X02-error.html#X02-error-bias"><i class="fa fa-check"></i><b>2.4.2</b> Bias</a></li>
+<li class="chapter" data-level="2.4.3" data-path="X02-error.html"><a href="X02-error.html#X02-error-var"><i class="fa fa-check"></i><b>2.4.3</b> Variance</a></li>
+<li class="chapter" data-level="2.4.4" data-path="X02-error.html"><a href="X02-error.html#result-1"><i class="fa fa-check"></i><b>2.4.4</b> Result</a></li>
 </ul></li>
-<li class="chapter" data-level="2.4" data-path="X02-error.html"><a href="X02-error.html#optimal-bandwidth-for-pointwise-mse"><i class="fa fa-check"></i><b>2.4</b> Optimal Bandwidth for Pointwise MSE</a></li>
-<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.5</b> Integrated Error</a></li>
+<li class="chapter" data-level="2.5" data-path="X02-error.html"><a href="X02-error.html#optimal-bandwidth-for-pointwise-mse"><i class="fa fa-check"></i><b>2.5</b> Optimal Bandwidth for Pointwise MSE</a></li>
+<li class="chapter" data-level="2.6" data-path="X02-error.html"><a href="X02-error.html#IMSE"><i class="fa fa-check"></i><b>2.6</b> Integrated Error</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="X03-practice.html"><a href="X03-practice.html"><i class="fa fa-check"></i><b>3</b> Kernel Density Estimation in Practice</a>
 <ul>
@@ -340,7 +342,7 @@ This leads to the design matrix
     \end{pmatrix}.
 \end{equation*}\]</span></p>
 <div class="example">
-<p><span id="exm:unlabeled-div-10" class="example"><strong>Example 5.1  </strong></span>To illustrate polynomial regression, we fit a third-order polynomial
+<p><span id="exm:unlabeled-div-11" class="example"><strong>Example 5.1  </strong></span>To illustrate polynomial regression, we fit a third-order polynomial
 to a simple, simulated dataset. Since the operator <code>^</code> has a special
 meaning inside <code>lm()</code>, we have to use the function <code>I()</code> (which disables
 the special meaning of <code>+</code> and <code>^</code> for its arguments) when computing
@@ -384,7 +386,7 @@ This leads to the design matrix
     \end{pmatrix}.  \tag{5.2}
 \end{equation}\]</span></p>
 <div class="example">
-<p><span id="exm:unlabeled-div-11" class="example"><strong>Example 5.2  </strong></span>Continuing from the previous example, we can see that writing the model as in<br />
+<p><span id="exm:unlabeled-div-12" class="example"><strong>Example 5.2  </strong></span>Continuing from the previous example, we can see that writing the model as in<br />
 <a href="X05-locpoly.html#eq:X-local">(5.2)</a> greatly improves the condition number:</p>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="X05-locpoly.html#cb49-1" tabindex="-1"></a>x.tilde <span class="ot">&lt;-</span> <span class="dv">5</span></span>
 <span id="cb49-2"><a href="X05-locpoly.html#cb49-2" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">I</span>(x<span class="sc">-</span>x.tilde) <span class="sc">+</span> <span class="fu">I</span>((x<span class="sc">-</span>x.tilde)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>((x<span class="sc">-</span>x.tilde)<span class="sc">^</span><span class="dv">3</span>))</span>
@@ -487,7 +489,7 @@ This sometimes gives
 a better fit than the Nadaraya-Watson estimator, for example at the boundaries
 of the domain.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-12" class="example"><strong>Example 5.3  </strong></span>We can use the R function <code>locpoly</code> from the <code>KernSmooth</code> package to
+<p><span id="exm:unlabeled-div-13" class="example"><strong>Example 5.3  </strong></span>We can use the R function <code>locpoly</code> from the <code>KernSmooth</code> package to
 compute locally polynomial regression estimates. Here we plot
 the estimate for <span class="math inline">\(p=1\)</span> (blue line) together with the Nadaraya-Watson
 estimator (red line), for a simple, simulated dataset.
@@ -525,7 +527,7 @@ retains its slope right up to the boundary.</p>
 <p>For <span class="math inline">\(p=2\)</span> the local polynomials are parabolas. This allows sometimes to reduce
 bias near peaks.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-13" class="example"><strong>Example 5.4  </strong></span>We compare the Nadaraya-Watson estimator to locally polynomial regression
+<p><span id="exm:unlabeled-div-14" class="example"><strong>Example 5.4  </strong></span>We compare the Nadaraya-Watson estimator to locally polynomial regression
 with <span class="math inline">\(p=2\)</span>, using a simulated dataset which has a peak in the middle of the
 domain. We choose the same bandwidths as in the previous example.</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="X05-locpoly.html#cb54-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>

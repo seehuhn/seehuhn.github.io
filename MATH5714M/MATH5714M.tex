@@ -842,10 +842,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min        lq      mean   median        uq       max neval
-##  KDE1 1427.087 1486.0655 1586.5418 1503.388 1525.2000 10611.702  1000
-##  KDE2  189.953  254.2410  326.3504  259.202  265.6800  5755.539  1000
-##  KDE3  171.052  216.4185  272.1135  220.867  225.4385  6084.769  1000
+##  expr      min        lq      mean   median       uq      max neval
+##  KDE1 1431.556 1495.7210 1557.1180 1513.126 1527.250 7893.197  1000
+##  KDE2  190.076  256.9675  350.2575  261.416  267.156 6923.711  1000
+##  KDE3  171.134  219.7805  312.0894  222.712  226.853 7849.573  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -867,8 +867,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr     min      lq     mean  median      uq      max neval
-##  density 158.752 168.838 185.6986 172.487 177.202 3733.337  1000
+##     expr    min      lq   mean  median      uq      max neval
+##  density 156.62 168.059 186.21 171.216 175.316 4351.289  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -1031,6 +1031,52 @@ and
   = h^2 \, \mu_2(K).  \label{eq:Kh-var-Y}
 \end{equation}
 Thus, \(Y\) is centred and the variance of \(Y\) is proportional to~\(h^2\).
+
+\subsection{The Roughness of Kernels}\label{the-roughness-of-kernels}
+
+In addition to the moments of a kernel, we will need one more kernel property
+for our analysis.
+
+\begin{definition}
+The \textbf{roughness} of a kernel \(K\) is given by
+\begin{equation*}
+  R(K)
+  := \int_{-\infty}^\infty K(x)^2 \,dx.
+\end{equation*}
+\end{definition}
+
+The roughness measures how concentrated the kernel is: a kernel with higher
+roughness has more mass concentrated in a smaller region, while a kernel with
+lower roughness is more spread out.
+
+Similar to the moments, the roughness of the rescaled kernel \(K_h\) can be
+expressed in terms of the roughness of \(K\).
+
+\begin{lemma}
+\protect\hypertarget{lem:Kh-rough}{}\label{lem:Kh-rough}Let \(K\) be a kernel and \(h > 0\). Then
+\begin{equation*}
+  R(K_h)
+  = \frac{1}{h} R(K).
+\end{equation*}
+\end{lemma}
+
+\begin{proof}
+We have
+\begin{align*}
+  R(K_h)
+  &= \int_{-\infty}^\infty K_h(x)^2 \,dx \\
+  &= \int_{-\infty}^\infty \Bigl( \frac{1}{h} K\Bigl(\frac{x}{h}\Bigr) \Bigr)^2 \,dx \\
+  &= \int_{-\infty}^\infty \frac{1}{h^2} K\Bigl(\frac{x}{h}\Bigr)^2 \,dx.
+\end{align*}
+Using the substitution \(y = x/h\) we find
+\begin{align*}
+  R(K_h)
+  &= \int_{-\infty}^\infty \frac{1}{h^2} K(y)^2 \, h \,dy \\
+  &= \frac{1}{h} \int_{-\infty}^\infty K(y)^2 \,dy \\
+  &= \frac{1}{h} R(K).
+\end{align*}
+This completes the proof.
+\end{proof}
 
 \subsection{Mean Squared Error}\label{X02-error-MSE}
 
@@ -1217,7 +1263,7 @@ Since \((n-1)/n - 1 = -1/n\) we get
                                                           \label{eq:Var-hat-f-2}
 \end{equation}
 
-\paragraph{The Roughness of a Kernel}\label{the-roughness-of-a-kernel}
+\paragraph{\texorpdfstring{Approximating \(\mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)\)}{Approximating \textbackslash mathbb\{E\}\textbackslash bigl( K\_h(x - X\_1)\^{}2 \textbackslash bigr)}}\label{approximating-mathbbebigl-k_hx---x_12-bigr}
 
 Similar to the bias analysis, we will use Taylor expansion of \(f\) around
 the point \(x\) to understand the behaviour of the variance for small~\(h\). Some more care is needed here, because this time the
@@ -1246,17 +1292,8 @@ Finally, we use Taylor approximation to get
       + \frac12 h f''(x) \int z^2 K(z)^2 \,dz
 \end{align*}
 where the first-order term disappears since \(z \mapsto z K(z)^2\) is an
-antisymmetric function. As a shorthand we use the following definition.
-
-\begin{definition}
-The \textbf{roughness} of a kernel \(K\) is given by
-\begin{equation*}
-  R(K)
-  := \int_{-\infty}^\infty K(x)^2 \,dx.
-\end{equation*}
-\end{definition}
-
-This gives the result
+antisymmetric function. Using the definition of the roughness of a kernel,
+\(R(K) = \int K(x)^2 \,dx\), this gives the result
 \begin{equation}
   \mathbb{E}\bigl( K_h(x - X_1)^2 \bigr)
   \approx \frac{1}{h} f(x) R(K) + \frac12 h f''(x) \int z^2 K(z)^2 \,dz
@@ -1299,7 +1336,7 @@ we find
 \end{equation}
 as~\(h\downarrow 0\).
 
-\paragraph{Combining Bias and Variance}\label{combining-bias-and-variance}
+\subsubsection{Result}\label{result-1}
 
 Recall that the mean squared error can be decomposed as
 \begin{equation*}
@@ -1514,7 +1551,7 @@ kernel
 \bottomrule\noalign{}
 \endlastfoot
 Uniform & \includegraphics[width=4cm,height=\textheight,keepaspectratio,alt={uniform kernel}]{MATH5714M_files/figure-html/kUniform-1.pdf} & \(\displaystyle\frac13\) & \(\displaystyle\frac12\) & \(0.08333\) \\
-Triangular & \includegraphics[width=4cm,height=\textheight,keepaspectratio,alt={triangluar kernel}]{MATH5714M_files/figure-html/kTriangular-1.pdf} & \(\displaystyle\frac16\) & \(\displaystyle\frac23\) & \(0.07407\) \\
+Triangular & \includegraphics[width=4cm,height=\textheight,keepaspectratio,alt={triangular kernel}]{MATH5714M_files/figure-html/kTriangular-1.pdf} & \(\displaystyle\frac16\) & \(\displaystyle\frac23\) & \(0.07407\) \\
 Epanechnikov & \includegraphics[width=4cm,height=\textheight,keepaspectratio,alt={Epanechnikov kernel}]{MATH5714M_files/figure-html/kEpanechnikov-1.pdf} & \(\displaystyle\frac15\) & \(\displaystyle\frac35\) & \(0.07200\) \\
 Gaussian & \includegraphics[width=4cm,height=\textheight,keepaspectratio,alt={Gaussian kernel}]{MATH5714M_files/figure-html/kGaussian-1.pdf} & \(1\) & \(\displaystyle\frac{1}{2\sqrt{\pi}}\) & \(0.07958\) \\
 \end{longtable}
@@ -1593,7 +1630,7 @@ calculation shows that the roughness is then \(R(K) = 3 / (5*\sqrt(5))\).
 \end{verbatim}
 
 R has a variety of different builtin methods to estimate bandwidths.
-See stats/bandwidth for a description. For comparison to our result,
+See \texttt{help("bw.nrd0")} for R's built-in bandwidth selectors. For comparison to our result,
 we list here the bandwidths suggested by some of R's algorithms:
 
 \begin{Shaded}
@@ -1642,7 +1679,7 @@ In this setup, a \textbf{kernel} is a function \(K\colon \mathbb{R}^p\to \mathbb
 \item
   \(K(x) = K(-x)\) and
 \item
-  \(K(x) \geq 0\) for all \(x\in \mathbb{R}\),
+  \(K(x) \geq 0\) for all \(x\in \mathbb{R}^p\),
 \end{itemize}
 
 where the integral in the first condition is now over all \(p\) coordinates.
