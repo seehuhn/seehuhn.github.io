@@ -399,9 +399,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="S08-influence" class="section level1 hasAnchor" number="8">
 <h1><span class="header-section-number">Section 8</span> The Influence of Observations<a href="S08-influence.html#S08-influence" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In this section we consider the influence which individual samples have on
-the estimate. Samples with a large influence may be outliers, and are
-worth checking for validity.</p>
+<p>Having learned how to estimate parameters and perform hypothesis tests in
+sections <a href="S05-single.html#S05-single">5</a>–<a href="S07-examples.html#S07-examples">7</a>, a natural question arises:
+how reliable are these estimates? In particular, do individual observations
+have an undue influence on our results? In this section we consider the
+influence which individual samples have on the estimate. Samples with a
+large influence may be outliers, and are worth checking for validity.</p>
 <div id="deleting" class="section level2 hasAnchor" number="8.1">
 <h2><span class="header-section-number">8.1</span> Deleting Observations<a href="S08-influence.html#deleting" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
@@ -419,8 +422,8 @@ where all observations <span class="math inline">\(i\in I\)</span> have been rem
 <span class="math inline">\(\hat\beta^{(i)}\)</span> instead of <span class="math inline">\(\hat\beta^{(\{i\})}\)</span> for the case where only
 a single observation has been removed.</p>
 </div>
-<p>This approach is very different from what we used in the
-section about <a href="S06-simultaneous.html#S06-simultaneous">Estimating Coefficients Simultaneously</a>. There, we selected a
+<p>This approach is very different from what we used in
+section <a href="S06-simultaneous.html#S06-simultaneous">6</a>. There, we selected a
 subset of regression coefficients, corresponding to columns in the design
 matrix <span class="math inline">\(X\)</span>, whereas here we are considering a subset of the observations,
 corresponding to rows of <span class="math inline">\(X\)</span>.</p>
@@ -447,7 +450,7 @@ for all <span class="math inline">\(k \in \{0, \ldots, p\}\)</span>, and thus
 \end{equation}\]</span>
 where <span class="math inline">\(X_I\)</span> stands for the matrix which only contains the rows <span class="math inline">\(i\in I\)</span> of the
 matrix <span class="math inline">\(X\)</span>, and <span class="math inline">\(y_I = (y_i)_{i\in I}\)</span>. Before we substitute this result into
-equation <a href="S08-influence.html#eq:hat-beta-I1">(8.1)</a>, we first consider how we can write the the
+equation <a href="S08-influence.html#eq:hat-beta-I1">(8.1)</a>, we first consider how we can write the
 inverse <span class="math inline">\((X_{(I)}^\top X_{(I)})^{-1}\)</span> in terms of <span class="math inline">\((X^\top X)^{-1}\)</span>.</p>
 <div class="lemma">
 <p><span id="lem:low-rank-inverse" class="lemma"><strong>Lemma 8.1  </strong></span>Let <span class="math inline">\(A \in \mathbb{R}^{(p+1)\times (p+1)}\)</span> and let <span class="math inline">\(U, V \in \mathbb{R}^{m \times (p+1)}\)</span>.
@@ -610,7 +613,7 @@ Using the correct prefactors the second result gives
 the function <code>influence()</code>:</p>
 <div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="S08-influence.html#cb133-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">10</span>)</span>
 <span id="cb133-2"><a href="S08-influence.html#cb133-2" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>)</span>
-<span id="cb133-3"><a href="S08-influence.html#cb133-3" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> stackloss)</span>
+<span id="cb133-3"><a href="S08-influence.html#cb133-3" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
 <span id="cb133-4"><a href="S08-influence.html#cb133-4" tabindex="-1"></a><span class="fu">influence</span>(m)</span></code></pre></div>
 <pre class="routput"><code>$hat
    1    2    3    4 
@@ -643,7 +646,7 @@ for each <span class="math inline">\(i\)</span> as <code>$sigma</code>, and the 
 </iframe>
 </div>
 </div>
-<p>In the section about <a href="S06-simultaneous.html#S06-simultaneous">Estimating Coefficients Simultaneously</a> we learned
+<p>In section <a href="S06-simultaneous.html#S06-simultaneous">6</a> we learned
 how to measure distances of estimated parameter vectors: To compare
 <span class="math inline">\(K\hat\beta\)</span> to a vector <span class="math inline">\(K\beta\)</span> we used the norm
 <span class="math display">\[\begin{equation*}
@@ -779,12 +782,12 @@ large.</p>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>We can measure the influence of an observation by the amount
+<li>We have learned to measure the influence of an observation by the amount
 the estimated parameters change when the observation is deleted.</li>
-<li>We learned how to determine the amount of change without
+<li>We have learned how to determine this change without
 having to fit <span class="math inline">\(n\)</span> additional models.</li>
-<li>Cook’s distance provides a numerical measure for the influence of each
-observation.</li>
+<li>We have learned to use Cook’s distance as a numerical measure for the
+influence of each observation.</li>
 </ul>
 </div>
 

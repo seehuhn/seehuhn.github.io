@@ -3120,7 +3120,7 @@ in \(\beta_1\) and \(\beta_2\) only.
 \end{example}
 
 The setup allows for more general questions than just selecting components
-of \(\beta\). We can also derive statements about linear combination of
+of \(\beta\). We can also derive statements about linear combinations of
 the \(\beta_i\), \emph{e.g.} we will be able to derive confidence intervals
 for quantities like \(\beta_1 - \beta_2\).
 
@@ -3193,7 +3193,7 @@ It is tedious but easy to check that \(R\) is idempotent:
   &= X (X^\top X)^{-1} K^\top Q^{-1} K (X^\top X)^{-1} X^\top \\
   &= R.
 \end{align*}
-When we checked in the proof of \hyperref[thm:Cochran]{Cochran's theorem} that
+When we checked in the proof of Cochran's theorem (theorem~\ref{thm:Cochran}) that
 \(\varepsilon^\top H \varepsilon\) was chi-squared distributed, the only property of \(H\)
 we used was that \(H\) is idempotent. (If you don't remember the details,
 it would be a good idea to re-read the proof before continuing.) Thus,
@@ -3236,8 +3236,8 @@ This completes the proof.
 
 Using \(F\) as a distance between the unknown true \(K\beta\) and the estimator
 \(\hat\beta\), it is easy to find a region of \(\mathbb{R}^k\) which covers \(K\beta\) with
-high probability. Since we now have an \(k\)-dimensional parameter vector, this
-region will no longer be an interval. Instead, we will get an \(k\)-dimensional
+high probability. Since we now have a \(k\)-dimensional parameter vector, this
+region will no longer be an interval. Instead, we will get a \(k\)-dimensional
 ellipsoid.
 
 \subsubsection{Result}\label{result}
@@ -3326,7 +3326,7 @@ before:
 \end{Highlighting}
 \end{Shaded}
 
-Here I want to consider the two regressions coefficients \(\beta_1\) (\texttt{Air.Flow})
+Here I want to consider the two regression coefficients \(\beta_1\) (\texttt{Air.Flow})
 and \(\beta_2\) (\texttt{Water.Temp}). For this we need to construct a matrix~\(K\)
 with two rows, where each row selects one of the two coefficients:
 
@@ -3946,7 +3946,7 @@ of examples.
 In this subsection we will illustrate how to compute a simple confidence interval
 for a single regression coefficient. We use a dataset about toxicity of
 chemicals towards aquatic life from the UCI Machine Learning
-Repository. The data is available at
+Repository. The data are available at
 
 \begin{itemize}
 \tightlist
@@ -4098,7 +4098,7 @@ interval:
 \subsubsection{\texorpdfstring{From the \texttt{lm()} Output}{From the lm() Output}}\label{from-the-lm-output}
 
 We can obtain the same result using only the quantile \(t\) and
-numbers shows in the \texttt{summary(m)} output. We focus on the
+numbers shown in the \texttt{summary(m)} output. We focus on the
 row corresponding to \texttt{GATS1p} in the output shown above:
 
 \begin{verbatim}
@@ -4741,9 +4741,12 @@ vertical axis. Comment on the resulting plots.
 
 \section{The Influence of Observations}\label{S08-influence}
 
-In this section we consider the influence which individual samples have on
-the estimate. Samples with a large influence may be outliers, and are
-worth checking for validity.
+Having learned how to estimate parameters and perform hypothesis tests in
+sections~\ref{S05-single}--\ref{S07-examples}, a natural question arises:
+how reliable are these estimates? In particular, do individual observations
+have an undue influence on our results? In this section we consider the
+influence which individual samples have on the estimate. Samples with a
+large influence may be outliers, and are worth checking for validity.
 
 \subsection{Deleting Observations}\label{deleting}
 
@@ -4758,8 +4761,8 @@ where all observations \(i\in I\) have been removed. As a shorthand we write
 a single observation has been removed.
 \end{definition}
 
-This approach is very different from what we used in the
-section about \hyperref[S06-simultaneous]{Estimating Coefficients Simultaneously}. There, we selected a
+This approach is very different from what we used in
+section~\ref{S06-simultaneous}. There, we selected a
 subset of regression coefficients, corresponding to columns in the design
 matrix~\(X\), whereas here we are considering a subset of the observations,
 corresponding to rows of~\(X\).
@@ -4788,7 +4791,7 @@ for all \(k \in \{0, \ldots, p\}\), and thus
 \end{equation}
 where \(X_I\) stands for the matrix which only contains the rows \(i\in I\) of~the
 matrix \(X\), and \(y_I = (y_i)_{i\in I}\). Before we substitute this result into
-equation~\eqref{eq:hat-beta-I1}, we first consider how we can write the the
+equation~\eqref{eq:hat-beta-I1}, we first consider how we can write the
 inverse \((X_{(I)}^\top X_{(I)})^{-1}\) in terms of \((X^\top X)^{-1}\).
 
 \begin{lemma}
@@ -5012,7 +5015,7 @@ the function \texttt{influence()}:
 \begin{Highlighting}[]
 \NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{10}\NormalTok{)}
 \NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{)}
-\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{data =}\NormalTok{ stackloss)}
+\NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
 \FunctionTok{influence}\NormalTok{(m)}
 \end{Highlighting}
 \end{Shaded}
@@ -5047,7 +5050,7 @@ for each \(i\) as \texttt{\$sigma}, and the residuals \(\hat\varepsilon_i\) as~\
 
 \subsection{Cook's Distance}\label{influence}
 
-In the section about \hyperref[S06-simultaneous]{Estimating Coefficients Simultaneously} we learned
+In section~\ref{S06-simultaneous} we learned
 how to measure distances of estimated parameter vectors: To compare
 \(K\hat\beta\) to a vector \(K\beta\) we used the norm
 \begin{equation*}
@@ -5232,14 +5235,14 @@ large.
 \begin{itemize}
 \tightlist
 \item
-  We can measure the influence of an observation by the amount
+  We have learned to measure the influence of an observation by the amount
   the estimated parameters change when the observation is deleted.
 \item
-  We learned how to determine the amount of change without
+  We have learned how to determine this change without
   having to fit \(n\) additional models.
 \item
-  Cook's distance provides a numerical measure for the influence of each
-  observation.
+  We have learned to use Cook's distance as a numerical measure for the
+  influence of each observation.
 \end{itemize}
 
 \clearpage
