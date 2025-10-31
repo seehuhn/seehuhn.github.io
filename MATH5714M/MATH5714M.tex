@@ -842,10 +842,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min       lq      mean    median        uq      max neval
-##  KDE1 1430.367 1496.889 1580.1073 1513.4330 1533.3795 7134.451  1000
-##  KDE2  190.281  251.535  339.8535  258.1360  266.2540 8587.409  1000
-##  KDE3  170.888  213.897  281.5703  219.6985  224.7415 5340.824  1000
+##  expr      min       lq      mean   median        uq      max neval
+##  KDE1 1425.283 1490.760 1575.2132 1507.447 1523.1090 6990.049  1000
+##  KDE2  189.748  252.519  330.3486  262.728  267.4635 7285.372  1000
+##  KDE3  170.683  200.244  271.0934  222.876  227.3040 6347.374  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -867,8 +867,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr    min      lq     mean  median      uq      max neval
-##  density 156.62 169.166 186.6823 172.446 176.464 4129.725  1000
+##     expr     min       lq     mean  median       uq      max neval
+##  density 155.595 168.3665 187.3811 171.421 175.7465 4949.725  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -2196,7 +2196,7 @@ spacing of the data points is too large.
 \subsection{Estimation Error}\label{estimation-error}
 
 Here we will discuss how fast the estimation error decreases in the
-limit of \(n\to \infty\), \emph{i.e.}~for the case when we have a large dateset
+limit of \(n\to \infty\), \emph{i.e.}~for the case when we have a large dataset
 to use for the estimate. As before, we will find that we need to decrease
 the bandwidth \(h\) as \(n\) increases.
 
@@ -2237,7 +2237,7 @@ as \(n \to \infty\) and \(h \downarrow 0\). We can write \(\hat m_h(x)\) as
   = \frac{\hat r_h(x)}{\hat f_h(x)}  \label{eq:m-hat-h}
 \end{equation}
 where \(\hat f_h(x)\) is the kernel density estimator from
-\hyperref[X01-KDE]{Section 1} and
+Section~\ref{X01-KDE} and
 \begin{equation*}
   \hat r_h(x)
   := \frac1n \sum_{i=1}^n K_h(x - X_i) Y_i.
@@ -2264,8 +2264,8 @@ as \(h \downarrow 0\).
 \addcontentsline{toc}{subsubsection}{Numerator}
 
 We start by considering the numerator \(\hat r_h(x)\). The arguments used here
-will be very similar to the arguments used in the section about the
-\hyperref[X02-error-var]{variance of kernel density estimates}.
+will be very similar to the arguments used in Section~\ref{X02-error-var}
+on the variance of kernel density estimates.
 
 The expectation of \(\hat r_h(x)\) is
 \begin{align*}
@@ -2273,14 +2273,14 @@ The expectation of \(\hat r_h(x)\) is
   &= \mathbb{E}\Bigl( \frac1n \sum_{i=1}^n K_h(x - X_i) Y_i \Bigr) \\
   &= \frac1n \sum_{i=1}^n \mathbb{E}\bigl( K_h(x - X_i) Y_i \bigr) \\
   &= \mathbb{E}\bigl( K_h(x - X) Y \bigr) \\
-  &= \mathbb{E}\Bigl( K_h(x - X) (m(X) + \sigma(X)\eta) \Bigr).
+  &= \mathbb{E}\Bigl( K_h(x - X) (m(X) + s(X)\eta) \Bigr).
 \end{align*}
 We use integrals to average over the randomness in \(X\) and \(\eta\),
 denoting the density of \(\eta\) by~\(\varphi\):
 \begin{align*}
   \mathbb{E}\bigl( \hat r_h(x) \bigr)
-  &= \int \int K_h(x - \xi) \bigl( m(\xi) + \sigma(\xi) e \bigr) \, \varphi(e) \, de \, f(\xi) \, d\xi \\
-  &= \int K_h(x - \xi) \Bigl( m(\xi) +\sigma(\xi) \int e \, \varphi(e) \, de \Bigr) \, f(\xi) \, d\xi \\
+  &= \int \int K_h(x - \xi) \bigl( m(\xi) + s(\xi) e \bigr) \, \varphi(e) \, de \, f(\xi) \, d\xi \\
+  &= \int K_h(x - \xi) \Bigl( m(\xi) + s(\xi) \int e \, \varphi(e) \, de \Bigr) \, f(\xi) \, d\xi \\
   &= \int K_h(x - \xi) m(\xi) f(\xi) \, d\xi,
 \end{align*}
 since
@@ -2408,7 +2408,7 @@ Substituting in our previous results we get
           \frac12 \mu_2(K) f''(x) h^2}{f(x)^2} \\
   &= \frac{r(x)}{f(x)}
     + \frac12 \frac{\mu_2(K) r''(x)}{f(x)} h^2
-    - \frac12 \frac{\mu_2(x) r(x) f''(x)}{f(x)^2} h^2
+    - \frac12 \frac{\mu_2(K) r(x) f''(x)}{f(x)^2} h^2
     + o(h^2)
 \end{align*}
 Using \(r(x) = f(x) m(x)\) we find the derivative
