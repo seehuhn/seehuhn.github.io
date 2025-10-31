@@ -419,8 +419,8 @@ In particular, the variance of the <span class="math inline">\(\varepsilon_i\)</
 Here we discuss different plot types which can be used for this purpose.</p>
 <div id="residual-plots" class="section level2 hasAnchor" number="9.1">
 <h2><span class="header-section-number">9.1</span> Residual Plots<a href="S09-plots.html#residual-plots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A plot of <span class="math inline">\(\hat\varepsilon_i\)</span> against <span class="math inline">\(\hat y_i\)</span> is often called a “residual plot”.
-If the modelling assuptions are correct, the errors will be independent
+<p>A plot of <span class="math inline">\(\hat\varepsilon_i\)</span> against <span class="math inline">\(\hat y_i\)</span> is often called a <strong>residual plot</strong>.
+If the modelling assumptions are correct, the errors will be independent
 and normally distributed with mean zero and constant variance. The fitted
 residuals are estimates of the errors, so they should approximately satisfy
 these two properties.</p>
@@ -475,8 +475,8 @@ is unknown whether or not the modelling assumptions are satisfied.</p>
 <span id="cb144-4"><a href="S09-plots.html#cb144-4" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;stackloss&quot;</span>)</span>
 <span id="cb144-5"><a href="S09-plots.html#cb144-5" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/stackloss-resid-1.png" width="672" /></p>
-<p>We can see that the residuals are clustered around zero as expected.
-Since there are no obvious patterns, the plot does not indicate any
+<p>The residuals are well-centred around zero with no obvious patterns visible.
+Since there are no systematic trends, the plot does not indicate any
 problems with model fit.</p>
 </div>
 </div>
@@ -485,9 +485,9 @@ problems with model fit.</p>
 <p>A <a href="https://en.wikipedia.org/wiki/Q%E2%80%93Q_plot">Q-Q plot</a> of the residuals
 can be used to assess whether the residuals are normally distributed. These
 plots plot quantiles of the data against quantiles of a normal distribution.
-If the residual are normally distributed, the points in a Q-Q plot will
-approximately lie on a straight line. The R command to produce Q-Q plots for
-the normal distribution is <code>qqnorm()</code>.</p>
+If the residuals are normally distributed, both sets of quantiles come from
+the same distribution, causing the points to lie on a straight line.
+The R command to produce Q-Q plots for the normal distribution is <code>qqnorm()</code>.</p>
 <div class="example">
 <p><span id="exm:correct-qq-plot" class="example"><strong>Example 9.4  </strong></span>We first show an example with simulated data, where the modelling
 assumptions are known to be satisfied.</p>
@@ -515,13 +515,12 @@ of normally distributed.</p>
 residuals are not normally distributed.</p>
 </div>
 <div class="example">
-<p><span id="exm:stackloss-qq-plot" class="example"><strong>Example 9.6  </strong></span>Next we consider an example where the errors are exponentially instead
-of normally distributed.</p>
+<p><span id="exm:stackloss-qq-plot" class="example"><strong>Example 9.6  </strong></span>A Q-Q plot for the <code>stackloss</code> dataset can be produced as follows:</p>
 <div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="S09-plots.html#cb147-1" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(stack.loss <span class="sc">~</span> ., <span class="at">data =</span> stackloss)</span>
 <span id="cb147-2"><a href="S09-plots.html#cb147-2" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">resid</span>(m), <span class="at">main =</span> <span class="st">&quot;stackloss&quot;</span>)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/stackloss-qq-plot-1.png" width="672" /></p>
 <p>The points in this Q-Q plot lie more or less on a straight line,
-so it seems a reasonable to assume that the errors were normally
+so it seems reasonable to assume that the errors were normally
 distributed.</p>
 </div>
 </div>
@@ -546,7 +545,7 @@ effect in chapter <a href="S15-multicoll.html#S15-multicoll">15</a>.)</p></li>
 <li><p>Data are often collected in time order. Even if time is not an explanatory
 variable, a plot of <span class="math inline">\(y\)</span> against time can be of interest. It can reveal
 serial correlation in the data. Similarly, plotting the residuals against
-time.</p></li>
+time can reveal temporal patterns in the model fit.</p></li>
 </ol>
 <div class="example">
 <p><span id="exm:stackloss-plot" class="example"><strong>Example 9.7  </strong></span>We can plot <code>stack.loss</code> against <code>Water.Temp</code> for the <code>stackloss</code> dataset:</p>
@@ -558,6 +557,9 @@ relationship seems not to be linear. It may make sense to include
 the square of the water temperature as an additional input variable
 in the model.</p>
 </div>
+<p>While diagnostic plots provide visual assessment of model assumptions,
+quantitative measures of model fit (discussed in section <a href="S10-diagnostics.html#S10-diagnostics">10</a>)
+can complement these visual tools.</p>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>

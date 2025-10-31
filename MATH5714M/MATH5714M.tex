@@ -842,10 +842,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min        lq      mean   median       uq      max neval
-##  KDE1 1431.556 1495.7210 1557.1180 1513.126 1527.250 7893.197  1000
-##  KDE2  190.076  256.9675  350.2575  261.416  267.156 6923.711  1000
-##  KDE3  171.134  219.7805  312.0894  222.712  226.853 7849.573  1000
+##  expr      min       lq      mean    median        uq      max neval
+##  KDE1 1430.367 1496.889 1580.1073 1513.4330 1533.3795 7134.451  1000
+##  KDE2  190.281  251.535  339.8535  258.1360  266.2540 8587.409  1000
+##  KDE3  170.888  213.897  281.5703  219.6985  224.7415 5340.824  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -867,8 +867,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr    min      lq   mean  median      uq      max neval
-##  density 156.62 168.059 186.21 171.216 175.316 4351.289  1000
+##     expr    min      lq     mean  median      uq      max neval
+##  density 156.62 169.166 186.6823 172.446 176.464 4129.725  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -1603,7 +1603,7 @@ We now demonstrate how this rule of thumb could be used in R to obtain a kernel
 density estimate for the snowfall data. We will use the Epanechnikov kernel.
 For compatibility with the kernels built into R, we rescale this kernel, so
 that \(\mu_2(K) = 1\), \emph{i.e.} we consider \(K_{\sqrt{5}}\) in place of \(K\). An easy
-calculation shows that the roughness is then \(R(K) = 3 / (5*\sqrt(5))\).
+calculation shows that the roughness is then \(R(K) = 3/(5\sqrt{5})\).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1648,7 +1648,7 @@ we list here the bandwidths suggested by some of R's algorithms:
 ## 3   SJ 11.903840
 \end{verbatim}
 
-All of these value seem close the value we obtained manually. Using
+All of these values seem close the value we obtained manually. Using
 our bandwidth estimate, we get the following estimated density.
 
 \begin{Shaded}
@@ -1670,7 +1670,7 @@ are real numbers. In this subsection we will sketch how these methods will need
 to be adjusted for the multivariate case of \(x_i = (x_{i,1}, \ldots,
 x_{i,p}) \in \mathbb{R}^p\).
 
-In this setup, a \textbf{kernel} is a function \(K\colon \mathbb{R}^p\to \mathbb{R}\) such that
+In this setup, a \textbf{kernel} is a function \(K\colon \mathbb{R}^p\to \mathbb{R}\) (generalizing Definition \ref{def:kernel}) such that
 
 \begin{itemize}
 \tightlist
@@ -2847,329 +2847,7 @@ In contrast, the local polynomial estimate (blue line) has much lower bias.
 
 \clearpage
 
-\section{Spline Smoothing}\label{X06-splines}
-
-In the previous sections we have seen how kernel methods and \(k\)-nearest
-neighbour methods can be used to estimate the regression function \(m\colon
-\mathbb{R}\to \mathbb{R}\) from data \((x_1, y_1), \ldots, (x_n, y_n)\). While these methods
-work well in many situations, they have some limitations:
-
-\begin{itemize}
-\tightlist
-\item
-  The choice of bandwidth \(h\) or neighbourhood size \(k\) can be difficult.
-\item
-  Kernel methods can suffer from boundary effects, where the estimate
-  is biased near the edges of the data range.
-\item
-  All methods are local, averaging nearby observations, which can lead
-  to increased variance.
-\end{itemize}
-
-In this section we introduce an alternative approach based on \textbf{spline
-smoothing}. Instead of local averaging, we fit a smooth function globally
-to the entire dataset, using a penalty term to control the smoothness.
-
-\subsection{Smoothing Splines}\label{smoothing-splines}
-
-The key idea of spline smoothing is to find a function \(m\) which balances
-two competing goals:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  The function should fit the data well, \emph{i.e.}~the residual sum of
-  squares \(\sum_{i=1}^n \bigl( y_i - m(x_i) \bigr)^2\) should be small.
-\item
-  The function should be smooth, \emph{i.e.}~it should not have too much
-  curvature.
-\end{enumerate}
-
-To measure the curvature of a function~\(m\), we use the integral of the
-squared second derivative:
-\begin{equation*}
-  \int_{-\infty}^\infty \bigl( m''(x) \bigr)^2 \,dx.
-\end{equation*}
-This integral is large if \(m\) has high curvature, and small if \(m\) is
-nearly linear. (For a linear function \(m(x) = a + bx\) we have \(m''(x) = 0\)
-and thus the integral equals zero.)
-
-\begin{definition}
-\protect\hypertarget{def:smoothing-spline}{}\label{def:smoothing-spline}The \textbf{smoothing spline} estimate for the regression function \(m\) is the
-function \(\hat m_\lambda\) which minimizes
-\begin{equation}
-  \sum_{i=1}^n \bigl( y_i - m(x_i) \bigr)^2 + \lambda \int_{-\infty}^\infty \bigl( m''(x) \bigr)^2 \,dx
-  \label{eq:spline-penalty}
-\end{equation}
-over all twice differentiable functions \(m\colon \mathbb{R}\to \mathbb{R}\).
-The parameter \(\lambda \geq 0\) is called the \textbf{smoothing parameter}.
-\end{definition}
-
-The smoothing parameter \(\lambda\) controls the trade-off between fitting
-the data and smoothness:
-
-\begin{itemize}
-\tightlist
-\item
-  For \(\lambda = 0\), only the residual sum of squares matters, and the
-  solution is the interpolating function which passes through all data
-  points.
-\item
-  For \(\lambda \to \infty\), only the smoothness matters, and the solution
-  is the linear regression line (which has zero curvature).
-\item
-  For intermediate values of \(\lambda\), the solution balances fit and
-  smoothness.
-\end{itemize}
-
-This is similar to ridge regression (see \href{https://seehuhn.github.io/MATH3714/S16-ridge.html}{section 16 of the level 3
-notes}), where a penalty
-term \(\lambda \|\beta\|^2\) is added to the residual sum of squares to
-control the size of the coefficients.
-
-\subsection{Cubic Splines}\label{cubic-splines}
-
-Before we can state the solution to the optimization problem in
-definition~\ref{def:smoothing-spline}, we need to introduce the concept
-of a \textbf{cubic spline}.
-
-\begin{definition}
-\protect\hypertarget{def:cubic-spline}{}\label{def:cubic-spline}A \textbf{cubic spline} with knots \(\kappa_1 < \kappa_2 < \cdots < \kappa_k\) is
-a function \(s\colon \mathbb{R}\to \mathbb{R}\) such that
-
-\begin{itemize}
-\tightlist
-\item
-  \(s\) is a cubic polynomial on each interval \((-\infty, \kappa_1)\),
-  \((\kappa_1, \kappa_2)\), \ldots, \((\kappa_{k-1}, \kappa_k)\), and
-  \((\kappa_k, \infty)\), and
-\item
-  \(s\) is twice continuously differentiable, \emph{i.e.}~\(s\), \(s'\) and \(s''\)
-  are all continuous.
-\end{itemize}
-
-A \textbf{natural cubic spline} is a cubic spline which is linear on the
-intervals \((-\infty, \kappa_1)\) and \((\kappa_k, \infty)\).
-\end{definition}
-
-The points \(\kappa_1, \ldots, \kappa_k\) are called \textbf{knots}. At each
-knot, the function \(s\) transitions from one cubic polynomial to another,
-but the transition is smooth because \(s\), \(s'\) and \(s''\) are all continuous.
-
-\begin{example}
-TODO: add a simple example showing a cubic spline with 2-3 knots
-\end{example}
-
-The following theorem shows that the solution to the smoothing spline
-problem is always a natural cubic spline.
-
-\begin{theorem}
-\protect\hypertarget{thm:spline-solution}{}\label{thm:spline-solution}The solution \(\hat m_\lambda\) to the optimization problem in
-definition~\ref{def:smoothing-spline} is a natural cubic spline with
-knots at the data points \(x_1, \ldots, x_n\).
-\end{theorem}
-
-\begin{proof}
-We sketch the main idea of the proof, showing that the solution must be
-a cubic spline. (The full proof, including the boundary conditions which
-make the spline ``natural'', is more technical.)
-
-Suppose \(\hat m_\lambda\) is the solution but \(\hat m_\lambda\) is not a
-cubic polynomial on some interval \([x_i, x_{i+1}]\). We will show that
-this leads to a contradiction.
-
-Let \(p\) be the cubic polynomial which interpolates \(\hat m_\lambda\),
-\(\hat m_\lambda'\), \(\hat m_\lambda''\) at \(x_i\) and \(\hat m_\lambda''\)
-at \(x_{i+1}\). (Such a polynomial exists and is unique.) Now consider
-the function \(\tilde m\) which equals \(\hat m_\lambda\) outside
-\([x_i, x_{i+1}]\) and equals \(p\) on \([x_i, x_{i+1}]\).
-
-Since \(\tilde m\) agrees with \(\hat m_\lambda\) at all data points, the
-residual sum of squares is the same for both functions. However, the
-penalty term is smaller for \(\tilde m\):
-\begin{equation*}
-  \int_{-\infty}^\infty \bigl( \tilde m''(x) \bigr)^2 \,dx
-  < \int_{-\infty}^\infty \bigl( \hat m_\lambda''(x) \bigr)^2 \,dx.
-\end{equation*}
-This is because \(p''\) is linear (the second derivative of a cubic
-polynomial), and among all functions with given values at the endpoints
-of an interval, the linear function has the smallest integral of the
-square.
-
-This contradicts the assumption that \(\hat m_\lambda\) minimizes
-equation~\eqref{eq:spline-penalty}. Therefore, \(\hat m_\lambda\) must be
-a cubic polynomial on each interval \([x_i, x_{i+1}]\).
-
-A similar argument shows that \(\hat m_\lambda\) must be twice continuously
-differentiable at the knots, completing the proof that \(\hat m_\lambda\)
-is a cubic spline.
-\end{proof}
-
-The theorem shows that the smoothing spline has knots at \emph{all} data
-points \(x_1, \ldots, x_n\). This might seem surprising, since a spline
-with \(n\) knots has \(n + 4\) degrees of freedom (four coefficients for each
-of the \(n+1\) pieces, minus \(3n\) constraints from continuity and
-smoothness, giving \(4(n+1) - 3n = n + 4\)). However, the penalty term
-\(\lambda \int (m'')^2 dx\) prevents overfitting by penalizing functions
-with high curvature.
-
-\subsection{Degrees of Freedom}\label{degrees-of-freedom}
-
-As with linear regression, we can write the smoothing spline estimate in
-matrix form. Let \(y = (y_1, \ldots, y_n)^\top\) be the vector of
-responses, and let \(\hat y = (\hat m_\lambda(x_1), \ldots,
-\hat m_\lambda(x_n))^\top\) be the vector of fitted values. Then we can
-write
-\begin{equation}
-  \hat y
-  = S_\lambda y,  \label{eq:smoother-matrix}
-\end{equation}
-where \(S_\lambda \in \mathbb{R}^{n\times n}\) is the \textbf{smoother matrix}. This is
-analogous to the hat matrix \(H = X(X^\top X)^{-1}X^\top\) in linear
-regression (see \href{https://seehuhn.github.io/MATH3714/S02-multiple.html}{section 2 of the level 3
-notes}).
-
-The smoother matrix \(S_\lambda\) depends on the smoothing parameter
-\(\lambda\) and on the data points \(x_1, \ldots, x_n\), but not on the
-responses \(y_1, \ldots, y_n\). We will not give the explicit formula for
-\(S_\lambda\) here, but note that it can be computed efficiently.
-
-\begin{definition}
-\protect\hypertarget{def:df-spline}{}\label{def:df-spline}The \textbf{effective degrees of freedom} of the smoothing spline estimate is
-\begin{equation*}
-  \mathop{\mathrm{df}}\nolimits(\lambda)
-  = \mathop{\mathrm{tr}}\nolimits(S_\lambda),
-\end{equation*}
-where \(\mathop{\mathrm{tr}}\nolimits\) denotes the trace of a matrix (the sum of the diagonal
-elements).
-\end{definition}
-
-The effective degrees of freedom measure the complexity of the fitted
-model:
-
-\begin{itemize}
-\tightlist
-\item
-  For \(\lambda = 0\), the smoother matrix is \(S_0 = I\) (the identity
-  matrix), and we have \(\mathop{\mathrm{df}}\nolimits(0) = n\). This corresponds to interpolation,
-  where we use all \(n\) data points.
-\item
-  For \(\lambda \to \infty\), the smoother matrix converges to the hat
-  matrix of linear regression, and we have \(\mathop{\mathrm{df}}\nolimits(\infty) = 2\). This
-  corresponds to fitting a straight line.
-\item
-  For intermediate values of \(\lambda\), we have \(2 < \mathop{\mathrm{df}}\nolimits(\lambda) < n\).
-\end{itemize}
-
-The effective degrees of freedom provide an alternative way to specify
-the amount of smoothing: instead of choosing \(\lambda\) directly, we can
-choose a target value for \(\mathop{\mathrm{df}}\nolimits(\lambda)\) and then find the corresponding
-\(\lambda\).
-
-\subsection{Smoothing Splines in R}\label{smoothing-splines-in-r}
-
-Smoothing splines can be computed in R using the built-in function
-\href{https://rdrr.io/r/stats/smooth.spline.html}{\texttt{smooth.spline()}}. The
-function takes the following arguments:
-
-\begin{itemize}
-\tightlist
-\item
-  \texttt{x} and \texttt{y}: the data points.
-\item
-  \texttt{spar}: the smoothing parameter. This is related to \(\lambda\) but uses
-  a different scale. If not specified, a default value is chosen.
-\item
-  \texttt{df}: the target degrees of freedom. If specified, the function finds
-  the value of \texttt{spar} which gives the desired degrees of freedom.
-\end{itemize}
-
-The return value is an object which contains the fitted spline. The most
-important components are:
-
-\begin{itemize}
-\tightlist
-\item
-  \texttt{\$x} and \texttt{\$y}: the fitted spline evaluated at the data points (or at a
-  grid of points if the optional argument \texttt{all.knots\ =\ FALSE} is used).
-\item
-  \texttt{\$df}: the effective degrees of freedom of the fitted spline.
-\item
-  \texttt{\$lambda}: the smoothing parameter \(\lambda\) (on a different scale than
-  \texttt{spar}).
-\end{itemize}
-
-\begin{example}
-TODO: add example using faithful dataset, comparing to kernel methods
-\end{example}
-
-\subsection{Comparison with Kernel Methods}\label{comparison-with-kernel-methods}
-
-Both smoothing splines and kernel methods can be used to estimate the
-regression function \(m\) from data. The two approaches have different
-strengths and weaknesses.
-
-\textbf{Advantages of smoothing splines:}
-
-\begin{itemize}
-\tightlist
-\item
-  \textbf{Global method:} The spline is fitted to the entire dataset at once,
-  which can give better results at the boundaries of the data range.
-\item
-  \textbf{Automatic smoothness:} The solution is guaranteed to be twice
-  continuously differentiable.
-\item
-  \textbf{Efficient computation:} The spline can be computed by solving a
-  system of linear equations, without the need to perform local fits at
-  many points.
-\end{itemize}
-
-\textbf{Advantages of kernel methods:}
-
-\begin{itemize}
-\tightlist
-\item
-  \textbf{Local adaptation:} Kernel methods can adapt to local features of the
-  data, for example by using different bandwidths in different regions
-  (as in \(k\)-NN methods).
-\item
-  \textbf{Geometric interpretation:} The weighted average interpretation of
-  kernel methods is easier to understand than the penalized least squares
-  formulation.
-\item
-  \textbf{Robustness:} Kernel methods can be made robust to outliers by using
-  robust kernels or by trimming extreme values.
-\end{itemize}
-
-In practice, the choice between smoothing splines and kernel methods
-often depends on the specific application and the properties of the data.
-
-\begin{example}
-TODO: add comparison example showing spline vs.~NW vs.~local linear
-\end{example}
-
-\textbf{Summary}
-
-\begin{itemize}
-\tightlist
-\item
-  Smoothing splines balance fit and smoothness using a penalty term.
-\item
-  The solution is a natural cubic spline with knots at the data points.
-\item
-  The smoothing parameter \(\lambda\) controls the trade-off between fit and
-  smoothness.
-\item
-  Effective degrees of freedom measure model complexity.
-\item
-  Smoothing splines are a global alternative to local kernel methods.
-\end{itemize}
-
-\clearpage
-
-\section{\texorpdfstring{\emph{k}-Nearest Neighbour Regression}{k-Nearest Neighbour Regression}}\label{X07-nearest}
+\section{\texorpdfstring{\emph{k}-Nearest Neighbour Regression}{k-Nearest Neighbour Regression}}\label{X06-nearest}
 
 In the previous sections we used a fixed bandwidth \(h\) to determine the
 scale on which ``closeness'' of existing samples to a new input \(x\) was
@@ -3317,6 +2995,550 @@ The estimated mean curve looks reasonable.
         0 & \mbox{otherwise,}
       \end{cases}
   \end{equation*} this method coincides with the \(k\)-NN estimator.
+\end{itemize}
+
+\clearpage
+
+\section{Spline Smoothing}\label{X07-splines}
+
+The previous sections showed how kernel methods and \(k\)-nearest neighbour
+methods estimate the regression function \(m\colon \mathbb{R}\to \mathbb{R}\) from data \((x_1,
+y_1), \ldots, (x_n, y_n)\). In this section we introduce an alternative approach
+based on \textbf{spline smoothing}. Instead of local averaging, we fit a smooth
+function globally to the entire dataset, using a penalty term to control the
+smoothness.
+
+\subsection{Smoothing Splines}\label{smoothing-splines}
+
+Spline smoothing finds a function \(m\) that balances two competing goals:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Fit the data well: minimise the residual sum of
+  squares \(\sum_{i=1}^n \bigl( y_i - m(x_i) \bigr)^2\).
+\item
+  Remain smooth: avoid excessive curvature.
+\end{enumerate}
+
+We measure the curvature of a function \(m\) using the integral of the
+squared second derivative:
+\begin{equation*}
+  \int_{-\infty}^\infty \bigl( m''(x) \bigr)^2 \,dx.
+\end{equation*}
+A function with high curvature produces a large integral; a nearly linear
+function produces a small integral. A linear function \(m(x) = a + bx\) has
+\(m''(x) = 0\), giving an integral of zero.
+
+\begin{definition}
+\protect\hypertarget{def:smoothing-spline}{}\label{def:smoothing-spline}The \textbf{smoothing spline} estimate for the regression function \(m\) is the
+function \(\hat m_\lambda\) which minimises
+\begin{equation}
+  I(m)
+  = \sum_{i=1}^n \bigl( y_i - m(x_i) \bigr)^2 + \lambda \int_{-\infty}^\infty \bigl( m''(x) \bigr)^2 \,dx
+  \label{eq:spline-penalty}
+\end{equation}
+over all twice differentiable functions \(m\colon \mathbb{R}\to \mathbb{R}\).
+The parameter \(\lambda \geq 0\) is called the \textbf{smoothing parameter}.
+\end{definition}
+
+The smoothing parameter \(\lambda\) controls the trade-off between fitting
+the data and smoothness:
+
+\begin{itemize}
+\tightlist
+\item
+  For \(\lambda = 0\), only the residual sum of squares matters, and the
+  solution is the interpolating function which passes through all data
+  points.
+\item
+  For \(\lambda \to \infty\), only the smoothness matters, and the solution
+  is the linear regression line (which has zero curvature).
+\item
+  For intermediate values of \(\lambda\), the solution balances fit and
+  smoothness.
+\end{itemize}
+
+This is similar to ridge regression (see \href{https://seehuhn.github.io/MATH3714/S16-ridge.html}{section 16 of the level 3
+notes}), where a penalty
+term \(\lambda \|\beta\|^2\) is added to the residual sum of squares to
+control the size of the coefficients.
+
+\subsection{Cubic Splines}\label{cubic-splines}
+
+Before we can state the solution to the optimization problem in
+definition~\ref{def:smoothing-spline}, we need to introduce the concept
+of a \textbf{cubic spline}.
+
+\begin{definition}
+\protect\hypertarget{def:cubic-spline}{}\label{def:cubic-spline}A \textbf{cubic spline} with knots \(\kappa_1 < \kappa_2 < \cdots < \kappa_k\) is
+a function \(s\colon \mathbb{R}\to \mathbb{R}\) such that
+
+\begin{itemize}
+\tightlist
+\item
+  \(s\) is a cubic polynomial on each interval \((-\infty, \kappa_1)\),
+  \((\kappa_1, \kappa_2)\), \ldots, \((\kappa_{k-1}, \kappa_k)\), and
+  \((\kappa_k, \infty)\), and
+\item
+  \(s\) is twice continuously differentiable, \emph{i.e.}~\(s\), \(s'\) and \(s''\)
+  are all continuous.
+\end{itemize}
+
+A \textbf{natural cubic spline} is a cubic spline which is linear on the
+intervals \((-\infty, \kappa_1)\) and \((\kappa_k, \infty)\).
+\end{definition}
+
+The points \(\kappa_1, \ldots, \kappa_k\) are called \textbf{knots}. At each
+knot, the function \(s\) transitions from one cubic polynomial to another,
+but the transition is smooth because \(s\), \(s'\) and \(s''\) are all continuous.
+
+\begin{example}
+Consider the knots at \(\kappa_1 = 0\), \(\kappa_2 = 1\), and \(\kappa_3 = 2\). We
+will show that the function defined by
+
+\begin{itemize}
+\tightlist
+\item
+  On \((-\infty, 0)\): \(s(x) = \frac{3}{2}x\)
+\item
+  On \((0, 1)\): \(s(x) = \frac{3}{2}x - \frac{1}{2}x^3\)
+\item
+  On \((1, 2)\): \(s(x) = \frac{3}{2}(2-x) - \frac{1}{2}(2-x)^3\)
+\item
+  On \((2, \infty)\): \(s(x) = \frac{3}{2}(2-x)\) (linear)
+\end{itemize}
+
+is a natural cubic spline, by checking values and continuity at the
+knots. For \(\kappa_1 = 0\) we have:
+
+\begin{itemize}
+\tightlist
+\item
+  \(s(0^-) = 0\) and \(s(0^+) = 0\)
+\item
+  \(s'(0^-) = \frac{3}{2}\) and \(s'(0^+) = \frac{3}{2}\)
+\item
+  \(s''(0^-) = 0\) and \(s''(0^+) = 0\)
+\end{itemize}
+
+For the knot \(\kappa_2 = 1\) we get:
+
+\begin{itemize}
+\tightlist
+\item
+  \(s(1^-) = \frac{3}{2} - \frac{1}{2} = 1\) and \(s(1^+) = \frac{3}{2} - \frac{1}{2} = 1\)
+\item
+  \(s'(1^-) = \frac{3}{2} - \frac{3}{2} = 0\) and \(s'(1^+) = -\frac{3}{2} + \frac{3}{2} = 0\)
+\item
+  \(s''(1^-) = -3\) and \(s''(1^+) = -3\)
+\end{itemize}
+
+Finally, for the knot \(\kappa_3 = 2\) we find:
+
+\begin{itemize}
+\tightlist
+\item
+  \(s(2^-) = 0\) and \(s(2^+) = 0\)
+\item
+  \(s'(2^-) = -\frac{3}{2}\) and \(s'(2^+) = -\frac{3}{2}\)
+\item
+  \(s''(2^-) = 0\) and \(s''(2^+) = 0\)
+\end{itemize}
+
+Thus, \(s\) is indeed a natural cubic spline.
+\end{example}
+
+The following theorem shows that the solution to the smoothing spline problem
+is always a natural cubic spline.
+
+\begin{theorem}
+\protect\hypertarget{thm:spline-solution}{}\label{thm:spline-solution}The solution \(\hat m_\lambda\) to the optimization problem in
+definition~\ref{def:smoothing-spline} is a natural cubic spline with
+knots at the data points \(x_1, \ldots, x_n\).
+\end{theorem}
+
+\begin{proof}
+We sketch the main idea of the proof, showing that the solution must be
+a cubic spline.
+
+The
+\href{https://en.wikipedia.org/wiki/Calculus_of_variations}{``calculus of variations''}
+shows that among all twice-differentiable functions \(f\colon [x_i,
+x_{i+1}] \to \mathbb{R}\) with given values and derivatives at the endpoints, the cubic
+polynomial minimises \(\int_{x_i}^{x_{i+1}} [f''(x)]^2 dx\). Equality holds only
+if \(\hat m_\lambda\) is already cubic on \([x_i, x_{i+1}]\).
+
+Now suppose \(\hat m_\lambda\) is the solution but \(\hat m_\lambda\) is not a
+cubic polynomial on some interval \([x_i, x_{i+1}]\). We will show that this
+leads to a contradiction.
+
+Let \(p\) be the unique cubic polynomial on \([x_i, x_{i+1}]\) which matches \(\hat
+m_\lambda\) in value and first derivative at both endpoints: \(p(x_i) = \hat
+m_\lambda(x_i)\), \(p'(x_i) = \hat m_\lambda'(x_i)\), \(p(x_{i+1}) = \hat
+m_\lambda(x_{i+1})\), and \(p'(x_{i+1}) = \hat m_\lambda'(x_{i+1})\). Now consider
+the function \(\tilde m\) which equals \(\hat m_\lambda\) outside \([x_i, x_{i+1}]\)
+and equals \(p\) on \([x_i, x_{i+1}]\).
+
+Since \(\tilde m\) agrees with \(\hat m_\lambda\) at all data points,
+both functions produce the same residual sum of squares. However, \(\tilde m\)
+has a smaller penalty term:
+\begin{equation*}
+  \int_{-\infty}^\infty \bigl( \tilde m''(x) \bigr)^2 \,dx
+  < \int_{-\infty}^\infty \bigl( \hat m_\lambda''(x) \bigr)^2 \,dx,
+\end{equation*}
+by the property of cubic polynomials mentioned above. This contradicts the
+assumption that \(\hat m_\lambda\) minimises equation~\eqref{eq:spline-penalty}.
+Therefore, \(\hat m_\lambda\) must be a cubic polynomial on each interval \([x_i,
+x_{i+1}]\).
+
+A similar argument shows that \(\hat m_\lambda\) must be twice continuously
+differentiable at the knots, completing the proof that \(\hat m_\lambda\)
+is a cubic spline.
+\end{proof}
+
+The theorem shows that the smoothing spline is a natural cubic spline with \(n\)
+knots at the data points \(x_1, \ldots, x_n\). Such a spline consists of:
+
+\begin{itemize}
+\tightlist
+\item
+  A linear function on \((-\infty, x_1)\): 2 parameters
+\item
+  Cubic polynomials on each of the \(n-1\) intervals between consecutive knots: \(4(n-1)\) parameters
+\item
+  A linear function on \((x_n, \infty)\): 2 parameters
+\end{itemize}
+
+This gives \(2 + 4(n-1) + 2 = 4n\) parameters initially. However, at each of the
+\(n\) knots, we require continuity of the function, its first derivative, and its
+second derivative. This imposes \(3n\) constraints, leaving \(4n - 3n = n\) free
+parameters.
+With \(n\) free parameters and \(n\) data points \((x_1, y_1), \ldots,
+(x_n, y_n)\), we could make the spline pass through all
+data points exactly---a perfect interpolating fit.
+This corresponds to \(\lambda = 0\). For \(\lambda > 0\), the penalty
+term in equation~\eqref{eq:spline-penalty} forces the spline to be smoother,
+in exchange for imperfect fit.
+
+\subsection{Degrees of Freedom}\label{degrees-of-freedom}
+
+As with linear regression, we can write the smoothing spline estimate in
+matrix form. Let \(y = (y_1, \ldots, y_n)^\top\) be the vector of
+responses, and let \(\hat y = (\hat m_\lambda(x_1), \ldots,
+\hat m_\lambda(x_n))^\top\) be the vector of fitted values. Then we can
+write
+\begin{equation}
+  \hat y
+  = S_\lambda y,  \label{eq:smoother-matrix}
+\end{equation}
+where \(S_\lambda \in \mathbb{R}^{n\times n}\) is the \textbf{smoother matrix}. This is
+analogous to the hat matrix \(H = X(X^\top X)^{-1}X^\top\) in linear
+regression (see \href{https://seehuhn.github.io/MATH3714/S02-multiple.html}{section 2 of the level 3
+notes}).
+
+The smoother matrix \(S_\lambda\) depends on the smoothing parameter
+\(\lambda\) and on the data points \(x_1, \ldots, x_n\), but not on the
+responses \(y_1, \ldots, y_n\). We omit the explicit formula for
+\(S_\lambda\), but note that efficient algorithms exist for computing it.
+
+\begin{definition}
+\protect\hypertarget{def:df-spline}{}\label{def:df-spline}The \textbf{effective degrees of freedom} of the smoothing spline estimate is
+\begin{equation*}
+  \mathop{\mathrm{df}}\nolimits(\lambda)
+  = \mathop{\mathrm{tr}}\nolimits(S_\lambda),
+\end{equation*}
+where \(\mathop{\mathrm{tr}}\nolimits\) denotes the trace of a matrix (the sum of the diagonal
+elements).
+\end{definition}
+
+The effective degrees of freedom measure the complexity of the fitted
+model:
+
+\begin{itemize}
+\tightlist
+\item
+  For \(\lambda = 0\), the smoother matrix is \(S_0 = I\) (the identity
+  matrix), and we have \(\mathop{\mathrm{df}}\nolimits(0) = n\). This corresponds to interpolation,
+  where we use all \(n\) data points.
+\item
+  For \(\lambda \to \infty\), the smoother matrix converges to the hat
+  matrix of linear regression, and we have \(\mathop{\mathrm{df}}\nolimits(\infty) = 2\). This
+  corresponds to fitting a straight line.
+\item
+  For intermediate values of \(\lambda\), we have \(2 < \mathop{\mathrm{df}}\nolimits(\lambda) < n\).
+\end{itemize}
+
+The effective degrees of freedom provide an alternative way to specify
+the amount of smoothing: choose a target value for \(\mathop{\mathrm{df}}\nolimits(\lambda)\) and
+find the corresponding \(\lambda\).
+
+\subsection{Smoothing Splines in R}\label{smoothing-splines-in-r}
+
+R computes smoothing splines using the built-in function
+\href{https://rdrr.io/r/stats/smooth.spline.html}{\texttt{smooth.spline()}}, which
+takes the following arguments:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{x} and \texttt{y}: the data points.
+\item
+  \texttt{spar}: the smoothing parameter. This is related to \(\lambda\) but uses
+  a different scale: specifically, \(\lambda = r \cdot 256^{3 \cdot \text{spar} - 1}\)
+  where \(r\) is a data-dependent scaling factor. If not specified, the function
+  chooses a default value.
+\item
+  \texttt{df}: the target degrees of freedom. If specified, the function finds
+  the value of \texttt{spar} which gives the desired degrees of freedom.
+\end{itemize}
+
+The return value is an object which contains the fitted spline. The most
+important components are:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{\$x} and \texttt{\$y}: the fitted spline evaluated at the data points (or at a
+  grid of points if you set the optional argument \texttt{all.knots\ =\ FALSE}).
+\item
+  \texttt{\$df}: the effective degrees of freedom of the fitted spline.
+\item
+  \texttt{\$lambda}: the smoothing parameter \(\lambda\).
+\end{itemize}
+
+\begin{example}
+We illustrate smoothing splines using the \texttt{faithful} dataset, which contains
+waiting times between eruptions and eruption durations for the Old Faithful
+geyser. We fit smoothing splines with different degrees of freedom and
+compare them to kernel methods.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Load the data}
+\FunctionTok{data}\NormalTok{(faithful)}
+\NormalTok{x }\OtherTok{\textless{}{-}}\NormalTok{ faithful}\SpecialCharTok{$}\NormalTok{waiting}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ faithful}\SpecialCharTok{$}\NormalTok{eruptions}
+
+\CommentTok{\# Sort the data for plotting}
+\NormalTok{ord }\OtherTok{\textless{}{-}} \FunctionTok{order}\NormalTok{(x)}
+\NormalTok{x }\OtherTok{\textless{}{-}}\NormalTok{ x[ord]}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ y[ord]}
+
+\CommentTok{\# Fit smoothing splines with different df}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+
+\CommentTok{\# Left panel: varying degrees of freedom}
+\FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{main =} \StringTok{"Smoothing Splines with Different df"}\NormalTok{,}
+     \AttributeTok{xlab =} \StringTok{"Waiting time (min)"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Duration (min)"}\NormalTok{,}
+     \AttributeTok{pch =} \DecValTok{16}\NormalTok{, }\AttributeTok{col =} \StringTok{"grey70"}\NormalTok{, }\AttributeTok{cex =} \FloatTok{0.7}\NormalTok{)}
+
+\CommentTok{\# Fit splines with df = 3, 6, and 15}
+\NormalTok{fit3 }\OtherTok{\textless{}{-}} \FunctionTok{smooth.spline}\NormalTok{(x, y, }\AttributeTok{df =} \DecValTok{3}\NormalTok{)}
+\NormalTok{fit6 }\OtherTok{\textless{}{-}} \FunctionTok{smooth.spline}\NormalTok{(x, y, }\AttributeTok{df =} \DecValTok{6}\NormalTok{)}
+\NormalTok{fit15 }\OtherTok{\textless{}{-}} \FunctionTok{smooth.spline}\NormalTok{(x, y, }\AttributeTok{df =} \DecValTok{15}\NormalTok{)}
+
+\FunctionTok{lines}\NormalTok{(fit3, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(fit6, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(fit15, }\AttributeTok{col =} \StringTok{"darkgreen"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{legend}\NormalTok{(}\StringTok{"bottomright"}\NormalTok{,}
+       \AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{"df = 3"}\NormalTok{, }\StringTok{"df = 6"}\NormalTok{, }\StringTok{"df = 15"}\NormalTok{),}
+       \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"red"}\NormalTok{, }\StringTok{"darkgreen"}\NormalTok{),}
+       \AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{bty =} \StringTok{"n"}\NormalTok{)}
+
+\CommentTok{\# Right panel: comparison with kernel smoother}
+\FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{main =} \StringTok{"Spline vs. Kernel Smoother"}\NormalTok{,}
+     \AttributeTok{xlab =} \StringTok{"Waiting time (min)"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Duration (min)"}\NormalTok{,}
+     \AttributeTok{pch =} \DecValTok{16}\NormalTok{, }\AttributeTok{col =} \StringTok{"grey70"}\NormalTok{, }\AttributeTok{cex =} \FloatTok{0.7}\NormalTok{)}
+
+\CommentTok{\# Smoothing spline with df = 15}
+\FunctionTok{lines}\NormalTok{(fit15, }\AttributeTok{col =} \StringTok{"darkgreen"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\CommentTok{\# Nadaraya{-}Watson kernel smoother with automatic bandwidth}
+\NormalTok{h }\OtherTok{\textless{}{-}} \FunctionTok{bw.nrd}\NormalTok{(x)}
+\NormalTok{fit\_nw }\OtherTok{\textless{}{-}} \FunctionTok{ksmooth}\NormalTok{(x, y, }\AttributeTok{kernel =} \StringTok{"normal"}\NormalTok{, }\AttributeTok{bandwidth =}\NormalTok{ h)}
+\FunctionTok{lines}\NormalTok{(fit\_nw, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{legend}\NormalTok{(}\StringTok{"bottomright"}\NormalTok{,}
+       \AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{"Spline (df = 15)"}\NormalTok{,}
+                  \FunctionTok{paste}\NormalTok{(}\StringTok{"Nadaraya{-}Watson (h ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(h, }\DecValTok{1}\NormalTok{), }\StringTok{")"}\NormalTok{)),}
+       \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"darkgreen"}\NormalTok{, }\StringTok{"blue"}\NormalTok{),}
+       \AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{bty =} \StringTok{"n"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/faithful-splines-1.pdf}}
+
+The left panel shows how degrees of freedom control smoothness: \(\mathop{\mathrm{df}}\nolimits= 3\)
+gives an almost linear fit, while \(\mathop{\mathrm{df}}\nolimits= 15\) follows the data closely.
+The right panel compares the smoothing spline (\(\mathop{\mathrm{df}}\nolimits= 15\)) with the
+Nadaraya-Watson estimator (using the normal reference rule for bandwidth
+selection). Both methods produce similar estimates, though the spline
+has better boundary behaviour.
+\end{example}
+
+\subsection{Comparison with Kernel Methods}\label{comparison-with-kernel-methods}
+
+Both smoothing splines and kernel methods estimate the
+regression function \(m\) from data, but they differ in
+strengths and weaknesses.
+
+\textbf{Advantages of smoothing splines:}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Global method:} The spline fits the entire dataset at once,
+  which gives better results at the boundaries of the data range.
+\item
+  \textbf{Automatic smoothness:} The solution is always twice
+  continuously differentiable.
+\item
+  \textbf{Efficient computation:} Solving a system of linear equations
+  computes the spline, avoiding local fits at many points.
+\end{itemize}
+
+\textbf{Advantages of kernel methods:}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Local adaptation:} Kernel methods can adapt to local features of the
+  data, for example by using different bandwidths in different regions
+  (as in \(k\)-NN methods).
+\item
+  \textbf{Geometric interpretation:} Kernel methods use weighted averages,
+  which are easier to understand than the penalized least squares
+  formulation of splines.
+\item
+  \textbf{Robustness:} Robust kernels or trimmed extreme values make kernel
+  methods resistant to outliers.
+\end{itemize}
+
+In practice, the choice between smoothing splines and kernel methods
+often depends on the specific application and the properties of the data.
+
+\begin{example}
+We compare smoothing splines with Nadaraya-Watson and local linear regression
+using simulated data where the true regression function is known. This allows
+us to assess the performance of each method, particularly near the boundaries.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Generate simulated data}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{100}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{sort}\NormalTok{(}\FunctionTok{runif}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{))}
+\NormalTok{m\_true }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(t) }\FunctionTok{sin}\NormalTok{(}\DecValTok{2}\SpecialCharTok{*}\NormalTok{t) }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{16}\SpecialCharTok{*}\NormalTok{(t}\DecValTok{{-}2}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{m\_true}\NormalTok{(x) }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\FloatTok{0.3}\NormalTok{)}
+
+\CommentTok{\# Grid for evaluation}
+\NormalTok{x\_grid }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{, }\AttributeTok{length =} \DecValTok{200}\NormalTok{)}
+\NormalTok{y\_true }\OtherTok{\textless{}{-}} \FunctionTok{m\_true}\NormalTok{(x\_grid)}
+
+\CommentTok{\# Nadaraya{-}Watson estimator}
+\NormalTok{nw\_estimate }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x\_new, x, y, h) \{}
+\NormalTok{  K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{((x\_new }\SpecialCharTok{{-}}\NormalTok{ x) }\SpecialCharTok{/}\NormalTok{ h)}
+  \FunctionTok{sum}\NormalTok{(K }\SpecialCharTok{*}\NormalTok{ y) }\SpecialCharTok{/} \FunctionTok{sum}\NormalTok{(K)}
+\NormalTok{\}}
+
+\CommentTok{\# Local linear estimator}
+\NormalTok{local\_linear }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x\_new, x, y, h) \{}
+\NormalTok{  w }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{((x }\SpecialCharTok{{-}}\NormalTok{ x\_new) }\SpecialCharTok{/}\NormalTok{ h)}
+\NormalTok{  X }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, x }\SpecialCharTok{{-}}\NormalTok{ x\_new)}
+\NormalTok{  beta }\OtherTok{\textless{}{-}} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%} \FunctionTok{diag}\NormalTok{(w) }\SpecialCharTok{\%*\%}\NormalTok{ X) }\SpecialCharTok{\%*\%} \FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%} \FunctionTok{diag}\NormalTok{(w) }\SpecialCharTok{\%*\%}\NormalTok{ y}
+\NormalTok{  beta[}\DecValTok{1}\NormalTok{]}
+\NormalTok{\}}
+
+\CommentTok{\# Choose bandwidth using rule of thumb}
+\NormalTok{h }\OtherTok{\textless{}{-}} \FloatTok{0.3}
+
+\CommentTok{\# Compute estimates}
+\NormalTok{y\_nw }\OtherTok{\textless{}{-}} \FunctionTok{sapply}\NormalTok{(x\_grid, nw\_estimate, }\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{h =}\NormalTok{ h)}
+\NormalTok{y\_ll }\OtherTok{\textless{}{-}} \FunctionTok{sapply}\NormalTok{(x\_grid, local\_linear, }\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{h =}\NormalTok{ h)}
+
+\CommentTok{\# Smoothing spline}
+\NormalTok{fit\_spline }\OtherTok{\textless{}{-}} \FunctionTok{smooth.spline}\NormalTok{(x, y, }\AttributeTok{cv =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{y\_spline }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(fit\_spline, x\_grid)}\SpecialCharTok{$}\NormalTok{y}
+
+\CommentTok{\# Plotting}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+
+\CommentTok{\# Left panel: all three methods}
+\FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{main =} \StringTok{"Comparison of Smoothing Methods"}\NormalTok{,}
+     \AttributeTok{xlab =} \StringTok{"x"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"y"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{16}\NormalTok{, }\AttributeTok{col =} \StringTok{"grey70"}\NormalTok{, }\AttributeTok{cex =} \FloatTok{0.7}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(x\_grid, y\_true, }\AttributeTok{col =} \StringTok{"black"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(x\_grid, y\_nw, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(x\_grid, y\_ll, }\AttributeTok{col =} \StringTok{"darkgreen"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(x\_grid, y\_spline, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{,}
+       \AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{"True function"}\NormalTok{, }\StringTok{"Nadaraya{-}Watson"}\NormalTok{,}
+                  \StringTok{"Local linear"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\StringTok{"Spline (df ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(fit\_spline}\SpecialCharTok{$}\NormalTok{df, }\DecValTok{1}\NormalTok{), }\StringTok{")"}\NormalTok{)),}
+       \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"blue"}\NormalTok{, }\StringTok{"darkgreen"}\NormalTok{, }\StringTok{"red"}\NormalTok{),}
+       \AttributeTok{lty =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{), }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{bty =} \StringTok{"n"}\NormalTok{, }\AttributeTok{cex =} \FloatTok{0.8}\NormalTok{)}
+
+\CommentTok{\# Right panel: zoom on boundary region}
+\FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{main =} \StringTok{"Boundary Behaviour (x \textless{} 0.5)"}\NormalTok{,}
+     \AttributeTok{xlim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.5}\NormalTok{), }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{2}\NormalTok{),}
+     \AttributeTok{xlab =} \StringTok{"x"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"y"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{16}\NormalTok{, }\AttributeTok{col =} \StringTok{"grey70"}\NormalTok{, }\AttributeTok{cex =} \FloatTok{0.7}\NormalTok{)}
+
+\CommentTok{\# Only plot in boundary region}
+\NormalTok{idx }\OtherTok{\textless{}{-}}\NormalTok{ x\_grid }\SpecialCharTok{\textless{}=} \FloatTok{0.5}
+\FunctionTok{lines}\NormalTok{(x\_grid[idx], y\_true[idx], }\AttributeTok{col =} \StringTok{"black"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(x\_grid[idx], y\_nw[idx], }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(x\_grid[idx], y\_ll[idx], }\AttributeTok{col =} \StringTok{"darkgreen"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(x\_grid[idx], y\_spline[idx], }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\CommentTok{\# Add vertical line at x = h to show bandwidth}
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{v =}\NormalTok{ h, }\AttributeTok{col =} \StringTok{"grey"}\NormalTok{, }\AttributeTok{lty =} \DecValTok{3}\NormalTok{)}
+\FunctionTok{text}\NormalTok{(h, }\FloatTok{0.2}\NormalTok{, }\StringTok{"h"}\NormalTok{, }\AttributeTok{pos =} \DecValTok{4}\NormalTok{, }\AttributeTok{col =} \StringTok{"grey"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/comparison-methods-1.pdf}}
+
+The comparison reveals several key differences:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Boundary effects}: The Nadaraya-Watson estimator (blue) shows clear bias
+  near \(x = 0\), underestimating the function. The local linear estimator
+  (green) performs better at the boundary but still shows bias. The
+  smoothing spline (red) handles the boundary well through its global nature.
+\item
+  \textbf{Peak capture}: All methods struggle with the sharp peak at
+  \(x = 2\), but the smoothing spline adapts well despite using a
+  global smoothing parameter.
+\item
+  \textbf{Smoothness}: The spline produces the smoothest estimate, constrained
+  to be twice differentiable everywhere. The kernel methods
+  show more local variation.
+\end{enumerate}
+
+The choice of method depends on the specific
+requirements---boundary behaviour, local adaptation,
+or global smoothness.
+\end{example}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  Smoothing splines balance fit and smoothness using a penalty term.
+\item
+  The solution is a natural cubic spline with knots at the data points.
+\item
+  The smoothing parameter \(\lambda\) controls the trade-off between fit and
+  smoothness.
+\item
+  Effective degrees of freedom measure model complexity.
+\item
+  Smoothing splines are a global alternative to local kernel methods.
 \end{itemize}
 
 \clearpage
