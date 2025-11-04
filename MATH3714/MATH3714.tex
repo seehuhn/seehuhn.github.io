@@ -5495,29 +5495,58 @@ can complement these visual tools.
 
 \subsection{The Coefficient of Multiple Determination}\label{R-squared}
 
-In equation~\eqref{eq:eps-y-orth} we have seen that
+A widely used measure of model fit is the coefficient of multiple determination,
+commonly denoted \(R^2\). This measure is not specific to linear regression,
+but can be used for any regression model which produces fitted values \(\hat y_i\)
+and residuals \(\hat\varepsilon_i\).
+
+\begin{definition}
+\protect\hypertarget{def:R-squared}{}\label{def:R-squared}The \textbf{coefficient of multiple determination} is defined as
 \begin{equation*}
-  \|y\|^2
-  = \|\hat y\|^2 + \|\hat\varepsilon\|^2.
+  R^2
+  := 1 - \frac{\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2}
+  = 1 - \frac{\frac{1}{n-1} \sum_{i=1}^n (\hat\varepsilon_i - \overline{\hat\varepsilon})^2}
+             {\frac{1}{n-1} \sum_{i=1}^n (y_i - \bar y)^2}.
 \end{equation*}
-The following lemma shows that a similar relation also holds after the sample
-means are subtracted.
+\end{definition}
+
+The coefficient of multiple determination provides a numerical measure of how
+well the model fits the data. The numerator \(\mathrm{s}_{\hat\varepsilon}^2\) is the
+sample variance of the residuals, while the denominator \(\mathrm{s}_y^2\) is the
+sample variance of the response variable~\(y\). Thus, \(R^2\) measures the
+proportion of total variance in \(y\) which is explained by the regression model.
+Large values of \(R^2\) indicate good model fit.
+
+We will use the following lemma to simplify the formula for \(R^2\)
+for the special case of linear regression models.
 
 \begin{lemma}
-\protect\hypertarget{lem:explained-variance}{}\label{lem:explained-variance}Assume that the fitted model includes an intercept. Then we have
-\begin{align*}
-  \sum_{i=1}^n (y_i - \overline{y})^2
-  &= \sum_{i=1}^n (\hat y_i - \overline{y})^2
-    + \sum_{i=1}^n \hat \varepsilon_i^2 \\
-  &= \sum_{i=1}^n \bigl( \hat y_i - \overline{\hat y} \bigr)^2
-    + \sum_{i=1}^n \bigl( \hat \varepsilon_i - \overline{\hat\varepsilon} \bigr)^2,
-\end{align*}
-where \(\overline{y}\), \(\overline{\hat y}\) and \(\overline{\hat\varepsilon}\)
-are the sample means of the three vectors \(y\), \(\hat y\) and~\(\hat\varepsilon\).
+\protect\hypertarget{lem:explained-variance}{}\label{lem:explained-variance}
+
+For multiple linear regression models with an intercept term, the following
+relations hold:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  We have
+  \begin{equation*}
+    \sum_{i=1}^n \hat\varepsilon_i = 0,
+    \end{equation*}
+  and thus \(\overline{\hat\varepsilon} = 0\).
+\item
+  We have
+  \begin{equation*}
+   \sum_{i=1}^n (y_i - \overline{y})^2
+   = \sum_{i=1}^n \bigl( \hat y_i - \overline{\hat y} \bigr)^2
+     + \sum_{i=1}^n \bigl( \hat \varepsilon_i - \overline{\hat\varepsilon} \bigr)^2.
+    \end{equation*}
+\end{enumerate}
+
 \end{lemma}
 
 \begin{proof}
-Define \(\mathbf{1} = (1, \ldots, 1) \in \mathbb{R}^p\). From exercise~2 on
+Define \(\mathbf{1} = (1, \ldots, 1) \in \mathbb{R}^n\). From exercise~2 on
 problem sheet 1 we know that \(H\mathbf{1} = \mathbf{1}\) and since \(H\)
 is symmetric we also have \(\mathbf{1}^\top H = \mathbf{1}^\top\).
 This gives
@@ -5528,47 +5557,49 @@ This gives
   = 0.  \label{eq:I-H-left}
 \end{equation}
 
-As we have already seen previously, we have
-\begin{align*}
-  \hat y^\top \hat\varepsilon
-  &= (H y)^\top (I - H) y \\
-  &= y^\top H (I - H) y \\
-  &= 0
-\end{align*}
-and using equation~\eqref{eq:I-H-left} we also get
-\begin{equation}
-  \mathbf{1}^\top \hat\varepsilon
-  = \mathbf{1}^\top (I - H) y
-  = 0.
-\end{equation}
-Thus, \((\hat y - \overline{y} \mathbf{1})^\top \hat\varepsilon= 0\) and using
-Pythagoras' theorem as in section~\ref{hat-matrix}, we
-find
-\begin{align*}
-  \| y - \overline{y} \mathbf{1} \|^2
-  &= \| y - \hat y + \hat y - \overline{y} \mathbf{1} \|^2 \\
-  &= \| \hat \varepsilon+ \hat y - \overline{y} \mathbf{1} \|^2 \\
-  &= \| \hat \varepsilon\|^2 + \| \hat y - \overline{y} \mathbf{1} \|^2.
-\end{align*}
-This proves the first equality.
-
-Using equation~\eqref{eq:I-H-left} again, we find
+We first show that the residuals sum to zero. Using equation~\eqref{eq:I-H-left}
+we have
 \begin{equation*}
   \sum_{i=1}^n \hat\varepsilon_i
   = \mathbf{1}^\top \hat\varepsilon
-  = \mathbf{1}^\top (y - \hat y)
   = \mathbf{1}^\top (I - H) y
-  = 0
+  = 0,
 \end{equation*}
-and thus \(\overline{\hat\varepsilon} = 0\).
-Since \(y = \hat y + (y - \hat y) = \hat y + \hat\varepsilon\) we also have
-\begin{equation*}
+which proves part 1 of the lemma. Thus we have \(\overline{\hat\varepsilon} = 0\).
+Since \(y = \hat y + \hat\varepsilon\), taking sample means we also find
+\begin{equation}
   \overline{y}
   = \overline{\hat y} + \overline{\hat\varepsilon}
-  = \overline{\hat y}.
+  = \overline{\hat y}.  \label{eq:y-yhat-mean}
+\end{equation}
+
+For part 2, we note that as shown previously, the fitted values and residuals
+are orthogonal:
+\begin{equation*}
+  \hat y^\top \hat\varepsilon
+  = (H y)^\top (I - H) y
+  = y^\top H (I - H) y
+  = 0.
 \end{equation*}
-This completes the proof.
+Combining this with \(\mathbf{1}^\top \hat\varepsilon= 0\), we find that
+\((\hat y - \overline{y} \mathbf{1})^\top \hat\varepsilon= 0\). Using
+Pythagoras' theorem as in section~\ref{hat-matrix}, we obtain
+\begin{align*}
+  \| y - \overline{y} \mathbf{1} \|^2
+  &= \| (y - \hat y) + (\hat y - \overline{y} \mathbf{1}) \|^2 \\
+  &= \| \hat \varepsilon\|^2 + \| \hat y - \overline{y} \mathbf{1} \|^2,
+\end{align*}
+which proves the first equality in part 2. The second equality follows by
+noting that \(\overline{\hat\varepsilon} = 0\) and using equation~\eqref{eq:y-yhat-mean}.
 \end{proof}
+
+Note that in equation~\eqref{eq:eps-y-orth} we have seen that
+\begin{equation*}
+  \|y\|^2
+  = \|\hat y\|^2 + \|\hat\varepsilon\|^2.
+\end{equation*}
+The lemma shows that a similar relation also holds after the sample
+means are subtracted.
 
 We can express the terms in the statement of lemma~\ref{lem:explained-variance}
 as sample variances. For example, we write
@@ -5582,8 +5613,8 @@ the lemma can be written as
   \mathrm{s}_y^2
   = \mathrm{s}_{\hat y}^2 + \mathrm{s}_{\hat\varepsilon}^2.
 \end{equation*}
-Different from equation~\eqref{eq:eps-y-orth}, the current relation is
-only true for models which include an intercept.
+Unlike equation~\eqref{eq:eps-y-orth}, this relation is only true for
+models which include an intercept.
 
 Some authors define
 
@@ -5607,27 +5638,15 @@ becomes
   = \mathrm{SS}_\mathrm{reg} + \mathrm{SS}_\mathrm{res}.
 \end{equation*}
 
-\begin{definition}
-\protect\hypertarget{def:R-squared}{}\label{def:R-squared}The \textbf{coefficient of multiple determination} is defined as
-\begin{equation*}
-  R^2
-  := 1 - \frac{\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2}
-  = 1 - \frac{\sum_{i=1}^n \hat\varepsilon_i^2}{\sum_{i=1}^n (y_i - \bar y)^2}.
-\end{equation*}
-\end{definition}
-
-Using the result of lemma~\ref{lem:explained-variance}, for models which
-include an intercept we can also
-express \(R^2\) as
+Using the result of lemma~\ref{lem:explained-variance}, for linear regression
+models we can also express \(R^2\) as
 \begin{equation*}
   R^2
   = \mathrm{s}_{\hat y}^2 / \mathrm{s}_y^2.
 \end{equation*}
-Since both numerator and denominator are positive, it is clear that \(R^2 \geq
-0\). Similarly, from the definition it is clear that \(R^2 \leq 1\), so that we
-always have \(R^2 \in [0, 1]\). A large value of \(R^2\) indicates that
-the residuals are small compared to the sample variance of the \(y_i\),
-and thus often indicates good model fit.
+Since both numerator and denominator are positive, we have \(R^2 \geq 0\).
+Similarly, from the definition it is clear that \(R^2 \leq 1\), so that
+\(R^2 \in [0, 1]\) always holds.
 
 \begin{example}
 
@@ -5684,13 +5703,19 @@ We can also find this value near the bottom of the output of
 
 \end{example}
 
-One problem with the \(R^2\) value is, that it always increases when another
+Note that the alternative formula \(R^2 = \mathrm{s}_{\hat y}^2 / \mathrm{s}_y^2\)
+and the variance decomposition in lemma~\ref{lem:explained-variance} require
+the model to include an intercept term.
+
+\subsection{\texorpdfstring{Adjusted \(R^2\)}{Adjusted R\^{}2}}\label{adjusted-R-squared}
+
+One problem with the \(R^2\) value is that it always increases when another
 input variable is added to the model. Thus, the \(R^2\) value cannot be used
 to compare model fit for models with different numbers of variables. An
-attempt to compensate for this effect is the adjusted \(R^2\) value:
+attempt to compensate for this effect is the adjusted \(R^2\) value.
 
 \begin{definition}
-\protect\hypertarget{def:adjusted-R-squared}{}\label{def:adjusted-R-squared}The \textbf{adjusted \(R^2\) value} is given by
+\protect\hypertarget{def:adjusted-R-squared-def}{}\label{def:adjusted-R-squared-def}The \textbf{adjusted \(R^2\) value} is given by
 \begin{equation*}
   R^2_\mathrm{adj}
   := 1 - \frac{\frac{1}{n-p-1}\mathrm{s}_{\hat\varepsilon}^2}{\frac{1}{n-1}\mathrm{s}_y^2}
@@ -5768,18 +5793,17 @@ the extended model may be better than the original model.
 
 \subsection{Error Variance}\label{error-var}
 
-The estimate for the error variance,
+Another measure for model fit is the estimated error variance,
 \begin{equation*}
-  \hat\sigma^2 = \frac{1}{n - q} \sum_{i=1}^n (y_i - \hat y_i)^2
+  \hat\sigma^2 = \frac{1}{n - p - 1} \sum_{i=1}^n (y_i - \hat y_i)^2.
 \end{equation*}
-can be used, where \(q\) is the number of columns of the design matrix.
-(For the full model with an intercept we have \(q = p+1\).)
-``Good'' models have small \(\hat\sigma^2\). We have
+Good models have small \(\hat\sigma^2\). This measure is closely related to
+the adjusted \(R^2\) value. We have
 \begin{align*}
   R^2_\mathrm{adj}
-  &= 1 - \frac{\frac{1}{n-q}\mathrm{s}_{\hat\varepsilon}^2}{\frac{1}{n-1}\mathrm{s}_y^2} \\
-  &= 1 - \frac{\frac{n-1}{n-q}\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2} \\
-  &= 1 - \frac{\frac{1}{n-q} \sum_{i=1}^n (y_i - \hat y_i)^2}{\mathrm{s}_y^2} \\
+  &= 1 - \frac{\frac{1}{n-p-1}\mathrm{s}_{\hat\varepsilon}^2}{\frac{1}{n-1}\mathrm{s}_y^2} \\
+  &= 1 - \frac{\frac{n-1}{n-p-1}\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2} \\
+  &= 1 - \frac{\frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2}{\mathrm{s}_y^2} \\
   &= 1 - \frac{\hat\sigma^2}{\mathrm{s}_y^2},
 \end{align*}
 where \(\mathrm{s}_{\hat\varepsilon}^2\) and \(\mathrm{s}_y^2\) are the sample variances
@@ -5789,17 +5813,17 @@ maximising \(R^2_\mathrm{adj}\).
 \subsection{Prediction Error Sum of Squares}\label{PRESS}
 
 The \textbf{Prediction Error Sum of Squares (PRESS)} compares each
-output \(y_i\) to the fitted value \(\hat y^{(i)}_i\) for observation i,
+output \(y_i\) to the fitted value \(\hat y^{(i)}_i\) for observation~\(i\),
 computed without using sample~\(i\):
 \begin{equation*}
    \mathrm{PRESS}
    := \sum_{i=1}^n \bigl( y_i - \hat y^{(i)}_i \bigr)^2.
 \end{equation*}
-In the comparison, \(\hat y^{(i)}_i\) is used instead of \(\hat y_i\)
-so that in models with too many parameters, overfitting does not
-result in overoptimistic estimates.
-``Good'' models have small PRESS. The following lemma helps to compute
-PRESS without having to fit \(n\) separate models.
+By using \(\hat y^{(i)}_i\) instead of \(\hat y_i\) in the comparison,
+we avoid overoptimistic estimates that would arise from overfitting
+in models with too many parameters.
+Good models have small PRESS. The following lemma provides a convenient
+formula for computing PRESS without having to fit \(n\) separate models.
 
 \begin{lemma}
 \protect\hypertarget{lem:PRESS}{}\label{lem:PRESS}We have
@@ -5845,7 +5869,8 @@ completes the proof.
 \end{equation*}
 where \(q\) is the number of parameters in the model, and \(\hat L\)
 is the maximum of the likelihood function when these \(q\) parameters
-are chosen optimally. ``Good'' models have small AIC.
+are chosen optimally. For a model with \(p\) predictors and an intercept,
+we have \(q = p+1\). Good models have small AIC.
 
 Since we assume \(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\), i.i.d. and
 we have \(\varepsilon_i = y_i - x_i^\top\beta\), the likelihood function
@@ -5873,7 +5898,7 @@ find the optimal value of \(\sigma^2\). The result is
    \hat\sigma^2_\mathrm{MLE}
    = \frac1n r(\hat\beta)
    = \frac{1}{n} \sum_{i=1}^n \bigl( y_i - (X \hat\beta)_i \bigr)^2
-   = \frac{n-q}{n} \hat\sigma^2.
+   = \frac{n-p-1}{n} \hat\sigma^2.
 \end{equation*}
 Thus we get
 \begin{align*}
@@ -5966,7 +5991,7 @@ sections in turn:
   for individual coefficients.
 \item
   Field \textbf{H} shows the \(R^2\) value and adjusted \(R^2\) value. These are
-  computed using definitions \ref{def:R-squared} and \ref{def:adjusted-R-squared}.
+  computed using definitions \ref{def:R-squared} and \ref{def:adjusted-R-squared-def}.
 \item
   Field \textbf{I} shows the \(F\)-test statistic for testing the hypothesis
   \(H_i\colon \beta_1 = \cdots = \beta_p = 0\) (omitting the coeficient
@@ -9387,7 +9412,7 @@ where \(X\) is the design matrix.
 \end{definition}
 
 Since \(x_i\) is the \(i\)th row of \(X\), the leverage \(h_{ii}\) equals the \(i\)th
-diagonal element of the hat matrix \(H = X (X^\top X)^{-1} X\).
+diagonal element of the hat matrix \(H = X (X^\top X)^{-1} X^\top\).
 
 \begin{lemma}
 The derivative of the fitted value \(\hat y_i\) with respect to the

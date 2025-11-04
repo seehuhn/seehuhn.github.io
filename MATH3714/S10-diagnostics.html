@@ -243,9 +243,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html"><i class="fa fa-check"></i><b>10</b> Measures for Model Fit</a>
 <ul>
 <li class="chapter" data-level="10.1" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#R-squared"><i class="fa fa-check"></i><b>10.1</b> The Coefficient of Multiple Determination</a></li>
-<li class="chapter" data-level="10.2" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#error-var"><i class="fa fa-check"></i><b>10.2</b> Error Variance</a></li>
-<li class="chapter" data-level="10.3" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#PRESS"><i class="fa fa-check"></i><b>10.3</b> Prediction Error Sum of Squares</a></li>
-<li class="chapter" data-level="10.4" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#AIC"><i class="fa fa-check"></i><b>10.4</b> Akaike’s Information Criterion</a></li>
+<li class="chapter" data-level="10.2" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#adjusted-R-squared"><i class="fa fa-check"></i><b>10.2</b> Adjusted <span class="math inline">\(R^2\)</span></a></li>
+<li class="chapter" data-level="10.3" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#error-var"><i class="fa fa-check"></i><b>10.3</b> Error Variance</a></li>
+<li class="chapter" data-level="10.4" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#PRESS"><i class="fa fa-check"></i><b>10.4</b> Prediction Error Sum of Squares</a></li>
+<li class="chapter" data-level="10.5" data-path="S10-diagnostics.html"><a href="S10-diagnostics.html#AIC"><i class="fa fa-check"></i><b>10.5</b> Akaike’s Information Criterion</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="I03-lm-output.html"><a href="I03-lm-output.html"><i class="fa fa-check"></i>Interlude: Understanding the <code>lm()</code> Output</a></li>
 <li class="chapter" data-level="11" data-path="S11-improving.html"><a href="S11-improving.html"><i class="fa fa-check"></i><b>11</b> Improving the Model Fit</a>
@@ -401,8 +402,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Section 10</span> Measures for Model Fit<a href="S10-diagnostics.html#S10-diagnostics" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <!--
 TODO (voss):
-* make a distinction between the general definition of $R^2$ and
-  the special case of linear regression
 * identify and cite the source which introduced $\mathrm{SS}_\mathrm{tot}$ etc.
 -->
 <div id="R-squared" class="section level2 hasAnchor" number="10.1">
@@ -413,27 +412,46 @@ TODO (voss):
 </iframe>
 </div>
 </div>
-<p>In equation <a href="S04-model.html#eq:eps-y-orth">(4.5)</a> we have seen that
+<p>A widely used measure of model fit is the coefficient of multiple determination,
+commonly denoted <span class="math inline">\(R^2\)</span>. This measure is not specific to linear regression,
+but can be used for any regression model which produces fitted values <span class="math inline">\(\hat y_i\)</span>
+and residuals <span class="math inline">\(\hat\varepsilon_i\)</span>.</p>
+<div class="definition">
+<p><span id="def:R-squared" class="definition"><strong>Definition 10.1  </strong></span>The <strong>coefficient of multiple determination</strong> is defined as
 <span class="math display">\[\begin{equation*}
-  \|y\|^2
-  = \|\hat y\|^2 + \|\hat\varepsilon\|^2.
-\end{equation*}\]</span>
-The following lemma shows that a similar relation also holds after the sample
-means are subtracted.</p>
+  R^2
+  := 1 - \frac{\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2}
+  = 1 - \frac{\frac{1}{n-1} \sum_{i=1}^n (\hat\varepsilon_i - \overline{\hat\varepsilon})^2}
+             {\frac{1}{n-1} \sum_{i=1}^n (y_i - \bar y)^2}.
+\end{equation*}\]</span></p>
+</div>
+<p>The coefficient of multiple determination provides a numerical measure of how
+well the model fits the data. The numerator <span class="math inline">\(\mathrm{s}_{\hat\varepsilon}^2\)</span> is the
+sample variance of the residuals, while the denominator <span class="math inline">\(\mathrm{s}_y^2\)</span> is the
+sample variance of the response variable <span class="math inline">\(y\)</span>. Thus, <span class="math inline">\(R^2\)</span> measures the
+proportion of total variance in <span class="math inline">\(y\)</span> which is explained by the regression model.
+Large values of <span class="math inline">\(R^2\)</span> indicate good model fit.</p>
+<p>We will use the following lemma to simplify the formula for <span class="math inline">\(R^2\)</span>
+for the special case of linear regression models.</p>
 <div class="lemma">
-<p><span id="lem:explained-variance" class="lemma"><strong>Lemma 10.1  </strong></span>Assume that the fitted model includes an intercept. Then we have
-<span class="math display">\[\begin{align*}
-  \sum_{i=1}^n (y_i - \overline{y})^2
-  &amp;= \sum_{i=1}^n (\hat y_i - \overline{y})^2
-    + \sum_{i=1}^n \hat \varepsilon_i^2 \\
-  &amp;= \sum_{i=1}^n \bigl( \hat y_i - \overline{\hat y} \bigr)^2
-    + \sum_{i=1}^n \bigl( \hat \varepsilon_i - \overline{\hat\varepsilon} \bigr)^2,
-\end{align*}\]</span>
-where <span class="math inline">\(\overline{y}\)</span>, <span class="math inline">\(\overline{\hat y}\)</span> and <span class="math inline">\(\overline{\hat\varepsilon}\)</span>
-are the sample means of the three vectors <span class="math inline">\(y\)</span>, <span class="math inline">\(\hat y\)</span> and <span class="math inline">\(\hat\varepsilon\)</span>.</p>
+<p><span id="lem:explained-variance" class="lemma"><strong>Lemma 10.1  </strong></span>For multiple linear regression models with an intercept term, the following
+relations hold:</p>
+<ol style="list-style-type: decimal">
+<li><p>We have
+<span class="math display">\[\begin{equation*}
+  \sum_{i=1}^n \hat\varepsilon_i = 0,
+  \end{equation*}\]</span>
+and thus <span class="math inline">\(\overline{\hat\varepsilon} = 0\)</span>.</p></li>
+<li><p>We have
+<span class="math display">\[\begin{equation*}
+\sum_{i=1}^n (y_i - \overline{y})^2
+= \sum_{i=1}^n \bigl( \hat y_i - \overline{\hat y} \bigr)^2
+   + \sum_{i=1}^n \bigl( \hat \varepsilon_i - \overline{\hat\varepsilon} \bigr)^2.
+  \end{equation*}\]</span></p></li>
+</ol>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-41" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(\mathbf{1} = (1, \ldots, 1) \in \mathbb{R}^p\)</span>. From exercise 2 on
+<p><span id="unlabeled-div-41" class="proof"><em>Proof</em>. </span>Define <span class="math inline">\(\mathbf{1} = (1, \ldots, 1) \in \mathbb{R}^n\)</span>. From exercise 2 on
 problem sheet 1 we know that <span class="math inline">\(H\mathbf{1} = \mathbf{1}\)</span> and since <span class="math inline">\(H\)</span>
 is symmetric we also have <span class="math inline">\(\mathbf{1}^\top H = \mathbf{1}^\top\)</span>.
 This gives
@@ -443,46 +461,47 @@ This gives
   = \mathbf{1}^\top - \mathbf{1}^\top
   = 0.  \tag{10.1}
 \end{equation}\]</span></p>
-<p>As we have already seen previously, we have
-<span class="math display">\[\begin{align*}
-  \hat y^\top \hat\varepsilon
-  &amp;= (H y)^\top (I - H) y \\
-  &amp;= y^\top H (I - H) y \\
-  &amp;= 0
-\end{align*}\]</span>
-and using equation <a href="S10-diagnostics.html#eq:I-H-left">(10.1)</a> we also get
-<span class="math display">\[\begin{equation}
-  \mathbf{1}^\top \hat\varepsilon
-  = \mathbf{1}^\top (I - H) y
-  = 0.
-\end{equation}\]</span>
-Thus, <span class="math inline">\((\hat y - \overline{y} \mathbf{1})^\top \hat\varepsilon= 0\)</span> and using
-Pythagoras’ theorem as in section <a href="S04-model.html#hat-matrix">4.2</a>, we
-find
-<span class="math display">\[\begin{align*}
-  \| y - \overline{y} \mathbf{1} \|^2
-  &amp;= \| y - \hat y + \hat y - \overline{y} \mathbf{1} \|^2 \\
-  &amp;= \| \hat \varepsilon+ \hat y - \overline{y} \mathbf{1} \|^2 \\
-  &amp;= \| \hat \varepsilon\|^2 + \| \hat y - \overline{y} \mathbf{1} \|^2.
-\end{align*}\]</span>
-This proves the first equality.</p>
-<p>Using equation <a href="S10-diagnostics.html#eq:I-H-left">(10.1)</a> again, we find
+<p>We first show that the residuals sum to zero. Using equation <a href="S10-diagnostics.html#eq:I-H-left">(10.1)</a>
+we have
 <span class="math display">\[\begin{equation*}
   \sum_{i=1}^n \hat\varepsilon_i
   = \mathbf{1}^\top \hat\varepsilon
-  = \mathbf{1}^\top (y - \hat y)
   = \mathbf{1}^\top (I - H) y
-  = 0
+  = 0,
 \end{equation*}\]</span>
-and thus <span class="math inline">\(\overline{\hat\varepsilon} = 0\)</span>.
-Since <span class="math inline">\(y = \hat y + (y - \hat y) = \hat y + \hat\varepsilon\)</span> we also have
-<span class="math display">\[\begin{equation*}
+which proves part 1 of the lemma. Thus we have <span class="math inline">\(\overline{\hat\varepsilon} = 0\)</span>.
+Since <span class="math inline">\(y = \hat y + \hat\varepsilon\)</span>, taking sample means we also find
+<span class="math display" id="eq:y-yhat-mean">\[\begin{equation}
   \overline{y}
   = \overline{\hat y} + \overline{\hat\varepsilon}
-  = \overline{\hat y}.
+  = \overline{\hat y}.  \tag{10.2}
+\end{equation}\]</span></p>
+<p>For part 2, we note that as shown previously, the fitted values and residuals
+are orthogonal:
+<span class="math display">\[\begin{equation*}
+  \hat y^\top \hat\varepsilon
+  = (H y)^\top (I - H) y
+  = y^\top H (I - H) y
+  = 0.
 \end{equation*}\]</span>
-This completes the proof.</p>
+Combining this with <span class="math inline">\(\mathbf{1}^\top \hat\varepsilon= 0\)</span>, we find that
+<span class="math inline">\((\hat y - \overline{y} \mathbf{1})^\top \hat\varepsilon= 0\)</span>. Using
+Pythagoras’ theorem as in section <a href="S04-model.html#hat-matrix">4.2</a>, we obtain
+<span class="math display">\[\begin{align*}
+  \| y - \overline{y} \mathbf{1} \|^2
+  &amp;= \| (y - \hat y) + (\hat y - \overline{y} \mathbf{1}) \|^2 \\
+  &amp;= \| \hat \varepsilon\|^2 + \| \hat y - \overline{y} \mathbf{1} \|^2,
+\end{align*}\]</span>
+which proves the first equality in part 2. The second equality follows by
+noting that <span class="math inline">\(\overline{\hat\varepsilon} = 0\)</span> and using equation <a href="S10-diagnostics.html#eq:y-yhat-mean">(10.2)</a>.</p>
 </div>
+<p>Note that in equation <a href="S04-model.html#eq:eps-y-orth">(4.5)</a> we have seen that
+<span class="math display">\[\begin{equation*}
+  \|y\|^2
+  = \|\hat y\|^2 + \|\hat\varepsilon\|^2.
+\end{equation*}\]</span>
+The lemma shows that a similar relation also holds after the sample
+means are subtracted.</p>
 <p>We can express the terms in the statement of lemma <a href="S10-diagnostics.html#lem:explained-variance">10.1</a>
 as sample variances. For example, we write
 <span class="math display">\[\begin{equation*}
@@ -495,8 +514,8 @@ the lemma can be written as
   \mathrm{s}_y^2
   = \mathrm{s}_{\hat y}^2 + \mathrm{s}_{\hat\varepsilon}^2.
 \end{equation*}\]</span>
-Different from equation <a href="S04-model.html#eq:eps-y-orth">(4.5)</a>, the current relation is
-only true for models which include an intercept.</p>
+Unlike equation <a href="S04-model.html#eq:eps-y-orth">(4.5)</a>, this relation is only true for
+models which include an intercept.</p>
 <p>Some authors define</p>
 <ul>
 <li><span class="math inline">\(\mathrm{SS}_\mathrm{tot} = \sum_{i=1}^n (y_i - \bar y)^2\)</span>
@@ -512,26 +531,15 @@ becomes
   \mathrm{SS}_\mathrm{tot}
   = \mathrm{SS}_\mathrm{reg} + \mathrm{SS}_\mathrm{res}.
 \end{equation*}\]</span></p>
-<div class="definition">
-<p><span id="def:R-squared" class="definition"><strong>Definition 10.1  </strong></span>The <strong>coefficient of multiple determination</strong> is defined as
-<span class="math display">\[\begin{equation*}
-  R^2
-  := 1 - \frac{\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2}
-  = 1 - \frac{\sum_{i=1}^n \hat\varepsilon_i^2}{\sum_{i=1}^n (y_i - \bar y)^2}.
-\end{equation*}\]</span></p>
-</div>
-<p>Using the result of lemma <a href="S10-diagnostics.html#lem:explained-variance">10.1</a>, for models which
-include an intercept we can also
-express <span class="math inline">\(R^2\)</span> as
+<p>Using the result of lemma <a href="S10-diagnostics.html#lem:explained-variance">10.1</a>, for linear regression
+models we can also express <span class="math inline">\(R^2\)</span> as
 <span class="math display">\[\begin{equation*}
   R^2
   = \mathrm{s}_{\hat y}^2 / \mathrm{s}_y^2.
 \end{equation*}\]</span>
-Since both numerator and denominator are positive, it is clear that <span class="math inline">\(R^2 \geq
-0\)</span>. Similarly, from the definition it is clear that <span class="math inline">\(R^2 \leq 1\)</span>, so that we
-always have <span class="math inline">\(R^2 \in [0, 1]\)</span>. A large value of <span class="math inline">\(R^2\)</span> indicates that
-the residuals are small compared to the sample variance of the <span class="math inline">\(y_i\)</span>,
-and thus often indicates good model fit.</p>
+Since both numerator and denominator are positive, we have <span class="math inline">\(R^2 \geq 0\)</span>.
+Similarly, from the definition it is clear that <span class="math inline">\(R^2 \leq 1\)</span>, so that
+<span class="math inline">\(R^2 \in [0, 1]\)</span> always holds.</p>
 <div class="example">
 <p><span id="exm:unlabeled-div-42" class="example"><strong>Example 10.1  </strong></span>We can easily compute the <span class="math inline">\(R^2\)</span> value for the <code>stackloss</code> dataset
 manually:</p>
@@ -563,12 +571,18 @@ Residual standard error: 3.243 on 17 degrees of freedom
 Multiple R-squared:  0.9136,    Adjusted R-squared:  0.8983 
 F-statistic:  59.9 on 3 and 17 DF,  p-value: 3.016e-09</code></pre>
 </div>
-<p>One problem with the <span class="math inline">\(R^2\)</span> value is, that it always increases when another
+<p>Note that the alternative formula <span class="math inline">\(R^2 = \mathrm{s}_{\hat y}^2 / \mathrm{s}_y^2\)</span>
+and the variance decomposition in lemma <a href="S10-diagnostics.html#lem:explained-variance">10.1</a> require
+the model to include an intercept term.</p>
+</div>
+<div id="adjusted-R-squared" class="section level2 hasAnchor" number="10.2">
+<h2><span class="header-section-number">10.2</span> Adjusted <span class="math inline">\(R^2\)</span><a href="S10-diagnostics.html#adjusted-R-squared" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>One problem with the <span class="math inline">\(R^2\)</span> value is that it always increases when another
 input variable is added to the model. Thus, the <span class="math inline">\(R^2\)</span> value cannot be used
 to compare model fit for models with different numbers of variables. An
-attempt to compensate for this effect is the adjusted <span class="math inline">\(R^2\)</span> value:</p>
+attempt to compensate for this effect is the adjusted <span class="math inline">\(R^2\)</span> value.</p>
 <div class="definition">
-<p><span id="def:adjusted-R-squared" class="definition"><strong>Definition 10.2  </strong></span>The <strong>adjusted <span class="math inline">\(R^2\)</span> value</strong> is given by
+<p><span id="def:adjusted-R-squared-def" class="definition"><strong>Definition 10.2  </strong></span>The <strong>adjusted <span class="math inline">\(R^2\)</span> value</strong> is given by
 <span class="math display">\[\begin{equation*}
   R^2_\mathrm{adj}
   := 1 - \frac{\frac{1}{n-p-1}\mathrm{s}_{\hat\varepsilon}^2}{\frac{1}{n-1}\mathrm{s}_y^2}
@@ -619,40 +633,39 @@ Since the adjusted <span class="math inline">\(R^2\)</span> value has also incre
 the extended model may be better than the original model.</p>
 </div>
 </div>
-<div id="error-var" class="section level2 hasAnchor" number="10.2">
-<h2><span class="header-section-number">10.2</span> Error Variance<a href="S10-diagnostics.html#error-var" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The estimate for the error variance,
+<div id="error-var" class="section level2 hasAnchor" number="10.3">
+<h2><span class="header-section-number">10.3</span> Error Variance<a href="S10-diagnostics.html#error-var" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Another measure for model fit is the estimated error variance,
 <span class="math display">\[\begin{equation*}
-  \hat\sigma^2 = \frac{1}{n - q} \sum_{i=1}^n (y_i - \hat y_i)^2
+  \hat\sigma^2 = \frac{1}{n - p - 1} \sum_{i=1}^n (y_i - \hat y_i)^2.
 \end{equation*}\]</span>
-can be used, where <span class="math inline">\(q\)</span> is the number of columns of the design matrix.
-(For the full model with an intercept we have <span class="math inline">\(q = p+1\)</span>.)
-“Good” models have small <span class="math inline">\(\hat\sigma^2\)</span>. We have
+Good models have small <span class="math inline">\(\hat\sigma^2\)</span>. This measure is closely related to
+the adjusted <span class="math inline">\(R^2\)</span> value. We have
 <span class="math display">\[\begin{align*}
   R^2_\mathrm{adj}
-  &amp;= 1 - \frac{\frac{1}{n-q}\mathrm{s}_{\hat\varepsilon}^2}{\frac{1}{n-1}\mathrm{s}_y^2} \\
-  &amp;= 1 - \frac{\frac{n-1}{n-q}\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2} \\
-  &amp;= 1 - \frac{\frac{1}{n-q} \sum_{i=1}^n (y_i - \hat y_i)^2}{\mathrm{s}_y^2} \\
+  &amp;= 1 - \frac{\frac{1}{n-p-1}\mathrm{s}_{\hat\varepsilon}^2}{\frac{1}{n-1}\mathrm{s}_y^2} \\
+  &amp;= 1 - \frac{\frac{n-1}{n-p-1}\mathrm{s}_{\hat\varepsilon}^2}{\mathrm{s}_y^2} \\
+  &amp;= 1 - \frac{\frac{1}{n-p-1} \sum_{i=1}^n (y_i - \hat y_i)^2}{\mathrm{s}_y^2} \\
   &amp;= 1 - \frac{\hat\sigma^2}{\mathrm{s}_y^2},
 \end{align*}\]</span>
 where <span class="math inline">\(\mathrm{s}_{\hat\varepsilon}^2\)</span> and <span class="math inline">\(\mathrm{s}_y^2\)</span> are the sample variances
 as before. Thus, minimising <span class="math inline">\(\hat\sigma^2\)</span> is equivalent to
 maximising <span class="math inline">\(R^2_\mathrm{adj}\)</span>.</p>
 </div>
-<div id="PRESS" class="section level2 hasAnchor" number="10.3">
-<h2><span class="header-section-number">10.3</span> Prediction Error Sum of Squares<a href="S10-diagnostics.html#PRESS" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="PRESS" class="section level2 hasAnchor" number="10.4">
+<h2><span class="header-section-number">10.4</span> Prediction Error Sum of Squares<a href="S10-diagnostics.html#PRESS" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The <strong>Prediction Error Sum of Squares (PRESS)</strong> compares each
-output <span class="math inline">\(y_i\)</span> to the fitted value <span class="math inline">\(\hat y^{(i)}_i\)</span> for observation i,
+output <span class="math inline">\(y_i\)</span> to the fitted value <span class="math inline">\(\hat y^{(i)}_i\)</span> for observation <span class="math inline">\(i\)</span>,
 computed without using sample <span class="math inline">\(i\)</span>:
 <span class="math display">\[\begin{equation*}
    \mathrm{PRESS}
    := \sum_{i=1}^n \bigl( y_i - \hat y^{(i)}_i \bigr)^2.
 \end{equation*}\]</span>
-In the comparison, <span class="math inline">\(\hat y^{(i)}_i\)</span> is used instead of <span class="math inline">\(\hat y_i\)</span>
-so that in models with too many parameters, overfitting does not
-result in overoptimistic estimates.
-“Good” models have small PRESS. The following lemma helps to compute
-PRESS without having to fit <span class="math inline">\(n\)</span> separate models.</p>
+By using <span class="math inline">\(\hat y^{(i)}_i\)</span> instead of <span class="math inline">\(\hat y_i\)</span> in the comparison,
+we avoid overoptimistic estimates that would arise from overfitting
+in models with too many parameters.
+Good models have small PRESS. The following lemma provides a convenient
+formula for computing PRESS without having to fit <span class="math inline">\(n\)</span> separate models.</p>
 <div class="lemma">
 <p><span id="lem:PRESS" class="lemma"><strong>Lemma 10.2  </strong></span>We have
 <span class="math display">\[\begin{equation*}
@@ -687,8 +700,8 @@ Substituting this expression into the definition of PRESS
 completes the proof.</p>
 </div>
 </div>
-<div id="AIC" class="section level2 hasAnchor" number="10.4">
-<h2><span class="header-section-number">10.4</span> Akaike’s Information Criterion<a href="S10-diagnostics.html#AIC" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="AIC" class="section level2 hasAnchor" number="10.5">
+<h2><span class="header-section-number">10.5</span> Akaike’s Information Criterion<a href="S10-diagnostics.html#AIC" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><strong>Akaike’s Information Criterion (AIC)</strong> is defined as
 <span class="math display">\[\begin{equation*}
     \mathrm{AIC}
@@ -696,7 +709,8 @@ completes the proof.</p>
 \end{equation*}\]</span>
 where <span class="math inline">\(q\)</span> is the number of parameters in the model, and <span class="math inline">\(\hat L\)</span>
 is the maximum of the likelihood function when these <span class="math inline">\(q\)</span> parameters
-are chosen optimally. “Good” models have small AIC.</p>
+are chosen optimally. For a model with <span class="math inline">\(p\)</span> predictors and an intercept,
+we have <span class="math inline">\(q = p+1\)</span>. Good models have small AIC.</p>
 <p>Since we assume <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span>, i.i.d. and
 we have <span class="math inline">\(\varepsilon_i = y_i - x_i^\top\beta\)</span>, the likelihood function
 for our model is
@@ -723,7 +737,7 @@ find the optimal value of <span class="math inline">\(\sigma^2\)</span>. The res
    \hat\sigma^2_\mathrm{MLE}
    = \frac1n r(\hat\beta)
    = \frac{1}{n} \sum_{i=1}^n \bigl( y_i - (X \hat\beta)_i \bigr)^2
-   = \frac{n-q}{n} \hat\sigma^2.
+   = \frac{n-p-1}{n} \hat\sigma^2.
 \end{equation*}\]</span>
 Thus we get
 <span class="math display">\[\begin{align*}
