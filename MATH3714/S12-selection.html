@@ -264,13 +264,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="12.2.1" data-path="S12-selection.html"><a href="S12-selection.html#missing-variables"><i class="fa fa-check"></i><b>12.2.1</b> Missing Variables</a></li>
 <li class="chapter" data-level="12.2.2" data-path="S12-selection.html"><a href="S12-selection.html#unnecessary-variables"><i class="fa fa-check"></i><b>12.2.2</b> Unnecessary Variables</a></li>
 </ul></li>
-<li class="chapter" data-level="12.3" data-path="S12-selection.html"><a href="S12-selection.html#choosing-between-models"><i class="fa fa-check"></i><b>12.3</b> Choosing Between Models</a>
+<li class="chapter" data-level="12.3" data-path="S12-selection.html"><a href="S12-selection.html#sec:nested-models"><i class="fa fa-check"></i><b>12.3</b> Testing Nested Models</a></li>
+<li class="chapter" data-level="12.4" data-path="S12-selection.html"><a href="S12-selection.html#choosing-between-models"><i class="fa fa-check"></i><b>12.4</b> Choosing Between Models</a>
 <ul>
-<li class="chapter" data-level="12.3.1" data-path="S12-selection.html"><a href="S12-selection.html#criteria-for-model-selection"><i class="fa fa-check"></i><b>12.3.1</b> Criteria for Model Selection</a></li>
-<li class="chapter" data-level="12.3.2" data-path="S12-selection.html"><a href="S12-selection.html#exhaustive-search"><i class="fa fa-check"></i><b>12.3.2</b> Exhaustive Search</a></li>
-<li class="chapter" data-level="12.3.3" data-path="S12-selection.html"><a href="S12-selection.html#stepwise-forward-selection"><i class="fa fa-check"></i><b>12.3.3</b> Stepwise Forward Selection</a></li>
-<li class="chapter" data-level="12.3.4" data-path="S12-selection.html"><a href="S12-selection.html#stepwise-backward-selection"><i class="fa fa-check"></i><b>12.3.4</b> Stepwise Backward Selection</a></li>
-<li class="chapter" data-level="12.3.5" data-path="S12-selection.html"><a href="S12-selection.html#hybrid-methods"><i class="fa fa-check"></i><b>12.3.5</b> Hybrid Methods</a></li>
+<li class="chapter" data-level="12.4.1" data-path="S12-selection.html"><a href="S12-selection.html#criteria-for-model-selection"><i class="fa fa-check"></i><b>12.4.1</b> Criteria for Model Selection</a></li>
+<li class="chapter" data-level="12.4.2" data-path="S12-selection.html"><a href="S12-selection.html#exhaustive-search"><i class="fa fa-check"></i><b>12.4.2</b> Exhaustive Search</a></li>
+<li class="chapter" data-level="12.4.3" data-path="S12-selection.html"><a href="S12-selection.html#stepwise-forward-selection"><i class="fa fa-check"></i><b>12.4.3</b> Stepwise Forward Selection</a></li>
+<li class="chapter" data-level="12.4.4" data-path="S12-selection.html"><a href="S12-selection.html#stepwise-backward-selection"><i class="fa fa-check"></i><b>12.4.4</b> Stepwise Backward Selection</a></li>
+<li class="chapter" data-level="12.4.5" data-path="S12-selection.html"><a href="S12-selection.html#hybrid-methods"><i class="fa fa-check"></i><b>12.4.5</b> Hybrid Methods</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="S13-exhaustive.html"><a href="S13-exhaustive.html"><i class="fa fa-check"></i><b>13</b> Exhaustive Model Search</a>
@@ -324,6 +325,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.3.4" data-path="S18-m-est.html"><a href="S18-m-est.html#hampel"><i class="fa fa-check"></i><b>18.3.4</b> Hampel’s Method</a></li>
 <li class="chapter" data-level="18.3.5" data-path="S18-m-est.html"><a href="S18-m-est.html#bisquare"><i class="fa fa-check"></i><b>18.3.5</b> Tukey’s Bisquare Method</a></li>
 </ul></li>
+<li class="chapter" data-level="18.4" data-path="S18-m-est.html"><a href="S18-m-est.html#breakdown-points-of-m-estimators"><i class="fa fa-check"></i><b>18.4</b> Breakdown Points of M-Estimators</a></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="S19-efficiency.html"><a href="S19-efficiency.html"><i class="fa fa-check"></i><b>19</b> Efficiency of Robust Estimators</a>
 <ul>
@@ -432,24 +434,24 @@ the coefficients.</p>
 <h3><span class="header-section-number">12.2.1</span> Missing Variables<a href="S12-selection.html#missing-variables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Assume that the data comes from the model
 <span class="math display">\[\begin{equation*}
-  Y = \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon,
+  Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon,
 \end{equation*}\]</span>
-(we can include the intercept as <span class="math inline">\(x_1 = 1\)</span> if needed),
-but we are only using the first <span class="math inline">\(q\)</span> variables <span class="math inline">\(x_1, \ldots, x_q\)</span>,
+where <span class="math inline">\(p\)</span> denotes the number of predictors (not including the intercept),
+but we are only using the first <span class="math inline">\(q\)</span> predictors <span class="math inline">\(x_1, \ldots, x_q\)</span>,
 where <span class="math inline">\(q &lt; p\)</span>, to estimate the coefficients. Then the least squares
-estimate of <span class="math inline">\(\beta = (\beta_1, \ldots, \beta_q)\)</span> is given by
+estimate of <span class="math inline">\(\beta = (\beta_0, \beta_1, \ldots, \beta_q)\)</span> is given by
 <span class="math display">\[\begin{equation*}
   \hat\beta
   = (X^\top X)^{-1} X^\top y
 \end{equation*}\]</span>
-where <span class="math inline">\(X \in \mathbb{R}^{n\times q}\)</span>,
+where <span class="math inline">\(X \in \mathbb{R}^{n\times (q+1)}\)</span> has columns <span class="math inline">\([1, x_1, \ldots, x_q]\)</span>,
 and our estimate for the error variance <span class="math inline">\(\sigma^2\)</span> is
 <span class="math display">\[\begin{equation*}
   \hat\sigma^2
-  = \frac{1}{n-q} y^\top (I - H) y,
+  = \frac{1}{n-q-1} y^\top (I - H) y,
 \end{equation*}\]</span>
 where <span class="math inline">\(H = X (X^\top X)^{-1} X^\top\)</span> is the hat matrix computed
-without using <span class="math inline">\(x_{q+1}, \ldots, x_p\)</span>.</p>
+using only the first <span class="math inline">\(q\)</span> predictors.</p>
 <p>If we write <span class="math inline">\(\tilde X \in \mathbb{R}^{n\times (p-q)}\)</span> for the matrix with columns
 <span class="math inline">\(x_{q+1}, \ldots, x_p\)</span> and <span class="math inline">\(\tilde\beta = (\beta_{q+1}, \ldots, \beta_p) \in
 \mathbb{R}^{p-q}\)</span>, then the full model can be written as
@@ -493,7 +495,7 @@ Similar to our derivation in the section <a href="S04-model.html#var-est-bias">E
 one can show that
 <span class="math display">\[\begin{equation*}
   \mathbb{E}\bigl( \hat\sigma^2 \bigr)
-  = \sigma^2 + \frac{\tilde\beta^\top \tilde X^\top (I - H) \tilde X \tilde \beta}{n-q}.
+  = \sigma^2 + \frac{\tilde\beta^\top \tilde X^\top (I - H) \tilde X \tilde \beta}{n-q-1}.
 \end{equation*}\]</span>
 Thus, the estimate of the error variance is in general also biased.</p>
 <p>This shows that our estimates can become biased if some of the inputs
@@ -550,10 +552,89 @@ when we added the unnecessary input.</p>
 as possible.</p>
 </div>
 </div>
-<div id="choosing-between-models" class="section level2 hasAnchor" number="12.3">
-<h2><span class="header-section-number">12.3</span> Choosing Between Models<a href="S12-selection.html#choosing-between-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div id="criteria-for-model-selection" class="section level3 hasAnchor" number="12.3.1">
-<h3><span class="header-section-number">12.3.1</span> Criteria for Model Selection<a href="S12-selection.html#criteria-for-model-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="sec:nested-models" class="section level2 hasAnchor" number="12.3">
+<h2><span class="header-section-number">12.3</span> Testing Nested Models<a href="S12-selection.html#sec:nested-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the preceding section, we discussed the bias-variance trade-off when
+choosing between a full model and a reduced model. A natural question arises:
+how can we formally test whether the additional predictors in the full model
+are needed? In section <a href="S06-simultaneous.html#S06-simultaneous">6</a>, we developed the <span class="math inline">\(F\)</span>-test
+for testing linear combinations of coefficients. Here we show that for nested
+models, this test simplifies to a formula involving only the residual sums of
+squares.</p>
+<p>We use the same setup as in the preceding section: the reduced model uses only
+the first <span class="math inline">\(q\)</span> predictors, with design matrix <span class="math inline">\(X \in \mathbb{R}^{n\times (q+1)}\)</span>
+(including intercept), while the full model uses all <span class="math inline">\(p\)</span> predictors, with
+additional predictors in <span class="math inline">\(\tilde X \in \mathbb{R}^{n\times (p-q)}\)</span>. We wish to test
+<span class="math display">\[\begin{equation*}
+  H_0\colon \tilde\beta = 0
+  \quad \text{vs.} \quad
+  H_1\colon \tilde\beta \neq 0.
+\end{equation*}\]</span>
+Let <span class="math inline">\(X_{\text{full}} = [X\; \tilde X] \in \mathbb{R}^{n \times (p+1)}\)</span> be the design
+matrix for the full model. We define the hat matrices
+<span class="math display">\[\begin{equation*}
+  H_{\text{reduced}}
+  = X(X^\top X)^{-1} X^\top
+  \quad \text{and} \quad
+  H_{\text{full}}
+  = X_{\text{full}}(X_{\text{full}}^\top X_{\text{full}})^{-1} X_{\text{full}}^\top,
+\end{equation*}\]</span>
+and the residual sums of squares as
+<span class="math display">\[\begin{equation*}
+  \mathrm{RSS}_{\text{reduced}}
+  := \| y - H_{\text{reduced}} y \|^2
+  \quad \text{and} \quad
+  \mathrm{RSS}_{\text{full}}
+  := \| y - H_{\text{full}} y \|^2.
+\end{equation*}\]</span></p>
+<div class="theorem">
+<p><span id="thm:nested-F-test" class="theorem"><strong>Theorem 12.1  </strong></span>Under the model <span class="math inline">\(Y = X\beta + \tilde X \tilde\beta + \varepsilon\)</span> with <span class="math inline">\(\varepsilon\sim
+\mathcal{N}(0, \sigma^2 I)\)</span>, to test <span class="math inline">\(H_0\colon \tilde\beta = 0\)</span>, the <span class="math inline">\(F\)</span>-statistic
+is given by
+<span class="math display" id="eq:nested-F">\[\begin{equation}
+  F
+  = \frac{(\mathrm{RSS}_{\text{reduced}} - \mathrm{RSS}_{\text{full}})/(p-q)}
+         {\mathrm{RSS}_{\text{full}}/(n-p-1)}.  \tag{12.1}
+\end{equation}\]</span>
+Under <span class="math inline">\(H_0\)</span>, we have <span class="math inline">\(F \sim F_{p-q, n-p-1}\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-50" class="proof"><em>Proof</em>. </span>In section <a href="S06-simultaneous.html#S06-simultaneous">6</a>, we have seen that the <span class="math inline">\(F\)</span>-statistic for
+testing <span class="math inline">\(k\)</span> linear combinations of coefficients is given by
+<span class="math display">\[\begin{equation*}
+  F
+  = \frac{\bigl\| K \hat\beta - K \beta \bigr\|_{K(X^\top X)^{-1} K^\top}^2}
+         {k \hat\sigma^2},
+\end{equation*}\]</span>
+where <span class="math inline">\(K\)</span> is a matrix that selects the coefficients of interest. For testing
+<span class="math inline">\(H_0\colon \tilde\beta = 0\)</span>, we have <span class="math inline">\(k = p-q\)</span>. It can be shown (though we
+omit the details) that for this choice of <span class="math inline">\(K\)</span>, we have
+<span class="math display">\[\begin{equation*}
+  \bigl\| K \hat\beta - K \beta \bigr\|_{K(X^\top X)^{-1} K^\top}^2
+  = \mathrm{RSS}_{\text{reduced}} - \mathrm{RSS}_{\text{full}}.
+\end{equation*}\]</span>
+Furthermore, under the full model, we have
+<span class="math display">\[\begin{equation*}
+  \hat\sigma^2
+  = \frac{\mathrm{RSS}_{\text{full}}}{n-p-1}.
+\end{equation*}\]</span>
+Substituting these expressions into the <span class="math inline">\(F\)</span>-statistic, we obtain
+<span class="math display">\[\begin{equation*}
+  F
+  = \frac{(\mathrm{RSS}_{\text{reduced}} - \mathrm{RSS}_{\text{full}})/(p-q)}
+         {\mathrm{RSS}_{\text{full}}/(n-p-1)}.
+\end{equation*}\]</span>
+By lemma <a href="S06-simultaneous.html#lem:F-dist">6.1</a>, this follows an <span class="math inline">\(F_{p-q, n-p-1}\)</span> distribution
+under <span class="math inline">\(H_0\)</span>.</p>
+</div>
+<p>This formula is particularly useful in practice: we can test whether predictors
+should be included simply by comparing residual sums of squares, without
+computing the Mahalanobis norm from section <a href="S06-simultaneous.html#S06-simultaneous">6</a>.</p>
+</div>
+<div id="choosing-between-models" class="section level2 hasAnchor" number="12.4">
+<h2><span class="header-section-number">12.4</span> Choosing Between Models<a href="S12-selection.html#choosing-between-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="criteria-for-model-selection" class="section level3 hasAnchor" number="12.4.1">
+<h3><span class="header-section-number">12.4.1</span> Criteria for Model Selection<a href="S12-selection.html#criteria-for-model-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>When comparing different models, we need a criterion to decide which
 is “best”. Several options exist:</p>
 <ul>
@@ -563,7 +644,7 @@ variables are added, even if they are irrelevant. This makes it
 unsuitable for model selection.</p></li>
 <li><p><strong>Adjusted <span class="math inline">\(R^2\)</span></strong> (written <span class="math inline">\(R^2_\mathrm{adj}\)</span>): Adjusts <span class="math inline">\(R^2\)</span> to
 penalize model complexity. This is the criterion we will use
-throughout this section and the next.</p></li>
+throughout this section and section <a href="S13-exhaustive.html#S13-exhaustive">13</a>.</p></li>
 <li><p><strong>AIC</strong> (Akaike Information Criterion) and <strong>BIC</strong> (Bayesian
 Information Criterion): Alternative criteria that also penalize
 model complexity, discussed in section <a href="S10-diagnostics.html#S10-diagnostics">10</a>.</p></li>
@@ -571,8 +652,8 @@ model complexity, discussed in section <a href="S10-diagnostics.html#S10-diagno
 <p>In the following subsections, we describe algorithms that use these
 criteria to select models efficiently.</p>
 </div>
-<div id="exhaustive-search" class="section level3 hasAnchor" number="12.3.2">
-<h3><span class="header-section-number">12.3.2</span> Exhaustive Search<a href="S12-selection.html#exhaustive-search" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="exhaustive-search" class="section level3 hasAnchor" number="12.4.2">
+<h3><span class="header-section-number">12.4.2</span> Exhaustive Search<a href="S12-selection.html#exhaustive-search" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For a model with <span class="math inline">\(p\)</span> input variables, there are <span class="math inline">\(2^p\)</span> different choices for
 which variables to include in the model (or <span class="math inline">\(2^{p+1}\)</span>, if we also have to
 decide whether to include the intercept). This value increases quickly with
@@ -582,10 +663,11 @@ try all possible models to find the best one.</p>
 <p>If <span class="math inline">\(p\)</span> is small enough, we can simply fit all <span class="math inline">\(2^p\)</span> models and choose the one
 with the best performance (<em>e.g.</em>, highest <span class="math inline">\(R^2_\mathrm{adj}\)</span>). This guarantees
 finding the optimal model. However, for <span class="math inline">\(p \geq 20\)</span> this becomes
-computationally infeasible (<span class="math inline">\(2^{20} &gt; 1\)</span> million models).</p>
+computationally infeasible (<span class="math inline">\(2^{20} &gt; 1\)</span> million models). See
+section <a href="S13-exhaustive.html#S13-exhaustive">13</a> for more details on exhaustive search methods.</p>
 </div>
-<div id="stepwise-forward-selection" class="section level3 hasAnchor" number="12.3.3">
-<h3><span class="header-section-number">12.3.3</span> Stepwise Forward Selection<a href="S12-selection.html#stepwise-forward-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="stepwise-forward-selection" class="section level3 hasAnchor" number="12.4.3">
+<h3><span class="header-section-number">12.4.3</span> Stepwise Forward Selection<a href="S12-selection.html#stepwise-forward-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Here the idea is to start with a minimal model, and then add variables one by
 one, until no further (large enough) improvements can be achieved.</p>
 <p>Start with only intercept term: <span class="math inline">\(y=\beta_0 + \varepsilon\)</span>, then
@@ -600,13 +682,13 @@ for <span class="math inline">\(j \in \{1, \ldots, p\}\)</span>.</p>
 continues by adding more variables, one at a time, until either</p>
 <ul>
 <li>All variables are in the model.</li>
-<li>The significance level can not be achieved by any variable not in the model.</li>
+<li>The significance level cannot be achieved by any variable not in the model.</li>
 </ul>
 <p>The “significance of the model” can be examined by considering a
 <span class="math inline">\(t\)</span>-test as in lemma <a href="S05-single.html#lem:t-test">5.4</a>.</p>
 </div>
-<div id="stepwise-backward-selection" class="section level3 hasAnchor" number="12.3.4">
-<h3><span class="header-section-number">12.3.4</span> Stepwise Backward Selection<a href="S12-selection.html#stepwise-backward-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="stepwise-backward-selection" class="section level3 hasAnchor" number="12.4.4">
+<h3><span class="header-section-number">12.4.4</span> Stepwise Backward Selection<a href="S12-selection.html#stepwise-backward-selection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Here the idea is to start with the full model, and to remove variables
 one by one until no good enough candidates for removal are left.</p>
 <p>In each step we consider the test statistic <span class="math inline">\(|T_j|\)</span> for the tests
@@ -624,14 +706,14 @@ Repeat until either:</p>
 <li>The smallest <span class="math inline">\(|T_j|\)</span> is above the threshold.</li>
 </ul>
 </div>
-<div id="hybrid-methods" class="section level3 hasAnchor" number="12.3.5">
-<h3><span class="header-section-number">12.3.5</span> Hybrid Methods<a href="S12-selection.html#hybrid-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="hybrid-methods" class="section level3 hasAnchor" number="12.4.5">
+<h3><span class="header-section-number">12.4.5</span> Hybrid Methods<a href="S12-selection.html#hybrid-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Either start with a full model or just intercept. At each stage consider:</p>
 <ul>
 <li>removing least significant variable already in the model,</li>
 <li>adding most significant variable not currently in the model,</li>
 </ul>
-<p>with significance levels set to avoid a cyclical behaviour.</p>
+<p>with significance levels set to avoid cyclical behaviour.</p>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>

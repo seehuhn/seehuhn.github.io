@@ -79,6 +79,7 @@
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -6009,7 +6010,7 @@ sections in turn:
 The \hyperref[S09-plots]{diagnostic plots} introduced in section~\ref{S09-plots}
 can often reveal if the data do not fit the modelling assumptions.
 In cases where the assumptions are violated, sometimes a linear
-model can still be used if the data is transformed first.
+model can still be used if the data are transformed first.
 
 \subsection{Linearising the Mean}\label{linearising-the-mean}
 
@@ -6018,18 +6019,18 @@ can sometimes transform the variables to achieve a linear relationship.
 We list some examples of non-linear models which can be transformed
 to linear models:
 
-{\def\LTcaptype{} % do not increment counter
+{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3750}}
   >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2500}}
   >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3750}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
-nonlinear model
+Nonlinear Model
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-transformation
+Transformation
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-linear Model
+Linear Model
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
@@ -6077,7 +6078,7 @@ strict equality.
 
 Some commonly-used variance stabilising transformations are:
 
-{\def\LTcaptype{} % do not increment counter
+{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.6429}}
   >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.3571}}@{}}
@@ -6131,7 +6132,7 @@ this transformation, we plot the function \(y \mapsto \arcsin(\sqrt{y})\):
 
 We can see that the transformation is approximately linear for most
 of the interval, but has a steeper slope near the edges. The effect of
-this is to increase the size of fluctations for small and large
+this is to increase the size of fluctuations for small and large
 \(y\)-values. We now consider residual plots for the original and transformed
 data, for a simulated dataset:
 
@@ -6362,16 +6363,23 @@ We see that the spread of the residuals has indeed improved, when compared to
 fitting the original data.
 \end{example}
 
+When applying transformations, we create new candidate variables---for example,
+we might have both \(x\) and \(\log x\) available as potential predictors. This
+leads naturally to the question of which variables (original or transformed)
+should be included in the final model. We will study this question in the next
+section.
+
 \textbf{Summary}
 
 \begin{itemize}
 \tightlist
 \item
-  We have seen different transformations which can be used
-  to transform a nonlinear model into a linear one.
+  Transformations can be used to linearise the mean or to stabilise
+  the variance of the errors.
 \item
-  We have discussed transformations which can stabilise the
-  variance of the errors in the model.
+  The power transform provides a systematic family of transformations
+  for positive response data, with a data-driven method for selecting
+  the transformation parameter λ.
 \end{itemize}
 
 \clearpage
@@ -6387,7 +6395,7 @@ of the workshop in week~6 where the answers will be discussed.
 \textbf{9.} Consider the following dataset. Our aim is to predict \(y\) from the
 variables \(x_1\), \(x_2\) and \(x_3\).
 
-{\def\LTcaptype{} % do not increment counter
+{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}rrrrr@{}}
 \toprule\noalign{}
 \(i\) & \(x_{1,i}\) & \(x_{2,i}\) & \(x_{3,i}\) & \(y_i\) \\
@@ -6788,24 +6796,24 @@ the coefficients.
 
 Assume that the data comes from the model
 \begin{equation*}
-  Y = \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon,
+  Y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \varepsilon,
 \end{equation*}
-(we can include the intercept as \(x_1 = 1\) if needed),
-but we are only using the first \(q\) variables \(x_1, \ldots, x_q\),
+where \(p\) denotes the number of predictors (not including the intercept),
+but we are only using the first \(q\) predictors \(x_1, \ldots, x_q\),
 where \(q < p\), to estimate the coefficients. Then the least squares
-estimate of \(\beta = (\beta_1, \ldots, \beta_q)\) is given by
+estimate of \(\beta = (\beta_0, \beta_1, \ldots, \beta_q)\) is given by
 \begin{equation*}
   \hat\beta
   = (X^\top X)^{-1} X^\top y
 \end{equation*}
-where \(X \in \mathbb{R}^{n\times q}\),
+where \(X \in \mathbb{R}^{n\times (q+1)}\) has columns \([1, x_1, \ldots, x_q]\),
 and our estimate for the error variance \(\sigma^2\) is
 \begin{equation*}
   \hat\sigma^2
-  = \frac{1}{n-q} y^\top (I - H) y,
+  = \frac{1}{n-q-1} y^\top (I - H) y,
 \end{equation*}
 where \(H = X (X^\top X)^{-1} X^\top\) is the hat matrix computed
-without using \(x_{q+1}, \ldots, x_p\).
+using only the first \(q\) predictors.
 
 If we write \(\tilde X \in \mathbb{R}^{n\times (p-q)}\) for the matrix with columns
 \(x_{q+1}, \ldots, x_p\) and \(\tilde\beta = (\beta_{q+1}, \ldots, \beta_p) \in
@@ -6851,7 +6859,7 @@ Similar to our derivation in the section \hyperref[var-est-bias]{Estimating the 
 one can show that
 \begin{equation*}
   \mathbb{E}\bigl( \hat\sigma^2 \bigr)
-  = \sigma^2 + \frac{\tilde\beta^\top \tilde X^\top (I - H) \tilde X \tilde \beta}{n-q}.
+  = \sigma^2 + \frac{\tilde\beta^\top \tilde X^\top (I - H) \tilde X \tilde \beta}{n-q-1}.
 \end{equation*}
 Thus, the estimate of the error variance is in general also biased.
 
@@ -6945,6 +6953,89 @@ when we added the unnecessary input.
 The example illustrates that it is important to keep the model as small
 as possible.
 
+\subsection{Testing Nested Models}\label{sec:nested-models}
+
+In the preceding section, we discussed the bias-variance trade-off when
+choosing between a full model and a reduced model. A natural question arises:
+how can we formally test whether the additional predictors in the full model
+are needed? In section~\ref{S06-simultaneous}, we developed the \(F\)-test
+for testing linear combinations of coefficients. Here we show that for nested
+models, this test simplifies to a formula involving only the residual sums of
+squares.
+
+We use the same setup as in the preceding section: the reduced model uses only
+the first \(q\) predictors, with design matrix \(X \in \mathbb{R}^{n\times (q+1)}\)
+(including intercept), while the full model uses all \(p\) predictors, with
+additional predictors in \(\tilde X \in \mathbb{R}^{n\times (p-q)}\). We wish to test
+\begin{equation*}
+  H_0\colon \tilde\beta = 0
+  \quad \text{vs.} \quad
+  H_1\colon \tilde\beta \neq 0.
+\end{equation*}
+Let \(X_{\text{full}} = [X\; \tilde X] \in \mathbb{R}^{n \times (p+1)}\) be the design
+matrix for the full model. We define the hat matrices
+\begin{equation*}
+  H_{\text{reduced}}
+  = X(X^\top X)^{-1} X^\top
+  \quad \text{and} \quad
+  H_{\text{full}}
+  = X_{\text{full}}(X_{\text{full}}^\top X_{\text{full}})^{-1} X_{\text{full}}^\top,
+\end{equation*}
+and the residual sums of squares as
+\begin{equation*}
+  \mathrm{RSS}_{\text{reduced}}
+  := \| y - H_{\text{reduced}} y \|^2
+  \quad \text{and} \quad
+  \mathrm{RSS}_{\text{full}}
+  := \| y - H_{\text{full}} y \|^2.
+\end{equation*}
+
+\begin{theorem}
+\protect\hypertarget{thm:nested-F-test}{}\label{thm:nested-F-test}Under the model \(Y = X\beta + \tilde X \tilde\beta + \varepsilon\) with \(\varepsilon\sim
+\mathcal{N}(0, \sigma^2 I)\), to test \(H_0\colon \tilde\beta = 0\), the \(F\)-statistic
+is given by
+\begin{equation}
+  F
+  = \frac{(\mathrm{RSS}_{\text{reduced}} - \mathrm{RSS}_{\text{full}})/(p-q)}
+         {\mathrm{RSS}_{\text{full}}/(n-p-1)}.  \label{eq:nested-F}
+\end{equation}
+Under \(H_0\), we have \(F \sim F_{p-q, n-p-1}\).
+\end{theorem}
+
+\begin{proof}
+In section~\ref{S06-simultaneous}, we have seen that the \(F\)-statistic for
+testing \(k\) linear combinations of coefficients is given by
+\begin{equation*}
+  F
+  = \frac{\bigl\| K \hat\beta - K \beta \bigr\|_{K(X^\top X)^{-1} K^\top}^2}
+         {k \hat\sigma^2},
+\end{equation*}
+where \(K\) is a matrix that selects the coefficients of interest. For testing
+\(H_0\colon \tilde\beta = 0\), we have \(k = p-q\). It can be shown (though we
+omit the details) that for this choice of \(K\), we have
+\begin{equation*}
+  \bigl\| K \hat\beta - K \beta \bigr\|_{K(X^\top X)^{-1} K^\top}^2
+  = \mathrm{RSS}_{\text{reduced}} - \mathrm{RSS}_{\text{full}}.
+\end{equation*}
+Furthermore, under the full model, we have
+\begin{equation*}
+  \hat\sigma^2
+  = \frac{\mathrm{RSS}_{\text{full}}}{n-p-1}.
+\end{equation*}
+Substituting these expressions into the \(F\)-statistic, we obtain
+\begin{equation*}
+  F
+  = \frac{(\mathrm{RSS}_{\text{reduced}} - \mathrm{RSS}_{\text{full}})/(p-q)}
+         {\mathrm{RSS}_{\text{full}}/(n-p-1)}.
+\end{equation*}
+By lemma~\ref{lem:F-dist}, this follows an \(F_{p-q, n-p-1}\) distribution
+under \(H_0\).
+\end{proof}
+
+This formula is particularly useful in practice: we can test whether predictors
+should be included simply by comparing residual sums of squares, without
+computing the Mahalanobis norm from section~\ref{S06-simultaneous}.
+
 \subsection{Choosing Between Models}\label{choosing-between-models}
 
 \subsubsection{Criteria for Model Selection}\label{criteria-for-model-selection}
@@ -6961,7 +7052,7 @@ is ``best''. Several options exist:
 \item
   \textbf{Adjusted \(R^2\)} (written \(R^2_\mathrm{adj}\)): Adjusts \(R^2\) to
   penalize model complexity. This is the criterion we will use
-  throughout this section and the next.
+  throughout this section and section~\ref{S13-exhaustive}.
 \item
   \textbf{AIC} (Akaike Information Criterion) and \textbf{BIC} (Bayesian
   Information Criterion): Alternative criteria that also penalize
@@ -6983,7 +7074,8 @@ try all possible models to find the best one.
 If \(p\) is small enough, we can simply fit all \(2^p\) models and choose the one
 with the best performance (\emph{e.g.}, highest \(R^2_\mathrm{adj}\)). This guarantees
 finding the optimal model. However, for \(p \geq 20\) this becomes
-computationally infeasible (\(2^{20} > 1\) million models).
+computationally infeasible (\(2^{20} > 1\) million models). See
+section~\ref{S13-exhaustive} for more details on exhaustive search methods.
 
 \subsubsection{Stepwise Forward Selection}\label{stepwise-forward-selection}
 
@@ -7007,7 +7099,7 @@ continues by adding more variables, one at a time, until either
 \item
   All variables are in the model.
 \item
-  The significance level can not be achieved by any variable not in the model.
+  The significance level cannot be achieved by any variable not in the model.
 \end{itemize}
 
 The ``significance of the model'' can be examined by considering a
@@ -7049,7 +7141,7 @@ Either start with a full model or just intercept. At each stage consider:
   adding most significant variable not currently in the model,
 \end{itemize}
 
-with significance levels set to avoid a cyclical behaviour.
+with significance levels set to avoid cyclical behaviour.
 
 \textbf{Summary}
 
@@ -7634,7 +7726,7 @@ Assume we are given data
 \((1, \mathrm{male})\), \((2, \mathrm{female})\), \((3, \mathrm{female})\).
 Then we can encode this data using the following design matrix:
 
-{\def\LTcaptype{} % do not increment counter
+{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}ccc@{}}
 \toprule\noalign{}
 intercept & \(x_1\) & \(1_\mathrm{\{female\}}(x_2)\) \\
@@ -8272,7 +8364,7 @@ defined.
 \begin{example}
 Consider the following data:
 
-{\def\LTcaptype{} % do not increment counter
+{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}rcl@{}}
 \toprule\noalign{}
 \(y\) & \(x_1\) & \(x_2\) \\
@@ -10112,6 +10204,18 @@ a \frac{\varepsilon- c \mathop{\mathrm{sign}}(\varepsilon)}{b - c} & \mbox{if } 
 0 & \mbox{if } c < |\varepsilon|.
 \end{cases}
 \end{equation*}
+We observe an important property: for residuals with \(|\varepsilon| > c\),
+the \(\psi\)-function equals zero. This property deserves a name:
+
+\begin{definition}
+A \(\psi\)-function is called \textbf{redescending} if \(\psi(u) \to 0\) as \(|u| \to \infty\).
+\end{definition}
+
+Hampel's method uses a redescending \(\psi\)-function. Observations with \(|\varepsilon_i| > c\)
+receive zero weight and have no influence on the regression estimate whatsoever.
+This provides additional robustness compared to non-redescending methods such as
+Huber's, where large residuals are down-weighted but still retain some influence.
+
 Since these formulas are tedious to understand, we consider plots
 of \(\psi\) and \(\psi(\varepsilon) / \varepsilon\) again:
 
@@ -10148,7 +10252,8 @@ and do not affect the location of the regression line at all.
 We see that \(\psi\) is not increasing and therefore \(\rho\) is not convex. A
 consequence of this fact is that the function~\(s\) may have several local minima
 and care must be used when choosing the starting point of iterative
-minimisation methods.
+minimisation methods. Non-convexity is a common feature of redescending
+M-estimators.
 
 \subsubsection{Tukey's Bisquare Method}\label{bisquare}
 
@@ -10171,6 +10276,9 @@ with derivative
       0 & \mbox{if } |\varepsilon| > a.
   \end{cases}
 \end{equation*}
+Like Hampel's method, Tukey's bisquare is also a redescending \(\psi\)-function,
+since \(\psi(\varepsilon) = 0\) for all \(|\varepsilon| > a\).
+
 The plots show that this is a simplified variant of Hampel's
 estimator:
 
@@ -10199,6 +10307,26 @@ estimator:
 Again, \(\rho\) is not convex and care is needed when computing
 the estimate~\(\hat\beta\).
 
+\subsection{Breakdown Points of M-Estimators}\label{breakdown-points-of-m-estimators}
+
+In section~\ref{S17-robust} we introduced the breakdown point as a measure
+of robustness. We now consider how the choice of \(\psi\)-function affects the
+breakdown point of M-estimators.
+
+For M-estimators with non-redescending \(\psi\)-functions (such as least squares,
+LAV, or Huber's method), the \(\psi\)-function grows without bound as
+\(|\varepsilon| \to \infty\). This means that observations with arbitrarily large
+residuals still contribute to the objective function. Consequently, a single
+outlier with sufficiently large \(y\)-value can make \(\|\hat\beta\| \to \infty\).
+Thus, these methods have breakdown point \(\varepsilon_n(\hat\beta) = 1/n\).
+
+Redescending M-estimators (such as Hampel's or Tukey's bisquare) assign zero
+weight to observations with large residuals. This provides additional
+robustness compared to non-redescending methods. However, the breakdown point
+is still \(1/n\) for M-estimators in general, because a single \(x\)-space outlier
+with high leverage can still cause breakdown. Methods with higher breakdown
+points are discussed in section~\ref{S19-efficiency}.
+
 \textbf{Summary}
 
 \begin{itemize}
@@ -10209,6 +10337,8 @@ the estimate~\(\hat\beta\).
   We discussed the iteratively re-weighted least squares method for computing M-estimates.
 \item
   We discussed different choices for the objective function of an M-estimator.
+\item
+  We defined redescending \(\psi\)-functions and showed that M-estimators have breakdown point \(1/n\).
 \end{itemize}
 
 \clearpage
@@ -10344,9 +10474,10 @@ principle:
 
 \subsection{Robust estimators}\label{robust-estimators}
 
-Since the M-estimator only addresses \(y\)-space outliers, the breakdown point
-of M-estimation is still~\(1/n\). We now consider two estimators which have a
-higher breakdown point, but lower efficiency.
+As shown in section~\ref{S18-m-est}, M-estimators (both redescending and
+non-redescending) have breakdown point \(1/n\) because a single \(x\)-space outlier
+with high leverage can cause breakdown. We now consider two estimators which
+have a higher breakdown point, but lower efficiency.
 
 \subsubsection{Least Median of Squares}\label{LMS}
 
@@ -10566,7 +10697,7 @@ fitted lines can be plotted using \texttt{abline(lms1)} or \texttt{abline(lts1)}
 
 The following table summarises the R functions for robust regression:
 
-{\def\LTcaptype{} % do not increment counter
+{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1231}}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4923}}
@@ -11108,9 +11239,9 @@ differ:
 
 These differences reflect the different shapes of the weight functions
 \(w(\varepsilon) = \psi(\varepsilon) / \varepsilon\) discussed in section~\ref{S18-m-est}.
-The Bisquare and Hampel methods are ``redescending'' M-estimators, meaning
-that sufficiently large residuals receive weight zero. The Huber method
-is not redescending, so all observations retain some influence.
+The Bisquare and Hampel methods use redescending \(\psi\)-functions,
+assigning zero weight to sufficiently large residuals.~The Huber method
+uses a non-redescending \(\psi\)-function, so all observations retain some influence.
 
 \begin{figure}
 \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robweights-1} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robweights-2} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robweights-3} \caption{Comparisons of weights assigned by different M-estimators. The left plot shows weights for all observations. The centre and right plots compare weights pairwise between methods, with outliers shown as red points.}\label{fig:robweights}
