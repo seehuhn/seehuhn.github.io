@@ -79,6 +79,7 @@
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -843,9 +844,9 @@ We measure execution times using \texttt{microbenchmark}:
 \begin{verbatim}
 ## Unit: microseconds
 ##  expr      min       lq      mean   median        uq      max neval
-##  KDE1 1425.283 1490.760 1575.2132 1507.447 1523.1090 6990.049  1000
-##  KDE2  189.748  252.519  330.3486  262.728  267.4635 7285.372  1000
-##  KDE3  170.683  200.244  271.0934  222.876  227.3040 6347.374  1000
+##  KDE1 1428.317 1441.765 1492.2350 1448.776 1461.0760 4161.131  1000
+##  KDE2  192.905  194.709  230.0708  195.406  196.8615 2513.341  1000
+##  KDE3  173.225  174.783  218.7376  175.562  176.8330 4943.329  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -867,8 +868,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr     min       lq     mean  median       uq      max neval
-##  density 155.595 168.3665 187.3811 171.421 175.7465 4949.725  1000
+##     expr     min      lq     mean  median       uq      max neval
+##  density 155.144 158.957 185.0568 170.601 179.7235 6990.254  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -1528,7 +1529,7 @@ Thus, for the uniform kernel we have
 Calculations similar to the ones in the example give the following
 values:
 
-{\def\LTcaptype{} % do not increment counter
+{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedleft\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1017}}
   >{\centering\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.4322}}
@@ -1737,6 +1738,11 @@ For all of these choices, the kernel density estimator is given by
 (using \(K_H\) for the third option) for all \(x\in\mathbb{R}^p\).
 Bandwidth selection in the multivariate case is a difficult problem
 and we will not discuss this here.
+
+In the previous sections we have used kernel methods to estimate
+probability densities from observed data. In the following sections
+we will see a different application of kernel methods: using them for
+regression, where we estimate a function \(m\) from noisy observations.
 
 \clearpage
 
@@ -2116,7 +2122,7 @@ where \(K_h\) is a kernel scaled to bandwidth~\(h\) as in
 definition~\ref{def:KDE}.
 \end{definition}
 
-The problem of finding \(m\) using kernel functions are called \textbf{kernel smoothing}
+The problem of finding \(m\) using kernel functions is called \textbf{kernel smoothing}
 or \textbf{kernel regression}. In this context, the bandwidth \(h\) is also called
 the \textbf{smoothing parameter}. The Nadaraya-Watson Estimator is not the only
 method for kernel smoothing. We will learn about different methods in the
@@ -2243,7 +2249,7 @@ Section~\ref{X01-KDE} and
   := \frac1n \sum_{i=1}^n K_h(x - X_i) Y_i.
 \end{equation*}
 We will consider the numerator and denominator of equation \eqref{eq:m-hat-h}
-separately
+separately.
 
 \subsubsection*{Denominator}\label{denominator}
 \addcontentsline{toc}{subsubsection}{Denominator}
@@ -2322,7 +2328,7 @@ and let \(K\) be a kernel function. Then we have
 \end{lemma}
 
 \begin{proof}
-The first statement is proved using substitution and Taylor expandion of \(r\)
+The first statement is proved using substitution and Taylor expansion of \(r\)
 around \(x\) as shown in the derivation of equation~\eqref{eq:fhatbias}.
 The second statement is proved similarly, as shown in the derivation of
 equation~\eqref{eq:Var-frag1}.
@@ -2420,7 +2426,7 @@ This gives
   \mathbb{E}\bigl( \hat m_h(x) \bigr)
   &= m(x)
     + \frac12 \frac{\mu_2(K) r''(x)}{f(x)} h^2
-    - \frac12 \frac{\mu_2(x) m(x) f''(x)}{f(x)} h^2
+    - \frac12 \frac{\mu_2(K) m(x) f''(x)}{f(x)} h^2
     + o(h^2) \\
   &= m(x)
     + \frac12 \frac{\mu_2(K) \bigl(2 f'(x) m'(x) + f(x) m''(x)\bigr)}{f(x)} h^2
@@ -2453,7 +2459,7 @@ So finally we have
 \begin{itemize}
 \tightlist
 \item
-  A more careful calculation will need to take into account that \(\hat m(x)\)
+  A more careful calculation will need to take into account that \(\hat m_h(x)\)
   may be undefined. All expectations and variances are conditional on
   \(\hat f(x) \neq 0\). One can show that \(P\bigl( \hat f(x) \neq 0 \bigr) \to 1\)
   as \(n\to\infty\) for all \(x\in\mathbb{R}\) with \(f(x) > 0\), so this is not a problem.
@@ -2479,10 +2485,24 @@ So finally we have
 \begin{itemize}
 \tightlist
 \item
-  We have learned how the Nadaraya-Watson Estimator can be used
-  for smoothing.
+  The Nadaraya-Watson estimator provides a kernel-based method for
+  nonparametric regression, estimating \(m(x)\) as a weighted average of
+  nearby observations.
 \item
-  We have considered the mean squared error of this estimator.
+  For kernels with bounded support, the estimator may be undefined
+  when data points are too sparse (bandwidth too small).
+\item
+  Under a random design model, the estimator has bias of order \(O(h^2)\)
+  and variance of order \(O(1/(nh))\).
+\item
+  The optimal bandwidth is \(h \sim n^{-1/5}\), giving mean squared error
+  of order \(O(n^{-4/5})\).
+\item
+  The bias depends on both \(m''(x)\) and the ratio \(f'(x)/f(x)\), reflecting
+  curvature in the regression function and the density of observations.
+\item
+  The variance is smaller in regions where observations are plentiful
+  (large \(f(x)\)) and increases with the local noise level \(\sigma^2(x)\).
 \end{itemize}
 
 \clearpage
@@ -2499,7 +2519,7 @@ given data \((x_1, y_1), \ldots, (x_n, y_n)\).
 
 In the \href{https://seehuhn.github.io/MATH3714/S02-multiple.html\#the-normal-equations}{level 3 part of the module},
 we introduced the least squares method for linear regression. This method
-estimartes the regression coefficients by minimising the residual sum of
+estimates the regression coefficients by minimising the residual sum of
 squares:
 \begin{equation*}
   r(\beta)
@@ -2548,7 +2568,7 @@ As before, the fitted value for inputs \((\tilde x_1, \ldots, \tilde x_p) \in
   \hat\beta_0 + \hat\beta_1 \tilde x_1 + \cdots + \hat\beta_p \tilde x_p
   = \tilde x^\top \hat\beta,
 \end{equation*}
-where \(\tilde x = (1, \tilde x_1, \ldots, \tilde x_n)\).
+where \(\tilde x = (1, \tilde x_1, \ldots, \tilde x_p)\).
 
 \subsection{Polynomial Regression}\label{polynomial-regression}
 
@@ -2595,7 +2615,7 @@ the inputs \(x^2\) and~\(x^3\).
 
 \pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/polreg1-1.pdf}}
 
-The resulting regression line seems like a resonable fit for the data.
+The resulting regression line seems like a reasonable fit for the data.
 We note that a third-order polynomial grows very quickly to \(\pm\infty\)
 as \(|x|\) increases. Thus, the fitted model cannot be used for extrapolating
 beyond the range of the data.
@@ -2621,7 +2641,7 @@ of the problem we can use the model
   y
   = \beta_0 + \beta_1 (x - \tilde x) + \beta_2 (x - \tilde x)^2 + \cdots + \beta_p (x - \tilde x)^p + \varepsilon,
 \end{equation*}
-where \(\tilde x\) is inside the interval if \(x\) values.
+where \(\tilde x\) is inside the interval of \(x\) values.
 This leads to the design matrix
 \begin{equation}
   X
@@ -2679,7 +2699,7 @@ and the model mean near \(\tilde x\) is given by
   \hat m_h(x; \tilde x)
   = \hat\beta_0 + \hat\beta_1 (x - \tilde x) + \hat\beta_2 (x - \tilde x)^2 + \cdots + \hat\beta_p (x - \tilde x)^p,
 \end{equation*}
-where the weights \(\hat\beta\) depend on \(\tilde x\). The model mean at
+where the coefficients \(\hat\beta\) depend on \(\tilde x\). The model mean at
 \(x = \tilde x\) simplifies to
 \begin{align*}
   \hat m_h(\tilde x)
@@ -2755,7 +2775,7 @@ which is different from what \texttt{ksmooth()} uses. Experimentally I found
 that \texttt{bandwidth\ =\ 0.3} for \texttt{ksmooth()} corresponds to
 \texttt{bandwidth\ =\ 0.11} for \texttt{locpoly()}: the output of
 \texttt{ksmooth(...,\ bandwidth\ =\ 0.3)}
-and of \texttt{locpoly(..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is near identical.
+and of \texttt{locpoly(..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is nearly identical.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2797,7 +2817,7 @@ retains its slope right up to the boundary.
 \subsubsection*{\texorpdfstring{\(p = 2\)}{p = 2}}\label{p-2}
 \addcontentsline{toc}{subsubsection}{\(p = 2\)}
 
-For \(p=2\) the local polynomials are parabolas. This allows sometimes to reduce
+For \(p=2\) the local polynomials are parabolas. This sometimes allows us to reduce
 bias near peaks.
 
 \begin{example}

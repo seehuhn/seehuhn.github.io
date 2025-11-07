@@ -266,7 +266,7 @@ given data <span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n)\)</span>.<
 </div>
 <p>In the <a href="https://seehuhn.github.io/MATH3714/S02-multiple.html#the-normal-equations">level 3 part of the module</a>,
 we introduced the least squares method for linear regression. This method
-estimartes the regression coefficients by minimising the residual sum of
+estimates the regression coefficients by minimising the residual sum of
 squares:
 <span class="math display">\[\begin{equation*}
   r(\beta)
@@ -313,7 +313,7 @@ need to “normalise” the weights <span class="math inline">\(w_i\)</span> to 
   \hat\beta_0 + \hat\beta_1 \tilde x_1 + \cdots + \hat\beta_p \tilde x_p
   = \tilde x^\top \hat\beta,
 \end{equation*}\]</span>
-where <span class="math inline">\(\tilde x = (1, \tilde x_1, \ldots, \tilde x_n)\)</span>.</p>
+where <span class="math inline">\(\tilde x = (1, \tilde x_1, \ldots, \tilde x_p)\)</span>.</p>
 </div>
 <div id="polynomial-regression" class="section level2 hasAnchor" number="5.2">
 <h2><span class="header-section-number">5.2</span> Polynomial Regression<a href="X05-locpoly.html#polynomial-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -358,7 +358,7 @@ the inputs <span class="math inline">\(x^2\)</span> and <span class="math inlin
 <span id="cb46-9"><a href="X05-locpoly.html#cb46-9" tabindex="-1"></a><span class="fu">plot</span>(x, y)</span>
 <span id="cb46-10"><a href="X05-locpoly.html#cb46-10" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">fitted</span>(m))</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/polreg1-1.png" width="672" /></p>
-<p>The resulting regression line seems like a resonable fit for the data.
+<p>The resulting regression line seems like a reasonable fit for the data.
 We note that a third-order polynomial grows very quickly to <span class="math inline">\(\pm\infty\)</span>
 as <span class="math inline">\(|x|\)</span> increases. Thus, the fitted model cannot be used for extrapolating
 beyond the range of the data.</p>
@@ -374,7 +374,7 @@ of the problem we can use the model
   y
   = \beta_0 + \beta_1 (x - \tilde x) + \beta_2 (x - \tilde x)^2 + \cdots + \beta_p (x - \tilde x)^p + \varepsilon,
 \end{equation*}\]</span>
-where <span class="math inline">\(\tilde x\)</span> is inside the interval if <span class="math inline">\(x\)</span> values.
+where <span class="math inline">\(\tilde x\)</span> is inside the interval of <span class="math inline">\(x\)</span> values.
 This leads to the design matrix
 <span class="math display" id="eq:X-local">\[\begin{equation}
   X
@@ -427,7 +427,7 @@ and the model mean near <span class="math inline">\(\tilde x\)</span> is given b
   \hat m_h(x; \tilde x)
   = \hat\beta_0 + \hat\beta_1 (x - \tilde x) + \hat\beta_2 (x - \tilde x)^2 + \cdots + \hat\beta_p (x - \tilde x)^p,
 \end{equation*}\]</span>
-where the weights <span class="math inline">\(\hat\beta\)</span> depend on <span class="math inline">\(\tilde x\)</span>. The model mean at
+where the coefficients <span class="math inline">\(\hat\beta\)</span> depend on <span class="math inline">\(\tilde x\)</span>. The model mean at
 <span class="math inline">\(x = \tilde x\)</span> simplifies to
 <span class="math display">\[\begin{align*}
   \hat m_h(\tilde x)
@@ -498,7 +498,7 @@ which is different from what <code>ksmooth()</code> uses. Experimentally I found
 that <code>bandwidth = 0.3</code> for <code>ksmooth()</code> corresponds to
 <code>bandwidth = 0.11</code> for <code>locpoly()</code>: the output of
 <code>ksmooth(..., bandwidth = 0.3)</code>
-and of <code>locpoly(.., degree = 0, bandwidth = 0.11)</code> is near identical.</p>
+and of <code>locpoly(.., degree = 0, bandwidth = 0.11)</code> is nearly identical.</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="X05-locpoly.html#cb51-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>
 <span id="cb51-2"><a href="X05-locpoly.html#cb51-2" tabindex="-1"></a></span>
 <span id="cb51-3"><a href="X05-locpoly.html#cb51-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
@@ -524,7 +524,7 @@ retains its slope right up to the boundary.</p>
 </div>
 <div id="p-2" class="section level3 unnumbered hasAnchor">
 <h3><span class="math inline">\(p = 2\)</span><a href="X05-locpoly.html#p-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>For <span class="math inline">\(p=2\)</span> the local polynomials are parabolas. This allows sometimes to reduce
+<p>For <span class="math inline">\(p=2\)</span> the local polynomials are parabolas. This sometimes allows us to reduce
 bias near peaks.</p>
 <div class="example">
 <p><span id="exm:unlabeled-div-14" class="example"><strong>Example 5.4  </strong></span>We compare the Nadaraya-Watson estimator to locally polynomial regression

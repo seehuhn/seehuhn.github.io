@@ -293,7 +293,7 @@ values. This leads to the following definition.</p>
 where <span class="math inline">\(K_h\)</span> is a kernel scaled to bandwidth <span class="math inline">\(h\)</span> as in
 definition <a href="X01-KDE.html#def:KDE">1.2</a>.</p>
 </div>
-<p>The problem of finding <span class="math inline">\(m\)</span> using kernel functions are called <strong>kernel smoothing</strong>
+<p>The problem of finding <span class="math inline">\(m\)</span> using kernel functions is called <strong>kernel smoothing</strong>
 or <strong>kernel regression</strong>. In this context, the bandwidth <span class="math inline">\(h\)</span> is also called
 the <strong>smoothing parameter</strong>. The Nadaraya-Watson Estimator is not the only
 method for kernel smoothing. We will learn about different methods in the
@@ -400,7 +400,7 @@ Section <a href="X01-KDE.html#X01-KDE">1</a> and
   := \frac1n \sum_{i=1}^n K_h(x - X_i) Y_i.
 \end{equation*}\]</span>
 We will consider the numerator and denominator of equation <a href="X04-smoothing.html#eq:m-hat-h">(4.1)</a>
-separately</p>
+separately.</p>
 <div id="denominator" class="section level3 unnumbered hasAnchor">
 <h3>Denominator<a href="X04-smoothing.html#denominator" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>From equations <a href="X02-error.html#eq:fhatbias">(2.6)</a> and <a href="X02-error.html#eq:fhatvar">(2.11)</a> we know that
@@ -464,7 +464,7 @@ as <span class="math inline">\(h \downarrow 0\)</span>.</li>
 </ol>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>The first statement is proved using substitution and Taylor expandion of <span class="math inline">\(r\)</span>
+<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>The first statement is proved using substitution and Taylor expansion of <span class="math inline">\(r\)</span>
 around <span class="math inline">\(x\)</span> as shown in the derivation of equation <a href="X02-error.html#eq:fhatbias">(2.6)</a>.
 The second statement is proved similarly, as shown in the derivation of
 equation <a href="X02-error.html#eq:Var-frag1">(2.9)</a>.</p>
@@ -559,7 +559,7 @@ This gives
   \mathbb{E}\bigl( \hat m_h(x) \bigr)
   &amp;= m(x)
     + \frac12 \frac{\mu_2(K) r&#39;&#39;(x)}{f(x)} h^2
-    - \frac12 \frac{\mu_2(x) m(x) f&#39;&#39;(x)}{f(x)} h^2
+    - \frac12 \frac{\mu_2(K) m(x) f&#39;&#39;(x)}{f(x)} h^2
     + o(h^2) \\
   &amp;= m(x)
     + \frac12 \frac{\mu_2(K) \bigl(2 f&#39;(x) m&#39;(x) + f(x) m&#39;&#39;(x)\bigr)}{f(x)} h^2
@@ -587,7 +587,7 @@ So finally we have
 \end{align*}\]</span></p>
 <p><strong>Notes:</strong></p>
 <ul>
-<li>A more careful calculation will need to take into account that <span class="math inline">\(\hat m(x)\)</span>
+<li>A more careful calculation will need to take into account that <span class="math inline">\(\hat m_h(x)\)</span>
 may be undefined. All expectations and variances are conditional on
 <span class="math inline">\(\hat f(x) \neq 0\)</span>. One can show that <span class="math inline">\(P\bigl( \hat f(x) \neq 0 \bigr) \to 1\)</span>
 as <span class="math inline">\(n\to\infty\)</span> for all <span class="math inline">\(x\in\mathbb{R}\)</span> with <span class="math inline">\(f(x) &gt; 0\)</span>, so this is not a problem.</li>
@@ -606,9 +606,19 @@ all of the data except for the observation at <span class="math inline">\((x_i, 
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>We have learned how the Nadaraya-Watson Estimator can be used
-for smoothing.</li>
-<li>We have considered the mean squared error of this estimator.</li>
+<li>The Nadaraya-Watson estimator provides a kernel-based method for
+nonparametric regression, estimating <span class="math inline">\(m(x)\)</span> as a weighted average of
+nearby observations.</li>
+<li>For kernels with bounded support, the estimator may be undefined
+when data points are too sparse (bandwidth too small).</li>
+<li>Under a random design model, the estimator has bias of order <span class="math inline">\(O(h^2)\)</span>
+and variance of order <span class="math inline">\(O(1/(nh))\)</span>.</li>
+<li>The optimal bandwidth is <span class="math inline">\(h \sim n^{-1/5}\)</span>, giving mean squared error
+of order <span class="math inline">\(O(n^{-4/5})\)</span>.</li>
+<li>The bias depends on both <span class="math inline">\(m&#39;&#39;(x)\)</span> and the ratio <span class="math inline">\(f&#39;(x)/f(x)\)</span>, reflecting
+curvature in the regression function and the density of observations.</li>
+<li>The variance is smaller in regions where observations are plentiful
+(large <span class="math inline">\(f(x)\)</span>) and increases with the local noise level <span class="math inline">\(\sigma^2(x)\)</span>.</li>
 </ul>
 </div>
 
