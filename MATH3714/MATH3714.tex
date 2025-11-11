@@ -6781,7 +6781,7 @@ this model in various ways:
   the others, and similarly the intercept may be included or not,
   there are \(2^{p+1}\) possible models to consider.
 \item
-  In the section about \hyperref[S11-improving]{Improving the Model Fit} we have seen that
+  In section~\ref{S11-improving} we have seen that
   sometimes it is useful to transform input variables before using them
   in the model. This can either happen individually, \emph{e.g.}~\(x_2' = \log
   x_2\), or collectively, \emph{e.g.}~\(x^\ast = x_1 x_2\). The number of
@@ -6861,7 +6861,7 @@ Using the formula for \(\hat\beta\) we find
   &= \sigma^2 (X^\top X)^{-1}.
 \end{align*}
 Thus, the variance of \(\hat\beta\) is not affected by the omitted variables.
-Similar to our derivation in the section \hyperref[var-est-bias]{Estimating the Error Variance}
+Similar to our derivation in section~\ref{var-est-bias}
 one can show that
 \begin{equation*}
   \mathbb{E}\bigl( \hat\sigma^2 \bigr)
@@ -7070,97 +7070,69 @@ criteria to select models efficiently.
 
 \subsubsection{Exhaustive Search}\label{exhaustive-search}
 
-For a model with \(p\) input variables, there are \(2^p\) different choices for
-which variables to include in the model (or \(2^{p+1}\), if we also have to
-decide whether to include the intercept). This value increases quickly with
-\(p\): for \(p = 10\) we have \(1024\) models to consider, for \(p = 20\) there are
-\(1048576\) possible models, and for large \(p\) it becomes infeasible to simply
-try all possible models to find the best one.
-
-If \(p\) is small enough, we can simply fit all \(2^p\) models and choose the one
-with the best performance (\emph{e.g.}, highest \(R^2_\mathrm{adj}\)). This guarantees
-finding the optimal model. However, for \(p \geq 20\) this becomes
-computationally infeasible (\(2^{20} > 1\) million models). See
-section~\ref{S13-exhaustive} for more details on exhaustive search methods.
+When \(p\) is small (typically \(p < 20\)), we can fit all \(2^p\) possible models
+and choose the one with the best criterion value (\emph{e.g.}, highest
+\(R^2_\mathrm{adj}\)). This guarantees finding the optimal model but becomes
+computationally infeasible for larger \(p\) (since \(2^{20} > 1\) million). See
+section~\ref{S13-exhaustive} for efficient algorithms.
 
 \subsubsection{Stepwise Forward Selection}\label{stepwise-forward-selection}
 
-Here the idea is to start with a minimal model, and then add variables one by
-one, until no further (large enough) improvements can be achieved.
-
-Start with only intercept term: \(y=\beta_0 + \varepsilon\), then
-consider each of \(p\) models:
-\begin{equation*}
-  y
-  = \beta_0 + \beta_j x_j + \varepsilon,
-\end{equation*}
-for \(j \in \{1, \ldots, p\}\).
-
-Choose the model with the smallest residual sum of squares, provided that the
-``significance of the fitted model'' achieves a specified threshold. The process
-continues by adding more variables, one at a time, until either
-
-\begin{itemize}
-\tightlist
-\item
-  All variables are in the model.
-\item
-  The significance level cannot be achieved by any variable not in the model.
-\end{itemize}
-
-The ``significance of the model'' can be examined by considering a
-\(t\)-test as in lemma~\ref{lem:t-test}.
+Forward selection starts with the intercept-only model \(y=\beta_0 + \varepsilon\),
+then iteratively adds variables. At each step, for each variable not yet in
+the model, we compute the \(t\)-statistic for testing whether that variable's
+coefficient is zero (lemma~\ref{lem:t-test}). We add the variable (if any)
+with the largest \(|t|\)-value, provided this is above a chosen threshold
+(commonly \(|t| > 2\), corresponding to approximate 5\% significance). The
+process continues until no remaining variable is above the threshold.
 
 \subsubsection{Stepwise Backward Selection}\label{stepwise-backward-selection}
 
-Here the idea is to start with the full model, and to remove variables
-one by one until no good enough candidates for removal are left.
+Backward selection starts with the full model containing all \(p\) predictors,
+then iteratively removes variables. At each step, we compute the \(t\)-statistic
+\(T_j\) for testing \(H_0\colon \beta_j = 0\) for each variable currently in the
+model (lemma~\ref{lem:t-test}). We remove the variable with the smallest
+\(|T_j|\), provided this is below a chosen threshold (commonly \(|t| < 2\)). The
+process continues until all remaining variables have \(|t|\)-values above the
+threshold.
 
-In each step we consider the test statistic \(|T_j|\) for the tests
-\begin{equation*}
-  H_0\colon \beta_j = 0
-  \quad \textit{vs.} \quad
-  H_1\colon \beta_j \neq 0
-\end{equation*}
-for \(j \in \{1, \ldots, p\}\), again as in lemma~\ref{lem:t-test}.
-The method selects \(x_j\) corresponding to the smallest \(|T_j|\).
-If this is below a given threshold, then remove \(x_j\) and re-fit the model.
-Repeat until either:
+\subsubsection{Bidirectional Selection}\label{bidirectional-selection}
 
-\begin{itemize}
-\tightlist
-\item
-  No variables are left in the model.
-\item
-  The smallest \(|T_j|\) is above the threshold.
-\end{itemize}
+Bidirectional (or hybrid) methods combine forward and backward selection.
+At each step, we consider both adding the most significant variable not in
+the model and removing the least significant variable currently in the model.
+Typically, different significance thresholds are used for entry and removal
+to avoid cycling.
 
-\subsubsection{Hybrid Methods}\label{hybrid-methods}
-
-Either start with a full model or just intercept. At each stage consider:
-
-\begin{itemize}
-\tightlist
-\item
-  removing least significant variable already in the model,
-\item
-  adding most significant variable not currently in the model,
-\end{itemize}
-
-with significance levels set to avoid cyclical behaviour.
+\begin{remark}
+While computationally efficient, stepwise procedures have important limitations:
+the resulting test statistics and confidence intervals are biased (since variable
+selection and testing use the same data), the methods are prone to overfitting,
+and small changes in the data can lead to very different selected models. These
+procedures should be used primarily for exploratory analysis, and any final
+model should ideally be validated on independent data.
+\end{remark}
 
 \textbf{Summary}
 
 \begin{itemize}
 \tightlist
 \item
+  Misspecified models affect estimates: missing variables introduce bias
+  \(\mathop{\mathrm{bias}}(\hat\beta) = (X^\top X)^{-1} X^\top \tilde X \tilde\beta\), while
+  unnecessary variables increase variance.
+\item
+  The bias-variance tradeoff: smaller models may have lower MSE despite bias
+  if variance reduction is sufficient.
+\item
+  For nested models, the F-test simplifies to comparing residual sums of
+  squares: \(F = (\mathrm{RSS}_{\text{reduced}} - \mathrm{RSS}_{\text{full}})/(p-q) \div \mathrm{RSS}_{\text{full}}/(n-p-1)\).
+\item
   Model selection requires choosing a criterion such as \(R^2_\mathrm{adj}\),
   AIC, or BIC to compare models.
 \item
   Stepwise methods (forward, backward, hybrid) provide computationally
-  efficient heuristics for large \(p\).
-\item
-  These methods do not guarantee finding the optimal model.
+  efficient heuristics for large \(p\), but do not guarantee finding the optimal model.
 \item
   Exhaustive search can find the optimal model when \(p\) is small to moderate.
 \end{itemize}
@@ -7176,11 +7148,6 @@ heuristics, but they may not find the model with truly maximal
 \(R^2_\mathrm{adj}\). When \(p\) is small to moderate, exhaustive search
 allows us to evaluate all possible models systematically. Here we
 present an efficient algorithm that can often find the optimal model
-without having to fit all \(2^p\) models.
-
-Efficient algorithms are available to find the best model out of the
-\(2^p\) possible models for small to moderate \(p\). Here we present
-a method which can often find the model with the largest \(R^2_\mathrm{adj}\)
 without having to fit all \(2^p\) models. We consider the least squares
 estimate throughout.
 
@@ -7209,7 +7176,7 @@ The method described in this section is based on the following three observation
       := \sum_{i=1}^n (y_i - \hat y_i)^2
   \end{equation*}
   where \(\hat y_i\) are the fitted values for the model corresponding to~\(J\).
-  This gives the residual sum of squares for each model. The we have
+  This gives the residual sum of squares for each model. Then we have
   \begin{align*}
     \min_J \hat\sigma^2(J)
       &= \min_J \frac{1}{n - |J| - 1} \sum_{i=1}^n (y_i - \hat y_i)^2 \\
@@ -7220,7 +7187,7 @@ The method described in this section is based on the following three observation
   for each fixed number \(q\) of inputs, and then find the \(q\)
   which gives the best~\(\hat\sigma^2\) in a second step.
 \item
-  Adding a variables never increases the residual sum of squares.
+  Adding a variable never increases the residual sum of squares.
   Thus we have \(r(J) \leq r(K)\) whenever \(J \supseteq K\).
   We can use this result to exclude certain models without having to fit them.
 \end{itemize}
@@ -7285,7 +7252,7 @@ section.
   \item
     Similarly to the previous step, we consider all models with \(q\)
     variables where the first excluded variable has index \(k = q-1\).
-    If the best RSS amonst these and the previously considered
+    If the best RSS amongst these and the previously considered
     models is less than or equal to \(\varphi_{k-1}\) we are done
     and consider the next \(q\). Otherwise we decrease \(k\) until we reach
     \(k = 1\). At this point we have considered all models with \(q\)
@@ -7650,6 +7617,13 @@ This gives the \(R^2_\mathrm{adj}\) for the optimal model of each size
 again. At the end of the list we recognise the values \texttt{0.4799} and
 \texttt{0.4785} from our previous analysis.
 \end{example}
+
+\begin{remark}
+Like stepwise methods, exhaustive search is affected by using the same data for
+both model selection and inference: test statistics and confidence intervals from
+the selected model are biased and overly optimistic. Validation on independent
+data is advisable.
+\end{remark}
 
 \textbf{Summary}
 
@@ -9666,7 +9640,7 @@ hat matrix.
     \CommentTok{\# get the leverage}
 \NormalTok{    hii }\OtherTok{\textless{}{-}} \FunctionTok{influence}\NormalTok{(m)}\SpecialCharTok{$}\NormalTok{hat}
 
-    \CommentTok{\# get the studentized residuals}
+    \CommentTok{\# get the studentised residuals}
 \NormalTok{    sigma.hat }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(m)}\SpecialCharTok{$}\NormalTok{sigma}
 \NormalTok{    ri }\OtherTok{\textless{}{-}} \FunctionTok{resid}\NormalTok{(m) }\SpecialCharTok{/}\NormalTok{ sigma.hat }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ hii)}
 
