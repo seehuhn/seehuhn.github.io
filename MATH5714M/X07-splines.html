@@ -474,56 +474,56 @@ grid of points if you set the optional argument <code>all.knots = FALSE</code>).
 waiting times between eruptions and eruption durations for the Old Faithful
 geyser. We fit smoothing splines with different degrees of freedom and
 compare them to kernel methods.</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="X07-splines.html#cb57-1" tabindex="-1"></a><span class="co"># Load the data</span></span>
-<span id="cb57-2"><a href="X07-splines.html#cb57-2" tabindex="-1"></a><span class="fu">data</span>(faithful)</span>
-<span id="cb57-3"><a href="X07-splines.html#cb57-3" tabindex="-1"></a>x <span class="ot">&lt;-</span> faithful<span class="sc">$</span>waiting</span>
-<span id="cb57-4"><a href="X07-splines.html#cb57-4" tabindex="-1"></a>y <span class="ot">&lt;-</span> faithful<span class="sc">$</span>eruptions</span>
-<span id="cb57-5"><a href="X07-splines.html#cb57-5" tabindex="-1"></a></span>
-<span id="cb57-6"><a href="X07-splines.html#cb57-6" tabindex="-1"></a><span class="co"># Sort the data for plotting</span></span>
-<span id="cb57-7"><a href="X07-splines.html#cb57-7" tabindex="-1"></a>ord <span class="ot">&lt;-</span> <span class="fu">order</span>(x)</span>
-<span id="cb57-8"><a href="X07-splines.html#cb57-8" tabindex="-1"></a>x <span class="ot">&lt;-</span> x[ord]</span>
-<span id="cb57-9"><a href="X07-splines.html#cb57-9" tabindex="-1"></a>y <span class="ot">&lt;-</span> y[ord]</span>
-<span id="cb57-10"><a href="X07-splines.html#cb57-10" tabindex="-1"></a></span>
-<span id="cb57-11"><a href="X07-splines.html#cb57-11" tabindex="-1"></a><span class="co"># Fit smoothing splines with different df</span></span>
-<span id="cb57-12"><a href="X07-splines.html#cb57-12" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb57-13"><a href="X07-splines.html#cb57-13" tabindex="-1"></a></span>
-<span id="cb57-14"><a href="X07-splines.html#cb57-14" tabindex="-1"></a><span class="co"># Left panel: varying degrees of freedom</span></span>
-<span id="cb57-15"><a href="X07-splines.html#cb57-15" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">main =</span> <span class="st">&quot;Smoothing Splines with Different df&quot;</span>,</span>
-<span id="cb57-16"><a href="X07-splines.html#cb57-16" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Waiting time (min)&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Duration (min)&quot;</span>,</span>
-<span id="cb57-17"><a href="X07-splines.html#cb57-17" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;grey70&quot;</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
-<span id="cb57-18"><a href="X07-splines.html#cb57-18" tabindex="-1"></a></span>
-<span id="cb57-19"><a href="X07-splines.html#cb57-19" tabindex="-1"></a><span class="co"># Fit splines with df = 3, 6, and 15</span></span>
-<span id="cb57-20"><a href="X07-splines.html#cb57-20" tabindex="-1"></a>fit3 <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y, <span class="at">df =</span> <span class="dv">3</span>)</span>
-<span id="cb57-21"><a href="X07-splines.html#cb57-21" tabindex="-1"></a>fit6 <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y, <span class="at">df =</span> <span class="dv">6</span>)</span>
-<span id="cb57-22"><a href="X07-splines.html#cb57-22" tabindex="-1"></a>fit15 <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y, <span class="at">df =</span> <span class="dv">15</span>)</span>
-<span id="cb57-23"><a href="X07-splines.html#cb57-23" tabindex="-1"></a></span>
-<span id="cb57-24"><a href="X07-splines.html#cb57-24" tabindex="-1"></a><span class="fu">lines</span>(fit3, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb57-25"><a href="X07-splines.html#cb57-25" tabindex="-1"></a><span class="fu">lines</span>(fit6, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb57-26"><a href="X07-splines.html#cb57-26" tabindex="-1"></a><span class="fu">lines</span>(fit15, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb57-27"><a href="X07-splines.html#cb57-27" tabindex="-1"></a></span>
-<span id="cb57-28"><a href="X07-splines.html#cb57-28" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomright&quot;</span>,</span>
-<span id="cb57-29"><a href="X07-splines.html#cb57-29" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;df = 3&quot;</span>, <span class="st">&quot;df = 6&quot;</span>, <span class="st">&quot;df = 15&quot;</span>),</span>
-<span id="cb57-30"><a href="X07-splines.html#cb57-30" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>),</span>
-<span id="cb57-31"><a href="X07-splines.html#cb57-31" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span>
-<span id="cb57-32"><a href="X07-splines.html#cb57-32" tabindex="-1"></a></span>
-<span id="cb57-33"><a href="X07-splines.html#cb57-33" tabindex="-1"></a><span class="co"># Right panel: comparison with kernel smoother</span></span>
-<span id="cb57-34"><a href="X07-splines.html#cb57-34" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">main =</span> <span class="st">&quot;Spline vs. Kernel Smoother&quot;</span>,</span>
-<span id="cb57-35"><a href="X07-splines.html#cb57-35" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Waiting time (min)&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Duration (min)&quot;</span>,</span>
-<span id="cb57-36"><a href="X07-splines.html#cb57-36" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;grey70&quot;</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
-<span id="cb57-37"><a href="X07-splines.html#cb57-37" tabindex="-1"></a></span>
-<span id="cb57-38"><a href="X07-splines.html#cb57-38" tabindex="-1"></a><span class="co"># Smoothing spline with df = 15</span></span>
-<span id="cb57-39"><a href="X07-splines.html#cb57-39" tabindex="-1"></a><span class="fu">lines</span>(fit15, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb57-40"><a href="X07-splines.html#cb57-40" tabindex="-1"></a></span>
-<span id="cb57-41"><a href="X07-splines.html#cb57-41" tabindex="-1"></a><span class="co"># Nadaraya-Watson kernel smoother with automatic bandwidth</span></span>
-<span id="cb57-42"><a href="X07-splines.html#cb57-42" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">bw.nrd</span>(x)</span>
-<span id="cb57-43"><a href="X07-splines.html#cb57-43" tabindex="-1"></a>fit_nw <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> h)</span>
-<span id="cb57-44"><a href="X07-splines.html#cb57-44" tabindex="-1"></a><span class="fu">lines</span>(fit_nw, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb57-45"><a href="X07-splines.html#cb57-45" tabindex="-1"></a></span>
-<span id="cb57-46"><a href="X07-splines.html#cb57-46" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomright&quot;</span>,</span>
-<span id="cb57-47"><a href="X07-splines.html#cb57-47" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Spline (df = 15)&quot;</span>,</span>
-<span id="cb57-48"><a href="X07-splines.html#cb57-48" tabindex="-1"></a>                  <span class="fu">paste</span>(<span class="st">&quot;Nadaraya-Watson (h =&quot;</span>, <span class="fu">round</span>(h, <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>)),</span>
-<span id="cb57-49"><a href="X07-splines.html#cb57-49" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;blue&quot;</span>),</span>
-<span id="cb57-50"><a href="X07-splines.html#cb57-50" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="X07-splines.html#cb59-1" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb59-2"><a href="X07-splines.html#cb59-2" tabindex="-1"></a><span class="fu">data</span>(faithful)</span>
+<span id="cb59-3"><a href="X07-splines.html#cb59-3" tabindex="-1"></a>x <span class="ot">&lt;-</span> faithful<span class="sc">$</span>waiting</span>
+<span id="cb59-4"><a href="X07-splines.html#cb59-4" tabindex="-1"></a>y <span class="ot">&lt;-</span> faithful<span class="sc">$</span>eruptions</span>
+<span id="cb59-5"><a href="X07-splines.html#cb59-5" tabindex="-1"></a></span>
+<span id="cb59-6"><a href="X07-splines.html#cb59-6" tabindex="-1"></a><span class="co"># Sort the data for plotting</span></span>
+<span id="cb59-7"><a href="X07-splines.html#cb59-7" tabindex="-1"></a>ord <span class="ot">&lt;-</span> <span class="fu">order</span>(x)</span>
+<span id="cb59-8"><a href="X07-splines.html#cb59-8" tabindex="-1"></a>x <span class="ot">&lt;-</span> x[ord]</span>
+<span id="cb59-9"><a href="X07-splines.html#cb59-9" tabindex="-1"></a>y <span class="ot">&lt;-</span> y[ord]</span>
+<span id="cb59-10"><a href="X07-splines.html#cb59-10" tabindex="-1"></a></span>
+<span id="cb59-11"><a href="X07-splines.html#cb59-11" tabindex="-1"></a><span class="co"># Fit smoothing splines with different df</span></span>
+<span id="cb59-12"><a href="X07-splines.html#cb59-12" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb59-13"><a href="X07-splines.html#cb59-13" tabindex="-1"></a></span>
+<span id="cb59-14"><a href="X07-splines.html#cb59-14" tabindex="-1"></a><span class="co"># Left panel: varying degrees of freedom</span></span>
+<span id="cb59-15"><a href="X07-splines.html#cb59-15" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">main =</span> <span class="st">&quot;Smoothing Splines with Different df&quot;</span>,</span>
+<span id="cb59-16"><a href="X07-splines.html#cb59-16" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Waiting time (min)&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Duration (min)&quot;</span>,</span>
+<span id="cb59-17"><a href="X07-splines.html#cb59-17" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;grey70&quot;</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
+<span id="cb59-18"><a href="X07-splines.html#cb59-18" tabindex="-1"></a></span>
+<span id="cb59-19"><a href="X07-splines.html#cb59-19" tabindex="-1"></a><span class="co"># Fit splines with df = 3, 6, and 15</span></span>
+<span id="cb59-20"><a href="X07-splines.html#cb59-20" tabindex="-1"></a>fit3 <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y, <span class="at">df =</span> <span class="dv">3</span>)</span>
+<span id="cb59-21"><a href="X07-splines.html#cb59-21" tabindex="-1"></a>fit6 <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y, <span class="at">df =</span> <span class="dv">6</span>)</span>
+<span id="cb59-22"><a href="X07-splines.html#cb59-22" tabindex="-1"></a>fit15 <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y, <span class="at">df =</span> <span class="dv">15</span>)</span>
+<span id="cb59-23"><a href="X07-splines.html#cb59-23" tabindex="-1"></a></span>
+<span id="cb59-24"><a href="X07-splines.html#cb59-24" tabindex="-1"></a><span class="fu">lines</span>(fit3, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb59-25"><a href="X07-splines.html#cb59-25" tabindex="-1"></a><span class="fu">lines</span>(fit6, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb59-26"><a href="X07-splines.html#cb59-26" tabindex="-1"></a><span class="fu">lines</span>(fit15, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb59-27"><a href="X07-splines.html#cb59-27" tabindex="-1"></a></span>
+<span id="cb59-28"><a href="X07-splines.html#cb59-28" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomright&quot;</span>,</span>
+<span id="cb59-29"><a href="X07-splines.html#cb59-29" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;df = 3&quot;</span>, <span class="st">&quot;df = 6&quot;</span>, <span class="st">&quot;df = 15&quot;</span>),</span>
+<span id="cb59-30"><a href="X07-splines.html#cb59-30" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>),</span>
+<span id="cb59-31"><a href="X07-splines.html#cb59-31" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span>
+<span id="cb59-32"><a href="X07-splines.html#cb59-32" tabindex="-1"></a></span>
+<span id="cb59-33"><a href="X07-splines.html#cb59-33" tabindex="-1"></a><span class="co"># Right panel: comparison with kernel smoother</span></span>
+<span id="cb59-34"><a href="X07-splines.html#cb59-34" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">main =</span> <span class="st">&quot;Spline vs. Kernel Smoother&quot;</span>,</span>
+<span id="cb59-35"><a href="X07-splines.html#cb59-35" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Waiting time (min)&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Duration (min)&quot;</span>,</span>
+<span id="cb59-36"><a href="X07-splines.html#cb59-36" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;grey70&quot;</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
+<span id="cb59-37"><a href="X07-splines.html#cb59-37" tabindex="-1"></a></span>
+<span id="cb59-38"><a href="X07-splines.html#cb59-38" tabindex="-1"></a><span class="co"># Smoothing spline with df = 15</span></span>
+<span id="cb59-39"><a href="X07-splines.html#cb59-39" tabindex="-1"></a><span class="fu">lines</span>(fit15, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb59-40"><a href="X07-splines.html#cb59-40" tabindex="-1"></a></span>
+<span id="cb59-41"><a href="X07-splines.html#cb59-41" tabindex="-1"></a><span class="co"># Nadaraya-Watson kernel smoother with automatic bandwidth</span></span>
+<span id="cb59-42"><a href="X07-splines.html#cb59-42" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">bw.nrd</span>(x)</span>
+<span id="cb59-43"><a href="X07-splines.html#cb59-43" tabindex="-1"></a>fit_nw <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> h)</span>
+<span id="cb59-44"><a href="X07-splines.html#cb59-44" tabindex="-1"></a><span class="fu">lines</span>(fit_nw, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb59-45"><a href="X07-splines.html#cb59-45" tabindex="-1"></a></span>
+<span id="cb59-46"><a href="X07-splines.html#cb59-46" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomright&quot;</span>,</span>
+<span id="cb59-47"><a href="X07-splines.html#cb59-47" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Spline (df = 15)&quot;</span>,</span>
+<span id="cb59-48"><a href="X07-splines.html#cb59-48" tabindex="-1"></a>                  <span class="fu">paste</span>(<span class="st">&quot;Nadaraya-Watson (h =&quot;</span>, <span class="fu">round</span>(h, <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>)),</span>
+<span id="cb59-49"><a href="X07-splines.html#cb59-49" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;blue&quot;</span>),</span>
+<span id="cb59-50"><a href="X07-splines.html#cb59-50" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/faithful-splines-1.png" width="960" /></p>
 <p>The left panel shows how degrees of freedom control smoothness: <span class="math inline">\(\mathop{\mathrm{df}}\nolimits= 3\)</span>
 gives an almost linear fit, while <span class="math inline">\(\mathop{\mathrm{df}}\nolimits= 15\)</span> follows the data closely.
@@ -564,74 +564,74 @@ often depends on the specific application and the properties of the data.</p>
 <p><span id="exm:unlabeled-div-20" class="example"><strong>Example 7.3  </strong></span>We compare smoothing splines with Nadaraya-Watson and local linear regression
 using simulated data where the true regression function is known. This allows
 us to assess the performance of each method, particularly near the boundaries.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="X07-splines.html#cb58-1" tabindex="-1"></a><span class="co"># Generate simulated data</span></span>
-<span id="cb58-2"><a href="X07-splines.html#cb58-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb58-3"><a href="X07-splines.html#cb58-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb58-4"><a href="X07-splines.html#cb58-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">4</span>))</span>
-<span id="cb58-5"><a href="X07-splines.html#cb58-5" tabindex="-1"></a>m_true <span class="ot">&lt;-</span> <span class="cf">function</span>(t) <span class="fu">sin</span>(<span class="dv">2</span><span class="sc">*</span>t) <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">exp</span>(<span class="sc">-</span><span class="dv">16</span><span class="sc">*</span>(t<span class="dv">-2</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb58-6"><a href="X07-splines.html#cb58-6" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">m_true</span>(x) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fl">0.3</span>)</span>
-<span id="cb58-7"><a href="X07-splines.html#cb58-7" tabindex="-1"></a></span>
-<span id="cb58-8"><a href="X07-splines.html#cb58-8" tabindex="-1"></a><span class="co"># Grid for evaluation</span></span>
-<span id="cb58-9"><a href="X07-splines.html#cb58-9" tabindex="-1"></a>x_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">4</span>, <span class="at">length =</span> <span class="dv">200</span>)</span>
-<span id="cb58-10"><a href="X07-splines.html#cb58-10" tabindex="-1"></a>y_true <span class="ot">&lt;-</span> <span class="fu">m_true</span>(x_grid)</span>
-<span id="cb58-11"><a href="X07-splines.html#cb58-11" tabindex="-1"></a></span>
-<span id="cb58-12"><a href="X07-splines.html#cb58-12" tabindex="-1"></a><span class="co"># Nadaraya-Watson estimator</span></span>
-<span id="cb58-13"><a href="X07-splines.html#cb58-13" tabindex="-1"></a>nw_estimate <span class="ot">&lt;-</span> <span class="cf">function</span>(x_new, x, y, h) {</span>
-<span id="cb58-14"><a href="X07-splines.html#cb58-14" tabindex="-1"></a>  K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>((x_new <span class="sc">-</span> x) <span class="sc">/</span> h)</span>
-<span id="cb58-15"><a href="X07-splines.html#cb58-15" tabindex="-1"></a>  <span class="fu">sum</span>(K <span class="sc">*</span> y) <span class="sc">/</span> <span class="fu">sum</span>(K)</span>
-<span id="cb58-16"><a href="X07-splines.html#cb58-16" tabindex="-1"></a>}</span>
-<span id="cb58-17"><a href="X07-splines.html#cb58-17" tabindex="-1"></a></span>
-<span id="cb58-18"><a href="X07-splines.html#cb58-18" tabindex="-1"></a><span class="co"># Local linear estimator</span></span>
-<span id="cb58-19"><a href="X07-splines.html#cb58-19" tabindex="-1"></a>local_linear <span class="ot">&lt;-</span> <span class="cf">function</span>(x_new, x, y, h) {</span>
-<span id="cb58-20"><a href="X07-splines.html#cb58-20" tabindex="-1"></a>  w <span class="ot">&lt;-</span> <span class="fu">dnorm</span>((x <span class="sc">-</span> x_new) <span class="sc">/</span> h)</span>
-<span id="cb58-21"><a href="X07-splines.html#cb58-21" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x <span class="sc">-</span> x_new)</span>
-<span id="cb58-22"><a href="X07-splines.html#cb58-22" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> <span class="fu">diag</span>(w) <span class="sc">%*%</span> X) <span class="sc">%*%</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> <span class="fu">diag</span>(w) <span class="sc">%*%</span> y</span>
-<span id="cb58-23"><a href="X07-splines.html#cb58-23" tabindex="-1"></a>  beta[<span class="dv">1</span>]</span>
-<span id="cb58-24"><a href="X07-splines.html#cb58-24" tabindex="-1"></a>}</span>
-<span id="cb58-25"><a href="X07-splines.html#cb58-25" tabindex="-1"></a></span>
-<span id="cb58-26"><a href="X07-splines.html#cb58-26" tabindex="-1"></a><span class="co"># Choose bandwidth using rule of thumb</span></span>
-<span id="cb58-27"><a href="X07-splines.html#cb58-27" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
-<span id="cb58-28"><a href="X07-splines.html#cb58-28" tabindex="-1"></a></span>
-<span id="cb58-29"><a href="X07-splines.html#cb58-29" tabindex="-1"></a><span class="co"># Compute estimates</span></span>
-<span id="cb58-30"><a href="X07-splines.html#cb58-30" tabindex="-1"></a>y_nw <span class="ot">&lt;-</span> <span class="fu">sapply</span>(x_grid, nw_estimate, <span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">h =</span> h)</span>
-<span id="cb58-31"><a href="X07-splines.html#cb58-31" tabindex="-1"></a>y_ll <span class="ot">&lt;-</span> <span class="fu">sapply</span>(x_grid, local_linear, <span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">h =</span> h)</span>
-<span id="cb58-32"><a href="X07-splines.html#cb58-32" tabindex="-1"></a></span>
-<span id="cb58-33"><a href="X07-splines.html#cb58-33" tabindex="-1"></a><span class="co"># Smoothing spline</span></span>
-<span id="cb58-34"><a href="X07-splines.html#cb58-34" tabindex="-1"></a>fit_spline <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y, <span class="at">cv =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb58-35"><a href="X07-splines.html#cb58-35" tabindex="-1"></a>y_spline <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_spline, x_grid)<span class="sc">$</span>y</span>
-<span id="cb58-36"><a href="X07-splines.html#cb58-36" tabindex="-1"></a></span>
-<span id="cb58-37"><a href="X07-splines.html#cb58-37" tabindex="-1"></a><span class="co"># Plotting</span></span>
-<span id="cb58-38"><a href="X07-splines.html#cb58-38" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb58-39"><a href="X07-splines.html#cb58-39" tabindex="-1"></a></span>
-<span id="cb58-40"><a href="X07-splines.html#cb58-40" tabindex="-1"></a><span class="co"># Left panel: all three methods</span></span>
-<span id="cb58-41"><a href="X07-splines.html#cb58-41" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">main =</span> <span class="st">&quot;Comparison of Smoothing Methods&quot;</span>,</span>
-<span id="cb58-42"><a href="X07-splines.html#cb58-42" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;x&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;y&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;grey70&quot;</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
-<span id="cb58-43"><a href="X07-splines.html#cb58-43" tabindex="-1"></a><span class="fu">lines</span>(x_grid, y_true, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb58-44"><a href="X07-splines.html#cb58-44" tabindex="-1"></a><span class="fu">lines</span>(x_grid, y_nw, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb58-45"><a href="X07-splines.html#cb58-45" tabindex="-1"></a><span class="fu">lines</span>(x_grid, y_ll, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb58-46"><a href="X07-splines.html#cb58-46" tabindex="-1"></a><span class="fu">lines</span>(x_grid, y_spline, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb58-47"><a href="X07-splines.html#cb58-47" tabindex="-1"></a></span>
-<span id="cb58-48"><a href="X07-splines.html#cb58-48" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>,</span>
-<span id="cb58-49"><a href="X07-splines.html#cb58-49" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;True function&quot;</span>, <span class="st">&quot;Nadaraya-Watson&quot;</span>,</span>
-<span id="cb58-50"><a href="X07-splines.html#cb58-50" tabindex="-1"></a>                  <span class="st">&quot;Local linear&quot;</span>, <span class="fu">paste</span>(<span class="st">&quot;Spline (df =&quot;</span>, <span class="fu">round</span>(fit_spline<span class="sc">$</span>df, <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>)),</span>
-<span id="cb58-51"><a href="X07-splines.html#cb58-51" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;red&quot;</span>),</span>
-<span id="cb58-52"><a href="X07-splines.html#cb58-52" tabindex="-1"></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
-<span id="cb58-53"><a href="X07-splines.html#cb58-53" tabindex="-1"></a></span>
-<span id="cb58-54"><a href="X07-splines.html#cb58-54" tabindex="-1"></a><span class="co"># Right panel: zoom on boundary region</span></span>
-<span id="cb58-55"><a href="X07-splines.html#cb58-55" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">main =</span> <span class="st">&quot;Boundary Behaviour (x &lt; 0.5)&quot;</span>,</span>
-<span id="cb58-56"><a href="X07-splines.html#cb58-56" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>),</span>
-<span id="cb58-57"><a href="X07-splines.html#cb58-57" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;x&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;y&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;grey70&quot;</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
-<span id="cb58-58"><a href="X07-splines.html#cb58-58" tabindex="-1"></a></span>
-<span id="cb58-59"><a href="X07-splines.html#cb58-59" tabindex="-1"></a><span class="co"># Only plot in boundary region</span></span>
-<span id="cb58-60"><a href="X07-splines.html#cb58-60" tabindex="-1"></a>idx <span class="ot">&lt;-</span> x_grid <span class="sc">&lt;=</span> <span class="fl">0.5</span></span>
-<span id="cb58-61"><a href="X07-splines.html#cb58-61" tabindex="-1"></a><span class="fu">lines</span>(x_grid[idx], y_true[idx], <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb58-62"><a href="X07-splines.html#cb58-62" tabindex="-1"></a><span class="fu">lines</span>(x_grid[idx], y_nw[idx], <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb58-63"><a href="X07-splines.html#cb58-63" tabindex="-1"></a><span class="fu">lines</span>(x_grid[idx], y_ll[idx], <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb58-64"><a href="X07-splines.html#cb58-64" tabindex="-1"></a><span class="fu">lines</span>(x_grid[idx], y_spline[idx], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb58-65"><a href="X07-splines.html#cb58-65" tabindex="-1"></a></span>
-<span id="cb58-66"><a href="X07-splines.html#cb58-66" tabindex="-1"></a><span class="co"># Add vertical line at x = h to show bandwidth</span></span>
-<span id="cb58-67"><a href="X07-splines.html#cb58-67" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> h, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">lty =</span> <span class="dv">3</span>)</span>
-<span id="cb58-68"><a href="X07-splines.html#cb58-68" tabindex="-1"></a><span class="fu">text</span>(h, <span class="fl">0.2</span>, <span class="st">&quot;h&quot;</span>, <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="X07-splines.html#cb60-1" tabindex="-1"></a><span class="co"># Generate simulated data</span></span>
+<span id="cb60-2"><a href="X07-splines.html#cb60-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb60-3"><a href="X07-splines.html#cb60-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb60-4"><a href="X07-splines.html#cb60-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">4</span>))</span>
+<span id="cb60-5"><a href="X07-splines.html#cb60-5" tabindex="-1"></a>m_true <span class="ot">&lt;-</span> <span class="cf">function</span>(t) <span class="fu">sin</span>(<span class="dv">2</span><span class="sc">*</span>t) <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">exp</span>(<span class="sc">-</span><span class="dv">16</span><span class="sc">*</span>(t<span class="dv">-2</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb60-6"><a href="X07-splines.html#cb60-6" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">m_true</span>(x) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fl">0.3</span>)</span>
+<span id="cb60-7"><a href="X07-splines.html#cb60-7" tabindex="-1"></a></span>
+<span id="cb60-8"><a href="X07-splines.html#cb60-8" tabindex="-1"></a><span class="co"># Grid for evaluation</span></span>
+<span id="cb60-9"><a href="X07-splines.html#cb60-9" tabindex="-1"></a>x_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">4</span>, <span class="at">length =</span> <span class="dv">200</span>)</span>
+<span id="cb60-10"><a href="X07-splines.html#cb60-10" tabindex="-1"></a>y_true <span class="ot">&lt;-</span> <span class="fu">m_true</span>(x_grid)</span>
+<span id="cb60-11"><a href="X07-splines.html#cb60-11" tabindex="-1"></a></span>
+<span id="cb60-12"><a href="X07-splines.html#cb60-12" tabindex="-1"></a><span class="co"># Nadaraya-Watson estimator</span></span>
+<span id="cb60-13"><a href="X07-splines.html#cb60-13" tabindex="-1"></a>nw_estimate <span class="ot">&lt;-</span> <span class="cf">function</span>(x_new, x, y, h) {</span>
+<span id="cb60-14"><a href="X07-splines.html#cb60-14" tabindex="-1"></a>  K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>((x_new <span class="sc">-</span> x) <span class="sc">/</span> h)</span>
+<span id="cb60-15"><a href="X07-splines.html#cb60-15" tabindex="-1"></a>  <span class="fu">sum</span>(K <span class="sc">*</span> y) <span class="sc">/</span> <span class="fu">sum</span>(K)</span>
+<span id="cb60-16"><a href="X07-splines.html#cb60-16" tabindex="-1"></a>}</span>
+<span id="cb60-17"><a href="X07-splines.html#cb60-17" tabindex="-1"></a></span>
+<span id="cb60-18"><a href="X07-splines.html#cb60-18" tabindex="-1"></a><span class="co"># Local linear estimator</span></span>
+<span id="cb60-19"><a href="X07-splines.html#cb60-19" tabindex="-1"></a>local_linear <span class="ot">&lt;-</span> <span class="cf">function</span>(x_new, x, y, h) {</span>
+<span id="cb60-20"><a href="X07-splines.html#cb60-20" tabindex="-1"></a>  w <span class="ot">&lt;-</span> <span class="fu">dnorm</span>((x <span class="sc">-</span> x_new) <span class="sc">/</span> h)</span>
+<span id="cb60-21"><a href="X07-splines.html#cb60-21" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x <span class="sc">-</span> x_new)</span>
+<span id="cb60-22"><a href="X07-splines.html#cb60-22" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> <span class="fu">diag</span>(w) <span class="sc">%*%</span> X) <span class="sc">%*%</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> <span class="fu">diag</span>(w) <span class="sc">%*%</span> y</span>
+<span id="cb60-23"><a href="X07-splines.html#cb60-23" tabindex="-1"></a>  beta[<span class="dv">1</span>]</span>
+<span id="cb60-24"><a href="X07-splines.html#cb60-24" tabindex="-1"></a>}</span>
+<span id="cb60-25"><a href="X07-splines.html#cb60-25" tabindex="-1"></a></span>
+<span id="cb60-26"><a href="X07-splines.html#cb60-26" tabindex="-1"></a><span class="co"># Choose bandwidth using rule of thumb</span></span>
+<span id="cb60-27"><a href="X07-splines.html#cb60-27" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb60-28"><a href="X07-splines.html#cb60-28" tabindex="-1"></a></span>
+<span id="cb60-29"><a href="X07-splines.html#cb60-29" tabindex="-1"></a><span class="co"># Compute estimates</span></span>
+<span id="cb60-30"><a href="X07-splines.html#cb60-30" tabindex="-1"></a>y_nw <span class="ot">&lt;-</span> <span class="fu">sapply</span>(x_grid, nw_estimate, <span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">h =</span> h)</span>
+<span id="cb60-31"><a href="X07-splines.html#cb60-31" tabindex="-1"></a>y_ll <span class="ot">&lt;-</span> <span class="fu">sapply</span>(x_grid, local_linear, <span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">h =</span> h)</span>
+<span id="cb60-32"><a href="X07-splines.html#cb60-32" tabindex="-1"></a></span>
+<span id="cb60-33"><a href="X07-splines.html#cb60-33" tabindex="-1"></a><span class="co"># Smoothing spline</span></span>
+<span id="cb60-34"><a href="X07-splines.html#cb60-34" tabindex="-1"></a>fit_spline <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y, <span class="at">cv =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb60-35"><a href="X07-splines.html#cb60-35" tabindex="-1"></a>y_spline <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_spline, x_grid)<span class="sc">$</span>y</span>
+<span id="cb60-36"><a href="X07-splines.html#cb60-36" tabindex="-1"></a></span>
+<span id="cb60-37"><a href="X07-splines.html#cb60-37" tabindex="-1"></a><span class="co"># Plotting</span></span>
+<span id="cb60-38"><a href="X07-splines.html#cb60-38" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb60-39"><a href="X07-splines.html#cb60-39" tabindex="-1"></a></span>
+<span id="cb60-40"><a href="X07-splines.html#cb60-40" tabindex="-1"></a><span class="co"># Left panel: all three methods</span></span>
+<span id="cb60-41"><a href="X07-splines.html#cb60-41" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">main =</span> <span class="st">&quot;Comparison of Smoothing Methods&quot;</span>,</span>
+<span id="cb60-42"><a href="X07-splines.html#cb60-42" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;x&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;y&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;grey70&quot;</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
+<span id="cb60-43"><a href="X07-splines.html#cb60-43" tabindex="-1"></a><span class="fu">lines</span>(x_grid, y_true, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb60-44"><a href="X07-splines.html#cb60-44" tabindex="-1"></a><span class="fu">lines</span>(x_grid, y_nw, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb60-45"><a href="X07-splines.html#cb60-45" tabindex="-1"></a><span class="fu">lines</span>(x_grid, y_ll, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb60-46"><a href="X07-splines.html#cb60-46" tabindex="-1"></a><span class="fu">lines</span>(x_grid, y_spline, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb60-47"><a href="X07-splines.html#cb60-47" tabindex="-1"></a></span>
+<span id="cb60-48"><a href="X07-splines.html#cb60-48" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>,</span>
+<span id="cb60-49"><a href="X07-splines.html#cb60-49" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;True function&quot;</span>, <span class="st">&quot;Nadaraya-Watson&quot;</span>,</span>
+<span id="cb60-50"><a href="X07-splines.html#cb60-50" tabindex="-1"></a>                  <span class="st">&quot;Local linear&quot;</span>, <span class="fu">paste</span>(<span class="st">&quot;Spline (df =&quot;</span>, <span class="fu">round</span>(fit_spline<span class="sc">$</span>df, <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>)),</span>
+<span id="cb60-51"><a href="X07-splines.html#cb60-51" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;darkgreen&quot;</span>, <span class="st">&quot;red&quot;</span>),</span>
+<span id="cb60-52"><a href="X07-splines.html#cb60-52" tabindex="-1"></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
+<span id="cb60-53"><a href="X07-splines.html#cb60-53" tabindex="-1"></a></span>
+<span id="cb60-54"><a href="X07-splines.html#cb60-54" tabindex="-1"></a><span class="co"># Right panel: zoom on boundary region</span></span>
+<span id="cb60-55"><a href="X07-splines.html#cb60-55" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">main =</span> <span class="st">&quot;Boundary Behaviour (x &lt; 0.5)&quot;</span>,</span>
+<span id="cb60-56"><a href="X07-splines.html#cb60-56" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>),</span>
+<span id="cb60-57"><a href="X07-splines.html#cb60-57" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;x&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;y&quot;</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;grey70&quot;</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
+<span id="cb60-58"><a href="X07-splines.html#cb60-58" tabindex="-1"></a></span>
+<span id="cb60-59"><a href="X07-splines.html#cb60-59" tabindex="-1"></a><span class="co"># Only plot in boundary region</span></span>
+<span id="cb60-60"><a href="X07-splines.html#cb60-60" tabindex="-1"></a>idx <span class="ot">&lt;-</span> x_grid <span class="sc">&lt;=</span> <span class="fl">0.5</span></span>
+<span id="cb60-61"><a href="X07-splines.html#cb60-61" tabindex="-1"></a><span class="fu">lines</span>(x_grid[idx], y_true[idx], <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb60-62"><a href="X07-splines.html#cb60-62" tabindex="-1"></a><span class="fu">lines</span>(x_grid[idx], y_nw[idx], <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb60-63"><a href="X07-splines.html#cb60-63" tabindex="-1"></a><span class="fu">lines</span>(x_grid[idx], y_ll[idx], <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb60-64"><a href="X07-splines.html#cb60-64" tabindex="-1"></a><span class="fu">lines</span>(x_grid[idx], y_spline[idx], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb60-65"><a href="X07-splines.html#cb60-65" tabindex="-1"></a></span>
+<span id="cb60-66"><a href="X07-splines.html#cb60-66" tabindex="-1"></a><span class="co"># Add vertical line at x = h to show bandwidth</span></span>
+<span id="cb60-67"><a href="X07-splines.html#cb60-67" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> h, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">lty =</span> <span class="dv">3</span>)</span>
+<span id="cb60-68"><a href="X07-splines.html#cb60-68" tabindex="-1"></a><span class="fu">text</span>(h, <span class="fl">0.2</span>, <span class="st">&quot;h&quot;</span>, <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/comparison-methods-1.png" width="960" /></p>
 <p>The comparison reveals several key differences:</p>
 <ol style="list-style-type: decimal">

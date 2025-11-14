@@ -246,13 +246,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="X05-locpoly" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Section 5</span> Local Polynomial Regression<a href="X05-locpoly.html#X05-locpoly" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<!--
-- TODO(voss): also show Charles code?
-
-
--->
 <p>Local polynomial regression is a generalisation of the
-Nadaraya-Watson estimator. The method combines the two ideas of
+Nadaraya-Watson estimator that addresses some of its limitations,
+particularly boundary bias. The method combines the two ideas of
 linear regression with weights and polynomial regression. The aim
 is still to estimate the model mean <span class="math inline">\(m \colon\mathbb{R}\to \mathbb{R}\)</span> from
 given data <span class="math inline">\((x_1, y_1), \ldots, (x_n, y_n)\)</span>.</p>
@@ -323,8 +319,8 @@ where <span class="math inline">\(\tilde x = (1, \tilde x_1, \ldots, \tilde x_p)
 </iframe>
 </div>
 </div>
-<p>In these notes we only consider the case of <span class="math inline">\(p=1\)</span>. In this case we
-can easily fit a polynomial of degree <span class="math inline">\(p\)</span> to the data by using
+<p>In these notes we only consider regression with a single input variable, <span class="math inline">\(x \in \mathbb{R}\)</span>.
+In this case we can easily fit a polynomial of degree <span class="math inline">\(p\)</span> to the data by using
 <span class="math inline">\(x, x^2, \ldots, x^p\)</span> as the input variables. The corresponding
 model is
 <span class="math display">\[\begin{equation*}
@@ -489,7 +485,57 @@ This sometimes gives
 a better fit than the Nadaraya-Watson estimator, for example at the boundaries
 of the domain.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-13" class="example"><strong>Example 5.3  </strong></span>We can use the R function <code>locpoly</code> from the <code>KernSmooth</code> package to
+<p><span id="exm:local-linear-implementation" class="example"><strong>Example 5.3  </strong></span>To better understand how the local linear estimator works, we can implement
+it directly from the formulas derived above. Recall from earlier in this
+section that <span class="math inline">\(\hat m_h(\tilde x) = \hat\beta_0\)</span>, where <span class="math inline">\(\hat\beta\)</span> is
+computed via weighted least squares. For the local linear case (<span class="math inline">\(p=1\)</span>), the
+matrix formula <span class="math inline">\(\hat\beta = (X^\top W X)^{-1} X^\top W y\)</span> leads to the expression
+<span class="math display">\[\begin{equation*}
+  \hat m_h(\tilde x)
+  = \frac{T_1 T_2 - T_3 T_4}{B_1 B_2 - B_3^2},
+\end{equation*}\]</span>
+where the seven terms are sums involving the kernel weights.</p>
+<p>Here is a direct implementation in R:</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="X05-locpoly.html#cb51-1" tabindex="-1"></a><span class="co"># Local linear regression estimator</span></span>
+<span id="cb51-2"><a href="X05-locpoly.html#cb51-2" tabindex="-1"></a>local_linear <span class="ot">&lt;-</span> <span class="cf">function</span>(x_train, y_train, x_eval, h) {</span>
+<span id="cb51-3"><a href="X05-locpoly.html#cb51-3" tabindex="-1"></a>  <span class="co"># Matrix of differences between evaluation points and training points</span></span>
+<span id="cb51-4"><a href="X05-locpoly.html#cb51-4" tabindex="-1"></a>  <span class="co"># Each column corresponds to one evaluation point x_eval[j]</span></span>
+<span id="cb51-5"><a href="X05-locpoly.html#cb51-5" tabindex="-1"></a>  dx <span class="ot">&lt;-</span> <span class="fu">outer</span>(x_eval, x_train, <span class="st">&quot;-&quot;</span>)</span>
+<span id="cb51-6"><a href="X05-locpoly.html#cb51-6" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="X05-locpoly.html#cb51-7" tabindex="-1"></a>  <span class="co"># Kernel weights K_h(x_eval[j] - x_train[i])</span></span>
+<span id="cb51-8"><a href="X05-locpoly.html#cb51-8" tabindex="-1"></a>  K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(dx, <span class="at">sd =</span> h)</span>
+<span id="cb51-9"><a href="X05-locpoly.html#cb51-9" tabindex="-1"></a></span>
+<span id="cb51-10"><a href="X05-locpoly.html#cb51-10" tabindex="-1"></a>  <span class="co"># The seven terms from the weighted regression formula:</span></span>
+<span id="cb51-11"><a href="X05-locpoly.html#cb51-11" tabindex="-1"></a>  T1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(y_train <span class="sc">*</span> K)</span>
+<span id="cb51-12"><a href="X05-locpoly.html#cb51-12" tabindex="-1"></a>  T2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x_train <span class="sc">*</span> (<span class="sc">-</span>dx) <span class="sc">*</span> K)</span>
+<span id="cb51-13"><a href="X05-locpoly.html#cb51-13" tabindex="-1"></a>  T3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x_train <span class="sc">*</span> y_train <span class="sc">*</span> K)</span>
+<span id="cb51-14"><a href="X05-locpoly.html#cb51-14" tabindex="-1"></a>  T4 <span class="ot">&lt;-</span> <span class="fu">colSums</span>((<span class="sc">-</span>dx) <span class="sc">*</span> K)</span>
+<span id="cb51-15"><a href="X05-locpoly.html#cb51-15" tabindex="-1"></a>  B1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(K)</span>
+<span id="cb51-16"><a href="X05-locpoly.html#cb51-16" tabindex="-1"></a>  B2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x_train<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span> K)</span>
+<span id="cb51-17"><a href="X05-locpoly.html#cb51-17" tabindex="-1"></a>  B3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x_train <span class="sc">*</span> K)</span>
+<span id="cb51-18"><a href="X05-locpoly.html#cb51-18" tabindex="-1"></a></span>
+<span id="cb51-19"><a href="X05-locpoly.html#cb51-19" tabindex="-1"></a>  <span class="co"># The local linear estimate at each evaluation point</span></span>
+<span id="cb51-20"><a href="X05-locpoly.html#cb51-20" tabindex="-1"></a>  (T1<span class="sc">*</span>T2 <span class="sc">-</span> T3<span class="sc">*</span>T4) <span class="sc">/</span> (B1<span class="sc">*</span>B2 <span class="sc">-</span> B3<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb51-21"><a href="X05-locpoly.html#cb51-21" tabindex="-1"></a>}</span></code></pre></div>
+<p>We can test this implementation on a simple dataset:</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="X05-locpoly.html#cb52-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20251114</span>)</span>
+<span id="cb52-2"><a href="X05-locpoly.html#cb52-2" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="X05-locpoly.html#cb52-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb52-4"><a href="X05-locpoly.html#cb52-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb52-5"><a href="X05-locpoly.html#cb52-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.05</span>)</span>
+<span id="cb52-6"><a href="X05-locpoly.html#cb52-6" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="X05-locpoly.html#cb52-7" tabindex="-1"></a><span class="co"># Compute local linear estimate on a grid</span></span>
+<span id="cb52-8"><a href="X05-locpoly.html#cb52-8" tabindex="-1"></a>x_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb52-9"><a href="X05-locpoly.html#cb52-9" tabindex="-1"></a>m_ll <span class="ot">&lt;-</span> <span class="fu">local_linear</span>(x_grid, x, y, <span class="at">h =</span> <span class="fl">0.05</span>)</span>
+<span id="cb52-10"><a href="X05-locpoly.html#cb52-10" tabindex="-1"></a></span>
+<span id="cb52-11"><a href="X05-locpoly.html#cb52-11" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>, <span class="at">main =</span> <span class="st">&quot;Local Linear Estimator (from scratch)&quot;</span>)</span>
+<span id="cb52-12"><a href="X05-locpoly.html#cb52-12" tabindex="-1"></a><span class="fu">lines</span>(x_grid, m_ll, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="MATH5714M_files/figure-html/locpoly0-1.png" width="672" /></p>
+<p>The implementation shows clearly how the kernel weights <span class="math inline">\(K_h\)</span> combine with
+the data to produce the estimate at each point.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-13" class="example"><strong>Example 5.4  </strong></span>We can use the R function <code>locpoly</code> from the <code>KernSmooth</code> package to
 compute locally polynomial regression estimates. Here we plot
 the estimate for <span class="math inline">\(p=1\)</span> (blue line) together with the Nadaraya-Watson
 estimator (red line), for a simple, simulated dataset.
@@ -499,21 +545,21 @@ that <code>bandwidth = 0.3</code> for <code>ksmooth()</code> corresponds to
 <code>bandwidth = 0.11</code> for <code>locpoly()</code>: the output of
 <code>ksmooth(..., bandwidth = 0.3)</code>
 and of <code>locpoly(.., degree = 0, bandwidth = 0.11)</code> is nearly identical.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="X05-locpoly.html#cb51-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>
-<span id="cb51-2"><a href="X05-locpoly.html#cb51-2" tabindex="-1"></a></span>
-<span id="cb51-3"><a href="X05-locpoly.html#cb51-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
-<span id="cb51-4"><a href="X05-locpoly.html#cb51-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
-<span id="cb51-5"><a href="X05-locpoly.html#cb51-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.05</span>)</span>
-<span id="cb51-6"><a href="X05-locpoly.html#cb51-6" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>)</span>
-<span id="cb51-7"><a href="X05-locpoly.html#cb51-7" tabindex="-1"></a></span>
-<span id="cb51-8"><a href="X05-locpoly.html#cb51-8" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> <span class="fl">0.3</span>)</span>
-<span id="cb51-9"><a href="X05-locpoly.html#cb51-9" tabindex="-1"></a><span class="fu">lines</span>(m1, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
-<span id="cb51-10"><a href="X05-locpoly.html#cb51-10" tabindex="-1"></a></span>
-<span id="cb51-11"><a href="X05-locpoly.html#cb51-11" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="X05-locpoly.html#cb53-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>
+<span id="cb53-2"><a href="X05-locpoly.html#cb53-2" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="X05-locpoly.html#cb53-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb53-4"><a href="X05-locpoly.html#cb53-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb53-5"><a href="X05-locpoly.html#cb53-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.05</span>)</span>
+<span id="cb53-6"><a href="X05-locpoly.html#cb53-6" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>)</span>
+<span id="cb53-7"><a href="X05-locpoly.html#cb53-7" tabindex="-1"></a></span>
+<span id="cb53-8"><a href="X05-locpoly.html#cb53-8" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> <span class="fl">0.3</span>)</span>
+<span id="cb53-9"><a href="X05-locpoly.html#cb53-9" tabindex="-1"></a><span class="fu">lines</span>(m1, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb53-10"><a href="X05-locpoly.html#cb53-10" tabindex="-1"></a></span>
+<span id="cb53-11"><a href="X05-locpoly.html#cb53-11" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span></code></pre></div>
 <pre><code>## KernSmooth 2.23 loaded
 ## Copyright M. P. Wand 1997-2009</code></pre>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="X05-locpoly.html#cb53-1" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">1</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
-<span id="cb53-2"><a href="X05-locpoly.html#cb53-2" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="X05-locpoly.html#cb55-1" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">1</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
+<span id="cb55-2"><a href="X05-locpoly.html#cb55-2" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/locpoly1-1.png" width="672" /></p>
 <p>Near the boundaries the Nadaraya-Watson estimator is biased, because on the
 left-hand boundary all nearby samples correspond to larger values of the mean
@@ -527,22 +573,22 @@ retains its slope right up to the boundary.</p>
 <p>For <span class="math inline">\(p=2\)</span> the local polynomials are parabolas. This sometimes allows us to reduce
 bias near peaks.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-14" class="example"><strong>Example 5.4  </strong></span>We compare the Nadaraya-Watson estimator to locally polynomial regression
+<p><span id="exm:unlabeled-div-14" class="example"><strong>Example 5.5  </strong></span>We compare the Nadaraya-Watson estimator to locally polynomial regression
 with <span class="math inline">\(p=2\)</span>, using a simulated dataset which has a peak in the middle of the
 domain. We choose the same bandwidths as in the previous example.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="X05-locpoly.html#cb54-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>
-<span id="cb54-2"><a href="X05-locpoly.html#cb54-2" tabindex="-1"></a></span>
-<span id="cb54-3"><a href="X05-locpoly.html#cb54-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
-<span id="cb54-4"><a href="X05-locpoly.html#cb54-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
-<span id="cb54-5"><a href="X05-locpoly.html#cb54-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.05</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb54-6"><a href="X05-locpoly.html#cb54-6" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>)</span>
-<span id="cb54-7"><a href="X05-locpoly.html#cb54-7" tabindex="-1"></a></span>
-<span id="cb54-8"><a href="X05-locpoly.html#cb54-8" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> <span class="fl">0.3</span>, <span class="at">n.points =</span> <span class="dv">100</span>)</span>
-<span id="cb54-9"><a href="X05-locpoly.html#cb54-9" tabindex="-1"></a><span class="fu">lines</span>(m1, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
-<span id="cb54-10"><a href="X05-locpoly.html#cb54-10" tabindex="-1"></a></span>
-<span id="cb54-11"><a href="X05-locpoly.html#cb54-11" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
-<span id="cb54-12"><a href="X05-locpoly.html#cb54-12" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
-<span id="cb54-13"><a href="X05-locpoly.html#cb54-13" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="X05-locpoly.html#cb56-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211103</span>)</span>
+<span id="cb56-2"><a href="X05-locpoly.html#cb56-2" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="X05-locpoly.html#cb56-3" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb56-4"><a href="X05-locpoly.html#cb56-4" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb56-5"><a href="X05-locpoly.html#cb56-5" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.05</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb56-6"><a href="X05-locpoly.html#cb56-6" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>)</span>
+<span id="cb56-7"><a href="X05-locpoly.html#cb56-7" tabindex="-1"></a></span>
+<span id="cb56-8"><a href="X05-locpoly.html#cb56-8" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">ksmooth</span>(x, y, <span class="at">kernel =</span> <span class="st">&quot;normal&quot;</span>, <span class="at">bandwidth =</span> <span class="fl">0.3</span>, <span class="at">n.points =</span> <span class="dv">100</span>)</span>
+<span id="cb56-9"><a href="X05-locpoly.html#cb56-9" tabindex="-1"></a><span class="fu">lines</span>(m1, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb56-10"><a href="X05-locpoly.html#cb56-10" tabindex="-1"></a></span>
+<span id="cb56-11"><a href="X05-locpoly.html#cb56-11" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
+<span id="cb56-12"><a href="X05-locpoly.html#cb56-12" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">bandwidth =</span> <span class="fl">0.11</span>)</span>
+<span id="cb56-13"><a href="X05-locpoly.html#cb56-13" tabindex="-1"></a><span class="fu">lines</span>(m2, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/locpoly2-1.png" width="672" /></p>
 <p>We can see that the Nadaraya-Watson estimator (red line) is biased near the
 peak, because all nearby samples correspond to smaller values of the mean line.
@@ -551,12 +597,20 @@ In contrast, the local polynomial estimate (blue line) has much lower bias.</p>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>Regression with weights can be used to fit models to the data near
-a given point.</li>
-<li>A simple application of linear regression can fit polynomials as well
-as straight lines.</li>
-<li>The local polynomial regression estimator is a generalization of the
-Nadaraya-Watson estimator.</li>
+<li>Local polynomial regression combines weighted least squares with polynomial
+models, using kernel weights <span class="math inline">\(w_i = K_h(\tilde x - x_i)\)</span> to emphasize nearby
+observations.</li>
+<li>The estimate at <span class="math inline">\(\tilde x\)</span> is <span class="math inline">\(\hat m_h(\tilde x) = \hat\beta_0\)</span> where
+<span class="math inline">\(\hat\beta = (X^\top W X)^{-1} X^\top W y\)</span> must be computed separately for
+each evaluation point.</li>
+<li>For <span class="math inline">\(p=0\)</span> (constant fit), the method reduces to the Nadaraya-Watson estimator;
+for <span class="math inline">\(p=1\)</span> (local linear), it reduces boundary bias; for <span class="math inline">\(p=2\)</span> (local quadratic),
+it reduces bias near peaks.</li>
+<li>Local linear regression (<span class="math inline">\(p=1\)</span>) performs better than Nadaraya-Watson at
+boundaries because the linear fit adapts to local slope.</li>
+<li>In R, the <code>locpoly()</code> function from <code>KernSmooth</code> provides efficient
+implementations, though the method can be implemented directly from the
+weighted regression formula.</li>
 </ul>
 </div>
 

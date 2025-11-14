@@ -843,10 +843,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min       lq      mean   median        uq      max neval
-##  KDE1 1428.317 1441.765 1492.2350 1448.776 1461.0760 4161.131  1000
-##  KDE2  192.905  194.709  230.0708  195.406  196.8615 2513.341  1000
-##  KDE3  173.225  174.783  218.7376  175.562  176.8330 4943.329  1000
+##  expr      min       lq      mean   median       uq      max neval
+##  KDE1 1429.875 1443.364 1490.1977 1450.006 1458.472 4012.916  1000
+##  KDE2  193.151  194.545  242.2490  195.078  196.021 4660.429  1000
+##  KDE3  173.184  174.701  203.5463  175.398  176.300 2373.449  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -869,7 +869,7 @@ to specify the same grid \(\tilde x\):
 \begin{verbatim}
 ## Unit: microseconds
 ##     expr     min      lq     mean  median       uq      max neval
-##  density 155.144 158.957 185.0568 170.601 179.7235 6990.254  1000
+##  density 154.939 158.834 189.6719 167.936 181.5275 11585.53  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -1744,6 +1744,24 @@ probability densities from observed data. In the following sections
 we will see a different application of kernel methods: using them for
 regression, where we estimate a function \(m\) from noisy observations.
 
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  The Epanechnikov kernel minimises \(R(K)^2 \mu_2(K)\) and gives the smallest
+  integrated error, though differences between common kernels are small.
+\item
+  Bandwidth selection uses plug-in rules that estimate \(R(f'')\) from the data,
+  often by assuming a normal reference distribution.
+\item
+  R provides built-in bandwidth selectors such as \texttt{bw.nrd0()}, \texttt{bw.nrd()}, and
+  \texttt{bw.SJ()} for practical use.
+\item
+  Kernel density estimation extends to higher dimensions \(\mathbb{R}^p\) using product
+  kernels, with bandwidth parameters that can differ across coordinates.
+\end{itemize}
+
 \clearpage
 
 \section*{Problem Sheet 1}\label{P01}
@@ -2510,7 +2528,8 @@ So finally we have
 \section{Local Polynomial Regression}\label{X05-locpoly}
 
 Local polynomial regression is a generalisation of the
-Nadaraya-Watson estimator. The method combines the two ideas of
+Nadaraya-Watson estimator that addresses some of its limitations,
+particularly boundary bias. The method combines the two ideas of
 linear regression with weights and polynomial regression. The aim
 is still to estimate the model mean \(m \colon\mathbb{R}\to \mathbb{R}\) from
 given data \((x_1, y_1), \ldots, (x_n, y_n)\).
@@ -2572,8 +2591,8 @@ where \(\tilde x = (1, \tilde x_1, \ldots, \tilde x_p)\).
 
 \subsection{Polynomial Regression}\label{polynomial-regression}
 
-In these notes we only consider the case of \(p=1\). In this case we
-can easily fit a polynomial of degree \(p\) to the data by using
+In these notes we only consider regression with a single input variable, \(x \in \mathbb{R}\).
+In this case we can easily fit a polynomial of degree \(p\) to the data by using
 \(x, x^2, \ldots, x^p\) as the input variables. The corresponding
 model is
 \begin{equation*}
@@ -2766,6 +2785,71 @@ a better fit than the Nadaraya-Watson estimator, for example at the boundaries
 of the domain.
 
 \begin{example}
+\protect\hypertarget{exm:local-linear-implementation}{}\label{exm:local-linear-implementation}To better understand how the local linear estimator works, we can implement
+it directly from the formulas derived above. Recall from earlier in this
+section that \(\hat m_h(\tilde x) = \hat\beta_0\), where \(\hat\beta\) is
+computed via weighted least squares. For the local linear case (\(p=1\)), the
+matrix formula \(\hat\beta = (X^\top W X)^{-1} X^\top W y\) leads to the expression
+\begin{equation*}
+  \hat m_h(\tilde x)
+  = \frac{T_1 T_2 - T_3 T_4}{B_1 B_2 - B_3^2},
+\end{equation*}
+where the seven terms are sums involving the kernel weights.
+
+Here is a direct implementation in R:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Local linear regression estimator}
+\NormalTok{local\_linear }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x\_train, y\_train, x\_eval, h) \{}
+  \CommentTok{\# Matrix of differences between evaluation points and training points}
+  \CommentTok{\# Each column corresponds to one evaluation point x\_eval[j]}
+\NormalTok{  dx }\OtherTok{\textless{}{-}} \FunctionTok{outer}\NormalTok{(x\_eval, x\_train, }\StringTok{"{-}"}\NormalTok{)}
+
+  \CommentTok{\# Kernel weights K\_h(x\_eval[j] {-} x\_train[i])}
+\NormalTok{  K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(dx, }\AttributeTok{sd =}\NormalTok{ h)}
+
+  \CommentTok{\# The seven terms from the weighted regression formula:}
+\NormalTok{  T1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(y\_train }\SpecialCharTok{*}\NormalTok{ K)}
+\NormalTok{  T2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x\_train }\SpecialCharTok{*}\NormalTok{ (}\SpecialCharTok{{-}}\NormalTok{dx) }\SpecialCharTok{*}\NormalTok{ K)}
+\NormalTok{  T3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x\_train }\SpecialCharTok{*}\NormalTok{ y\_train }\SpecialCharTok{*}\NormalTok{ K)}
+\NormalTok{  T4 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{((}\SpecialCharTok{{-}}\NormalTok{dx) }\SpecialCharTok{*}\NormalTok{ K)}
+\NormalTok{  B1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(K)}
+\NormalTok{  B2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x\_train}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ K)}
+\NormalTok{  B3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x\_train }\SpecialCharTok{*}\NormalTok{ K)}
+
+  \CommentTok{\# The local linear estimate at each evaluation point}
+\NormalTok{  (T1}\SpecialCharTok{*}\NormalTok{T2 }\SpecialCharTok{{-}}\NormalTok{ T3}\SpecialCharTok{*}\NormalTok{T4) }\SpecialCharTok{/}\NormalTok{ (B1}\SpecialCharTok{*}\NormalTok{B2 }\SpecialCharTok{{-}}\NormalTok{ B3}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+We can test this implementation on a simple dataset:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{20251114}\NormalTok{)}
+
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{200}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length.out =}\NormalTok{ n)}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ x }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n, }\AttributeTok{sd =} \FloatTok{0.05}\NormalTok{)}
+
+\CommentTok{\# Compute local linear estimate on a grid}
+\NormalTok{x\_grid }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)}
+\NormalTok{m\_ll }\OtherTok{\textless{}{-}} \FunctionTok{local\_linear}\NormalTok{(x\_grid, x, y, }\AttributeTok{h =} \FloatTok{0.05}\NormalTok{)}
+
+\FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{cex =}\NormalTok{ .}\DecValTok{5}\NormalTok{, }\AttributeTok{main =} \StringTok{"Local Linear Estimator (from scratch)"}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(x\_grid, m\_ll, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/locpoly0-1.pdf}}
+
+The implementation shows clearly how the kernel weights \(K_h\) combine with
+the data to produce the estimate at each point.
+\end{example}
+
+\begin{example}
 We can use the R function \texttt{locpoly} from the \texttt{KernSmooth} package to
 compute locally polynomial regression estimates. Here we plot
 the estimate for \(p=1\) (blue line) together with the Nadaraya-Watson
@@ -2855,14 +2939,24 @@ In contrast, the local polynomial estimate (blue line) has much lower bias.
 \begin{itemize}
 \tightlist
 \item
-  Regression with weights can be used to fit models to the data near
-  a given point.
+  Local polynomial regression combines weighted least squares with polynomial
+  models, using kernel weights \(w_i = K_h(\tilde x - x_i)\) to emphasize nearby
+  observations.
 \item
-  A simple application of linear regression can fit polynomials as well
-  as straight lines.
+  The estimate at \(\tilde x\) is \(\hat m_h(\tilde x) = \hat\beta_0\) where
+  \(\hat\beta = (X^\top W X)^{-1} X^\top W y\) must be computed separately for
+  each evaluation point.
 \item
-  The local polynomial regression estimator is a generalization of the
-  Nadaraya-Watson estimator.
+  For \(p=0\) (constant fit), the method reduces to the Nadaraya-Watson estimator;
+  for \(p=1\) (local linear), it reduces boundary bias; for \(p=2\) (local quadratic),
+  it reduces bias near peaks.
+\item
+  Local linear regression (\(p=1\)) performs better than Nadaraya-Watson at
+  boundaries because the linear fit adapts to local slope.
+\item
+  In R, the \texttt{locpoly()} function from \texttt{KernSmooth} provides efficient
+  implementations, though the method can be implemented directly from the
+  weighted regression formula.
 \end{itemize}
 
 \clearpage
@@ -2935,8 +3029,8 @@ constant. The other extreme is the case of \(k=1\), where \(\hat m_k(x)\)
 always equals the value of the closest \(x_i\) and has jumps at the
 mid-points between the data points.
 
-In the next section we will learn how \(k\) can be chosen using
-cross-validation.
+Later, in section~\ref{X08-xval} on cross-validation, we will learn
+how \(k\) can be chosen from data.
 
 Independent of the value of \(k\), the function \(\hat m_k\) is always a
 step function, with jumps at points \(x\) where two points have equal
@@ -3015,6 +3109,27 @@ The estimated mean curve looks reasonable.
         0 & \mbox{otherwise,}
       \end{cases}
   \end{equation*} this method coincides with the \(k\)-NN estimator.
+\end{itemize}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  The \(k\)-NN estimator averages the \(k\) nearest responses, providing an
+  adaptive bandwidth that adjusts to local data density.
+\item
+  The parameter \(k\) controls smoothness: larger \(k\) gives smoother estimates,
+  while \(k=1\) produces a step function matching the nearest observation.
+\item
+  The method extends naturally to higher dimensions \(\mathbb{R}^p\), though finding
+  nearest neighbours becomes computationally expensive without specialised
+  data structures.
+\item
+  In R, the \texttt{FNN} package provides efficient implementations via \texttt{knn.reg()}.
+\item
+  Variants include symmetric \(k\)-NN and continuous versions using local
+  bandwidth \(h(x)\) based on the distance to the \(k\)th nearest neighbour.
 \end{itemize}
 
 \clearpage
@@ -4063,9 +4178,9 @@ elements of the matrix \texttt{K} to zero.
     \FunctionTok{diag}\NormalTok{(K) }\OtherTok{\textless{}{-}} \DecValTok{0}
 
 \NormalTok{    T1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(y}\SpecialCharTok{*}\NormalTok{K)}
-\NormalTok{    T2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{dx}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{    T2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{dx)}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{    T3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{y}\SpecialCharTok{*}\NormalTok{K)}
-\NormalTok{    T4 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(dx}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{    T4 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{((}\SpecialCharTok{{-}}\NormalTok{dx)}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{    B1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(K)}
 \NormalTok{    B2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{    B3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{K)}
@@ -4159,9 +4274,9 @@ methods together in one plot.
 \NormalTok{dx }\OtherTok{\textless{}{-}} \FunctionTok{outer}\NormalTok{(x, x.tilde, }\StringTok{"{-}"}\NormalTok{)}
 \NormalTok{K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(dx, }\AttributeTok{sd =}\NormalTok{ best.h.LL)}
 \NormalTok{T1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(y}\SpecialCharTok{*}\NormalTok{K)}
-\NormalTok{T2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{dx}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{T2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{dx)}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{T3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{y}\SpecialCharTok{*}\NormalTok{K)}
-\NormalTok{T4 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(dx}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{T4 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{((}\SpecialCharTok{{-}}\NormalTok{dx)}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{B1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(K)}
 \NormalTok{B2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{B3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{K)}
@@ -4186,6 +4301,28 @@ methods together in one plot.
 \end{Shaded}
 
 \pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/xv-summary-1.pdf}}
+
+\textbf{Summary}
+
+\begin{itemize}
+\tightlist
+\item
+  Cross-validation for kernel density estimation uses integrated squared error
+  or maximum likelihood criteria to select bandwidth~\(h\).
+\item
+  For kernel regression, leave-one-out cross-validation minimises
+  \(\sum_i (y_i - \hat m_h^{(i)}(x_i))^2\) where \(\hat m_h^{(i)}\) excludes
+  observation~\(i\).
+\item
+  Efficient implementation uses matrix operations with \texttt{outer()} to compute
+  all pairwise differences and kernel weights simultaneously.
+\item
+  The \texttt{faithful} dataset example shows that \(k\)-NN regression can outperform
+  fixed-bandwidth methods when data density varies across the domain.
+\item
+  Optimal parameters differ between methods: local linear regression typically
+  requires larger bandwidth than Nadaraya-Watson due to reduced boundary bias.
+\end{itemize}
 
 \clearpage
 
