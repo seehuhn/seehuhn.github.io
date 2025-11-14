@@ -434,7 +434,7 @@ find the <span class="math inline">\(J\)</span> which <em>minimises</em>
 \end{equation*}\]</span>
 where <span class="math inline">\(|J|\)</span> is the number of variables in <span class="math inline">\(J\)</span> and the
 <span class="math inline">\(\hat y_i\)</span> are the fitted values for the model with inputs <span class="math inline">\(j \in J\)</span>.
-We have seen that these criteria are equivalent in section <a href="S10-diagnostics.html#error-var">10.3</a>.</p></li>
+We have seen in <a href="S10-diagnostics.html#error-var">10.3</a> that these criteria are equivalent.</p></li>
 <li><p>For <span class="math inline">\(J \subseteq \{1, \ldots p\}\)</span>, define
 <span class="math display">\[\begin{equation*}
   r(J)
@@ -497,7 +497,7 @@ In this case we have found
    \min_{J, |J|=q} r(J)
    = r.
 \end{equation*}\]</span>
-and we continue step B by trying the next value of <span class="math inline">\(q\)</span>.
+and we continue step C by trying the next value of <span class="math inline">\(q\)</span>.
 If <span class="math inline">\(r &gt; \varphi_{k-1}\)</span>, no decision can be taken at this point and we
 continue with step 2.</p></li>
 <li><p>For <span class="math inline">\(j \in \{q+1, \ldots, p\}\)</span> let
@@ -507,7 +507,7 @@ continue with step 2.</p></li>
 These are all models with <span class="math inline">\(q\)</span> inputs where the first excluded
 variable has index <span class="math inline">\(k = q\)</span>.
 If <span class="math inline">\(\min(r, r_1, \ldots, r_q) \leq \varphi_{k-1} = \varphi_{q-1}\)</span>, then we know
-from step A that the <span class="math inline">\(J\)</span> corresponing to the minimum is the best model
+from step A that the <span class="math inline">\(J\)</span> corresponding to the minimum is the best model
 with <span class="math inline">\(q\)</span> inputs. In this case we continue step B by trying the next
 value of <span class="math inline">\(q\)</span>. Otherwise we proceed to step 3.</p></li>
 <li><p>Similarly to the previous step, we consider all models with <span class="math inline">\(q\)</span>
@@ -618,8 +618,7 @@ This is the case <span class="math inline">\(q = 0\)</span>.</p>
 <p><strong>C.</strong> Now we consider <span class="math inline">\(q \in \{1, \ldots, p-2\}\)</span>. The algorithm groups
 these cases by the position <span class="math inline">\(k\)</span> of the first column omitted in the model,
 starting with <span class="math inline">\(k = q+1\)</span> and then decreasing <span class="math inline">\(k\)</span> in each step.
-We use the function <code>combn</code> from the <code>sets</code> package
-to get all possible choices of
+We use the function <code>combn</code> to get all possible choices of
 <span class="math inline">\(q - k + 1\)</span> columns out of <span class="math inline">\(\{k+1, \ldots, p\}\)</span>.</p>
 <div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="S13-exhaustive.html#cb186-1" tabindex="-1"></a><span class="fu">library</span>(sets) <span class="co"># this defines &quot;combn()&quot;</span></span>
 <span id="cb186-2"><a href="S13-exhaustive.html#cb186-2" tabindex="-1"></a><span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(p<span class="dv">-2</span>)) {</span>
@@ -649,7 +648,7 @@ to get all possible choices of
 <span id="cb186-26"><a href="S13-exhaustive.html#cb186-26" tabindex="-1"></a>            }</span>
 <span id="cb186-27"><a href="S13-exhaustive.html#cb186-27" tabindex="-1"></a>        }</span>
 <span id="cb186-28"><a href="S13-exhaustive.html#cb186-28" tabindex="-1"></a></span>
-<span id="cb186-29"><a href="S13-exhaustive.html#cb186-29" tabindex="-1"></a>        <span class="cf">if</span> (k <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> best.rss[q] <span class="sc">&lt;=</span> phi[k<span class="dv">-1</span>]) {</span>
+<span id="cb186-29"><a href="S13-exhaustive.html#cb186-29" tabindex="-1"></a>        <span class="cf">if</span> (k <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> best.rss[q<span class="sc">+</span><span class="dv">1</span>] <span class="sc">&lt;=</span> phi[k<span class="dv">-1</span>]) {</span>
 <span id="cb186-30"><a href="S13-exhaustive.html#cb186-30" tabindex="-1"></a>            <span class="co"># If we reach this point, we know that we found the best</span></span>
 <span id="cb186-31"><a href="S13-exhaustive.html#cb186-31" tabindex="-1"></a>            <span class="co"># arrangement and we can exit the loop over k early.</span></span>
 <span id="cb186-32"><a href="S13-exhaustive.html#cb186-32" tabindex="-1"></a>            <span class="co"># This is what makes the algorithm efficient.</span></span>
@@ -716,7 +715,7 @@ from <span class="math inline">\(0.4785\)</span> to <span class="math inline">\(
 <span id="cb194-2"><a href="S13-exhaustive.html#cb194-2" tabindex="-1"></a><span class="fu">cat</span>(count,</span>
 <span id="cb194-3"><a href="S13-exhaustive.html#cb194-3" tabindex="-1"></a>    <span class="st">&quot; models fitted (&quot;</span>, <span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> count <span class="sc">/</span> total, <span class="dv">1</span>), <span class="st">&quot;%)</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
 <span id="cb194-4"><a href="S13-exhaustive.html#cb194-4" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
-<pre class="routput"><code>88 models fitted (34.4%)</code></pre>
+<pre class="routput"><code>36 models fitted (14.1%)</code></pre>
 <p>This shows that we only needed to fit 88 of the 256 models under consideration.</p>
 </div>
 <div class="example">
@@ -777,6 +776,9 @@ algorithm in R.</li>
 stepwise methods remain the practical choice.</li>
 </ul>
 </div>
+<p>This concludes our discussion of model selection techniques. In the next
+section we turn to a new topic: how to include categorical variables (called
+factors) in regression models.</p>
 
 </div>
 </div>

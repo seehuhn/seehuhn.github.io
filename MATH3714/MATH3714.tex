@@ -6785,7 +6785,7 @@ this model in various ways:
   sometimes it is useful to transform input variables before using them
   in the model. This can either happen individually, \emph{e.g.}~\(x_2' = \log
   x_2\), or collectively, \emph{e.g.}~\(x^\ast = x_1 x_2\). The number of
-  models we may obtain in this way is unlimited.
+  models we can obtain by adding transformed versions of the inputs is unlimited.
 \end{itemize}
 
 If we want to compare these candidate models in a systematic way,
@@ -7168,7 +7168,7 @@ The method described in this section is based on the following three observation
   \end{equation*}
   where \(|J|\) is the number of variables in \(J\) and the
   \(\hat y_i\) are the fitted values for the model with inputs \(j \in J\).
-  We have seen that these criteria are equivalent in section~\ref{error-var}.
+  We have seen in~\ref{error-var} that these criteria are equivalent.
 \item
   For \(J \subseteq \{1, \ldots p\}\), define
   \begin{equation*}
@@ -7235,7 +7235,7 @@ section.
        \min_{J, |J|=q} r(J)
        = r.
      \end{equation*}
-    and we continue step B by trying the next value of~\(q\).
+    and we continue step C by trying the next value of~\(q\).
     If \(r > \varphi_{k-1}\), no decision can be taken at this point and we
     continue with step~2.
   \item
@@ -7246,7 +7246,7 @@ section.
     These are all models with \(q\) inputs where the first excluded
     variable has index \(k = q\).
     If \(\min(r, r_1, \ldots, r_q) \leq \varphi_{k-1} = \varphi_{q-1}\), then we know
-    from step~A that the \(J\) corresponing to the minimum is the best model
+    from step~A that the \(J\) corresponding to the minimum is the best model
     with \(q\) inputs. In this case we continue step B by trying the next
     value of~\(q\). Otherwise we proceed to step~3.
   \item
@@ -7395,8 +7395,7 @@ This is the case \(q = 0\).
 \textbf{C.} Now we consider \(q \in \{1, \ldots, p-2\}\). The algorithm groups
 these cases by the position \(k\) of the first column omitted in the model,
 starting with \(k = q+1\) and then decreasing \(k\) in each step.
-We use the function \texttt{combn} from the \texttt{sets} package
-to get all possible choices of
+We use the function \texttt{combn} to get all possible choices of
 \(q - k + 1\) columns out of \(\{k+1, \ldots, p\}\).
 
 \begin{Shaded}
@@ -7429,7 +7428,7 @@ to get all possible choices of
 \NormalTok{            \}}
 \NormalTok{        \}}
 
-        \ControlFlowTok{if}\NormalTok{ (k }\SpecialCharTok{\textgreater{}} \DecValTok{1} \SpecialCharTok{\&\&}\NormalTok{ best.rss[q] }\SpecialCharTok{\textless{}=}\NormalTok{ phi[k}\DecValTok{{-}1}\NormalTok{]) \{}
+        \ControlFlowTok{if}\NormalTok{ (k }\SpecialCharTok{\textgreater{}} \DecValTok{1} \SpecialCharTok{\&\&}\NormalTok{ best.rss[q}\SpecialCharTok{+}\DecValTok{1}\NormalTok{] }\SpecialCharTok{\textless{}=}\NormalTok{ phi[k}\DecValTok{{-}1}\NormalTok{]) \{}
             \CommentTok{\# If we reach this point, we know that we found the best}
             \CommentTok{\# arrangement and we can exit the loop over k early.}
             \CommentTok{\# This is what makes the algorithm efficient.}
@@ -7549,7 +7548,7 @@ To conclude, we check that the complicated algorithm indeed saved some work:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# 88 models fitted (34.4\%)}
+\NormalTok{\# 36 models fitted (14.1\%)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -7642,6 +7641,10 @@ data is advisable.
   For very large \(p\), even exhaustive search becomes infeasible, and
   stepwise methods remain the practical choice.
 \end{itemize}
+
+This concludes our discussion of model selection techniques. In the next
+section we turn to a new topic: how to include categorical variables (called
+factors) in regression models.
 
 \clearpage
 
