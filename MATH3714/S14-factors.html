@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 14 Factors | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
-  <meta name="generator" content="bookdown 0.44 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 14 Factors | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -445,7 +445,7 @@ x_{k-1}\)</span>, where
   \end{cases}
 \end{equation*}\]</span>
 for all <span class="math inline">\(\ell \in \{1, \ldots, k-1\}\)</span> and <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.
-Using this convention, <span class="math inline">\(x_{ji} = k\)</span> is represented by setting
+Using this convention, <span class="math inline">\(x_{ji} = a_k\)</span> is represented by setting
 <span class="math inline">\(\tilde x_{1,i} = \cdots = \tilde x_{k-1,i} = 0\)</span>. The value <span class="math inline">\(a_k\)</span>
 which is not represented as a separate column is called the
 <strong>reference level</strong>. The regression coefficients corresponding to the
@@ -453,17 +453,22 @@ columns <span class="math inline">\(\tilde x_1, \ldots, \tilde x_{k-1}\)</span> 
 as the effect of level <span class="math inline">\(a_\ell\)</span>, relative to the effect
 of level <span class="math inline">\(a_k\)</span>. Since the indicator is constant <span class="math inline">\(1\)</span> for all samples
 corresponding to a given factor, regression coefficients representing factors
-lead to changes of the intercept, rather than of slopes.</p>
+lead to changes of the intercept, rather than of slopes. This interpretation
+assumes the model includes an intercept term; without an intercept, factor
+coefficients would represent absolute levels rather than relative shifts.</p>
 <p>We are using only <span class="math inline">\(k-1\)</span> columns to represent a factor
-with <span class="math inline">\(k\)</span> levels in order to avoid collinearity. If we would use <span class="math inline">\(k\)</span> columns,
+with <span class="math inline">\(k\)</span> levels. The reason is that using all <span class="math inline">\(k\)</span> columns would
+create a logical redundancy: if an observation doesn’t belong to
+any of the first <span class="math inline">\(k-1\)</span> levels, we already know it must belong to
+level <span class="math inline">\(a_k\)</span>. Mathematically, if we would use <span class="math inline">\(k\)</span> columns,
 defined as above, we would get
 <span class="math display">\[\begin{equation*}
   \sum_{\ell=1}^k \tilde x_{\ell i}
   = \mathbf{1},
 \end{equation*}\]</span>
-and in a model with an intercept we would have exact collinearity of
-the corresponding columns in the design matrix <span class="math inline">\(X\)</span> and thus
-the matrix <span class="math inline">\(X^\top X\)</span> would not be invertible.</p>
+and in a model with an intercept, this redundancy makes
+the matrix <span class="math inline">\(X^\top X\)</span> non-invertible (see section <a href="S15-multicoll.html#S15-multicoll">15</a>
+for the general theory).</p>
 <div class="example">
 <p><span id="exm:unlabeled-div-54" class="example"><strong>Example 14.1  </strong></span>Consider a dataset consisting of a numerical input variable
 and a binary factor for gender (<code>female</code>, <code>male</code>).
@@ -521,7 +526,7 @@ instead of 12).</p>
 <span id="cb200-11"><a href="S14-factors.html#cb200-11" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(group1, group2)</span>
 <span id="cb200-12"><a href="S14-factors.html#cb200-12" tabindex="-1"></a></span>
 <span id="cb200-13"><a href="S14-factors.html#cb200-13" tabindex="-1"></a>data<span class="sc">$</span>treated <span class="ot">&lt;-</span> <span class="fu">factor</span>(data<span class="sc">$</span>treated, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;no&quot;</span>, <span class="st">&quot;yes&quot;</span>))</span></code></pre></div>
-<p>The last line of the code tells R explicitely that the <code>treated</code> column
+<p>The last line of the code tells R explicitly that the <code>treated</code> column
 represents a factor with levels “no” and “yes”. Internally, this column will
 now be represented by numbers 1 (for “no”) and 2 (for “yes”), but this numeric representation
 is mostly hidden from the user. Now we fit a regression model:</p>
@@ -546,7 +551,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 Residual standard error: 0.5452 on 47 degrees of freedom
 Multiple R-squared:  0.9635,    Adjusted R-squared:  0.962 
 F-statistic: 620.5 on 2 and 47 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>We see that R used “no” as the reference factor, here. The
+<p>We see that R used “no” as the reference level, here. The
 regression coefficient <code>treatedyes</code> gives the relative change
 of the “yes”, compared to “no”. The true value is
 the difference of the means: <span class="math inline">\(10 - 12 = -2\)</span>, and the estimated
@@ -601,7 +606,7 @@ difference in intercepts is statistically significant.</p>
 </div>
 <p>In some situations, the strength of the dependency of the response <span class="math inline">\(y\)</span> to an
 input <span class="math inline">\(x_1\)</span> might depend on another input, say <span class="math inline">\(x_2\)</span>. The simplest such
-situation would be, if the coefficient <span class="math inline">\(\beta_1\)</span>, corresponding on <span class="math inline">\(x_1\)</span> is
+situation would be, if the coefficient <span class="math inline">\(\beta_1\)</span>, corresponding to <span class="math inline">\(x_1\)</span> is
 itself proportional to <span class="math inline">\(x_2\)</span>, say <span class="math inline">\(\beta_1 = \gamma x_2\)</span>. In this case we have
 <span class="math inline">\(y = \cdots + \beta_1 x_1 = \cdots + \gamma x_1 x_2\)</span>. Traditionally, inputs
 added to a model which are the product of two or more of the original inputs
@@ -640,11 +645,10 @@ three terms <code>x1 + x2 + x1:x2</code>:</p>
 attr(,&quot;assign&quot;)
 [1] 0 1 2 3</code></pre>
 </div>
-<p>Interactions also work for factors. In this case, products with all of
-the corresponding indicator variables are added to the model. while
-the base effect of factor variables is to have different intercepts for
-the different groups, using interactions with a factor allows to have
-different slopes for the different groups.</p>
+<p>Interactions also work for factors, with products of the corresponding
+indicator variables added to the model. While factors alone create
+different intercepts for different groups, factor interactions allow
+different slopes for different groups.</p>
 <div class="example">
 <p><span id="exm:unlabeled-div-57" class="example"><strong>Example 14.4  </strong></span>The classical example of an interaction is to consider how the
 yield <span class="math inline">\(y\)</span> of a crop is related to temperature <span class="math inline">\(x_1\)</span> and rainfall <span class="math inline">\(x_2\)</span>.

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 15 Multicollinearity | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
-  <meta name="generator" content="bookdown 0.44 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 15 Multicollinearity | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -429,7 +429,20 @@ invertible. If the columns of <span class="math inline">\(X\)</span> are linearl
 longer invertible and the least squares estimate is no longer uniquely
 defined.</p>
 <div class="example">
-<p><span id="exm:unlabeled-div-60" class="example"><strong>Example 15.1  </strong></span>Consider the following data:</p>
+<p><span id="exm:unlabeled-div-60" class="example"><strong>Example 15.1  </strong></span>Recall from section <a href="S14-factors.html#S14-factors">14</a> that when encoding a factor
+with <span class="math inline">\(k\)</span> levels using indicator variables, we use only <span class="math inline">\(k-1\)</span> columns
+rather than all <span class="math inline">\(k\)</span> columns. If we would use <span class="math inline">\(k\)</span> indicator variables
+<span class="math inline">\(\tilde x_1, \ldots, \tilde x_k\)</span> (one for each level), then for
+any observation exactly one indicator equals 1 and the rest equal 0, so
+<span class="math display">\[\begin{equation*}
+  \sum_{\ell=1}^k \tilde x_{\ell i} = \mathbf{1}.
+\end{equation*}\]</span>
+In a model with intercept, this creates exact multicollinearity: the <span class="math inline">\(k\)</span>
+indicator columns sum to the intercept column, making <span class="math inline">\(X^\top X\)</span> singular.
+This is why we use the <span class="math inline">\(k-1\)</span> encoding convention for factors.</p>
+</div>
+<div class="example">
+<p><span id="exm:unlabeled-div-61" class="example"><strong>Example 15.2  </strong></span>As another illustration of exact multicollinearity, consider the following data:</p>
 <table>
 <thead>
 <tr class="header">
@@ -466,13 +479,13 @@ lead to zero residuals.</p>
 data are identical. The same problem, in a less obvious way, would occur in
 datasets with more inputs when one column of <span class="math inline">\(X\)</span> can be written as a linear
 combination of other columns. This is a problem of the given
-input data, not of the responsees or of the statistical model.</p>
+input data, not of the responses or of the statistical model.</p>
 <p>In the case where there is only approximate linear dependency between the
 columns of <span class="math inline">\(X\)</span>, the inverse <span class="math inline">\((X^\top X)^{-1}\)</span> exists and an estimate <span class="math inline">\(\hat\beta\)</span>
-can be computed, but there will be huge uncertainties in some of the stimated
+can be computed, but there will be huge uncertainties in some of the estimated
 coefficients. We illustrate this effect using a numerical example.</p>
 <div class="example">
-<p><span id="exm:mulcollell" class="example"><strong>Example 15.2  </strong></span>Here we simulate data which has similar characteristics to the toy example
+<p><span id="exm:mulcollell" class="example"><strong>Example 15.3  </strong></span>Here we simulate data which has similar characteristics to the toy example
 above: we have very similar two inputs, the sum of which nearly equals the
 output. We fit a model without the intercept, so that there are only two
 coefficients to estimate and plotting these is no problem.</p>
@@ -518,7 +531,7 @@ strongly affected by rounding errors.</p></li>
 <li><p>If the columns of <span class="math inline">\(X\)</span> are approximately linearly dependent,
 the computed value of the estimator <span class="math inline">\(\hat\beta\)</span> is strongly affected
 by small changes to the system: the noise in the model strongly affects
-<span class="math inline">\(\hat\beta\)</span> (as demonstrated in example <a href="S15-multicoll.html#exm:mulcollell">15.2</a>, above),
+<span class="math inline">\(\hat\beta\)</span> (as demonstrated in example <a href="S15-multicoll.html#exm:mulcollell">15.3</a>, above),
 leaving out a single observation may lead to large changes in <span class="math inline">\(\hat\beta\)</span>
 and computation of <span class="math inline">\(\hat\beta\)</span> is sensitive to rounding errors.</p></li>
 </ol>
@@ -539,7 +552,7 @@ a pair scatter plot of the inputs <span class="math inline">\(x_i\)</span>, mult
 more than two columns can be harder to notice. The condition number of
 <span class="math inline">\(X\)</span> is a quantitative measure of how close <span class="math inline">\(X\)</span> is to multicollinearity.</p>
 <div class="definition">
-<p><span id="def:unlabeled-div-61" class="definition"><strong>Definition 15.2  </strong></span>The <strong>condition number</strong> of <span class="math inline">\(X\)</span> is defined to be
+<p><span id="def:unlabeled-div-62" class="definition"><strong>Definition 15.2  </strong></span>The <strong>condition number</strong> of <span class="math inline">\(X\)</span> is defined to be
 <span class="math display">\[\begin{equation*}
   \kappa(X)
   = \frac{\sigma_\mathrm{max}(X)}{\sigma_\mathrm{min}(X)},
@@ -564,7 +577,7 @@ where <code>m</code> is the object returned by <code>lm()</code>. If the optiona
 argument <code>exact = TRUE</code> is omitted, only an approximate result
 is returned (using a faster algorithm).</p>
 <div class="example">
-<p><span id="exm:multcoll3" class="example"><strong>Example 15.3  </strong></span>Consider the following toy dataset:</p>
+<p><span id="exm:multcoll3" class="example"><strong>Example 15.4  </strong></span>Consider the following toy dataset:</p>
 <div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="S15-multicoll.html#cb229-1" tabindex="-1"></a>data</span></code></pre></div>
 <pre class="routput"><code>       y   x.1    x.2    x.3    x.4
 1   7.37 4.182  0.078  0.008  1.043
@@ -648,7 +661,7 @@ be addressed:</p>
 is present. Removing one of the input variables in a group
 of linearly dependent inputs can solve this problem.</p></li>
 <li><p>The inputs can be transformed by choosing new variables as functions
-of the original inputs. For example, in example <a href="S15-multicoll.html#exm:mulcollell">15.2</a>
+of the original inputs. For example, in example <a href="S15-multicoll.html#exm:mulcollell">15.3</a>
 one could try the input variables <span class="math inline">\(\tilde x_1 = (x_1 + x_2) / 2\)</span> and
 <span class="math inline">\(\tilde x_2 = (x_1 - x_2) / 2\)</span>. The confidence ellipse shown above
 indicates that it should be possible to get good estimates for the

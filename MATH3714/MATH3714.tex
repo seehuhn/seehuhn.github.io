@@ -970,7 +970,7 @@ the same result as above:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] 3.979039e{-}13}
+\NormalTok{\# [1] 1.008971e{-}12}
 \end{Highlighting}
 \end{Shaded}
 
@@ -7245,7 +7245,7 @@ section.
      \end{equation*}
     These are all models with \(q\) inputs where the first excluded
     variable has index \(k = q\).
-    If \(\min(r, r_{q+1}, \ldots, r_p) \leq \varphi_{k-1} = \varphi_{q-1}\), then we know
+    If \(\min(r, r_1, \ldots, r_q) \leq \varphi_{k-1} = \varphi_{q-1}\), then we know
     from step~A that the \(J\) corresponding to the minimum is the best model
     with \(q\) inputs. In this case we continue step B by trying the next
     value of~\(q\). Otherwise we proceed to step~3.
@@ -7680,7 +7680,7 @@ x_{k-1}\), where
   \end{cases}
 \end{equation*}
 for all \(\ell \in \{1, \ldots, k-1\}\) and \(i \in \{1, \ldots, n\}\).
-Using this convention, \(x_{ji} = k\) is represented by setting
+Using this convention, \(x_{ji} = a_k\) is represented by setting
 \(\tilde x_{1,i} = \cdots = \tilde x_{k-1,i} = 0\). The value \(a_k\)
 which is not represented as a separate column is called the
 \textbf{reference level}. The regression coefficients corresponding to the
@@ -7688,18 +7688,23 @@ columns \(\tilde x_1, \ldots, \tilde x_{k-1}\) can be interpreted
 as the effect of level \(a_\ell\), relative to the effect
 of level \(a_k\). Since the indicator is constant \(1\) for all samples
 corresponding to a given factor, regression coefficients representing factors
-lead to changes of the intercept, rather than of slopes.
+lead to changes of the intercept, rather than of slopes. This interpretation
+assumes the model includes an intercept term; without an intercept, factor
+coefficients would represent absolute levels rather than relative shifts.
 
 We are using only \(k-1\) columns to represent a factor
-with \(k\) levels in order to avoid collinearity. If we would use \(k\) columns,
+with \(k\) levels. The reason is that using all \(k\) columns would
+create a logical redundancy: if an observation doesn't belong to
+any of the first \(k-1\) levels, we already know it must belong to
+level~\(a_k\). Mathematically, if we would use \(k\) columns,
 defined as above, we would get
 \begin{equation*}
   \sum_{\ell=1}^k \tilde x_{\ell i}
   = \mathbf{1},
 \end{equation*}
-and in a model with an intercept we would have exact collinearity of
-the corresponding columns in the design matrix~\(X\) and thus
-the matrix \(X^\top X\) would not be invertible.
+and in a model with an intercept, this redundancy makes
+the matrix \(X^\top X\) non-invertible (see section~\ref{S15-multicoll}
+for the general theory).
 
 \begin{example}
 
@@ -7756,7 +7761,7 @@ instead of 12).
 \end{Highlighting}
 \end{Shaded}
 
-The last line of the code tells R explicitely that the \texttt{treated} column
+The last line of the code tells R explicitly that the \texttt{treated} column
 represents a factor with levels ``no'' and ``yes''. Internally, this column will
 now be represented by numbers 1 (for ``no'') and 2 (for ``yes''), but this numeric representation
 is mostly hidden from the user. Now we fit a regression model:
@@ -7792,7 +7797,7 @@ is mostly hidden from the user. Now we fit a regression model:
 \end{Highlighting}
 \end{Shaded}
 
-We see that R used ``no'' as the reference factor, here. The
+We see that R used ``no'' as the reference level, here. The
 regression coefficient \texttt{treatedyes} gives the relative change
 of the ``yes'', compared to ``no''. The true value is
 the difference of the means: \(10 - 12 = -2\), and the estimated
@@ -7850,7 +7855,7 @@ difference in intercepts is statistically significant.
 
 In some situations, the strength of the dependency of the response \(y\) to an
 input \(x_1\) might depend on another input, say \(x_2\). The simplest such
-situation would be, if the coefficient \(\beta_1\), corresponding on \(x_1\) is
+situation would be, if the coefficient \(\beta_1\), corresponding to \(x_1\) is
 itself proportional to \(x_2\), say \(\beta_1 = \gamma x_2\). In this case we have
 \(y = \cdots + \beta_1 x_1 = \cdots + \gamma x_1 x_2\). Traditionally, inputs
 added to a model which are the product of two or more of the original inputs
@@ -7921,11 +7926,10 @@ three terms \texttt{x1\ +\ x2\ +\ x1:x2}:
 
 \end{example}
 
-Interactions also work for factors. In this case, products with all of
-the corresponding indicator variables are added to the model. while
-the base effect of factor variables is to have different intercepts for
-the different groups, using interactions with a factor allows to have
-different slopes for the different groups.
+Interactions also work for factors, with products of the corresponding
+indicator variables added to the model. While factors alone create
+different intercepts for different groups, factor interactions allow
+different slopes for different groups.
 
 \begin{example}
 The classical example of an interaction is to consider how the
@@ -8345,7 +8349,21 @@ longer invertible and the least squares estimate is no longer uniquely
 defined.
 
 \begin{example}
-Consider the following data:
+Recall from section~\ref{S14-factors} that when encoding a factor
+with \(k\) levels using indicator variables, we use only \(k-1\) columns
+rather than all \(k\) columns. If we would use \(k\) indicator variables
+\(\tilde x_1, \ldots, \tilde x_k\) (one for each level), then for
+any observation exactly one indicator equals~1 and the rest equal~0, so
+\begin{equation*}
+  \sum_{\ell=1}^k \tilde x_{\ell i} = \mathbf{1}.
+\end{equation*}
+In a model with intercept, this creates exact multicollinearity: the \(k\)
+indicator columns sum to the intercept column, making \(X^\top X\) singular.
+This is why we use the \(k-1\) encoding convention for factors.
+\end{example}
+
+\begin{example}
+As another illustration of exact multicollinearity, consider the following data:
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}rcl@{}}
@@ -8372,11 +8390,11 @@ The problem in the example above occurs, since the two input columns in the
 data are identical. The same problem, in a less obvious way, would occur in
 datasets with more inputs when one column of \(X\) can be written as a linear
 combination of other columns. This is a problem of the given
-input data, not of the responsees or of the statistical model.
+input data, not of the responses or of the statistical model.
 
 In the case where there is only approximate linear dependency between the
 columns of \(X\), the inverse \((X^\top X)^{-1}\) exists and an estimate \(\hat\beta\)
-can be computed, but there will be huge uncertainties in some of the stimated
+can be computed, but there will be huge uncertainties in some of the estimated
 coefficients. We illustrate this effect using a numerical example.
 
 \begin{example}
