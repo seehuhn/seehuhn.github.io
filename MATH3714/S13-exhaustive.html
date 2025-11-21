@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 13 Exhaustive Model Search | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
-  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.44 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 13 Exhaustive Model Search | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -506,9 +506,9 @@ continue with step 2.</p></li>
 \end{equation*}\]</span>
 These are all models with <span class="math inline">\(q\)</span> inputs where the first excluded
 variable has index <span class="math inline">\(k = q\)</span>.
-If <span class="math inline">\(\min(r, r_1, \ldots, r_q) \leq \varphi_{k-1} = \varphi_{q-1}\)</span>, then we know
+If <span class="math inline">\(\min(r, r_{q+1}, \ldots, r_p) \leq \varphi_{k-1} = \varphi_{q-1}\)</span>, then we know
 from step A that the <span class="math inline">\(J\)</span> corresponding to the minimum is the best model
-with <span class="math inline">\(q\)</span> inputs. In this case we continue step B by trying the next
+with <span class="math inline">\(q\)</span> inputs. In this case we continue step C by trying the next
 value of <span class="math inline">\(q\)</span>. Otherwise we proceed to step 3.</p></li>
 <li><p>Similarly to the previous step, we consider all models with <span class="math inline">\(q\)</span>
 variables where the first excluded variable has index <span class="math inline">\(k = q-1\)</span>.
@@ -526,7 +526,7 @@ is smallest. Output the model which has minimal RSS for this <span class="math 
 <p>This algorithm finds the model with the maximal <span class="math inline">\(R^2_\mathrm{adj}\)</span>.
 Often, large savings are achieved by the early exits in step C.
 Only in the worst case, when all of the comparisons with <span class="math inline">\(\varphi_j\)</span> in step
-C fail, this algorithms needs to fit all <span class="math inline">\(2^p\)</span> models.</p>
+C fail, this algorithm needs to fit all <span class="math inline">\(2^p\)</span> models.</p>
 <div class="example">
 <p><span id="exm:qsar-search" class="example"><strong>Example 13.1  </strong></span>To demonstrate the steps of the algorithm, we implement the method
 “by hand”. We use the QSAR dataset, which we have already seen
@@ -620,42 +620,41 @@ these cases by the position <span class="math inline">\(k\)</span> of the first 
 starting with <span class="math inline">\(k = q+1\)</span> and then decreasing <span class="math inline">\(k\)</span> in each step.
 We use the function <code>combn</code> to get all possible choices of
 <span class="math inline">\(q - k + 1\)</span> columns out of <span class="math inline">\(\{k+1, \ldots, p\}\)</span>.</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="S13-exhaustive.html#cb186-1" tabindex="-1"></a><span class="fu">library</span>(sets) <span class="co"># this defines &quot;combn()&quot;</span></span>
-<span id="cb186-2"><a href="S13-exhaustive.html#cb186-2" tabindex="-1"></a><span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(p<span class="dv">-2</span>)) {</span>
-<span id="cb186-3"><a href="S13-exhaustive.html#cb186-3" tabindex="-1"></a>    best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="cn">Inf</span></span>
-<span id="cb186-4"><a href="S13-exhaustive.html#cb186-4" tabindex="-1"></a></span>
-<span id="cb186-5"><a href="S13-exhaustive.html#cb186-5" tabindex="-1"></a>    <span class="co"># Consider all sets of q columns, ...</span></span>
-<span id="cb186-6"><a href="S13-exhaustive.html#cb186-6" tabindex="-1"></a>    <span class="cf">for</span> (k <span class="cf">in</span> (q<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="dv">1</span>) {</span>
-<span id="cb186-7"><a href="S13-exhaustive.html#cb186-7" tabindex="-1"></a>        <span class="co"># ... where the first omitted column is k.</span></span>
-<span id="cb186-8"><a href="S13-exhaustive.html#cb186-8" tabindex="-1"></a></span>
-<span id="cb186-9"><a href="S13-exhaustive.html#cb186-9" tabindex="-1"></a>        <span class="co"># We have to include 1, ..., k-1, and ...</span></span>
-<span id="cb186-10"><a href="S13-exhaustive.html#cb186-10" tabindex="-1"></a>        a <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(k<span class="dv">-1</span>)</span>
-<span id="cb186-11"><a href="S13-exhaustive.html#cb186-11" tabindex="-1"></a></span>
-<span id="cb186-12"><a href="S13-exhaustive.html#cb186-12" tabindex="-1"></a>        <span class="co"># ... for the remaining q - (k-1) inputs, we try all</span></span>
-<span id="cb186-13"><a href="S13-exhaustive.html#cb186-13" tabindex="-1"></a>        <span class="co"># possible combinations.</span></span>
-<span id="cb186-14"><a href="S13-exhaustive.html#cb186-14" tabindex="-1"></a>        bb <span class="ot">&lt;-</span> <span class="fu">combn</span>((k<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>p, q <span class="sc">-</span> k <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb186-15"><a href="S13-exhaustive.html#cb186-15" tabindex="-1"></a>        <span class="cf">for</span> (l <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">ncol</span>(bb))) {</span>
-<span id="cb186-16"><a href="S13-exhaustive.html#cb186-16" tabindex="-1"></a>            b <span class="ot">&lt;-</span> bb[, l]</span>
-<span id="cb186-17"><a href="S13-exhaustive.html#cb186-17" tabindex="-1"></a>            included <span class="ot">&lt;-</span> <span class="fu">c</span>(a, b)</span>
-<span id="cb186-18"><a href="S13-exhaustive.html#cb186-18" tabindex="-1"></a></span>
-<span id="cb186-19"><a href="S13-exhaustive.html#cb186-19" tabindex="-1"></a>            m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[, included])</span>
-<span id="cb186-20"><a href="S13-exhaustive.html#cb186-20" tabindex="-1"></a>            count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb186-21"><a href="S13-exhaustive.html#cb186-21" tabindex="-1"></a>            rss <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb186-22"><a href="S13-exhaustive.html#cb186-22" tabindex="-1"></a></span>
-<span id="cb186-23"><a href="S13-exhaustive.html#cb186-23" tabindex="-1"></a>            <span class="cf">if</span> (rss <span class="sc">&lt;</span> best.rss[q <span class="sc">+</span> <span class="dv">1</span>]) {</span>
-<span id="cb186-24"><a href="S13-exhaustive.html#cb186-24" tabindex="-1"></a>                best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> rss</span>
-<span id="cb186-25"><a href="S13-exhaustive.html#cb186-25" tabindex="-1"></a>                best.model[[q <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> included</span>
-<span id="cb186-26"><a href="S13-exhaustive.html#cb186-26" tabindex="-1"></a>            }</span>
-<span id="cb186-27"><a href="S13-exhaustive.html#cb186-27" tabindex="-1"></a>        }</span>
-<span id="cb186-28"><a href="S13-exhaustive.html#cb186-28" tabindex="-1"></a></span>
-<span id="cb186-29"><a href="S13-exhaustive.html#cb186-29" tabindex="-1"></a>        <span class="cf">if</span> (k <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> best.rss[q<span class="sc">+</span><span class="dv">1</span>] <span class="sc">&lt;=</span> phi[k<span class="dv">-1</span>]) {</span>
-<span id="cb186-30"><a href="S13-exhaustive.html#cb186-30" tabindex="-1"></a>            <span class="co"># If we reach this point, we know that we found the best</span></span>
-<span id="cb186-31"><a href="S13-exhaustive.html#cb186-31" tabindex="-1"></a>            <span class="co"># arrangement and we can exit the loop over k early.</span></span>
-<span id="cb186-32"><a href="S13-exhaustive.html#cb186-32" tabindex="-1"></a>            <span class="co"># This is what makes the algorithm efficient.</span></span>
-<span id="cb186-33"><a href="S13-exhaustive.html#cb186-33" tabindex="-1"></a>            <span class="cf">break</span></span>
-<span id="cb186-34"><a href="S13-exhaustive.html#cb186-34" tabindex="-1"></a>        }</span>
-<span id="cb186-35"><a href="S13-exhaustive.html#cb186-35" tabindex="-1"></a>    }</span>
-<span id="cb186-36"><a href="S13-exhaustive.html#cb186-36" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="S13-exhaustive.html#cb186-1" tabindex="-1"></a><span class="cf">for</span> (q <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(p<span class="dv">-2</span>)) {</span>
+<span id="cb186-2"><a href="S13-exhaustive.html#cb186-2" tabindex="-1"></a>    best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="cn">Inf</span></span>
+<span id="cb186-3"><a href="S13-exhaustive.html#cb186-3" tabindex="-1"></a></span>
+<span id="cb186-4"><a href="S13-exhaustive.html#cb186-4" tabindex="-1"></a>    <span class="co"># Consider all sets of q columns, ...</span></span>
+<span id="cb186-5"><a href="S13-exhaustive.html#cb186-5" tabindex="-1"></a>    <span class="cf">for</span> (k <span class="cf">in</span> (q<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="dv">1</span>) {</span>
+<span id="cb186-6"><a href="S13-exhaustive.html#cb186-6" tabindex="-1"></a>        <span class="co"># ... where the first omitted column is k.</span></span>
+<span id="cb186-7"><a href="S13-exhaustive.html#cb186-7" tabindex="-1"></a></span>
+<span id="cb186-8"><a href="S13-exhaustive.html#cb186-8" tabindex="-1"></a>        <span class="co"># We have to include 1, ..., k-1, and ...</span></span>
+<span id="cb186-9"><a href="S13-exhaustive.html#cb186-9" tabindex="-1"></a>        a <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(k<span class="dv">-1</span>)</span>
+<span id="cb186-10"><a href="S13-exhaustive.html#cb186-10" tabindex="-1"></a></span>
+<span id="cb186-11"><a href="S13-exhaustive.html#cb186-11" tabindex="-1"></a>        <span class="co"># ... for the remaining q - (k-1) inputs, we try all</span></span>
+<span id="cb186-12"><a href="S13-exhaustive.html#cb186-12" tabindex="-1"></a>        <span class="co"># possible combinations.</span></span>
+<span id="cb186-13"><a href="S13-exhaustive.html#cb186-13" tabindex="-1"></a>        bb <span class="ot">&lt;-</span> <span class="fu">combn</span>((k<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>p, q <span class="sc">-</span> k <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb186-14"><a href="S13-exhaustive.html#cb186-14" tabindex="-1"></a>        <span class="cf">for</span> (l <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">ncol</span>(bb))) {</span>
+<span id="cb186-15"><a href="S13-exhaustive.html#cb186-15" tabindex="-1"></a>            b <span class="ot">&lt;-</span> bb[, l]</span>
+<span id="cb186-16"><a href="S13-exhaustive.html#cb186-16" tabindex="-1"></a>            included <span class="ot">&lt;-</span> <span class="fu">c</span>(a, b)</span>
+<span id="cb186-17"><a href="S13-exhaustive.html#cb186-17" tabindex="-1"></a></span>
+<span id="cb186-18"><a href="S13-exhaustive.html#cb186-18" tabindex="-1"></a>            m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> X[, included])</span>
+<span id="cb186-19"><a href="S13-exhaustive.html#cb186-19" tabindex="-1"></a>            count <span class="ot">&lt;-</span> count <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb186-20"><a href="S13-exhaustive.html#cb186-20" tabindex="-1"></a>            rss <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb186-21"><a href="S13-exhaustive.html#cb186-21" tabindex="-1"></a></span>
+<span id="cb186-22"><a href="S13-exhaustive.html#cb186-22" tabindex="-1"></a>            <span class="cf">if</span> (rss <span class="sc">&lt;</span> best.rss[q <span class="sc">+</span> <span class="dv">1</span>]) {</span>
+<span id="cb186-23"><a href="S13-exhaustive.html#cb186-23" tabindex="-1"></a>                best.rss[q <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> rss</span>
+<span id="cb186-24"><a href="S13-exhaustive.html#cb186-24" tabindex="-1"></a>                best.model[[q <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> included</span>
+<span id="cb186-25"><a href="S13-exhaustive.html#cb186-25" tabindex="-1"></a>            }</span>
+<span id="cb186-26"><a href="S13-exhaustive.html#cb186-26" tabindex="-1"></a>        }</span>
+<span id="cb186-27"><a href="S13-exhaustive.html#cb186-27" tabindex="-1"></a></span>
+<span id="cb186-28"><a href="S13-exhaustive.html#cb186-28" tabindex="-1"></a>        <span class="cf">if</span> (k <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> best.rss[q<span class="sc">+</span><span class="dv">1</span>] <span class="sc">&lt;=</span> phi[k<span class="dv">-1</span>]) {</span>
+<span id="cb186-29"><a href="S13-exhaustive.html#cb186-29" tabindex="-1"></a>            <span class="co"># If we reach this point, we know that we found the best</span></span>
+<span id="cb186-30"><a href="S13-exhaustive.html#cb186-30" tabindex="-1"></a>            <span class="co"># arrangement and we can exit the loop over k early.</span></span>
+<span id="cb186-31"><a href="S13-exhaustive.html#cb186-31" tabindex="-1"></a>            <span class="co"># This is what makes the algorithm efficient.</span></span>
+<span id="cb186-32"><a href="S13-exhaustive.html#cb186-32" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb186-33"><a href="S13-exhaustive.html#cb186-33" tabindex="-1"></a>        }</span>
+<span id="cb186-34"><a href="S13-exhaustive.html#cb186-34" tabindex="-1"></a>    }</span>
+<span id="cb186-35"><a href="S13-exhaustive.html#cb186-35" tabindex="-1"></a>}</span></code></pre></div>
 <p><strong>D.</strong> We already fitted all models with <span class="math inline">\(p-1\)</span> inputs, when we computed <code>phi</code>.
 Since we sorted the models, the best of these models is last in the list.
 This covers the case <span class="math inline">\(q = p - 1\)</span>.</p>
@@ -674,7 +673,7 @@ This covers the case <span class="math inline">\(q = p - 1\)</span>.</p>
 <span id="cb189-3"><a href="S13-exhaustive.html#cb189-3" tabindex="-1"></a>best.q <span class="ot">&lt;-</span> all.q[<span class="fu">which.min</span>(best.rss <span class="sc">/</span> (n <span class="sc">-</span> all.q <span class="sc">-</span> <span class="dv">1</span>))]</span>
 <span id="cb189-4"><a href="S13-exhaustive.html#cb189-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.q)</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/exhaustiveB-1.png" width="672" /></p>
-<p>We see that the model with <span class="math inline">\(q = 6\)</span> variables has the the
+<p>We see that the model with <span class="math inline">\(q = 6\)</span> variables has the
 lowest <span class="math inline">\(\hat\sigma^2\)</span> and thus the highest <span class="math inline">\(R^2_\mathrm{adj}\)</span>.
 The values for <span class="math inline">\(q = 7\)</span> and <span class="math inline">\(q = 8\)</span> are very close to
 optimal. The best model uses the following variables:</p>
@@ -763,6 +762,9 @@ both model selection and inference: test statistics and confidence intervals fro
 the selected model are biased and overly optimistic. Validation on independent
 data is advisable.</p>
 </div>
+<p>This concludes our discussion of model selection techniques. In the next
+section we turn to a new topic: how to include categorical variables (called
+factors) in regression models.</p>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
@@ -776,9 +778,6 @@ algorithm in R.</li>
 stepwise methods remain the practical choice.</li>
 </ul>
 </div>
-<p>This concludes our discussion of model selection techniques. In the next
-section we turn to a new topic: how to include categorical variables (called
-factors) in regression models.</p>
 
 </div>
 </div>

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 15 Multicollinearity | MATH3714 Linear Regression and Robustness</title>
   <meta name="description" content="Lecture notes for the course MATH3714 Linear Regression and Robustness at the University of Leeds, 2025/26" />
-  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.44 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 15 Multicollinearity | MATH3714 Linear Regression and Robustness" />
   <meta property="og:type" content="book" />
@@ -411,10 +411,9 @@ TODO (voss):
 when the columns of the design matrix <span class="math inline">\(X\)</span> are (approximately) linearly
 dependent.</p>
 </div>
-<p>The columns of <span class="math inline">\(X\)</span> are linearly dependent, if and only if
-there is a <span class="math inline">\(v \in \mathbb{R}^{p+1}\)</span> such that <span class="math inline">\(X v = 0\)</span>. The columns
-are approximately linearly dependent, if there is a vector <span class="math inline">\(v\)</span>
-such that <span class="math inline">\(X v \approx 0\)</span>.</p>
+<p>The columns of <span class="math inline">\(X\)</span> are linearly dependent, if and only if there is a <span class="math inline">\(v \in
+\mathbb{R}^{p+1}\)</span> such that <span class="math inline">\(v \neq 0\)</span> and <span class="math inline">\(X v = 0\)</span>. The columns are approximately
+linearly dependent, if there is a vector <span class="math inline">\(v \neq 0\)</span> such that <span class="math inline">\(\| X v \| \ll \| v \|\)</span>.</p>
 <div id="consequences-of-multicollinearity" class="section level2 hasAnchor" number="15.1">
 <h2><span class="header-section-number">15.1</span> Consequences of Multicollinearity<a href="S15-multicoll.html#consequences-of-multicollinearity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
@@ -431,7 +430,7 @@ defined.</p>
 <div class="example">
 <p><span id="exm:unlabeled-div-60" class="example"><strong>Example 15.1  </strong></span>Recall from section <a href="S14-factors.html#S14-factors">14</a> that when encoding a factor
 with <span class="math inline">\(k\)</span> levels using indicator variables, we use only <span class="math inline">\(k-1\)</span> columns
-rather than all <span class="math inline">\(k\)</span> columns. If we would use <span class="math inline">\(k\)</span> indicator variables
+rather than all <span class="math inline">\(k\)</span> columns. If we were to use <span class="math inline">\(k\)</span> indicator variables
 <span class="math inline">\(\tilde x_1, \ldots, \tilde x_k\)</span> (one for each level), then for
 any observation exactly one indicator equals 1 and the rest equal 0, so
 <span class="math display">\[\begin{equation*}
@@ -439,7 +438,7 @@ any observation exactly one indicator equals 1 and the rest equal 0, so
 \end{equation*}\]</span>
 In a model with intercept, this creates exact multicollinearity: the <span class="math inline">\(k\)</span>
 indicator columns sum to the intercept column, making <span class="math inline">\(X^\top X\)</span> singular.
-This is why we use the <span class="math inline">\(k-1\)</span> encoding convention for factors.</p>
+This is why we use only <span class="math inline">\(k-1\)</span> columns to encode a factor with <span class="math inline">\(k\)</span> levels.</p>
 </div>
 <div class="example">
 <p><span id="exm:unlabeled-div-61" class="example"><strong>Example 15.2  </strong></span>As another illustration of exact multicollinearity, consider the following data:</p>
@@ -486,7 +485,7 @@ can be computed, but there will be huge uncertainties in some of the estimated
 coefficients. We illustrate this effect using a numerical example.</p>
 <div class="example">
 <p><span id="exm:mulcollell" class="example"><strong>Example 15.3  </strong></span>Here we simulate data which has similar characteristics to the toy example
-above: we have very similar two inputs, the sum of which nearly equals the
+above: we have two very similar inputs, the sum of which nearly equals the
 output. We fit a model without the intercept, so that there are only two
 coefficients to estimate and plotting these is no problem.</p>
 <div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="S15-multicoll.html#cb227-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20211101</span>)</span>
@@ -495,7 +494,7 @@ coefficients to estimate and plotting these is no problem.</p>
 <span id="cb227-4"><a href="S15-multicoll.html#cb227-4" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">1</span><span class="sc">:</span>n, <span class="fl">0.15</span>)</span>
 <span id="cb227-5"><a href="S15-multicoll.html#cb227-5" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">1</span><span class="sc">:</span>n, <span class="fl">0.15</span>)</span>
 <span id="cb227-6"><a href="S15-multicoll.html#cb227-6" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> x1 <span class="sc">+</span> x2)</span></code></pre></div>
-<p>Similar to the approach in <a href="S06-simultaneous.html#coordinates-of-the-outline">section 6</a>,
+<p>Similar to the approach in section <a href="S06-simultaneous.html#S06-simultaneous">6</a>,
 we can plot a confidence ellipse. (Don’t worry about the details of the
 commands used to plot the ellipse.)</p>
 <div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="S15-multicoll.html#cb228-1" tabindex="-1"></a>sigma.hat <span class="ot">&lt;-</span> <span class="fu">summary</span>(m)<span class="sc">$</span>sigma</span>
@@ -548,7 +547,7 @@ where multicollinearity is present are still reliable.</p>
 </div>
 </div>
 <p>While collinearity of two columns of <span class="math inline">\(X\)</span> is easy to spot, for example in
-a pair scatter plot of the inputs <span class="math inline">\(x_i\)</span>, multicollinearity which involves
+a pair scatter plot of the inputs, multicollinearity which involves
 more than two columns can be harder to notice. The condition number of
 <span class="math inline">\(X\)</span> is a quantitative measure of how close <span class="math inline">\(X\)</span> is to multicollinearity.</p>
 <div class="definition">
@@ -565,7 +564,7 @@ equal to the square root of the smallest eigenvalue of <span class="math inline"
 </div>
 <p>As a rule of thumb, if <span class="math inline">\(\kappa(X) &lt; 10\)</span> there are no significant problems
 with multicollinearity, and if <span class="math inline">\(\kappa(X) &gt; 30\)</span> the regression problem
-sufferes severe problems with multicollinearity. In the case where the
+suffers severe problems with multicollinearity. In the case where the
 columns of <span class="math inline">\(X\)</span> are exactly linearly dependent, we have <span class="math inline">\(\sigma_\mathrm{min}(X)
 = 0\)</span> and <span class="math inline">\(\kappa(X) = \infty\)</span>.</p>
 <p>In R, the condition number can be computed using the
@@ -594,7 +593,7 @@ is returned (using a faster algorithm).</p>
 leaving out the responses in column 1:</p>
 <div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="S15-multicoll.html#cb231-1" tabindex="-1"></a><span class="fu">pairs</span>(data[,<span class="sc">-</span><span class="dv">1</span>])</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/multicollairs-1.png" width="672" /></p>
-<p>While there are visbile patterns, there are no clear signs of
+<p>While there are visible patterns, there are no clear signs of
 a linear dependency between any two columns.
 To see whether there are problems with multicollinearity, we fit
 a linear model and determine the condition number.</p>
@@ -606,7 +605,7 @@ data shows severe multicollinearity.</p>
 <p>(The rest of the example is not examinable.)</p>
 <p>To find out which variables are involved, we can use
 <a href="https://en.wikipedia.org/wiki/Singular_value_decomposition">singular value decomposition</a>.
-This allows to write <span class="math inline">\(X\)</span> as <span class="math inline">\(X = U D V^\top\)</span>, where <span class="math inline">\(D\in\mathbb{R}^{(p+1)\times(p+1)}\)</span>
+This allows us to write <span class="math inline">\(X\)</span> as <span class="math inline">\(X = U D V^\top\)</span>, where <span class="math inline">\(D\in\mathbb{R}^{(p+1)\times(p+1)}\)</span>
 is a diagonal matrix and <span class="math inline">\(U\in\mathbb{R}^{n\times(p+1)}\)</span> and
 <span class="math inline">\(V\in\mathbb{R}^{(p+1)\times(p+1)}\)</span> are matrices with orthonormal columns.</p>
 <div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="S15-multicoll.html#cb234-1" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
@@ -677,12 +676,13 @@ example of this approach.</p></li>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>Multicollinearity can lead to numerical problems and large variances in the
-estimated regression coefficients.</li>
-<li>The condition number of the design matrix can be used to detect
-multicollinearity.</li>
-<li>Singular value decomposition can used to better understand linear
-dependencies in the inputs.</li>
+<li>Multicollinearity occurs when columns of <span class="math inline">\(X\)</span> are (approximately) linearly dependent,
+causing large variances and numerical instability in coefficient estimates.</li>
+<li>Predictions remain reliable despite coefficient ambiguity.</li>
+<li>The condition number <span class="math inline">\(\kappa(X)\)</span> detects multicollinearity: <span class="math inline">\(\kappa(X) &lt; 10\)</span>
+indicates no problems, <span class="math inline">\(\kappa(X) &gt; 30\)</span> indicates severe problems.</li>
+<li>Mitigations include removing redundant variables, transforming inputs,
+or using alternative estimation methods such as ridge regression.</li>
 </ul>
 </div>
 

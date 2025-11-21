@@ -970,7 +970,7 @@ the same result as above:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\# [1] 1.008971e{-}12}
+\NormalTok{\# [1] 3.979039e{-}13}
 \end{Highlighting}
 \end{Shaded}
 
@@ -5229,6 +5229,11 @@ The star is placed if \emph{any} of the measures shown in the table is significa
 large.
 \end{example}
 
+Having completed the theoretical development of influence measures, the
+remainder of this module focuses on more practical aspects of model
+diagnostics. We begin in the next section by using visual tools to assess
+whether our modelling assumptions are satisfied.
+
 \textbf{Summary}
 
 \begin{itemize}
@@ -5238,10 +5243,8 @@ large.
 \item
   Efficient formulas allow us to compute these changes without having to refit the model \(n\) times.
 \item
-  Cook's distance combines residual size and leverage (hat matrix values) into a single measure of influence, which can be compared to an \(F\)-distribution to identify influential observations.
+  Cook's distance combines is a single measure, which can be compared to an \(F\)-distribution to identify influential observations.
 \end{itemize}
-
-Having completed the theoretical development of influence measures, the remainder of this module focuses on more practical aspects of model diagnostics. We begin in the next section by using visual tools to assess whether our modelling assumptions are satisfied.
 
 \clearpage
 
@@ -5909,7 +5912,9 @@ Thus we get
    &= 2q + n \log\bigl( \|\hat\varepsilon\|^2 \bigr) + n + n \log( 2\pi / n ).
 \end{align*}
 
-When these measures indicate poor model fit, data transformations discussed in section~\ref{S11-improving} may help to better satisfy the modelling assumptions.
+When these measures indicate poor model fit, data transformations discussed in
+section~\ref{S11-improving} may help to better satisfy the modelling
+assumptions.
 
 \textbf{Summary}
 
@@ -7245,9 +7250,9 @@ section.
      \end{equation*}
     These are all models with \(q\) inputs where the first excluded
     variable has index \(k = q\).
-    If \(\min(r, r_1, \ldots, r_q) \leq \varphi_{k-1} = \varphi_{q-1}\), then we know
+    If \(\min(r, r_{q+1}, \ldots, r_p) \leq \varphi_{k-1} = \varphi_{q-1}\), then we know
     from step~A that the \(J\) corresponding to the minimum is the best model
-    with \(q\) inputs. In this case we continue step B by trying the next
+    with \(q\) inputs. In this case we continue step C by trying the next
     value of~\(q\). Otherwise we proceed to step~3.
   \item
     Similarly to the previous step, we consider all models with \(q\)
@@ -7270,7 +7275,7 @@ section.
 This algorithm finds the model with the maximal \(R^2_\mathrm{adj}\).
 Often, large savings are achieved by the early exits in step~C.
 Only in the worst case, when all of the comparisons with \(\varphi_j\) in step
-C fail, this algorithms needs to fit all \(2^p\) models.
+C fail, this algorithm needs to fit all \(2^p\) models.
 
 \begin{example}
 \protect\hypertarget{exm:qsar-search}{}\label{exm:qsar-search}To demonstrate the steps of the algorithm, we implement the method
@@ -7400,7 +7405,6 @@ We use the function \texttt{combn} to get all possible choices of
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(sets) }\CommentTok{\# this defines "combn()"}
 \ControlFlowTok{for}\NormalTok{ (q }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(p}\DecValTok{{-}2}\NormalTok{)) \{}
 \NormalTok{    best.rss[q }\SpecialCharTok{+} \DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}} \ConstantTok{Inf}
 
@@ -7476,7 +7480,7 @@ This covers the case \(q = p - 1\).
 
 \pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/exhaustiveB-1.pdf}}
 
-We see that the model with \(q = 6\) variables has the the
+We see that the model with \(q = 6\) variables has the
 lowest \(\hat\sigma^2\) and thus the highest \(R^2_\mathrm{adj}\).
 The values for \(q = 7\) and \(q = 8\) are very close to
 optimal. The best model uses the following variables:
@@ -7624,6 +7628,10 @@ the selected model are biased and overly optimistic. Validation on independent
 data is advisable.
 \end{remark}
 
+This concludes our discussion of model selection techniques. In the next
+section we turn to a new topic: how to include categorical variables (called
+factors) in regression models.
+
 \textbf{Summary}
 
 \begin{itemize}
@@ -7641,10 +7649,6 @@ data is advisable.
   For very large \(p\), even exhaustive search becomes infeasible, and
   stepwise methods remain the practical choice.
 \end{itemize}
-
-This concludes our discussion of model selection techniques. In the next
-section we turn to a new topic: how to include categorical variables (called
-factors) in regression models.
 
 \clearpage
 
@@ -8335,10 +8339,9 @@ when the columns of the design matrix \(X\) are (approximately) linearly
 dependent.
 \end{definition}
 
-The columns of \(X\) are linearly dependent, if and only if
-there is a \(v \in \mathbb{R}^{p+1}\) such that \(X v = 0\). The columns
-are approximately linearly dependent, if there is a vector \(v\)
-such that \(X v \approx 0\).
+The columns of \(X\) are linearly dependent, if and only if there is a \(v \in
+\mathbb{R}^{p+1}\) such that \(v \neq 0\) and \(X v = 0\). The columns are approximately
+linearly dependent, if there is a vector \(v \neq 0\) such that \(\| X v \| \ll \| v \|\).
 
 \subsection{Consequences of Multicollinearity}\label{consequences-of-multicollinearity}
 
@@ -8351,7 +8354,7 @@ defined.
 \begin{example}
 Recall from section~\ref{S14-factors} that when encoding a factor
 with \(k\) levels using indicator variables, we use only \(k-1\) columns
-rather than all \(k\) columns. If we would use \(k\) indicator variables
+rather than all \(k\) columns. If we were to use \(k\) indicator variables
 \(\tilde x_1, \ldots, \tilde x_k\) (one for each level), then for
 any observation exactly one indicator equals~1 and the rest equal~0, so
 \begin{equation*}
@@ -8359,7 +8362,7 @@ any observation exactly one indicator equals~1 and the rest equal~0, so
 \end{equation*}
 In a model with intercept, this creates exact multicollinearity: the \(k\)
 indicator columns sum to the intercept column, making \(X^\top X\) singular.
-This is why we use the \(k-1\) encoding convention for factors.
+This is why we use only \(k-1\) columns to encode a factor with \(k\) levels.
 \end{example}
 
 \begin{example}
@@ -8399,7 +8402,7 @@ coefficients. We illustrate this effect using a numerical example.
 
 \begin{example}
 \protect\hypertarget{exm:mulcollell}{}\label{exm:mulcollell}Here we simulate data which has similar characteristics to the toy example
-above: we have very similar two inputs, the sum of which nearly equals the
+above: we have two very similar inputs, the sum of which nearly equals the
 output. We fit a model without the intercept, so that there are only two
 coefficients to estimate and plotting these is no problem.
 
@@ -8414,7 +8417,7 @@ coefficients to estimate and plotting these is no problem.
 \end{Highlighting}
 \end{Shaded}
 
-Similar to the approach in \hyperref[coordinates-of-the-outline]{section~6},
+Similar to the approach in section~\ref{S06-simultaneous},
 we can plot a confidence ellipse. (Don't worry about the details of the
 commands used to plot the ellipse.)
 
@@ -8474,7 +8477,7 @@ where multicollinearity is present are still reliable.
 \subsection{Detecting Multicollinearity}\label{detecting-multicollinearity}
 
 While collinearity of two columns of \(X\) is easy to spot, for example in
-a pair scatter plot of the inputs \(x_i\), multicollinearity which involves
+a pair scatter plot of the inputs, multicollinearity which involves
 more than two columns can be harder to notice. The condition number of
 \(X\) is a quantitative measure of how close \(X\) is to multicollinearity.
 
@@ -8493,7 +8496,7 @@ equal to the square root of the smallest eigenvalue of \(X^\top X\).
 
 As a rule of thumb, if \(\kappa(X) < 10\) there are no significant problems
 with multicollinearity, and if \(\kappa(X) > 30\) the regression problem
-sufferes severe problems with multicollinearity. In the case where the
+suffers severe problems with multicollinearity. In the case where the
 columns of \(X\) are exactly linearly dependent, we have \(\sigma_\mathrm{min}(X)
 = 0\) and \(\kappa(X) = \infty\).
 
@@ -8542,7 +8545,7 @@ leaving out the responses in column~1:
 
 \pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/multicollairs-1.pdf}}
 
-While there are visbile patterns, there are no clear signs of
+While there are visible patterns, there are no clear signs of
 a linear dependency between any two columns.
 To see whether there are problems with multicollinearity, we fit
 a linear model and determine the condition number.
@@ -8567,7 +8570,7 @@ data shows severe multicollinearity.
 
 To find out which variables are involved, we can use
 \href{https://en.wikipedia.org/wiki/Singular_value_decomposition}{singular value decomposition}.
-This allows to write \(X\) as \(X = U D V^\top\), where \(D\in\mathbb{R}^{(p+1)\times(p+1)}\)
+This allows us to write \(X\) as \(X = U D V^\top\), where \(D\in\mathbb{R}^{(p+1)\times(p+1)}\)
 is a diagonal matrix and \(U\in\mathbb{R}^{n\times(p+1)}\) and
 \(V\in\mathbb{R}^{(p+1)\times(p+1)}\) are matrices with orthonormal columns.
 
@@ -8680,14 +8683,16 @@ be addressed:
 \begin{itemize}
 \tightlist
 \item
-  Multicollinearity can lead to numerical problems and large variances in the
-  estimated regression coefficients.
+  Multicollinearity occurs when columns of \(X\) are (approximately) linearly dependent,
+  causing large variances and numerical instability in coefficient estimates.
 \item
-  The condition number of the design matrix can be used to detect
-  multicollinearity.
+  Predictions remain reliable despite coefficient ambiguity.
 \item
-  Singular value decomposition can used to better understand linear
-  dependencies in the inputs.
+  The condition number \(\kappa(X)\) detects multicollinearity: \(\kappa(X) < 10\)
+  indicates no problems, \(\kappa(X) > 30\) indicates severe problems.
+\item
+  Mitigations include removing redundant variables, transforming inputs,
+  or using alternative estimation methods such as ridge regression.
 \end{itemize}
 
 \clearpage
