@@ -253,9 +253,10 @@ TODO:
 - relate LOO-MSE to PRESS (section 13.3 of level 3)
 -->
 <p>In this section we will discuss methods for chosing the bandwidth <span class="math inline">\(h\)</span>
-for kernel-based methods, and the size <span class="math inline">\(k\)</span> of the neighbourhood used
-in <span class="math inline">\(k\)</span>-nearest neighbour regression. The methods we will use here
-are based on cross-validation.</p>
+for kernel-based methods, the size <span class="math inline">\(k\)</span> of the neighbourhood used
+in <span class="math inline">\(k\)</span>-nearest neighbour regression, and the smoothing parameter <span class="math inline">\(\lambda\)</span>
+(or equivalently the degrees of freedom) for spline smoothing. The methods
+we will use here are based on cross-validation.</p>
 <p>The idea of cross-validation is to measure goodness of fit by comparing each
 sample <span class="math inline">\(y_i\)</span> to a fitted value <span class="math inline">\(\tilde y_i\)</span>, where the fitted values <span class="math inline">\(\tilde
 y_i\)</span> are computed from a subset of the data which excludes <span class="math inline">\(x_i\)</span>.
@@ -312,6 +313,22 @@ for the Nadaraya-Watson Estimator and similarly for local polynomial
 regression.</p>
 <p>A similar approach can be used to find the optimal <span class="math inline">\(k\)</span> for
 a <span class="math inline">\(k\)</span>-nearest neighbour estimate.</p>
+<p>For spline smoothing (see section <a href="X07-splines.html#X07-splines">7</a>), we need to choose
+the smoothing parameter <span class="math inline">\(\lambda\)</span> or, equivalently, the effective degrees of
+freedom. The same leave-one-out cross-validation approach can be used:
+we minimise
+<span class="math display">\[\begin{equation*}
+  r_\mathrm{LOO}(\lambda)
+  := \sum_{i=1}^n \bigl( y_i - \hat s^{(i)}_\lambda(x_i) \bigr)^2,
+\end{equation*}\]</span>
+where <span class="math inline">\(\hat s^{(i)}_\lambda\)</span> is the smoothing spline fitted to the data
+with sample <span class="math inline">\(i\)</span> omitted.</p>
+<p>In R, the <code>smooth.spline()</code> function provides automatic parameter selection
+via cross-validation when the argument <code>cv = TRUE</code> is used:</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="X08-xval.html#cb61-1" tabindex="-1"></a><span class="co"># Fit smoothing spline with CV-selected smoothing parameter</span></span>
+<span id="cb61-2"><a href="X08-xval.html#cb61-2" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y, <span class="at">cv =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>By default, <code>smooth.spline()</code> uses ordinary (leave-one-out) cross-validation
+to select the effective degrees of freedom.</p>
 </div>
 <div id="kernel-density-estimation-1" class="section level2 hasAnchor" number="8.2">
 <h2><span class="header-section-number">8.2</span> Kernel Density Estimation<a href="X08-xval.html#kernel-density-estimation-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -441,9 +458,10 @@ easier to implement as there is no integration involved.</p>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>Cross-validation can be used to avoid overfitting the data when we choose <span class="math inline">\(h\)</span>.</li>
+<li>Cross-validation can be used to avoid overfitting the data when we choose parameters.</li>
 <li>We have seen how to estimate <span class="math inline">\(h\)</span> for kernel-based methods,
-and <span class="math inline">\(k\)</span> for <span class="math inline">\(k\)</span>-NN regression estimates.</li>
+<span class="math inline">\(k\)</span> for <span class="math inline">\(k\)</span>-NN regression estimates, and <span class="math inline">\(\lambda\)</span> (or degrees of freedom)
+for spline smoothing.</li>
 </ul>
 </div>
 

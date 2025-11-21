@@ -843,10 +843,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min       lq      mean   median       uq      max neval
-##  KDE1 1429.875 1443.364 1490.1977 1450.006 1458.472 4012.916  1000
-##  KDE2  193.151  194.545  242.2490  195.078  196.021 4660.429  1000
-##  KDE3  173.184  174.701  203.5463  175.398  176.300 2373.449  1000
+##  expr      min        lq      mean   median        uq       max neval
+##  KDE1 1674.932 2401.0830 2645.4077 2434.190 2562.9920 17928.808  1000
+##  KDE2  221.687  251.3505  392.7281  323.654  332.0385  8761.823  1000
+##  KDE3  195.119  219.7805  375.1720  290.608  299.1770 14311.214  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -869,7 +869,7 @@ to specify the same grid \(\tilde x\):
 \begin{verbatim}
 ## Unit: microseconds
 ##     expr     min      lq     mean  median       uq      max neval
-##  density 154.939 158.834 189.6719 167.936 181.5275 11585.53  1000
+##  density 229.887 263.794 510.2636 291.387 368.9385 26324.87  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -3594,8 +3594,8 @@ us to assess the performance of each method, particularly near the boundaries.
 \NormalTok{y\_nw }\OtherTok{\textless{}{-}} \FunctionTok{sapply}\NormalTok{(x\_grid, nw\_estimate, }\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{h =}\NormalTok{ h)}
 \NormalTok{y\_ll }\OtherTok{\textless{}{-}} \FunctionTok{sapply}\NormalTok{(x\_grid, local\_linear, }\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{h =}\NormalTok{ h)}
 
-\CommentTok{\# Smoothing spline}
-\NormalTok{fit\_spline }\OtherTok{\textless{}{-}} \FunctionTok{smooth.spline}\NormalTok{(x, y, }\AttributeTok{cv =} \ConstantTok{TRUE}\NormalTok{)}
+\CommentTok{\# Smoothing spline with fixed degrees of freedom}
+\NormalTok{fit\_spline }\OtherTok{\textless{}{-}} \FunctionTok{smooth.spline}\NormalTok{(x, y, }\AttributeTok{df =} \DecValTok{5}\NormalTok{)}
 \NormalTok{y\_spline }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(fit\_spline, x\_grid)}\SpecialCharTok{$}\NormalTok{y}
 
 \CommentTok{\# Plotting}
@@ -3659,21 +3659,22 @@ requirements---boundary behaviour, local adaptation,
 or global smoothness.
 \end{example}
 
+Methods for selecting the smoothing parameter \(\lambda\) or the effective
+degrees of freedom using cross-validation are discussed in
+section~\ref{X08-xval}.
+
 \textbf{Summary}
 
 \begin{itemize}
 \tightlist
 \item
-  Smoothing splines balance fit and smoothness using a penalty term.
+  Smoothing splines balance fit and smoothness using a penalty term on curvature.
 \item
   The solution is a natural cubic spline with knots at the data points.
 \item
-  The smoothing parameter \(\lambda\) controls the trade-off between fit and
-  smoothness.
+  Smoothness is controlled by \(\lambda\) or equivalently by effective degrees of freedom.
 \item
-  Effective degrees of freedom measure model complexity.
-\item
-  Smoothing splines are a global alternative to local kernel methods.
+  Compared to kernel methods, splines are global and handle boundaries better.
 \end{itemize}
 
 \clearpage
@@ -3681,9 +3682,10 @@ or global smoothness.
 \section{Cross-validation}\label{X08-xval}
 
 In this section we will discuss methods for chosing the bandwidth~\(h\)
-for kernel-based methods, and the size \(k\) of the neighbourhood used
-in \(k\)-nearest neighbour regression. The methods we will use here
-are based on cross-validation.
+for kernel-based methods, the size \(k\) of the neighbourhood used
+in \(k\)-nearest neighbour regression, and the smoothing parameter \(\lambda\)
+(or equivalently the degrees of freedom) for spline smoothing. The methods
+we will use here are based on cross-validation.
 
 The idea of cross-validation is to measure goodness of fit by comparing each
 sample \(y_i\) to a fitted value~\(\tilde y_i\), where the fitted values \(\tilde
@@ -3740,6 +3742,30 @@ regression.
 
 A similar approach can be used to find the optimal \(k\) for
 a \(k\)-nearest neighbour estimate.
+
+For spline smoothing (see section~\ref{X07-splines}), we need to choose
+the smoothing parameter \(\lambda\) or, equivalently, the effective degrees of
+freedom. The same leave-one-out cross-validation approach can be used:
+we minimise
+\begin{equation*}
+  r_\mathrm{LOO}(\lambda)
+  := \sum_{i=1}^n \bigl( y_i - \hat s^{(i)}_\lambda(x_i) \bigr)^2,
+\end{equation*}
+where \(\hat s^{(i)}_\lambda\) is the smoothing spline fitted to the data
+with sample~\(i\) omitted.
+
+In R, the \texttt{smooth.spline()} function provides automatic parameter selection
+via cross-validation when the argument \texttt{cv\ =\ TRUE} is used:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Fit smoothing spline with CV{-}selected smoothing parameter}
+\NormalTok{fit }\OtherTok{\textless{}{-}} \FunctionTok{smooth.spline}\NormalTok{(x, y, }\AttributeTok{cv =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+By default, \texttt{smooth.spline()} uses ordinary (leave-one-out) cross-validation
+to select the effective degrees of freedom.
 
 \subsection{Kernel Density Estimation}\label{kernel-density-estimation-1}
 
@@ -3885,10 +3911,11 @@ easier to implement as there is no integration involved.
 \begin{itemize}
 \tightlist
 \item
-  Cross-validation can be used to avoid overfitting the data when we choose~\(h\).
+  Cross-validation can be used to avoid overfitting the data when we choose parameters.
 \item
   We have seen how to estimate \(h\) for kernel-based methods,
-  and \(k\) for \(k\)-NN regression estimates.
+  \(k\) for \(k\)-NN regression estimates, and \(\lambda\) (or degrees of freedom)
+  for spline smoothing.
 \end{itemize}
 
 \clearpage
