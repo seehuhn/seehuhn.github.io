@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Practical Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            border: 1px solid #ccc;
+            padding: 30px;
+            border-radius: 5px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 15px;
+            padding: 12px 30px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+        .info {
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>MATH3714/MATH5714M Linear Regression Practical</h1>
+
+    <div class="container">
+        <h1>Download Your Practical Data</h1>
+        <p>Enter your 9-digit student ID to download your data file.</p>
+
+        <form id="downloadForm">
+            <label for="studentId">Student ID:</label>
+            <input
+                type="text"
+                id="studentId"
+                name="studentId"
+                maxlength="9"
+                placeholder="e.g., 201234567"
+                autocomplete="off"
+                required
+            >
+            <div class="error" id="errorMsg"></div>
+            <button type="submit">Download CSV File</button>
+        </form>
+
+        <p class="info">Your file will be named: <strong><span id="fileName">your_id.csv</span></strong></p>
+    </div>
+
+    <div class="container" style="margin-top: 30px;">
+        <h1>Practical Tasks</h1>
+        <p>Download the practical task sheet in your preferred format:</p>
+        <p>
+            <a href="tasks.html" style="color: #007bff; text-decoration: none; font-weight: bold;">View tasks (HTML)</a>
+            &nbsp;|&nbsp;
+            <a href="tasks.pdf" style="color: #007bff; text-decoration: none; font-weight: bold;">Download tasks (PDF)</a>
+        </p>
+        <p style="margin-top: 20px;">
+            The deadline for submitting your answers is <strong>Monday, 8th December, 12noon</strong>.
+            Submission will be via Minerva, once the submission link is set up.
+        </p>
+    </div>
+
+    <script>
+        // Get form elements
+        var form = document.getElementById('downloadForm');
+        var studentIdInput = document.getElementById('studentId');
+        var errorMsg = document.getElementById('errorMsg');
+        var fileNameDisplay = document.getElementById('fileName');
+        var submitButton = form.querySelector('button[type="submit"]');
+
+        // Update filename display as user types
+        studentIdInput.addEventListener('input', function() {
+            var value = this.value.trim();
+            if (value.length > 0) {
+                fileNameDisplay.textContent = value + '.csv';
+            } else {
+                fileNameDisplay.textContent = 'your_id.csv';
+            }
+        });
+
+        // Function to check if file exists
+        function checkFileExists(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('HEAD', url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        callback(true);
+                    } else {
+                        callback(false);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        // Handle form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Get and validate student ID
+            var studentId = studentIdInput.value.trim();
+
+            // Check if exactly 9 digits
+            if (!/^\d{9}$/.test(studentId)) {
+                errorMsg.textContent = 'Please enter exactly 9 digits.';
+                errorMsg.style.color = 'red';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Hide error message and disable button
+            errorMsg.style.display = 'none';
+            submitButton.disabled = true;
+            submitButton.textContent = 'Checking...';
+
+            // Construct file path
+            var filePath = 'data/' + studentId + '.csv';
+
+            // Check if file exists before downloading
+            checkFileExists(filePath, function(exists) {
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.textContent = 'Download CSV File';
+
+                if (exists) {
+                    // File exists, trigger download
+                    var link = document.createElement('a');
+                    link.href = filePath;
+                    link.download = studentId + '.csv';
+
+                    // Append to body, click, and remove
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    // Show success message
+                    errorMsg.textContent = 'Download started successfully.';
+                    errorMsg.style.color = 'green';
+                    errorMsg.style.display = 'block';
+
+                    // Reset message after 3 seconds
+                    setTimeout(function() {
+                        errorMsg.style.display = 'none';
+                    }, 3000);
+                } else {
+                    // File doesn't exist, show error
+                    errorMsg.textContent = 'Error: Student ID not found. Please check your ID and try again.';
+                    errorMsg.style.color = 'red';
+                    errorMsg.style.display = 'block';
+
+                    // Clear the input and refocus
+                    studentIdInput.select();
+                    studentIdInput.focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
