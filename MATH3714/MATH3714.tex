@@ -6874,13 +6874,6 @@ one can show that
 \end{equation*}
 Thus, the estimate of the error variance is in general also biased.
 
-This shows that our estimates can become biased if some of the inputs
-are missing from our model. As in the previous section, it may happen
-that the MSE of the parameter estimates in the reduced model
-is smaller than the MSE in the correct model; this is the case if the
-variance of the estimates decreases enough to compensate for the
-introduced bias.
-
 \subsubsection{Unnecessary Variables}\label{unnecessary-variables}
 
 If the data comes from a model with fewer inputs than the ones we are using,
@@ -9013,7 +9006,7 @@ from the lemma. Implementation in R is straightforward.
 In cases where \(X\) shows approximate multicollinearity, the parameter estimates
 \(\hat\beta\) have coefficients with large variance. In case of exact
 multicollinearity, \(\hat\beta\) is no longer uniquely defined, and the minimum
-of the residual sum of squares is attained on an (unbounded) subspace of the
+of the residual sum of squares is attained on an unbounded subspace of the
 parameter space. In both cases, a more stable estimate can be obtained by
 changing the estimation procedure to include an additional penalty term which
 discourages ``large'' values of \(\hat\beta\). This is the idea of ridge
@@ -9021,7 +9014,7 @@ regression. In this section we will see that the resulting estimates are
 biased, but sometimes have smaller mean squared error than the least squares
 estimator.
 
-\subsection{Definition the Estimator}\label{definition-the-estimator}
+\subsection{Definition of the Estimator}\label{definition-of-the-estimator}
 
 \begin{definition}
 In multiple linear regression, the \textbf{ridge regression} estimate for
@@ -9052,7 +9045,7 @@ The term being minimised is
 \end{equation*}
 consisting of the residual sum of squares plus a penalty term. The
 regularisation parameter \(\lambda\) controls the relative weight of these two
-terms. For large \(\lambda\), the main objective to minimise the norm
+terms. For large \(\lambda\), the main objective is to minimise the norm
 \(\|\beta\|\) and one can show that \(\lim_{\lambda \to\infty}
 \hat\beta^{(\lambda)} = 0\). For \(\lambda \downarrow 0\) only the residual sum
 of squares is left and if \(X^\top X\) is invertible we get \(\hat\beta^{(0)} =
@@ -9124,8 +9117,7 @@ We see that despite the small value of \(\lambda\) there is a considerable
 difference between the estimated values \(\hat\beta\) and
 \(\hat\beta^{(\lambda)}\) in this example. Experimenting with different
 values of the seed also shows that the variance of \(\hat\beta^{(\lambda)}\)
-is much smaller than the variance of \(\hat\beta\). In the next section
-we will see a theoretical explanation for this fact.
+is much smaller than the variance of \(\hat\beta\). Below we will see a theoretical explanation for this fact.
 \end{example}
 
 For \(\lambda > 0\) and \(v \neq 0\) we have \(\|v\| > 0\) and thus
@@ -9143,7 +9135,7 @@ is invertible for every \(\lambda > 0\). Thus the
 ridge regression estimate for \(\lambda > 0\) is always uniquely defined,
 even in cases where the least squares estimate is \emph{not} uniquely defined.
 
-There are variants of the method where the penalty term \(\|\beta\|^2\) is is
+There are variants of the method where the penalty term \(\|\beta\|^2\) is
 replaced with a different penalty term. One example of this is Lasso (least
 absolute shrinkage and selection operator) regression, which uses \(\|\beta\|_1
 = \sum_{j=0}^p |\beta_j|\) as the penalty term.
@@ -9210,7 +9202,7 @@ by
 While this is an explicit formula, the resulting covariance matrix
 depends on the unknown error variance~\(\sigma^2\).
 
-If \(X^\top X\) is invertible, this covariance will convert to the
+If \(X^\top X\) is invertible, this covariance will converge to the
 covariance of the least squares estimator as \(\lambda \downarrow 0\).
 From this we can find the variance of individual components
 as \(\mathop{\mathrm{Var}}\bigl( \hat\beta^{(\lambda)}_j \bigr) =
@@ -9230,7 +9222,7 @@ It is an easy exercise to show that this can equivalently be written as
   = \mathop{\mathrm{Var}}\bigl( \hat\beta_j \bigr) + \mathop{\mathrm{bias}}\bigl( \hat\beta_j \bigr)^2.
 \end{equation*}
 Using the formulas for the variance and bias from above, we
-can find an formula for \(\mathop{\mathrm{MSE}}\nolimits(\hat\beta^{(\lambda)}_j)\),
+can find a formula for \(\mathop{\mathrm{MSE}}\nolimits(\hat\beta^{(\lambda)}_j)\),
 but the result is hard to interpret. Instead of considering these analytical
 expressions, we illustrate the MSE using a numerical
 example.
@@ -9247,7 +9239,8 @@ We start with the bias:
 \begin{Highlighting}[]
 \NormalTok{lambda }\OtherTok{\textless{}{-}} \FloatTok{0.1}
 \NormalTok{Q }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X }\SpecialCharTok{+}\NormalTok{ lambda }\SpecialCharTok{*} \FunctionTok{diag}\NormalTok{(}\FunctionTok{ncol}\NormalTok{(X))}
-\NormalTok{lambda }\SpecialCharTok{*} \FunctionTok{solve}\NormalTok{(Q, }\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X }\SpecialCharTok{\%*\%}\NormalTok{ beta)}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ X }\SpecialCharTok{\%*\%}\NormalTok{ beta}
+\NormalTok{lambda }\SpecialCharTok{*} \FunctionTok{solve}\NormalTok{(Q, }\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ y)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -9323,13 +9316,15 @@ contribution is from the bias.
 
 \subsection{Standardisation}\label{standardisation}
 
-While ridge regression can be applied directly to the original data, the
-penalty is only comparable between the components of \(\beta\), if the components
-have similar magnitude. Also, we do not want a method which is depends on the
-units in which the \(x\) variables are measured. To address these issues, it is
-common practice to first standardise each of the \(x\). In this way the
-penalty will apply equally to all of the coefficients, and the results can be
-transformed back to obtain \(\hat{y}\) on the original scale.
+Ridge regression can be applied directly to the original data, but there are
+two reasons why this is often undesirable. First, the penalty term
+\(\|\beta\|^2\) treats all coefficients equally, which only makes sense if they
+have similar magnitudes. Second, the results would depend on the arbitrary
+choice of units for each predictor. Both issues are resolved by standardising
+the predictors before fitting the model: this ensures the penalty applies
+equally to all coefficients and makes the method independent of measurement
+units. The results can then be transformed back to obtain \(\hat{y}\) on the
+original scale.
 
 We standardise every column of the input separately: For
 the input variable \(x_j\), where \(j\in\{1, \ldots, p\}\), we get
@@ -9337,7 +9332,7 @@ the input variable \(x_j\), where \(j\in\{1, \ldots, p\}\), we get
   w_{ij}
   := \frac{x_{ij} - \overline{x_j}}{\mathrm{s}_{x_j}},
 \end{equation*}
-for all \(i \in \{1, \ldots, n\}\).
+for all \(i \in \{1, \ldots, n\}\),
 where \(\overline{x_j} = \frac1n \sum_{i=1}^n x_{ij}\) and
 \begin{equation*}
   \mathrm{s}_{x_j}^2
@@ -9455,6 +9450,10 @@ for all \(j \in \{1, \ldots, p\}\) and
 This transformation can be used both for least squares regression
 and ridge regression estimates.
 
+This section concludes our discussion about using linear regression in
+practice. In the remaining part of these notes we will discuss
+how to perform linear regression in the presence of outliers.
+
 \textbf{Summary}
 
 \begin{itemize}
@@ -9464,8 +9463,10 @@ and ridge regression estimates.
 \item
   The method is useful when multicollinearity is present.
 \item
-  Often it is advantageous to standardise the data before performing
-  ridge regression.
+  Ridge regression is biased, but can achieve lower mean squared error than
+  least squares by reducing variance.
+\item
+  It is advantageous to standardise the data before performing ridge regression.
 \end{itemize}
 
 \clearpage
