@@ -843,10 +843,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min        lq      mean   median        uq       max neval
-##  KDE1 1674.932 2401.0830 2645.4077 2434.190 2562.9920 17928.808  1000
-##  KDE2  221.687  251.3505  392.7281  323.654  332.0385  8761.823  1000
-##  KDE3  195.119  219.7805  375.1720  290.608  299.1770 14311.214  1000
+##  expr      min       lq      mean   median        uq      max neval
+##  KDE1 1430.203 1442.749 1489.0878 1448.838 1457.0170 3843.258  1000
+##  KDE2  193.110  194.504  250.4246  195.037  195.8570 5069.117  1000
+##  KDE3  173.266  174.578  197.2271  175.111  175.9105 2471.521  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -868,8 +868,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr     min      lq     mean  median       uq      max neval
-##  density 229.887 263.794 510.2636 291.387 368.9385 26324.87  1000
+##     expr     min      lq     mean   median       uq      max neval
+##  density 154.488 156.907 187.0263 164.6765 179.1495 11215.39  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -2802,9 +2802,9 @@ Here is a direct implementation in R:
 \begin{Highlighting}[]
 \CommentTok{\# Local linear regression estimator}
 \NormalTok{local\_linear }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x\_train, y\_train, x\_eval, h) \{}
-  \CommentTok{\# Matrix of differences between evaluation points and training points}
+  \CommentTok{\# Matrix of differences: dx[i,j] = x\_eval[j] {-} x\_train[i]}
   \CommentTok{\# Each column corresponds to one evaluation point x\_eval[j]}
-\NormalTok{  dx }\OtherTok{\textless{}{-}} \FunctionTok{outer}\NormalTok{(x\_eval, x\_train, }\StringTok{"{-}"}\NormalTok{)}
+\NormalTok{  dx }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\FunctionTok{outer}\NormalTok{(x\_train, x\_eval, }\StringTok{"{-}"}\NormalTok{)}
 
   \CommentTok{\# Kernel weights K\_h(x\_eval[j] {-} x\_train[i])}
 \NormalTok{  K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(dx, }\AttributeTok{sd =}\NormalTok{ h)}
@@ -2836,7 +2836,7 @@ We can test this implementation on a simple dataset:
 
 \CommentTok{\# Compute local linear estimate on a grid}
 \NormalTok{x\_grid }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{100}\NormalTok{)}
-\NormalTok{m\_ll }\OtherTok{\textless{}{-}} \FunctionTok{local\_linear}\NormalTok{(x\_grid, x, y, }\AttributeTok{h =} \FloatTok{0.05}\NormalTok{)}
+\NormalTok{m\_ll }\OtherTok{\textless{}{-}} \FunctionTok{local\_linear}\NormalTok{(x, y, x\_grid, }\AttributeTok{h =} \FloatTok{0.05}\NormalTok{)}
 
 \FunctionTok{plot}\NormalTok{(x, y, }\AttributeTok{cex =}\NormalTok{ .}\DecValTok{5}\NormalTok{, }\AttributeTok{main =} \StringTok{"Local Linear Estimator (from scratch)"}\NormalTok{)}
 \FunctionTok{lines}\NormalTok{(x\_grid, m\_ll, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
@@ -2874,16 +2874,6 @@ and of \texttt{locpoly(..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is nearly identi
 \FunctionTok{lines}\NormalTok{(m1, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
 
 \FunctionTok{library}\NormalTok{(KernSmooth)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## KernSmooth 2.23 loaded
-## Copyright M. P. Wand 1997-2009
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{locpoly}\NormalTok{(x, y, }\AttributeTok{degree =} \DecValTok{1}\NormalTok{, }\AttributeTok{bandwidth =} \FloatTok{0.11}\NormalTok{)}
 \FunctionTok{lines}\NormalTok{(m2, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
 \end{Highlighting}
@@ -2940,7 +2930,7 @@ In contrast, the local polynomial estimate (blue line) has much lower bias.
 \tightlist
 \item
   Local polynomial regression combines weighted least squares with polynomial
-  models, using kernel weights \(w_i = K_h(\tilde x - x_i)\) to emphasize nearby
+  models, using kernel weights \(w_i = K_h(\tilde x - x_i)\) to emphasise nearby
   observations.
 \item
   The estimate at \(\tilde x\) is \(\hat m_h(\tilde x) = \hat\beta_0\) where
@@ -3681,7 +3671,7 @@ section~\ref{X08-xval}.
 
 \section{Cross-validation}\label{X08-xval}
 
-In this section we will discuss methods for chosing the bandwidth~\(h\)
+In this section we will discuss methods for choosing the bandwidth~\(h\)
 for kernel-based methods, the size \(k\) of the neighbourhood used
 in \(k\)-nearest neighbour regression, and the smoothing parameter \(\lambda\)
 (or equivalently the degrees of freedom) for spline smoothing. The methods
@@ -3690,7 +3680,7 @@ we will use here are based on cross-validation.
 The idea of cross-validation is to measure goodness of fit by comparing each
 sample \(y_i\) to a fitted value~\(\tilde y_i\), where the fitted values \(\tilde
 y_i\) are computed from a subset of the data which excludes \(x_i\).
-This way, a method cannot achive a misleadingly good fit by overfitting the data.
+This way, a method cannot achieve a misleadingly good fit by overfitting the data.
 There are different ways to implement this idea:
 
 \begin{itemize}
@@ -3707,7 +3697,7 @@ There are different ways to implement this idea:
 \item
   In \textbf{leave-one-out cross-validation}, a separate model is fitted
   for each \(i \in \{1, \ldots, n\}\), leaving out just the sample \((x_i, y_i)\)
-  for this model. This is the special case of \(k\)-fold cross validation
+  for this model. This is the special case of \(k\)-fold cross-validation
   where \(k = n\).
   Since \(n\) models need to be fitted to the data, for large \(n\)
   the method can be computationally expensive.
@@ -3725,19 +3715,19 @@ approach here and to find the ``best'' \(h\) by minimising
 Unfortunately, this approach does not work: for \(h \downarrow 0\)
 we have \(\hat m_h(x_i) \to y_i\) and thus \(r(h) \to 0\). For this reason,
 minimising \(r(h)\) always finds \(h=0\) as the optimal value of~\(h\).
-To solve the problem we use leave-one-out cross validation and minimise
+To solve the problem we use leave-one-out cross-validation and minimise
 \begin{equation*}
   r_\mathrm{LOO}(h)
   := \sum_{i=1}^n \bigl( y_i - \hat m^{(i)}_h(x_i) \bigr)^2
 \end{equation*}
 instead,
-where \(m^{(i)}\) is the kernel regression estimate computed without using
+where \(\hat m^{(i)}\) is the kernel regression estimate computed without using
 sample~\(i\):
 \begin{equation*}
   \hat m_h^{(i)}(x)
   = \frac{\sum_{j \;\mid\; j\neq i} K_h(x - x_j)y_j}{\sum_{j \;\mid\; j\neq i}K_h(x - x_j)}
 \end{equation*}
-for the Nadaraya-Watson Estimator and similarly for local polynomial
+for the Nadaraya-Watson estimator and similarly for local polynomial
 regression.
 
 A similar approach can be used to find the optimal \(k\) for
@@ -3778,13 +3768,13 @@ choose \(h\) to maximize the likelihood
   = \prod_{i=1}^n \hat f_h(x_i),
 \end{equation*}
 but this gives the solution \(h=0\). So, instead we maximize the
-leave-one-out estimate of the log likelihood, which is given by
+leave-one-out likelihood, which is given by
 \begin{equation*}
   L_\mathrm{LOO}(h;x_1, \ldots, x_n)
   = \prod_{i=1}^n \hat f^{(i)}_h(x_i).
 \end{equation*}
-This technique is known as \textbf{maximum likelihood cross-validation}.
-When this method is used in practice, it is advantageous to minimise
+This technique is known as \textbf{maximum likelihood cross-validation}. When this
+method is used in practice, it is advantageous to maximise the logarithm
 \begin{align*}
   \mathcal{L}_\mathrm{LOO}(h;x_1, \ldots, x_n)
   &:= \log\Bigl( L_\mathrm{LOO}(h;x_1, \ldots, x_n) \Bigr) \\
@@ -3825,7 +3815,7 @@ Then the following statements hold.
   \(\mathrm{IMSE}\bigl( \hat f_h \bigr) = e(h) + \mathrm{const}\),
   where \(\mathrm{const}\) stands for a term which does not depend on \(h\).
 \item
-  Let \(f_h^{(i)}\) be the kernel density estimate computed from the data
+  Let \(\hat f_h^{(i)}\) be the kernel density estimate computed from the data
   with sample \(i\) omitted.
   Then
   \begin{equation*}
@@ -3838,7 +3828,7 @@ Then the following statements hold.
 \end{lemma}
 
 \begin{proof}
-For the first statement can be shown by expanding the square in the
+The first statement can be shown by expanding the square in the
 definition of the (I)MSE:
 \begin{align*}
   \mathrm{IMSE}\bigl( \hat f_h \bigr)
@@ -3878,11 +3868,11 @@ For the second term we have
   &= \mathbb{E}\Bigl( \hat f_h^{(1)}(X_1) \Bigr),
 \end{align*}
 since the \(X_i\) are independent and identically distributed.
-Since the estimator \(f_h^{(1)}\) is computed from \(X_2, \ldots, X_n\),
-which are independent of \(X_1\), we can evaluate the expecation on
+Since the estimator \(\hat f_h^{(1)}\) is computed from \(X_2, \ldots, X_n\),
+which are independent of \(X_1\), we can evaluate the expectation on
 the right-hand side by first computing \(\mathbb{E}\Bigl( \hat f_h^{(1)}(x) \Bigr)\)
 as a function of \(x\), then using \(X_1\) in place of \(x\), and computing
-the expecation over \(X_1\) afterwards. This gives
+the expectation over \(X_1\) afterwards. This gives
 \begin{align*}
   \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n \hat f_h^{(i)}(X_i) \Bigr)
   &= \mathbb{E}\Bigl( \mathbb{E}\bigl( \hat f_h^{(1)}(X_1) \bigm| X_1 \bigr) \Bigr) \\
@@ -3911,11 +3901,16 @@ easier to implement as there is no integration involved.
 \begin{itemize}
 \tightlist
 \item
-  Cross-validation can be used to avoid overfitting the data when we choose parameters.
+  Minimising residual sum of squares directly leads to \(h = 0\) (overfitting);
+  cross-validation avoids this by evaluating fitted values on held-out data.
 \item
-  We have seen how to estimate \(h\) for kernel-based methods,
-  \(k\) for \(k\)-NN regression estimates, and \(\lambda\) (or degrees of freedom)
-  for spline smoothing.
+  In leave-one-out cross-validation, each observation is predicted using
+  a model fitted without that observation; \(k\)-fold CV is a faster approximation.
+\item
+  For regression, we minimise \(r_\mathrm{LOO}(h) = \sum_i (y_i - \hat m_h^{(i)}(x_i))^2\).
+\item
+  For KDE, two approaches: maximum likelihood CV (maximise \(\sum_i \log \hat f_h^{(i)}(x_i)\))
+  or integrated squared error CV (minimise \(\mathrm{CV}(h)\), which estimates IMSE).
 \end{itemize}
 
 \clearpage
@@ -3924,12 +3919,12 @@ easier to implement as there is no integration involved.
 
 To conclude these notes, we give three examples where we use
 cross-validation to choose the tuning parameter in kernel
-density estimation, kernel regression, and k-nearest neighbour
+density estimation, kernel regression, and \(k\)-nearest neighbour
 regression.
 
 \subsection{Kernel Density Estimation}\label{kernel-density-estimation-2}
 
-Here we show how to find a good bandwidth for Kernel Density Estimation,
+Here we show how to find a good bandwidth for kernel density estimation,
 by using cross-validation. From lemma~\ref{lem:KDE-XV} we know that
 we can choose the \(h\) which minimises
 \begin{equation}
@@ -3951,7 +3946,7 @@ again:
 \end{Highlighting}
 \end{Shaded}
 
-In order to speed up the computation of the \(f_h^{(i)}\), we implement
+In order to speed up the computation of the \(\hat f_h^{(i)}\), we implement
 the kernel density estimate ``by hand''. Thus, instead of using the built-in
 function \texttt{density}, we use the formula
 \begin{equation*}
@@ -3983,7 +3978,7 @@ We use a number of ``tricks'' in the R code:
   column means of the matrix \texttt{K}. In R, these can be efficiently computed
   using the command \texttt{colMeans()}.
 \item
-  Term \(A\) in equation~\eqref{eq:CVh} can now be approximate by
+  Term \(A\) in equation~\eqref{eq:CVh} can now be approximated by
   the sum of the \(\hat f_h(\tilde x_j)\), multiplied by the distance
   between the grid points:
   \begin{equation*}
@@ -4115,7 +4110,7 @@ in an efficient way:
   If we ``multiply'' a matrix \texttt{K} to a vector \texttt{y} using \texttt{*} (instead of using
   \texttt{\%*\%} for the usual matrix vector multiplication), the product is
   performed element-wise. If \texttt{y} has as many elements as \texttt{K} has rows,
-  then the results is the matrix \((k_{ij}y_i)_{i,j}\), \emph{i.e.} each row
+  then the result is the matrix \((k_{ij}y_i)_{i,j}\), \emph{i.e.} each row
   of \texttt{K} is multiplied with the corresponding element of~\texttt{y}.
 \end{itemize}
 
@@ -4192,7 +4187,7 @@ where
 \end{align*}
 As before, for a leave-one-out estimate we need to compute these sums over all
 \(j\neq i\). Since each of the seven terms listed above contains the term
-\(K_h(x-x_j)\) inside the sum, we can achieve this by setting the corresponing
+\(K_h(x-x_j)\) inside the sum, we can achieve this by setting the corresponding
 elements of the matrix \texttt{K} to zero.
 
 \begin{Shaded}
@@ -4205,9 +4200,9 @@ elements of the matrix \texttt{K} to zero.
     \FunctionTok{diag}\NormalTok{(K) }\OtherTok{\textless{}{-}} \DecValTok{0}
 
 \NormalTok{    T1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(y}\SpecialCharTok{*}\NormalTok{K)}
-\NormalTok{    T2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{dx)}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{    T2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{dx}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{    T3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{y}\SpecialCharTok{*}\NormalTok{K)}
-\NormalTok{    T4 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{((}\SpecialCharTok{{-}}\NormalTok{dx)}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{    T4 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(dx}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{    B1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(K)}
 \NormalTok{    B2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{    B3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{K)}
@@ -4247,7 +4242,7 @@ to find the optimal \(h\) for each method.
 \pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/cv-loclin-1.pdf}}
 
 As expected, the optimal bandwidth for local linear regression is
-larger than for the Nadaraya Watson estimator.
+larger than for the Nadaraya-Watson estimator.
 
 \subsection{\texorpdfstring{\emph{k}-Nearest Neighbour Regression}{k-Nearest Neighbour Regression}}\label{k-nearest-neighbour-regression}
 
@@ -4281,11 +4276,11 @@ run than the code in the previous sections.
 
 \pandocbounded{\includegraphics[keepaspectratio]{MATH5714M_files/figure-latex/cv-knn-1.pdf}}
 
-We note the that leave-one-out mean squared error for kNN is smaller
+We note that the leave-one-out mean squared error for kNN is smaller
 than it is for Nadaraya-Watson or local linear regression, in the
 case of this dataset. Given
 the structure of the data, with different regions having very different
-densities of \(x\)-values, it makes sense that a method which choses
+densities of \(x\)-values, it makes sense that a method which chooses
 the bandwidth ``adaptively'' performs better.
 
 To conclude, we show the optimal regression curves for the three smoothing
@@ -4301,16 +4296,16 @@ methods together in one plot.
 \NormalTok{dx }\OtherTok{\textless{}{-}} \FunctionTok{outer}\NormalTok{(x, x.tilde, }\StringTok{"{-}"}\NormalTok{)}
 \NormalTok{K }\OtherTok{\textless{}{-}} \FunctionTok{dnorm}\NormalTok{(dx, }\AttributeTok{sd =}\NormalTok{ best.h.LL)}
 \NormalTok{T1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(y}\SpecialCharTok{*}\NormalTok{K)}
-\NormalTok{T2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{dx)}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{T2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{dx}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{T3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{y}\SpecialCharTok{*}\NormalTok{K)}
-\NormalTok{T4 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{((}\SpecialCharTok{{-}}\NormalTok{dx)}\SpecialCharTok{*}\NormalTok{K)}
+\NormalTok{T4 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(dx}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{B1 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(K)}
 \NormalTok{B2 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{B3 }\OtherTok{\textless{}{-}} \FunctionTok{colSums}\NormalTok{(x}\SpecialCharTok{*}\NormalTok{K)}
 \NormalTok{m.LL }\OtherTok{\textless{}{-}}\NormalTok{ (T1}\SpecialCharTok{*}\NormalTok{T2 }\SpecialCharTok{{-}}\NormalTok{ T3}\SpecialCharTok{*}\NormalTok{T4) }\SpecialCharTok{/}\NormalTok{ (B1}\SpecialCharTok{*}\NormalTok{B2 }\SpecialCharTok{{-}}\NormalTok{ B3}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 
 \NormalTok{m }\OtherTok{\textless{}{-}} \FunctionTok{knn.reg}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(x),}
-             \AttributeTok{y =}\NormalTok{ y[}\SpecialCharTok{{-}}\NormalTok{i],}
+             \AttributeTok{y =}\NormalTok{ y,}
              \AttributeTok{test =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x=}\NormalTok{x.tilde),}
              \AttributeTok{k =}\NormalTok{ best.k)}
 \NormalTok{m.kNN }\OtherTok{\textless{}{-}}\NormalTok{ m}\SpecialCharTok{$}\NormalTok{pred}

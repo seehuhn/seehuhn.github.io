@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 5 Local Polynomial Regression | MATH5714 Linear Regression, Robustness and Smoothing</title>
   <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2025/26" />
-  <meta name="generator" content="bookdown 0.44 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 5 Local Polynomial Regression | MATH5714 Linear Regression, Robustness and Smoothing" />
   <meta property="og:type" content="book" />
@@ -498,9 +498,9 @@ where the seven terms are sums involving the kernel weights.</p>
 <p>Here is a direct implementation in R:</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="X05-locpoly.html#cb51-1" tabindex="-1"></a><span class="co"># Local linear regression estimator</span></span>
 <span id="cb51-2"><a href="X05-locpoly.html#cb51-2" tabindex="-1"></a>local_linear <span class="ot">&lt;-</span> <span class="cf">function</span>(x_train, y_train, x_eval, h) {</span>
-<span id="cb51-3"><a href="X05-locpoly.html#cb51-3" tabindex="-1"></a>  <span class="co"># Matrix of differences between evaluation points and training points</span></span>
+<span id="cb51-3"><a href="X05-locpoly.html#cb51-3" tabindex="-1"></a>  <span class="co"># Matrix of differences: dx[i,j] = x_eval[j] - x_train[i]</span></span>
 <span id="cb51-4"><a href="X05-locpoly.html#cb51-4" tabindex="-1"></a>  <span class="co"># Each column corresponds to one evaluation point x_eval[j]</span></span>
-<span id="cb51-5"><a href="X05-locpoly.html#cb51-5" tabindex="-1"></a>  dx <span class="ot">&lt;-</span> <span class="fu">outer</span>(x_eval, x_train, <span class="st">&quot;-&quot;</span>)</span>
+<span id="cb51-5"><a href="X05-locpoly.html#cb51-5" tabindex="-1"></a>  dx <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">outer</span>(x_train, x_eval, <span class="st">&quot;-&quot;</span>)</span>
 <span id="cb51-6"><a href="X05-locpoly.html#cb51-6" tabindex="-1"></a></span>
 <span id="cb51-7"><a href="X05-locpoly.html#cb51-7" tabindex="-1"></a>  <span class="co"># Kernel weights K_h(x_eval[j] - x_train[i])</span></span>
 <span id="cb51-8"><a href="X05-locpoly.html#cb51-8" tabindex="-1"></a>  K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(dx, <span class="at">sd =</span> h)</span>
@@ -526,7 +526,7 @@ where the seven terms are sums involving the kernel weights.</p>
 <span id="cb52-6"><a href="X05-locpoly.html#cb52-6" tabindex="-1"></a></span>
 <span id="cb52-7"><a href="X05-locpoly.html#cb52-7" tabindex="-1"></a><span class="co"># Compute local linear estimate on a grid</span></span>
 <span id="cb52-8"><a href="X05-locpoly.html#cb52-8" tabindex="-1"></a>x_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
-<span id="cb52-9"><a href="X05-locpoly.html#cb52-9" tabindex="-1"></a>m_ll <span class="ot">&lt;-</span> <span class="fu">local_linear</span>(x_grid, x, y, <span class="at">h =</span> <span class="fl">0.05</span>)</span>
+<span id="cb52-9"><a href="X05-locpoly.html#cb52-9" tabindex="-1"></a>m_ll <span class="ot">&lt;-</span> <span class="fu">local_linear</span>(x, y, x_grid, <span class="at">h =</span> <span class="fl">0.05</span>)</span>
 <span id="cb52-10"><a href="X05-locpoly.html#cb52-10" tabindex="-1"></a></span>
 <span id="cb52-11"><a href="X05-locpoly.html#cb52-11" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">cex =</span> .<span class="dv">5</span>, <span class="at">main =</span> <span class="st">&quot;Local Linear Estimator (from scratch)&quot;</span>)</span>
 <span id="cb52-12"><a href="X05-locpoly.html#cb52-12" tabindex="-1"></a><span class="fu">lines</span>(x_grid, m_ll, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
@@ -598,7 +598,7 @@ In contrast, the local polynomial estimate (blue line) has much lower bias.</p>
 <p><strong>Summary</strong></p>
 <ul>
 <li>Local polynomial regression combines weighted least squares with polynomial
-models, using kernel weights <span class="math inline">\(w_i = K_h(\tilde x - x_i)\)</span> to emphasize nearby
+models, using kernel weights <span class="math inline">\(w_i = K_h(\tilde x - x_i)\)</span> to emphasise nearby
 observations.</li>
 <li>The estimate at <span class="math inline">\(\tilde x\)</span> is <span class="math inline">\(\hat m_h(\tilde x) = \hat\beta_0\)</span> where
 <span class="math inline">\(\hat\beta = (X^\top W X)^{-1} X^\top W y\)</span> must be computed separately for

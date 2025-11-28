@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 8 Cross-validation | MATH5714 Linear Regression, Robustness and Smoothing</title>
   <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2025/26" />
-  <meta name="generator" content="bookdown 0.44 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 8 Cross-validation | MATH5714 Linear Regression, Robustness and Smoothing" />
   <meta property="og:type" content="book" />
@@ -252,7 +252,7 @@ TODO:
 - The use of \mathrm{CV}(h) seems quite subtle.
 - relate LOO-MSE to PRESS (section 13.3 of level 3)
 -->
-<p>In this section we will discuss methods for chosing the bandwidth <span class="math inline">\(h\)</span>
+<p>In this section we will discuss methods for choosing the bandwidth <span class="math inline">\(h\)</span>
 for kernel-based methods, the size <span class="math inline">\(k\)</span> of the neighbourhood used
 in <span class="math inline">\(k\)</span>-nearest neighbour regression, and the smoothing parameter <span class="math inline">\(\lambda\)</span>
 (or equivalently the degrees of freedom) for spline smoothing. The methods
@@ -260,7 +260,7 @@ we will use here are based on cross-validation.</p>
 <p>The idea of cross-validation is to measure goodness of fit by comparing each
 sample <span class="math inline">\(y_i\)</span> to a fitted value <span class="math inline">\(\tilde y_i\)</span>, where the fitted values <span class="math inline">\(\tilde
 y_i\)</span> are computed from a subset of the data which excludes <span class="math inline">\(x_i\)</span>.
-This way, a method cannot achive a misleadingly good fit by overfitting the data.
+This way, a method cannot achieve a misleadingly good fit by overfitting the data.
 There are different ways to implement this idea:</p>
 <ul>
 <li><p>In <strong><em>k</em>-fold cross-validation</strong>, the data is partitioned into
@@ -274,7 +274,7 @@ For this method to work, it is important that the subsamples
 are independent of each other.</p></li>
 <li><p>In <strong>leave-one-out cross-validation</strong>, a separate model is fitted
 for each <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>, leaving out just the sample <span class="math inline">\((x_i, y_i)\)</span>
-for this model. This is the special case of <span class="math inline">\(k\)</span>-fold cross validation
+for this model. This is the special case of <span class="math inline">\(k\)</span>-fold cross-validation
 where <span class="math inline">\(k = n\)</span>.
 Since <span class="math inline">\(n\)</span> models need to be fitted to the data, for large <span class="math inline">\(n\)</span>
 the method can be computationally expensive.</p></li>
@@ -297,19 +297,19 @@ approach here and to find the “best” <span class="math inline">\(h\)</span> 
 Unfortunately, this approach does not work: for <span class="math inline">\(h \downarrow 0\)</span>
 we have <span class="math inline">\(\hat m_h(x_i) \to y_i\)</span> and thus <span class="math inline">\(r(h) \to 0\)</span>. For this reason,
 minimising <span class="math inline">\(r(h)\)</span> always finds <span class="math inline">\(h=0\)</span> as the optimal value of <span class="math inline">\(h\)</span>.
-To solve the problem we use leave-one-out cross validation and minimise
+To solve the problem we use leave-one-out cross-validation and minimise
 <span class="math display">\[\begin{equation*}
   r_\mathrm{LOO}(h)
   := \sum_{i=1}^n \bigl( y_i - \hat m^{(i)}_h(x_i) \bigr)^2
 \end{equation*}\]</span>
 instead,
-where <span class="math inline">\(m^{(i)}\)</span> is the kernel regression estimate computed without using
+where <span class="math inline">\(\hat m^{(i)}\)</span> is the kernel regression estimate computed without using
 sample <span class="math inline">\(i\)</span>:
 <span class="math display">\[\begin{equation*}
   \hat m_h^{(i)}(x)
   = \frac{\sum_{j \;\mid\; j\neq i} K_h(x - x_j)y_j}{\sum_{j \;\mid\; j\neq i}K_h(x - x_j)}
 \end{equation*}\]</span>
-for the Nadaraya-Watson Estimator and similarly for local polynomial
+for the Nadaraya-Watson estimator and similarly for local polynomial
 regression.</p>
 <p>A similar approach can be used to find the optimal <span class="math inline">\(k\)</span> for
 a <span class="math inline">\(k\)</span>-nearest neighbour estimate.</p>
@@ -341,13 +341,13 @@ choose <span class="math inline">\(h\)</span> to maximize the likelihood
   = \prod_{i=1}^n \hat f_h(x_i),
 \end{equation*}\]</span>
 but this gives the solution <span class="math inline">\(h=0\)</span>. So, instead we maximize the
-leave-one-out estimate of the log likelihood, which is given by
+leave-one-out likelihood, which is given by
 <span class="math display">\[\begin{equation*}
   L_\mathrm{LOO}(h;x_1, \ldots, x_n)
   = \prod_{i=1}^n \hat f^{(i)}_h(x_i).
 \end{equation*}\]</span>
-This technique is known as <strong>maximum likelihood cross-validation</strong>.
-When this method is used in practice, it is advantageous to minimise
+This technique is known as <strong>maximum likelihood cross-validation</strong>. When this
+method is used in practice, it is advantageous to maximise the logarithm
 <span class="math display">\[\begin{align*}
   \mathcal{L}_\mathrm{LOO}(h;x_1, \ldots, x_n)
   &amp;:= \log\Bigl( L_\mathrm{LOO}(h;x_1, \ldots, x_n) \Bigr) \\
@@ -380,7 +380,7 @@ Then the following statements hold.</p>
 <li><p>We have
 <span class="math inline">\(\mathrm{IMSE}\bigl( \hat f_h \bigr) = e(h) + \mathrm{const}\)</span>,
 where <span class="math inline">\(\mathrm{const}\)</span> stands for a term which does not depend on <span class="math inline">\(h\)</span>.</p></li>
-<li><p>Let <span class="math inline">\(f_h^{(i)}\)</span> be the kernel density estimate computed from the data
+<li><p>Let <span class="math inline">\(\hat f_h^{(i)}\)</span> be the kernel density estimate computed from the data
 with sample <span class="math inline">\(i\)</span> omitted.
 Then
 <span class="math display">\[\begin{equation*}
@@ -391,7 +391,7 @@ is an (approximately) unbiased estimator for <span class="math inline">\(e(h)\)
 </ol>
 </div>
 <div class="proof">
-<p><span id="unlabeled-div-21" class="proof"><em>Proof</em>. </span>For the first statement can be shown by expanding the square in the
+<p><span id="unlabeled-div-21" class="proof"><em>Proof</em>. </span>The first statement can be shown by expanding the square in the
 definition of the (I)MSE:
 <span class="math display">\[\begin{align*}
   \mathrm{IMSE}\bigl( \hat f_h \bigr)
@@ -430,11 +430,11 @@ For the second term we have
   &amp;= \mathbb{E}\Bigl( \hat f_h^{(1)}(X_1) \Bigr),
 \end{align*}\]</span>
 since the <span class="math inline">\(X_i\)</span> are independent and identically distributed.
-Since the estimator <span class="math inline">\(f_h^{(1)}\)</span> is computed from <span class="math inline">\(X_2, \ldots, X_n\)</span>,
-which are independent of <span class="math inline">\(X_1\)</span>, we can evaluate the expecation on
+Since the estimator <span class="math inline">\(\hat f_h^{(1)}\)</span> is computed from <span class="math inline">\(X_2, \ldots, X_n\)</span>,
+which are independent of <span class="math inline">\(X_1\)</span>, we can evaluate the expectation on
 the right-hand side by first computing <span class="math inline">\(\mathbb{E}\Bigl( \hat f_h^{(1)}(x) \Bigr)\)</span>
 as a function of <span class="math inline">\(x\)</span>, then using <span class="math inline">\(X_1\)</span> in place of <span class="math inline">\(x\)</span>, and computing
-the expecation over <span class="math inline">\(X_1\)</span> afterwards. This gives
+the expectation over <span class="math inline">\(X_1\)</span> afterwards. This gives
 <span class="math display">\[\begin{align*}
   \mathbb{E}\Bigl( \frac{1}{n} \sum_{i=1}^n \hat f_h^{(i)}(X_i) \Bigr)
   &amp;= \mathbb{E}\Bigl( \mathbb{E}\bigl( \hat f_h^{(1)}(X_1) \bigm| X_1 \bigr) \Bigr) \\
@@ -458,10 +458,13 @@ easier to implement as there is no integration involved.</p>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>Cross-validation can be used to avoid overfitting the data when we choose parameters.</li>
-<li>We have seen how to estimate <span class="math inline">\(h\)</span> for kernel-based methods,
-<span class="math inline">\(k\)</span> for <span class="math inline">\(k\)</span>-NN regression estimates, and <span class="math inline">\(\lambda\)</span> (or degrees of freedom)
-for spline smoothing.</li>
+<li>Minimising residual sum of squares directly leads to <span class="math inline">\(h = 0\)</span> (overfitting);
+cross-validation avoids this by evaluating fitted values on held-out data.</li>
+<li>In leave-one-out cross-validation, each observation is predicted using
+a model fitted without that observation; <span class="math inline">\(k\)</span>-fold CV is a faster approximation.</li>
+<li>For regression, we minimise <span class="math inline">\(r_\mathrm{LOO}(h) = \sum_i (y_i - \hat m_h^{(i)}(x_i))^2\)</span>.</li>
+<li>For KDE, two approaches: maximum likelihood CV (maximise <span class="math inline">\(\sum_i \log \hat f_h^{(i)}(x_i)\)</span>)
+or integrated squared error CV (minimise <span class="math inline">\(\mathrm{CV}(h)\)</span>, which estimates IMSE).</li>
 </ul>
 </div>
 

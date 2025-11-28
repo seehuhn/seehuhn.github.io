@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 9 Examples | MATH5714 Linear Regression, Robustness and Smoothing</title>
   <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2025/26" />
-  <meta name="generator" content="bookdown 0.44 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 9 Examples | MATH5714 Linear Regression, Robustness and Smoothing" />
   <meta property="og:type" content="book" />
@@ -248,7 +248,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Section 9</span> Examples<a href="X09-examples.html#X09-examples" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>To conclude these notes, we give three examples where we use
 cross-validation to choose the tuning parameter in kernel
-density estimation, kernel regression, and k-nearest neighbour
+density estimation, kernel regression, and <span class="math inline">\(k\)</span>-nearest neighbour
 regression.</p>
 <div id="kernel-density-estimation-2" class="section level2 hasAnchor" number="9.1">
 <h2><span class="header-section-number">9.1</span> Kernel Density Estimation<a href="X09-examples.html#kernel-density-estimation-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -258,7 +258,7 @@ regression.</p>
 </iframe>
 </div>
 </div>
-<p>Here we show how to find a good bandwidth for Kernel Density Estimation,
+<p>Here we show how to find a good bandwidth for kernel density estimation,
 by using cross-validation. From lemma <a href="X08-xval.html#lem:KDE-XV">8.1</a> we know that
 we can choose the <span class="math inline">\(h\)</span> which minimises
 <span class="math display" id="eq:CVh">\[\begin{equation}
@@ -273,7 +273,7 @@ again:</p>
 <span id="cb62-2"><a href="X09-examples.html#cb62-2" tabindex="-1"></a>buffalo <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/buffalo.csv&quot;</span>)</span>
 <span id="cb62-3"><a href="X09-examples.html#cb62-3" tabindex="-1"></a>x <span class="ot">&lt;-</span> buffalo<span class="sc">$</span>snowfall</span>
 <span id="cb62-4"><a href="X09-examples.html#cb62-4" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(x)</span></code></pre></div>
-<p>In order to speed up the computation of the <span class="math inline">\(f_h^{(i)}\)</span>, we implement
+<p>In order to speed up the computation of the <span class="math inline">\(\hat f_h^{(i)}\)</span>, we implement
 the kernel density estimate “by hand”. Thus, instead of using the built-in
 function <code>density</code>, we use the formula
 <span class="math display">\[\begin{equation*}
@@ -297,7 +297,7 @@ column <span class="math inline">\(j\)</span> stores the value <span class="mat
 <li>The kernel density estimate <span class="math inline">\(\hat f_h\)</span> now corresponds to the
 column means of the matrix <code>K</code>. In R, these can be efficiently computed
 using the command <code>colMeans()</code>.</li>
-<li>Term <span class="math inline">\(A\)</span> in equation <a href="X09-examples.html#eq:CVh">(9.1)</a> can now be approximate by
+<li>Term <span class="math inline">\(A\)</span> in equation <a href="X09-examples.html#eq:CVh">(9.1)</a> can now be approximated by
 the sum of the <span class="math inline">\(\hat f_h(\tilde x_j)\)</span>, multiplied by the distance
 between the grid points:
 <span class="math display">\[\begin{equation*}
@@ -398,7 +398,7 @@ in an efficient way:</p>
 <li>If we “multiply” a matrix <code>K</code> to a vector <code>y</code> using <code>*</code> (instead of using
 <code>%*%</code> for the usual matrix vector multiplication), the product is
 performed element-wise. If <code>y</code> has as many elements as <code>K</code> has rows,
-then the results is the matrix <span class="math inline">\((k_{ij}y_i)_{i,j}\)</span>, <em>i.e.</em> each row
+then the result is the matrix <span class="math inline">\((k_{ij}y_i)_{i,j}\)</span>, <em>i.e.</em> each row
 of <code>K</code> is multiplied with the corresponding element of <code>y</code>.</li>
 </ul>
 <p>Combining these ideas, we get the following function
@@ -468,7 +468,7 @@ where
 \end{align*}\]</span>
 As before, for a leave-one-out estimate we need to compute these sums over all
 <span class="math inline">\(j\neq i\)</span>. Since each of the seven terms listed above contains the term
-<span class="math inline">\(K_h(x-x_j)\)</span> inside the sum, we can achieve this by setting the corresponing
+<span class="math inline">\(K_h(x-x_j)\)</span> inside the sum, we can achieve this by setting the corresponding
 elements of the matrix <code>K</code> to zero.</p>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="X09-examples.html#cb68-1" tabindex="-1"></a>r.LL <span class="ot">&lt;-</span> <span class="cf">function</span>(h) {</span>
 <span id="cb68-2"><a href="X09-examples.html#cb68-2" tabindex="-1"></a>    dx <span class="ot">&lt;-</span> <span class="fu">outer</span>(x, x, <span class="st">&quot;-&quot;</span>)</span>
@@ -478,9 +478,9 @@ elements of the matrix <code>K</code> to zero.</p>
 <span id="cb68-6"><a href="X09-examples.html#cb68-6" tabindex="-1"></a>    <span class="fu">diag</span>(K) <span class="ot">&lt;-</span> <span class="dv">0</span></span>
 <span id="cb68-7"><a href="X09-examples.html#cb68-7" tabindex="-1"></a></span>
 <span id="cb68-8"><a href="X09-examples.html#cb68-8" tabindex="-1"></a>    T1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(y<span class="sc">*</span>K)</span>
-<span id="cb68-9"><a href="X09-examples.html#cb68-9" tabindex="-1"></a>    T2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>(<span class="sc">-</span>dx)<span class="sc">*</span>K)</span>
+<span id="cb68-9"><a href="X09-examples.html#cb68-9" tabindex="-1"></a>    T2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>dx<span class="sc">*</span>K)</span>
 <span id="cb68-10"><a href="X09-examples.html#cb68-10" tabindex="-1"></a>    T3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>y<span class="sc">*</span>K)</span>
-<span id="cb68-11"><a href="X09-examples.html#cb68-11" tabindex="-1"></a>    T4 <span class="ot">&lt;-</span> <span class="fu">colSums</span>((<span class="sc">-</span>dx)<span class="sc">*</span>K)</span>
+<span id="cb68-11"><a href="X09-examples.html#cb68-11" tabindex="-1"></a>    T4 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(dx<span class="sc">*</span>K)</span>
 <span id="cb68-12"><a href="X09-examples.html#cb68-12" tabindex="-1"></a>    B1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(K)</span>
 <span id="cb68-13"><a href="X09-examples.html#cb68-13" tabindex="-1"></a>    B2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>K)</span>
 <span id="cb68-14"><a href="X09-examples.html#cb68-14" tabindex="-1"></a>    B3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>K)</span>
@@ -510,7 +510,7 @@ to find the optimal <span class="math inline">\(h\)</span> for each method.</p>
 <span id="cb69-18"><a href="X09-examples.html#cb69-18" tabindex="-1"></a>       <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/cv-loclin-1.png" width="672" /></p>
 <p>As expected, the optimal bandwidth for local linear regression is
-larger than for the Nadaraya Watson estimator.</p>
+larger than for the Nadaraya-Watson estimator.</p>
 </div>
 <div id="k-nearest-neighbour-regression" class="section level2 hasAnchor" number="9.3">
 <h2><span class="header-section-number">9.3</span> <em>k</em>-Nearest Neighbour Regression<a href="X09-examples.html#k-nearest-neighbour-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -543,11 +543,11 @@ run than the code in the previous sections.</p>
 <span id="cb70-16"><a href="X09-examples.html#cb70-16" tabindex="-1"></a>best.k <span class="ot">&lt;-</span> k[<span class="fu">which.min</span>(mse.knn)]</span>
 <span id="cb70-17"><a href="X09-examples.html#cb70-17" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> best.k)</span></code></pre></div>
 <p><img src="MATH5714M_files/figure-html/cv-knn-1.png" width="672" /></p>
-<p>We note the that leave-one-out mean squared error for kNN is smaller
+<p>We note that the leave-one-out mean squared error for kNN is smaller
 than it is for Nadaraya-Watson or local linear regression, in the
 case of this dataset. Given
 the structure of the data, with different regions having very different
-densities of <span class="math inline">\(x\)</span>-values, it makes sense that a method which choses
+densities of <span class="math inline">\(x\)</span>-values, it makes sense that a method which chooses
 the bandwidth “adaptively” performs better.</p>
 <p>To conclude, we show the optimal regression curves for the three smoothing
 methods together in one plot.</p>
@@ -559,16 +559,16 @@ methods together in one plot.</p>
 <span id="cb71-6"><a href="X09-examples.html#cb71-6" tabindex="-1"></a>dx <span class="ot">&lt;-</span> <span class="fu">outer</span>(x, x.tilde, <span class="st">&quot;-&quot;</span>)</span>
 <span id="cb71-7"><a href="X09-examples.html#cb71-7" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(dx, <span class="at">sd =</span> best.h.LL)</span>
 <span id="cb71-8"><a href="X09-examples.html#cb71-8" tabindex="-1"></a>T1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(y<span class="sc">*</span>K)</span>
-<span id="cb71-9"><a href="X09-examples.html#cb71-9" tabindex="-1"></a>T2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>(<span class="sc">-</span>dx)<span class="sc">*</span>K)</span>
+<span id="cb71-9"><a href="X09-examples.html#cb71-9" tabindex="-1"></a>T2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>dx<span class="sc">*</span>K)</span>
 <span id="cb71-10"><a href="X09-examples.html#cb71-10" tabindex="-1"></a>T3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>y<span class="sc">*</span>K)</span>
-<span id="cb71-11"><a href="X09-examples.html#cb71-11" tabindex="-1"></a>T4 <span class="ot">&lt;-</span> <span class="fu">colSums</span>((<span class="sc">-</span>dx)<span class="sc">*</span>K)</span>
+<span id="cb71-11"><a href="X09-examples.html#cb71-11" tabindex="-1"></a>T4 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(dx<span class="sc">*</span>K)</span>
 <span id="cb71-12"><a href="X09-examples.html#cb71-12" tabindex="-1"></a>B1 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(K)</span>
 <span id="cb71-13"><a href="X09-examples.html#cb71-13" tabindex="-1"></a>B2 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>K)</span>
 <span id="cb71-14"><a href="X09-examples.html#cb71-14" tabindex="-1"></a>B3 <span class="ot">&lt;-</span> <span class="fu">colSums</span>(x<span class="sc">*</span>K)</span>
 <span id="cb71-15"><a href="X09-examples.html#cb71-15" tabindex="-1"></a>m.LL <span class="ot">&lt;-</span> (T1<span class="sc">*</span>T2 <span class="sc">-</span> T3<span class="sc">*</span>T4) <span class="sc">/</span> (B1<span class="sc">*</span>B2 <span class="sc">-</span> B3<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb71-16"><a href="X09-examples.html#cb71-16" tabindex="-1"></a></span>
 <span id="cb71-17"><a href="X09-examples.html#cb71-17" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="fu">data.frame</span>(x),</span>
-<span id="cb71-18"><a href="X09-examples.html#cb71-18" tabindex="-1"></a>             <span class="at">y =</span> y[<span class="sc">-</span>i],</span>
+<span id="cb71-18"><a href="X09-examples.html#cb71-18" tabindex="-1"></a>             <span class="at">y =</span> y,</span>
 <span id="cb71-19"><a href="X09-examples.html#cb71-19" tabindex="-1"></a>             <span class="at">test =</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x.tilde),</span>
 <span id="cb71-20"><a href="X09-examples.html#cb71-20" tabindex="-1"></a>             <span class="at">k =</span> best.k)</span>
 <span id="cb71-21"><a href="X09-examples.html#cb71-21" tabindex="-1"></a>m.kNN <span class="ot">&lt;-</span> m<span class="sc">$</span>pred</span>
