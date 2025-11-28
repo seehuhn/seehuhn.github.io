@@ -310,6 +310,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="17.1.1" data-path="S17-robust.html"><a href="S17-robust.html#leverage"><i class="fa fa-check"></i><b>17.1.1</b> Leverage</a></li>
 <li class="chapter" data-level="17.1.2" data-path="S17-robust.html"><a href="S17-robust.html#studentised-residuals"><i class="fa fa-check"></i><b>17.1.2</b> Studentised Residuals</a></li>
+<li class="chapter" data-level="17.1.3" data-path="S17-robust.html"><a href="S17-robust.html#residual-leverage-plots"><i class="fa fa-check"></i><b>17.1.3</b> Residual-Leverage Plots</a></li>
 </ul></li>
 <li class="chapter" data-level="17.2" data-path="S17-robust.html"><a href="S17-robust.html#breakdown-points"><i class="fa fa-check"></i><b>17.2</b> Breakdown Points</a></li>
 </ul></li>
@@ -402,10 +403,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="S17-robust" class="section level1 hasAnchor" number="17">
 <h1><span class="header-section-number">Section 17</span> Robust Regression<a href="S17-robust.html#S17-robust" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<!--
-TODO:
-- be more explicit about how to recognise outliers
--->
 <p>The overall aim of this part of the module is to find regression
 estimators which work well in the presence of outliers.</p>
 <div id="outliers" class="section level2 hasAnchor" number="17.1">
@@ -460,15 +457,11 @@ for all <span class="math inline">\(i\in \{1, \ldots, n\}\)</span>.</p>
 Taking derivatives with respect to <span class="math inline">\(y_i\)</span> completes the proof.</p>
 </div>
 <p>The leverage of <span class="math inline">\(x_i\)</span> describes the <em>potential</em> for <span class="math inline">\(y_i\)</span> to affect the fitted
-line or hyperplane. If <span class="math inline">\(h_{ii}\)</span> is large, changing of <span class="math inline">\(y_i\)</span> has a large effect
+line or hyperplane. If <span class="math inline">\(h_{ii}\)</span> is large, changing <span class="math inline">\(y_i\)</span> has a large effect
 on the fitted values. This is in contrast to the influence of a sample, which
-describes <em>actual</em> effect on the regression line: in the section about <a href="S08-influence.html#influence">Cook’s
-Distance</a>, we considered a sample to be “influential”, if the regression
+describes the <em>actual</em> effect on the regression line: in section <a href="S08-influence.html#influence">8.2</a>
+on Cook’s distance, we considered a sample to be “influential”, if the regression
 estimates with and without the sample in question were very different.</p>
-<p>Since we have <span class="math inline">\(\sum_{i=1}^n h_{ii} = \mathop{\mathrm{tr}}(H) = p+1\)</span> (see equation <a href="S04-model.html#eq:tr-H">(4.6)</a>),
-the average value of the leverage over all samples is <span class="math inline">\((p+1) / n\)</span>.
-Using a more careful argument,
-one can show that <span class="math inline">\(h_i \in [1/n, 1]\)</span> for every <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.</p>
 <div class="example">
 <p><span id="exm:unlabeled-div-68" class="example"><strong>Example 17.1  </strong></span>We use simulated data to illustrate the effect of outliers and
 the difference between leverage and influence.</p>
@@ -508,6 +501,20 @@ similar to the top-left panel) and low influence (since the red line is close
 to the black line), but a large residual. Finally, the bottom-right
 panel shows an <span class="math inline">\(x\)</span>-space outlier with high leverage and high influence.</p>
 </div>
+<p>The leverage can be used to detect <span class="math inline">\(x\)</span>-space outliers. As illustrated in the
+preceding example, points which are far away from the other <span class="math inline">\(x\)</span>-values have
+large leverage. To identify points with “high” leverage, we need to know
+what a “normal” value for the leverage is. Here are some results:</p>
+<ul>
+<li>From equation <a href="S04-model.html#eq:tr-H">(4.6)</a> we
+know <span class="math inline">\(\sum_{i=1}^n h_{ii} = \mathop{\mathrm{tr}}(H) = p+1\)</span>, the average value of the leverage
+over all samples is <span class="math inline">\((p+1) / n\)</span>.</li>
+<li>Since <span class="math inline">\(H\)</span> is idempotent, we have <span class="math inline">\(h_{ii} = H_{ii} = (H^2)_{ii} =
+\sum_{j=1}^n h_{ij}^2 \geq h_{ii}^2\)</span>, which implies <span class="math inline">\(h_{ii} \leq 1\)</span> for
+every <span class="math inline">\(i \in \{1, \ldots, n\}\)</span>.</li>
+</ul>
+<p>Common rules of thumb are to flag a sample as an <span class="math inline">\(x\)</span>-space outlier if
+its leverage exceeds <span class="math inline">\(2(p+1)/n\)</span> or <span class="math inline">\(3(p+1)/n\)</span>.</p>
 </div>
 <div id="studentised-residuals" class="section level3 hasAnchor" number="17.1.2">
 <h3><span class="header-section-number">17.1.2</span> Studentised Residuals<a href="S17-robust.html#studentised-residuals" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -542,8 +549,25 @@ From equation <a href="S04-model.html#eq:sigma-hat-chi-squared">(4.8)</a> we kn
 <span class="math inline">\((n - p - 1)\hat\sigma^2 / \sigma^2 \sim \chi^2(n - p - 1)\)</span>. Thus
 we find <span class="math inline">\(r_i \sim t(n-p-1)\)</span>, by the definition of the <span class="math inline">\(t\)</span>-distribution.</p>
 </div>
-<p>Samples where the studentised residuals are large, compared to quantiles
-of the <span class="math inline">\(t(n-p-1)\)</span>-distribution, might be <span class="math inline">\(y\)</span>-space outliers.</p>
+<p>As a rule of thumb, we may consider samples to be <span class="math inline">\(y\)</span>-space outliers, if the
+studentised residuals are large, compared to quantiles of the
+<span class="math inline">\(t(n-p-1)\)</span>-distribution.</p>
+<p>One problem with this argument is that in the presence of outliers, the modelling
+assumptions are likely to be violated. The outlier will affect the estimate
+for the error variance, invalidating the argument from the lemma.
+To address this, one can use the studentised deleted residual, defined as
+<span class="math display">\[
+r_i^*
+= \frac{\hat\varepsilon_i}{\sqrt{\hat\sigma_{(i)}^2 (1-h_{ii})}},
+\]</span>
+where <span class="math inline">\(\hat\sigma_{(i)}^2\)</span> is the estimate for the error variance obtained when
+observation <span class="math inline">\(i\)</span> is removed from the data. Since the potentially outlying
+observation does not contribute to the variance estimate, it cannot mask itself
+by inflating <span class="math inline">\(\hat\sigma_{(i)}^2\)</span>. In R, internally studentised residuals are
+computed by <code>rstandard()</code>, and studentised deleted residuals by <code>rstudent()</code>.</p>
+</div>
+<div id="residual-leverage-plots" class="section level3 hasAnchor" number="17.1.3">
+<h3><span class="header-section-number">17.1.3</span> Residual-Leverage Plots<a href="S17-robust.html#residual-leverage-plots" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>With the help of lemma <a href="S08-influence.html#lem:Cook-D-alt">8.4</a> we can express Cook’s
 distance as a function of studentised residuals and leverage. We get
 <span class="math display">\[\begin{align*}
@@ -599,7 +623,7 @@ recognise a <span class="math inline">\(y\)</span>-space outlier by the fact tha
 In the two right-hand panels we can recognise the <span class="math inline">\(x\)</span>-space outlier
 by the fact that it has much larger leverage than the other samples.
 Finally, samples which are to the right of the curved, red line
-correspond the “influential” observations.</p>
+correspond to “influential” observations.</p>
 </div>
 </div>
 </div>
@@ -618,8 +642,8 @@ regression. Using the formula
   \hat\beta
   = (X^\top X)^{-1} X^\top y,
 \end{equation*}\]</span>
-it is easy to see that it is enough to change a single sample,
-letting <span class="math inline">\(y_i \to\infty\)</span>, to get <span class="math inline">\(\|\hat\beta\| \to \infty\)</span>.</p>
+it is easy to see that changing a single sample is sufficient:
+letting <span class="math inline">\(y_i \to\infty\)</span> gives <span class="math inline">\(\|\hat\beta\| \to \infty\)</span>.</p>
 <div class="definition">
 <p><span id="def:unlabeled-div-73" class="definition"><strong>Definition 17.3  </strong></span>The <strong>finite sample breakdown point</strong> of an estimator <span class="math inline">\(\hat\theta\)</span>
 is the smallest fraction of samples such that

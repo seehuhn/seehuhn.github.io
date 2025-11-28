@@ -9381,7 +9381,12 @@ Using these relations we find
       + n \gamma_0^2.
 \end{align*}
 Thus, the coefficient for the intercept can be minimised separately and
-the optimal value is always~\(\gamma_0 = 0\). For this reason we do
+the optimal value is always~\(\gamma_0 = 0\).
+The same argument applies to ridge regression: adding the penalty term
+\(\lambda \|\gamma\|^2 = \lambda (\gamma_0^2 + \gamma_1^2 + \cdots + \gamma_p^2)\)
+replaces \(n \gamma_0^2\) by \((n + \lambda) \gamma_0^2\), but this term is still
+independent of the other coefficients and is minimised by \(\gamma_0 = 0\).
+For this reason we do
 not include the intercept in our model for the standardised data.
 The design matrix is thus
 \begin{equation*}
@@ -9532,16 +9537,11 @@ Taking derivatives with respect to \(y_i\) completes the proof.
 \end{proof}
 
 The leverage of \(x_i\) describes the \emph{potential} for \(y_i\) to affect the fitted
-line or hyperplane. If \(h_{ii}\) is large, changing of \(y_i\) has a large effect
+line or hyperplane. If \(h_{ii}\) is large, changing \(y_i\) has a large effect
 on the fitted values. This is in contrast to the influence of a sample, which
-describes \emph{actual} effect on the regression line: in the section about \hyperref[influence]{Cook's
-Distance}, we considered a sample to be ``influential'', if the regression
+describes the \emph{actual} effect on the regression line: in section~\ref{influence}
+on Cook's distance, we considered a sample to be ``influential'', if the regression
 estimates with and without the sample in question were very different.
-
-Since we have \(\sum_{i=1}^n h_{ii} = \mathop{\mathrm{tr}}(H) = p+1\) (see equation~\eqref{eq:tr-H}),
-the average value of the leverage over all samples is \((p+1) / n\).
-Using a more careful argument,
-one can show that \(h_i \in [1/n, 1]\) for every \(i \in \{1, \ldots, n\}\).
 
 \begin{example}
 We use simulated data to illustrate the effect of outliers and
@@ -9590,6 +9590,26 @@ to the black line), but a large residual. Finally, the bottom-right
 panel shows an \(x\)-space outlier with high leverage and high influence.
 \end{example}
 
+The leverage can be used to detect \(x\)-space outliers. As illustrated in the
+preceding example, points which are far away from the other \(x\)-values have
+large leverage. To identify points with ``high'' leverage, we need to know
+what a ``normal'' value for the leverage is. Here are some results:
+
+\begin{itemize}
+\tightlist
+\item
+  From equation~\eqref{eq:tr-H} we
+  know \(\sum_{i=1}^n h_{ii} = \mathop{\mathrm{tr}}(H) = p+1\), the average value of the leverage
+  over all samples is \((p+1) / n\).
+\item
+  Since \(H\) is idempotent, we have \(h_{ii} = H_{ii} = (H^2)_{ii} =
+  \sum_{j=1}^n h_{ij}^2 \geq h_{ii}^2\), which implies \(h_{ii} \leq 1\) for
+  every \(i \in \{1, \ldots, n\}\).
+\end{itemize}
+
+Common rules of thumb are to flag a sample as an \(x\)-space outlier if
+its leverage exceeds \(2(p+1)/n\) or \(3(p+1)/n\).
+
 \subsubsection{Studentised Residuals}\label{studentised-residuals}
 
 Sometimes, \(y\)-space outliers can be detected by having particularly
@@ -9627,8 +9647,25 @@ From equation~\eqref{eq:sigma-hat-chi-squared} we know that
 we find \(r_i \sim t(n-p-1)\), by the definition of the \(t\)-distribution.
 \end{proof}
 
-Samples where the studentised residuals are large, compared to quantiles
-of the \(t(n-p-1)\)-distribution, might be \(y\)-space outliers.
+As a rule of thumb, we may consider samples to be \(y\)-space outliers, if the
+studentised residuals are large, compared to quantiles of the
+\(t(n-p-1)\)-distribution.
+
+One problem with this argument is that in the presence of outliers, the modelling
+assumptions are likely to be violated. The outlier will affect the estimate
+for the error variance, invalidating the argument from the lemma.
+To address this, one can use the studentised deleted residual, defined as
+\[
+r_i^*
+= \frac{\hat\varepsilon_i}{\sqrt{\hat\sigma_{(i)}^2 (1-h_{ii})}},
+\]
+where \(\hat\sigma_{(i)}^2\) is the estimate for the error variance obtained when
+observation \(i\) is removed from the data. Since the potentially outlying
+observation does not contribute to the variance estimate, it cannot mask itself
+by inflating \(\hat\sigma_{(i)}^2\). In R, internally studentised residuals are
+computed by \texttt{rstandard()}, and studentised deleted residuals by \texttt{rstudent()}.
+
+\subsubsection{Residual-Leverage Plots}\label{residual-leverage-plots}
 
 With the help of lemma~\ref{lem:Cook-D-alt} we can express Cook's
 distance as a function of studentised residuals and leverage. We get
@@ -9693,7 +9730,7 @@ recognise a \(y\)-space outlier by the fact that it is outside the band.
 In the two right-hand panels we can recognise the \(x\)-space outlier
 by the fact that it has much larger leverage than the other samples.
 Finally, samples which are to the right of the curved, red line
-correspond the ``influential'' observations.
+correspond to ``influential'' observations.
 \end{example}
 
 \subsection{Breakdown Points}\label{breakdown-points}
@@ -9705,8 +9742,8 @@ regression. Using the formula
   \hat\beta
   = (X^\top X)^{-1} X^\top y,
 \end{equation*}
-it is easy to see that it is enough to change a single sample,
-letting \(y_i \to\infty\), to get \(\|\hat\beta\| \to \infty\).
+it is easy to see that changing a single sample is sufficient:
+letting \(y_i \to\infty\) gives \(\|\hat\beta\| \to \infty\).
 
 \begin{definition}
 The \textbf{finite sample breakdown point} of an estimator \(\hat\theta\)
