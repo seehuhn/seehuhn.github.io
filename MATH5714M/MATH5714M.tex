@@ -843,10 +843,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min       lq      mean   median        uq      max neval
-##  KDE1 1430.203 1442.749 1489.0878 1448.838 1457.0170 3843.258  1000
-##  KDE2  193.110  194.504  250.4246  195.037  195.8570 5069.117  1000
-##  KDE3  173.266  174.578  197.2271  175.111  175.9105 2471.521  1000
+##  expr      min       lq      mean   median       uq      max neval
+##  KDE1 1429.998 1445.291 1480.8799 1451.400 1459.928 4175.440  1000
+##  KDE2  192.946  194.463  254.6251  195.078  196.103 5123.360  1000
+##  KDE3  173.184  174.660  210.5374  175.275  176.177 5141.564  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -868,8 +868,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr     min      lq     mean   median       uq      max neval
-##  density 154.488 156.907 187.0263 164.6765 179.1495 11215.39  1000
+##     expr     min      lq     mean  median       uq      max neval
+##  density 155.185 159.449 185.5912 167.731 180.2565 8014.762  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -2874,6 +2874,16 @@ and of \texttt{locpoly(..,\ degree\ =\ 0,\ bandwidth\ =\ 0.11)} is nearly identi
 \FunctionTok{lines}\NormalTok{(m1, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
 
 \FunctionTok{library}\NormalTok{(KernSmooth)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## KernSmooth 2.23 loaded
+## Copyright M. P. Wand 1997-2009
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{m2 }\OtherTok{\textless{}{-}} \FunctionTok{locpoly}\NormalTok{(x, y, }\AttributeTok{degree =} \DecValTok{1}\NormalTok{, }\AttributeTok{bandwidth =} \FloatTok{0.11}\NormalTok{)}
 \FunctionTok{lines}\NormalTok{(m2, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
 \end{Highlighting}
@@ -2948,6 +2958,157 @@ In contrast, the local polynomial estimate (blue line) has much lower bias.
   implementations, though the method can be implemented directly from the
   weighted regression formula.
 \end{itemize}
+
+\clearpage
+
+\section*{Problem Sheet 2}\label{P02}
+\addcontentsline{toc}{section}{Problem Sheet 2}
+
+This problem sheet is for self-study only.
+It is not assessed.
+
+\textbf{5.} Consider the Nadaraya-Watson estimator
+\begin{equation*}
+  \hat m_h(x)
+  = \frac{\sum_{i=1}^n K_h(x - x_i) y_i}{\sum_{j=1}^n K_h(x - x_j)}.
+\end{equation*}
+Show that if \(K\) is continuous with \(K(0) > 0\), then
+\(\hat m_h(x_i) \to y_i\) as \(h \downarrow 0\) for each data point \(x_i\).
+
+\begin{myanswers}
+Evaluating the estimator at the data point \(x_i\), we have
+\begin{equation*}
+  \hat m_h(x_i)
+  = \frac{\sum_{j=1}^n K_h(x_i - x_j) y_j}{\sum_{j=1}^n K_h(x_i - x_j)}
+  = \frac{K_h(0) y_i + \sum_{j \neq i} K_h(x_i - x_j) y_j}{K_h(0) + \sum_{j \neq i} K_h(x_i - x_j)}.
+\end{equation*}
+Dividing numerator and denominator by \(K_h(0) = \frac{1}{h} K(0)\) gives
+\begin{equation*}
+  \hat m_h(x_i)
+  = \frac{y_i + \sum_{j \neq i} \frac{K_h(x_i - x_j)}{K_h(0)} y_j}{1 + \sum_{j \neq i} \frac{K_h(x_i - x_j)}{K_h(0)}}.
+\end{equation*}
+For \(j \neq i\), we have \(x_i - x_j \neq 0\), so \((x_i - x_j)/h \to \pm\infty\) as
+\(h \downarrow 0\). Since \(K\) is continuous and integrates to 1, we must have
+\(K(u) \to 0\) as \(|u| \to \infty\). Therefore
+\begin{equation*}
+  \frac{K_h(x_i - x_j)}{K_h(0)}
+  = \frac{K\bigl((x_i - x_j)/h\bigr)}{K(0)}
+  \to \frac{0}{K(0)}
+  = 0
+\end{equation*}
+as \(h \downarrow 0\), using \(K(0) > 0\). Since there are only finitely many terms
+in the sums (namely \(n-1\) terms), we conclude that
+\begin{equation*}
+  \hat m_h(x_i)
+  \to \frac{y_i + 0}{1 + 0}
+  = y_i
+\end{equation*}
+as \(h \downarrow 0\).
+
+\end{myanswers}
+
+\textbf{6.} The bias of the Nadaraya-Watson estimator \(\hat m_h(x)\) satisfies
+\begin{equation*}
+  \mathop{\mathrm{bias}}\bigl(\hat m_h(x)\bigr)
+  \approx \mu_2(K) \left( \frac{f'(x)}{f(x)} m'(x) + \frac{1}{2} m''(x) \right) h^2.
+\end{equation*}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Explain why the term \(f'(x)/f(x)\) appears in the bias formula for the
+  Nadaraya-Watson estimator but not in the bias formula for kernel density
+  estimation.
+\end{enumerate}
+
+\begin{myanswers}
+In kernel density estimation, we estimate \(f(x)\) directly from the data.
+The bias arises purely from the Taylor expansion of the density \(f\) around \(x\),
+giving bias \(\approx \frac{\mu_2(K)}{2} f''(x) h^2\).
+
+In contrast, the Nadaraya-Watson estimator estimates the conditional mean
+\(m(x) = \mathbb{E}(Y \mid X = x)\), but the estimator involves both the regression
+function \(m\) and the density \(f\) of the inputs \(X_i\). As shown in
+section~\ref{X04-smoothing}, the estimator can be written as a ratio
+\(\hat m_h(x) = \hat r_h(x) / \hat f_h(x)\), where \(\hat r_h(x)\) estimates
+\(r(x) = m(x) f(x)\).
+
+When analysing the bias of this ratio, we must expand both \(r\) and \(f\).
+Since \(r = mf\), the derivative \(r'' = m'' f + 2 m' f' + m f''\) involves
+cross-terms between \(m\) and \(f\). After simplification, the term \(2 m' f'\)
+in the numerator combines with the denominator \(f\) to produce the
+\(\frac{f'(x)}{f(x)} m'(x)\) term in the bias.
+
+Intuitively, the density gradient \(f'(x)\) affects which observations contribute
+to the weighted average. In regions where \(f\) is changing rapidly, nearby
+\(x\)-values are distributed asymmetrically around \(x\), which biases the
+estimate of \(m(x)\) when \(m\) has non-zero slope.
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  In a region where observations are sparse (small \(f(x)\), large \(|f'(x)|\)),
+  is the bias dominated by \(m'(x)\) or \(m''(x)\)? Interpret this geometrically.
+\end{enumerate}
+
+\begin{myanswers}
+The bias formula has two terms:
+\begin{equation*}
+  \mathop{\mathrm{bias}}\bigl(\hat m_h(x)\bigr)
+  \approx \mu_2(K) \left( \frac{f'(x)}{f(x)} m'(x) + \frac{1}{2} m''(x) \right) h^2.
+\end{equation*}
+When \(f(x)\) is small and \(|f'(x)|\) is large, the ratio \(|f'(x)/f(x)|\) becomes
+large. Consequently, the term \(\frac{f'(x)}{f(x)} m'(x)\) dominates over
+\(\frac{1}{2} m''(x)\), and the bias is dominated by \(m'(x)\).
+
+Geometrically, in a sparse region at the edge of the data distribution, most
+nearby observations come from one side---the direction where \(f\) is larger.
+The kernel averages \(y\)-values from points that are systematically shifted
+in one direction along the \(x\)-axis. If \(m\) has any slope (\(m'(x) \neq 0\)),
+this one-sided averaging pulls the estimate towards \(y\)-values that are
+systematically too high or too low, causing bias proportional to the slope
+\(m'(x)\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Suggest a scenario where the Nadaraya-Watson estimator would have high bias
+  even if \(m\) is nearly linear.
+\end{enumerate}
+
+\begin{myanswers}
+If \(m\) is nearly linear, then \(m''(x) \approx 0\) and the bias simplifies to
+\begin{equation*}
+  \mathop{\mathrm{bias}}\bigl(\hat m_h(x)\bigr)
+  \approx \mu_2(K) \frac{f'(x)}{f(x)} m'(x) h^2.
+\end{equation*}
+This can still be large if both \(m'(x)\) (the slope) and \(f'(x)/f(x)\)
+(the relative density gradient) are large.
+
+A concrete scenario: Suppose we want to estimate a steep linear regression
+function \(m(x) = a + bx\) with large slope \(b\), and the input data \(X_i\) are
+exponentially distributed or otherwise concentrated near one boundary.
+Near the sparse tail of the distribution, \(f(x)\) is small while \(|f'(x)|\)
+remains substantial, making \(|f'(x)/f(x)|\) large. Combined with the large
+slope \(m'(x) = b\), this produces substantial bias even though \(m''(x) = 0\).
+
+This is precisely the ``boundary bias'' phenomenon discussed in
+section~\ref{X05-locpoly}: at the edges of the data range, the
+Nadaraya-Watson estimator is biased because observations are available
+only on one side. Local linear regression (\(p = 1\)) addresses this
+by fitting a line locally, which can extrapolate correctly even when
+observations are asymmetrically distributed.
+
+\end{myanswers}
 
 \clearpage
 
@@ -4142,7 +4303,7 @@ the local linear estimator can be computed as
 \end{equation*}
 where \(X\) and \(W\) are defined as in equations \eqref{eq:X-local}
 and~\eqref{eq:W-diagonal}.
-Here we use the ``linear'' case (\(p=1\)) instead of the polynomial case (\(p\geq 1\)).
+Here we use the ``linear'' case, \(p=1\).
 For this case it is easy to check that we have
 \begin{equation*}
   X^\top W X
@@ -4247,10 +4408,14 @@ larger than for the Nadaraya-Watson estimator.
 \subsection{\texorpdfstring{\emph{k}-Nearest Neighbour Regression}{k-Nearest Neighbour Regression}}\label{k-nearest-neighbour-regression}
 
 To conclude this section we use leave-one-out cross-validation to determine the
-optimal \(k\) for \(k\)-nearest neighbour regression. Here it seems difficult to
-make any savings, so we resort to simply fitting \(n\) different models in the
-naive way. For this reason, the code in this section is much slower to
-run than the code in the previous sections.
+optimal \(k\) for \(k\)-nearest neighbour regression. Unlike KDE and kernel
+regression, where clever use of matrix operations allowed us to compute all
+leave-one-out predictions efficiently, kNN offers no such shortcut: removing
+observation \(i\) can change which points are the \(k\) nearest neighbours for
+every other observation. We therefore resort to a nested loop over both \(k\)
+values and observations, fitting a separate model for each combination. For
+this reason, the code in this section is much slower to run than the code in
+the previous sections.
 
 \begin{Shaded}
 \begin{Highlighting}[]

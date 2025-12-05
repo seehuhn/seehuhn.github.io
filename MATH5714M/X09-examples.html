@@ -198,6 +198,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="X05-locpoly.html"><a href="X05-locpoly.html#p-2"><i class="fa fa-check"></i><span class="math inline">\(p = 2\)</span></a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="P02.html"><a href="P02.html"><i class="fa fa-check"></i>Problem Sheet 2</a></li>
 <li class="chapter" data-level="6" data-path="X06-nearest.html"><a href="X06-nearest.html"><i class="fa fa-check"></i><b>6</b> <em>k</em>-Nearest Neighbour Regression</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="X06-nearest.html"><a href="X06-nearest.html#definition-of-the-estimator"><i class="fa fa-check"></i><b>6.1</b> Definition of the Estimator</a></li>
@@ -423,7 +424,7 @@ the local linear estimator can be computed as
 \end{equation*}\]</span>
 where <span class="math inline">\(X\)</span> and <span class="math inline">\(W\)</span> are defined as in equations <a href="X05-locpoly.html#eq:X-local">(5.2)</a>
 and <a href="X05-locpoly.html#eq:W-diagonal">(5.1)</a>.
-Here we use the “linear” case (<span class="math inline">\(p=1\)</span>) instead of the polynomial case (<span class="math inline">\(p\geq 1\)</span>).
+Here we use the “linear” case, <span class="math inline">\(p=1\)</span>.
 For this case it is easy to check that we have
 <span class="math display">\[\begin{equation*}
   X^\top W X
@@ -521,10 +522,14 @@ larger than for the Nadaraya-Watson estimator.</p>
 </div>
 </div>
 <p>To conclude this section we use leave-one-out cross-validation to determine the
-optimal <span class="math inline">\(k\)</span> for <span class="math inline">\(k\)</span>-nearest neighbour regression. Here it seems difficult to
-make any savings, so we resort to simply fitting <span class="math inline">\(n\)</span> different models in the
-naive way. For this reason, the code in this section is much slower to
-run than the code in the previous sections.</p>
+optimal <span class="math inline">\(k\)</span> for <span class="math inline">\(k\)</span>-nearest neighbour regression. Unlike KDE and kernel
+regression, where clever use of matrix operations allowed us to compute all
+leave-one-out predictions efficiently, kNN offers no such shortcut: removing
+observation <span class="math inline">\(i\)</span> can change which points are the <span class="math inline">\(k\)</span> nearest neighbours for
+every other observation. We therefore resort to a nested loop over both <span class="math inline">\(k\)</span>
+values and observations, fitting a separate model for each combination. For
+this reason, the code in this section is much slower to run than the code in
+the previous sections.</p>
 <div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="X09-examples.html#cb70-1" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">70</span></span>
 <span id="cb70-2"><a href="X09-examples.html#cb70-2" tabindex="-1"></a>mse.knn <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(k))</span>
 <span id="cb70-3"><a href="X09-examples.html#cb70-3" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(k)) {</span>

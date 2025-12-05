@@ -198,6 +198,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="X05-locpoly.html"><a href="X05-locpoly.html#p-2"><i class="fa fa-check"></i><span class="math inline">\(p = 2\)</span></a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="P02.html"><a href="P02.html"><i class="fa fa-check"></i>Problem Sheet 2</a></li>
 <li class="chapter" data-level="6" data-path="X06-nearest.html"><a href="X06-nearest.html"><i class="fa fa-check"></i><b>6</b> <em>k</em>-Nearest Neighbour Regression</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="X06-nearest.html"><a href="X06-nearest.html#definition-of-the-estimator"><i class="fa fa-check"></i><b>6.1</b> Definition of the Estimator</a></li>
@@ -366,10 +367,10 @@ means by <span class="math inline">\(h\)</span>:</p>
 <span id="cb25-6"><a href="I01-vectorise.html#cb25-6" tabindex="-1"></a>  <span class="at">KDE3 =</span> <span class="fu">KDE3</span>(x.tilde, snowfall, K, h),</span>
 <span id="cb25-7"><a href="I01-vectorise.html#cb25-7" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
-##  expr      min       lq      mean   median       uq      max neval
-##  KDE1 1436.476 1452.589 1499.5415 1459.764 1470.198 3784.054  1000
-##  KDE2  192.823  194.340  238.4981  195.037  197.989 4046.741  1000
-##  KDE3  173.020  174.619  212.7217  175.480  178.104 4660.429  1000</code></pre>
+##  expr      min       lq     mean   median       uq      max neval
+##  KDE1 1436.517 1451.072 1499.397 1458.595 1471.244 4185.649  1000
+##  KDE2  192.495  194.586  236.441  195.447  198.358 3979.214  1000
+##  KDE3  173.102  174.865  218.020  175.726  177.981 4483.924  1000</code></pre>
 <p>The output shows execution times for 1000 runs. The introduction
 of <code>outer()</code> in <code>KDE2()</code> gives a substantial speedup, and <code>KDE3()</code> improves further.</p>
 <p>Finally, we compare to <code>density()</code>, using arguments <code>from</code>, <code>to</code>, and <code>n</code>
@@ -382,7 +383,7 @@ to specify the same grid <span class="math inline">\(\tilde x\)</span>:</p>
 <span id="cb27-6"><a href="I01-vectorise.html#cb27-6" tabindex="-1"></a><span class="fu">microbenchmark</span>(<span class="at">density =</span> <span class="fu">KDE.builtin</span>(x.tilde, snowfall, <span class="st">&quot;triangular&quot;</span>, h), <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
 ##     expr     min      lq     mean   median      uq      max neval
-##  density 154.857 157.563 182.8733 171.0725 178.391 6440.239  1000</code></pre>
+##  density 154.529 157.522 182.9102 170.9085 179.211 6221.094  1000</code></pre>
 <p>The result shows that <code>density()</code> is faster than <code>KDE3()</code>, but by a factor
 of less than 2. The reason is that <code>density()</code> uses a more efficient
 algorithm based on Fast Fourier Transform to compute an approximation to the
