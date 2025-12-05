@@ -9875,8 +9875,9 @@ A variant of this method is implemented by the R function~\texttt{line()}.
 
 \section{M-Estimators}\label{S18-m-est}
 
-In this section we introduce a class of estimators which can be robust to
-\(y\)-space outliers.
+In section~\ref{S17-robust} we discussed outliers and their impact on
+regression estimates. In this section we introduce a class of estimators
+which can be robust to \(y\)-space outliers.
 
 \subsection{Definition}\label{definition}
 
@@ -9885,13 +9886,12 @@ An \textbf{M-estimator} for the regression coefficients~\(\beta\) is a method
 which computes the estimator \(\hat\beta\) as
 \begin{equation*}
   \hat\beta
-  = \mathop{\mathrm{arg\,min}}\limits_\beta r(\varepsilon)
-  = \mathop{\mathrm{arg\,min}}\limits_\beta r(y - X\beta),
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r(\beta),
 \end{equation*}
-where \(r\) is given by
+where \(r(\beta)\) is given by
 \begin{equation*}
-  r(\varepsilon)
-  = \sum_{i=1}^n \rho(\varepsilon_i)
+  r(\beta)
+  = \sum_{i=1}^n \rho\bigl( (y - X\beta)_i \bigr)
 \end{equation*}
 and \(\rho\colon \mathbb{R}\to \mathbb{R}\) is a symmetric, continuous function with
 a unique minimum at~\(0\). The function \(\rho\) is called the
@@ -9952,17 +9952,17 @@ than least squares regression is, and the breakdown point is still \(1/n\).
 \pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/lav-estimator-1.pdf}}
 \end{example}
 
-Define \(s(\beta) = r(y - X\beta)\). Then we have
+Using the notation from the definition, we have
 \begin{equation}
   \hat\beta
-  = \mathop{\mathrm{arg\,min}}\limits_\beta s(\beta).  \label{eq:m-est-min}
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r(\beta).  \label{eq:m-est-min}
 \end{equation}
-Some care is neede since the function \(s\) may have more than one
+Some care is needed since the function \(r\) may have more than one
 local minimum, and even the global minimum may not be uniquely
 defined.
 
 \begin{lemma}
-Assume that \(\rho\) is convex. Then \(s\) is convex.
+Assume that \(\rho\) is convex. Then \(r\) is convex.
 \end{lemma}
 
 \begin{proof}
@@ -9976,23 +9976,21 @@ for all \(\beta^{(1)}, \beta^{(2)}\in \mathbb{R}^{p+1}\) and all \(\lambda \in [
 Since \(\rho\) is convex, we find
 \begin{align*}
   \hskip1cm&\hskip-1cm
-  s\bigl( \lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr) \\
-  &= r\Bigl( y - X \bigl(\lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr) \Bigr) \\
-  &= r\Bigl( \lambda \bigl( y - X \beta^{(1)} \bigr)
-    + (1 - \lambda) \bigl( y - X \beta^{(2)} \bigr) \Bigr) \\
+  r\bigl( \lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr) \\
+  &= \sum_{i=1}^n \rho \Bigl( \bigl( y - X (\lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)}) \bigr)_i \Bigr) \\
   &= \sum_{i=1}^n \rho \Bigl( \lambda \bigl( y - X \beta^{(1)} \bigr)_i
     + (1 - \lambda) \bigl( y - X \beta^{(2)} \bigr)_i \Bigr) \\
-  &\leq \sum_{i=1}^n \Bigl( \lambda \rho \bigl( y - X \beta^{(1)} \bigr)_i
-    + (1 - \lambda) \rho \bigl( y - X \beta^{(2)} \bigr)_i \Bigr) \\
-  &= \lambda r\bigl( y - X \beta^{(1)} \bigr)
-    + (1 - \lambda) r\bigl( y - X \beta^{(2)} \bigr) \\
-  &= \lambda s\bigl( \beta^{(1)} \bigr) + (1 - \lambda) s\bigl( \beta^{(2)} \bigr).
+  &\leq \sum_{i=1}^n \Bigl( \lambda \rho \bigl( (y - X \beta^{(1)})_i \bigr)
+    + (1 - \lambda) \rho \bigl( (y - X \beta^{(2)})_i \bigr) \Bigr) \\
+  &= \lambda \sum_{i=1}^n \rho \bigl( (y - X \beta^{(1)})_i \bigr)
+    + (1 - \lambda) \sum_{i=1}^n \rho \bigl( (y - X \beta^{(2)})_i \bigr) \\
+  &= \lambda r\bigl( \beta^{(1)} \bigr) + (1 - \lambda) r\bigl( \beta^{(2)} \bigr).
 \end{align*}
-Thus \(s\) is convex and the proof is complete.
+Thus \(r\) is convex and the proof is complete.
 \end{proof}
 
 This shows that the problem of finding \(\hat\beta\) is better behaved when
-\(\rho\) is convex. For example, in this case, every local minimum of \(s\) is
+\(\rho\) is convex. For example, in this case, every local minimum of \(r\) is
 also a global minimum and the set of all minima is a convex set.
 
 M-estimates in general are not scale-invariant, \emph{i.e.}~if \(y\) is measured
@@ -10000,8 +9998,7 @@ in different units, the regression line changes. A scale-invariant, robust
 estimator is given by
 \begin{equation*}
   \hat\beta
-  = \mathop{\mathrm{arg\,min}}\limits_\beta r\Bigl( \frac{\varepsilon}{\hat\sigma} \Bigr)
-  = \mathop{\mathrm{arg\,min}}\limits_\beta r\Bigl( \frac{y - X\beta}{\hat\sigma} \Bigr),
+  = \mathop{\mathrm{arg\,min}}\limits_\beta \sum_{i=1}^n \rho\Bigl( \frac{(y - X\beta)_i}{\hat\sigma} \Bigr),
 \end{equation*}
 where \(\hat \sigma\) is a robust estimator of the residual standard deviation,
 for example the \textbf{median absolute deviation} (MAD) given by
@@ -10031,7 +10028,7 @@ If \(\rho' = \psi\), then the M-estimate satisfies
 Since \(\hat\beta\) minimises the function \(r\), we have
 \begin{align*}
   0
-  &= \left. \frac{\partial}{\partial\beta_j} r\bigl( y - X\beta \bigr) \right|_{\beta=\hat\beta} \\
+  &= \left. \frac{\partial}{\partial\beta_j} r(\beta) \right|_{\beta=\hat\beta} \\
   &= \left. \frac{\partial}{\partial\beta_j} \sum_{i=1}^n \rho\bigl( (y - X\beta)_i \bigr) \right|_{\beta=\hat\beta} \\
   &= \left. \sum_{i=1}^n \psi\bigl( (y - X\beta)_i \bigr) \frac{\partial}{\partial\beta_j} \bigl( y - X\beta \bigr)_i \right|_{\beta=\hat\beta} \\
   &= \left. \sum_{i=1}^n \psi\bigl( (y - X\beta)_i \bigr) (-x_{ij}) \right|_{\beta=\hat\beta} \\
@@ -10042,9 +10039,8 @@ where we use the convention \(x_{i0} = 1\). This completes the proof.
 
 With the result of the lemma, we have turned the problem of finding
 \(\hat\beta\) into the problem of finding the roots of a non-linear
-function. To solve this problem, we can for example use one
-of the generic root finding algorithms, for example
-\href{https://en.wikipedia.org/wiki/Newton\%27s_method}{Newton's method}.
+function. To solve this problem, we can use a generic root-finding algorithm
+such as \href{https://en.wikipedia.org/wiki/Newton\%27s_method}{Newton's method}.
 
 In the context of M-estimates, a more specialised method is often used in the
 literature. For this method we define weights
@@ -10053,8 +10049,9 @@ literature. For this method we define weights
   := \frac{\psi\bigl( (y - X\hat\beta)_i \bigr)}{(y - X\hat\beta)_i}
                                 \label{eq:psi-weights}
 \end{equation}
-and write \(W\) for the diagonal matrix which has \(w_1, \ldots, w_n\)
-on the diagonal. Using this notation, we can rewrite
+Note that the weights depend on the current estimate \(\hat\beta\) and will
+be updated iteratively. We write \(W\) for the diagonal matrix which has
+\(w_1, \ldots, w_n\) on the diagonal. Using this notation, we can rewrite
 condition~\eqref{eq:psi-root} as
 \begin{equation*}
   X^\top W (y - X\hat\beta)
@@ -10075,8 +10072,8 @@ also represents the solution of the weighted least-squares problem
 \end{equation*}
 
 While equation~\eqref{eq:irwls} looks like the solution of a linear problem at
-first glance, the weight matrix \(W\) depends on \(\hat\beta\) and this equation
-still represents a non-linear equation for~\(\hat\beta\).
+first glance, the weight matrix \(W\) depends on \(\hat\beta\), so this
+still represents a non-linear problem for~\(\hat\beta\).
 
 The \textbf{iteratively re-weighted least squares} method is an iterative method
 for solving equation~\eqref{eq:irwls}. Starting from an initial guess \(\hat\beta^{(0)}\)
@@ -10166,7 +10163,6 @@ and the weight function is
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{t }\OtherTok{\textless{}{-}} \DecValTok{1}
 \NormalTok{psi }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(eps) }\FunctionTok{sign}\NormalTok{(eps)}
 \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{),}
     \AttributeTok{mai =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.7}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{),}
@@ -10292,7 +10288,7 @@ is gradually reduced. Residuals with \(|\varepsilon_i| > c\) have weight \(0\)
 and do not affect the location of the regression line at all.
 
 We see that \(\psi\) is not increasing and therefore \(\rho\) is not convex. A
-consequence of this fact is that the function~\(s\) may have several local minima
+consequence of this fact is that the function~\(r\) may have several local minima
 and care must be used when choosing the starting point of iterative
 minimisation methods. Non-convexity is a common feature of redescending
 M-estimators.

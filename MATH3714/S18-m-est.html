@@ -409,8 +409,9 @@ TODO:
 - look up Peter Huber (1964)
 - introduce `rlm()` from MASS package
 -->
-<p>In this section we introduce a class of estimators which can be robust to
-<span class="math inline">\(y\)</span>-space outliers.</p>
+<p>In section <a href="S17-robust.html#S17-robust">17</a> we discussed outliers and their impact on
+regression estimates. In this section we introduce a class of estimators
+which can be robust to <span class="math inline">\(y\)</span>-space outliers.</p>
 <div id="definition" class="section level2 hasAnchor" number="18.1">
 <h2><span class="header-section-number">18.1</span> Definition<a href="S18-m-est.html#definition" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="videowrap">
@@ -424,13 +425,12 @@ TODO:
 which computes the estimator <span class="math inline">\(\hat\beta\)</span> as
 <span class="math display">\[\begin{equation*}
   \hat\beta
-  = \mathop{\mathrm{arg\,min}}\limits_\beta r(\varepsilon)
-  = \mathop{\mathrm{arg\,min}}\limits_\beta r(y - X\beta),
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r(\beta),
 \end{equation*}\]</span>
-where <span class="math inline">\(r\)</span> is given by
+where <span class="math inline">\(r(\beta)\)</span> is given by
 <span class="math display">\[\begin{equation*}
-  r(\varepsilon)
-  = \sum_{i=1}^n \rho(\varepsilon_i)
+  r(\beta)
+  = \sum_{i=1}^n \rho\bigl( (y - X\beta)_i \bigr)
 \end{equation*}\]</span>
 and <span class="math inline">\(\rho\colon \mathbb{R}\to \mathbb{R}\)</span> is a symmetric, continuous function with
 a unique minimum at <span class="math inline">\(0\)</span>. The function <span class="math inline">\(\rho\)</span> is called the
@@ -481,16 +481,16 @@ than least squares regression is, and the breakdown point is still <span class="
 <span id="cb264-28"><a href="S18-m-est.html#cb264-28" tabindex="-1"></a>}</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/lav-estimator-1.png" width="672" /></p>
 </div>
-<p>Define <span class="math inline">\(s(\beta) = r(y - X\beta)\)</span>. Then we have
+<p>Using the notation from the definition, we have
 <span class="math display" id="eq:m-est-min">\[\begin{equation}
   \hat\beta
-  = \mathop{\mathrm{arg\,min}}\limits_\beta s(\beta).  \tag{18.1}
+  = \mathop{\mathrm{arg\,min}}\limits_\beta r(\beta).  \tag{18.1}
 \end{equation}\]</span>
-Some care is neede since the function <span class="math inline">\(s\)</span> may have more than one
+Some care is needed since the function <span class="math inline">\(r\)</span> may have more than one
 local minimum, and even the global minimum may not be uniquely
 defined.</p>
 <div class="lemma">
-<p><span id="lem:unlabeled-div-75" class="lemma"><strong>Lemma 18.1  </strong></span>Assume that <span class="math inline">\(\rho\)</span> is convex. Then <span class="math inline">\(s\)</span> is convex.</p>
+<p><span id="lem:unlabeled-div-75" class="lemma"><strong>Lemma 18.1  </strong></span>Assume that <span class="math inline">\(\rho\)</span> is convex. Then <span class="math inline">\(r\)</span> is convex.</p>
 </div>
 <div class="proof">
 <p><span id="unlabeled-div-76" class="proof"><em>Proof</em>. </span>Here we use the property that a function <span class="math inline">\(f\colon \mathbb{R}^{p+1} \to \mathbb{R}\)</span> is convex,
@@ -503,30 +503,27 @@ for all <span class="math inline">\(\beta^{(1)}, \beta^{(2)}\in \mathbb{R}^{p+1}
 Since <span class="math inline">\(\rho\)</span> is convex, we find
 <span class="math display">\[\begin{align*}
   \hskip1cm&amp;\hskip-1cm
-  s\bigl( \lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr) \\
-  &amp;= r\Bigl( y - X \bigl(\lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr) \Bigr) \\
-  &amp;= r\Bigl( \lambda \bigl( y - X \beta^{(1)} \bigr)
-    + (1 - \lambda) \bigl( y - X \beta^{(2)} \bigr) \Bigr) \\
+  r\bigl( \lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)} \bigr) \\
+  &amp;= \sum_{i=1}^n \rho \Bigl( \bigl( y - X (\lambda \beta^{(1)} + (1 - \lambda) \beta^{(2)}) \bigr)_i \Bigr) \\
   &amp;= \sum_{i=1}^n \rho \Bigl( \lambda \bigl( y - X \beta^{(1)} \bigr)_i
     + (1 - \lambda) \bigl( y - X \beta^{(2)} \bigr)_i \Bigr) \\
-  &amp;\leq \sum_{i=1}^n \Bigl( \lambda \rho \bigl( y - X \beta^{(1)} \bigr)_i
-    + (1 - \lambda) \rho \bigl( y - X \beta^{(2)} \bigr)_i \Bigr) \\
-  &amp;= \lambda r\bigl( y - X \beta^{(1)} \bigr)
-    + (1 - \lambda) r\bigl( y - X \beta^{(2)} \bigr) \\
-  &amp;= \lambda s\bigl( \beta^{(1)} \bigr) + (1 - \lambda) s\bigl( \beta^{(2)} \bigr).
+  &amp;\leq \sum_{i=1}^n \Bigl( \lambda \rho \bigl( (y - X \beta^{(1)})_i \bigr)
+    + (1 - \lambda) \rho \bigl( (y - X \beta^{(2)})_i \bigr) \Bigr) \\
+  &amp;= \lambda \sum_{i=1}^n \rho \bigl( (y - X \beta^{(1)})_i \bigr)
+    + (1 - \lambda) \sum_{i=1}^n \rho \bigl( (y - X \beta^{(2)})_i \bigr) \\
+  &amp;= \lambda r\bigl( \beta^{(1)} \bigr) + (1 - \lambda) r\bigl( \beta^{(2)} \bigr).
 \end{align*}\]</span>
-Thus <span class="math inline">\(s\)</span> is convex and the proof is complete.</p>
+Thus <span class="math inline">\(r\)</span> is convex and the proof is complete.</p>
 </div>
 <p>This shows that the problem of finding <span class="math inline">\(\hat\beta\)</span> is better behaved when
-<span class="math inline">\(\rho\)</span> is convex. For example, in this case, every local minimum of <span class="math inline">\(s\)</span> is
+<span class="math inline">\(\rho\)</span> is convex. For example, in this case, every local minimum of <span class="math inline">\(r\)</span> is
 also a global minimum and the set of all minima is a convex set.</p>
 <p>M-estimates in general are not scale-invariant, <em>i.e.</em> if <span class="math inline">\(y\)</span> is measured
 in different units, the regression line changes. A scale-invariant, robust
 estimator is given by
 <span class="math display">\[\begin{equation*}
   \hat\beta
-  = \mathop{\mathrm{arg\,min}}\limits_\beta r\Bigl( \frac{\varepsilon}{\hat\sigma} \Bigr)
-  = \mathop{\mathrm{arg\,min}}\limits_\beta r\Bigl( \frac{y - X\beta}{\hat\sigma} \Bigr),
+  = \mathop{\mathrm{arg\,min}}\limits_\beta \sum_{i=1}^n \rho\Bigl( \frac{(y - X\beta)_i}{\hat\sigma} \Bigr),
 \end{equation*}\]</span>
 where <span class="math inline">\(\hat \sigma\)</span> is a robust estimator of the residual standard deviation,
 for example the <strong>median absolute deviation</strong> (MAD) given by
@@ -560,7 +557,7 @@ this approach is the following lemma.</p>
 <p><span id="unlabeled-div-78" class="proof"><em>Proof</em>. </span>Since <span class="math inline">\(\hat\beta\)</span> minimises the function <span class="math inline">\(r\)</span>, we have
 <span class="math display">\[\begin{align*}
   0
-  &amp;= \left. \frac{\partial}{\partial\beta_j} r\bigl( y - X\beta \bigr) \right|_{\beta=\hat\beta} \\
+  &amp;= \left. \frac{\partial}{\partial\beta_j} r(\beta) \right|_{\beta=\hat\beta} \\
   &amp;= \left. \frac{\partial}{\partial\beta_j} \sum_{i=1}^n \rho\bigl( (y - X\beta)_i \bigr) \right|_{\beta=\hat\beta} \\
   &amp;= \left. \sum_{i=1}^n \psi\bigl( (y - X\beta)_i \bigr) \frac{\partial}{\partial\beta_j} \bigl( y - X\beta \bigr)_i \right|_{\beta=\hat\beta} \\
   &amp;= \left. \sum_{i=1}^n \psi\bigl( (y - X\beta)_i \bigr) (-x_{ij}) \right|_{\beta=\hat\beta} \\
@@ -570,9 +567,8 @@ where we use the convention <span class="math inline">\(x_{i0} = 1\)</span>. Thi
 </div>
 <p>With the result of the lemma, we have turned the problem of finding
 <span class="math inline">\(\hat\beta\)</span> into the problem of finding the roots of a non-linear
-function. To solve this problem, we can for example use one
-of the generic root finding algorithms, for example
-<a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a>.</p>
+function. To solve this problem, we can use a generic root-finding algorithm
+such as <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a>.</p>
 <p>In the context of M-estimates, a more specialised method is often used in the
 literature. For this method we define weights
 <span class="math display" id="eq:psi-weights">\[\begin{equation}
@@ -580,8 +576,9 @@ literature. For this method we define weights
   := \frac{\psi\bigl( (y - X\hat\beta)_i \bigr)}{(y - X\hat\beta)_i}
                                 \tag{18.3}
 \end{equation}\]</span>
-and write <span class="math inline">\(W\)</span> for the diagonal matrix which has <span class="math inline">\(w_1, \ldots, w_n\)</span>
-on the diagonal. Using this notation, we can rewrite
+Note that the weights depend on the current estimate <span class="math inline">\(\hat\beta\)</span> and will
+be updated iteratively. We write <span class="math inline">\(W\)</span> for the diagonal matrix which has
+<span class="math inline">\(w_1, \ldots, w_n\)</span> on the diagonal. Using this notation, we can rewrite
 condition <a href="S18-m-est.html#eq:psi-root">(18.2)</a> as
 <span class="math display">\[\begin{equation*}
   X^\top W (y - X\hat\beta)
@@ -601,8 +598,8 @@ also represents the solution of the weighted least-squares problem
   = \mathop{\mathrm{arg\,min}}\limits_\beta \sum_{i=1}^n w_i \bigl( y_i - \beta_0 - \beta_1 x_{i1} - \cdots - \beta_p x_{ip} \bigr)^2.
 \end{equation*}\]</span></p>
 <p>While equation <a href="S18-m-est.html#eq:irwls">(18.4)</a> looks like the solution of a linear problem at
-first glance, the weight matrix <span class="math inline">\(W\)</span> depends on <span class="math inline">\(\hat\beta\)</span> and this equation
-still represents a non-linear equation for <span class="math inline">\(\hat\beta\)</span>.</p>
+first glance, the weight matrix <span class="math inline">\(W\)</span> depends on <span class="math inline">\(\hat\beta\)</span>, so this
+still represents a non-linear problem for <span class="math inline">\(\hat\beta\)</span>.</p>
 <p>The <strong>iteratively re-weighted least squares</strong> method is an iterative method
 for solving equation <a href="S18-m-est.html#eq:irwls">(18.4)</a>. Starting from an initial guess <span class="math inline">\(\hat\beta^{(0)}\)</span>
 for <span class="math inline">\(\hat\beta\)</span>, <em>e.g.</em> the least squares estimate or the zero vector,
@@ -680,16 +677,15 @@ and the weight function is
   = \frac{\mathop{\mathrm{sign}}(\varepsilon)}{\varepsilon}
   = \frac{1}{|\varepsilon|}.
 \end{equation*}\]</span></p>
-<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="S18-m-est.html#cb266-1" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb266-2"><a href="S18-m-est.html#cb266-2" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) <span class="fu">sign</span>(eps)</span>
-<span id="cb266-3"><a href="S18-m-est.html#cb266-3" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb266-4"><a href="S18-m-est.html#cb266-4" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
-<span id="cb266-5"><a href="S18-m-est.html#cb266-5" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
-<span id="cb266-6"><a href="S18-m-est.html#cb266-6" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
-<span id="cb266-7"><a href="S18-m-est.html#cb266-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
-<span id="cb266-8"><a href="S18-m-est.html#cb266-8" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb266-9"><a href="S18-m-est.html#cb266-9" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
-<span id="cb266-10"><a href="S18-m-est.html#cb266-10" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
+<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="S18-m-est.html#cb266-1" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="cf">function</span>(eps) <span class="fu">sign</span>(eps)</span>
+<span id="cb266-2"><a href="S18-m-est.html#cb266-2" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb266-3"><a href="S18-m-est.html#cb266-3" tabindex="-1"></a>    <span class="at">mai =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>),</span>
+<span id="cb266-4"><a href="S18-m-est.html#cb266-4" tabindex="-1"></a>    <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">1.7</span>, <span class="fl">0.5</span>, <span class="dv">0</span>))</span>
+<span id="cb266-5"><a href="S18-m-est.html#cb266-5" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps), <span class="at">type=</span><span class="st">&quot;l&quot;</span>,</span>
+<span id="cb266-6"><a href="S18-m-est.html#cb266-6" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon), <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)))</span>
+<span id="cb266-7"><a href="S18-m-est.html#cb266-7" tabindex="-1"></a><span class="fu">plot</span>(eps, <span class="fu">psi</span>(eps) <span class="sc">/</span> eps, <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb266-8"><a href="S18-m-est.html#cb266-8" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(epsilon),</span>
+<span id="cb266-9"><a href="S18-m-est.html#cb266-9" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">psi</span>(epsilon)<span class="sc">/</span>epsilon))</span></code></pre></div>
 <p><img src="MATH3714_files/figure-html/psi-abs-1.png" width="672" /></p>
 </div>
 <div id="Huber" class="section level3 hasAnchor" number="18.3.3">
@@ -785,7 +781,7 @@ as for least squares regression, and the weight for larger residuals
 is gradually reduced. Residuals with <span class="math inline">\(|\varepsilon_i| &gt; c\)</span> have weight <span class="math inline">\(0\)</span>
 and do not affect the location of the regression line at all.</p>
 <p>We see that <span class="math inline">\(\psi\)</span> is not increasing and therefore <span class="math inline">\(\rho\)</span> is not convex. A
-consequence of this fact is that the function <span class="math inline">\(s\)</span> may have several local minima
+consequence of this fact is that the function <span class="math inline">\(r\)</span> may have several local minima
 and care must be used when choosing the starting point of iterative
 minimisation methods. Non-convexity is a common feature of redescending
 M-estimators.</p>
