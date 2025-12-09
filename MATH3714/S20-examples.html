@@ -426,8 +426,8 @@ outliers:</p>
 <span id="cb291-6"><a href="S20-examples.html#cb291-6" tabindex="-1"></a></span>
 <span id="cb291-7"><a href="S20-examples.html#cb291-7" tabindex="-1"></a><span class="co"># Add three contaminants:</span></span>
 <span id="cb291-8"><a href="S20-examples.html#cb291-8" tabindex="-1"></a>outliers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">25</span>)</span>
-<span id="cb291-9"><a href="S20-examples.html#cb291-9" tabindex="-1"></a>x[outliers] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">9</span>, <span class="fl">8.5</span>, <span class="fl">9.5</span>)</span>
-<span id="cb291-10"><a href="S20-examples.html#cb291-10" tabindex="-1"></a>y[outliers] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="sc">-</span><span class="fl">1.5</span>, <span class="sc">-</span><span class="fl">2.5</span>)</span></code></pre></div>
+<span id="cb291-9"><a href="S20-examples.html#cb291-9" tabindex="-1"></a>x[outliers] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">9.5</span>, <span class="dv">10</span>, <span class="fl">10.5</span>)</span>
+<span id="cb291-10"><a href="S20-examples.html#cb291-10" tabindex="-1"></a>y[outliers] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">2.5</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="sc">-</span><span class="fl">3.5</span>)</span></code></pre></div>
 <p>Now we fit several different regression methods to this data:</p>
 <div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="S20-examples.html#cb292-1" tabindex="-1"></a><span class="fu">library</span>(MASS)     <span class="co"># for rlm() and lqs()</span></span>
 <span id="cb292-2"><a href="S20-examples.html#cb292-2" tabindex="-1"></a><span class="fu">library</span>(quantreg) <span class="co"># for rq()</span></span></code></pre></div>
@@ -494,20 +494,12 @@ Recall from section <a href="S18-m-est.html#S18-m-est">18</a> that M-estimators
 to observations based on the magnitude of their residuals, with larger
 residuals receiving smaller weights.</p>
 <p>Figure <a href="S20-examples.html#fig:robweights">20.3</a> shows the weights assigned by three
-different M-estimators: Huber, Bisquare and Hampel. The left plot
-shows the weights for all 30 observations. We can clearly see that
-observations 5, 15 and 25 (the outliers) receive very low weights
-from all three methods, confirming that these are correctly identified
-as outliers.</p>
-<p>The centre and right plots compare the weights pairwise between methods.
-Most observations lie on or near the diagonal line, indicating that
-different methods assign similar weights to these observations.
-However, for the outliers (points far from the diagonal), the methods
-differ:</p>
+different M-estimators: Huber, Bisquare and Hampel. The outliers
+(observations 5, 15 and 25) receive low weights from all three methods,
+confirming that they are correctly identified as outliers. However,
+the methods differ in how aggressively they down-weight these observations:</p>
 <ul>
-<li>The Bisquare and Hampel methods assign more extreme weights than
-the Huber method, with some observations receiving weights very close
-to zero.</li>
+<li>The Bisquare and Hampel methods assign zero weight to the outliers.</li>
 <li>The Huber method assigns intermediate weights even to the outliers,
 which reflects the fact that the Huber <span class="math inline">\(\psi\)</span>-function does not
 completely down-weight large residuals.</li>
@@ -518,30 +510,24 @@ The Bisquare and Hampel methods use redescending <span class="math inline">\(\ps
 assigning zero weight to sufficiently large residuals. The Huber method
 uses a non-redescending <span class="math inline">\(\psi\)</span>-function, so all observations retain some influence.</p>
 <div class="figure"><span style="display:block;" id="fig:robweights"></span>
-<img src="MATH3714_files/figure-html/robweights-1.png" alt="Comparisons of weights assigned by different M-estimators. The left plot shows weights for all observations. The centre and right plots compare weights pairwise between methods, with outliers shown as red points." width="32%" /><img src="MATH3714_files/figure-html/robweights-2.png" alt="Comparisons of weights assigned by different M-estimators. The left plot shows weights for all observations. The centre and right plots compare weights pairwise between methods, with outliers shown as red points." width="32%" /><img src="MATH3714_files/figure-html/robweights-3.png" alt="Comparisons of weights assigned by different M-estimators. The left plot shows weights for all observations. The centre and right plots compare weights pairwise between methods, with outliers shown as red points." width="32%" />
+<img src="MATH3714_files/figure-html/robweights-1.png" alt="Weights assigned by three M-estimators (Huber, Bisquare, Hampel)." width="70%" />
 <p class="caption">
-Figure 20.3: Comparisons of weights assigned by different M-estimators. The left plot shows weights for all observations. The centre and right plots compare weights pairwise between methods, with outliers shown as red points.
+Figure 20.3: Weights assigned by three M-estimators (Huber, Bisquare, Hampel).
 </p>
 </div>
 </div>
 <div class="mysummary">
 <p><strong>Summary</strong></p>
 <ul>
-<li>We have compared several robust regression methods on synthetic data
-with outliers.</li>
-<li>Methods with high breakdown points (LMS, LTS) resist outliers,
-whilst methods with low breakdown points (least squares, LAV, M-estimators)
-can be severely affected.</li>
-<li>Robust methods produce cleaner residual patterns than least squares
-when outliers are present, making diagnostics more reliable.</li>
-<li>M-estimators assign weights to observations based on residual magnitude,
-with different methods (Huber, Bisquare, Hampel) assigning weights
-differently.</li>
+<li>M-estimators downweight outliers based on residual magnitude, producing
+fits that better represent the bulk of the data than least squares.</li>
+<li>The LTS parameter <span class="math inline">\(k\)</span> controls how many observations contribute to the
+fit: smaller <span class="math inline">\(k\)</span> gives more resistance to outliers.</li>
+<li>M-estimators produce cleaner residual patterns than least squares when
+outliers are present.</li>
 <li>Redescending M-estimators (Bisquare, Hampel) assign zero weight to
-sufficiently large residuals, whilst the Huber method retains some
-influence for all observations.</li>
-<li>The choice of robust method involves a trade-off between breakdown point
-and efficiency, as discussed in sections <a href="S17-robust.html#S17-robust">17</a>–<a href="S19-efficiency.html#S19-efficiency">19</a>.</li>
+sufficiently large residuals, whilst non-redescending M-estimators
+(LAV, Huber) retain some influence for all observations.</li>
 </ul>
 </div>
 

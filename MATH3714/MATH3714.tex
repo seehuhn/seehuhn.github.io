@@ -10772,8 +10772,6 @@ and \texttt{abline()}.
 \section*{Problem Sheet 5}\label{P05}
 \addcontentsline{toc}{section}{Problem Sheet 5}
 
-\excludecomment{myanswers}
-
 You should attempt all these questions and write up your solutions in advance
 of the workshop in week 11 where the answers will be discussed.
 
@@ -11160,8 +11158,8 @@ outliers:
 
 \CommentTok{\# Add three contaminants:}
 \NormalTok{outliers }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{25}\NormalTok{)}
-\NormalTok{x[outliers] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{9}\NormalTok{, }\FloatTok{8.5}\NormalTok{, }\FloatTok{9.5}\NormalTok{)}
-\NormalTok{y[outliers] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{1.5}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{2.5}\NormalTok{)}
+\NormalTok{x[outliers] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{9.5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\FloatTok{10.5}\NormalTok{)}
+\NormalTok{y[outliers] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{2.5}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{3.5}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -11249,24 +11247,15 @@ to observations based on the magnitude of their residuals, with larger
 residuals receiving smaller weights.
 
 Figure~\ref{fig:robweights} shows the weights assigned by three
-different M-estimators: Huber, Bisquare and Hampel. The left plot
-shows the weights for all 30 observations. We can clearly see that
-observations 5, 15 and 25 (the outliers) receive very low weights
-from all three methods, confirming that these are correctly identified
-as outliers.
-
-The centre and right plots compare the weights pairwise between methods.
-Most observations lie on or near the diagonal line, indicating that
-different methods assign similar weights to these observations.
-However, for the outliers (points far from the diagonal), the methods
-differ:
+different M-estimators: Huber, Bisquare and Hampel. The outliers
+(observations 5, 15 and 25) receive low weights from all three methods,
+confirming that they are correctly identified as outliers. However,
+the methods differ in how aggressively they down-weight these observations:
 
 \begin{itemize}
 \tightlist
 \item
-  The Bisquare and Hampel methods assign more extreme weights than
-  the Huber method, with some observations receiving weights very close
-  to zero.
+  The Bisquare and Hampel methods assign zero weight to the outliers.
 \item
   The Huber method assigns intermediate weights even to the outliers,
   which reflects the fact that the Huber \(\psi\)-function does not
@@ -11280,7 +11269,7 @@ assigning zero weight to sufficiently large residuals.~The Huber method
 uses a non-redescending \(\psi\)-function, so all observations retain some influence.
 
 \begin{figure}
-\includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robweights-1} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robweights-2} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robweights-3} \caption{Comparisons of weights assigned by different M-estimators. The left plot shows weights for all observations. The centre and right plots compare weights pairwise between methods, with outliers shown as red points.}\label{fig:robweights}
+\includegraphics[width=0.7\linewidth]{MATH3714_files/figure-latex/robweights-1} \caption{Weights assigned by three M-estimators (Huber, Bisquare, Hampel).}\label{fig:robweights}
 \end{figure}
 
 \end{example}
@@ -11290,26 +11279,18 @@ uses a non-redescending \(\psi\)-function, so all observations retain some influ
 \begin{itemize}
 \tightlist
 \item
-  We have compared several robust regression methods on synthetic data
-  with outliers.
+  M-estimators downweight outliers based on residual magnitude, producing
+  fits that better represent the bulk of the data than least squares.
 \item
-  Methods with high breakdown points (LMS, LTS) resist outliers,
-  whilst methods with low breakdown points (least squares, LAV, M-estimators)
-  can be severely affected.
+  The LTS parameter \(k\) controls how many observations contribute to the
+  fit: smaller \(k\) gives more resistance to outliers.
 \item
-  Robust methods produce cleaner residual patterns than least squares
-  when outliers are present, making diagnostics more reliable.
-\item
-  M-estimators assign weights to observations based on residual magnitude,
-  with different methods (Huber, Bisquare, Hampel) assigning weights
-  differently.
+  M-estimators produce cleaner residual patterns than least squares when
+  outliers are present.
 \item
   Redescending M-estimators (Bisquare, Hampel) assign zero weight to
-  sufficiently large residuals, whilst the Huber method retains some
-  influence for all observations.
-\item
-  The choice of robust method involves a trade-off between breakdown point
-  and efficiency, as discussed in sections \ref{S17-robust}--\ref{S19-efficiency}.
+  sufficiently large residuals, whilst non-redescending M-estimators
+  (LAV, Huber) retain some influence for all observations.
 \end{itemize}
 
 \clearpage
