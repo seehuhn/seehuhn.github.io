@@ -843,10 +843,10 @@ We measure execution times using \texttt{microbenchmark}:
 
 \begin{verbatim}
 ## Unit: microseconds
-##  expr      min       lq      mean   median       uq      max neval
-##  KDE1 1439.346 1455.869 1503.0398 1462.265 1470.506 6839.210  1000
-##  KDE2  192.741  194.463  239.0309  195.037  195.980 4323.245  1000
-##  KDE3  173.389  174.619  209.0022  175.193  176.095 2477.835  1000
+##  expr     min       lq     mean   median       uq      max neval
+##  KDE1 824.305 843.7595 880.2882 849.9505 859.2985 4102.952  1000
+##  KDE2 112.340 113.7750 144.7461 114.3900 115.3535 1901.129  1000
+##  KDE3 100.573 102.2540 129.8623 102.7870 103.7300 3241.460  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -868,8 +868,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr     min      lq     mean   median       uq      max neval
-##  density 154.324 156.989 182.0305 164.2665 178.5345 6983.325  1000
+##     expr    min     lq     mean median      uq      max neval
+##  density 90.487 92.783 111.0257 99.835 106.354 5846.272  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -3011,30 +3011,32 @@ as \(h \downarrow 0\).
 \textbf{6.} The bias of the Nadaraya-Watson estimator satisfies
 \begin{equation*}
   \mathop{\mathrm{bias}}\bigl(\hat m_h(x)\bigr)
-  \approx \mu_2(K) \left( \frac{f'(x)}{f(x)} m'(x) + \frac{1}{2} m''(x) \right) h^2,
+  \approx \frac{\mu_2(K) f'(x)}{f(x)} m'(x) h^2 + \frac{\mu_2(K)}{2} m''(x) h^2,
 \end{equation*}
 while for the local linear estimator (section~\ref{X05-locpoly}), the bias is
 \begin{equation*}
-  \mathop{\mathrm{bias}}\approx \frac{\mu_2(K)}{2} m''(x) h^2.
+  \mathop{\mathrm{bias}}\approx \frac{\mu_2(K)}{2} m''(x) h^2
 \end{equation*}
+for small~\(h\).
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
 \tightlist
 \item
-  Suppose observations are denser to the left of a point \(x_0\) than to the
-  right (i.e., \(f'(x_0) < 0\)), and the regression function has positive slope
-  at \(x_0\). Explain geometrically why the Nadaraya-Watson estimator
-  underestimates \(m(x_0)\).
+  Suppose observations are more dense to the left of a point \(x_0\) than they
+  are to the right, \emph{i.e.}~\(f'(x_0) < 0\), and that the regression function~\(m\) has
+  positive slope at \(x_0\). Explain geometrically why the Nadaraya-Watson
+  estimator underestimates \(m(x_0)\).
 \end{enumerate}
 
 \begin{myanswers}
 The Nadaraya-Watson estimator computes a weighted average
-\(\hat m_h(x_0) = \sum_i w_i(x_0) y_i\), where the weights are determined by the
-kernel centred at \(x_0\). When observations are denser to the left
-(\(f'(x_0) < 0\)), more data points lie there and receive collectively greater
-weight. Since \(m\) has positive slope, these left-side \(y\)-values are
-systematically smaller than \(m(x_0)\). The weighted average is therefore pulled
+\(\hat m_h(x_0) = \sum_i w_i(x_0) y_i\), where the weights are determined by
+the distance from the point \(x_0\).
+Since \(m\) has positive slope, the \(y\)-values to the left of \(x_0\) are smaller than \(m(x_0)\),
+while those to the right are larger.
+When observations are more dense to the left, more data points lie there and
+receive collectively greater weight. The weighted average is therefore pulled
 downward, causing underestimation.
 
 \end{myanswers}
@@ -3045,16 +3047,16 @@ downward, causing underestimation.
 \tightlist
 \item
   Let \(m(x) = 2x\) and \(f(x) = 2(1-x)\) for \(x \in [0,1]\). Compute the
-  Nadaraya-Watson bias at \(x = 0.9\) as a multiple of \(\mu_2(K) h^2\).
+  Nadaraya-Watson bias at \(x_0 = 0.5\) as a multiple of \(\mu_2(K) h^2\).
 \end{enumerate}
 
 \begin{myanswers}
-We have \(m'(x) = 2\), \(m''(x) = 0\), \(f(0.9) = 0.2\), and \(f'(0.9) = -2\), giving
-\(f'(0.9)/f(0.9) = -10\). The Nadaraya-Watson bias is
+We have \(m'(x_0) = 2\), \(m''(x_0) = 0\), \(f(0.5) = 1\), and \(f'(0.5) = -2\). The
+Nadaraya-Watson bias is
 \begin{equation*}
-  \mathop{\mathrm{bias}}\bigl(\hat m_h(0.9)\bigr)
-  \approx \mu_2(K) \left( -10 \cdot 2 + \frac{1}{2} \cdot 0 \right) h^2
-  = -20 \mu_2(K) h^2.
+  \mathop{\mathrm{bias}}\bigl(\hat m_h(0.5)\bigr)
+  \approx \frac{\mu_2(K) \cdot (-2) \cdot 2}{1} h^2 + \frac{\mu_2(K)}{2} \cdot 0 \cdot h^2
+  = -4 \mu_2(K) h^2.
 \end{equation*}
 The negative sign confirms the underestimation predicted in part (a).
 
@@ -3065,7 +3067,8 @@ The negative sign confirms the underestimation predicted in part (a).
 \setcounter{enumi}{2}
 \tightlist
 \item
-  Compute the local linear bias at the same point. Explain geometrically why
+  Show that the bias for local linear regression at the same point equals zero.
+  Explain geometrically why
   fitting a local line, rather than taking a local average, eliminates this
   bias.
 \end{enumerate}
@@ -3080,6 +3083,77 @@ averaging them. Even when observations are concentrated on one side of \(x_0\),
 the fitted line can extrapolate to \(x_0\) using its estimated slope. Since the
 true function \(m(x) = 2x\) is linear, the locally fitted line matches \(m\)
 exactly in expectation, eliminating the bias.
+
+\end{myanswers}
+
+\textbf{7.} Consider local linear regression with kernel weights
+\(W = \mathrm{diag}(K_h(\tilde x - x_1), \ldots, K_h(\tilde x - x_n))\) and design
+matrix \(X\) with rows \((1, x_i - \tilde x)\). The local linear estimate
+for \(m(\tilde x)\) can be written as
+\begin{equation*}
+  \hat m_h(\tilde x)
+  = e_0^\top (X^\top W X)^{-1} X^\top W y,
+\end{equation*}
+where \(e_0 = (1,0)^\top\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Show that \(\hat m_h(\tilde x) = \sum_{i=1}^n w_i y_i\) for weights \(w_i\) that
+  do not depend on the \(y_j\).
+\end{enumerate}
+
+\begin{myanswers}
+The expression \(e_0^\top (X^\top W X)^{-1} X^\top W y\) is linear in \(y\). Writing
+\(w^\top = e_0^\top (X^\top W X)^{-1} X^\top W\), we have
+\(\hat m_h(\tilde x) = w^\top y = \sum_{i=1}^n w_i y_i\). The vector \(w\) depends
+on \(\tilde x\) and the \(x_i\) (through \(X\) and \(W\)) but not on the \(y_j\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Show that if \(y_i = a + b(x_i - \tilde x)\) for constants \(a\) and \(b\), then
+  \(\hat m_h(\tilde x) = a\).
+\end{enumerate}
+
+\begin{myanswers}
+If \(y_i = a + b(x_i - \tilde x)\), then \(\beta_0 = a\), \(\beta_1 = b\) makes every
+residual \(y_i - \beta_0 - \beta_1(x_i - \tilde x)\) equal to zero. The weighted
+RSS therefore vanishes, which is its minimum, so \(\hat\beta = (a, b)^\top\) and
+\(\hat m_h(\tilde x) = \hat\beta_0 = a\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Deduce that \(\sum_{i=1}^n w_i = 1\) and
+  \(\sum_{i=1}^n w_i(x_i - \tilde x) = 0\).
+\end{enumerate}
+
+\begin{myanswers}
+From part (a), \(\hat m_h(\tilde x) = \sum w_i y_i\) where the weights \(w_i\) do not
+depend on the \(y_j\). Thus we can choose \(y_i = a + b(x_i - \tilde x)\) as in
+part (b), giving \(\hat m_h(\tilde x) = a\). This gives
+\begin{equation*}
+  a
+  = \hat m_h(\tilde x)
+  = \sum_{i=1}^n w_i (a + b(x_i - \tilde x))
+  = a \sum_{i=1}^n w_i + b \sum_{i=1}^n w_i(x_i - \tilde x).
+\end{equation*}
+Rearranging gives
+\begin{equation*}
+  a\Bigl( \sum_{i=1}^n w_i - 1 \Bigr) + b \sum_{i=1}^n w_i(x_i - \tilde x) = 0.
+\end{equation*}
+Since this holds for all \(a, b\), both coefficients must vanish: \(\sum w_i = 1\)
+and \(\sum w_i(x_i - \tilde x) = 0\).
 
 \end{myanswers}
 
@@ -3800,6 +3874,160 @@ section~\ref{X08-xval}.
 \item
   Compared to kernel methods, splines are global and handle boundaries better.
 \end{itemize}
+
+\clearpage
+
+\section*{Problem Sheet 3}\label{P03}
+\addcontentsline{toc}{section}{Problem Sheet 3}
+
+This problem sheet is for self-study only.
+It is not assessed.
+
+\textbf{8.} The \(k\)-nearest neighbour estimator is defined as
+\begin{equation*}
+  \hat m_k(x)
+  = \frac{1}{k} \sum_{i \in J_k(x)} y_i,
+\end{equation*}
+where \(J_k(x) = \bigl\{ i \bigm| \text{$x_i$ is one of the $k$ nearest
+observations to $x$} \bigr\}\). Assuming the \(x_i\) are distinct, show that
+\(\hat m_1(x_j) = y_j\) for each data point \(x_j\).
+
+\begin{myanswers}
+For \(k = 1\), the set \(J_1(x_j)\) contains the single index \(i\) for which \(x_i\) is
+closest to \(x_j\). Since the \(x_i\) are distinct, the closest point to \(x_j\) is
+\(x_j\) itself (with distance zero). Thus \(J_1(x_j) = \{j\}\) and
+\begin{equation*}
+  \hat m_1(x_j)
+  = \frac{1}{1} \sum_{i \in \{j\}} y_i
+  = y_j.
+\end{equation*}
+
+\end{myanswers}
+
+\textbf{9.} Consider the \(k\)-nearest neighbour estimator with \(k = 1\) and ordered data
+\(x_1 < x_2 < \cdots < x_n\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  For \(x \in (x_i, x_{i+1})\), find the value of \(x\) at which the nearest
+  neighbour changes from \(x_i\) to \(x_{i+1}\).
+\end{enumerate}
+
+\begin{myanswers}
+The nearest neighbour is \(x_i\) when \(|x - x_i| < |x - x_{i+1}|\), \emph{i.e.}~when
+\(x - x_i < x_{i+1} - x\), which simplifies to \(x < \frac{x_i + x_{i+1}}{2}\).
+Similarly, the nearest neighbour is \(x_{i+1}\) when \(x > \frac{x_i + x_{i+1}}{2}\).
+Thus the nearest neighbour changes at the midpoint \(\frac{x_i + x_{i+1}}{2}\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Deduce that \(\hat m_1\) is a step function, and state the intervals on which
+  it is constant.
+\end{enumerate}
+
+\begin{myanswers}
+From part (a), the nearest neighbour changes only at the midpoints between
+consecutive data points. For \(x < x_1\), the nearest neighbour is \(x_1\); for
+\(x > x_n\), it is \(x_n\). Thus \(\hat m_1\) is constant on each of the \(n\) intervals
+\begin{equation*}
+  \Bigl( -\infty, \frac{x_1 + x_2}{2} \Bigr), \quad
+  \Bigl( \frac{x_1 + x_2}{2}, \frac{x_2 + x_3}{2} \Bigr), \quad \ldots, \quad
+  \Bigl( \frac{x_{n-1} + x_n}{2}, \infty \Bigr),
+\end{equation*}
+taking values \(y_1, y_2, \ldots, y_n\) respectively. This makes \(\hat m_1\) a step
+function with jumps at the \(n - 1\) midpoints.
+
+\end{myanswers}
+
+\textbf{10.} Among smooth interpolants, the natural cubic spline minimises roughness
+\(\int (m''(x))^2 \, dx\). This question illustrates this for two points within a
+family of cubics.
+
+Consider fitting the points \((0, 0)\) and \((1, 1)\). For any constants \(p\) and \(q\),
+the cubic
+\begin{equation*}
+  m(x) = x + x(1-x)\bigl(p(1-x) + qx\bigr)
+\end{equation*}
+passes through both points, with the linear function \(m(x) = x\) corresponding
+to \(p = q = 0\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  Show that the roughness \(\int_0^1 (m''(x))^2 \, dx\) equals \(4(p^2 - pq + q^2)\).
+\end{enumerate}
+
+\begin{myanswers}
+Expanding \(m(x)\):
+\begin{equation*}
+  m(x) = (1+p)x + (q-2p)x^2 + (p-q)x^3.
+\end{equation*}
+Differentiating twice:
+\begin{align*}
+  m'(x) &= (1+p) + 2(q-2p)x + 3(p-q)x^2, \\
+  m''(x) &= 2(q-2p) + 6(p-q)x.
+\end{align*}
+Writing \(m''(x) = \alpha + \beta x\) with \(\alpha = 2(q-2p)\) and \(\beta = 6(p-q)\),
+\begin{equation*}
+  \int_0^1 (m''(x))^2 \, dx
+  = \int_0^1 (\alpha + \beta x)^2 \, dx
+  = \alpha^2 + \alpha\beta + \frac{\beta^2}{3}.
+\end{equation*}
+Substituting \(\alpha = 2q - 4p\) and \(\beta = 6p - 6q\) and simplifying gives
+\(4(p^2 - pq + q^2)\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  By completing the square (or otherwise), show that \(p^2 - pq + q^2 \geq 0\)
+  with equality if and only if \(p = q = 0\).
+\end{enumerate}
+
+\begin{myanswers}
+Completing the square:
+\begin{equation*}
+  p^2 - pq + q^2
+  = \Bigl(p - \frac{q}{2}\Bigr)^{\!2} + \frac{3q^2}{4}.
+\end{equation*}
+This is a sum of two squares, hence non-negative. Equality holds if and only if
+both \(p - q/2 = 0\) and \(q = 0\), which requires \(p = q = 0\).
+
+Alternatively, \(p^2 - pq + q^2 = \frac{1}{2}(p^2 + q^2 + (p-q)^2) \geq 0\).
+
+\end{myanswers}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Since every member of this family passes through both data points,
+  \(\mathrm{RSS} = 0\) for each. Deduce that for any \(\lambda > 0\), the linear
+  function \(m(x) = x\) uniquely minimises
+  \(I(m) = \mathrm{RSS} + \lambda \int_0^1 (m''(x))^2 \, dx\) within this family.
+\end{enumerate}
+
+\begin{myanswers}
+With \(\mathrm{RSS} = 0\), the objective becomes
+\begin{equation*}
+  I(m) = \lambda \int_0^1 (m''(x))^2 \, dx = 4\lambda(p^2 - pq + q^2).
+\end{equation*}
+For \(\lambda > 0\), minimising \(I(m)\) is equivalent to minimising \(p^2 - pq + q^2\).
+By part (b), this is minimised uniquely at \(p = q = 0\), giving \(m(x) = x\).
+
+\end{myanswers}
 
 \clearpage
 

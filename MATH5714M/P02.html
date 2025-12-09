@@ -214,6 +214,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.4" data-path="X07-splines.html"><a href="X07-splines.html#smoothing-splines-in-r"><i class="fa fa-check"></i><b>7.4</b> Smoothing Splines in R</a></li>
 <li class="chapter" data-level="7.5" data-path="X07-splines.html"><a href="X07-splines.html#comparison-with-kernel-methods"><i class="fa fa-check"></i><b>7.5</b> Comparison with Kernel Methods</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
 <li class="chapter" data-level="8" data-path="X08-xval.html"><a href="X08-xval.html"><i class="fa fa-check"></i><b>8</b> Cross-validation</a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="X08-xval.html"><a href="X08-xval.html#regression"><i class="fa fa-check"></i><b>8.1</b> Regression</a></li>
@@ -317,48 +318,51 @@ as <span class="math inline">\(h \downarrow 0\)</span>.</p>
 <p><strong>6.</strong> The bias of the Nadaraya-Watson estimator satisfies
 <span class="math display">\[\begin{equation*}
   \mathop{\mathrm{bias}}\bigl(\hat m_h(x)\bigr)
-  \approx \mu_2(K) \left( \frac{f&#39;(x)}{f(x)} m&#39;(x) + \frac{1}{2} m&#39;&#39;(x) \right) h^2,
+  \approx \frac{\mu_2(K) f&#39;(x)}{f(x)} m&#39;(x) h^2 + \frac{\mu_2(K)}{2} m&#39;&#39;(x) h^2,
 \end{equation*}\]</span>
 while for the local linear estimator (section <a href="X05-locpoly.html#X05-locpoly">5</a>), the bias is
 <span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{bias}}\approx \frac{\mu_2(K)}{2} m&#39;&#39;(x) h^2.
-\end{equation*}\]</span></p>
+  \mathop{\mathrm{bias}}\approx \frac{\mu_2(K)}{2} m&#39;&#39;(x) h^2
+\end{equation*}\]</span>
+for small <span class="math inline">\(h\)</span>.</p>
 <div class="subq">
 <ol style="list-style-type: lower-alpha">
-<li>Suppose observations are denser to the left of a point <span class="math inline">\(x_0\)</span> than to the
-right (i.e., <span class="math inline">\(f&#39;(x_0) &lt; 0\)</span>), and the regression function has positive slope
-at <span class="math inline">\(x_0\)</span>. Explain geometrically why the Nadaraya-Watson estimator
-underestimates <span class="math inline">\(m(x_0)\)</span>.</li>
+<li>Suppose observations are more dense to the left of a point <span class="math inline">\(x_0\)</span> than they
+are to the right, <em>i.e.</em> <span class="math inline">\(f&#39;(x_0) &lt; 0\)</span>, and that the regression function <span class="math inline">\(m\)</span> has
+positive slope at <span class="math inline">\(x_0\)</span>. Explain geometrically why the Nadaraya-Watson
+estimator underestimates <span class="math inline">\(m(x_0)\)</span>.</li>
 </ol>
 <div class="myanswers">
 <p>The Nadaraya-Watson estimator computes a weighted average
-<span class="math inline">\(\hat m_h(x_0) = \sum_i w_i(x_0) y_i\)</span>, where the weights are determined by the
-kernel centred at <span class="math inline">\(x_0\)</span>. When observations are denser to the left
-(<span class="math inline">\(f&#39;(x_0) &lt; 0\)</span>), more data points lie there and receive collectively greater
-weight. Since <span class="math inline">\(m\)</span> has positive slope, these left-side <span class="math inline">\(y\)</span>-values are
-systematically smaller than <span class="math inline">\(m(x_0)\)</span>. The weighted average is therefore pulled
+<span class="math inline">\(\hat m_h(x_0) = \sum_i w_i(x_0) y_i\)</span>, where the weights are determined by
+the distance from the point <span class="math inline">\(x_0\)</span>.
+Since <span class="math inline">\(m\)</span> has positive slope, the <span class="math inline">\(y\)</span>-values to the left of <span class="math inline">\(x_0\)</span> are smaller than <span class="math inline">\(m(x_0)\)</span>,
+while those to the right are larger.
+When observations are more dense to the left, more data points lie there and
+receive collectively greater weight. The weighted average is therefore pulled
 downward, causing underestimation.</p>
 </div>
 </div>
 <div class="subq">
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Let <span class="math inline">\(m(x) = 2x\)</span> and <span class="math inline">\(f(x) = 2(1-x)\)</span> for <span class="math inline">\(x \in [0,1]\)</span>. Compute the
-Nadaraya-Watson bias at <span class="math inline">\(x = 0.9\)</span> as a multiple of <span class="math inline">\(\mu_2(K) h^2\)</span>.</li>
+Nadaraya-Watson bias at <span class="math inline">\(x_0 = 0.5\)</span> as a multiple of <span class="math inline">\(\mu_2(K) h^2\)</span>.</li>
 </ol>
 <div class="myanswers">
-<p>We have <span class="math inline">\(m&#39;(x) = 2\)</span>, <span class="math inline">\(m&#39;&#39;(x) = 0\)</span>, <span class="math inline">\(f(0.9) = 0.2\)</span>, and <span class="math inline">\(f&#39;(0.9) = -2\)</span>, giving
-<span class="math inline">\(f&#39;(0.9)/f(0.9) = -10\)</span>. The Nadaraya-Watson bias is
+<p>We have <span class="math inline">\(m&#39;(x_0) = 2\)</span>, <span class="math inline">\(m&#39;&#39;(x_0) = 0\)</span>, <span class="math inline">\(f(0.5) = 1\)</span>, and <span class="math inline">\(f&#39;(0.5) = -2\)</span>. The
+Nadaraya-Watson bias is
 <span class="math display">\[\begin{equation*}
-  \mathop{\mathrm{bias}}\bigl(\hat m_h(0.9)\bigr)
-  \approx \mu_2(K) \left( -10 \cdot 2 + \frac{1}{2} \cdot 0 \right) h^2
-  = -20 \mu_2(K) h^2.
+  \mathop{\mathrm{bias}}\bigl(\hat m_h(0.5)\bigr)
+  \approx \frac{\mu_2(K) \cdot (-2) \cdot 2}{1} h^2 + \frac{\mu_2(K)}{2} \cdot 0 \cdot h^2
+  = -4 \mu_2(K) h^2.
 \end{equation*}\]</span>
 The negative sign confirms the underestimation predicted in part (a).</p>
 </div>
 </div>
 <div class="subq">
 <ol start="3" style="list-style-type: lower-alpha">
-<li>Compute the local linear bias at the same point. Explain geometrically why
+<li>Show that the bias for local linear regression at the same point equals zero.
+Explain geometrically why
 fitting a local line, rather than taking a local average, eliminates this
 bias.</li>
 </ol>
@@ -372,6 +376,64 @@ averaging them. Even when observations are concentrated on one side of <span cla
 the fitted line can extrapolate to <span class="math inline">\(x_0\)</span> using its estimated slope. Since the
 true function <span class="math inline">\(m(x) = 2x\)</span> is linear, the locally fitted line matches <span class="math inline">\(m\)</span>
 exactly in expectation, eliminating the bias.</p>
+</div>
+</div>
+</div>
+<div class="myq">
+<p><strong>7.</strong> Consider local linear regression with kernel weights
+<span class="math inline">\(W = \mathrm{diag}(K_h(\tilde x - x_1), \ldots, K_h(\tilde x - x_n))\)</span> and design
+matrix <span class="math inline">\(X\)</span> with rows <span class="math inline">\((1, x_i - \tilde x)\)</span>. The local linear estimate
+for <span class="math inline">\(m(\tilde x)\)</span> can be written as
+<span class="math display">\[\begin{equation*}
+  \hat m_h(\tilde x)
+  = e_0^\top (X^\top W X)^{-1} X^\top W y,
+\end{equation*}\]</span>
+where <span class="math inline">\(e_0 = (1,0)^\top\)</span>.</p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Show that <span class="math inline">\(\hat m_h(\tilde x) = \sum_{i=1}^n w_i y_i\)</span> for weights <span class="math inline">\(w_i\)</span> that
+do not depend on the <span class="math inline">\(y_j\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>The expression <span class="math inline">\(e_0^\top (X^\top W X)^{-1} X^\top W y\)</span> is linear in <span class="math inline">\(y\)</span>. Writing
+<span class="math inline">\(w^\top = e_0^\top (X^\top W X)^{-1} X^\top W\)</span>, we have
+<span class="math inline">\(\hat m_h(\tilde x) = w^\top y = \sum_{i=1}^n w_i y_i\)</span>. The vector <span class="math inline">\(w\)</span> depends
+on <span class="math inline">\(\tilde x\)</span> and the <span class="math inline">\(x_i\)</span> (through <span class="math inline">\(X\)</span> and <span class="math inline">\(W\)</span>) but not on the <span class="math inline">\(y_j\)</span>.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Show that if <span class="math inline">\(y_i = a + b(x_i - \tilde x)\)</span> for constants <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, then
+<span class="math inline">\(\hat m_h(\tilde x) = a\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>If <span class="math inline">\(y_i = a + b(x_i - \tilde x)\)</span>, then <span class="math inline">\(\beta_0 = a\)</span>, <span class="math inline">\(\beta_1 = b\)</span> makes every
+residual <span class="math inline">\(y_i - \beta_0 - \beta_1(x_i - \tilde x)\)</span> equal to zero. The weighted
+RSS therefore vanishes, which is its minimum, so <span class="math inline">\(\hat\beta = (a, b)^\top\)</span> and
+<span class="math inline">\(\hat m_h(\tilde x) = \hat\beta_0 = a\)</span>.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Deduce that <span class="math inline">\(\sum_{i=1}^n w_i = 1\)</span> and
+<span class="math inline">\(\sum_{i=1}^n w_i(x_i - \tilde x) = 0\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>From part (a), <span class="math inline">\(\hat m_h(\tilde x) = \sum w_i y_i\)</span> where the weights <span class="math inline">\(w_i\)</span> do not
+depend on the <span class="math inline">\(y_j\)</span>. Thus we can choose <span class="math inline">\(y_i = a + b(x_i - \tilde x)\)</span> as in
+part (b), giving <span class="math inline">\(\hat m_h(\tilde x) = a\)</span>. This gives
+<span class="math display">\[\begin{equation*}
+  a
+  = \hat m_h(\tilde x)
+  = \sum_{i=1}^n w_i (a + b(x_i - \tilde x))
+  = a \sum_{i=1}^n w_i + b \sum_{i=1}^n w_i(x_i - \tilde x).
+\end{equation*}\]</span>
+Rearranging gives
+<span class="math display">\[\begin{equation*}
+  a\Bigl( \sum_{i=1}^n w_i - 1 \Bigr) + b \sum_{i=1}^n w_i(x_i - \tilde x) = 0.
+\end{equation*}\]</span>
+Since this holds for all <span class="math inline">\(a, b\)</span>, both coefficients must vanish: <span class="math inline">\(\sum w_i = 1\)</span>
+and <span class="math inline">\(\sum w_i(x_i - \tilde x) = 0\)</span>.</p>
 </div>
 </div>
 </div>

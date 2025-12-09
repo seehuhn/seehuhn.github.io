@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>MATH5714 Linear Regression, Robustness and Smoothing</title>
+  <title>Problem Sheet 3 | MATH5714 Linear Regression, Robustness and Smoothing</title>
   <meta name="description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2025/26" />
   <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta property="og:title" content="Problem Sheet 3 | MATH5714 Linear Regression, Robustness and Smoothing" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2025/26" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="MATH5714 Linear Regression, Robustness and Smoothing" />
+  <meta name="twitter:title" content="Problem Sheet 3 | MATH5714 Linear Regression, Robustness and Smoothing" />
   
   <meta name="twitter:description" content="Lecture notes for the course MATH5714 Linear Regression, Robustness and Smoothing at the University of Leeds, 2025/26" />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="X01-KDE.html"/>
+<link rel="prev" href="X07-splines.html"/>
+<link rel="next" href="X08-xval.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -246,49 +246,156 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">MATH5714 Linear Regression, Robustness and Smoothing</h1>
-<p class="author"><em><a href="mailto:J.Voss@leeds.ac.uk">Jochen Voss</a></em></p>
-<p class="date"><em>University of Leeds, Semester 1, 2025/26</em></p>
+<div id="P03" class="section level1 unnumbered hasAnchor">
+<h1>Problem Sheet 3<a href="P03.html#P03" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<style>
+.fold-btn {
+  float: right;
+  margin: -12px 0 0 0;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function() {
+  $folds = $(".myanswers");
+  $folds.wrapInner("<div class=\"fold-blck\">"); // wrap a div container around content
+  $folds.prepend("<button class=\"fold-btn\">Show solution</button>");  // add a button
+  $(".fold-blck").toggle();  // fold all blocks
+  $(".fold-btn").on("click", function() {  // add onClick event
+    $(this).text($(this).text() === "Hide solution" ? "Show solution" : "Hide solution");
+    $(this).next(".fold-blck").toggle("linear");  // "swing" is the default easing function. This can be further customized in its speed or the overall animation itself.
+  })
+});
+</script>
+<!--
+<style>.myanswers { display: none !important; }</style>
+\excludecomment{myanswers}
+-->
+<div class="mysummary">
+<p>This problem sheet is for self-study only.
+It is not assessed.</p>
 </div>
-<div id="home" class="section level1 unnumbered hasAnchor">
-<h1>Preface<a href="index.html#home" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>The MATH5714M module includes all the material from <a href="https://seehuhn.github.io/MATH3714/">MATH3714 (Linear
-Regression and Robustness)</a>, plus
-additional material on smoothing.</p>
-<p>The level 3 component covers linear regression and its extensions. In simple
-linear regression, we fit a line through data points <span class="math inline">\((x_1, y_1), \ldots, (x_n,
-y_n) \in\mathbb{R}^2\)</span> using the model
+<div class="myq">
+<p><strong>8.</strong> The <span class="math inline">\(k\)</span>-nearest neighbour estimator is defined as
 <span class="math display">\[\begin{equation*}
-  y_i = \alpha + \beta x_i + \varepsilon_i
+  \hat m_k(x)
+  = \frac{1}{k} \sum_{i \in J_k(x)} y_i,
 \end{equation*}\]</span>
-for all <span class="math inline">\(i \in \{1, 2, \ldots, n\}\)</span>, where the aim is to find values for the
-intercept <span class="math inline">\(\alpha\)</span> and the slope <span class="math inline">\(\beta\)</span> such that the fitted line is as
-close as possible to the data points.</p>
-<p>However, linear models are not always appropriate. Figure <a href="index.html#fig:accel">0.1</a>
-illustrates an example where a straight line model would be inadequate. For
-such data, we need more flexible methods that can capture non-linear patterns.</p>
-
-<div class="figure"><span style="display:block;" id="fig:accel"></span>
-<img src="MATH5714M_files/figure-html/accel-1.png" alt="An illustration of a dataset where a linear (straight line) model is not appropriate. The data represents a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets (the mcycle dataset from the MASS R package)." width="672" />
-<p class="caption">
-Figure 0.1: An illustration of a dataset where a linear (straight line) model is not appropriate. The data represents a series of measurements of head acceleration in a simulated motorcycle accident, used to test crash helmets (the <code>mcycle</code> dataset from the <code>MASS</code> R package).
-</p>
+where <span class="math inline">\(J_k(x) = \bigl\{ i \bigm| \text{$x_i$ is one of the $k$ nearest
+observations to $x$} \bigr\}\)</span>. Assuming the <span class="math inline">\(x_i\)</span> are distinct, show that
+<span class="math inline">\(\hat m_1(x_j) = y_j\)</span> for each data point <span class="math inline">\(x_j\)</span>.</p>
+<div class="myanswers">
+<p>For <span class="math inline">\(k = 1\)</span>, the set <span class="math inline">\(J_1(x_j)\)</span> contains the single index <span class="math inline">\(i\)</span> for which <span class="math inline">\(x_i\)</span> is
+closest to <span class="math inline">\(x_j\)</span>. Since the <span class="math inline">\(x_i\)</span> are distinct, the closest point to <span class="math inline">\(x_j\)</span> is
+<span class="math inline">\(x_j\)</span> itself (with distance zero). Thus <span class="math inline">\(J_1(x_j) = \{j\}\)</span> and
+<span class="math display">\[\begin{equation*}
+  \hat m_1(x_j)
+  = \frac{1}{1} \sum_{i \in \{j\}} y_i
+  = y_j.
+\end{equation*}\]</span></p>
 </div>
-<p>The level 5 component introduces techniques for fitting smooth curves through
-data—methods collectively known as <strong>smoothing</strong>. Unlike linear regression,
-which imposes a straight line on all the data, smoothing methods work locally:
-they estimate the relationship at different points using nearby observations,
-then blend these local estimates together to create a smooth curve. The red
-curve in Figure <a href="index.html#fig:accel">0.1</a> shows such a smoothed fit, which captures the
-complex pattern in the data without assuming any particular functional form.</p>
-<p>We will approach these smoothing methods gradually. We begin with the simpler
-problem of “kernel density estimation”: given a sample from an unknown
-distribution, how can we estimate the probability density? This introduces
-fundamental concepts (kernels, bandwidth selection, and the bias-variance
-trade-off) that apply throughout all smoothing methods. We then extend these
-ideas to regression smoothing, where we estimate the relationship between
-variables rather than a probability distribution.</p>
+</div>
+<div class="myq">
+<p><strong>9.</strong> Consider the <span class="math inline">\(k\)</span>-nearest neighbour estimator with <span class="math inline">\(k = 1\)</span> and ordered data
+<span class="math inline">\(x_1 &lt; x_2 &lt; \cdots &lt; x_n\)</span>.</p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>For <span class="math inline">\(x \in (x_i, x_{i+1})\)</span>, find the value of <span class="math inline">\(x\)</span> at which the nearest
+neighbour changes from <span class="math inline">\(x_i\)</span> to <span class="math inline">\(x_{i+1}\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>The nearest neighbour is <span class="math inline">\(x_i\)</span> when <span class="math inline">\(|x - x_i| &lt; |x - x_{i+1}|\)</span>, <em>i.e.</em> when
+<span class="math inline">\(x - x_i &lt; x_{i+1} - x\)</span>, which simplifies to <span class="math inline">\(x &lt; \frac{x_i + x_{i+1}}{2}\)</span>.
+Similarly, the nearest neighbour is <span class="math inline">\(x_{i+1}\)</span> when <span class="math inline">\(x &gt; \frac{x_i + x_{i+1}}{2}\)</span>.
+Thus the nearest neighbour changes at the midpoint <span class="math inline">\(\frac{x_i + x_{i+1}}{2}\)</span>.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Deduce that <span class="math inline">\(\hat m_1\)</span> is a step function, and state the intervals on which
+it is constant.</li>
+</ol>
+<div class="myanswers">
+<p>From part (a), the nearest neighbour changes only at the midpoints between
+consecutive data points. For <span class="math inline">\(x &lt; x_1\)</span>, the nearest neighbour is <span class="math inline">\(x_1\)</span>; for
+<span class="math inline">\(x &gt; x_n\)</span>, it is <span class="math inline">\(x_n\)</span>. Thus <span class="math inline">\(\hat m_1\)</span> is constant on each of the <span class="math inline">\(n\)</span> intervals
+<span class="math display">\[\begin{equation*}
+  \Bigl( -\infty, \frac{x_1 + x_2}{2} \Bigr), \quad
+  \Bigl( \frac{x_1 + x_2}{2}, \frac{x_2 + x_3}{2} \Bigr), \quad \ldots, \quad
+  \Bigl( \frac{x_{n-1} + x_n}{2}, \infty \Bigr),
+\end{equation*}\]</span>
+taking values <span class="math inline">\(y_1, y_2, \ldots, y_n\)</span> respectively. This makes <span class="math inline">\(\hat m_1\)</span> a step
+function with jumps at the <span class="math inline">\(n - 1\)</span> midpoints.</p>
+</div>
+</div>
+</div>
+<div class="myq">
+<p><strong>10.</strong> Among smooth interpolants, the natural cubic spline minimises roughness
+<span class="math inline">\(\int (m&#39;&#39;(x))^2 \, dx\)</span>. This question illustrates this for two points within a
+family of cubics.</p>
+<p>Consider fitting the points <span class="math inline">\((0, 0)\)</span> and <span class="math inline">\((1, 1)\)</span>. For any constants <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>,
+the cubic
+<span class="math display">\[\begin{equation*}
+  m(x) = x + x(1-x)\bigl(p(1-x) + qx\bigr)
+\end{equation*}\]</span>
+passes through both points, with the linear function <span class="math inline">\(m(x) = x\)</span> corresponding
+to <span class="math inline">\(p = q = 0\)</span>.</p>
+<div class="subq">
+<ol style="list-style-type: lower-alpha">
+<li>Show that the roughness <span class="math inline">\(\int_0^1 (m&#39;&#39;(x))^2 \, dx\)</span> equals <span class="math inline">\(4(p^2 - pq + q^2)\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>Expanding <span class="math inline">\(m(x)\)</span>:
+<span class="math display">\[\begin{equation*}
+  m(x) = (1+p)x + (q-2p)x^2 + (p-q)x^3.
+\end{equation*}\]</span>
+Differentiating twice:
+<span class="math display">\[\begin{align*}
+  m&#39;(x) &amp;= (1+p) + 2(q-2p)x + 3(p-q)x^2, \\
+  m&#39;&#39;(x) &amp;= 2(q-2p) + 6(p-q)x.
+\end{align*}\]</span>
+Writing <span class="math inline">\(m&#39;&#39;(x) = \alpha + \beta x\)</span> with <span class="math inline">\(\alpha = 2(q-2p)\)</span> and <span class="math inline">\(\beta = 6(p-q)\)</span>,
+<span class="math display">\[\begin{equation*}
+  \int_0^1 (m&#39;&#39;(x))^2 \, dx
+  = \int_0^1 (\alpha + \beta x)^2 \, dx
+  = \alpha^2 + \alpha\beta + \frac{\beta^2}{3}.
+\end{equation*}\]</span>
+Substituting <span class="math inline">\(\alpha = 2q - 4p\)</span> and <span class="math inline">\(\beta = 6p - 6q\)</span> and simplifying gives
+<span class="math inline">\(4(p^2 - pq + q^2)\)</span>.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="2" style="list-style-type: lower-alpha">
+<li>By completing the square (or otherwise), show that <span class="math inline">\(p^2 - pq + q^2 \geq 0\)</span>
+with equality if and only if <span class="math inline">\(p = q = 0\)</span>.</li>
+</ol>
+<div class="myanswers">
+<p>Completing the square:
+<span class="math display">\[\begin{equation*}
+  p^2 - pq + q^2
+  = \Bigl(p - \frac{q}{2}\Bigr)^{\!2} + \frac{3q^2}{4}.
+\end{equation*}\]</span>
+This is a sum of two squares, hence non-negative. Equality holds if and only if
+both <span class="math inline">\(p - q/2 = 0\)</span> and <span class="math inline">\(q = 0\)</span>, which requires <span class="math inline">\(p = q = 0\)</span>.</p>
+<p>Alternatively, <span class="math inline">\(p^2 - pq + q^2 = \frac{1}{2}(p^2 + q^2 + (p-q)^2) \geq 0\)</span>.</p>
+</div>
+</div>
+<div class="subq">
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Since every member of this family passes through both data points,
+<span class="math inline">\(\mathrm{RSS} = 0\)</span> for each. Deduce that for any <span class="math inline">\(\lambda &gt; 0\)</span>, the linear
+function <span class="math inline">\(m(x) = x\)</span> uniquely minimises
+<span class="math inline">\(I(m) = \mathrm{RSS} + \lambda \int_0^1 (m&#39;&#39;(x))^2 \, dx\)</span> within this family.</li>
+</ol>
+<div class="myanswers">
+<p>With <span class="math inline">\(\mathrm{RSS} = 0\)</span>, the objective becomes
+<span class="math display">\[\begin{equation*}
+  I(m) = \lambda \int_0^1 (m&#39;&#39;(x))^2 \, dx = 4\lambda(p^2 - pq + q^2).
+\end{equation*}\]</span>
+For <span class="math inline">\(\lambda &gt; 0\)</span>, minimising <span class="math inline">\(I(m)\)</span> is equivalent to minimising <span class="math inline">\(p^2 - pq + q^2\)</span>.
+By part (b), this is minimised uniquely at <span class="math inline">\(p = q = 0\)</span>, giving <span class="math inline">\(m(x) = x\)</span>.</p>
+</div>
+</div>
+</div>
 
 </div>
             </section>
@@ -296,8 +403,8 @@ variables rather than a probability distribution.</p>
           </div>
         </div>
       </div>
-
-<a href="X01-KDE.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="X07-splines.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="X08-xval.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

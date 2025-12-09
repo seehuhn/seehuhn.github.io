@@ -214,6 +214,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.4" data-path="X07-splines.html"><a href="X07-splines.html#smoothing-splines-in-r"><i class="fa fa-check"></i><b>7.4</b> Smoothing Splines in R</a></li>
 <li class="chapter" data-level="7.5" data-path="X07-splines.html"><a href="X07-splines.html#comparison-with-kernel-methods"><i class="fa fa-check"></i><b>7.5</b> Comparison with Kernel Methods</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="P03.html"><a href="P03.html"><i class="fa fa-check"></i>Problem Sheet 3</a></li>
 <li class="chapter" data-level="8" data-path="X08-xval.html"><a href="X08-xval.html"><i class="fa fa-check"></i><b>8</b> Cross-validation</a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="X08-xval.html"><a href="X08-xval.html#regression"><i class="fa fa-check"></i><b>8.1</b> Regression</a></li>
@@ -367,10 +368,10 @@ means by <span class="math inline">\(h\)</span>:</p>
 <span id="cb25-6"><a href="I01-vectorise.html#cb25-6" tabindex="-1"></a>  <span class="at">KDE3 =</span> <span class="fu">KDE3</span>(x.tilde, snowfall, K, h),</span>
 <span id="cb25-7"><a href="I01-vectorise.html#cb25-7" tabindex="-1"></a>  <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
-##  expr      min       lq      mean   median       uq      max neval
-##  KDE1 1431.556 1445.250 1495.2195 1452.322 1462.736 3847.440  1000
-##  KDE2  193.069  194.750  240.4245  195.693  198.686 4052.194  1000
-##  KDE3  173.020  174.865  211.3338  175.685  178.350 4525.826  1000</code></pre>
+##  expr     min       lq     mean  median       uq      max neval
+##  KDE1 808.889 821.9065 880.9922 837.753 861.6970 3811.237  1000
+##  KDE2 109.429 110.9460 151.1884 112.627 117.1575 2699.727  1000
+##  KDE3  97.990  99.6300 123.3287 101.147 105.3085 2660.613  1000</code></pre>
 <p>The output shows execution times for 1000 runs. The introduction
 of <code>outer()</code> in <code>KDE2()</code> gives a substantial speedup, and <code>KDE3()</code> improves further.</p>
 <p>Finally, we compare to <code>density()</code>, using arguments <code>from</code>, <code>to</code>, and <code>n</code>
@@ -382,8 +383,8 @@ to specify the same grid <span class="math inline">\(\tilde x\)</span>:</p>
 <span id="cb27-5"><a href="I01-vectorise.html#cb27-5" tabindex="-1"></a>}</span>
 <span id="cb27-6"><a href="I01-vectorise.html#cb27-6" tabindex="-1"></a><span class="fu">microbenchmark</span>(<span class="at">density =</span> <span class="fu">KDE.builtin</span>(x.tilde, snowfall, <span class="st">&quot;triangular&quot;</span>, h), <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>## Unit: microseconds
-##     expr     min      lq     mean  median      uq      max neval
-##  density 154.365 157.358 181.6977 169.043 177.325 6109.943  1000</code></pre>
+##     expr    min     lq     mean median       uq     max neval
+##  density 88.478 90.569 107.4159 100.04 103.7915 4162.73  1000</code></pre>
 <p>The result shows that <code>density()</code> is faster than <code>KDE3()</code>, but by a factor
 of less than 2. The reason is that <code>density()</code> uses a more efficient
 algorithm based on Fast Fourier Transform to compute an approximation to the
