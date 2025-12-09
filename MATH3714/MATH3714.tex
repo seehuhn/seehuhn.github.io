@@ -10134,7 +10134,7 @@ function~\(w\):
 
 \pandocbounded{\includegraphics[keepaspectratio]{MATH3714_files/figure-latex/psi-lsq-1.pdf}}
 
-The right-hand plot shows that weight of observations does not depend
+The right-hand plot shows that the weight of observations does not depend
 on their magnitude. This property is what makes the least squares estimate
 susceptible to outliers.
 
@@ -10585,7 +10585,7 @@ where \(r_{[i]}^2(\beta)\) represents the \(i\)th smallest value amongst
 
 The value \(k\) controls the trade-off between robustness and efficiency and the
 value must satisfy \(n/2 < k \leq n\). For a given \(k\) the method can tolerate
-\(n-k\) outliers. The bounday case \(k=n\) corresponds to the ordinary least
+\(n-k\) outliers. The boundary case \(k=n\) corresponds to the ordinary least
 squares method. The breakdown point of the method is \((n - k +1)/n\).
 
 Computing the LTS estimate is a non-trivial problem, which involves fitting the
@@ -10715,7 +10715,7 @@ section~\ref{S19-efficiency}:
 \end{Shaded}
 
 For the LTS estimator, the \texttt{quantile} argument can be used to specify
-the value of \(h\) (the number of observations to use in the objective function):
+the value of \(k\) (the number of observations to use in the objective function):
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -10723,8 +10723,8 @@ the value of \(h\) (the number of observations to use in the objective function)
 \end{Highlighting}
 \end{Shaded}
 
-As discussed in section~\ref{LTS}, the value of \(h\) controls the trade-off
-between robustness and efficiency. Smaller values of \(h\) give higher breakdown
+As discussed in section~\ref{LTS}, the value of \(k\) controls the trade-off
+between robustness and efficiency. Smaller values of \(k\) give higher breakdown
 points but lower efficiency.
 
 Coefficients can be extracted using \texttt{coef(lms1)} or \texttt{coef(lts1)}, and the
@@ -11198,18 +11198,18 @@ bulk of the data and the outliers, demonstrating their susceptibility
 to contamination.
 
 The right plot shows how the LTS estimator behaves for different
-values of the quantile parameter \(h\) (called \texttt{quantile} in R).
-For smaller values of \(h\), the method uses only the observations
-with smallest residuals and has higher breakdown point. As \(h\)
+values of the parameter \(k\) (called \texttt{quantile} in R).
+For smaller values of \(k\), the method uses only the observations
+with smallest residuals and has higher breakdown point. As \(k\)
 increases towards \(n = 30\), the method gradually converges to the
 least squares estimate.
 
 \begin{figure}
-\includegraphics[width=0.48\linewidth]{MATH3714_files/figure-latex/robcomp-1} \includegraphics[width=0.48\linewidth]{MATH3714_files/figure-latex/robcomp-2} \caption{On the left we compare several methods. As expected, only those with high breakdown point have resisted the gross outliers. On the right plot, we compare different values of the quantile parameter $h$ for the LTS estimator.}\label{fig:robcomp}
+\includegraphics[width=0.48\linewidth]{MATH3714_files/figure-latex/robcomp-1} \includegraphics[width=0.48\linewidth]{MATH3714_files/figure-latex/robcomp-2} \caption{On the left we compare several methods. As expected, only those with high breakdown point have resisted the outliers. On the right plot, we compare different values of the parameter $k$ for the LTS estimator.}\label{fig:robcomp}
 \end{figure}
 
-We see that for small \(h\) the LTS line passes through the bulk of the
-data and ignores the outliers, whilst for larger \(h\) it is increasingly
+We see that for small \(k\) the LTS line passes through the bulk of the
+data and ignores the outliers, whilst for larger \(k\) it is increasingly
 influenced by the outliers until it converges to the least squares line.
 \end{example}
 
@@ -11221,12 +11221,10 @@ Continuing with the same dataset, we now examine the residual patterns
 from different methods. When outliers influence the fitted line, the
 residuals from the remaining observations often exhibit systematic patterns.
 
-Figure~\ref{fig:robresid} shows the residuals from three methods,
-excluding the three known outliers. The least squares residuals (left plot)
-show a clear curved pattern: residuals are positive for small and large
-\(x\)-values, and negative for intermediate values. This pattern indicates
-that the outliers have pulled the regression line away from the bulk of
-the data.
+Figure~\ref{fig:robresid} shows the residuals from three methods, excluding
+the three known outliers. The least squares residuals (left plot) show a clear
+trend. This pattern indicates that the outliers have pulled the regression
+line away from the bulk of the data.
 
 The LAV and Huber methods (centre and right plots) show much less
 pronounced patterns. The residuals are more evenly scattered around
@@ -11236,7 +11234,7 @@ not only provide better parameter estimates in the presence of outliers,
 but also produce more reliable residual plots for model diagnostics.
 
 \begin{figure}
-\includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robresid-1} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robresid-2} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robresid-3} \caption{Residuals from non-outlier observations for three methods (left: LSQ; centre: LAV; right: Huber). The least squares residuals show a clear pattern due to the influence of the outliers.}\label{fig:robresid}
+\includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robresid-1} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robresid-2} \includegraphics[width=0.32\linewidth]{MATH3714_files/figure-latex/robresid-3} \caption{Residuals from non-outlier observations for three methods (left: LSQ; centre: LAV; right: Huber). The least squares residuals show a clear trend due to the influence of the outliers.}\label{fig:robresid}
 \end{figure}
 
 \end{example}
