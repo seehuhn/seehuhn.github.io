@@ -5243,7 +5243,7 @@ whether our modelling assumptions are satisfied.
 \item
   Efficient formulas allow us to compute these changes without having to refit the model \(n\) times.
 \item
-  Cook's distance combines is a single measure, which can be compared to an \(F\)-distribution to identify influential observations.
+  Cook's distance is a single measure which can be compared to an \(F\)-distribution to identify influential observations.
 \end{itemize}
 
 \clearpage
@@ -6000,7 +6000,7 @@ sections in turn:
   computed using definitions \ref{def:R-squared} and \ref{def:adjusted-R-squared-def}.
 \item
   Field \textbf{I} shows the \(F\)-test statistic for testing the hypothesis
-  \(H_i\colon \beta_1 = \cdots = \beta_p = 0\) (omitting the coeficient
+  \(H_i\colon \beta_1 = \cdots = \beta_p = 0\) (omitting the coefficient
   \(\beta_0\) for the intercept). This value can be used to test the hypothesis
   that the inputs have no effect on the output.
   The \(F\)-test statistic is computed using equation~\eqref{eq:simult-F},
@@ -10138,7 +10138,7 @@ The right-hand plot shows that the weight of observations does not depend
 on their magnitude. This property is what makes the least squares estimate
 susceptible to outliers.
 
-\subsubsection{Least Absolute Values}\label{least-absolute-values}
+\subsubsection{Least Absolute Values}\label{lav}
 
 Here we have
 \begin{equation*}
@@ -10629,8 +10629,17 @@ compared to ordinary least squares regression.
 This section explains how to use the robust regression methods discussed in
 sections \ref{S17-robust}, \ref{S18-m-est} and \ref{S19-efficiency} in~R.
 
-\subsection*{M-Estimators}\label{m-estimators}
-\addcontentsline{toc}{subsection}{M-Estimators}
+\subsection*{M-Estimators in R}\label{m-estimators-in-r}
+\addcontentsline{toc}{subsection}{M-Estimators in R}
+
+As discussed in section~\ref{S18-m-est}, M-estimators include methods such as
+Huber, Bisquare, Hampel, and also LAV (which uses \(\rho(\varepsilon) = |\varepsilon|\)).
+In R, these methods are implemented in two different packages: the \texttt{MASS}
+package provides \texttt{rlm()} for Huber, Bisquare and Hampel, whilst the \texttt{quantreg}
+package provides \texttt{rq()} for LAV.
+
+\subsubsection*{Huber, Bisquare and Hampel}\label{huber-bisquare-and-hampel}
+\addcontentsline{toc}{subsubsection}{Huber, Bisquare and Hampel}
 
 The \texttt{rlm()} function from the \texttt{MASS} package implements the iteratively
 reweighted least squares algorithm from section~\ref{S18-m-est}. The
@@ -10674,8 +10683,8 @@ Information can be extracted from the fitted model object:
 
 The fitted line can be plotted using \texttt{abline(rlm1)}.
 
-\subsection*{LAV Estimation}\label{lav-estimation}
-\addcontentsline{toc}{subsection}{LAV Estimation}
+\subsubsection*{LAV}\label{lav-1}
+\addcontentsline{toc}{subsubsection}{LAV}
 
 The \texttt{rq()} function from the \texttt{quantreg} package computes the least absolute
 values (LAV) estimator from section~\ref{exm:LAV}:
@@ -10688,12 +10697,9 @@ values (LAV) estimator from section~\ref{exm:LAV}:
 \end{Highlighting}
 \end{Shaded}
 
-The \texttt{rq()} function uses specialized algorithms (interior point methods) which
+The \texttt{rq()} function uses specialised algorithms (interior point methods) which
 are more efficient and have better convergence properties than the
-general-purpose \texttt{optim()} approach shown in section~\ref{exm:LAV}. For
-pedagogical purposes, section~\ref{exm:LAV} shows the \texttt{optim()}
-implementation to illustrate what the LAV estimator actually minimises, but for
-practical work the \texttt{rq()} function should be used.
+general-purpose \texttt{optim()} approach shown in section~\ref{exm:LAV}.
 
 Coefficients can be extracted using \texttt{coef(rq1)} and residuals using \texttt{resid(rq1)}.
 The fitted line can be plotted using \texttt{abline(rq1)}.
@@ -10738,29 +10744,29 @@ The following table summarises the R functions for robust regression:
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1231}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2308}}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4923}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1538}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2308}}@{}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1538}}@{}}
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 Method
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Section
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Function
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
 Package
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Section
 \end{minipage} \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-LAV & \texttt{rq(y\ \textasciitilde{}\ x)} & \texttt{quantreg} & \ref{exm:LAV} \\
-Huber & \texttt{rlm(y\ \textasciitilde{}\ x,\ psi\ =\ psi.huber)} & \texttt{MASS} & \ref{Huber} \\
-Bisquare & \texttt{rlm(y\ \textasciitilde{}\ x,\ psi\ =\ psi.bisquare)} & \texttt{MASS} & \ref{bisquare} \\
-Hampel & \texttt{rlm(y\ \textasciitilde{}\ x,\ psi\ =\ psi.hampel)} & \texttt{MASS} & \ref{hampel} \\
-LMS & \texttt{lqs(y\ \textasciitilde{}\ x,\ method\ =\ "lms")} & \texttt{MASS} & \ref{LMS} \\
-LTS & \texttt{lqs(y\ \textasciitilde{}\ x,\ method\ =\ "lts")} & \texttt{MASS} & \ref{LTS} \\
+LAV & \ref{lav} & \texttt{rq(y\ \textasciitilde{}\ x)} & \texttt{quantreg} \\
+Huber & \ref{Huber} & \texttt{rlm(y\ \textasciitilde{}\ x,\ psi\ =\ psi.huber)} & \texttt{MASS} \\
+Bisquare & \ref{bisquare} & \texttt{rlm(y\ \textasciitilde{}\ x,\ psi\ =\ psi.bisquare)} & \texttt{MASS} \\
+Hampel & \ref{hampel} & \texttt{rlm(y\ \textasciitilde{}\ x,\ psi\ =\ psi.hampel)} & \texttt{MASS} \\
+LMS & \ref{LMS} & \texttt{lqs(y\ \textasciitilde{}\ x,\ method\ =\ "lms")} & \texttt{MASS} \\
+LTS & \ref{LTS} & \texttt{lqs(y\ \textasciitilde{}\ x,\ method\ =\ "lts")} & \texttt{MASS} \\
 \end{longtable}
 }
 
@@ -11121,7 +11127,7 @@ To move either of the estimated regression coefficients to infinity,
 we need to move one of \(x_\mathrm{L}\), \(x_\mathrm{M}\), \(x_\mathrm{R}\),
 \(y_\mathrm{L}\), \(y_\mathrm{M}\), or \(y_\mathrm{R}\) to infinity.
 From the previous question we know that this requires to modify
-half of the corresponing third of the data, so the breakdown point
+half of the corresponding third of the data, so the breakdown point
 of the method is \(1/2 \cdot 1/3 = 1/6\).
 
 \end{myanswers}
@@ -11678,7 +11684,7 @@ measures their linear relationship. Key properties are:
    = \mathbb{E}(XY) - \mathbb{E}(X) \mathbb{E}(Y).
     \end{equation*}
 \item
-  We have \(Var(X) = Cov(X, X)\).
+  We have \(\mathop{\mathrm{Var}}(X) = \mathop{\mathrm{Cov}}(X, X)\).
 \end{enumerate}
 
 \subsection{Well-Known Distributions}\label{well-known-distributions}

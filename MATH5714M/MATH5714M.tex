@@ -844,9 +844,9 @@ We measure execution times using \texttt{microbenchmark}:
 \begin{verbatim}
 ## Unit: microseconds
 ##  expr      min       lq      mean   median       uq      max neval
-##  KDE1 1429.998 1445.291 1480.8799 1451.400 1459.928 4175.440  1000
-##  KDE2  192.946  194.463  254.6251  195.078  196.103 5123.360  1000
-##  KDE3  173.184  174.660  210.5374  175.275  176.177 5141.564  1000
+##  KDE1 1439.346 1455.869 1503.0398 1462.265 1470.506 6839.210  1000
+##  KDE2  192.741  194.463  239.0309  195.037  195.980 4323.245  1000
+##  KDE3  173.389  174.619  209.0022  175.193  176.095 2477.835  1000
 \end{verbatim}
 
 The output shows execution times for 1000 runs. The introduction
@@ -868,8 +868,8 @@ to specify the same grid \(\tilde x\):
 
 \begin{verbatim}
 ## Unit: microseconds
-##     expr     min      lq     mean  median       uq      max neval
-##  density 155.185 159.449 185.5912 167.731 180.2565 8014.762  1000
+##     expr     min      lq     mean   median       uq      max neval
+##  density 154.324 156.989 182.0305 164.2665 178.5345 6983.325  1000
 \end{verbatim}
 
 The result shows that \texttt{density()} is faster than \texttt{KDE3()}, but by a factor
@@ -2970,10 +2970,11 @@ It is not assessed.
 \textbf{5.} Consider the Nadaraya-Watson estimator
 \begin{equation*}
   \hat m_h(x)
-  = \frac{\sum_{i=1}^n K_h(x - x_i) y_i}{\sum_{j=1}^n K_h(x - x_j)}.
+  = \frac{\sum_{i=1}^n K_h(x - x_i) y_i}{\sum_{j=1}^n K_h(x - x_j)},
 \end{equation*}
-Show that if \(K\) is continuous with \(K(0) > 0\), then
-\(\hat m_h(x_i) \to y_i\) as \(h \downarrow 0\) for each data point \(x_i\).
+where the Gaussian kernel is used for \(K\). Assuming the \(x_i\) are distinct,
+show that \(\hat m_h(x_i) \to y_i\) as \(h \downarrow 0\) for each
+data point~\(x_i\).
 
 \begin{myanswers}
 Evaluating the estimator at the data point \(x_i\), we have
@@ -2982,14 +2983,14 @@ Evaluating the estimator at the data point \(x_i\), we have
   = \frac{\sum_{j=1}^n K_h(x_i - x_j) y_j}{\sum_{j=1}^n K_h(x_i - x_j)}
   = \frac{K_h(0) y_i + \sum_{j \neq i} K_h(x_i - x_j) y_j}{K_h(0) + \sum_{j \neq i} K_h(x_i - x_j)}.
 \end{equation*}
-Dividing numerator and denominator by \(K_h(0) = \frac{1}{h} K(0)\) gives
+Dividing both numerator and denominator by \(K_h(0) = \frac{1}{h} K(0)\) gives
 \begin{equation*}
   \hat m_h(x_i)
   = \frac{y_i + \sum_{j \neq i} \frac{K_h(x_i - x_j)}{K_h(0)} y_j}{1 + \sum_{j \neq i} \frac{K_h(x_i - x_j)}{K_h(0)}}.
 \end{equation*}
-For \(j \neq i\), we have \(x_i - x_j \neq 0\), so \((x_i - x_j)/h \to \pm\infty\) as
-\(h \downarrow 0\). Since \(K\) is continuous and integrates to 1, we must have
-\(K(u) \to 0\) as \(|u| \to \infty\). Therefore
+For \(j \neq i\) we have \(x_i - x_j \neq 0\), and thus \(|(x_i - x_j)/h| \to \infty\) as
+\(h\downarrow 0\). For the Gaussian kernel, \(K(u) = \frac{1}{\sqrt{2\pi}}
+e^{-u^2/2} \to 0\) as \(|u| \to \infty\). Therefore
 \begin{equation*}
   \frac{K_h(x_i - x_j)}{K_h(0)}
   = \frac{K\bigl((x_i - x_j)/h\bigr)}{K(0)}
@@ -3007,43 +3008,34 @@ as \(h \downarrow 0\).
 
 \end{myanswers}
 
-\textbf{6.} The bias of the Nadaraya-Watson estimator \(\hat m_h(x)\) satisfies
+\textbf{6.} The bias of the Nadaraya-Watson estimator satisfies
 \begin{equation*}
   \mathop{\mathrm{bias}}\bigl(\hat m_h(x)\bigr)
-  \approx \mu_2(K) \left( \frac{f'(x)}{f(x)} m'(x) + \frac{1}{2} m''(x) \right) h^2.
+  \approx \mu_2(K) \left( \frac{f'(x)}{f(x)} m'(x) + \frac{1}{2} m''(x) \right) h^2,
+\end{equation*}
+while for the local linear estimator (section~\ref{X05-locpoly}), the bias is
+\begin{equation*}
+  \mathop{\mathrm{bias}}\approx \frac{\mu_2(K)}{2} m''(x) h^2.
 \end{equation*}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
 \tightlist
 \item
-  Explain why the term \(f'(x)/f(x)\) appears in the bias formula for the
-  Nadaraya-Watson estimator but not in the bias formula for kernel density
-  estimation.
+  Suppose observations are denser to the left of a point \(x_0\) than to the
+  right (i.e., \(f'(x_0) < 0\)), and the regression function has positive slope
+  at \(x_0\). Explain geometrically why the Nadaraya-Watson estimator
+  underestimates \(m(x_0)\).
 \end{enumerate}
 
 \begin{myanswers}
-In kernel density estimation, we estimate \(f(x)\) directly from the data.
-The bias arises purely from the Taylor expansion of the density \(f\) around \(x\),
-giving bias \(\approx \frac{\mu_2(K)}{2} f''(x) h^2\).
-
-In contrast, the Nadaraya-Watson estimator estimates the conditional mean
-\(m(x) = \mathbb{E}(Y \mid X = x)\), but the estimator involves both the regression
-function \(m\) and the density \(f\) of the inputs \(X_i\). As shown in
-section~\ref{X04-smoothing}, the estimator can be written as a ratio
-\(\hat m_h(x) = \hat r_h(x) / \hat f_h(x)\), where \(\hat r_h(x)\) estimates
-\(r(x) = m(x) f(x)\).
-
-When analysing the bias of this ratio, we must expand both \(r\) and \(f\).
-Since \(r = mf\), the derivative \(r'' = m'' f + 2 m' f' + m f''\) involves
-cross-terms between \(m\) and \(f\). After simplification, the term \(2 m' f'\)
-in the numerator combines with the denominator \(f\) to produce the
-\(\frac{f'(x)}{f(x)} m'(x)\) term in the bias.
-
-Intuitively, the density gradient \(f'(x)\) affects which observations contribute
-to the weighted average. In regions where \(f\) is changing rapidly, nearby
-\(x\)-values are distributed asymmetrically around \(x\), which biases the
-estimate of \(m(x)\) when \(m\) has non-zero slope.
+The Nadaraya-Watson estimator computes a weighted average
+\(\hat m_h(x_0) = \sum_i w_i(x_0) y_i\), where the weights are determined by the
+kernel centred at \(x_0\). When observations are denser to the left
+(\(f'(x_0) < 0\)), more data points lie there and receive collectively greater
+weight. Since \(m\) has positive slope, these left-side \(y\)-values are
+systematically smaller than \(m(x_0)\). The weighted average is therefore pulled
+downward, causing underestimation.
 
 \end{myanswers}
 
@@ -3052,27 +3044,19 @@ estimate of \(m(x)\) when \(m\) has non-zero slope.
 \setcounter{enumi}{1}
 \tightlist
 \item
-  In a region where observations are sparse (small \(f(x)\), large \(|f'(x)|\)),
-  is the bias dominated by \(m'(x)\) or \(m''(x)\)? Interpret this geometrically.
+  Let \(m(x) = 2x\) and \(f(x) = 2(1-x)\) for \(x \in [0,1]\). Compute the
+  Nadaraya-Watson bias at \(x = 0.9\) as a multiple of \(\mu_2(K) h^2\).
 \end{enumerate}
 
 \begin{myanswers}
-The bias formula has two terms:
+We have \(m'(x) = 2\), \(m''(x) = 0\), \(f(0.9) = 0.2\), and \(f'(0.9) = -2\), giving
+\(f'(0.9)/f(0.9) = -10\). The Nadaraya-Watson bias is
 \begin{equation*}
-  \mathop{\mathrm{bias}}\bigl(\hat m_h(x)\bigr)
-  \approx \mu_2(K) \left( \frac{f'(x)}{f(x)} m'(x) + \frac{1}{2} m''(x) \right) h^2.
+  \mathop{\mathrm{bias}}\bigl(\hat m_h(0.9)\bigr)
+  \approx \mu_2(K) \left( -10 \cdot 2 + \frac{1}{2} \cdot 0 \right) h^2
+  = -20 \mu_2(K) h^2.
 \end{equation*}
-When \(f(x)\) is small and \(|f'(x)|\) is large, the ratio \(|f'(x)/f(x)|\) becomes
-large. Consequently, the term \(\frac{f'(x)}{f(x)} m'(x)\) dominates over
-\(\frac{1}{2} m''(x)\), and the bias is dominated by \(m'(x)\).
-
-Geometrically, in a sparse region at the edge of the data distribution, most
-nearby observations come from one side---the direction where \(f\) is larger.
-The kernel averages \(y\)-values from points that are systematically shifted
-in one direction along the \(x\)-axis. If \(m\) has any slope (\(m'(x) \neq 0\)),
-this one-sided averaging pulls the estimate towards \(y\)-values that are
-systematically too high or too low, causing bias proportional to the slope
-\(m'(x)\).
+The negative sign confirms the underestimation predicted in part (a).
 
 \end{myanswers}
 
@@ -3081,32 +3065,21 @@ systematically too high or too low, causing bias proportional to the slope
 \setcounter{enumi}{2}
 \tightlist
 \item
-  Suggest a scenario where the Nadaraya-Watson estimator would have high bias
-  even if \(m\) is nearly linear.
+  Compute the local linear bias at the same point. Explain geometrically why
+  fitting a local line, rather than taking a local average, eliminates this
+  bias.
 \end{enumerate}
 
 \begin{myanswers}
-If \(m\) is nearly linear, then \(m''(x) \approx 0\) and the bias simplifies to
+The local linear bias is
 \begin{equation*}
-  \mathop{\mathrm{bias}}\bigl(\hat m_h(x)\bigr)
-  \approx \mu_2(K) \frac{f'(x)}{f(x)} m'(x) h^2.
+  \mathop{\mathrm{bias}}\approx \frac{\mu_2(K)}{2} \cdot 0 \cdot h^2 = 0.
 \end{equation*}
-This can still be large if both \(m'(x)\) (the slope) and \(f'(x)/f(x)\)
-(the relative density gradient) are large.
-
-A concrete scenario: Suppose we want to estimate a steep linear regression
-function \(m(x) = a + bx\) with large slope \(b\), and the input data \(X_i\) are
-exponentially distributed or otherwise concentrated near one boundary.
-Near the sparse tail of the distribution, \(f(x)\) is small while \(|f'(x)|\)
-remains substantial, making \(|f'(x)/f(x)|\) large. Combined with the large
-slope \(m'(x) = b\), this produces substantial bias even though \(m''(x) = 0\).
-
-This is precisely the ``boundary bias'' phenomenon discussed in
-section~\ref{X05-locpoly}: at the edges of the data range, the
-Nadaraya-Watson estimator is biased because observations are available
-only on one side. Local linear regression (\(p = 1\)) addresses this
-by fitting a line locally, which can extrapolate correctly even when
-observations are asymmetrically distributed.
+Local linear regression fits a line to the weighted observations rather than
+averaging them. Even when observations are concentrated on one side of \(x_0\),
+the fitted line can extrapolate to \(x_0\) using its estimated slope. Since the
+true function \(m(x) = 2x\) is linear, the locally fitted line matches \(m\)
+exactly in expectation, eliminating the bias.
 
 \end{myanswers}
 

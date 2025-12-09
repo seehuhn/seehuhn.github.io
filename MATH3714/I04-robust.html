@@ -321,7 +321,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.3" data-path="S18-m-est.html"><a href="S18-m-est.html#objective-functions"><i class="fa fa-check"></i><b>18.3</b> Objective Functions</a>
 <ul>
 <li class="chapter" data-level="18.3.1" data-path="S18-m-est.html"><a href="S18-m-est.html#least-squares-method"><i class="fa fa-check"></i><b>18.3.1</b> Least Squares Method</a></li>
-<li class="chapter" data-level="18.3.2" data-path="S18-m-est.html"><a href="S18-m-est.html#least-absolute-values"><i class="fa fa-check"></i><b>18.3.2</b> Least Absolute Values</a></li>
+<li class="chapter" data-level="18.3.2" data-path="S18-m-est.html"><a href="S18-m-est.html#lav"><i class="fa fa-check"></i><b>18.3.2</b> Least Absolute Values</a></li>
 <li class="chapter" data-level="18.3.3" data-path="S18-m-est.html"><a href="S18-m-est.html#Huber"><i class="fa fa-check"></i><b>18.3.3</b> Huber’s <span class="math inline">\(t\)</span>-function</a></li>
 <li class="chapter" data-level="18.3.4" data-path="S18-m-est.html"><a href="S18-m-est.html#hampel"><i class="fa fa-check"></i><b>18.3.4</b> Hampel’s Method</a></li>
 <li class="chapter" data-level="18.3.5" data-path="S18-m-est.html"><a href="S18-m-est.html#bisquare"><i class="fa fa-check"></i><b>18.3.5</b> Tukey’s Bisquare Method</a></li>
@@ -339,8 +339,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html"><i class="fa fa-check"></i>Interlude: Robust Regression in R</a>
 <ul>
-<li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html#m-estimators"><i class="fa fa-check"></i>M-Estimators</a></li>
-<li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html#lav-estimation"><i class="fa fa-check"></i>LAV Estimation</a></li>
+<li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html#m-estimators-in-r"><i class="fa fa-check"></i>M-Estimators in R</a>
+<ul>
+<li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html#huber-bisquare-and-hampel"><i class="fa fa-check"></i>Huber, Bisquare and Hampel</a></li>
+<li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html#lav-1"><i class="fa fa-check"></i>LAV</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html#high-breakdown-point-methods"><i class="fa fa-check"></i>High Breakdown Point Methods</a></li>
 <li class="chapter" data-level="" data-path="I04-robust.html"><a href="I04-robust.html#summary"><i class="fa fa-check"></i>Summary</a></li>
 </ul></li>
@@ -405,8 +408,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Interlude: Robust Regression in R<a href="I04-robust.html#I04-robust" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>This section explains how to use the robust regression methods discussed in
 sections <a href="S17-robust.html#S17-robust">17</a>, <a href="S18-m-est.html#S18-m-est">18</a> and <a href="S19-efficiency.html#S19-efficiency">19</a> in R.</p>
-<div id="m-estimators" class="section level2 unnumbered hasAnchor">
-<h2>M-Estimators<a href="I04-robust.html#m-estimators" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="m-estimators-in-r" class="section level2 unnumbered hasAnchor">
+<h2>M-Estimators in R<a href="I04-robust.html#m-estimators-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As discussed in section <a href="S18-m-est.html#S18-m-est">18</a>, M-estimators include methods such as
+Huber, Bisquare, Hampel, and also LAV (which uses <span class="math inline">\(\rho(\varepsilon) = |\varepsilon|\)</span>).
+In R, these methods are implemented in two different packages: the <code>MASS</code>
+package provides <code>rlm()</code> for Huber, Bisquare and Hampel, whilst the <code>quantreg</code>
+package provides <code>rq()</code> for LAV.</p>
+<div id="huber-bisquare-and-hampel" class="section level3 unnumbered hasAnchor">
+<h3>Huber, Bisquare and Hampel<a href="I04-robust.html#huber-bisquare-and-hampel" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The <code>rlm()</code> function from the <code>MASS</code> package implements the iteratively
 reweighted least squares algorithm from section <a href="S18-m-est.html#S18-m-est">18</a>. The
 function takes a formula interface similar to <code>lm()</code>, and the <code>psi</code> argument
@@ -431,21 +441,19 @@ in section <a href="S18-m-est.html#S18-m-est">18</a>:</p>
 </ul>
 <p>The fitted line can be plotted using <code>abline(rlm1)</code>.</p>
 </div>
-<div id="lav-estimation" class="section level2 unnumbered hasAnchor">
-<h2>LAV Estimation<a href="I04-robust.html#lav-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="lav-1" class="section level3 unnumbered hasAnchor">
+<h3>LAV<a href="I04-robust.html#lav-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The <code>rq()</code> function from the <code>quantreg</code> package computes the least absolute
 values (LAV) estimator from section <a href="S18-m-est.html#exm:LAV">18.1</a>:</p>
 <div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="I04-robust.html#cb273-1" tabindex="-1"></a><span class="fu">library</span>(quantreg)</span>
 <span id="cb273-2"><a href="I04-robust.html#cb273-2" tabindex="-1"></a></span>
 <span id="cb273-3"><a href="I04-robust.html#cb273-3" tabindex="-1"></a>rq1 <span class="ot">&lt;-</span> <span class="fu">rq</span>(y <span class="sc">~</span> x)</span></code></pre></div>
-<p>The <code>rq()</code> function uses specialized algorithms (interior point methods) which
+<p>The <code>rq()</code> function uses specialised algorithms (interior point methods) which
 are more efficient and have better convergence properties than the
-general-purpose <code>optim()</code> approach shown in section <a href="S18-m-est.html#exm:LAV">18.1</a>. For
-pedagogical purposes, section <a href="S18-m-est.html#exm:LAV">18.1</a> shows the <code>optim()</code>
-implementation to illustrate what the LAV estimator actually minimises, but for
-practical work the <code>rq()</code> function should be used.</p>
+general-purpose <code>optim()</code> approach shown in section <a href="S18-m-est.html#exm:LAV">18.1</a>.</p>
 <p>Coefficients can be extracted using <code>coef(rq1)</code> and residuals using <code>resid(rq1)</code>.
 The fitted line can be plotted using <code>abline(rq1)</code>.</p>
+</div>
 </div>
 <div id="high-breakdown-point-methods" class="section level2 unnumbered hasAnchor">
 <h2>High Breakdown Point Methods<a href="I04-robust.html#high-breakdown-point-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -471,54 +479,54 @@ fitted lines can be plotted using <code>abline(lms1)</code> or <code>abline(lts1
 <table>
 <colgroup>
 <col width="12%" />
+<col width="23%" />
 <col width="49%" />
 <col width="15%" />
-<col width="23%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="left">Method</th>
+<th align="left">Section</th>
 <th align="left">Function</th>
 <th align="left">Package</th>
-<th align="left">Section</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">LAV</td>
+<td align="left"><a href="S18-m-est.html#lav">18.3.2</a></td>
 <td align="left"><code>rq(y ~ x)</code></td>
 <td align="left"><code>quantreg</code></td>
-<td align="left"><a href="S18-m-est.html#exm:LAV">18.1</a></td>
 </tr>
 <tr class="even">
 <td align="left">Huber</td>
+<td align="left"><a href="S18-m-est.html#Huber">18.3.3</a></td>
 <td align="left"><code>rlm(y ~ x, psi = psi.huber)</code></td>
 <td align="left"><code>MASS</code></td>
-<td align="left"><a href="S18-m-est.html#Huber">18.3.3</a></td>
 </tr>
 <tr class="odd">
 <td align="left">Bisquare</td>
+<td align="left"><a href="S18-m-est.html#bisquare">18.3.5</a></td>
 <td align="left"><code>rlm(y ~ x, psi = psi.bisquare)</code></td>
 <td align="left"><code>MASS</code></td>
-<td align="left"><a href="S18-m-est.html#bisquare">18.3.5</a></td>
 </tr>
 <tr class="even">
 <td align="left">Hampel</td>
+<td align="left"><a href="S18-m-est.html#hampel">18.3.4</a></td>
 <td align="left"><code>rlm(y ~ x, psi = psi.hampel)</code></td>
 <td align="left"><code>MASS</code></td>
-<td align="left"><a href="S18-m-est.html#hampel">18.3.4</a></td>
 </tr>
 <tr class="odd">
 <td align="left">LMS</td>
+<td align="left"><a href="S19-efficiency.html#LMS">19.2.1</a></td>
 <td align="left"><code>lqs(y ~ x, method = "lms")</code></td>
 <td align="left"><code>MASS</code></td>
-<td align="left"><a href="S19-efficiency.html#LMS">19.2.1</a></td>
 </tr>
 <tr class="even">
 <td align="left">LTS</td>
+<td align="left"><a href="S19-efficiency.html#LTS">19.2.2</a></td>
 <td align="left"><code>lqs(y ~ x, method = "lts")</code></td>
 <td align="left"><code>MASS</code></td>
-<td align="left"><a href="S19-efficiency.html#LTS">19.2.2</a></td>
 </tr>
 </tbody>
 </table>
