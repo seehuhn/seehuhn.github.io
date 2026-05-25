@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en_GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="Author" content="Jochen Voss">
+    <title>Ilkley Moor Walk</title>
+
+    <!-- Leaflet from CDN -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <style>
+        html, body { height: 100%; margin: 0; }
+        #map { height: 100%; width: 100%; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* Title / info panel overlaid on the map */
+        .panel {
+            position: absolute;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.92);
+            padding: 0.6rem 0.9rem;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.4;
+        }
+        #title {
+            top: 0.6rem;
+            left: 0.6rem;
+            max-width: 16rem;
+        }
+        #title h1 { font-size: 1.1rem; margin: 0 0 0.3rem; }
+        #title p { font-size: 0.85rem; margin: 0; color: #333; }
+
+        #legend {
+            bottom: 1.2rem;
+            left: 0.6rem;
+            font-size: 0.8rem;
+        }
+        #legend .row { display: flex; align-items: center; margin: 0.2rem 0; }
+        #legend .swatch {
+            width: 26px; height: 0; margin-right: 8px;
+            border-top-width: 4px; border-top-style: solid;
+        }
+        #legend .swatch.main { border-top-color: #c0392b; }
+        #legend .swatch.detour { border-top-color: #2980b9; border-top-style: dashed; }
+
+        /* Popup photo thumbnails */
+        .popup-photos { margin-top: 6px; }
+        .popup-photos img {
+            width: 64px; height: 48px; object-fit: cover;
+            border-radius: 3px; margin: 2px; cursor: pointer;
+            border: 1px solid #ccc;
+        }
+        .leaflet-popup-content { font-size: 0.85rem; }
+        .leaflet-popup-content b { font-size: 0.95rem; }
+
+        /* Zero-dependency lightbox */
+        #lightbox {
+            position: fixed; inset: 0; z-index: 2000;
+            background: rgba(0, 0, 0, 0.85);
+            display: none; align-items: center; justify-content: center;
+            cursor: zoom-out;
+        }
+        #lightbox.open { display: flex; }
+        #lightbox figure { margin: 0; text-align: center; max-width: 92vw; max-height: 92vh; }
+        #lightbox img { max-width: 92vw; max-height: 84vh; border-radius: 4px; }
+        #lightbox figcaption { color: #fff; margin-top: 0.5rem; font-size: 0.9rem; }
+        #lightbox .close {
+            position: absolute; top: 0.8rem; right: 1.2rem;
+            color: #fff; font-size: 2rem; line-height: 1; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div id="title" class="panel">
+    <h1>Ilkley Moor Walk</h1>
+    <p>A circular walk from Wells Road up over the moor, taking in White Wells,
+       the Cow and Calf, and Ilkley Tarn. Click the markers for details.</p>
+</div>
+
+<div id="legend" class="panel">
+    <div class="row"><span class="swatch main"></span>Main route</div>
+    <div class="row"><span class="swatch detour"></span>Optional detour</div>
+</div>
+
+<!-- Lightbox overlay (populated on demand) -->
+<div id="lightbox">
+    <span class="close">&times;</span>
+    <figure>
+        <img src="" alt="">
+        <figcaption></figcaption>
+    </figure>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ *
+ *  DATA  — all approximate; refine coordinates in https://geojson.io  *
+ *  Coordinates are [latitude, longitude].                             *
+ * ------------------------------------------------------------------ */
+
+// Points of interest. Add photos by listing files you drop in ./photos/
+// e.g. photos: [{ src: 'photos/white-wells.jpg', caption: 'White Wells' }]
+const POINTS = [
+    {
+        name: 'Car park (Wells Road)',
+        coord: [53.9213, -1.8224],
+        desc: 'Start / finish. Parking on Wells Road, near Darwin Gardens.',
+        photos: []
+    },
+    {
+        name: 'White Wells',
+        coord: [53.9165, -1.8237],
+        desc: 'Historic spa bath house on the lower moor.',
+        photos: []
+    },
+    {
+        name: 'Twelve Apostles stone circle',
+        coord: [53.9008, -1.8079],
+        desc: 'Optional detour: a Bronze Age stone circle on the moor top, then back.',
+        photos: []
+    },
+    {
+        name: 'Cow and Calf rocks',
+        coord: [53.9128, -1.7957],
+        desc: 'Dramatic gritstone outcrop, popular with climbers.',
+        photos: []
+    },
+    {
+        name: 'Cow and Calf (pub)',
+        coord: [53.9133, -1.7968],
+        desc: 'Lunch stop.',
+        photos: []
+    },
+    {
+        name: 'Ilkley Tarn',
+        coord: [53.9095, -1.8165],
+        desc: 'Quiet moorland tarn on the way back down.',
+        photos: []
+    }
+];
+
+// Main circular route (ordered list of waypoints).
+const MAIN_ROUTE = [
+    [53.9213, -1.8224],  // car park
+    [53.9165, -1.8237],  // White Wells
+    [53.9120, -1.8205],  // edge of the moors
+    [53.9118, -1.8050],  // traverse east along the moor edge
+    [53.9128, -1.7957],  // Cow and Calf rocks
+    [53.9133, -1.7968],  // Cow and Calf pub (lunch)
+    [53.9110, -1.8060],  // head back south-west
+    [53.9095, -1.8165],  // Ilkley Tarn
+    [53.9165, -1.8237],  // back past White Wells
+    [53.9213, -1.8224]   // car park
+];
+
+// Optional detour: out-and-back to the Twelve Apostles from the moor edge.
+const DETOUR_ROUTE = [
+    [53.9120, -1.8205],  // leave the main route at the moor edge
+    [53.9008, -1.8079]   // Twelve Apostles (return by the same path)
+];
+
+/* ------------------------------------------------------------------ *
+ *  MAP                                                                *
+ * ------------------------------------------------------------------ */
+
+const map = L.map('map');
+
+// --- Base layer: OpenTopoMap (no API key needed) -------------------
+L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    maxZoom: 17,
+    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+                 '<a href="http://viewfinderpanoramas.org">SRTM</a> | ' +
+                 'Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)'
+}).addTo(map);
+
+/* To switch to Ordnance Survey tiles later, comment out the layer above
+ * and uncomment this, replacing YOUR_KEY (lock the key to your domain in
+ * the OS Data Hub dashboard):
+ *
+ * L.tileLayer('https://api.os.uk/maps/raster/v1/zxy/Outdoor_3857/{z}/{x}/{y}.png?key=YOUR_KEY', {
+ *     maxZoom: 20,
+ *     attribution: 'Contains OS data &copy; Crown copyright and database rights ' + new Date().getFullYear()
+ * }).addTo(map);
+ */
+
+// --- Routes --------------------------------------------------------
+const mainLine = L.polyline(MAIN_ROUTE, {
+    color: '#c0392b', weight: 4, opacity: 0.9
+}).addTo(map);
+
+const detourLine = L.polyline(DETOUR_ROUTE, {
+    color: '#2980b9', weight: 4, opacity: 0.9, dashArray: '8 8'
+}).addTo(map);
+
+// --- Markers -------------------------------------------------------
+function popupHtml(p) {
+    let html = '<b>' + p.name + '</b><br>' + p.desc;
+    if (p.photos && p.photos.length) {
+        html += '<div class="popup-photos">';
+        for (const ph of p.photos) {
+            html += '<img src="' + ph.src + '" alt="" ' +
+                    'data-full="' + ph.src + '" ' +
+                    'data-caption="' + (ph.caption || '') + '">';
+        }
+        html += '</div>';
+    }
+    return html;
+}
+
+for (const p of POINTS) {
+    L.marker(p.coord).addTo(map).bindPopup(popupHtml(p));
+}
+
+// Frame the whole walk (route + detour).
+map.fitBounds(mainLine.getBounds().extend(detourLine.getBounds()), { padding: [30, 30] });
+
+/* ------------------------------------------------------------------ *
+ *  LIGHTBOX  (zero dependencies)                                      *
+ * ------------------------------------------------------------------ */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = lightbox.querySelector('img');
+const lightboxCaption = lightbox.querySelector('figcaption');
+
+function openLightbox(src, caption) {
+    lightboxImg.src = src;
+    lightboxCaption.textContent = caption || '';
+    lightbox.classList.add('open');
+}
+function closeLightbox() {
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+}
+
+// Thumbnails live inside Leaflet popups, which are created dynamically,
+// so listen on the document and act on clicks on thumbnail images.
+document.addEventListener('click', function (e) {
+    const img = e.target.closest('.popup-photos img');
+    if (img) {
+        openLightbox(img.dataset.full, img.dataset.caption);
+    }
+});
+
+lightbox.addEventListener('click', closeLightbox);
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeLightbox();
+});
+</script>
+</body>
+</html>
