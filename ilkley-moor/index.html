@@ -53,6 +53,12 @@
         }
         #legend .swatch.main { border-top-color: #c0392b; }
         #legend .swatch.detour { border-top-color: #2980b9; border-top-style: dashed; }
+        #legend .swatch.start {
+            width: 12px; height: 12px; border: 0; border-radius: 50%;
+            background: #2e7d32; margin: 0 15px 0 7px;
+        }
+
+        #title p.dir { margin-top: 0.4rem; font-size: 0.9rem; }
 
         /* Popup photo thumbnails */
         .popup-photos { margin-top: 6px; }
@@ -89,11 +95,13 @@
     <h1>Ilkley Moor Walk</h1>
     <p>A circular walk from Wells Road up over the moor, taking in White Wells,
        the Cow and Calf, and Ilkley Tarn. Click the markers for details.</p>
+    <p class="dir">Walk <b>clockwise</b> &#8635;</p>
 </div>
 
 <div id="legend" class="panel">
-    <div class="row"><span class="swatch main"></span>Main route</div>
-    <div class="row"><span class="swatch detour"></span>Optional detour</div>
+    <div class="row"><span class="swatch main"></span>Main route &mdash; 4&nbsp;km</div>
+    <div class="row"><span class="swatch detour"></span>Optional detour &mdash; +3&nbsp;km</div>
+    <div class="row"><span class="swatch start"></span>Start / finish</div>
 </div>
 
 <!-- Lightbox overlay (populated on demand) -->
@@ -117,7 +125,8 @@ const POINTS = [
     {
         name: 'Car park (Wells Road)',
         coord: [53.92056085831621, -1.8224139463040103],
-        desc: 'Start / finish. Parking on Wells Road, near Darwin Gardens.',
+        desc: 'Start / finish. Parking on Wells Road, near Darwin Gardens. The walk goes clockwise.',
+        start: true,
         photos: []
     },
     {
@@ -153,7 +162,7 @@ const POINTS = [
     {
         name: 'Ilkley Tarn',
         coord: [53.91897412411697, -1.815925004696794],
-        desc: 'Quiet moorland tarn on the way back down.',
+        desc: 'A small village lake on the edge of town, passed on the way back down.',
         photos: []
     }
 ];
@@ -223,8 +232,17 @@ function popupHtml(p) {
     return html;
 }
 
+// Green marker to highlight the start / finish point.
+const startIcon = L.icon({
+    iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-green.png',
+    iconRetinaUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-2x-green.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+});
+
 for (const p of POINTS) {
-    L.marker(p.coord).addTo(map).bindPopup(popupHtml(p));
+    const opts = p.start ? { icon: startIcon } : {};
+    L.marker(p.coord, opts).addTo(map).bindPopup(popupHtml(p));
 }
 
 // Frame the whole walk (route + detour).
