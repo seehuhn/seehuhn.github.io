@@ -1,0 +1,892 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory</title>
+<!--Generated on Wed Sep 30 09:26:32 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<style>:root { --bml-ltx-font-size: 10.95; }</style>
+<link rel="stylesheet" href="LaTeXML.css" type="text/css">
+<link rel="stylesheet" href="ltx-book.css" type="text/css">
+<link rel="stylesheet" href="ltx-listings.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-table.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-search.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-bookdown.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-fontsettings.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook,plain.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook.css" type="text/css">
+<link rel="stylesheet" href="bmluser/colors.gitbook-notes.css" type="text/css">
+<link rel="stylesheet" href="bmluser/statheo-custom.css" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+<link rel="up" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="start" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="prev" href="Ch6.html" title="Lecture 6 Estimators by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="next" href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx1.html" title="Introduction ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch1.html" title="Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch3.html" title="Lecture 3 R Basics and a First Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch5.html" title="Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch6.html" title="Lecture 6 Estimators by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch9.html" title="Lecture 9 Consistency by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch10.html" title="Lecture 10 Improving Estimators: Rao–Blackwell and Lehmann–Scheffe ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch11.html" title="Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch12.html" title="Lecture 12 Sampling Distributions and Standard Errors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch13.html" title="Lecture 13 The Cramer–Rao Inequality ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch14.html" title="Lecture 14 Multiparameter Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch15.html" title="Lecture 15 Cramer–Rao and Efficiency in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch18.html" title="Lecture 18 Maximum Likelihood in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch19.html" title="Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch20.html" title="Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch21.html" title="Lecture 21 EM in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch22.html" title="Lecture 22 The Neyman–Pearson Lemma ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch23.html" title="Lecture 23 Likelihood-Ratio Tests ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch24.html" title="Lecture 24 Power and Size by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch26.html" title="Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch27.html" title="Lecture 27 Confidence Versus Credibility ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch28.html" title="Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch29.html" title="Lecture 29 Standard Tests Revisited ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch30.html" title="Lecture 30 Do the Standard Tests Work? ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch31.html" title="Lecture 31 The Exponential Model: From Start to Finish ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx2.html" title="Preparing for the Exam ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A1.html" title="Appendix A Background from Probability ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A2.html" title="Appendix B Introduction to R ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A3.html" title="Appendix C Solutions to the Exercises ‣ MATH5703M Statistical Theory">
+<link rel="bibliography" href="bib.html" title="Bibliography ‣ MATH5703M Statistical Theory">
+<link rel="index" href="idx.html" title="Index ‣ MATH5703M Statistical Theory">
+<meta name="keywords" lang="en" content="-parameter, cumulant function, exponential family, full rank, log-partition function, mean and variance, moments of the natural statistic, natural, natural parameter, natural parameter space, natural parametrisation, natural statistic, one-parameter, sample from, shape, statistic">
+</head>
+<body class="bml_class_book">
+<div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+<a href="#bml-main-content" tabindex="0" class="bml-skip-to-content">Skip to content.</a>
+<div class="book-summary"><nav class="ltx_page_navbar">
+<ul class="ltx_toclist summary">
+<li>
+<a href="index.html" title="" class="ltx_ref" rel="start">MATH5703M Statistical Theory</a>
+</li>
+<li class="divider" aria-hidden="true">
+<li data-level="" data-path="Chx1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx1.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Introduction</a></li>
+<li data-level="1" data-path="Ch1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">1 </span></b>Statistical Models and Estimation</a></li>
+<li data-level="2" data-path="Ch2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">2 </span></b>Bias, Mean Squared Error and Consistency</a></li>
+<li data-level="3" data-path="Ch3.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">3 </span></b>R Basics and a First Simulation</a></li>
+<li data-level="4" data-path="Ch4.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch4.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">4 </span></b>Likelihood and the Method of Moments</a></li>
+<li data-level="5" data-path="Ch5.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch5.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5 </span></b>Maximum Likelihood Estimation</a></li>
+<li data-level="6" data-path="Ch6.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch6.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">6 </span></b>Estimators by Simulation</a></li>
+<li data-level="7" data-path="" class="ltx_tocentry ltx_tocentry_chapter ltx_ref_self  chapter active">
+<a href="" title="In MATH5703M Statistical Theory" aria-current="page" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">7 </span></b>Exponential Families</a>
+<ol class="ltx_toclist ltx_toclist_chapter">
+<li data-level="7.1" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S1" title="In Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">7.1 </span></b>Recognising the Shape</a></li>
+<li data-level="7.2" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S2" title="In Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">7.2 </span></b>The Natural Parametrisation and the Cumulant Function</a></li>
+<li data-level="7.3" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S3" title="In Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">7.3 </span></b>Several Parameters</a></li>
+<li data-level="7.4" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S4" title="In Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">7.4 </span></b>What the Structure Buys</a></li>
+</ol>
+</li>
+<li data-level="8" data-path="Ch8.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch8.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">8 </span></b>Sufficiency</a></li>
+<li data-level="9" data-path="Ch9.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch9.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">9 </span></b>Consistency by Simulation</a></li>
+<li data-level="10" data-path="Ch10.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch10.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">10 </span></b>Improving Estimators: Rao–Blackwell and Lehmann–Scheffe</a></li>
+<li data-level="11" data-path="Ch11.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch11.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">11 </span></b>Fisher Information</a></li>
+<li data-level="12" data-path="Ch12.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch12.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">12 </span></b>Sampling Distributions and Standard Errors</a></li>
+<li data-level="13" data-path="Ch13.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch13.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">13 </span></b>The Cramer–Rao Inequality</a></li>
+<li data-level="14" data-path="Ch14.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch14.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">14 </span></b>Multiparameter Fisher Information</a></li>
+<li data-level="15" data-path="Ch15.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch15.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">15 </span></b>Cramer–Rao and Efficiency in R</a></li>
+<li data-level="16" data-path="Ch16.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch16.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">16 </span></b>Consistency of the MLE</a></li>
+<li data-level="17" data-path="Ch17.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch17.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">17 </span></b>Asymptotic Normality and Efficiency of the MLE</a></li>
+<li data-level="18" data-path="Ch18.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch18.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">18 </span></b>Maximum Likelihood in R</a></li>
+<li data-level="19" data-path="Ch19.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch19.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19 </span></b>The EM Algorithm</a></li>
+<li data-level="20" data-path="Ch20.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch20.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20 </span></b>Hypothesis Testing</a></li>
+<li data-level="21" data-path="Ch21.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch21.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21 </span></b>EM in R</a></li>
+<li data-level="22" data-path="Ch22.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch22.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">22 </span></b>The Neyman–Pearson Lemma</a></li>
+<li data-level="23" data-path="Ch23.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch23.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">23 </span></b>Likelihood-Ratio Tests</a></li>
+<li data-level="24" data-path="Ch24.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch24.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">24 </span></b>Power and Size by Simulation</a></li>
+<li data-level="25" data-path="Ch25.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch25.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">25 </span></b>Confidence Intervals</a></li>
+<li data-level="26" data-path="Ch26.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch26.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">26 </span></b>Bayesian Inference: Priors and Posteriors</a></li>
+<li data-level="27" data-path="Ch27.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch27.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">27 </span></b>Confidence Versus Credibility</a></li>
+<li data-level="28" data-path="Ch28.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch28.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">28 </span></b>Credible Intervals and Bayesian Testing</a></li>
+<li data-level="29" data-path="Ch29.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch29.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">29 </span></b>Standard Tests Revisited</a></li>
+<li data-level="30" data-path="Ch30.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch30.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">30 </span></b>Do the Standard Tests Work?</a></li>
+<li data-level="31" data-path="Ch31.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch31.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">31 </span></b>The Exponential Model: Start to Finish</a></li>
+<li data-level="" data-path="Chx2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx2.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Preparing for the Exam</a></li>
+<li data-level="A" data-path="A1.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">A </span></b>Background from Probability</a></li>
+<li data-level="B" data-path="A2.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">B </span></b>Introduction to R</a></li>
+<li data-level="C" data-path="A3.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">C </span></b>Solutions to the Exercises</a></li>
+<li data-level="" data-path="bib.html" class="ltx_tocentry ltx_tocentry_bibliography  chapter "><a href="bib.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Bibliography</a></li>
+<li data-level="" data-path="idx.html" class="ltx_tocentry ltx_tocentry_index  chapter "><a href="idx.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Index</a></li>
+</ul>
+</nav></div>
+<div class="ltx_page_main book-body fixed">
+<div class="body-inner">
+<header class="book-header fixed" aria-label="toolbar"><span class="bml-separator"></span></header>
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="ltx_page_content page-inner" id="bml-main-content">
+<section class="ltx_chapter bml_mathjax4 ltx_authors_1line normal">
+<div class="section level1">
+<h1 class="ltx_title ltx_title_chapter">
+<span class="ltx_tag ltx_tag_chapter header-section-number">Lecture 7</span> Exponential Families</h1>
+
+<div id="p1" class="ltx_para">
+<p class="ltx_p">In lectures <a href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4</span></a> and <a href="Ch5.html" title="Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5</span></a> we repeatedly collapsed
+products of <math id="p1.m1" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> densities to expressions which summarised the data
+using only one or two sums. This lecture explains the reason for
+this coincidence: almost all families of models considered here
+have the same algebraic shape, and models of this shape are called
+<em class="ltx_emph ltx_font_italic">exponential families</em>. This shape allows us to define the data
+summary used in the likelihood, the moments of this summary, and the
+smoothness required for the later theory, and many of the results in
+the following weeks are almost automatic for this class.</p>
+</div>
+<section id="S1" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">7.1</span> Recognising the Shape</h2>
+
+<div id="S1.p1" class="ltx_para">
+<p class="ltx_p">We start by considering a familiar distribution and then rewrite its
+probability weights so that
+the data and the parameter are as far apart as possible. For the
+Bernoulli distribution with <math id="S1.p1.m1" class="ltx_Math" alttext="x\in\{0,1\}" display="inline"><semantics><mrow><mi>x</mi><mo>∈</mo><mrow><mo stretchy="false">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">x\in\{0,1\}</annotation></semantics></math> we can write</p>
+<div id="A3.S21.EGx3" class="ltx_equationgroup ltx_eqn_align bml_equationgroup bml_equation_container ltx_align_baseline">
+<div id="Ex1" class="ltx_equation bml_equation ltx_align_baseline" role="group" aria-label="equation">
+<div class="ltx_td ltx_align_right bml_eqn_cell"><math id="Ex1.m1" class="ltx_Math" alttext="\displaystyle f(x;\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\displaystyle f(x;\theta)</annotation></semantics></math></div>
+<div class="ltx_td ltx_align_left bml_eqn_cell"><math id="Ex1.m2" class="ltx_Math" alttext="\displaystyle=\theta^{x}(1-\theta)^{1-x}=\exp\bigl{(}x\log\theta+(1-x)\log(1-%
+\theta)\bigr{)}" display="inline"><semantics><mrow><mi></mi><mo>=</mo><mrow><msup><mi>θ</mi><mi>x</mi></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mn>1</mn><mo>−</mo><mi>x</mi></mrow></msup></mrow><mo>=</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>x</mi><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>θ</mi></mrow></mrow><mo>+</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\displaystyle=\theta^{x}(1-\theta)^{1-x}=\exp\bigl{(}x\log\theta+(1-x)\log(1-%
+\theta)\bigr{)}</annotation></semantics></math></div>
+</div>
+<div id="Ex2" class="ltx_equation bml_equation ltx_align_baseline" role="group" aria-label="equation">
+<div class="ltx_td bml_eqn_cell"></div>
+<div class="ltx_td ltx_align_left bml_eqn_cell"><math id="Ex2.m1" class="ltx_Math" alttext="\displaystyle=\exp\Bigl{(}x\log\frac{\theta}{1-\theta}+\log(1-\theta)\Bigr{)}." display="inline"><semantics><mrow><mrow><mi></mi><mo>=</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mrow><mi>x</mi><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mstyle displaystyle="true"><mfrac><mi>θ</mi><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow></mfrac></mstyle></mrow></mrow><mo>+</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\displaystyle=\exp\Bigl{(}x\log\frac{\theta}{1-\theta}+\log(1-\theta)\Bigr{)}.</annotation></semantics></math></div>
+</div>
+</div>
+<p class="ltx_p">Here we have written the weights as the exponential of the product of
+one function of <math id="S1.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and one function of <math id="S1.p1.m3" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>, minus a function of
+only <math id="S1.p1.m4" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. The Poisson weights and the exponential density can be written in a
+similar way: we have <math id="S1.p1.m5" class="ltx_Math" alttext="\theta^{x}=e^{x\log\theta}" display="inline"><semantics><mrow><msup><mi>θ</mi><mi>x</mi></msup><mo>=</mo><msup><mi>e</mi><mrow><mi>x</mi><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>θ</mi></mrow></mrow></msup></mrow><annotation encoding="application/x-tex">\theta^{x}=e^{x\log\theta}</annotation></semantics></math> and
+<math id="S1.p1.m6" class="ltx_Math" alttext="\theta e^{-\theta x}=e^{-\theta x+\log\theta}" display="inline"><semantics><mrow><mrow><mi>θ</mi><mo>⁢</mo><msup><mi>e</mi><mrow><mo>−</mo><mrow><mi>θ</mi><mo>⁢</mo><mi>x</mi></mrow></mrow></msup></mrow><mo>=</mo><msup><mi>e</mi><mrow><mrow><mo>−</mo><mrow><mi>θ</mi><mo>⁢</mo><mi>x</mi></mrow></mrow><mo>+</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>θ</mi></mrow></mrow></msup></mrow><annotation encoding="application/x-tex">\theta e^{-\theta x}=e^{-\theta x+\log\theta}</annotation></semantics></math>, up to a factor depending on <math id="S1.p1.m7" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.
+We will give a name to this structure.</p>
+</div>
+<div id="Thmtheorem1" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id1">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id1"><span class="ltx_text ltx_font_bold">Definition 7.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem1.p1" class="ltx_para">
+<p class="ltx_p">A parametric model <math id="Thmtheorem1.p1.m1" class="ltx_Math" alttext="\bigl{(}f(x;\theta)\!\mathrel{\big{|}}\!\theta\in\Theta\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}f(x;\theta)\!\mathrel{\big{|}}\!\theta\in\Theta\bigr{)}</annotation></semantics></math> with
+<math id="Thmtheorem1.p1.m2" class="ltx_Math" alttext="\Theta\subseteq\mathbb{R}" display="inline"><semantics><mrow><mi mathvariant="normal">Θ</mi><mo>⊆</mo><mi>ℝ</mi></mrow><annotation encoding="application/x-tex">\Theta\subseteq\mathbb{R}</annotation></semantics></math> is a <em class="ltx_emph ltx_font_italic">one-parameter exponential family</em>, if the
+density or the probability weights can be written as</p>
+<div id="Ex3" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex3.m1" class="ltx_Math" alttext="f(x;\theta)=h(x)\exp\bigl{(}\eta(\theta)\,T(x)-B(\theta)\bigr{)}" display="block"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)=h(x)\exp\bigl{(}\eta(\theta)\,T(x)-B(\theta)\bigr{)}</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">for all <math id="Thmtheorem1.p1.m3" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and all <math id="Thmtheorem1.p1.m4" class="ltx_Math" alttext="\theta\in\Theta" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><annotation encoding="application/x-tex">\theta\in\Theta</annotation></semantics></math>, where <math id="Thmtheorem1.p1.m5" class="ltx_Math" alttext="h\geq 0" display="inline"><semantics><mrow><mi>h</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">h\geq 0</annotation></semantics></math> and <math id="Thmtheorem1.p1.m6" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math> are
+functions of <math id="Thmtheorem1.p1.m7" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> alone and <math id="Thmtheorem1.p1.m8" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> and <math id="Thmtheorem1.p1.m9" class="ltx_Math" alttext="B" display="inline"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> are functions of <math id="Thmtheorem1.p1.m10" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+alone. In
+particular, the support <math id="Thmtheorem1.p1.m11" class="ltx_Math" alttext="\{x\mid f(x;\theta)&gt;0\}" display="inline"><semantics><mrow><mo stretchy="false">{</mo><mi>x</mi><mo fence="true" lspace="0em" rspace="0em">∣</mo><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&gt;</mo><mn>0</mn></mrow><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{x\mid f(x;\theta)&gt;0\}</annotation></semantics></math> is
+<math id="Thmtheorem1.p1.m12" class="ltx_Math" alttext="\{x\mid h(x)&gt;0\}" display="inline"><semantics><mrow><mo stretchy="false">{</mo><mi>x</mi><mo fence="true" lspace="0em" rspace="0em">∣</mo><mrow><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&gt;</mo><mn>0</mn></mrow><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{x\mid h(x)&gt;0\}</annotation></semantics></math> and does not depend on <math id="Thmtheorem1.p1.m13" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. The
+statistic <math id="Thmtheorem1.p1.m14" class="ltx_Math" alttext="T(X)" display="inline"><semantics><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">T(X)</annotation></semantics></math> is called the <em class="ltx_emph ltx_font_italic">natural statistic</em> and
+<math id="Thmtheorem1.p1.m15" class="ltx_Math" alttext="\eta(\theta)" display="inline"><semantics><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\eta(\theta)</annotation></semantics></math> is called the <em class="ltx_emph ltx_font_italic">natural parameter</em> of the family.</p>
+</div>
+</div>
+<div id="S1.p2" class="ltx_para">
+<p class="ltx_p">Since the exponential is always positive, <math id="S1.p2.m1" class="ltx_Math" alttext="f(x;\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)</annotation></semantics></math> is positive if and
+only if <math id="S1.p2.m2" class="ltx_Math" alttext="h(x)" display="inline"><semantics><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">h(x)</annotation></semantics></math> is. This proves the statement about the support.
+The representation is not unique, since we can replace <math id="S1.p2.m3" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>
+by <math id="S1.p2.m4" class="ltx_Math" alttext="c\eta" display="inline"><semantics><mrow><mi>c</mi><mo>⁢</mo><mi>η</mi></mrow><annotation encoding="application/x-tex">c\eta</annotation></semantics></math> and <math id="S1.p2.m5" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math> by <math id="S1.p2.m6" class="ltx_Math" alttext="T/c" display="inline"><semantics><mrow><mi>T</mi><mo>/</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">T/c</annotation></semantics></math> for any constant <math id="S1.p2.m7" class="ltx_Math" alttext="c\neq 0" display="inline"><semantics><mrow><mi>c</mi><mo>≠</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">c\neq 0</annotation></semantics></math>. Finally, since
+the density must integrate (or sum) to one, the function <math id="S1.p2.m8" class="ltx_Math" alttext="B" display="inline"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> is
+determined by the other three functions: we have</p>
+<div id="E1" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id2">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id2"><span class="bml_sr_only">equation </span>(7.1)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(7.1)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E1.m1" class="ltx_Math" alttext="B(\theta)=\log\int h(x)\exp\bigl{(}\eta(\theta)\,T(x)\bigr{)}\,\mathrm{d}x." display="block"><semantics><mrow><mrow><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>log</mi><mo>⁢</mo><mrow><mo>∫</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo lspace="0.170em">⁢</mo><mrow><mo rspace="0em">d</mo><mi>x</mi></mrow></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">B(\theta)=\log\int h(x)\exp\bigl{(}\eta(\theta)\,T(x)\bigr{)}\,\mathrm{d}x.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">These rewritings give the following examples.</p>
+</div>
+<div id="Thmtheorem2" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id3">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id3"><span class="ltx_text ltx_font_bold">Example 7.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem2.p1" class="ltx_para">
+<p class="ltx_p">The Bernoulli distribution with <math id="Thmtheorem2.p1.m1" class="ltx_Math" alttext="\theta\in(0,1)" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta\in(0,1)</annotation></semantics></math> is a one-parameter
+exponential family with <math id="Thmtheorem2.p1.m2" class="ltx_Math" alttext="h(x)=1" display="inline"><semantics><mrow><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">h(x)=1</annotation></semantics></math> for <math id="Thmtheorem2.p1.m3" class="ltx_Math" alttext="x\in\{0,1\}" display="inline"><semantics><mrow><mi>x</mi><mo>∈</mo><mrow><mo stretchy="false">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">x\in\{0,1\}</annotation></semantics></math>, natural
+statistic <math id="Thmtheorem2.p1.m4" class="ltx_Math" alttext="T(x)=x" display="inline"><semantics><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">T(x)=x</annotation></semantics></math>, natural parameter
+<math id="Thmtheorem2.p1.m5" class="ltx_Math" alttext="\eta(\theta)=\log\bigl{(}\theta/(1-\theta)\bigr{)}" display="inline"><semantics><mrow><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>θ</mi><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\eta(\theta)=\log\bigl{(}\theta/(1-\theta)\bigr{)}</annotation></semantics></math>, the
+<em class="ltx_emph ltx_font_italic">log-odds</em> of success, and <math id="Thmtheorem2.p1.m6" class="ltx_Math" alttext="B(\theta)=-\log(1-\theta)" display="inline"><semantics><mrow><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mo rspace="0.167em">−</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">B(\theta)=-\log(1-\theta)</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="Thmtheorem3" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id4">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id4"><span class="ltx_text ltx_font_bold">Example 7.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem3.p1" class="ltx_para">
+<p class="ltx_p">The Poisson distribution with <math id="Thmtheorem3.p1.m1" class="ltx_Math" alttext="\theta&gt;0" display="inline"><semantics><mrow><mi>θ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta&gt;0</annotation></semantics></math> is a one-parameter exponential
+family with <math id="Thmtheorem3.p1.m2" class="ltx_Math" alttext="h(x)=1/x!" display="inline"><semantics><mrow><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mrow><mi>x</mi><mo>!</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">h(x)=1/x!</annotation></semantics></math> for <math id="Thmtheorem3.p1.m3" class="ltx_Math" alttext="x\in\{0,1,2,\dots\}" display="inline"><semantics><mrow><mi>x</mi><mo>∈</mo><mrow><mo stretchy="false">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">x\in\{0,1,2,\dots\}</annotation></semantics></math>, natural statistic
+<math id="Thmtheorem3.p1.m4" class="ltx_Math" alttext="T(x)=x" display="inline"><semantics><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">T(x)=x</annotation></semantics></math>, natural parameter <math id="Thmtheorem3.p1.m5" class="ltx_Math" alttext="\eta(\theta)=\log\theta" display="inline"><semantics><mrow><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>θ</mi></mrow></mrow><annotation encoding="application/x-tex">\eta(\theta)=\log\theta</annotation></semantics></math> and
+<math id="Thmtheorem3.p1.m6" class="ltx_Math" alttext="B(\theta)=\theta" display="inline"><semantics><mrow><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">B(\theta)=\theta</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="Thmtheorem4" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id5">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id5"><span class="ltx_text ltx_font_bold">Example 7.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem4.p1" class="ltx_para">
+<p class="ltx_p">The exponential distribution with rate <math id="Thmtheorem4.p1.m1" class="ltx_Math" alttext="\theta&gt;0" display="inline"><semantics><mrow><mi>θ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta&gt;0</annotation></semantics></math> is a
+one-parameter exponential family with <math id="Thmtheorem4.p1.m2" class="ltx_Math" alttext="h(x)=1" display="inline"><semantics><mrow><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">h(x)=1</annotation></semantics></math> for <math id="Thmtheorem4.p1.m3" class="ltx_Math" alttext="x\geq 0" display="inline"><semantics><mrow><mi>x</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x\geq 0</annotation></semantics></math> and
+<math id="Thmtheorem4.p1.m4" class="ltx_Math" alttext="h(x)=0" display="inline"><semantics><mrow><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">h(x)=0</annotation></semantics></math> otherwise, natural statistic <math id="Thmtheorem4.p1.m5" class="ltx_Math" alttext="T(x)=x" display="inline"><semantics><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">T(x)=x</annotation></semantics></math>, natural
+parameter <math id="Thmtheorem4.p1.m6" class="ltx_Math" alttext="\eta(\theta)=-\theta" display="inline"><semantics><mrow><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mo>−</mo><mi>θ</mi></mrow></mrow><annotation encoding="application/x-tex">\eta(\theta)=-\theta</annotation></semantics></math> and
+<math id="Thmtheorem4.p1.m7" class="ltx_Math" alttext="B(\theta)=-\log\theta" display="inline"><semantics><mrow><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mo rspace="0.167em">−</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>θ</mi></mrow></mrow></mrow><annotation encoding="application/x-tex">B(\theta)=-\log\theta</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="S1.p3" class="ltx_para">
+<p class="ltx_p">The normal distribution is also an exponential family, but since
+both parameters are unknown, we need to use the two-parameter version
+of the definition from section <a href="#S3" title="7.3 Several Parameters ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.3</span></a>.</p>
+</div>
+<div id="Thmremarkx6" class="ltx_theorem ltx_theorem_remark" role="group" aria-labelledby="bml-auto-id6">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id6"><span class="ltx_text ltx_font_italic">Remark</span></span><span class="ltx_text ltx_font_italic">.</span>
+</div>
+<div id="Thmremarkx6.p1" class="ltx_para">
+<p class="ltx_p">The uniform distribution on <math id="Thmremarkx6.p1.m1" class="ltx_Math" alttext="[0,\theta]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mi>θ</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0,\theta]</annotation></semantics></math> is not an exponential family,
+since the support of the distribution changes with the parameter.
+In contrast, the support of an exponential family is always fixed.
+This is the same reason why the likelihood equation was useless
+in example <a href="Ch5.html#Thmtheorem5" title="Example 5.5. ‣ 5.3 When the Recipe Fails ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.5</span></a>. Similarly, the <math id="Thmremarkx6.p1.m2" class="ltx_Math" alttext="t" display="inline"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> location model
+from section <a href="Ch5.html#S3" title="5.3 When the Recipe Fails ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.3</span></a> is not an exponential family, despite
+the fact that its support is all of <math id="Thmremarkx6.p1.m3" class="ltx_Math" alttext="\mathbb{R}" display="inline"><semantics><mi>ℝ</mi><annotation encoding="application/x-tex">\mathbb{R}</annotation></semantics></math>; we do not prove this.</p>
+</div>
+</div>
+<div id="S1.p4" class="ltx_para">
+<p class="ltx_p">The shape survives the passage from one observation to a sample.</p>
+</div>
+<div id="Thmtheorem5" class="ltx_theorem ltx_theorem_lemma" role="region" aria-labelledby="bml-auto-id7">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id7"><span class="ltx_text ltx_font_bold">Lemma 7.5</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem5.p1" class="ltx_para">
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">Let <math id="Thmtheorem5.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be i.i.d. from the one-parameter exponential
+family in definition <a href="#Thmtheorem1" title="Definition 7.1. ‣ 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.1</span></a>. Then the joint density of the
+sample is</span></p>
+<div id="Ex4" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex4.m1" class="ltx_Math" alttext="f(x_{1},\dots,x_{n};\theta)=\prod_{i=1}^{n}h(x_{i})\exp\Bigl{(}\eta(\theta)%
+\sum_{i=1}^{n}T(x_{i})-nB(\theta)\Bigr{)}," display="block"><semantics><mrow><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><munderover><mo movablelimits="false">∏</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><munderover><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>−</mo><mrow><mi>n</mi><mo>⁢</mo><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">f(x_{1},\dots,x_{n};\theta)=\prod_{i=1}^{n}h(x_{i})\exp\Bigl{(}\eta(\theta)%
+\sum_{i=1}^{n}T(x_{i})-nB(\theta)\Bigr{)},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">which is of the form of definition <a href="#Thmtheorem1" title="Definition 7.1. ‣ 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.1</span></a> with the same
+natural parameter <math id="Thmtheorem5.p1.m2" class="ltx_Math" alttext="\eta(\theta)" display="inline"><semantics><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\eta(\theta)</annotation></semantics></math>, natural statistic
+<math id="Thmtheorem5.p1.m3" class="ltx_Math" alttext="T_{n}=\sum_{i=1}^{n}T(X_{i})" display="inline"><semantics><mrow><msub><mi>T</mi><mi>n</mi></msub><mo rspace="0.111em">=</mo><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">T_{n}=\sum_{i=1}^{n}T(X_{i})</annotation></semantics></math>, the function <math id="Thmtheorem5.p1.m4" class="ltx_Math" alttext="\prod_{i}h(x_{i})" display="inline"><semantics><mrow><msub><mo>∏</mo><mi>i</mi></msub><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\prod_{i}h(x_{i})</annotation></semantics></math> instead
+of <math id="Thmtheorem5.p1.m5" class="ltx_Math" alttext="h" display="inline"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math> and <math id="Thmtheorem5.p1.m6" class="ltx_Math" alttext="nB(\theta)" display="inline"><semantics><mrow><mi>n</mi><mo>⁢</mo><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">nB(\theta)</annotation></semantics></math> instead of <math id="Thmtheorem5.p1.m7" class="ltx_Math" alttext="B(\theta)" display="inline"><semantics><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">B(\theta)</annotation></semantics></math>.</span></p>
+</div>
+</div>
+<div class="ltx_proof" role="group" aria-labelledby="bml-auto-id8">
+<div class="ltx_title ltx_runin ltx_font_italic ltx_title_proof" id="bml-auto-id8">Proof.</div>
+<div id="S1.p5" class="ltx_para">
+<p class="ltx_p">Since the observations are independent, the joint density is the
+product <math id="S1.p5.m1" class="ltx_Math" alttext="\prod_{i=1}^{n}h(x_{i})\exp\bigl{(}\eta(\theta)\,T(x_{i})-B(\theta)\bigr{)}" display="inline"><semantics><mrow><msubsup><mo>∏</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\prod_{i=1}^{n}h(x_{i})\exp\bigl{(}\eta(\theta)\,T(x_{i})-B(\theta)\bigr{)}</annotation></semantics></math> of the marginal densities. Combining the <math id="S1.p5.m2" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+exponents using the rule <math id="S1.p5.m3" class="ltx_Math" alttext="e^{a}e^{b}=e^{a+b}" display="inline"><semantics><mrow><mrow><msup><mi>e</mi><mi>a</mi></msup><mo>⁢</mo><msup><mi>e</mi><mi>b</mi></msup></mrow><mo>=</mo><msup><mi>e</mi><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow></msup></mrow><annotation encoding="application/x-tex">e^{a}e^{b}=e^{a+b}</annotation></semantics></math> gives the
+required form. This completes the proof.
+∎</p>
+</div>
+</div>
+<div id="S1.p6" class="ltx_para">
+<p class="ltx_p">Read as a function of <math id="S1.p6.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, the joint density is the likelihood, and
+thus the log-likelihood of an exponential family sample is</p>
+<div id="E2" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id9">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id9"><span class="bml_sr_only">equation </span>(7.2)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(7.2)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E2.m1" class="ltx_Math" alttext="\ell(\theta)=\sum_{i=1}^{n}\log h(x_{i})+\eta(\theta)\,T_{n}-nB(\theta)." display="block"><semantics><mrow><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><mrow><mrow><munderover><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>h</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>+</mo><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><msub><mi>T</mi><mi>n</mi></msub></mrow></mrow><mo>−</mo><mrow><mi>n</mi><mo>⁢</mo><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\ell(\theta)=\sum_{i=1}^{n}\log h(x_{i})+\eta(\theta)\,T_{n}-nB(\theta).</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">The first term does not involve <math id="S1.p6.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and thus, except for the term
+involving <math id="S1.p6.m3" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>, the likelihood depends on the data only via the single
+number <math id="S1.p6.m4" class="ltx_Math" alttext="T_{n}=\sum_{i}T(x_{i})" display="inline"><semantics><mrow><msub><mi>T</mi><mi>n</mi></msub><mo rspace="0.111em">=</mo><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">T_{n}=\sum_{i}T(x_{i})</annotation></semantics></math>. This is an extension of
+example <a href="Ch4.html#Thmtheorem3" title="Example 4.3. ‣ 4.1 The Likelihood Function ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.3</span></a> to the whole class; in lecture <a href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">8</span></a> we
+will see in which sense the value <math id="S1.p6.m5" class="ltx_Math" alttext="T_{n}" display="inline"><semantics><msub><mi>T</mi><mi>n</mi></msub><annotation encoding="application/x-tex">T_{n}</annotation></semantics></math> contains all the information
+about <math id="S1.p6.m6" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</div>
+</section>
+<section id="S2" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">7.2</span> The Natural Parametrisation and the Cumulant Function</h2>
+
+<div id="S2.p1" class="ltx_para">
+<p class="ltx_p">Since the parameter enters the density only via <math id="S2.p1.m1" class="ltx_Math" alttext="\eta(\theta)" display="inline"><semantics><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\eta(\theta)</annotation></semantics></math>, it is often
+convenient to use <math id="S2.p1.m2" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> as the parameter. In this case, the
+normalising function (<a href="#E1" title="In 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.1</span></a>) could be given a name, since
+its derivatives are the moments of the natural statistic.</p>
+</div>
+<div id="Thmtheorem6" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id10">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id10"><span class="ltx_text ltx_font_bold">Definition 7.6</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem6.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmtheorem6.p1.m1" class="ltx_Math" alttext="h" display="inline"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math> and <math id="Thmtheorem6.p1.m2" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math> be as in definition <a href="#Thmtheorem1" title="Definition 7.1. ‣ 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.1</span></a>. Then
+the <em class="ltx_emph ltx_font_italic">natural parametrisation</em> of the family is given by</p>
+<div id="Ex5" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex5.m1" class="ltx_Math" alttext="f(x;\eta)=h(x)\exp\bigl{(}\eta\,T(x)-K(\eta)\bigr{)},\qquad\eta\in\mathcal{N}," display="block"><semantics><mrow><mrow><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>η</mi><mo lspace="0.170em">⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow></mrow><mo rspace="2.357em">,</mo><mrow><mi>η</mi><mo>∈</mo><mi class="ltx_font_mathcaligraphic">𝒩︀</mi></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">f(x;\eta)=h(x)\exp\bigl{(}\eta\,T(x)-K(\eta)\bigr{)},\qquad\eta\in\mathcal{N},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where the <em class="ltx_emph ltx_font_italic">cumulant function</em> (also called the
+<em class="ltx_emph ltx_font_italic">log-partition function</em>) is given by</p>
+<div id="Ex6" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex6.m1" class="ltx_Math" alttext="K(\eta)=\log\int h(x)\,e^{\eta T(x)}\,\mathrm{d}x," display="block"><semantics><mrow><mrow><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>log</mi><mo>⁢</mo><mrow><mo>∫</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><msup><mi>e</mi><mrow><mi>η</mi><mo>⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></msup><mo lspace="0em">⁢</mo><mrow><mo rspace="0em">d</mo><mi>x</mi></mrow></mrow></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">K(\eta)=\log\int h(x)\,e^{\eta T(x)}\,\mathrm{d}x,</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where the sum replaces the integral for discrete models, and the
+<em class="ltx_emph ltx_font_italic">natural parameter space</em> is the set
+<math id="Thmtheorem6.p1.m3" class="ltx_Math" alttext="\mathcal{N}=\{\eta\in\mathbb{R}\mid K(\eta)&lt;\infty\}" display="inline"><semantics><mrow><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><mo>=</mo><mrow><mo stretchy="false">{</mo><mrow><mi>η</mi><mo>∈</mo><mi>ℝ</mi></mrow><mo fence="true" lspace="0em" rspace="0em">∣</mo><mrow><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&lt;</mo><mi mathvariant="normal">∞</mi></mrow><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{N}=\{\eta\in\mathbb{R}\mid K(\eta)&lt;\infty\}</annotation></semantics></math> of all <math id="Thmtheorem6.p1.m4" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> such that the integral is finite.</p>
+</div>
+</div>
+<div id="S2.p2" class="ltx_para">
+<p class="ltx_p">Since <math id="S2.p2.m1" class="ltx_Math" alttext="K" display="inline"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> makes <math id="S2.p2.m2" class="ltx_Math" alttext="f(x;\eta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x;\eta)</annotation></semantics></math> integrate to one, the formula defines a
+probability distribution for every <math id="S2.p2.m3" class="ltx_Math" alttext="\eta\in\mathcal{N}" display="inline"><semantics><mrow><mi>η</mi><mo>∈</mo><mi class="ltx_font_mathcaligraphic">𝒩︀</mi></mrow><annotation encoding="application/x-tex">\eta\in\mathcal{N}</annotation></semantics></math>, whether or
+not <math id="S2.p2.m4" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> is of the form <math id="S2.p2.m5" class="ltx_Math" alttext="\eta(\theta)" display="inline"><semantics><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\eta(\theta)</annotation></semantics></math>; comparing
+with (<a href="#E1" title="In 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.1</span></a>) shows that
+<math id="S2.p2.m6" class="ltx_Math" alttext="\eta(\theta)\in\mathcal{N}" display="inline"><semantics><mrow><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>∈</mo><mi class="ltx_font_mathcaligraphic">𝒩︀</mi></mrow><annotation encoding="application/x-tex">\eta(\theta)\in\mathcal{N}</annotation></semantics></math> and <math id="S2.p2.m7" class="ltx_Math" alttext="B(\theta)=K\bigl{(}\eta(\theta)\bigr{)}" display="inline"><semantics><mrow><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>K</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">B(\theta)=K\bigl{(}\eta(\theta)\bigr{)}</annotation></semantics></math>,
+so that the original family sits inside this larger one. For the
+three examples of section <a href="#S1" title="7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.1</span></a> we find
+<math id="S2.p2.m8" class="ltx_Math" alttext="K(\eta)=\log(1+e^{\eta})" display="inline"><semantics><mrow><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mi>η</mi></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">K(\eta)=\log(1+e^{\eta})</annotation></semantics></math> with <math id="S2.p2.m9" class="ltx_Math" alttext="\mathcal{N}=\mathbb{R}" display="inline"><semantics><mrow><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><mo>=</mo><mi>ℝ</mi></mrow><annotation encoding="application/x-tex">\mathcal{N}=\mathbb{R}</annotation></semantics></math> for the Bernoulli
+distribution, <math id="S2.p2.m10" class="ltx_Math" alttext="K(\eta)=e^{\eta}" display="inline"><semantics><mrow><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><msup><mi>e</mi><mi>η</mi></msup></mrow><annotation encoding="application/x-tex">K(\eta)=e^{\eta}</annotation></semantics></math> with <math id="S2.p2.m11" class="ltx_Math" alttext="\mathcal{N}=\mathbb{R}" display="inline"><semantics><mrow><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><mo>=</mo><mi>ℝ</mi></mrow><annotation encoding="application/x-tex">\mathcal{N}=\mathbb{R}</annotation></semantics></math> for the Poisson
+distribution and <math id="S2.p2.m12" class="ltx_Math" alttext="K(\eta)=-\log(-\eta)" display="inline"><semantics><mrow><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mo rspace="0.167em">−</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mo>−</mo><mi>η</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">K(\eta)=-\log(-\eta)</annotation></semantics></math> with
+<math id="S2.p2.m13" class="ltx_Math" alttext="\mathcal{N}=(-\infty,0)" display="inline"><semantics><mrow><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mo>,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{N}=(-\infty,0)</annotation></semantics></math> for the exponential distribution. In all
+three cases <math id="S2.p2.m14" class="ltx_Math" alttext="\mathcal{N}" display="inline"><semantics><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><annotation encoding="application/x-tex">\mathcal{N}</annotation></semantics></math> is an open interval and
+<math id="S2.p2.m15" class="ltx_Math" alttext="\theta\mapsto\eta(\theta)" display="inline"><semantics><mrow><mi>θ</mi><mo stretchy="false">↦</mo><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta\mapsto\eta(\theta)</annotation></semantics></math> is a bijection onto <math id="S2.p2.m16" class="ltx_Math" alttext="\mathcal{N}" display="inline"><semantics><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><annotation encoding="application/x-tex">\mathcal{N}</annotation></semantics></math>, making
+the natural parametrisation a relabelling in the sense of
+theorem <a href="Ch5.html#Thmtheorem6" title="Theorem 5.6 (Invariance of the MLE). ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.6</span></a>.</p>
+</div>
+<div id="S2.p3" class="ltx_para">
+<p class="ltx_p">The first two derivatives of <math id="S2.p3.m1" class="ltx_Math" alttext="K" display="inline"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> give the mean and the variance
+of <math id="S2.p3.m2" class="ltx_Math" alttext="T(X)" display="inline"><semantics><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">T(X)</annotation></semantics></math>. The name of <math id="S2.p3.m3" class="ltx_Math" alttext="K" display="inline"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> is derived from the fact that
+<math id="S2.p3.m4" class="ltx_Math" alttext="s\mapsto K(\eta+s)-K(\eta)" display="inline"><semantics><mrow><mi>s</mi><mo stretchy="false">↦</mo><mrow><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>η</mi><mo>+</mo><mi>s</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">s\mapsto K(\eta+s)-K(\eta)</annotation></semantics></math> is the cumulant generating function
+of <math id="S2.p3.m5" class="ltx_Math" alttext="T(X)" display="inline"><semantics><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">T(X)</annotation></semantics></math>, as given in exercise <a href="#Thmexercise6" title="Exercise 7.6. ‣ 7.4 What the Structure Buys ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.6</span></a>.</p>
+</div>
+<div id="Thmtheorem7" class="ltx_theorem ltx_theorem_theorem" role="region" aria-labelledby="bml-auto-id11">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id11"><span class="ltx_text ltx_font_bold">Theorem 7.7</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem7.p1" class="ltx_para">
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">Let <math id="Thmtheorem7.p1.m1" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> be an interior point of the natural parameter
+space <math id="Thmtheorem7.p1.m2" class="ltx_Math" alttext="\mathcal{N}" display="inline"><semantics><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><annotation encoding="application/x-tex">\mathcal{N}</annotation></semantics></math>. Then, in the natural parametrisation,</span></p>
+<div id="Ex7" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex7.m1" class="ltx_Math" alttext="\mathbb{E}_{\eta}\bigl{(}T(X)\bigr{)}=K^{\prime}(\eta)\qquad\text{and}\qquad%
+\mathop{\mathrm{Var}}\nolimits_{\eta}\bigl{(}T(X)\bigr{)}=K^{\prime\prime}(%
+\eta)." display="block"><semantics><mrow><mrow><mrow><mrow><msub><mi>𝔼</mi><mi>η</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><msup><mi>K</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mspace width="2.19em"></mspace><mtext class="ltx_mathvariant_italic">and</mtext></mrow></mrow><mspace width="2.357em"></mspace><mrow><mrow><msub><mo rspace="0em">Var</mo><mi>η</mi></msub><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mi>K</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\eta}\bigl{(}T(X)\bigr{)}=K^{\prime}(\eta)\qquad\text{and}\qquad%
+\mathop{\mathrm{Var}}\nolimits_{\eta}\bigl{(}T(X)\bigr{)}=K^{\prime\prime}(%
+\eta).</annotation></semantics></math></div>
+</div>
+</div>
+</div>
+<div class="ltx_proof" role="group" aria-labelledby="bml-auto-id12">
+<div class="ltx_title ltx_runin ltx_font_italic ltx_title_proof" id="bml-auto-id12">Proof.</div>
+<div id="S2.p4" class="ltx_para">
+<p class="ltx_p">Set <math id="S2.p4.m1" class="ltx_Math" alttext="Z(\eta)=\int h(x)e^{\eta T(x)}\,\mathrm{d}x" display="inline"><semantics><mrow><mrow><mi>Z</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><mo>∫</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msup><mi>e</mi><mrow><mi>η</mi><mo>⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></msup><mo lspace="0em">⁢</mo><mrow><mo rspace="0em">d</mo><mi>x</mi></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">Z(\eta)=\int h(x)e^{\eta T(x)}\,\mathrm{d}x</annotation></semantics></math>, so that <math id="S2.p4.m2" class="ltx_Math" alttext="K=\log Z" display="inline"><semantics><mrow><mi>K</mi><mo>=</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>Z</mi></mrow></mrow><annotation encoding="application/x-tex">K=\log Z</annotation></semantics></math>. Since
+<math id="S2.p4.m3" class="ltx_Math" alttext="h\geq 0" display="inline"><semantics><mrow><mi>h</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">h\geq 0</annotation></semantics></math> is not identically zero and <math id="S2.p4.m4" class="ltx_Math" alttext="e^{\eta T(x)}&gt;0" display="inline"><semantics><mrow><msup><mi>e</mi><mrow><mi>η</mi><mo>⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></msup><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">e^{\eta T(x)}&gt;0</annotation></semantics></math>, we have
+<math id="S2.p4.m5" class="ltx_Math" alttext="Z(\eta)&gt;0" display="inline"><semantics><mrow><mrow><mi>Z</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">Z(\eta)&gt;0</annotation></semantics></math> and thus the division in the proof is
+justified.
+Since <math id="S2.p4.m6" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> is in the interior of <math id="S2.p4.m7" class="ltx_Math" alttext="\mathcal{N}" display="inline"><semantics><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><annotation encoding="application/x-tex">\mathcal{N}</annotation></semantics></math>, we can take derivatives
+inside the integral as many times as required; this is a result from
+analysis which we use without proof. Taking derivatives once, we get</p>
+<div id="Ex8" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex8.m1" class="ltx_Math" alttext="Z^{\prime}(\eta)=\int T(x)\,h(x)\,e^{\eta T(x)}\,\mathrm{d}x." display="block"><semantics><mrow><mrow><mrow><msup><mi>Z</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><mo>∫</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><msup><mi>e</mi><mrow><mi>η</mi><mo>⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></msup><mo lspace="0em">⁢</mo><mrow><mo rspace="0em">d</mo><mi>x</mi></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">Z^{\prime}(\eta)=\int T(x)\,h(x)\,e^{\eta T(x)}\,\mathrm{d}x.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Dividing by <math id="S2.p4.m8" class="ltx_Math" alttext="Z(\eta)=e^{K(\eta)}" display="inline"><semantics><mrow><mrow><mi>Z</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><msup><mi>e</mi><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></msup></mrow><annotation encoding="application/x-tex">Z(\eta)=e^{K(\eta)}</annotation></semantics></math> changes the integrand to <math id="S2.p4.m9" class="ltx_Math" alttext="T(x)" display="inline"><semantics><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">T(x)</annotation></semantics></math> times the density
+<math id="S2.p4.m10" class="ltx_Math" alttext="f(x;\eta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x;\eta)</annotation></semantics></math> and thus we get</p>
+<div id="Ex9" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex9.m1" class="ltx_Math" alttext="K^{\prime}(\eta)=\frac{Z^{\prime}(\eta)}{Z(\eta)}=\int T(x)\,h(x)\,e^{\eta T(x%
+)-K(\eta)}\,\mathrm{d}x=\mathbb{E}_{\eta}\bigl{(}T(X)\bigr{)}." display="block"><semantics><mrow><mrow><mrow><msup><mi>K</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mfrac><mrow><msup><mi>Z</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mrow><mi>Z</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mfrac><mo rspace="0.111em">=</mo><mrow><mo>∫</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><msup><mi>e</mi><mrow><mrow><mi>η</mi><mo>⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></msup><mo lspace="0em">⁢</mo><mrow><mo rspace="0em">d</mo><mi>x</mi></mrow></mrow></mrow><mo>=</mo><mrow><msub><mi>𝔼</mi><mi>η</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">K^{\prime}(\eta)=\frac{Z^{\prime}(\eta)}{Z(\eta)}=\int T(x)\,h(x)\,e^{\eta T(x%
+)-K(\eta)}\,\mathrm{d}x=\mathbb{E}_{\eta}\bigl{(}T(X)\bigr{)}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Taking derivatives again, we find</p>
+<div id="Ex10" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex10.m1" class="ltx_Math" alttext="K^{\prime\prime}(\eta)=\frac{Z^{\prime\prime}(\eta)}{Z(\eta)}-\Bigl{(}\frac{Z^%
+{\prime}(\eta)}{Z(\eta)}\Bigr{)}^{2}," display="block"><semantics><mrow><mrow><mrow><msup><mi>K</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mfrac><mrow><msup><mi>Z</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mrow><mi>Z</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mfrac><mo>−</mo><msup><mrow><mo maxsize="160%" minsize="160%">(</mo><mfrac><mrow><msup><mi>Z</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mrow><mi>Z</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mfrac><mo maxsize="160%" minsize="160%">)</mo></mrow><mn>2</mn></msup></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">K^{\prime\prime}(\eta)=\frac{Z^{\prime\prime}(\eta)}{Z(\eta)}-\Bigl{(}\frac{Z^%
+{\prime}(\eta)}{Z(\eta)}\Bigr{)}^{2},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">and using the same argument as above, with <math id="S2.p4.m11" class="ltx_Math" alttext="T(x)^{2}" display="inline"><semantics><mrow><mi>T</mi><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">T(x)^{2}</annotation></semantics></math> in the integrand,
+we find <math id="S2.p4.m12" class="ltx_Math" alttext="Z^{\prime\prime}(\eta)/Z(\eta)=\mathbb{E}_{\eta}\bigl{(}T(X)^{2}\bigr{)}" display="inline"><semantics><mrow><mrow><mrow><mrow><msup><mi>Z</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>Z</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>𝔼</mi><mi>η</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>T</mi><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">Z^{\prime\prime}(\eta)/Z(\eta)=\mathbb{E}_{\eta}\bigl{(}T(X)^{2}\bigr{)}</annotation></semantics></math>. Thus we have
+<math id="S2.p4.m13" class="ltx_Math" alttext="K^{\prime\prime}(\eta)=\mathbb{E}_{\eta}(T(X)^{2})-\mathbb{E}_{\eta}(T(X))^{2}%
+=\mathop{\mathrm{Var}}\nolimits_{\eta}(T(X))" display="inline"><semantics><mrow><mrow><msup><mi>K</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><msub><mi>𝔼</mi><mi>η</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>T</mi><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><msub><mi>𝔼</mi><mi>η</mi></msub><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mrow><mo rspace="0.1389em">=</mo><mrow><msub><mo lspace="0.1389em" rspace="0em">Var</mo><mi>η</mi></msub><mrow><mo stretchy="false">(</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">K^{\prime\prime}(\eta)=\mathbb{E}_{\eta}(T(X)^{2})-\mathbb{E}_{\eta}(T(X))^{2}%
+=\mathop{\mathrm{Var}}\nolimits_{\eta}(T(X))</annotation></semantics></math> and the proof is complete.
+∎</p>
+</div>
+</div>
+<div id="S2.p5" class="ltx_para">
+<p class="ltx_p">The theorem allows us to compute moments by differentiation: for
+the Poisson distribution <math id="S2.p5.m1" class="ltx_Math" alttext="K(\eta)=e^{\eta}" display="inline"><semantics><mrow><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><msup><mi>e</mi><mi>η</mi></msup></mrow><annotation encoding="application/x-tex">K(\eta)=e^{\eta}</annotation></semantics></math> we find
+<math id="S2.p5.m2" class="ltx_Math" alttext="K^{\prime}(\eta)=K^{\prime\prime}(\eta)=e^{\eta}=\theta" display="inline"><semantics><mrow><mrow><msup><mi>K</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mi>K</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><msup><mi>e</mi><mi>η</mi></msup><mo>=</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">K^{\prime}(\eta)=K^{\prime\prime}(\eta)=e^{\eta}=\theta</annotation></semantics></math>, the mean and variance from
+table <a href="A1.html#T1" title="Table A.1 ‣ A.2 Standard Distributions ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.1</span></a>, and in exercise <a href="#Thmexercise4" title="Exercise 7.4. ‣ 7.4 What the Structure Buys ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.4</span></a>
+we consider the exponential and normal distributions. For <math id="S2.p5.m3" class="ltx_Math" alttext="T_{n}" display="inline"><semantics><msub><mi>T</mi><mi>n</mi></msub><annotation encoding="application/x-tex">T_{n}</annotation></semantics></math>, being a sum of <math id="S2.p5.m4" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> i.i.d. copies of <math id="S2.p5.m5" class="ltx_Math" alttext="T(X)" display="inline"><semantics><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">T(X)</annotation></semantics></math>, we
+can use the theorem to find <math id="S2.p5.m6" class="ltx_Math" alttext="\mathbb{E}_{\eta}(T_{n})=nK^{\prime}(\eta)" display="inline"><semantics><mrow><mrow><msub><mi>𝔼</mi><mi>η</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>T</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>n</mi><mo>⁢</mo><msup><mi>K</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\eta}(T_{n})=nK^{\prime}(\eta)</annotation></semantics></math> and <math id="S2.p5.m7" class="ltx_Math" alttext="\mathop{\mathrm{Var}}\nolimits_{\eta}(T_{n})=nK^{\prime\prime}(\eta)" display="inline"><semantics><mrow><mrow><msub><mo>Var</mo><mi>η</mi></msub><mrow><mo lspace="0em" stretchy="false">(</mo><msub><mi>T</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>n</mi><mo>⁢</mo><msup><mi>K</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{Var}}\nolimits_{\eta}(T_{n})=nK^{\prime\prime}(\eta)</annotation></semantics></math>.</p>
+</div>
+</div>
+</section>
+<section id="S3" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">7.3</span> Several Parameters</h2>
+
+<div id="S3.p1" class="ltx_para">
+<p class="ltx_p">The normal distribution where both <math id="S3.p1.m1" class="ltx_Math" alttext="\mu" display="inline"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math> and <math id="S3.p1.m2" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math> are unknown does not
+fit definition <a href="#Thmtheorem1" title="Definition 7.1. ‣ 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.1</span></a>, since there are two unknown quantities
+in the exponent. The extension here is to allow the sum of products
+in the exponent, one for each parameter.</p>
+</div>
+<div id="Thmtheorem8" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id13">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id13"><span class="ltx_text ltx_font_bold">Definition 7.8</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem8.p1" class="ltx_para">
+<p class="ltx_p">A parametric model <math id="Thmtheorem8.p1.m1" class="ltx_Math" alttext="\bigl{(}f(x;\theta)\!\mathrel{\big{|}}\!\theta\in\Theta\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}f(x;\theta)\!\mathrel{\big{|}}\!\theta\in\Theta\bigr{)}</annotation></semantics></math> with
+<math id="Thmtheorem8.p1.m2" class="ltx_Math" alttext="\Theta\subseteq\mathbb{R}^{k}" display="inline"><semantics><mrow><mi mathvariant="normal">Θ</mi><mo>⊆</mo><msup><mi>ℝ</mi><mi>k</mi></msup></mrow><annotation encoding="application/x-tex">\Theta\subseteq\mathbb{R}^{k}</annotation></semantics></math> is a <em class="ltx_emph ltx_font_italic"><math id="Thmtheorem8.p1.m3" class="ltx_Math" alttext="k" display="inline"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>-parameter exponential family</em>, if the
+density or the probability weights can be written as</p>
+<div id="Ex11" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex11.m1" class="ltx_Math" alttext="f(x;\theta)=h(x)\exp\Bigl{(}\sum_{j=1}^{k}\eta_{j}(\theta)\,T_{j}(x)-B(\theta)%
+\Bigr{)}" display="block"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mrow><munderover><mo lspace="0em" movablelimits="false">∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></munderover><mrow><msub><mi>η</mi><mi>j</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><msub><mi>T</mi><mi>j</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>−</mo><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)=h(x)\exp\Bigl{(}\sum_{j=1}^{k}\eta_{j}(\theta)\,T_{j}(x)-B(\theta)%
+\Bigr{)}</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">for all <math id="Thmtheorem8.p1.m4" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and all <math id="Thmtheorem8.p1.m5" class="ltx_Math" alttext="\theta\in\Theta" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><annotation encoding="application/x-tex">\theta\in\Theta</annotation></semantics></math>, where <math id="Thmtheorem8.p1.m6" class="ltx_Math" alttext="h\geq 0" display="inline"><semantics><mrow><mi>h</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">h\geq 0</annotation></semantics></math> and <math id="Thmtheorem8.p1.m7" class="ltx_Math" alttext="T_{1},\dots,T_{k}" display="inline"><semantics><mrow><msub><mi>T</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>T</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">T_{1},\dots,T_{k}</annotation></semantics></math>
+are functions of <math id="Thmtheorem8.p1.m8" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> alone and <math id="Thmtheorem8.p1.m9" class="ltx_Math" alttext="\eta_{1},\dots,\eta_{k}" display="inline"><semantics><mrow><msub><mi>η</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>η</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\eta_{1},\dots,\eta_{k}</annotation></semantics></math> and <math id="Thmtheorem8.p1.m10" class="ltx_Math" alttext="B" display="inline"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> are
+functions of <math id="Thmtheorem8.p1.m11" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> alone. The vector
+<math id="Thmtheorem8.p1.m12" class="ltx_Math" alttext="\bigl{(}T_{1}(X),\dots,T_{k}(X)\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msub><mi>T</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><mrow><msub><mi>T</mi><mi>k</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}T_{1}(X),\dots,T_{k}(X)\bigr{)}</annotation></semantics></math> is the <em class="ltx_emph ltx_font_italic">natural statistic</em> and
+<math id="Thmtheorem8.p1.m13" class="ltx_Math" alttext="\bigl{(}\eta_{1}(\theta),\dots,\eta_{k}(\theta)\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msub><mi>η</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><mrow><msub><mi>η</mi><mi>k</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}\eta_{1}(\theta),\dots,\eta_{k}(\theta)\bigr{)}</annotation></semantics></math> is the
+<em class="ltx_emph ltx_font_italic">natural parameter</em> of the family.</p>
+</div>
+</div>
+<div id="S3.p2" class="ltx_para">
+<p class="ltx_p">The support of the distribution is again <math id="S3.p2.m1" class="ltx_Math" alttext="\{x\mid h(x)&gt;0\}" display="inline"><semantics><mrow><mo stretchy="false">{</mo><mi>x</mi><mo fence="true" lspace="0em" rspace="0em">∣</mo><mrow><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&gt;</mo><mn>0</mn></mrow><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{x\mid h(x)&gt;0\}</annotation></semantics></math> and the proof of
+lemma <a href="#Thmtheorem5" title="Lemma 7.5. ‣ 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.5</span></a> applies without change: an i.i.d. sample is again a <math id="S3.p2.m2" class="ltx_Math" alttext="k" display="inline"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>-parameter exponential family, where the
+natural statistic is the vector of the <math id="S3.p2.m3" class="ltx_Math" alttext="k" display="inline"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math> sums <math id="S3.p2.m4" class="ltx_Math" alttext="\sum_{i}T_{j}(X_{i})" display="inline"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><msub><mi>T</mi><mi>j</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\sum_{i}T_{j}(X_{i})</annotation></semantics></math>. The
+cumulant function can be extended to this situation, but we do not
+need this result here.</p>
+</div>
+<div id="Thmtheorem9" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id14">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id14"><span class="ltx_text ltx_font_bold">Example 7.9</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem9.p1" class="ltx_para">
+<p class="ltx_p">By expanding the square in the exponent of the density of the
+normal distribution <math id="Thmtheorem9.p1.m1" class="ltx_Math" alttext="N(\mu,\sigma^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\mu,\sigma^{2})</annotation></semantics></math> from table <a href="Ch1.html#T2" title="Table 1.2 ‣ 1.1 Statistical Models ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.2</span></a>, we
+can write</p>
+<div id="Ex12" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex12.m1" class="ltx_Math" alttext="f(x;\mu,\sigma^{2})=\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\Bigl{(}-\frac{x^{2}}{2%
+\sigma^{2}}+\frac{\mu}{\sigma^{2}}\,x-\frac{\mu^{2}}{2\sigma^{2}}\Bigr{)}." display="block"><semantics><mrow><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mfrac><mn>1</mn><msqrt><mrow><mn>2</mn><mo>⁢</mo><mi>π</mi><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></msqrt></mfrac><mo lspace="0.167em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mrow><mrow><mo>−</mo><mfrac><msup><mi>x</mi><mn>2</mn></msup><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mfrac></mrow><mo>+</mo><mrow><mfrac><mi>μ</mi><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo lspace="0.170em">⁢</mo><mi>x</mi></mrow></mrow><mo>−</mo><mfrac><msup><mi>μ</mi><mn>2</mn></msup><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mfrac></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">f(x;\mu,\sigma^{2})=\frac{1}{\sqrt{2\pi\sigma^{2}}}\exp\Bigl{(}-\frac{x^{2}}{2%
+\sigma^{2}}+\frac{\mu}{\sigma^{2}}\,x-\frac{\mu^{2}}{2\sigma^{2}}\Bigr{)}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">If only <math id="Thmtheorem9.p1.m2" class="ltx_Math" alttext="\mu" display="inline"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math> is unknown, the factor <math id="Thmtheorem9.p1.m3" class="ltx_Math" alttext="(2\pi\sigma^{2})^{-1/2}" display="inline"><semantics><msup><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><mi>π</mi><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow><mrow><mo>−</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow></msup><annotation encoding="application/x-tex">(2\pi\sigma^{2})^{-1/2}</annotation></semantics></math> and the term
+<math id="Thmtheorem9.p1.m4" class="ltx_Math" alttext="-x^{2}/(2\sigma^{2})" display="inline"><semantics><mrow><mo>−</mo><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">-x^{2}/(2\sigma^{2})</annotation></semantics></math> contain no unknown quantities and we can define the
+function <math id="Thmtheorem9.p1.m5" class="ltx_Math" alttext="h(x)=(2\pi\sigma^{2})^{-1/2}e^{-x^{2}/(2\sigma^{2})}" display="inline"><semantics><mrow><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><mi>π</mi><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow><mrow><mo>−</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow></msup><mo>⁢</mo><msup><mi>e</mi><mrow><mo>−</mo><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></msup></mrow></mrow><annotation encoding="application/x-tex">h(x)=(2\pi\sigma^{2})^{-1/2}e^{-x^{2}/(2\sigma^{2})}</annotation></semantics></math>: we have found a
+one-parameter exponential family with natural statistic <math id="Thmtheorem9.p1.m6" class="ltx_Math" alttext="T(x)=x" display="inline"><semantics><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">T(x)=x</annotation></semantics></math>,
+natural parameter <math id="Thmtheorem9.p1.m7" class="ltx_Math" alttext="\eta(\mu)=\mu/\sigma^{2}" display="inline"><semantics><mrow><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>μ</mi><mo>/</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">\eta(\mu)=\mu/\sigma^{2}</annotation></semantics></math> and <math id="Thmtheorem9.p1.m8" class="ltx_Math" alttext="B(\mu)=\mu^{2}/(2\sigma^{2})" display="inline"><semantics><mrow><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mi>μ</mi><mn>2</mn></msup><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">B(\mu)=\mu^{2}/(2\sigma^{2})</annotation></semantics></math>. If both
+parameters are unknown, we have to interpret the term
+<math id="Thmtheorem9.p1.m9" class="ltx_Math" alttext="-x^{2}/(2\sigma^{2})" display="inline"><semantics><mrow><mo>−</mo><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">-x^{2}/(2\sigma^{2})</annotation></semantics></math> as a second product and we get a two-parameter exponential
+family with <math id="Thmtheorem9.p1.m10" class="ltx_Math" alttext="h(x)=1" display="inline"><semantics><mrow><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">h(x)=1</annotation></semantics></math>, natural statistic
+<math id="Thmtheorem9.p1.m11" class="ltx_Math" alttext="(x,x^{2})" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><msup><mi>x</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,x^{2})</annotation></semantics></math>, natural parameter <math id="Thmtheorem9.p1.m12" class="ltx_Math" alttext="\bigl{(}\mu/\sigma^{2},\,-1/(2\sigma^{2})\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>μ</mi><mo>/</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo rspace="0.337em">,</mo><mrow><mo>−</mo><mrow><mn>1</mn><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}\mu/\sigma^{2},\,-1/(2\sigma^{2})\bigr{)}</annotation></semantics></math>
+and <math id="Thmtheorem9.p1.m13" class="ltx_Math" alttext="B(\theta)=\mu^{2}/(2\sigma^{2})+\frac{1}{2}\log(2\pi\sigma^{2})" display="inline"><semantics><mrow><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><msup><mi>μ</mi><mn>2</mn></msup><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>+</mo><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><mi>π</mi><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">B(\theta)=\mu^{2}/(2\sigma^{2})+\frac{1}{2}\log(2\pi\sigma^{2})</annotation></semantics></math>. For a sample, the natural
+statistic <math id="Thmtheorem9.p1.m14" class="ltx_Math" alttext="\bigl{(}\sum_{i}x_{i},\sum_{i}x_{i}^{2}\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msub><mo lspace="0em">∑</mo><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub></mrow><mo rspace="0em">,</mo><mrow><msub><mo>∑</mo><mi>i</mi></msub><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}\sum_{i}x_{i},\sum_{i}x_{i}^{2}\bigr{)}</annotation></semantics></math> is equivalent to the pair <math id="Thmtheorem9.p1.m15" class="ltx_Math" alttext="\bigl{(}\bar{x},\sum_{i}(x_{i}-\bar{x})^{2}\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo rspace="0em">,</mo><mrow><msub><mo rspace="0em">∑</mo><mi>i</mi></msub><msup><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}\bar{x},\sum_{i}(x_{i}-\bar{x})^{2}\bigr{)}</annotation></semantics></math>
+used to derive the maximum likelihood estimator in
+example <a href="Ch5.html#Thmtheorem4" title="Example 5.4. ‣ 5.2 Worked Examples ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.4</span></a>.</p>
+</div>
+</div>
+<div id="S3.p3" class="ltx_para">
+<p class="ltx_p">The gamma distribution with both parameters unknown is a second
+example of a two-parameter exponential family. If we write
+<math id="S3.p3.m1" class="ltx_Math" alttext="x^{\alpha-1}=e^{(\alpha-1)\log x}" display="inline"><semantics><mrow><msup><mi>x</mi><mrow><mi>α</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>=</mo><msup><mi>e</mi><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>α</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>x</mi></mrow></mrow></msup></mrow><annotation encoding="application/x-tex">x^{\alpha-1}=e^{(\alpha-1)\log x}</annotation></semantics></math>, then the natural statistic is
+<math id="S3.p3.m2" class="ltx_Math" alttext="(\log x,\,x)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>x</mi></mrow><mo rspace="0.337em">,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\log x,\,x)</annotation></semantics></math> and the details can be worked out using
+exercise <a href="#Thmexercise3" title="Exercise 7.3. ‣ 7.4 What the Structure Buys ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.3</span></a>. For a sample of size <math id="S3.p3.m3" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>, the natural
+statistic is the pair
+<math id="S3.p3.m4" class="ltx_Math" alttext="\bigl{(}\sum_{i}\log x_{i},\sum_{i}x_{i}\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msub><mo lspace="0em">∑</mo><mi>i</mi></msub><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><msub><mi>x</mi><mi>i</mi></msub></mrow></mrow><mo rspace="0em">,</mo><mrow><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}\sum_{i}\log x_{i},\sum_{i}x_{i}\bigr{)}</annotation></semantics></math>, which is different from the pair of
+moments used in example <a href="Ch4.html#Thmtheorem9" title="Example 4.9. ‣ 4.3 The Method of Moments ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.9</span></a>. This is the first sign
+that the moment estimator is missing some information. (We will see
+in lecture <a href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">8</span></a> that this is indeed the case.)</p>
+</div>
+<div id="S3.p4" class="ltx_para">
+<p class="ltx_p">For the completeness statements in lecture <a href="Ch10.html" title="Lecture 10 Improving Estimators: Rao–Blackwell and Lehmann–Scheffe ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">10</span></a> it is
+important that the natural parameter varies in as many directions as
+there are natural statistics. Mathematically, this can be expressed
+as the following condition.</p>
+</div>
+<div id="Thmtheorem10" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id15">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id15"><span class="ltx_text ltx_font_bold">Definition 7.10</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem10.p1" class="ltx_para">
+<p class="ltx_p">A one-parameter exponential family is of <em class="ltx_emph ltx_font_italic">full rank</em>, if the set
+<math id="Thmtheorem10.p1.m1" class="ltx_Math" alttext="\eta(\Theta)=\{\eta(\theta)\mid\theta\in\Theta\}" display="inline"><semantics><mrow><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">Θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mo stretchy="false">{</mo><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo fence="true" lspace="0em" rspace="0em">∣</mo><mrow><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">\eta(\Theta)=\{\eta(\theta)\mid\theta\in\Theta\}</annotation></semantics></math> of natural parameter
+values contains a non-degenerate open interval. A <math id="Thmtheorem10.p1.m2" class="ltx_Math" alttext="k" display="inline"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>-parameter
+exponential family is of <em class="ltx_emph ltx_font_italic">full rank</em>, if the set
+<math id="Thmtheorem10.p1.m3" class="ltx_Math" alttext="\bigl{\{}\bigl{(}\eta_{1}(\theta),\dots,\eta_{k}(\theta)\bigr{)}\mathrel{\big{%
+|}}\theta\in\Theta\bigr{\}}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">{</mo><mrow><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msub><mi>η</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><mrow><msub><mi>η</mi><mi>k</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><mo fence="false" mathsize="120%">|</mo><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><mo maxsize="120%" minsize="120%">}</mo></mrow><annotation encoding="application/x-tex">\bigl{\{}\bigl{(}\eta_{1}(\theta),\dots,\eta_{k}(\theta)\bigr{)}\mathrel{\big{%
+|}}\theta\in\Theta\bigr{\}}</annotation></semantics></math>
+contains a non-empty open subset of <math id="Thmtheorem10.p1.m4" class="ltx_Math" alttext="\mathbb{R}^{k}" display="inline"><semantics><msup><mi>ℝ</mi><mi>k</mi></msup><annotation encoding="application/x-tex">\mathbb{R}^{k}</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="S3.p5" class="ltx_para">
+<p class="ltx_p">In the one-parameter case, the condition is almost always satisfied,
+since the image of an interval <math id="S3.p5.m1" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math> under a continuous, non-constant <math id="S3.p5.m2" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>
+is an interval with more than one point; all the one-parameter
+examples above are of full rank. For several parameters, the
+condition can be more interesting: the natural parameter values
+of the normal distribution fill the open half-plane
+<math id="S3.p5.m3" class="ltx_Math" alttext="\{(\eta_{1},\eta_{2})\mid\eta_{2}&lt;0\}" display="inline"><semantics><mrow><mo stretchy="false">{</mo><mrow><mo stretchy="false">(</mo><msub><mi>η</mi><mn>1</mn></msub><mo>,</mo><msub><mi>η</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow><mo fence="true" lspace="0em" rspace="0em">∣</mo><mrow><msub><mi>η</mi><mn>2</mn></msub><mo>&lt;</mo><mn>0</mn></mrow><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{(\eta_{1},\eta_{2})\mid\eta_{2}&lt;0\}</annotation></semantics></math> (example <a href="#Thmtheorem9" title="Example 7.9. ‣ 7.3 Several Parameters ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.9</span></a>) and
+the natural parameter values of the gamma distribution fill an open quadrant
+(exercise <a href="#Thmexercise3" title="Exercise 7.3. ‣ 7.4 What the Structure Buys ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.3</span></a>), but the natural parameter values of <math id="S3.p5.m4" class="ltx_Math" alttext="N(\theta,\theta^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo>,</mo><msup><mi>θ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\theta,\theta^{2})</annotation></semantics></math> with
+<math id="S3.p5.m5" class="ltx_Math" alttext="\theta&gt;0" display="inline"><semantics><mrow><mi>θ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta&gt;0</annotation></semantics></math>, where the standard deviation equals the mean, form a
+curve in <math id="S3.p5.m6" class="ltx_Math" alttext="\mathbb{R}^{2}" display="inline"><semantics><msup><mi>ℝ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\mathbb{R}^{2}</annotation></semantics></math> which does not contain an open set and thus the
+two-parameter family in this case is not of full rank
+(exercise <a href="#Thmexercise7" title="Exercise 7.7. ‣ 7.4 What the Structure Buys ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.7</span></a>).</p>
+</div>
+</div>
+</section>
+<section id="S4" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">7.4</span> What the Structure Buys</h2>
+
+<div id="S4.p1" class="ltx_para">
+<p class="ltx_p">The definitions in this lecture have applications in many areas. In
+lecture <a href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">8</span></a> we see that the natural statistic <math id="S4.p1.m1" class="ltx_Math" alttext="T_{n}" display="inline"><semantics><msub><mi>T</mi><mi>n</mi></msub><annotation encoding="application/x-tex">T_{n}</annotation></semantics></math> of a
+sample is <em class="ltx_emph ltx_font_italic">sufficient</em> and lemma <a href="#Thmtheorem5" title="Lemma 7.5. ‣ 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.5</span></a> is
+essentially the whole proof. In lecture <a href="Ch10.html" title="Lecture 10 Improving Estimators: Rao–Blackwell and Lehmann–Scheffe ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">10</span></a> we see that
+full rank implies that <math id="S4.p1.m2" class="ltx_Math" alttext="T_{n}" display="inline"><semantics><msub><mi>T</mi><mi>n</mi></msub><annotation encoding="application/x-tex">T_{n}</annotation></semantics></math>
+is <em class="ltx_emph ltx_font_italic">complete</em> and we use the Lehmann–Scheffe theorem to find
+the best unbiased estimators. In lecture <a href="Ch11.html" title="Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">11</span></a> we find
+that the Fisher information for the natural parameter equals
+<math id="S4.p1.m3" class="ltx_Math" alttext="K^{\prime\prime}(\eta)" display="inline"><semantics><mrow><msup><mi>K</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">K^{\prime\prime}(\eta)</annotation></semantics></math>. In lecture <a href="Ch13.html" title="Lecture 13 The Cramer–Rao Inequality ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">13</span></a> we see that the estimators
+which achieve the Cramer–Rao bound are, up to affine transformations,
+natural statistics. Finally, in lecture <a href="Ch26.html" title="Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26</span></a> we find that
+conjugate priors arise because the likelihood (<a href="#E2" title="In 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.2</span></a>)
+depends on the data only via <math id="S4.p1.m4" class="ltx_Math" alttext="T_{n}" display="inline"><semantics><msub><mi>T</mi><mi>n</mi></msub><annotation encoding="application/x-tex">T_{n}</annotation></semantics></math> and <math id="S4.p1.m5" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.</p>
+</div>
+<div id="S4.p2" class="ltx_para">
+<p class="ltx_p">Exponential families also satisfy the regularity conditions from
+lectures <a href="Ch11.html" title="Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">11</span></a>, <a href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">16</span></a> and <a href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">17</span></a>: the support of
+the distribution is fixed, the density is smooth in <math id="S4.p2.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> whenever
+<math id="S4.p2.m2" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> and <math id="S4.p2.m3" class="ltx_Math" alttext="B" display="inline"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> are, and we have
+differentiation under the integral sign as in the proof of
+theorem <a href="#Thmtheorem7" title="Theorem 7.7. ‣ 7.2 The Natural Parametrisation and the Cumulant Function ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.7</span></a>. The log-likelihood
+<math id="S4.p2.m4" class="ltx_Math" alttext="\ell(\eta)=\sum_{i}\log h(x_{i})+\eta T_{n}-nK(\eta)" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><mrow><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>h</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>+</mo><mrow><mi>η</mi><mo>⁢</mo><msub><mi>T</mi><mi>n</mi></msub></mrow></mrow><mo>−</mo><mrow><mi>n</mi><mo>⁢</mo><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\ell(\eta)=\sum_{i}\log h(x_{i})+\eta T_{n}-nK(\eta)</annotation></semantics></math> has second derivative
+<math id="S4.p2.m5" class="ltx_Math" alttext="-nK^{\prime\prime}(\eta)=-n\mathop{\mathrm{Var}}\nolimits_{\eta}\bigl{(}T(X)%
+\bigr{)}&lt;0" display="inline"><semantics><mrow><mrow><mo>−</mo><mrow><mi>n</mi><mo>⁢</mo><msup><mi>K</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>=</mo><mrow><mo>−</mo><mrow><mi>n</mi><mo lspace="0.167em">⁢</mo><mrow><msub><mo rspace="0em">Var</mo><mi>η</mi></msub><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow></mrow><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">-nK^{\prime\prime}(\eta)=-n\mathop{\mathrm{Var}}\nolimits_{\eta}\bigl{(}T(X)%
+\bigr{)}&lt;0</annotation></semantics></math>, since <math id="S4.p2.m6" class="ltx_Math" alttext="T(X)" display="inline"><semantics><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">T(X)</annotation></semantics></math> is not
+constant, and thus is strictly concave in <math id="S4.p2.m7" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>. For this reason,
+the likelihood equation from exercise <a href="#Thmexercise5" title="Exercise 7.5. ‣ 7.4 What the Structure Buys ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.5</span></a> has at most
+one root and this root is then the maximum likelihood estimator. This
+shows that the uniqueness hypothesis of the consistency theorem from
+lecture <a href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">16</span></a> holds for the whole class.</p>
+</div>
+<div id="Thmsummarybodyx7" class="ltx_theorem bml_border-color_000000 ltx_theorem_summarybody ltx_framed ltx_framed_left" style="border-width:3pt;padding-left:10pt;" role="group" aria-labelledby="bml-auto-id16">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id16"><span class="ltx_text ltx_font_italic">Summary</span></span><span class="ltx_text ltx_font_italic">.</span>
+</div>
+<div id="Thmsummarybodyx7.p1" class="ltx_para">
+<ul id="S4.I1" class="ltx_itemize">
+<li id="S4.I1.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i1.p1" class="ltx_para">​<p class="ltx_p">A one-parameter exponential family has density of the form
+<math id="S4.I1.i1.p1.m1" class="ltx_Math" alttext="f(x;\theta)=h(x)\exp\bigl{(}\eta(\theta)T(x)-B(\theta)\bigr{)}" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)=h(x)\exp\bigl{(}\eta(\theta)T(x)-B(\theta)\bigr{)}</annotation></semantics></math>, where
+the natural statistic is <math id="S4.I1.i1.p1.m2" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>, the natural parameter is <math id="S4.I1.i1.p1.m3" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> and the
+support of the distribution does not depend on <math id="S4.I1.i1.p1.m4" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. Examples
+of exponential families include the Bernoulli, Poisson, exponential,
+normal and gamma distributions. The uniform distribution is not
+an exponential family.</p>
+</div>
+</li>
+<li id="S4.I1.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i2.p1" class="ltx_para">​<p class="ltx_p">An i.i.d. sample from an exponential family is again an
+exponential family. In this case, the natural statistic is
+<math id="S4.I1.i2.p1.m1" class="ltx_Math" alttext="T_{n}=\sum_{i}T(X_{i})" display="inline"><semantics><mrow><msub><mi>T</mi><mi>n</mi></msub><mo rspace="0.111em">=</mo><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">T_{n}=\sum_{i}T(X_{i})</annotation></semantics></math> and the likelihood depends on the data only through <math id="S4.I1.i2.p1.m2" class="ltx_Math" alttext="T_{n}" display="inline"><semantics><msub><mi>T</mi><mi>n</mi></msub><annotation encoding="application/x-tex">T_{n}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S4.I1.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i3.p1" class="ltx_para">​<p class="ltx_p">In the natural parametrisation <math id="S4.I1.i3.p1.m1" class="ltx_Math" alttext="f(x;\eta)=h(x)\exp(\eta T(x)-K(\eta))" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mrow><mi>η</mi><mo>⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x;\eta)=h(x)\exp(\eta T(x)-K(\eta))</annotation></semantics></math>
+the cumulant function <math id="S4.I1.i3.p1.m2" class="ltx_Math" alttext="K" display="inline"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> can be used to find the moments of the
+natural statistic: we have
+<math id="S4.I1.i3.p1.m3" class="ltx_Math" alttext="\mathbb{E}_{\eta}(T(X))=K^{\prime}(\eta)" display="inline"><semantics><mrow><mrow><msub><mi>𝔼</mi><mi>η</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mi>K</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\eta}(T(X))=K^{\prime}(\eta)</annotation></semantics></math> and <math id="S4.I1.i3.p1.m4" class="ltx_Math" alttext="\mathop{\mathrm{Var}}\nolimits_{\eta}(T(X))=K^{\prime\prime}(\eta)" display="inline"><semantics><mrow><mrow><msub><mo>Var</mo><mi>η</mi></msub><mrow><mo lspace="0em" stretchy="false">(</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mi>K</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{Var}}\nolimits_{\eta}(T(X))=K^{\prime\prime}(\eta)</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S4.I1.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i4.p1" class="ltx_para">​<p class="ltx_p">A family is of full rank, if the values of the natural
+parameter corresponding to an open set of the correct dimension
+can be achieved. This condition is required for completeness in
+lecture <a href="Ch10.html" title="Lecture 10 Improving Estimators: Rao–Blackwell and Lehmann–Scheffe ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">10</span></a>.</p>
+</div>
+</li>
+<li id="S4.I1.i5" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i5.p1" class="ltx_para">​<p class="ltx_p">By construction, exponential families satisfy the regularity
+conditions of the later theory and the log-likelihood function is
+strictly concave in the natural parameter.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="Thmexercise1" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id17">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id17"><span class="ltx_text ltx_font_bold">Exercise 7.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise1.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise1.p1.m1" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> be geometrically distributed with parameter <math id="Thmexercise1.p1.m2" class="ltx_Math" alttext="p\in(0,1)" display="inline"><semantics><mrow><mi>p</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">p\in(0,1)</annotation></semantics></math>,
+<span class="ltx_text ltx_font_italic">i.e.</span> <math id="Thmexercise1.p1.m3" class="ltx_Math" alttext="f(x;p)=(1-p)^{x-1}p" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>p</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>p</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mi>x</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><mi>p</mi></mrow></mrow><annotation encoding="application/x-tex">f(x;p)=(1-p)^{x-1}p</annotation></semantics></math> for <math id="Thmexercise1.p1.m4" class="ltx_Math" alttext="x\in\{1,2,\dots\}" display="inline"><semantics><mrow><mi>x</mi><mo>∈</mo><mrow><mo stretchy="false">{</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">x\in\{1,2,\dots\}</annotation></semantics></math>, as in
+exercises <a href="Ch4.html#Thmexercise2" title="Exercise 4.2. ‣ 4.4 Identifiability ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.2</span></a> and <a href="Ch5.html#Thmexercise1" title="Exercise 5.1. ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.1</span></a>.</p>
+<ol id="S4.I2" class="ltx_enumerate">
+<li id="S4.I2.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I2.i1.p1" class="ltx_para">​<p class="ltx_p">Show that this distribution is a one-parameter exponential
+family and identify the functions <math id="S4.I2.i1.p1.m1" class="ltx_Math" alttext="h" display="inline"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math>, <math id="S4.I2.i1.p1.m2" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>, <math id="S4.I2.i1.p1.m3" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> and <math id="S4.I2.i1.p1.m4" class="ltx_Math" alttext="B" display="inline"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>. What is the natural statistic of
+an i.i.d. sample <math id="S4.I2.i1.p1.m5" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math>?</p>
+</div>
+</li>
+<li id="S4.I2.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I2.i2.p1" class="ltx_para">​<p class="ltx_p">Determine the natural parameter space <math id="S4.I2.i2.p1.m1" class="ltx_Math" alttext="\mathcal{N}" display="inline"><semantics><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><annotation encoding="application/x-tex">\mathcal{N}</annotation></semantics></math> and the
+cumulant function <math id="S4.I2.i2.p1.m2" class="ltx_Math" alttext="K" display="inline"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>. Check that <math id="S4.I2.i2.p1.m3" class="ltx_Math" alttext="B(p)=K\bigl{(}\eta(p)\bigr{)}" display="inline"><semantics><mrow><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>p</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>K</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>p</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">B(p)=K\bigl{(}\eta(p)\bigr{)}</annotation></semantics></math>.
+Is this family of full rank?</p>
+</div>
+</li>
+<li id="S4.I2.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S4.I2.i3.p1" class="ltx_para">​<p class="ltx_p">Using theorem <a href="#Thmtheorem7" title="Theorem 7.7. ‣ 7.2 The Natural Parametrisation and the Cumulant Function ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.7</span></a>, determine the mean and variance
+of <math id="S4.I2.i3.p1.m1" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> and compare the result with table <a href="A1.html#T1" title="Table A.1 ‣ A.2 Standard Distributions ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.1</span></a>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise2" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id18">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id18"><span class="ltx_text ltx_font_bold">Exercise 7.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise2.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise2.p1.m1" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> be binomially distributed with a known number <math id="Thmexercise2.p1.m2" class="ltx_Math" alttext="m" display="inline"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+of trials and unknown success probability <math id="Thmexercise2.p1.m3" class="ltx_Math" alttext="\theta\in(0,1)" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta\in(0,1)</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> <math id="Thmexercise2.p1.m4" class="ltx_Math" alttext="f(x;\theta)=\binom{m}{x}\theta^{x}(1-\theta)^{m-x}" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo>(</mo><mfrac linethickness="0pt"><mi>m</mi><mi>x</mi></mfrac><mo>)</mo></mrow><mo>⁢</mo><msup><mi>θ</mi><mi>x</mi></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mi>m</mi><mo>−</mo><mi>x</mi></mrow></msup></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)=\binom{m}{x}\theta^{x}(1-\theta)^{m-x}</annotation></semantics></math> for <math id="Thmexercise2.p1.m5" class="ltx_Math" alttext="x\in\{0,1,\dots,m\}" display="inline"><semantics><mrow><mi>x</mi><mo>∈</mo><mrow><mo stretchy="false">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><mi>m</mi><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">x\in\{0,1,\dots,m\}</annotation></semantics></math>.</p>
+<ol id="S4.I3" class="ltx_enumerate">
+<li id="S4.I3.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I3.i1.p1" class="ltx_para">​<p class="ltx_p">Show that this distribution is a one-parameter exponential
+family, with the same natural parameter as the Bernoulli
+distribution from example <a href="#Thmtheorem2" title="Example 7.2. ‣ 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.2</span></a>, and identify the
+functions <math id="S4.I3.i1.p1.m1" class="ltx_Math" alttext="h" display="inline"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math>, <math id="S4.I3.i1.p1.m2" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math> and <math id="S4.I3.i1.p1.m3" class="ltx_Math" alttext="B" display="inline"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S4.I3.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I3.i2.p1" class="ltx_para">​<p class="ltx_p">Determine the natural parameter space and the cumulant
+function.</p>
+</div>
+</li>
+<li id="S4.I3.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S4.I3.i3.p1" class="ltx_para">​<p class="ltx_p">Using theorem <a href="#Thmtheorem7" title="Theorem 7.7. ‣ 7.2 The Natural Parametrisation and the Cumulant Function ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.7</span></a>, determine the mean and variance
+of <math id="S4.I3.i3.p1.m1" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>, and the mean and variance of the natural statistic
+<math id="S4.I3.i3.p1.m2" class="ltx_Math" alttext="T_{n}" display="inline"><semantics><msub><mi>T</mi><mi>n</mi></msub><annotation encoding="application/x-tex">T_{n}</annotation></semantics></math> for an i.i.d. sample of size <math id="S4.I3.i3.p1.m3" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise3" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id19">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id19"><span class="ltx_text ltx_font_bold">Exercise 7.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise3.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise3.p1.m1" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> be gamma distributed, <math id="Thmexercise3.p1.m2" class="ltx_Math" alttext="X\sim\text{Gamma}(\alpha,\beta)" display="inline"><semantics><mrow><mi>X</mi><mo>∼</mo><mrow><mtext>Gamma</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>α</mi><mo>,</mo><mi>β</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">X\sim\text{Gamma}(\alpha,\beta)</annotation></semantics></math>
+with shape <math id="Thmexercise3.p1.m3" class="ltx_Math" alttext="\alpha&gt;0" display="inline"><semantics><mrow><mi>α</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\alpha&gt;0</annotation></semantics></math> and rate <math id="Thmexercise3.p1.m4" class="ltx_Math" alttext="\beta&gt;0" display="inline"><semantics><mrow><mi>β</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\beta&gt;0</annotation></semantics></math>, both unknown,
+<span class="ltx_text ltx_font_italic">i.e.</span> with density given by
+<math id="Thmexercise3.p1.m5" class="ltx_Math" alttext="f(x;\alpha,\beta)=\beta^{\alpha}x^{\alpha-1}e^{-\beta x}/\Gamma(\alpha)" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>α</mi><mo>,</mo><mi>β</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mrow><msup><mi>β</mi><mi>α</mi></msup><mo>⁢</mo><msup><mi>x</mi><mrow><mi>α</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><msup><mi>e</mi><mrow><mo>−</mo><mrow><mi>β</mi><mo>⁢</mo><mi>x</mi></mrow></mrow></msup></mrow><mo>/</mo><mi mathvariant="normal">Γ</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>α</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x;\alpha,\beta)=\beta^{\alpha}x^{\alpha-1}e^{-\beta x}/\Gamma(\alpha)</annotation></semantics></math>
+for <math id="Thmexercise3.p1.m6" class="ltx_Math" alttext="x&gt;0" display="inline"><semantics><mrow><mi>x</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x&gt;0</annotation></semantics></math>, as given in table <a href="A1.html#T2" title="Table A.2 ‣ A.2 Standard Distributions ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.2</span></a>.</p>
+<ol id="S4.I4" class="ltx_enumerate">
+<li id="S4.I4.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I4.i1.p1" class="ltx_para">​<p class="ltx_p">Show that this model is a two-parameter exponential family,
+as given in definition <a href="#Thmtheorem8" title="Definition 7.8. ‣ 7.3 Several Parameters ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.8</span></a>, with
+<math id="S4.I4.i1.p1.m1" class="ltx_Math" alttext="h(x)=1" display="inline"><semantics><mrow><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">h(x)=1</annotation></semantics></math> for <math id="S4.I4.i1.p1.m2" class="ltx_Math" alttext="x&gt;0" display="inline"><semantics><mrow><mi>x</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x&gt;0</annotation></semantics></math> and
+<math id="S4.I4.i1.p1.m3" class="ltx_Math" alttext="h(x)=0" display="inline"><semantics><mrow><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">h(x)=0</annotation></semantics></math> otherwise, natural statistic
+<math id="S4.I4.i1.p1.m4" class="ltx_Math" alttext="(\log x,\,x)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>x</mi></mrow><mo rspace="0.337em">,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\log x,\,x)</annotation></semantics></math>, natural parameter <math id="S4.I4.i1.p1.m5" class="ltx_Math" alttext="(\alpha-1,\,-\beta)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mi>α</mi><mo>−</mo><mn>1</mn></mrow><mo rspace="0.337em">,</mo><mrow><mo>−</mo><mi>β</mi></mrow><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\alpha-1,\,-\beta)</annotation></semantics></math>, and
+function
+<math id="S4.I4.i1.p1.m6" class="ltx_Math" alttext="B(\alpha,\beta)=\log\Gamma(\alpha)-\alpha\log\beta" display="inline"><semantics><mrow><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>α</mi><mo>,</mo><mi>β</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi mathvariant="normal">Γ</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>α</mi><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>α</mi><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>β</mi></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">B(\alpha,\beta)=\log\Gamma(\alpha)-\alpha\log\beta</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S4.I4.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I4.i2.p1" class="ltx_para">​<p class="ltx_p">Show that the set of natural parameter values is the open
+quadrant</p>
+<div id="Ex13" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex13.m1" class="ltx_Math" alttext="\{(\eta_{1},\eta_{2})\mid\eta_{1}&gt;-1,\ \eta_{2}&lt;0\}" display="block"><semantics><mrow><mo stretchy="false">{</mo><mrow><mo stretchy="false">(</mo><msub><mi>η</mi><mn>1</mn></msub><mo>,</mo><msub><mi>η</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow><mo fence="true" lspace="0em" rspace="0em">∣</mo><mrow><mrow><msub><mi>η</mi><mn>1</mn></msub><mo>&gt;</mo><mrow><mo>−</mo><mn>1</mn></mrow></mrow><mo rspace="0.717em">,</mo><mrow><msub><mi>η</mi><mn>2</mn></msub><mo>&lt;</mo><mn>0</mn></mrow></mrow><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{(\eta_{1},\eta_{2})\mid\eta_{1}&gt;-1,\ \eta_{2}&lt;0\}</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">and thus the family has full rank as given
+in definition <a href="#Thmtheorem10" title="Definition 7.10. ‣ 7.3 Several Parameters ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.10</span></a>.</p>
+</div>
+</li>
+<li id="S4.I4.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S4.I4.i3.p1" class="ltx_para">​<p class="ltx_p">Assume that the shape <math id="S4.I4.i3.p1.m1" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> is known, as in
+exercise <a href="Ch5.html#Thmexercise2" title="Exercise 5.2. ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.2</span></a>. Show that then the factor
+<math id="S4.I4.i3.p1.m2" class="ltx_Math" alttext="x^{\alpha-1}" display="inline"><semantics><msup><mi>x</mi><mrow><mi>α</mi><mo>−</mo><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">x^{\alpha-1}</annotation></semantics></math> can be incorporated into the function <math id="S4.I4.i3.p1.m3" class="ltx_Math" alttext="h" display="inline"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math> to yield a
+one-parameter exponential family with natural statistic
+<math id="S4.I4.i3.p1.m4" class="ltx_Math" alttext="T(x)=x" display="inline"><semantics><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">T(x)=x</annotation></semantics></math> and natural parameter <math id="S4.I4.i3.p1.m5" class="ltx_Math" alttext="-\beta" display="inline"><semantics><mrow><mo>−</mo><mi>β</mi></mrow><annotation encoding="application/x-tex">-\beta</annotation></semantics></math>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise4" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id20">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id20"><span class="ltx_text ltx_font_bold">Exercise 7.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise4.p1" class="ltx_para">
+<ol id="S4.I5" class="ltx_enumerate">
+<li id="S4.I5.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I5.i1.p1" class="ltx_para">​<p class="ltx_p">For the exponential distribution with rate <math id="S4.I5.i1.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, use the
+cumulant function <math id="S4.I5.i1.p1.m2" class="ltx_Math" alttext="K(\eta)=-\log(-\eta)" display="inline"><semantics><mrow><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mo rspace="0.167em">−</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mo>−</mo><mi>η</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">K(\eta)=-\log(-\eta)</annotation></semantics></math> from the text to find
+the mean and variance of an observation.</p>
+</div>
+</li>
+<li id="S4.I5.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I5.i2.p1" class="ltx_para">​<p class="ltx_p">For the normal distribution with known variance <math id="S4.I5.i2.p1.m1" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math> and
+unknown mean <math id="S4.I5.i2.p1.m2" class="ltx_Math" alttext="\mu" display="inline"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math>, where <math id="S4.I5.i2.p1.m3" class="ltx_Math" alttext="h" display="inline"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math>, <math id="S4.I5.i2.p1.m4" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math> and <math id="S4.I5.i2.p1.m5" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> are as in
+example <a href="#Thmtheorem9" title="Example 7.9. ‣ 7.3 Several Parameters ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.9</span></a>, use the method of completing the square
+to show that
+<math id="S4.I5.i2.p1.m6" class="ltx_Math" alttext="K(\eta)=\sigma^{2}\eta^{2}/2" display="inline"><semantics><mrow><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><msup><mi>σ</mi><mn>2</mn></msup><mo>⁢</mo><msup><mi>η</mi><mn>2</mn></msup></mrow><mo>/</mo><mn>2</mn></mrow></mrow><annotation encoding="application/x-tex">K(\eta)=\sigma^{2}\eta^{2}/2</annotation></semantics></math> with <math id="S4.I5.i2.p1.m7" class="ltx_Math" alttext="\mathcal{N}=\mathbb{R}" display="inline"><semantics><mrow><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><mo>=</mo><mi>ℝ</mi></mrow><annotation encoding="application/x-tex">\mathcal{N}=\mathbb{R}</annotation></semantics></math>
+and use this to derive the mean and variance of an observation.
+Check that your result satisfies
+<math id="S4.I5.i2.p1.m8" class="ltx_Math" alttext="B(\mu)=K\bigl{(}\eta(\mu)\bigr{)}" display="inline"><semantics><mrow><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>K</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">B(\mu)=K\bigl{(}\eta(\mu)\bigr{)}</annotation></semantics></math>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise5" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id21">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id21"><span class="ltx_text ltx_font_bold">Exercise 7.5</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise5.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise5.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be an i.i.d. sample from a one-parameter exponential
+family in its natural parametrisation, with <math id="Thmexercise5.p1.m2" class="ltx_Math" alttext="\mathcal{N}" display="inline"><semantics><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><annotation encoding="application/x-tex">\mathcal{N}</annotation></semantics></math> an open
+interval and <math id="Thmexercise5.p1.m3" class="ltx_Math" alttext="\mathop{\mathrm{Var}}\nolimits_{\eta}(T(X_{1}))&gt;0" display="inline"><semantics><mrow><mrow><msub><mo>Var</mo><mi>η</mi></msub><mrow><mo lspace="0em" stretchy="false">(</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mn>1</mn></msub><mo stretchy="false">)</mo></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{Var}}\nolimits_{\eta}(T(X_{1}))&gt;0</annotation></semantics></math> for all <math id="Thmexercise5.p1.m4" class="ltx_Math" alttext="\eta\in\mathcal{N}" display="inline"><semantics><mrow><mi>η</mi><mo>∈</mo><mi class="ltx_font_mathcaligraphic">𝒩︀</mi></mrow><annotation encoding="application/x-tex">\eta\in\mathcal{N}</annotation></semantics></math>.</p>
+<ol id="S4.I6" class="ltx_enumerate">
+<li id="S4.I6.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I6.i1.p1" class="ltx_para">​<p class="ltx_p">Show that the likelihood equation <math id="S4.I6.i1.p1.m1" class="ltx_Math" alttext="\ell^{\prime}(\eta)=0" display="inline"><semantics><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ell^{\prime}(\eta)=0</annotation></semantics></math> from
+lecture <a href="Ch5.html" title="Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5</span></a> can be written as</p>
+<div id="Ex14" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex14.m1" class="ltx_Math" alttext="\frac{1}{n}\sum_{i=1}^{n}T(x_{i})=\mathbb{E}_{\eta}\bigl{(}T(X_{1})\bigr{)}," display="block"><semantics><mrow><mrow><mrow><mfrac><mn>1</mn><mi>n</mi></mfrac><mo>⁢</mo><mrow><munderover><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>=</mo><mrow><msub><mi>𝔼</mi><mi>η</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mn>1</mn></msub><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\frac{1}{n}\sum_{i=1}^{n}T(x_{i})=\mathbb{E}_{\eta}\bigl{(}T(X_{1})\bigr{)},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">i.e.</span> the maximum likelihood estimator is the parameter
+value under which the population mean of the natural statistic
+equals its sample mean.</p>
+</div>
+</li>
+<li id="S4.I6.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I6.i2.p1" class="ltx_para">​<p class="ltx_p">Show that every root of the likelihood equation is the unique
+maximum likelihood estimator for <math id="S4.I6.i2.p1.m1" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S4.I6.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S4.I6.i3.p1" class="ltx_para">​<p class="ltx_p">Apply the equation from the first part to the Poisson
+distribution and to the Bernoulli distribution, and use
+theorem <a href="Ch5.html#Thmtheorem6" title="Theorem 5.6 (Invariance of the MLE). ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.6</span></a> to recover the estimators found in
+exercise <a href="Ch5.html#Thmexercise7" title="Exercise 5.7. ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.7</span></a> and example <a href="Ch5.html#Thmtheorem3" title="Example 5.3. ‣ 5.2 Worked Examples ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.3</span></a>.</p>
+</div>
+</li>
+<li id="S4.I6.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">4.</span><div id="S4.I6.i4.p1" class="ltx_para">​<p class="ltx_p">Explain how the first part of this exercise accounts for the
+coincidences between the method of moments and maximum likelihood
+which we noted in lecture <a href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4</span></a>, and why no such coincidence is to be expected
+for the gamma distribution of exercise <a href="#Thmexercise3" title="Exercise 7.3. ‣ 7.4 What the Structure Buys ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.3</span></a>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise6" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id22">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id22"><span class="ltx_text ltx_font_bold">Exercise 7.6</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise6.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise6.p1.m1" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> be a random variable with density</p>
+<div id="Ex15" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex15.m1" class="ltx_Math" alttext="f(x;\eta)=h(x)\exp\bigl{(}\eta T(x)-K(\eta)\bigr{)}" display="block"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>η</mi><mo>⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x;\eta)=h(x)\exp\bigl{(}\eta T(x)-K(\eta)\bigr{)}</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">given by
+definition <a href="#Thmtheorem6" title="Definition 7.6. ‣ 7.2 The Natural Parametrisation and the Cumulant Function ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.6</span></a>, and let <math id="Thmexercise6.p1.m2" class="ltx_Math" alttext="s" display="inline"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> be such that
+<math id="Thmexercise6.p1.m3" class="ltx_Math" alttext="\eta+s\in\mathcal{N}" display="inline"><semantics><mrow><mrow><mi>η</mi><mo>+</mo><mi>s</mi></mrow><mo>∈</mo><mi class="ltx_font_mathcaligraphic">𝒩︀</mi></mrow><annotation encoding="application/x-tex">\eta+s\in\mathcal{N}</annotation></semantics></math>.</p>
+<ol id="S4.I7" class="ltx_enumerate">
+<li id="S4.I7.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I7.i1.p1" class="ltx_para">​<p class="ltx_p">Show that <math id="S4.I7.i1.p1.m1" class="ltx_Math" alttext="\mathbb{E}_{\eta}\bigl{(}e^{sT(X)}\bigr{)}=\exp\bigl{(}K(\eta+s)-K(\eta)\bigr{)}" display="inline"><semantics><mrow><mrow><msub><mi>𝔼</mi><mi>η</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><msup><mi>e</mi><mrow><mi>s</mi><mo>⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow></msup><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>=</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>η</mi><mo>+</mo><mi>s</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\eta}\bigl{(}e^{sT(X)}\bigr{)}=\exp\bigl{(}K(\eta+s)-K(\eta)\bigr{)}</annotation></semantics></math>,
+<span class="ltx_text ltx_font_italic">i.e.</span> that <math id="S4.I7.i1.p1.m2" class="ltx_Math" alttext="M(s)=K(\eta+s)-K(\eta)" display="inline"><semantics><mrow><mrow><mi>M</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>s</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>η</mi><mo>+</mo><mi>s</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">M(s)=K(\eta+s)-K(\eta)</annotation></semantics></math> is the logarithm of the
+moment generating function of <math id="S4.I7.i1.p1.m3" class="ltx_Math" alttext="T(X)" display="inline"><semantics><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">T(X)</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S4.I7.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I7.i2.p1" class="ltx_para">​<p class="ltx_p">Let <math id="S4.I7.i2.p1.m1" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> be an interior point of <math id="S4.I7.i2.p1.m2" class="ltx_Math" alttext="\mathcal{N}" display="inline"><semantics><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><annotation encoding="application/x-tex">\mathcal{N}</annotation></semantics></math>.
+Then, since <math id="S4.I7.i2.p1.m3" class="ltx_Math" alttext="M" display="inline"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math> is differentiable at <math id="S4.I7.i2.p1.m4" class="ltx_Math" alttext="s=0" display="inline"><semantics><mrow><mi>s</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">s=0</annotation></semantics></math>, we can
+find <math id="S4.I7.i2.p1.m5" class="ltx_Math" alttext="M^{\prime}(0)" display="inline"><semantics><mrow><msup><mi>M</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">M^{\prime}(0)</annotation></semantics></math> and <math id="S4.I7.i2.p1.m6" class="ltx_Math" alttext="M^{\prime\prime}(0)" display="inline"><semantics><mrow><msup><mi>M</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">M^{\prime\prime}(0)</annotation></semantics></math> from the first part of this
+exercise. Use these results to give an alternative proof of
+theorem <a href="#Thmtheorem7" title="Theorem 7.7. ‣ 7.2 The Natural Parametrisation and the Cumulant Function ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.7</span></a>.</p>
+</div>
+</li>
+<li id="S4.I7.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S4.I7.i3.p1" class="ltx_para">​<p class="ltx_p">Using the first part of the question, show that for the
+Poisson distribution with parameter <math id="S4.I7.i3.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> we have
+<math id="S4.I7.i3.p1.m2" class="ltx_Math" alttext="\mathbb{E}_{\theta}\bigl{(}z^{X}\bigr{)}=e^{\theta(z-1)}" display="inline"><semantics><mrow><mrow><msub><mi>𝔼</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><msup><mi>z</mi><mi>X</mi></msup><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>=</mo><msup><mi>e</mi><mrow><mi>θ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>z</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\theta}\bigl{(}z^{X}\bigr{)}=e^{\theta(z-1)}</annotation></semantics></math> for all <math id="S4.I7.i3.p1.m3" class="ltx_Math" alttext="z&gt;0" display="inline"><semantics><mrow><mi>z</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">z&gt;0</annotation></semantics></math>. This is
+the same identity as in exercise <a href="Ch5.html#Thmexercise7" title="Exercise 5.7. ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.7</span></a>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise7" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id23">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id23"><span class="ltx_text ltx_font_bold">Exercise 7.7</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise7.p1" class="ltx_para">
+<p class="ltx_p">Consider the normal distribution <math id="Thmexercise7.p1.m1" class="ltx_Math" alttext="N(\theta,\theta^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo>,</mo><msup><mi>θ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\theta,\theta^{2})</annotation></semantics></math> with mean and standard
+deviation both equal to <math id="Thmexercise7.p1.m2" class="ltx_Math" alttext="\theta&gt;0" display="inline"><semantics><mrow><mi>θ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta&gt;0</annotation></semantics></math>.</p>
+<ol id="S4.I8" class="ltx_enumerate">
+<li id="S4.I8.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I8.i1.p1" class="ltx_para">​<p class="ltx_p">Using example <a href="#Thmtheorem9" title="Example 7.9. ‣ 7.3 Several Parameters ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.9</span></a>, show that this model is a
+two-parameter exponential family with natural statistic and natural
+parameter given by</p>
+<div id="Ex16" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex16.m1" class="ltx_Math" alttext="T(x)=(x,x^{2})\qquad\text{and}\qquad\eta(\theta)=\bigl{(}1/\theta,\,-1/(2%
+\theta^{2})\bigr{)}." display="block"><semantics><mrow><mrow><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><msup><mi>x</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><mspace width="2.19em"></mspace><mtext>and</mtext></mrow></mrow><mspace width="2.19em"></mspace><mrow><mrow><mi>η</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mn>1</mn><mo>/</mo><mi>θ</mi></mrow><mo rspace="0.337em">,</mo><mrow><mo>−</mo><mrow><mn>1</mn><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><msup><mi>θ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">T(x)=(x,x^{2})\qquad\text{and}\qquad\eta(\theta)=\bigl{(}1/\theta,\,-1/(2%
+\theta^{2})\bigr{)}.</annotation></semantics></math></div>
+</div>
+</div>
+</li>
+<li id="S4.I8.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I8.i2.p1" class="ltx_para">​<p class="ltx_p">Show that as <math id="S4.I8.i2.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> varies, the natural parameter values
+follow the curve <math id="S4.I8.i2.p1.m2" class="ltx_Math" alttext="\eta_{2}=-\eta_{1}^{2}/2" display="inline"><semantics><mrow><msub><mi>η</mi><mn>2</mn></msub><mo>=</mo><mrow><mo>−</mo><mrow><msubsup><mi>η</mi><mn>1</mn><mn>2</mn></msubsup><mo>/</mo><mn>2</mn></mrow></mrow></mrow><annotation encoding="application/x-tex">\eta_{2}=-\eta_{1}^{2}/2</annotation></semantics></math> with <math id="S4.I8.i2.p1.m3" class="ltx_Math" alttext="\eta_{1}&gt;0" display="inline"><semantics><mrow><msub><mi>η</mi><mn>1</mn></msub><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\eta_{1}&gt;0</annotation></semantics></math>.
+Conclude that this family is not of full rank in the sense of
+definition <a href="#Thmtheorem10" title="Definition 7.10. ‣ 7.3 Several Parameters ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.10</span></a>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</div>
+</div>
+<a href="Ch6.html" class="navigation navigation-prev" aria-label="Previous page"><i class="fa fa-angle-left"></i></a><a href="Ch8.html" class="navigation navigation-next" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+</div>
+</div>
+<script src="bookml/gitbook/js/app.min.js"></script>
+<script src="bookml/gitbook/js/jquery.highlight.js"></script>
+<script src="bookml/gitbook/js/plugin-search.js"></script>
+<script src="bookml/gitbook/js/plugin-fontsettings.js"></script>
+<script src="bookml/gitbook/js/plugin-bookdown.js"></script>
+<script src="bookml/js/mathjax4.js"></script>
+<script type="text/javascript">
+                gitbook.require(["gitbook"], function(gitbook) {
+                gitbook.start({
+                  "fontsettings": {
+                    "theme": "white",
+                    "family": "sans",
+                    "size": 2
+                  },
+                  "download": [ [ "notes.pdf", "PDF" ], ],
+                  "search": {
+                    "engine": "fuse"
+                  },
+                  "toc": {
+                    "collapse": "none"
+                  }
+                });
+              });
+            </script>
+</body>
+
+</html>

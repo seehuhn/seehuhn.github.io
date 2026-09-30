@@ -1,0 +1,811 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory</title>
+<!--Generated on Wed Sep 30 09:26:32 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<style>:root { --bml-ltx-font-size: 10.95; }</style>
+<link rel="stylesheet" href="LaTeXML.css" type="text/css">
+<link rel="stylesheet" href="ltx-book.css" type="text/css">
+<link rel="stylesheet" href="ltx-listings.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-table.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-search.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-bookdown.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-fontsettings.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook,plain.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook.css" type="text/css">
+<link rel="stylesheet" href="bmluser/colors.gitbook-notes.css" type="text/css">
+<link rel="stylesheet" href="bmluser/statheo-custom.css" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+<link rel="up" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="start" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="prev" href="Ch18.html" title="Lecture 18 Maximum Likelihood in R ‣ MATH5703M Statistical Theory">
+<link rel="next" href="Ch20.html" title="Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx1.html" title="Introduction ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch1.html" title="Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch3.html" title="Lecture 3 R Basics and a First Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch5.html" title="Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch6.html" title="Lecture 6 Estimators by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch7.html" title="Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch9.html" title="Lecture 9 Consistency by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch10.html" title="Lecture 10 Improving Estimators: Rao–Blackwell and Lehmann–Scheffe ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch11.html" title="Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch12.html" title="Lecture 12 Sampling Distributions and Standard Errors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch13.html" title="Lecture 13 The Cramer–Rao Inequality ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch14.html" title="Lecture 14 Multiparameter Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch15.html" title="Lecture 15 Cramer–Rao and Efficiency in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch18.html" title="Lecture 18 Maximum Likelihood in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch20.html" title="Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch21.html" title="Lecture 21 EM in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch22.html" title="Lecture 22 The Neyman–Pearson Lemma ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch23.html" title="Lecture 23 Likelihood-Ratio Tests ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch24.html" title="Lecture 24 Power and Size by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch26.html" title="Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch27.html" title="Lecture 27 Confidence Versus Credibility ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch28.html" title="Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch29.html" title="Lecture 29 Standard Tests Revisited ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch30.html" title="Lecture 30 Do the Standard Tests Work? ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch31.html" title="Lecture 31 The Exponential Model: From Start to Finish ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx2.html" title="Preparing for the Exam ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A1.html" title="Appendix A Background from Probability ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A2.html" title="Appendix B Introduction to R ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A3.html" title="Appendix C Solutions to the Exercises ‣ MATH5703M Statistical Theory">
+<link rel="bibliography" href="bib.html" title="Bibliography ‣ MATH5703M Statistical Theory">
+<link rel="index" href="idx.html" title="Index ‣ MATH5703M Statistical Theory">
+<meta name="keywords" lang="en" content="EM algorithm, ascent property, complete data, complete-data log-likelihood, fixed points, label switching, latent variable, mixture model, observed data">
+</head>
+<body class="bml_class_book">
+<div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+<a href="#bml-main-content" tabindex="0" class="bml-skip-to-content">Skip to content.</a>
+<div class="book-summary"><nav class="ltx_page_navbar">
+<ul class="ltx_toclist summary">
+<li>
+<a href="index.html" title="" class="ltx_ref" rel="start">MATH5703M Statistical Theory</a>
+</li>
+<li class="divider" aria-hidden="true">
+<li data-level="" data-path="Chx1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx1.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Introduction</a></li>
+<li data-level="1" data-path="Ch1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">1 </span></b>Statistical Models and Estimation</a></li>
+<li data-level="2" data-path="Ch2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">2 </span></b>Bias, Mean Squared Error and Consistency</a></li>
+<li data-level="3" data-path="Ch3.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">3 </span></b>R Basics and a First Simulation</a></li>
+<li data-level="4" data-path="Ch4.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch4.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">4 </span></b>Likelihood and the Method of Moments</a></li>
+<li data-level="5" data-path="Ch5.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch5.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5 </span></b>Maximum Likelihood Estimation</a></li>
+<li data-level="6" data-path="Ch6.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch6.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">6 </span></b>Estimators by Simulation</a></li>
+<li data-level="7" data-path="Ch7.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch7.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">7 </span></b>Exponential Families</a></li>
+<li data-level="8" data-path="Ch8.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch8.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">8 </span></b>Sufficiency</a></li>
+<li data-level="9" data-path="Ch9.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch9.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">9 </span></b>Consistency by Simulation</a></li>
+<li data-level="10" data-path="Ch10.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch10.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">10 </span></b>Improving Estimators: Rao–Blackwell and Lehmann–Scheffe</a></li>
+<li data-level="11" data-path="Ch11.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch11.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">11 </span></b>Fisher Information</a></li>
+<li data-level="12" data-path="Ch12.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch12.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">12 </span></b>Sampling Distributions and Standard Errors</a></li>
+<li data-level="13" data-path="Ch13.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch13.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">13 </span></b>The Cramer–Rao Inequality</a></li>
+<li data-level="14" data-path="Ch14.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch14.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">14 </span></b>Multiparameter Fisher Information</a></li>
+<li data-level="15" data-path="Ch15.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch15.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">15 </span></b>Cramer–Rao and Efficiency in R</a></li>
+<li data-level="16" data-path="Ch16.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch16.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">16 </span></b>Consistency of the MLE</a></li>
+<li data-level="17" data-path="Ch17.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch17.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">17 </span></b>Asymptotic Normality and Efficiency of the MLE</a></li>
+<li data-level="18" data-path="Ch18.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch18.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">18 </span></b>Maximum Likelihood in R</a></li>
+<li data-level="19" data-path="" class="ltx_tocentry ltx_tocentry_chapter ltx_ref_self  chapter active">
+<a href="" title="In MATH5703M Statistical Theory" aria-current="page" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19 </span></b>The EM Algorithm</a>
+<ol class="ltx_toclist ltx_toclist_chapter">
+<li data-level="19.1" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S1" title="In Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19.1 </span></b>Incomplete Data</a></li>
+<li data-level="19.2" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S2" title="In Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19.2 </span></b>The Algorithm</a></li>
+<li data-level="19.3" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S3" title="In Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19.3 </span></b>The Ascent Property</a></li>
+<li data-level="19.4" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S4" title="In Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19.4 </span></b>A Two-Component Normal Mixture</a></li>
+<li data-level="19.5" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S5" title="In Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19.5 </span></b>Practical Matters</a></li>
+</ol>
+</li>
+<li data-level="20" data-path="Ch20.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch20.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20 </span></b>Hypothesis Testing</a></li>
+<li data-level="21" data-path="Ch21.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch21.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21 </span></b>EM in R</a></li>
+<li data-level="22" data-path="Ch22.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch22.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">22 </span></b>The Neyman–Pearson Lemma</a></li>
+<li data-level="23" data-path="Ch23.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch23.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">23 </span></b>Likelihood-Ratio Tests</a></li>
+<li data-level="24" data-path="Ch24.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch24.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">24 </span></b>Power and Size by Simulation</a></li>
+<li data-level="25" data-path="Ch25.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch25.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">25 </span></b>Confidence Intervals</a></li>
+<li data-level="26" data-path="Ch26.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch26.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">26 </span></b>Bayesian Inference: Priors and Posteriors</a></li>
+<li data-level="27" data-path="Ch27.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch27.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">27 </span></b>Confidence Versus Credibility</a></li>
+<li data-level="28" data-path="Ch28.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch28.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">28 </span></b>Credible Intervals and Bayesian Testing</a></li>
+<li data-level="29" data-path="Ch29.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch29.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">29 </span></b>Standard Tests Revisited</a></li>
+<li data-level="30" data-path="Ch30.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch30.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">30 </span></b>Do the Standard Tests Work?</a></li>
+<li data-level="31" data-path="Ch31.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch31.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">31 </span></b>The Exponential Model: Start to Finish</a></li>
+<li data-level="" data-path="Chx2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx2.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Preparing for the Exam</a></li>
+<li data-level="A" data-path="A1.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">A </span></b>Background from Probability</a></li>
+<li data-level="B" data-path="A2.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">B </span></b>Introduction to R</a></li>
+<li data-level="C" data-path="A3.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">C </span></b>Solutions to the Exercises</a></li>
+<li data-level="" data-path="bib.html" class="ltx_tocentry ltx_tocentry_bibliography  chapter "><a href="bib.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Bibliography</a></li>
+<li data-level="" data-path="idx.html" class="ltx_tocentry ltx_tocentry_index  chapter "><a href="idx.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Index</a></li>
+</ul>
+</nav></div>
+<div class="ltx_page_main book-body fixed">
+<div class="body-inner">
+<header class="book-header fixed" aria-label="toolbar"><span class="bml-separator"></span></header>
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="ltx_page_content page-inner" id="bml-main-content">
+<section class="ltx_chapter bml_mathjax4 ltx_authors_1line normal">
+<div class="section level1">
+<h1 class="ltx_title ltx_title_chapter">
+<span class="ltx_tag ltx_tag_chapter header-section-number">Lecture 19</span> The EM Algorithm</h1>
+
+<div id="p1" class="ltx_para">
+<p class="ltx_p">For the standard families of tables <a href="Ch1.html#T1" title="Table 1.1 ‣ 1.1 Statistical Models ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.1</span></a> and <a href="Ch1.html#T2" title="Table 1.2 ‣ 1.1 Statistical Models ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.2</span></a> the
+likelihood equation from lecture <a href="Ch5.html" title="Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5</span></a> could be solved in
+closed form, but for models with latent variables or missing data, as
+considered in this lecture, this is no longer the case. The
+expectation-maximisation (EM) algorithm, introduced in this lecture,
+alternates between filling in the missing information and re-estimating
+the parameter values. We prove that each round of the EM algorithm
+cannot decrease the likelihood. We illustrate the EM algorithm with
+the help of a worked example, considering a mixture of two normal
+distributions. This example also gives the non-identifiable model
+from lecture <a href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4</span></a>. In lecture <a href="Ch21.html" title="Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">21</span></a> we will discuss
+how to implement the EM algorithm in R.</p>
+</div>
+<section id="S1" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">19.1</span> Incomplete Data</h2>
+
+<div id="S1.p1" class="ltx_para">
+<p class="ltx_p">Assume that we are given data consisting of i.i.d. pairs
+<math id="S1.p1.m1" class="ltx_Math" alttext="(X_{i},Z_{i})" display="inline"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mi>i</mi></msub><mo>,</mo><msub><mi>Z</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(X_{i},Z_{i})</annotation></semantics></math>, <math id="S1.p1.m2" class="ltx_Math" alttext="i=1,\dots,n" display="inline"><semantics><mrow><mi>i</mi><mo>=</mo><mrow><mn>1</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">i=1,\dots,n</annotation></semantics></math>, with joint density or joint probability
+weights <math id="S1.p1.m3" class="ltx_Math" alttext="f_{c}(x,z;\theta)" display="inline"><semantics><mrow><msub><mi>f</mi><mi>c</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>z</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f_{c}(x,z;\theta)</annotation></semantics></math>, but we have observed only <math id="S1.p1.m4" class="ltx_Math" alttext="X=(X_{1},\dots,X_{n})" display="inline"><semantics><mrow><mi>X</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">X=(X_{1},\dots,X_{n})</annotation></semantics></math>. The
+pair <math id="S1.p1.m5" class="ltx_Math" alttext="(X,Z)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mi>X</mi><mo>,</mo><mi>Z</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(X,Z)</annotation></semantics></math> with <math id="S1.p1.m6" class="ltx_Math" alttext="Z=(Z_{1},\dots,Z_{n})" display="inline"><semantics><mrow><mi>Z</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>Z</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>Z</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">Z=(Z_{1},\dots,Z_{n})</annotation></semantics></math> is called the <em class="ltx_emph ltx_font_italic">complete
+data</em>, the values <math id="S1.p1.m7" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> are called the <em class="ltx_emph ltx_font_italic">observed data</em> and the
+unobserved values <math id="S1.p1.m8" class="ltx_Math" alttext="Z_{i}" display="inline"><semantics><msub><mi>Z</mi><mi>i</mi></msub><annotation encoding="application/x-tex">Z_{i}</annotation></semantics></math> are called <em class="ltx_emph ltx_font_italic">latent variables</em>. The
+<em class="ltx_emph ltx_font_italic">complete-data log-likelihood</em> is given by</p>
+<div id="Ex1" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex1.m1" class="ltx_Math" alttext="\ell_{c}(\theta)=\sum_{i=1}^{n}\log f_{c}(X_{i},Z_{i};\theta)," display="block"><semantics><mrow><mrow><mrow><msub><mi mathvariant="normal">ℓ</mi><mi>c</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><munderover><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><msub><mi>f</mi><mi>c</mi></msub></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mi>i</mi></msub><mo>,</mo><msub><mi>Z</mi><mi>i</mi></msub><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\ell_{c}(\theta)=\sum_{i=1}^{n}\log f_{c}(X_{i},Z_{i};\theta),</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">and the <em class="ltx_emph ltx_font_italic">observed-data log-likelihood</em> is given by the marginal
+density of a single observation,</p>
+<div id="Ex2" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex2.m1" class="ltx_Math" alttext="f(x;\theta)=\sum_{z}f_{c}(x,z;\theta),\qquad\ell(\theta)=\sum_{i=1}^{n}\log f(%
+X_{i};\theta)," display="block"><semantics><mrow><mrow><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><munder><mo movablelimits="false">∑</mo><mi>z</mi></munder><mrow><msub><mi>f</mi><mi>c</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>z</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo rspace="2.357em">,</mo><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><munderover><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>f</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mi>i</mi></msub><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">f(x;\theta)=\sum_{z}f_{c}(x,z;\theta),\qquad\ell(\theta)=\sum_{i=1}^{n}\log f(%
+X_{i};\theta),</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where the integral is used instead of a sum when <math id="S1.p1.m9" class="ltx_Math" alttext="Z_{i}" display="inline"><semantics><msub><mi>Z</mi><mi>i</mi></msub><annotation encoding="application/x-tex">Z_{i}</annotation></semantics></math> is continuous. The
+MLE for <math id="S1.p1.m10" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is the maximiser of <math id="S1.p1.m11" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math>, but the algebra from
+lecture <a href="Ch5.html" title="Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5</span></a> is not applicable, since the sum inside the
+logarithm prevents any simplifications. The function
+<math id="S1.p1.m12" class="ltx_Math" alttext="\ell_{c}" display="inline"><semantics><msub><mi mathvariant="normal">ℓ</mi><mi>c</mi></msub><annotation encoding="application/x-tex">\ell_{c}</annotation></semantics></math>, being a sum of standard log-likelihoods, would be easy to
+maximise, but it cannot even be evaluated as it depends on <math id="S1.p1.m13" class="ltx_Math" alttext="Z" display="inline"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>. The
+EM algorithm is based on this observation.</p>
+</div>
+<div id="S1.p2" class="ltx_para">
+<p class="ltx_p">In the example we consider in the lecture, the population consists of
+two groups, with proportion <math id="S1.p2.m1" class="ltx_Math" alttext="\pi" display="inline"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math> for group 1 and <math id="S1.p2.m2" class="ltx_Math" alttext="1-\pi" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow><annotation encoding="application/x-tex">1-\pi</annotation></semantics></math> for group 2. The
+measurement for group 1 is <math id="S1.p2.m3" class="ltx_Math" alttext="N(\mu_{1},\sigma^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>μ</mi><mn>1</mn></msub><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\mu_{1},\sigma^{2})</annotation></semantics></math> and for group 2 is <math id="S1.p2.m4" class="ltx_Math" alttext="N(\mu_{2},\sigma^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>μ</mi><mn>2</mn></msub><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\mu_{2},\sigma^{2})</annotation></semantics></math>, where we
+assume that we know <math id="S1.p2.m5" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math>. We are given observations of the
+measurement <math id="S1.p2.m6" class="ltx_Math" alttext="X_{i}" display="inline"><semantics><msub><mi>X</mi><mi>i</mi></msub><annotation encoding="application/x-tex">X_{i}</annotation></semantics></math>, but we do not know which group <math id="S1.p2.m7" class="ltx_Math" alttext="Z_{i}\in\{1,2\}" display="inline"><semantics><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>∈</mo><mrow><mo stretchy="false">{</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">Z_{i}\in\{1,2\}</annotation></semantics></math> the
+observation belongs to. If we write <math id="S1.p2.m8" class="ltx_Math" alttext="\varphi_{\sigma}" display="inline"><semantics><msub><mi>φ</mi><mi>σ</mi></msub><annotation encoding="application/x-tex">\varphi_{\sigma}</annotation></semantics></math> for the density of
+<math id="S1.p2.m9" class="ltx_Math" alttext="N(0,\sigma^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(0,\sigma^{2})</annotation></semantics></math>, then the observations are i.i.d. with density</p>
+<div id="Ex3" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex3.m1" class="ltx_Math" alttext="f(x;\theta)=\pi\,\varphi_{\sigma}(x-\mu_{1})+(1-\pi)\,\varphi_{\sigma}(x-\mu_{%
+2}),\qquad\theta=(\pi,\mu_{1},\mu_{2})\in(0,1)\times\mathbb{R}\times\mathbb{R}." display="block"><semantics><mrow><mrow><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>π</mi><mo lspace="0.170em">⁢</mo><msub><mi>φ</mi><mi>σ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><msub><mi>μ</mi><mn>1</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>+</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><msub><mi>φ</mi><mi>σ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo rspace="2.357em">,</mo><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mi>π</mi><mo>,</mo><msub><mi>μ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>μ</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow><mo>∈</mo><mrow><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo rspace="0.055em" stretchy="false">)</mo></mrow><mo rspace="0.222em">×</mo><mi>ℝ</mi><mo lspace="0.222em" rspace="0.222em">×</mo><mi>ℝ</mi></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">f(x;\theta)=\pi\,\varphi_{\sigma}(x-\mu_{1})+(1-\pi)\,\varphi_{\sigma}(x-\mu_{%
+2}),\qquad\theta=(\pi,\mu_{1},\mu_{2})\in(0,1)\times\mathbb{R}\times\mathbb{R}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This is an example of a <em class="ltx_emph ltx_font_italic">two-component normal mixture</em>. If we
+knew the groups, the MLEs for this example would be easy to find: we
+would get the proportion of group 1 and the two group means by using
+examples <a href="Ch5.html#Thmtheorem3" title="Example 5.3. ‣ 5.2 Worked Examples ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.3</span></a> and <a href="Ch5.html#Thmtheorem4" title="Example 5.4. ‣ 5.2 Worked Examples ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.4</span></a>,
+but without the groups we cannot find the MLEs in closed form.</p>
+</div>
+</div>
+</section>
+<section id="S2" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">19.2</span> The Algorithm</h2>
+
+<div id="S2.p1" class="ltx_para">
+<p class="ltx_p">If we knew the parameter, we could compute the conditional distribution
+of the latent variables given the data; if we knew the latent
+variables, we could maximise <math id="S2.p1.m1" class="ltx_Math" alttext="\ell_{c}" display="inline"><semantics><msub><mi mathvariant="normal">ℓ</mi><mi>c</mi></msub><annotation encoding="application/x-tex">\ell_{c}</annotation></semantics></math>. Neither of these quantities is
+known, so we start with a guess <math id="S2.p1.m2" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math> and alternate between filling
+in the missing values, replacing <math id="S2.p1.m3" class="ltx_Math" alttext="\ell_{c}" display="inline"><semantics><msub><mi mathvariant="normal">ℓ</mi><mi>c</mi></msub><annotation encoding="application/x-tex">\ell_{c}</annotation></semantics></math> by its conditional expectation
+given the observed data, and maximising over <math id="S2.p1.m4" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+<div id="Thmtheorem1" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id1">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id1"><span class="ltx_text ltx_font_bold">Definition 19.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem1.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmtheorem1.p1.m1" class="ltx_Math" alttext="\theta_{0}\in\Theta" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><annotation encoding="application/x-tex">\theta_{0}\in\Theta</annotation></semantics></math> be given. Then the <em class="ltx_emph ltx_font_italic">EM algorithm</em>
+for finding the parameter values <math id="Thmtheorem1.p1.m2" class="ltx_Math" alttext="\theta_{1},\theta_{2},\dots" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>θ</mi><mn>2</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi></mrow><annotation encoding="application/x-tex">\theta_{1},\theta_{2},\dots</annotation></semantics></math> consists of the following
+iterative steps for <math id="Thmtheorem1.p1.m3" class="ltx_Math" alttext="k=0,1,2,\dots" display="inline"><semantics><mrow><mi>k</mi><mo>=</mo><mrow><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi mathvariant="normal">…</mi></mrow></mrow><annotation encoding="application/x-tex">k=0,1,2,\dots</annotation></semantics></math>:</p>
+<ol id="S2.I1" class="ltx_enumerate">
+<li id="S2.I1.ix1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">(E)</span><div id="S2.I1.ix1.p1" class="ltx_para">​<p class="ltx_p">Expectation step: compute</p>
+<div id="Ex4" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex4.m1" class="ltx_Math" alttext="Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})=\mathbb{E}_{\theta_{k}}\bigl{(}%
+\ell_{c}(\theta)\!\mathrel{\big{|}}\!X\bigr{)}," display="block"><semantics><mrow><mrow><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>𝔼</mi><msub><mi>θ</mi><mi>k</mi></msub></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><msub><mi mathvariant="normal">ℓ</mi><mi>c</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><mi>X</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})=\mathbb{E}_{\theta_{k}}\bigl{(}%
+\ell_{c}(\theta)\!\mathrel{\big{|}}\!X\bigr{)},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">the conditional expectation of the complete-data log-likelihood
+given the observed data, where the conditional distribution of <math id="S2.I1.ix1.p1.m1" class="ltx_Math" alttext="Z" display="inline"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+is computed using the parameter value <math id="S2.I1.ix1.p1.m2" class="ltx_Math" alttext="\theta_{k}" display="inline"><semantics><msub><mi>θ</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\theta_{k}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S2.I1.ix2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">(M)</span><div id="S2.I1.ix2.p1" class="ltx_para">​<p class="ltx_p">Maximisation step: set</p>
+<div id="Ex5" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex5.m1" class="ltx_Math" alttext="\theta_{k+1}=\arg\max_{\theta\in\Theta}Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta%
+_{k})." display="block"><semantics><mrow><mrow><msub><mi>θ</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mrow><mrow><mi>arg</mi><mo lspace="0.167em">⁡</mo><mrow><munder><mi>max</mi><mrow><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow></munder><mo lspace="0.167em">⁡</mo><mi>Q</mi></mrow></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\theta_{k+1}=\arg\max_{\theta\in\Theta}Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta%
+_{k}).</annotation></semantics></math></div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="S2.p2" class="ltx_para">
+<p class="ltx_p">The second argument <math id="S2.p2.m1" class="ltx_Math" alttext="\theta_{k}" display="inline"><semantics><msub><mi>θ</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\theta_{k}</annotation></semantics></math> of <math id="S2.p2.m2" class="ltx_Math" alttext="Q" display="inline"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> enters only through the
+conditional distribution of <math id="S2.p2.m3" class="ltx_Math" alttext="Z" display="inline"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math> given <math id="S2.p2.m4" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>. By Bayes’ rule,
+proposition <a href="A1.html#Thmtheorem20" title="Proposition A.20 (Bayes’ theorem). ‣ A.8 Bayes’ Theorem ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.20</span></a> in appendix <a href="A1.html" title="Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A</span></a>, this
+conditional distribution has density or probability
+weights</p>
+<div id="Ex6" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex6.m1" class="ltx_Math" alttext="k(z\mskip 1.0mu|\mskip 1.0mux;\theta)=\frac{f_{c}(x,z;\theta)}{f(x;\theta)}." display="block"><semantics><mrow><mrow><mrow><mi>k</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><mi>θ</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mfrac><mrow><msub><mi>f</mi><mi>c</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>z</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mfrac></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">k(z\mskip 1.0mu|\mskip 1.0mux;\theta)=\frac{f_{c}(x,z;\theta)}{f(x;\theta)}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Since the pairs <math id="S2.p2.m5" class="ltx_Math" alttext="(X_{i},Z_{i})" display="inline"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mi>i</mi></msub><mo>,</mo><msub><mi>Z</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(X_{i},Z_{i})</annotation></semantics></math> are independent, once the data are observed
+<math id="S2.p2.m6" class="ltx_Math" alttext="Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})" display="inline"><semantics><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})</annotation></semantics></math> is a sum over the observations, given by</p>
+<div id="Ex7" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex7.m1" class="ltx_Math" alttext="Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})=\sum_{i=1}^{n}\sum_{z}k(z\mskip 1%
+.0mu|\mskip 1.0mux_{i};\theta_{k})\,\log f_{c}(x_{i},z;\theta)." display="block"><semantics><mrow><mrow><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><munderover><mo movablelimits="false" rspace="0em">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><munder><mo movablelimits="false">∑</mo><mi>z</mi></munder><mrow><mi>k</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>;</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.337em">⁢</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><msub><mi>f</mi><mi>c</mi></msub></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><mi>z</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})=\sum_{i=1}^{n}\sum_{z}k(z\mskip 1%
+.0mu|\mskip 1.0mux_{i};\theta_{k})\,\log f_{c}(x_{i},z;\theta).</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">In cases where <math id="S2.p2.m7" class="ltx_Math" alttext="\ell_{c}" display="inline"><semantics><msub><mi mathvariant="normal">ℓ</mi><mi>c</mi></msub><annotation encoding="application/x-tex">\ell_{c}</annotation></semantics></math> is linear in the indicator functions of the
+latent variables, <span class="ltx_text ltx_font_italic">e.g.</span> for the mixture distribution
+considered in this section, the E-step is to replace the indicator
+functions by the corresponding conditional probabilities given the data.</p>
+</div>
+</div>
+</section>
+<section id="S3" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">19.3</span> The Ascent Property</h2>
+
+<div id="S3.p1" class="ltx_para">
+<p class="ltx_p">The algorithm only ever maximises <math id="S3.p1.m1" class="ltx_Math" alttext="Q" display="inline"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>, and it is not obvious that this
+does anything for the observed-data log-likelihood <math id="S3.p1.m2" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math>. The central
+result of this lecture is that it does. We assume throughout that
+the set of values <math id="S3.p1.m3" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math> with <math id="S3.p1.m4" class="ltx_Math" alttext="f_{c}(x,z;\theta)&gt;0" display="inline"><semantics><mrow><mrow><msub><mi>f</mi><mi>c</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>z</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">f_{c}(x,z;\theta)&gt;0</annotation></semantics></math> does not depend
+on <math id="S3.p1.m5" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, the analogue for the
+latent variables of condition (R2) in definition <a href="Ch16.html#Thmtheorem1" title="Definition 16.1. ‣ 16.1 The Regularity Conditions ‣ Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">16.1</span></a>.
+We also assume that <math id="S3.p1.m6" class="ltx_Math" alttext="f(x;\theta)&gt;0" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">f(x;\theta)&gt;0</annotation></semantics></math> for every data point <math id="S3.p1.m7" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and every
+<math id="S3.p1.m8" class="ltx_Math" alttext="\theta\in\Theta" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><annotation encoding="application/x-tex">\theta\in\Theta</annotation></semantics></math>, and that
+<math id="S3.p1.m9" class="ltx_Math" alttext="\mathbb{E}_{\theta^{\prime}}\bigl{(}\log f_{c}(x,Z;\theta)\!\mathrel{\big{|}}%
+\!X=x\bigr{)}" display="inline"><semantics><mrow><msub><mi>𝔼</mi><msup><mi>θ</mi><mo>′</mo></msup></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><msub><mi>f</mi><mi>c</mi></msub></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>Z</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><mi>X</mi><mo>=</mo><mi>x</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\theta^{\prime}}\bigl{(}\log f_{c}(x,Z;\theta)\!\mathrel{\big{|}}%
+\!X=x\bigr{)}</annotation></semantics></math> is finite for all
+<math id="S3.p1.m10" class="ltx_Math" alttext="\theta,\theta^{\prime}\in\Theta" display="inline"><semantics><mrow><mrow><mi>θ</mi><mo>,</mo><msup><mi>θ</mi><mo>′</mo></msup></mrow><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><annotation encoding="application/x-tex">\theta,\theta^{\prime}\in\Theta</annotation></semantics></math> and every data point <math id="S3.p1.m11" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>, so that
+<math id="S3.p1.m12" class="ltx_Math" alttext="Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})" display="inline"><semantics><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})</annotation></semantics></math> and <math id="S3.p1.m13" class="ltx_Math" alttext="H(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})" display="inline"><semantics><mrow><mi>H</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">H(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})</annotation></semantics></math> in the
+decomposition (<a href="#E1" title="In 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a>) below are well defined.
+Rearranging the formula for <math id="S3.p1.m14" class="ltx_Math" alttext="k(z\mskip 1.0mu|\mskip 1.0mux;\theta)" display="inline"><semantics><mrow><mi>k</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><mi>θ</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">k(z\mskip 1.0mu|\mskip 1.0mux;\theta)</annotation></semantics></math> and taking
+logarithms, we have</p>
+<div id="Ex8" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex8.m1" class="ltx_Math" alttext="\log f(x;\theta)=\log f_{c}(x,z;\theta)-\log k(z\mskip 1.0mu|\mskip 1.0mux;\theta)" display="block"><semantics><mrow><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>f</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><msub><mi>f</mi><mi>c</mi></msub></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>z</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>k</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><mi>θ</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\log f(x;\theta)=\log f_{c}(x,z;\theta)-\log k(z\mskip 1.0mu|\mskip 1.0mux;\theta)</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">for every such <math id="S3.p1.m15" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>. The left-hand side does not involve <math id="S3.p1.m16" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math> and
+thus taking conditional expectations given <math id="S3.p1.m17" class="ltx_Math" alttext="X=x" display="inline"><semantics><mrow><mi>X</mi><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">X=x</annotation></semantics></math> under <math id="S3.p1.m18" class="ltx_Math" alttext="\theta_{k}" display="inline"><semantics><msub><mi>θ</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\theta_{k}</annotation></semantics></math>, with the
+random variable <math id="S3.p1.m19" class="ltx_Math" alttext="Z" display="inline"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math> in place of <math id="S3.p1.m20" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>, does not change this. Summing over
+the sample gives the decomposition</p>
+<div id="E1" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id2">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id2"><span class="bml_sr_only">equation </span>(19.1)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(19.1)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E1.m1" class="ltx_Math" alttext="\ell(\theta)=Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})-H(\theta\mskip 1.0mu%
+|\mskip 1.0mu\theta_{k}),\qquad\text{where }H(\theta\mskip 1.0mu|\mskip 1.0mu%
+\theta_{k})=\sum_{i=1}^{n}\mathbb{E}_{\theta_{k}}\bigl{(}\log k(Z_{i}\mskip 1.%
+0mu|\mskip 1.0muX_{i};\theta)\!\mathrel{\big{|}}\!X_{i}\bigr{)}," display="block"><semantics><mrow><mrow><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>H</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo rspace="2.357em">,</mo><mrow><mrow><mtext>where </mtext><mo>⁢</mo><mi>H</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><munderover><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><msub><mi>𝔼</mi><msub><mi>θ</mi><mi>k</mi></msub></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>k</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo fence="false" rspace="0.338em">|</mo><mrow><msub><mi>X</mi><mi>i</mi></msub><mo>;</mo><mi>θ</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><msub><mi>X</mi><mi>i</mi></msub></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\ell(\theta)=Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})-H(\theta\mskip 1.0mu%
+|\mskip 1.0mu\theta_{k}),\qquad\text{where }H(\theta\mskip 1.0mu|\mskip 1.0mu%
+\theta_{k})=\sum_{i=1}^{n}\mathbb{E}_{\theta_{k}}\bigl{(}\log k(Z_{i}\mskip 1.%
+0mu|\mskip 1.0muX_{i};\theta)\!\mathrel{\big{|}}\!X_{i}\bigr{)},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">valid for all <math id="S3.p1.m21" class="ltx_Math" alttext="\theta,\theta_{k}\in\Theta" display="inline"><semantics><mrow><mrow><mi>θ</mi><mo>,</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><annotation encoding="application/x-tex">\theta,\theta_{k}\in\Theta</annotation></semantics></math>.</p>
+</div>
+<div id="Thmtheorem2" class="ltx_theorem ltx_theorem_theorem" role="region" aria-labelledby="bml-auto-id3">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id3"><span class="ltx_text ltx_font_bold">Theorem 19.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem2.p1" class="ltx_para">
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">Let <math id="Thmtheorem2.p1.m1" class="ltx_Math" alttext="\theta_{0},\theta_{1},\theta_{2},\dots" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>,</mo><msub><mi>θ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>θ</mi><mn>2</mn></msub><mo>,</mo><mi>…</mi></mrow><annotation encoding="application/x-tex">\theta_{0},\theta_{1},\theta_{2},\dots</annotation></semantics></math> be generated by the EM algorithm from
+definition <a href="#Thmtheorem1" title="Definition 19.1. ‣ 19.2 The Algorithm ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a>. Then</span></p>
+<div id="Ex9" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex9.m1" class="ltx_Math" alttext="\ell(\theta_{k+1})\geq\ell(\theta_{k})\qquad\text{for all $k=0,1,2,\dots$}" display="block"><semantics><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false">)</mo></mrow></mrow><mo>≥</mo><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mi>k</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mspace width="2.19em"></mspace><mrow><mtext class="ltx_mathvariant_italic">for all </mtext><mrow><mi>k</mi><mo>=</mo><mrow><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi>…</mi></mrow></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\ell(\theta_{k+1})\geq\ell(\theta_{k})\qquad\text{for all $k=0,1,2,\dots$}</annotation></semantics></math></div>
+</div>
+</div>
+</div>
+<div class="ltx_proof" role="group" aria-labelledby="bml-auto-id4">
+<div class="ltx_title ltx_runin ltx_font_italic ltx_title_proof" id="bml-auto-id4">Proof.</div>
+<div id="S3.p2" class="ltx_para">
+<p class="ltx_p">We first show that <math id="S3.p2.m1" class="ltx_Math" alttext="H(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})\leq H(\theta_{k}\mskip 1.0mu|%
+\mskip 1.0mu\theta_{k})" display="inline"><semantics><mrow><mrow><mi>H</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>≤</mo><mrow><mi>H</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>θ</mi><mi>k</mi></msub><mo fence="false" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">H(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})\leq H(\theta_{k}\mskip 1.0mu|%
+\mskip 1.0mu\theta_{k})</annotation></semantics></math>
+for all <math id="S3.p2.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. Since <math id="S3.p2.m3" class="ltx_Math" alttext="H" display="inline"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> is a sum over the observations, we
+only need to consider a single observation with observed value <math id="S3.p2.m4" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.
+Let <math id="S3.p2.m5" class="ltx_Math" alttext="Y=k(Z\mskip 1.0mu|\mskip 1.0mux;\theta)/k(Z\mskip 1.0mu|\mskip 1.0mux;\theta_{%
+k})" display="inline"><semantics><mrow><mi>Y</mi><mo>=</mo><mrow><mrow><mrow><mi>k</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>Z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><mi>θ</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>k</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>Z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">Y=k(Z\mskip 1.0mu|\mskip 1.0mux;\theta)/k(Z\mskip 1.0mu|\mskip 1.0mux;\theta_{%
+k})</annotation></semantics></math>. This value is well
+defined and positive by our assumption on the supports. Since <math id="S3.p2.m6" class="ltx_Math" alttext="-\log" display="inline"><semantics><mrow><mo rspace="0.167em">−</mo><mi>log</mi></mrow><annotation encoding="application/x-tex">-\log</annotation></semantics></math>
+is convex, we can use Jensen’s inequality, lemma <a href="A1.html#Thmtheorem7" title="Lemma A.7 (Jensen’s inequality). ‣ A.4 Some Inequalities ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.7</span></a>, for
+the conditional distribution of <math id="S3.p2.m7" class="ltx_Math" alttext="Z" display="inline"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math> given <math id="S3.p2.m8" class="ltx_Math" alttext="X=x" display="inline"><semantics><mrow><mi>X</mi><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">X=x</annotation></semantics></math> under <math id="S3.p2.m9" class="ltx_Math" alttext="\theta_{k}" display="inline"><semantics><msub><mi>θ</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\theta_{k}</annotation></semantics></math> to
+get</p>
+<div id="A3.S21.EGx9" class="ltx_equationgroup ltx_eqn_align bml_equationgroup bml_equation_container ltx_align_baseline">
+<div id="Ex10" class="ltx_equation bml_equation ltx_align_baseline" role="group" aria-label="equation">
+<div class="ltx_td ltx_align_left bml_eqn_cell"><math id="Ex10.m1" class="ltx_Math" alttext="\displaystyle\mathbb{E}_{\theta_{k}}\bigl{(}\log k(Z\mskip 1.0mu|\mskip 1.0mux%
+;\theta)\!\mathrel{\big{|}}\!X=x\bigr{)}-\mathbb{E}_{\theta_{k}}\bigl{(}\log k%
+(Z\mskip 1.0mu|\mskip 1.0mux;\theta_{k})\!\mathrel{\big{|}}\!X=x\bigr{)}" display="inline"><semantics><mrow><mrow><msub><mi>𝔼</mi><msub><mi>θ</mi><mi>k</mi></msub></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>k</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>Z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><mi>θ</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><mi>X</mi><mo>=</mo><mi>x</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>−</mo><mrow><msub><mi>𝔼</mi><msub><mi>θ</mi><mi>k</mi></msub></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>k</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>Z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><mi>X</mi><mo>=</mo><mi>x</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\displaystyle\mathbb{E}_{\theta_{k}}\bigl{(}\log k(Z\mskip 1.0mu|\mskip 1.0mux%
+;\theta)\!\mathrel{\big{|}}\!X=x\bigr{)}-\mathbb{E}_{\theta_{k}}\bigl{(}\log k%
+(Z\mskip 1.0mu|\mskip 1.0mux;\theta_{k})\!\mathrel{\big{|}}\!X=x\bigr{)}</annotation></semantics></math></div>
+</div>
+<div id="Ex11" class="ltx_equation bml_equation ltx_align_baseline" role="group" aria-label="equation">
+<div class="ltx_td ltx_align_left bml_eqn_cell"><math id="Ex11.m1" class="ltx_Math" alttext="\displaystyle\qquad=\mathbb{E}_{\theta_{k}}\bigl{(}\log Y\!\mathrel{\big{|}}\!%
+X=x\bigr{)}\leq\log\mathbb{E}_{\theta_{k}}\bigl{(}Y\!\mathrel{\big{|}}\!X=x%
+\bigr{)}" display="inline"><semantics><mrow><mi></mi><mo lspace="2.468em">=</mo><mrow><msub><mi>𝔼</mi><msub><mi>θ</mi><mi>k</mi></msub></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>Y</mi></mrow><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><mi>X</mi><mo>=</mo><mi>x</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>≤</mo><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><msub><mi>𝔼</mi><msub><mi>θ</mi><mi>k</mi></msub></msub></mrow><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>Y</mi><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><mi>X</mi><mo>=</mo><mi>x</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\displaystyle\qquad=\mathbb{E}_{\theta_{k}}\bigl{(}\log Y\!\mathrel{\big{|}}\!%
+X=x\bigr{)}\leq\log\mathbb{E}_{\theta_{k}}\bigl{(}Y\!\mathrel{\big{|}}\!X=x%
+\bigr{)}</annotation></semantics></math></div>
+</div>
+<div id="Ex12" class="ltx_equation bml_equation ltx_align_baseline" role="group" aria-label="equation">
+<div class="ltx_td ltx_align_left bml_eqn_cell"><math id="Ex12.m1" class="ltx_Math" alttext="\displaystyle\qquad=\log\sum_{z}\frac{k(z\mskip 1.0mu|\mskip 1.0mux;\theta)}{k%
+(z\mskip 1.0mu|\mskip 1.0mux;\theta_{k})}\,k(z\mskip 1.0mu|\mskip 1.0mux;%
+\theta_{k})=\log\sum_{z}k(z\mskip 1.0mu|\mskip 1.0mux;\theta)=\log 1=0," display="inline"><semantics><mrow><mrow><mi></mi><mo lspace="2.468em">=</mo><mrow><mi>log</mi><mo lspace="0.167em">⁢</mo><mrow><mstyle displaystyle="true"><munder><mo movablelimits="false">∑</mo><mi>z</mi></munder></mstyle><mrow><mstyle displaystyle="true"><mfrac><mrow><mi>k</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><mi>θ</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mrow><mi>k</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mfrac></mstyle><mo lspace="0.170em">⁢</mo><mi>k</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>=</mo><mrow><mi>log</mi><mo lspace="0.167em">⁢</mo><mrow><mstyle displaystyle="true"><munder><mo movablelimits="false">∑</mo><mi>z</mi></munder></mstyle><mrow><mi>k</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><mi>θ</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>=</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mn>1</mn></mrow><mo>=</mo><mn>0</mn></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\displaystyle\qquad=\log\sum_{z}\frac{k(z\mskip 1.0mu|\mskip 1.0mux;\theta)}{k%
+(z\mskip 1.0mu|\mskip 1.0mux;\theta_{k})}\,k(z\mskip 1.0mu|\mskip 1.0mux;%
+\theta_{k})=\log\sum_{z}k(z\mskip 1.0mu|\mskip 1.0mux;\theta)=\log 1=0,</annotation></semantics></math></div>
+</div>
+</div>
+<p class="ltx_p">since <math id="S3.p2.m10" class="ltx_Math" alttext="z\mapsto k(z\mskip 1.0mu|\mskip 1.0mux;\theta)" display="inline"><semantics><mrow><mi>z</mi><mo stretchy="false">↦</mo><mrow><mi>k</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>z</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mrow><mi>x</mi><mo>;</mo><mi>θ</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">z\mapsto k(z\mskip 1.0mu|\mskip 1.0mux;\theta)</annotation></semantics></math> is a probability distribution
+over <math id="S3.p2.m11" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math> (with sums replaced by integrals for a continuous latent
+variable).
+This is the same argument as in the proof of theorem <a href="Ch16.html#Thmtheorem2" title="Theorem 16.2. ‣ 16.2 The Likelihood Ratio Detects the Truth ‣ Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">16.2</span></a>.</p>
+</div>
+<div id="S3.p3" class="ltx_para">
+<p class="ltx_p">Now we can use the decomposition (<a href="#E1" title="In 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a>) at
+<math id="S3.p3.m1" class="ltx_Math" alttext="\theta=\theta_{k+1}" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><msub><mi>θ</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">\theta=\theta_{k+1}</annotation></semantics></math> and at <math id="S3.p3.m2" class="ltx_Math" alttext="\theta=\theta_{k}" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\theta=\theta_{k}</annotation></semantics></math>, both with the same
+second argument <math id="S3.p3.m3" class="ltx_Math" alttext="\theta_{k}" display="inline"><semantics><msub><mi>θ</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\theta_{k}</annotation></semantics></math>, and taking the difference we get</p>
+<div id="Ex13" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex13.m1" class="ltx_Math" alttext="\ell(\theta_{k+1})-\ell(\theta_{k})=\bigl{(}Q(\theta_{k+1}\mskip 1.0mu|\mskip 1%
+.0mu\theta_{k})-Q(\theta_{k}\mskip 1.0mu|\mskip 1.0mu\theta_{k})\bigr{)}-\bigl%
+{(}H(\theta_{k+1}\mskip 1.0mu|\mskip 1.0mu\theta_{k})-H(\theta_{k}\mskip 1.0mu%
+|\mskip 1.0mu\theta_{k})\bigr{)}." display="block"><semantics><mrow><mrow><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mi>k</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>=</mo><mrow><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>θ</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo fence="false" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>θ</mi><mi>k</mi></msub><mo fence="false" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><mo>−</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>H</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>θ</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo fence="false" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>H</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>θ</mi><mi>k</mi></msub><mo fence="false" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\ell(\theta_{k+1})-\ell(\theta_{k})=\bigl{(}Q(\theta_{k+1}\mskip 1.0mu|\mskip 1%
+.0mu\theta_{k})-Q(\theta_{k}\mskip 1.0mu|\mskip 1.0mu\theta_{k})\bigr{)}-\bigl%
+{(}H(\theta_{k+1}\mskip 1.0mu|\mskip 1.0mu\theta_{k})-H(\theta_{k}\mskip 1.0mu%
+|\mskip 1.0mu\theta_{k})\bigr{)}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">The first bracket is non-negative, since <math id="S3.p3.m4" class="ltx_Math" alttext="\theta_{k+1}" display="inline"><semantics><msub><mi>θ</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\theta_{k+1}</annotation></semantics></math> is the maximiser
+of <math id="S3.p3.m5" class="ltx_Math" alttext="\theta\mapsto Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})" display="inline"><semantics><mrow><mi>θ</mi><mo stretchy="false">↦</mo><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta\mapsto Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})</annotation></semantics></math> in the M step, and the second bracket is
+non-positive by the first step of the proof. Thus the difference is
+non-negative as claimed.
+∎</p>
+</div>
+</div>
+<div id="S3.p4" class="ltx_para">
+<p class="ltx_p">The statement of the theorem does not imply that EM finds the MLE:
+the sequence <math id="S3.p4.m1" class="ltx_Math" alttext="\ell(\theta_{k})" display="inline"><semantics><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mi>k</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\ell(\theta_{k})</annotation></semantics></math> converges whenever <math id="S3.p4.m2" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math> is bounded
+above, but the iteration may stop at a local maximum or, in principle,
+at a saddle point. In general we can only say that the points where
+the EM algorithm converges are stationary points of <math id="S3.p4.m3" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math>.</p>
+</div>
+<div id="Thmtheorem3" class="ltx_theorem ltx_theorem_proposition" role="region" aria-labelledby="bml-auto-id5">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id5"><span class="ltx_text ltx_font_bold">Proposition 19.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem3.p1" class="ltx_para">
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">Let <math id="Thmtheorem3.p1.m1" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math> be open and <math id="Thmtheorem3.p1.m2" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math> as
+well as <math id="Thmtheorem3.p1.m3" class="ltx_Math" alttext="\theta\mapsto Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta^{\prime})" display="inline"><semantics><mrow><mi>θ</mi><mo stretchy="false">↦</mo><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msup><mi>θ</mi><mo>′</mo></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta\mapsto Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta^{\prime})</annotation></semantics></math> differentiable for all <math id="Thmtheorem3.p1.m4" class="ltx_Math" alttext="\theta^{\prime}\in\Theta" display="inline"><semantics><mrow><msup><mi>θ</mi><mo>′</mo></msup><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><annotation encoding="application/x-tex">\theta^{\prime}\in\Theta</annotation></semantics></math>.
+Then</span></p>
+<div id="Ex14" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex14.m1" class="ltx_Math" alttext="\ell^{\prime}(\theta^{\prime})=\left.\frac{\partial}{\partial\theta}\,Q(\theta%
+\mskip 1.0mu|\mskip 1.0mu\theta^{\prime})\right|_{\theta=\theta^{\prime}}%
+\qquad\text{for all $\theta^{\prime}\in\Theta$.}" display="block"><semantics><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msup><mi>θ</mi><mo>′</mo></msup><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mrow><mrow><mfrac><mo>∂</mo><mrow><mo rspace="0em">∂</mo><mi>θ</mi></mrow></mfrac><mo lspace="0.170em">⁢</mo><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msup><mi>θ</mi><mo>′</mo></msup></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>|</mo></mrow><mrow><mi>θ</mi><mo>=</mo><msup><mi>θ</mi><mo>′</mo></msup></mrow></msub><mspace width="2.19em"></mspace><mrow><mtext class="ltx_mathvariant_italic">for all </mtext><mrow><msup><mi>θ</mi><mo>′</mo></msup><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><mtext class="ltx_mathvariant_italic">.</mtext></mrow></mrow></mrow><annotation encoding="application/x-tex">\ell^{\prime}(\theta^{\prime})=\left.\frac{\partial}{\partial\theta}\,Q(\theta%
+\mskip 1.0mu|\mskip 1.0mu\theta^{\prime})\right|_{\theta=\theta^{\prime}}%
+\qquad\text{for all $\theta^{\prime}\in\Theta$.}</annotation></semantics></math></div>
+</div>
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">In particular, if <math id="Thmtheorem3.p1.m5" class="ltx_Math" alttext="\theta_{k+1}=\theta_{k}" display="inline"><semantics><mrow><msub><mi>θ</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\theta_{k+1}=\theta_{k}</annotation></semantics></math> for some <math id="Thmtheorem3.p1.m6" class="ltx_Math" alttext="k" display="inline"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>, the point <math id="Thmtheorem3.p1.m7" class="ltx_Math" alttext="\theta_{k}" display="inline"><semantics><msub><mi>θ</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\theta_{k}</annotation></semantics></math>
+is a root of the likelihood equation <math id="Thmtheorem3.p1.m8" class="ltx_Math" alttext="\ell^{\prime}(\theta)=0" display="inline"><semantics><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ell^{\prime}(\theta)=0</annotation></semantics></math>.</span></p>
+</div>
+</div>
+<div class="ltx_proof" role="group" aria-labelledby="bml-auto-id6">
+<div class="ltx_title ltx_runin ltx_font_italic ltx_title_proof" id="bml-auto-id6">Proof.</div>
+<div id="S3.p5" class="ltx_para">
+<p class="ltx_p">From (<a href="#E1" title="In 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a>) we know that the function
+<math id="S3.p5.m1" class="ltx_Math" alttext="\theta\mapsto H(\theta\mskip 1.0mu|\mskip 1.0mu\theta^{\prime})=Q(\theta\mskip
+1%
+.0mu|\mskip 1.0mu\theta^{\prime})-\ell(\theta)" display="inline"><semantics><mrow><mi>θ</mi><mo stretchy="false">↦</mo><mrow><mi>H</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msup><mi>θ</mi><mo>′</mo></msup></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msup><mi>θ</mi><mo>′</mo></msup></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta\mapsto H(\theta\mskip 1.0mu|\mskip 1.0mu\theta^{\prime})=Q(\theta\mskip
+1%
+.0mu|\mskip 1.0mu\theta^{\prime})-\ell(\theta)</annotation></semantics></math> is
+differentiable. Furthermore, from the first step of the proof of
+theorem <a href="#Thmtheorem2" title="Theorem 19.2. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.2</span></a> we know that this function has its maximum
+at an interior point <math id="S3.p5.m2" class="ltx_Math" alttext="\theta^{\prime}" display="inline"><semantics><msup><mi>θ</mi><mo>′</mo></msup><annotation encoding="application/x-tex">\theta^{\prime}</annotation></semantics></math>. Thus, the derivative at this point
+must be zero.
+Taking derivatives of the decomposition at <math id="S3.p5.m3" class="ltx_Math" alttext="\theta=\theta^{\prime}" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><msup><mi>θ</mi><mo>′</mo></msup></mrow><annotation encoding="application/x-tex">\theta=\theta^{\prime}</annotation></semantics></math> gives the
+identity. If <math id="S3.p5.m4" class="ltx_Math" alttext="\theta_{k+1}=\theta_{k}" display="inline"><semantics><mrow><msub><mi>θ</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\theta_{k+1}=\theta_{k}</annotation></semantics></math>, then <math id="S3.p5.m5" class="ltx_Math" alttext="\theta_{k}" display="inline"><semantics><msub><mi>θ</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\theta_{k}</annotation></semantics></math> is an interior maximiser
+of <math id="S3.p5.m6" class="ltx_Math" alttext="\theta\mapsto Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})" display="inline"><semantics><mrow><mi>θ</mi><mo stretchy="false">↦</mo><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta\mapsto Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})</annotation></semantics></math> and the right-hand side equals zero at
+<math id="S3.p5.m7" class="ltx_Math" alttext="\theta^{\prime}=\theta_{k}" display="inline"><semantics><mrow><msup><mi>θ</mi><mo>′</mo></msup><mo>=</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\theta^{\prime}=\theta_{k}</annotation></semantics></math>. Thus we have <math id="S3.p5.m8" class="ltx_Math" alttext="\ell^{\prime}(\theta_{k})=0" display="inline"><semantics><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mi>k</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ell^{\prime}(\theta_{k})=0</annotation></semantics></math>.
+This completes the proof.
+∎</p>
+</div>
+</div>
+<div id="S3.p6" class="ltx_para">
+<p class="ltx_p">For a vector parameter the same argument applies, but now using
+gradients instead of derivatives. Conversely, if the function <math id="S3.p6.m1" class="ltx_Math" alttext="\theta\mapsto Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta^{\prime})" display="inline"><semantics><mrow><mi>θ</mi><mo stretchy="false">↦</mo><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msup><mi>θ</mi><mo>′</mo></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta\mapsto Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta^{\prime})</annotation></semantics></math> is
+strictly concave for all <math id="S3.p6.m2" class="ltx_Math" alttext="\theta^{\prime}" display="inline"><semantics><msup><mi>θ</mi><mo>′</mo></msup><annotation encoding="application/x-tex">\theta^{\prime}</annotation></semantics></math>, then all roots of the likelihood
+equation are fixed points: The derivative of <math id="S3.p6.m3" class="ltx_Math" alttext="\theta\mapsto Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta^{*})" display="inline"><semantics><mrow><mi>θ</mi><mo stretchy="false">↦</mo><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msup><mi>θ</mi><mo>∗</mo></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta\mapsto Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta^{*})</annotation></semantics></math> is zero at a
+root <math id="S3.p6.m4" class="ltx_Math" alttext="\theta^{*}" display="inline"><semantics><msup><mi>θ</mi><mo>∗</mo></msup><annotation encoding="application/x-tex">\theta^{*}</annotation></semantics></math> and the only maxima of a strictly concave function are
+the points where the derivative is zero; exercises <a href="#Thmexercise2" title="Exercise 19.2. ‣ 19.5 Practical Matters ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.2</span></a>
+and <a href="#Thmexercise4" title="Exercise 19.4. ‣ 19.5 Practical Matters ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a> show that this argument applies for two
+mixtures.</p>
+</div>
+</div>
+</section>
+<section id="S4" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">19.4</span> A Two-Component Normal Mixture</h2>
+
+<div id="S4.p1" class="ltx_para">
+<p class="ltx_p">We can apply the algorithm for finding the parameters of a mixture
+from section <a href="#S1" title="19.1 Incomplete Data ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a>. The E and M steps for this mixture
+model are as follows.</p>
+</div>
+<div id="Thmtheorem4" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id7">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id7"><span class="ltx_text ltx_font_bold">Example 19.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem4.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmtheorem4.p1.m1" class="ltx_Math" alttext="Z_{1},\dots,Z_{n}" display="inline"><semantics><mrow><msub><mi>Z</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>Z</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">Z_{1},\dots,Z_{n}</annotation></semantics></math> be i.i.d. with <math id="Thmtheorem4.p1.m2" class="ltx_Math" alttext="\mathbb{P}(Z_{i}=1)=\pi" display="inline"><semantics><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mi>π</mi></mrow><annotation encoding="application/x-tex">\mathbb{P}(Z_{i}=1)=\pi</annotation></semantics></math> and <math id="Thmtheorem4.p1.m3" class="ltx_Math" alttext="\mathbb{P}(Z_{i}=2)=1-\pi" display="inline"><semantics><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}(Z_{i}=2)=1-\pi</annotation></semantics></math>
+and given <math id="Thmtheorem4.p1.m4" class="ltx_Math" alttext="Z_{i}=j" display="inline"><semantics><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">Z_{i}=j</annotation></semantics></math> let <math id="Thmtheorem4.p1.m5" class="ltx_Math" alttext="X_{i}\sim N(\mu_{j},\sigma^{2})" display="inline"><semantics><mrow><msub><mi>X</mi><mi>i</mi></msub><mo>∼</mo><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>μ</mi><mi>j</mi></msub><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">X_{i}\sim N(\mu_{j},\sigma^{2})</annotation></semantics></math>, where
+<math id="Thmtheorem4.p1.m6" class="ltx_Math" alttext="\sigma^{2}&gt;0" display="inline"><semantics><mrow><msup><mi>σ</mi><mn>2</mn></msup><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\sigma^{2}&gt;0</annotation></semantics></math> is known and <math id="Thmtheorem4.p1.m7" class="ltx_Math" alttext="\theta=(\pi,\mu_{1},\mu_{2})" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mi>π</mi><mo>,</mo><msub><mi>μ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>μ</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta=(\pi,\mu_{1},\mu_{2})</annotation></semantics></math> is unknown. Then the
+complete-data density is <math id="Thmtheorem4.p1.m8" class="ltx_Math" alttext="f_{c}(x,1;\theta)=\pi\varphi_{\sigma}(x-\mu_{1})" display="inline"><semantics><mrow><mrow><msub><mi>f</mi><mi>c</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mn>1</mn><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>π</mi><mo>⁢</mo><msub><mi>φ</mi><mi>σ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><msub><mi>μ</mi><mn>1</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">f_{c}(x,1;\theta)=\pi\varphi_{\sigma}(x-\mu_{1})</annotation></semantics></math> and
+<math id="Thmtheorem4.p1.m9" class="ltx_Math" alttext="f_{c}(x,2;\theta)=(1-\pi)\varphi_{\sigma}(x-\mu_{2})" display="inline"><semantics><mrow><mrow><msub><mi>f</mi><mi>c</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mn>2</mn><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msub><mi>φ</mi><mi>σ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">f_{c}(x,2;\theta)=(1-\pi)\varphi_{\sigma}(x-\mu_{2})</annotation></semantics></math>. Thus, the
+complete-data log-likelihood is</p>
+<div id="Ex15" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex15.m1" class="ltx_Math" alttext="\ell_{c}(\theta)=\sum_{i=1}^{n}\Bigl{[}\mathbf{1}_{\{Z_{i}=1\}}\bigl{(}\log\pi%
++\log\varphi_{\sigma}(x_{i}-\mu_{1})\bigr{)}+\mathbf{1}_{\{Z_{i}=2\}}\bigl{(}%
+\log(1-\pi)+\log\varphi_{\sigma}(x_{i}-\mu_{2})\bigr{)}\Bigr{]}," display="block"><semantics><mrow><mrow><mrow><msub><mi mathvariant="normal">ℓ</mi><mi>c</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><munderover><mo movablelimits="false" rspace="0em">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo maxsize="160%" minsize="160%">[</mo><mrow><mrow><msub><mn>𝟏</mn><mrow><mo stretchy="false">{</mo><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><mo stretchy="false">}</mo></mrow></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>π</mi></mrow><mo>+</mo><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><msub><mi>φ</mi><mi>σ</mi></msub></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>μ</mi><mn>1</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>+</mo><mrow><msub><mn>𝟏</mn><mrow><mo stretchy="false">{</mo><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mn>2</mn></mrow><mo stretchy="false">}</mo></mrow></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>+</mo><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><msub><mi>φ</mi><mi>σ</mi></msub></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><mo maxsize="160%" minsize="160%">]</mo></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\ell_{c}(\theta)=\sum_{i=1}^{n}\Bigl{[}\mathbf{1}_{\{Z_{i}=1\}}\bigl{(}\log\pi%
++\log\varphi_{\sigma}(x_{i}-\mu_{1})\bigr{)}+\mathbf{1}_{\{Z_{i}=2\}}\bigl{(}%
+\log(1-\pi)+\log\varphi_{\sigma}(x_{i}-\mu_{2})\bigr{)}\Bigr{]},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">which is linear in the indicators. For the E step, using Bayes’
+rule with the current value <math id="Thmtheorem4.p1.m10" class="ltx_Math" alttext="\theta_{k}=(\pi_{k},\mu_{1,k},\mu_{2,k})" display="inline"><semantics><mrow><msub><mi>θ</mi><mi>k</mi></msub><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>π</mi><mi>k</mi></msub><mo>,</mo><msub><mi>μ</mi><mrow><mn>1</mn><mo>,</mo><mi>k</mi></mrow></msub><mo>,</mo><msub><mi>μ</mi><mrow><mn>2</mn><mo>,</mo><mi>k</mi></mrow></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta_{k}=(\pi_{k},\mu_{1,k},\mu_{2,k})</annotation></semantics></math>, we find</p>
+<div id="Ex16" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex16.m1" class="ltx_Math" alttext="\gamma_{i}=\mathbb{P}_{\theta_{k}}(Z_{i}=1\mskip 1.0mu|\mskip 1.0muX_{i}=x_{i}%
+)=\frac{\pi_{k}\,\varphi_{\sigma}(x_{i}-\mu_{1,k})}{\pi_{k}\,\varphi_{\sigma}(%
+x_{i}-\mu_{1,k})+(1-\pi_{k})\,\varphi_{\sigma}(x_{i}-\mu_{2,k})}," display="block"><semantics><mrow><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>=</mo><mrow><msub><mi>ℙ</mi><msub><mi>θ</mi><mi>k</mi></msub></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mrow><mn>1</mn><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>X</mi><mi>i</mi></msub></mrow><mo>=</mo><msub><mi>x</mi><mi>i</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mfrac><mrow><msub><mi>π</mi><mi>k</mi></msub><mo lspace="0.170em">⁢</mo><msub><mi>φ</mi><mi>σ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>μ</mi><mrow><mn>1</mn><mo>,</mo><mi>k</mi></mrow></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mrow><mrow><msub><mi>π</mi><mi>k</mi></msub><mo lspace="0.170em">⁢</mo><msub><mi>φ</mi><mi>σ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>μ</mi><mrow><mn>1</mn><mo>,</mo><mi>k</mi></mrow></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>+</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><msub><mi>π</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><msub><mi>φ</mi><mi>σ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>μ</mi><mrow><mn>2</mn><mo>,</mo><mi>k</mi></mrow></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mfrac></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\gamma_{i}=\mathbb{P}_{\theta_{k}}(Z_{i}=1\mskip 1.0mu|\mskip 1.0muX_{i}=x_{i}%
+)=\frac{\pi_{k}\,\varphi_{\sigma}(x_{i}-\mu_{1,k})}{\pi_{k}\,\varphi_{\sigma}(%
+x_{i}-\mu_{1,k})+(1-\pi_{k})\,\varphi_{\sigma}(x_{i}-\mu_{2,k})},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This is called the <em class="ltx_emph ltx_font_italic">responsibility</em> of group 1 for the
+observation <math id="Thmtheorem4.p1.m11" class="ltx_Math" alttext="i" display="inline"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, and <math id="Thmtheorem4.p1.m12" class="ltx_Math" alttext="Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})" display="inline"><semantics><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})</annotation></semantics></math> is <math id="Thmtheorem4.p1.m13" class="ltx_Math" alttext="\ell_{c}(\theta)" display="inline"><semantics><mrow><msub><mi mathvariant="normal">ℓ</mi><mi>c</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\ell_{c}(\theta)</annotation></semantics></math> with
+<math id="Thmtheorem4.p1.m14" class="ltx_Math" alttext="\mathbf{1}_{\{Z_{i}=1\}}" display="inline"><semantics><msub><mn>𝟏</mn><mrow><mo stretchy="false">{</mo><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><mo stretchy="false">}</mo></mrow></msub><annotation encoding="application/x-tex">\mathbf{1}_{\{Z_{i}=1\}}</annotation></semantics></math> replaced by <math id="Thmtheorem4.p1.m15" class="ltx_Math" alttext="\gamma_{i}" display="inline"><semantics><msub><mi>γ</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\gamma_{i}</annotation></semantics></math> and
+<math id="Thmtheorem4.p1.m16" class="ltx_Math" alttext="\mathbf{1}_{\{Z_{i}=2\}}" display="inline"><semantics><msub><mn>𝟏</mn><mrow><mo stretchy="false">{</mo><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mn>2</mn></mrow><mo stretchy="false">}</mo></mrow></msub><annotation encoding="application/x-tex">\mathbf{1}_{\{Z_{i}=2\}}</annotation></semantics></math> replaced by <math id="Thmtheorem4.p1.m17" class="ltx_Math" alttext="1-\gamma_{i}" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><msub><mi>γ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">1-\gamma_{i}</annotation></semantics></math>.</p>
+</div>
+<div id="Thmtheorem4.p2" class="ltx_para">
+<p class="ltx_p">For the M step we maximise over <math id="Thmtheorem4.p2.m1" class="ltx_Math" alttext="\theta=(\pi,\mu_{1},\mu_{2})" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mi>π</mi><mo>,</mo><msub><mi>μ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>μ</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta=(\pi,\mu_{1},\mu_{2})</annotation></semantics></math> with the
+<math id="Thmtheorem4.p2.m2" class="ltx_Math" alttext="\gamma_{i}" display="inline"><semantics><msub><mi>γ</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\gamma_{i}</annotation></semantics></math> fixed. Since
+<math id="Thmtheorem4.p2.m3" class="ltx_Math" alttext="\log\varphi_{\sigma}(x-\mu)=-(x-\mu)^{2}/(2\sigma^{2})+\text{const}" display="inline"><semantics><mrow><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><msub><mi>φ</mi><mi>σ</mi></msub></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><mi>μ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo>−</mo><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><mi>μ</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>+</mo><mtext>const</mtext></mrow></mrow><annotation encoding="application/x-tex">\log\varphi_{\sigma}(x-\mu)=-(x-\mu)^{2}/(2\sigma^{2})+\text{const}</annotation></semantics></math>, the
+partial derivatives of <math id="Thmtheorem4.p2.m4" class="ltx_Math" alttext="Q" display="inline"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> are</p>
+<div id="A3.S21.EGx10" class="ltx_equationgroup ltx_eqn_align bml_equationgroup bml_equation_container ltx_align_baseline">
+<div id="Ex17" class="ltx_equation bml_equation ltx_align_baseline" role="group" aria-label="equation">
+<div class="ltx_td ltx_align_right bml_eqn_cell"><math id="Ex17.m1" class="ltx_Math" alttext="\displaystyle\frac{\partial Q}{\partial\pi}" display="inline"><semantics><mstyle displaystyle="true"><mfrac><mrow><mo rspace="0em">∂</mo><mi>Q</mi></mrow><mrow><mo rspace="0em">∂</mo><mi>π</mi></mrow></mfrac></mstyle><annotation encoding="application/x-tex">\displaystyle\frac{\partial Q}{\partial\pi}</annotation></semantics></math></div>
+<div class="ltx_td ltx_align_left bml_eqn_cell"><math id="Ex17.m2" class="ltx_Math" alttext="\displaystyle=\frac{\sum_{i}\gamma_{i}}{\pi}-\frac{\sum_{i}(1-\gamma_{i})}{1-%
+\pi}," display="inline"><semantics><mrow><mrow><mi></mi><mo>=</mo><mrow><mstyle displaystyle="true"><mfrac><mrow><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>γ</mi><mi>i</mi></msub></mrow><mi>π</mi></mfrac></mstyle><mo>−</mo><mstyle displaystyle="true"><mfrac><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><mo lspace="0em" stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><msub><mi>γ</mi><mi>i</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow></mfrac></mstyle></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\displaystyle=\frac{\sum_{i}\gamma_{i}}{\pi}-\frac{\sum_{i}(1-\gamma_{i})}{1-%
+\pi},</annotation></semantics></math></div>
+</div>
+<div id="Ex18" class="ltx_equation bml_equation ltx_align_baseline" role="group" aria-label="equation">
+<div class="ltx_td ltx_align_right bml_eqn_cell"><math id="Ex18.m1" class="ltx_Math" alttext="\displaystyle\frac{\partial Q}{\partial\mu_{1}}" display="inline"><semantics><mstyle displaystyle="true"><mfrac><mrow><mo rspace="0em">∂</mo><mi>Q</mi></mrow><mrow><mo rspace="0em">∂</mo><msub><mi>μ</mi><mn>1</mn></msub></mrow></mfrac></mstyle><annotation encoding="application/x-tex">\displaystyle\frac{\partial Q}{\partial\mu_{1}}</annotation></semantics></math></div>
+<div class="ltx_td ltx_align_left bml_eqn_cell"><math id="Ex18.m2" class="ltx_Math" alttext="\displaystyle=\frac{1}{\sigma^{2}}\sum_{i=1}^{n}\gamma_{i}(x_{i}-\mu_{1}),%
+\qquad\frac{\partial Q}{\partial\mu_{2}}=\frac{1}{\sigma^{2}}\sum_{i=1}^{n}(1-%
+\gamma_{i})(x_{i}-\mu_{2})," display="inline"><semantics><mrow><mrow><mrow><mi></mi><mo>=</mo><mrow><mstyle displaystyle="true"><mfrac><mn>1</mn><msup><mi>σ</mi><mn>2</mn></msup></mfrac></mstyle><mo>⁢</mo><mrow><mstyle displaystyle="true"><munderover><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover></mstyle><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>μ</mi><mn>1</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow></mrow><mo rspace="2.357em">,</mo><mrow><mstyle displaystyle="true"><mfrac><mrow><mo rspace="0em">∂</mo><mi>Q</mi></mrow><mrow><mo rspace="0em">∂</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow></mfrac></mstyle><mo>=</mo><mrow><mstyle displaystyle="true"><mfrac><mn>1</mn><msup><mi>σ</mi><mn>2</mn></msup></mfrac></mstyle><mo>⁢</mo><mrow><mstyle displaystyle="true"><munderover><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover></mstyle><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><msub><mi>γ</mi><mi>i</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\displaystyle=\frac{1}{\sigma^{2}}\sum_{i=1}^{n}\gamma_{i}(x_{i}-\mu_{1}),%
+\qquad\frac{\partial Q}{\partial\mu_{2}}=\frac{1}{\sigma^{2}}\sum_{i=1}^{n}(1-%
+\gamma_{i})(x_{i}-\mu_{2}),</annotation></semantics></math></div>
+</div>
+</div>
+<p class="ltx_p">and setting these to zero gives the updates</p>
+<div id="E2" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id8">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id8"><span class="bml_sr_only">equation </span>(19.2)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(19.2)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E2.m1" class="ltx_Math" alttext="\pi_{k+1}=\frac{1}{n}\sum_{i=1}^{n}\gamma_{i},\qquad\mu_{1,k+1}=\frac{\sum_{i}%
+\gamma_{i}x_{i}}{\sum_{i}\gamma_{i}},\qquad\mu_{2,k+1}=\frac{\sum_{i}(1-\gamma%
+_{i})x_{i}}{\sum_{i}(1-\gamma_{i})}." display="block"><semantics><mrow><mrow><mrow><msub><mi>π</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mrow><mfrac><mn>1</mn><mi>n</mi></mfrac><mo>⁢</mo><mrow><munderover><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>γ</mi><mi>i</mi></msub></mrow></mrow></mrow><mo rspace="2.357em">,</mo><mrow><mrow><msub><mi>μ</mi><mrow><mn>1</mn><mo>,</mo><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></mrow></msub><mo>=</mo><mfrac><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>⁢</mo><msub><mi>x</mi><mi>i</mi></msub></mrow></mrow><mrow><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>γ</mi><mi>i</mi></msub></mrow></mfrac></mrow><mo rspace="2.357em">,</mo><mrow><msub><mi>μ</mi><mrow><mn>2</mn><mo>,</mo><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></mrow></msub><mo>=</mo><mfrac><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><mrow><mo lspace="0em" stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><msub><mi>γ</mi><mi>i</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msub><mi>x</mi><mi>i</mi></msub></mrow></mrow><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><mo lspace="0em" stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><msub><mi>γ</mi><mi>i</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mfrac></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\pi_{k+1}=\frac{1}{n}\sum_{i=1}^{n}\gamma_{i},\qquad\mu_{1,k+1}=\frac{\sum_{i}%
+\gamma_{i}x_{i}}{\sum_{i}\gamma_{i}},\qquad\mu_{2,k+1}=\frac{\sum_{i}(1-\gamma%
+_{i})x_{i}}{\sum_{i}(1-\gamma_{i})}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">The second derivatives are negative and thus these are maxima. They
+are the complete-data MLEs of examples <a href="Ch5.html#Thmtheorem3" title="Example 5.3. ‣ 5.2 Worked Examples ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.3</span></a>
+and <a href="Ch5.html#Thmtheorem4" title="Example 5.4. ‣ 5.2 Worked Examples ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.4</span></a> with indicators replaced by
+responsibilities.</p>
+</div>
+<div id="Thmtheorem4.p3" class="ltx_para">
+<p class="ltx_p">For a numerical example we can choose <math id="Thmtheorem4.p3.m1" class="ltx_Math" alttext="\sigma=1" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=1</annotation></semantics></math>, together with the
+observations <math id="Thmtheorem4.p3.m2" class="ltx_Math" alttext="x=(0,1,5,6,7)" display="inline"><semantics><mrow><mi>x</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>5</mn><mo>,</mo><mn>6</mn><mo>,</mo><mn>7</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">x=(0,1,5,6,7)</annotation></semantics></math> and initial value <math id="Thmtheorem4.p3.m3" class="ltx_Math" alttext="\theta_{0}=(1/2,2,4)" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>=</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta_{0}=(1/2,2,4)</annotation></semantics></math>.
+In this case we have
+<math id="Thmtheorem4.p3.m4" class="ltx_Math" alttext="\pi_{0}=1/2" display="inline"><semantics><mrow><msub><mi>π</mi><mn>0</mn></msub><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow><annotation encoding="application/x-tex">\pi_{0}=1/2</annotation></semantics></math> and to cancel the weights we divide
+the numerator and denominator by <math id="Thmtheorem4.p3.m5" class="ltx_Math" alttext="\varphi_{1}(x_{i}-2)" display="inline"><semantics><mrow><msub><mi>φ</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\varphi_{1}(x_{i}-2)</annotation></semantics></math> to get</p>
+<div id="Ex19" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex19.m1" class="ltx_Math" alttext="\gamma_{i}=\frac{1}{1+\exp\bigl{(}\tfrac{1}{2}(x_{i}-2)^{2}-\tfrac{1}{2}(x_{i}%
+-4)^{2}\bigr{)}}=\frac{1}{1+e^{2x_{i}-6}}." display="block"><semantics><mrow><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow><mo>−</mo><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mn>4</mn></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow></mfrac><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mrow><mn>2</mn><mo>⁢</mo><msub><mi>x</mi><mi>i</mi></msub></mrow><mo>−</mo><mn>6</mn></mrow></msup></mrow></mfrac></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\gamma_{i}=\frac{1}{1+\exp\bigl{(}\tfrac{1}{2}(x_{i}-2)^{2}-\tfrac{1}{2}(x_{i}%
+-4)^{2}\bigr{)}}=\frac{1}{1+e^{2x_{i}-6}}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">So, with four decimal digits we have</p>
+<div id="Ex20" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex20.m1" class="ltx_Math" alttext="\gamma=(0.9975,\,0.9820,\,0.0180,\,0.0025,\,0.0003)." display="block"><semantics><mrow><mrow><mi>γ</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mn>0.9975</mn><mo>,</mo><mn> 0.9820</mn><mo>,</mo><mn> 0.0180</mn><mo>,</mo><mn> 0.0025</mn><mo>,</mo><mn> 0.0003</mn><mo stretchy="false">)</mo></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\gamma=(0.9975,\,0.9820,\,0.0180,\,0.0025,\,0.0003).</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This shows that the two small observations are assigned nearly
+completely to group 1, while the three large observations are assigned
+to group 2. Now, with <math id="Thmtheorem4.p3.m6" class="ltx_Math" alttext="\sum_{i}\gamma_{i}=2.0003" display="inline"><semantics><mrow><mrow><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>γ</mi><mi>i</mi></msub></mrow><mo>=</mo><mn>2.0003</mn></mrow><annotation encoding="application/x-tex">\sum_{i}\gamma_{i}=2.0003</annotation></semantics></math>,
+<math id="Thmtheorem4.p3.m7" class="ltx_Math" alttext="\sum_{i}\gamma_{i}x_{i}=1.0891" display="inline"><semantics><mrow><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>⁢</mo><msub><mi>x</mi><mi>i</mi></msub></mrow></mrow><mo>=</mo><mn>1.0891</mn></mrow><annotation encoding="application/x-tex">\sum_{i}\gamma_{i}x_{i}=1.0891</annotation></semantics></math> and <math id="Thmtheorem4.p3.m8" class="ltx_Math" alttext="\sum_{i}(1-\gamma_{i})x_{i}=17.9109" display="inline"><semantics><mrow><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><mrow><mo lspace="0em" stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><msub><mi>γ</mi><mi>i</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msub><mi>x</mi><mi>i</mi></msub></mrow></mrow><mo>=</mo><mn>17.9109</mn></mrow><annotation encoding="application/x-tex">\sum_{i}(1-\gamma_{i})x_{i}=17.9109</annotation></semantics></math>, we can use the
+update (<a href="#E2" title="In Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.2</span></a>) to get</p>
+<div id="Ex21" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex21.m1" class="ltx_Math" alttext="\theta_{1}=\Bigl{(}\frac{2.0003}{5},\ \frac{1.0891}{2.0003},\ \frac{17.9109}{2%
+.9997}\Bigr{)}=(0.4001,\ 0.5445,\ 5.9709)." display="block"><semantics><mrow><mrow><msub><mi>θ</mi><mn>1</mn></msub><mo>=</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mfrac><mn>2.0003</mn><mn>5</mn></mfrac><mo rspace="0.717em">,</mo><mfrac><mn>1.0891</mn><mn>2.0003</mn></mfrac><mo rspace="0.717em">,</mo><mfrac><mn>17.9109</mn><mn>2.9997</mn></mfrac><mo maxsize="160%" minsize="160%">)</mo></mrow><mo>=</mo><mrow><mo stretchy="false">(</mo><mn>0.4001</mn><mo>,</mo><mn> 0.5445</mn><mo>,</mo><mn> 5.9709</mn><mo stretchy="false">)</mo></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\theta_{1}=\Bigl{(}\frac{2.0003}{5},\ \frac{1.0891}{2.0003},\ \frac{17.9109}{2%
+.9997}\Bigr{)}=(0.4001,\ 0.5445,\ 5.9709).</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">The log-likelihood of the observed data increases from <math id="Thmtheorem4.p3.m9" class="ltx_Math" alttext="\ell(\theta_{0})=-17.52" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mn>0</mn></msub><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mo>−</mo><mn>17.52</mn></mrow></mrow><annotation encoding="application/x-tex">\ell(\theta_{0})=-17.52</annotation></semantics></math> to
+<math id="Thmtheorem4.p3.m10" class="ltx_Math" alttext="\ell(\theta_{1})=-9.21" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mn>1</mn></msub><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mo>−</mo><mn>9.21</mn></mrow></mrow><annotation encoding="application/x-tex">\ell(\theta_{1})=-9.21</annotation></semantics></math>, as required by theorem <a href="#Thmtheorem2" title="Theorem 19.2. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.2</span></a>
+(see exercise <a href="#Thmexercise3" title="Exercise 19.3. ‣ 19.5 Practical Matters ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.3</span></a>). For another iteration we find</p>
+<div id="Ex22" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex22.m1" class="ltx_Math" alttext="\theta_{2}=(0.4000,\ 0.5001,\ 6.0000)." display="block"><semantics><mrow><mrow><msub><mi>θ</mi><mn>2</mn></msub><mo>=</mo><mrow><mo stretchy="false">(</mo><mn>0.4000</mn><mo>,</mo><mn> 0.5001</mn><mo>,</mo><mn> 6.0000</mn><mo stretchy="false">)</mo></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\theta_{2}=(0.4000,\ 0.5001,\ 6.0000).</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">At this point the iteration no longer changes by more than four
+decimal digits: the responsibilities are so close to <math id="Thmtheorem4.p3.m11" class="ltx_Math" alttext="0" display="inline"><mn>0</mn></math> or <math id="Thmtheorem4.p3.m12" class="ltx_Math" alttext="1" display="inline"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>
+that the mean of each group coincides with the mean of the observations
+for that group.
+The algorithm converged quickly in this example, because the groups
+were well separated. In cases where the groups have more overlap,
+more iterations will be required for the algorithm to converge.</p>
+</div>
+</div>
+<div id="S4.p2" class="ltx_para">
+<p class="ltx_p">In the example we assumed that the variance was known and
+common to both groups. If, on the other hand, we had assumed
+separate, unknown variances for the two groups, then the estimate
+for one component could be centred on an observation and the variance
+of this component could be shrunk to zero. In this case, the
+likelihood would become infinite at this point and the MLE would not
+exist.</p>
+</div>
+</div>
+</section>
+<section id="S5" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">19.5</span> Practical Matters</h2>
+
+<div id="S5.p1" class="ltx_para">
+<p class="ltx_p">Three issues arise whenever EM is used, and the mixture shows all
+three. The first is the promised failure of identifiability: the
+parameter values <math id="S5.p1.m1" class="ltx_Math" alttext="(\pi,\mu_{1},\mu_{2})" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mi>π</mi><mo>,</mo><msub><mi>μ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>μ</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\pi,\mu_{1},\mu_{2})</annotation></semantics></math> and <math id="S5.p1.m2" class="ltx_Math" alttext="(1-\pi,\mu_{2},\mu_{1})" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow><mo>,</mo><msub><mi>μ</mi><mn>2</mn></msub><mo>,</mo><msub><mi>μ</mi><mn>1</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1-\pi,\mu_{2},\mu_{1})</annotation></semantics></math> give the
+same density <math id="S5.p1.m3" class="ltx_Math" alttext="f(x;\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)</annotation></semantics></math>, and thus the model is not identifiable in
+the sense of definition <a href="Ch4.html#Thmtheorem10" title="Definition 4.10. ‣ 4.4 Identifiability ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.10</span></a>, the difficulty
+foreshadowed after example <a href="Ch4.html#Thmtheorem11" title="Example 4.11. ‣ 4.4 Identifiability ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.11</span></a>. This is called
+<em class="ltx_emph ltx_font_italic">label switching</em>: the likelihood has two global maxima which are
+mirror images of each other, and EM started from <math id="S5.p1.m4" class="ltx_Math" alttext="(1/2,4,2)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>4</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1/2,4,2)</annotation></semantics></math> instead
+of <math id="S5.p1.m5" class="ltx_Math" alttext="(1/2,2,4)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1/2,2,4)</annotation></semantics></math> in example <a href="#Thmtheorem4" title="Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a> converges to
+<math id="S5.p1.m6" class="ltx_Math" alttext="(0.6,6.0,0.5)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0.6</mn><mo>,</mo><mn>6.0</mn><mo>,</mo><mn>0.5</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0.6,6.0,0.5)</annotation></semantics></math> instead of <math id="S5.p1.m7" class="ltx_Math" alttext="(0.4,0.5,6.0)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0.4</mn><mo>,</mo><mn>0.5</mn><mo>,</mo><mn>6.0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0.4,0.5,6.0)</annotation></semantics></math>. Either answer is fine on
+its own, but averaging different runs is not, and the remedy of
+lecture <a href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4</span></a> is to restrict the parameter space by a
+convention such as <math id="S5.p1.m8" class="ltx_Math" alttext="\mu_{1}&lt;\mu_{2}" display="inline"><semantics><mrow><msub><mi>μ</mi><mn>1</mn></msub><mo>&lt;</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_{1}&lt;\mu_{2}</annotation></semantics></math>. The second issue is local maxima:
+theorem <a href="#Thmtheorem2" title="Theorem 19.2. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.2</span></a> guarantees ascent and nothing more, and a
+poor starting value can lead the iteration to a local maximum of <math id="S5.p1.m9" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math>
+without warning. The standard precaution is to run EM from several
+starting values and to keep the run with the largest observed-data
+log-likelihood, which we can always evaluate. The third issue is when
+to stop: since <math id="S5.p1.m10" class="ltx_Math" alttext="\ell(\theta_{k})" display="inline"><semantics><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mi>k</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\ell(\theta_{k})</annotation></semantics></math> is non-decreasing, we stop when its
+increase falls below a small tolerance; convergence is geometric.
+Finally, EM produces an estimate but no standard error; that is
+obtained afterwards from the observed information at the fixed point,
+as in section <a href="Ch17.html#S3" title="17.3 Standard Errors ‣ Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">17.3</span></a>. Lecture <a href="Ch21.html" title="Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">21</span></a> shows all three
+issues in R.</p>
+</div>
+<div id="Thmsummarybodyx19" class="ltx_theorem bml_border-color_000000 ltx_theorem_summarybody ltx_framed ltx_framed_left" style="border-width:3pt;padding-left:10pt;" role="group" aria-labelledby="bml-auto-id9">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id9"><span class="ltx_text ltx_font_italic">Summary</span></span><span class="ltx_text ltx_font_italic">.</span>
+</div>
+<div id="Thmsummarybodyx19.p1" class="ltx_para">
+<ul id="S5.I1" class="ltx_itemize">
+<li id="S5.I1.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i1.p1" class="ltx_para">​<p class="ltx_p">In an incomplete-data model, the complete data <math id="S5.I1.i1.p1.m1" class="ltx_Math" alttext="(X,Z)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mi>X</mi><mo>,</mo><mi>Z</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(X,Z)</annotation></semantics></math> has
+an easy log-likelihood <math id="S5.I1.i1.p1.m2" class="ltx_Math" alttext="\ell_{c}" display="inline"><semantics><msub><mi mathvariant="normal">ℓ</mi><mi>c</mi></msub><annotation encoding="application/x-tex">\ell_{c}</annotation></semantics></math>, but only <math id="S5.I1.i1.p1.m3" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> is observed and the
+observed-data log-likelihood <math id="S5.I1.i1.p1.m4" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math> has a sum inside the logarithm.</p>
+</div>
+</li>
+<li id="S5.I1.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i2.p1" class="ltx_para">​<p class="ltx_p">EM iteratively computes the expectation <math id="S5.I1.i2.p1.m1" class="ltx_Math" alttext="Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})=\mathbb{E}_{\theta_{k}}\bigl{(}%
+\ell_{c}(\theta)\!\mathrel{\big{|}}\!X\bigr{)}" display="inline"><semantics><mrow><mrow><mi>Q</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>𝔼</mi><msub><mi>θ</mi><mi>k</mi></msub></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><msub><mi mathvariant="normal">ℓ</mi><mi>c</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><mi>X</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">Q(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})=\mathbb{E}_{\theta_{k}}\bigl{(}%
+\ell_{c}(\theta)\!\mathrel{\big{|}}\!X\bigr{)}</annotation></semantics></math> and then
+maximises the expectation <math id="S5.I1.i2.p1.m2" class="ltx_Math" alttext="Q" display="inline"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> over <math id="S5.I1.i2.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I1.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i3.p1" class="ltx_para">​<p class="ltx_p">We have shown that <math id="S5.I1.i3.p1.m1" class="ltx_Math" alttext="\ell(\theta_{k+1})\geq\ell(\theta_{k})" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false">)</mo></mrow></mrow><mo>≥</mo><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mi>k</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\ell(\theta_{k+1})\geq\ell(\theta_{k})</annotation></semantics></math> for
+all <math id="S5.I1.i3.p1.m2" class="ltx_Math" alttext="k" display="inline"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>. The proof uses <math id="S5.I1.i3.p1.m3" class="ltx_Math" alttext="\ell=Q-H" display="inline"><semantics><mrow><mi mathvariant="normal">ℓ</mi><mo>=</mo><mrow><mi>Q</mi><mo>−</mo><mi>H</mi></mrow></mrow><annotation encoding="application/x-tex">\ell=Q-H</annotation></semantics></math> and
+Jensen’s inequality to show that the maximum of <math id="S5.I1.i3.p1.m4" class="ltx_Math" alttext="\theta\mapsto H(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})" display="inline"><semantics><mrow><mi>θ</mi><mo stretchy="false">↦</mo><mrow><mi>H</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta\mapsto H(\theta\mskip 1.0mu|\mskip 1.0mu\theta_{k})</annotation></semantics></math> is attained
+at <math id="S5.I1.i3.p1.m5" class="ltx_Math" alttext="\theta_{k}" display="inline"><semantics><msub><mi>θ</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\theta_{k}</annotation></semantics></math>. A fixed point of the iteration is a root of the
+likelihood equation.</p>
+</div>
+</li>
+<li id="S5.I1.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i4.p1" class="ltx_para">​<p class="ltx_p">For a two-component normal mixture, the E step computes the
+responsibilities <math id="S5.I1.i4.p1.m1" class="ltx_Math" alttext="\gamma_{i}=\mathbb{P}_{\theta_{k}}(Z_{i}=1\mskip 1.0mu|\mskip 1.0muX_{i}=x_{i})" display="inline"><semantics><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>=</mo><mrow><msub><mi>ℙ</mi><msub><mi>θ</mi><mi>k</mi></msub></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mrow><mn>1</mn><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>X</mi><mi>i</mi></msub></mrow><mo>=</mo><msub><mi>x</mi><mi>i</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\gamma_{i}=\mathbb{P}_{\theta_{k}}(Z_{i}=1\mskip 1.0mu|\mskip 1.0muX_{i}=x_{i})</annotation></semantics></math> and the M step computes the weight
+as the average responsibility and the means as the responsibility-
+weighted mean of the data.</p>
+</div>
+</li>
+<li id="S5.I1.i5" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i5.p1" class="ltx_para">​<p class="ltx_p">Mixture parameters are only identifiable up to relabelling
+the components (label switching). Local maxima of the likelihood
+function can be avoided by running EM with different starting
+values and by comparing runs of the algorithm using the
+observed-data log-likelihood.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="Thmexercise1" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id10">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id10"><span class="ltx_text ltx_font_bold">Exercise 19.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise1.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise1.p1.m1" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> be geometrically distributed with parameter <math id="Thmexercise1.p1.m2" class="ltx_Math" alttext="p\in(0,1)" display="inline"><semantics><mrow><mi>p</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">p\in(0,1)</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> <math id="Thmexercise1.p1.m3" class="ltx_Math" alttext="f(x;p)=(1-p)^{x-1}p" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>p</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>p</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mi>x</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><mi>p</mi></mrow></mrow><annotation encoding="application/x-tex">f(x;p)=(1-p)^{x-1}p</annotation></semantics></math> for <math id="Thmexercise1.p1.m4" class="ltx_Math" alttext="x\in\{1,2,\dots\}" display="inline"><semantics><mrow><mi>x</mi><mo>∈</mo><mrow><mo stretchy="false">{</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">x\in\{1,2,\dots\}</annotation></semantics></math>, as in
+exercise <a href="Ch5.html#Thmexercise1" title="Exercise 5.1. ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.1</span></a>.</p>
+<ol id="S5.I2" class="ltx_enumerate">
+<li id="S5.I2.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I2.i1.p1" class="ltx_para">​<p class="ltx_p">Show that <math id="S5.I2.i1.p1.m1" class="ltx_Math" alttext="\mathbb{P}_{p}(X\geq m)=(1-p)^{m-1}" display="inline"><semantics><mrow><mrow><msub><mi>ℙ</mi><mi>p</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>X</mi><mo>≥</mo><mi>m</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>p</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbb{P}_{p}(X\geq m)=(1-p)^{m-1}</annotation></semantics></math> for <math id="S5.I2.i1.p1.m2" class="ltx_Math" alttext="m\in\{1,2,\dots\}" display="inline"><semantics><mrow><mi>m</mi><mo>∈</mo><mrow><mo stretchy="false">{</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">m\in\{1,2,\dots\}</annotation></semantics></math>
+and use this result to show that <math id="S5.I2.i1.p1.m3" class="ltx_Math" alttext="\mathbb{P}_{p}(X\geq m+k\mskip 1.0mu|\mskip 1.0muX\geq m)=\mathbb{P}_{p}(X\geq
+k%
++1)" display="inline"><semantics><mrow><mrow><msub><mi>ℙ</mi><mi>p</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>X</mi><mo>≥</mo><mrow><mi>m</mi><mo>+</mo><mrow><mi>k</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>X</mi></mrow></mrow><mo>≥</mo><mi>m</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>ℙ</mi><mi>p</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>X</mi><mo>≥</mo><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}_{p}(X\geq m+k\mskip 1.0mu|\mskip 1.0muX\geq m)=\mathbb{P}_{p}(X\geq
+k%
++1)</annotation></semantics></math> for
+all <math id="S5.I2.i1.p1.m4" class="ltx_Math" alttext="k\geq 0" display="inline"><semantics><mrow><mi>k</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">k\geq 0</annotation></semantics></math>. Comment upon your result in the light of the
+memorylessness of the exponential distribution from
+exercise <a href="Ch5.html#Thmexercise6" title="Exercise 5.6. ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.6</span></a>.</p>
+</div>
+</li>
+<li id="S5.I2.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I2.i2.p1" class="ltx_para">​<p class="ltx_p">Show that</p>
+<div id="Ex23" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex23.m1" class="ltx_Math" alttext="\mathbb{E}_{p}(X\mskip 1.0mu|\mskip 1.0muX\geq m)=m-1+\mathbb{E}_{p}(X)=m-1+%
+\frac{1}{p}\qquad\text{for all $m\in\{1,2,\dots\}$.}" display="block"><semantics><mrow><mrow><mrow><msub><mi>𝔼</mi><mi>p</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mrow><mi>X</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>X</mi></mrow><mo>≥</mo><mi>m</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow><mo>+</mo><mrow><msub><mi>𝔼</mi><mi>p</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>=</mo><mrow><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow><mo>+</mo><mfrac><mn>1</mn><mi>p</mi></mfrac></mrow></mrow><mspace width="2.19em"></mspace><mrow><mtext>for all </mtext><mrow><mi>m</mi><mo>∈</mo><mrow><mo stretchy="false">{</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo stretchy="false">}</mo></mrow></mrow><mtext>.</mtext></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}_{p}(X\mskip 1.0mu|\mskip 1.0muX\geq m)=m-1+\mathbb{E}_{p}(X)=m-1+%
+\frac{1}{p}\qquad\text{for all $m\in\{1,2,\dots\}$.}</annotation></semantics></math></div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise2" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id11">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id11"><span class="ltx_text ltx_font_bold">Exercise 19.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise2.p1" class="ltx_para">
+<p class="ltx_p">Suppose <math id="Thmexercise2.p1.m1" class="ltx_Math" alttext="f_{1}" display="inline"><semantics><msub><mi>f</mi><mn>1</mn></msub><annotation encoding="application/x-tex">f_{1}</annotation></semantics></math> and <math id="Thmexercise2.p1.m2" class="ltx_Math" alttext="f_{2}" display="inline"><semantics><msub><mi>f</mi><mn>2</mn></msub><annotation encoding="application/x-tex">f_{2}</annotation></semantics></math> are two known, distinct densities,
+and that <math id="Thmexercise2.p1.m3" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> are i.i.d. with
+density</p>
+<div id="Ex24" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex24.m1" class="ltx_Math" alttext="f(x;\pi)=\pi f_{1}(x)+(1-\pi)f_{2}(x)," display="block"><semantics><mrow><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>π</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>π</mi><mo>⁢</mo><msub><mi>f</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>+</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msub><mi>f</mi><mn>2</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">f(x;\pi)=\pi f_{1}(x)+(1-\pi)f_{2}(x),</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where <math id="Thmexercise2.p1.m4" class="ltx_Math" alttext="\pi\in(0,1)" display="inline"><semantics><mrow><mi>π</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi\in(0,1)</annotation></semantics></math> is the only unknown parameter. Let <math id="Thmexercise2.p1.m5" class="ltx_Math" alttext="Z_{i}\in\{1,2\}" display="inline"><semantics><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>∈</mo><mrow><mo stretchy="false">{</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">Z_{i}\in\{1,2\}</annotation></semantics></math> be
+the component observation <math id="Thmexercise2.p1.m6" class="ltx_Math" alttext="i" display="inline"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> belongs to, as in
+example <a href="#Thmtheorem4" title="Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a>.</p>
+<ol id="S5.I3" class="ltx_enumerate">
+<li id="S5.I3.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I3.i1.p1" class="ltx_para">​<p class="ltx_p">Write down the observed-data log-likelihood <math id="S5.I3.i1.p1.m1" class="ltx_Math" alttext="\ell(\pi)" display="inline"><semantics><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>π</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\ell(\pi)</annotation></semantics></math> and
+the likelihood equation <math id="S5.I3.i1.p1.m2" class="ltx_Math" alttext="\ell^{\prime}(\pi)=0" display="inline"><semantics><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>π</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ell^{\prime}(\pi)=0</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I3.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I3.i2.p1" class="ltx_para">​<p class="ltx_p">Write down the complete-data log-likelihood and show that the
+E step determines the responsibilities
+<math id="S5.I3.i2.p1.m1" class="ltx_Math" alttext="\gamma_{i}(\pi_{k})=\pi_{k}f_{1}(x_{i})/\bigl{(}\pi_{k}f_{1}(x_{i})+(1-\pi_{k}%
+)f_{2}(x_{i})\bigr{)}" display="inline"><semantics><mrow><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>π</mi><mi>k</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><msub><mi>π</mi><mi>k</mi></msub><mo>⁢</mo><msub><mi>f</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><msub><mi>π</mi><mi>k</mi></msub><mo>⁢</mo><msub><mi>f</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mo>+</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><msub><mi>π</mi><mi>k</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msub><mi>f</mi><mn>2</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\gamma_{i}(\pi_{k})=\pi_{k}f_{1}(x_{i})/\bigl{(}\pi_{k}f_{1}(x_{i})+(1-\pi_{k}%
+)f_{2}(x_{i})\bigr{)}</annotation></semantics></math> and the M step determines the update
+<math id="S5.I3.i2.p1.m2" class="ltx_Math" alttext="\pi_{k+1}=\frac{1}{n}\sum_{i}\gamma_{i}(\pi_{k})" display="inline"><semantics><mrow><msub><mi>π</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mrow><mfrac><mn>1</mn><mi>n</mi></mfrac><mo>⁢</mo><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>π</mi><mi>k</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\pi_{k+1}=\frac{1}{n}\sum_{i}\gamma_{i}(\pi_{k})</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I3.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I3.i3.p1" class="ltx_para">​<p class="ltx_p">Show that <math id="S5.I3.i3.p1.m1" class="ltx_Math" alttext="\gamma_{i}(\pi)-\pi=\pi(1-\pi)\,\bigl{(}f_{1}(x_{i})-f_{2}(x_{i})\bigr{)}/f(x_%
+{i};\pi)" display="inline"><semantics><mrow><mrow><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>π</mi><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mi>π</mi></mrow><mo>=</mo><mrow><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><msub><mi>f</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><msub><mi>f</mi><mn>2</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>/</mo><mi>f</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>;</mo><mi>π</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\gamma_{i}(\pi)-\pi=\pi(1-\pi)\,\bigl{(}f_{1}(x_{i})-f_{2}(x_{i})\bigr{)}/f(x_%
+{i};\pi)</annotation></semantics></math> and thus that
+<math id="S5.I3.i3.p1.m2" class="ltx_Math" alttext="\frac{1}{n}\sum_{i}\gamma_{i}(\pi)-\pi=\pi(1-\pi)\,\ell^{\prime}(\pi)/n" display="inline"><semantics><mrow><mrow><mrow><mfrac><mn>1</mn><mi>n</mi></mfrac><mo>⁢</mo><mrow><msub><mo>∑</mo><mi>i</mi></msub><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>π</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>−</mo><mi>π</mi></mrow><mo>=</mo><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><msup><mi mathvariant="normal">ℓ</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>π</mi><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">\frac{1}{n}\sum_{i}\gamma_{i}(\pi)-\pi=\pi(1-\pi)\,\ell^{\prime}(\pi)/n</annotation></semantics></math>. Deduce that <math id="S5.I3.i3.p1.m3" class="ltx_Math" alttext="\pi^{*}\in(0,1)" display="inline"><semantics><mrow><msup><mi>π</mi><mo>∗</mo></msup><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi^{*}\in(0,1)</annotation></semantics></math> is
+a fixed point of the EM iteration if and only if it solves the
+likelihood equation, as in proposition <a href="#Thmtheorem3" title="Proposition 19.3. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.3</span></a>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise3" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id12">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id12"><span class="ltx_text ltx_font_bold">Exercise 19.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise3.p1" class="ltx_para">
+<p class="ltx_p">For the data, starting value and first iterate of the numerical
+illustration in example <a href="#Thmtheorem4" title="Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a>, compute the observed-data
+log-likelihood
+<math id="Thmexercise3.p1.m1" class="ltx_Math" alttext="\ell(\theta)=\sum_{i=1}^{5}\log\bigl{(}\pi\varphi_{1}(x_{i}-\mu_{1})+(1-\pi)%
+\varphi_{1}(x_{i}-\mu_{2})\bigr{)}" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mn>5</mn></msubsup><mrow><mi>log</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>π</mi><mo>⁢</mo><msub><mi>φ</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>μ</mi><mn>1</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>+</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msub><mi>φ</mi><mn>1</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\ell(\theta)=\sum_{i=1}^{5}\log\bigl{(}\pi\varphi_{1}(x_{i}-\mu_{1})+(1-\pi)%
+\varphi_{1}(x_{i}-\mu_{2})\bigr{)}</annotation></semantics></math>
+for <math id="Thmexercise3.p1.m2" class="ltx_Math" alttext="\theta_{0}=(1/2,2,4)" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>=</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta_{0}=(1/2,2,4)</annotation></semantics></math> and <math id="Thmexercise3.p1.m3" class="ltx_Math" alttext="\theta_{1}=(0.4001,0.5445,5.9709)" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>1</mn></msub><mo>=</mo><mrow><mo stretchy="false">(</mo><mn>0.4001</mn><mo>,</mo><mn>0.5445</mn><mo>,</mo><mn>5.9709</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta_{1}=(0.4001,0.5445,5.9709)</annotation></semantics></math>. Show that the likelihood has
+increased. Which of the five observations contributes most to the
+increase in likelihood? Why?</p>
+</div>
+</div>
+<div id="Thmexercise4" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id13">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id13"><span class="ltx_text ltx_font_bold">Exercise 19.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise4.p1" class="ltx_para">
+<p class="ltx_p">Consider the two-component normal mixture from
+example <a href="#Thmtheorem4" title="Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a>, but with known weight <math id="Thmexercise4.p1.m1" class="ltx_Math" alttext="\pi\in(0,1)" display="inline"><semantics><mrow><mi>π</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi\in(0,1)</annotation></semantics></math>
+and known variance <math id="Thmexercise4.p1.m2" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math>. The only unknown quantities are the
+means <math id="Thmexercise4.p1.m3" class="ltx_Math" alttext="\theta=(\mu_{1},\mu_{2})" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>μ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>μ</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta=(\mu_{1},\mu_{2})</annotation></semantics></math>.</p>
+<ol id="S5.I4" class="ltx_enumerate">
+<li id="S5.I4.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I4.i1.p1" class="ltx_para">​<p class="ltx_p">Show that the EM updates for this case are given by the two
+mean updates from (<a href="#E2" title="In Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.2</span></a>), where the responsibilities
+are computed using the known <math id="S5.I4.i1.p1.m1" class="ltx_Math" alttext="\pi" display="inline"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I4.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I4.i2.p1" class="ltx_para">​<p class="ltx_p">Compute the derivative of the observed-data log-likelihood
+and show that</p>
+<div id="Ex25" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex25.m1" class="ltx_Math" alttext="\frac{\partial\ell}{\partial\mu_{1}}(\theta)=\frac{1}{\sigma^{2}}\sum_{i=1}^{n%
+}\gamma_{i}(\theta)\,(x_{i}-\mu_{1})," display="block"><semantics><mrow><mrow><mrow><mfrac><mrow><mo rspace="0em">∂</mo><mi mathvariant="normal">ℓ</mi></mrow><mrow><mo rspace="0em">∂</mo><msub><mi>μ</mi><mn>1</mn></msub></mrow></mfrac><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mfrac><mn>1</mn><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo>⁢</mo><mrow><munderover><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>μ</mi><mn>1</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\frac{\partial\ell}{\partial\mu_{1}}(\theta)=\frac{1}{\sigma^{2}}\sum_{i=1}^{n%
+}\gamma_{i}(\theta)\,(x_{i}-\mu_{1}),</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where <math id="S5.I4.i2.p1.m1" class="ltx_Math" alttext="\gamma_{i}(\theta)" display="inline"><semantics><mrow><msub><mi>γ</mi><mi>i</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\gamma_{i}(\theta)</annotation></semantics></math> is the responsibility at <math id="S5.I4.i2.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. Deduce that the
+likelihood equations coincide with the fixed-point equations of the
+EM iteration.</p>
+</div>
+</li>
+<li id="S5.I4.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I4.i3.p1" class="ltx_para">​<p class="ltx_p">What are the updates in the limit <math id="S5.I4.i3.p1.m1" class="ltx_Math" alttext="\pi\to 1" display="inline"><semantics><mrow><mi>π</mi><mo stretchy="false">→</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\pi\to 1</annotation></semantics></math>? Comment upon
+your result in the context of example <a href="Ch5.html#Thmtheorem4" title="Example 5.4. ‣ 5.2 Worked Examples ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.4</span></a>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</div>
+</div>
+<a href="Ch18.html" class="navigation navigation-prev" aria-label="Previous page"><i class="fa fa-angle-left"></i></a><a href="Ch20.html" class="navigation navigation-next" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+</div>
+</div>
+<script src="bookml/gitbook/js/app.min.js"></script>
+<script src="bookml/gitbook/js/jquery.highlight.js"></script>
+<script src="bookml/gitbook/js/plugin-search.js"></script>
+<script src="bookml/gitbook/js/plugin-fontsettings.js"></script>
+<script src="bookml/gitbook/js/plugin-bookdown.js"></script>
+<script src="bookml/js/mathjax4.js"></script>
+<script type="text/javascript">
+                gitbook.require(["gitbook"], function(gitbook) {
+                gitbook.start({
+                  "fontsettings": {
+                    "theme": "white",
+                    "family": "sans",
+                    "size": 2
+                  },
+                  "download": [ [ "notes.pdf", "PDF" ], ],
+                  "search": {
+                    "engine": "fuse"
+                  },
+                  "toc": {
+                    "collapse": "none"
+                  }
+                });
+              });
+            </script>
+</body>
+
+</html>

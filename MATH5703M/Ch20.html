@@ -1,0 +1,818 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory</title>
+<!--Generated on Wed Sep 30 09:26:32 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<style>:root { --bml-ltx-font-size: 10.95; }</style>
+<link rel="stylesheet" href="LaTeXML.css" type="text/css">
+<link rel="stylesheet" href="ltx-book.css" type="text/css">
+<link rel="stylesheet" href="ltx-listings.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-table.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-search.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-bookdown.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-fontsettings.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook,plain.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook.css" type="text/css">
+<link rel="stylesheet" href="bmluser/colors.gitbook-notes.css" type="text/css">
+<link rel="stylesheet" href="bmluser/statheo-custom.css" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+<link rel="up" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="start" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="prev" href="Ch19.html" title="Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory">
+<link rel="next" href="Ch21.html" title="Lecture 21 EM in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx1.html" title="Introduction ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch1.html" title="Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch3.html" title="Lecture 3 R Basics and a First Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch5.html" title="Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch6.html" title="Lecture 6 Estimators by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch7.html" title="Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch9.html" title="Lecture 9 Consistency by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch10.html" title="Lecture 10 Improving Estimators: Rao–Blackwell and Lehmann–Scheffe ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch11.html" title="Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch12.html" title="Lecture 12 Sampling Distributions and Standard Errors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch13.html" title="Lecture 13 The Cramer–Rao Inequality ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch14.html" title="Lecture 14 Multiparameter Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch15.html" title="Lecture 15 Cramer–Rao and Efficiency in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch18.html" title="Lecture 18 Maximum Likelihood in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch19.html" title="Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch21.html" title="Lecture 21 EM in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch22.html" title="Lecture 22 The Neyman–Pearson Lemma ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch23.html" title="Lecture 23 Likelihood-Ratio Tests ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch24.html" title="Lecture 24 Power and Size by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch26.html" title="Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch27.html" title="Lecture 27 Confidence Versus Credibility ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch28.html" title="Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch29.html" title="Lecture 29 Standard Tests Revisited ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch30.html" title="Lecture 30 Do the Standard Tests Work? ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch31.html" title="Lecture 31 The Exponential Model: From Start to Finish ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx2.html" title="Preparing for the Exam ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A1.html" title="Appendix A Background from Probability ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A2.html" title="Appendix B Introduction to R ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A3.html" title="Appendix C Solutions to the Exercises ‣ MATH5703M Statistical Theory">
+<link rel="bibliography" href="bib.html" title="Bibliography ‣ MATH5703M Statistical Theory">
+<link rel="index" href="idx.html" title="Index ‣ MATH5703M Statistical Theory">
+<meta name="keywords" lang="en" content="-value, alternative, alternative hypothesis, composite, composite hypothesis, conservative, conservative test, critical region, critical value, hypothesis, level of a test, null, null hypothesis, power, power function, significance level, simple, simple hypothesis, size of a test, statistic, test, test function, test statistic, type I error, type II error">
+</head>
+<body class="bml_class_book">
+<div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+<a href="#bml-main-content" tabindex="0" class="bml-skip-to-content">Skip to content.</a>
+<div class="book-summary"><nav class="ltx_page_navbar">
+<ul class="ltx_toclist summary">
+<li>
+<a href="index.html" title="" class="ltx_ref" rel="start">MATH5703M Statistical Theory</a>
+</li>
+<li class="divider" aria-hidden="true">
+<li data-level="" data-path="Chx1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx1.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Introduction</a></li>
+<li data-level="1" data-path="Ch1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">1 </span></b>Statistical Models and Estimation</a></li>
+<li data-level="2" data-path="Ch2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">2 </span></b>Bias, Mean Squared Error and Consistency</a></li>
+<li data-level="3" data-path="Ch3.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">3 </span></b>R Basics and a First Simulation</a></li>
+<li data-level="4" data-path="Ch4.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch4.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">4 </span></b>Likelihood and the Method of Moments</a></li>
+<li data-level="5" data-path="Ch5.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch5.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5 </span></b>Maximum Likelihood Estimation</a></li>
+<li data-level="6" data-path="Ch6.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch6.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">6 </span></b>Estimators by Simulation</a></li>
+<li data-level="7" data-path="Ch7.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch7.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">7 </span></b>Exponential Families</a></li>
+<li data-level="8" data-path="Ch8.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch8.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">8 </span></b>Sufficiency</a></li>
+<li data-level="9" data-path="Ch9.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch9.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">9 </span></b>Consistency by Simulation</a></li>
+<li data-level="10" data-path="Ch10.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch10.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">10 </span></b>Improving Estimators: Rao–Blackwell and Lehmann–Scheffe</a></li>
+<li data-level="11" data-path="Ch11.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch11.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">11 </span></b>Fisher Information</a></li>
+<li data-level="12" data-path="Ch12.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch12.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">12 </span></b>Sampling Distributions and Standard Errors</a></li>
+<li data-level="13" data-path="Ch13.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch13.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">13 </span></b>The Cramer–Rao Inequality</a></li>
+<li data-level="14" data-path="Ch14.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch14.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">14 </span></b>Multiparameter Fisher Information</a></li>
+<li data-level="15" data-path="Ch15.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch15.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">15 </span></b>Cramer–Rao and Efficiency in R</a></li>
+<li data-level="16" data-path="Ch16.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch16.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">16 </span></b>Consistency of the MLE</a></li>
+<li data-level="17" data-path="Ch17.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch17.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">17 </span></b>Asymptotic Normality and Efficiency of the MLE</a></li>
+<li data-level="18" data-path="Ch18.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch18.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">18 </span></b>Maximum Likelihood in R</a></li>
+<li data-level="19" data-path="Ch19.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch19.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19 </span></b>The EM Algorithm</a></li>
+<li data-level="20" data-path="" class="ltx_tocentry ltx_tocentry_chapter ltx_ref_self  chapter active">
+<a href="" title="In MATH5703M Statistical Theory" aria-current="page" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20 </span></b>Hypothesis Testing</a>
+<ol class="ltx_toclist ltx_toclist_chapter">
+<li data-level="20.1" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S1" title="In Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20.1 </span></b>Hypotheses</a></li>
+<li data-level="20.2" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S2" title="In Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20.2 </span></b>Tests, Critical Regions and Errors</a></li>
+<li data-level="20.3" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S3" title="In Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20.3 </span></b>The Power Function, Size and Level</a></li>
+<li data-level="20.4" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S4" title="In Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20.4 </span></b>Testing the Mean of a Normal Sample</a></li>
+<li data-level="20.5" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S5" title="In Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20.5 </span></b>The <math class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-Value</a></li>
+</ol>
+</li>
+<li data-level="21" data-path="Ch21.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch21.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21 </span></b>EM in R</a></li>
+<li data-level="22" data-path="Ch22.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch22.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">22 </span></b>The Neyman–Pearson Lemma</a></li>
+<li data-level="23" data-path="Ch23.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch23.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">23 </span></b>Likelihood-Ratio Tests</a></li>
+<li data-level="24" data-path="Ch24.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch24.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">24 </span></b>Power and Size by Simulation</a></li>
+<li data-level="25" data-path="Ch25.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch25.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">25 </span></b>Confidence Intervals</a></li>
+<li data-level="26" data-path="Ch26.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch26.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">26 </span></b>Bayesian Inference: Priors and Posteriors</a></li>
+<li data-level="27" data-path="Ch27.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch27.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">27 </span></b>Confidence Versus Credibility</a></li>
+<li data-level="28" data-path="Ch28.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch28.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">28 </span></b>Credible Intervals and Bayesian Testing</a></li>
+<li data-level="29" data-path="Ch29.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch29.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">29 </span></b>Standard Tests Revisited</a></li>
+<li data-level="30" data-path="Ch30.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch30.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">30 </span></b>Do the Standard Tests Work?</a></li>
+<li data-level="31" data-path="Ch31.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch31.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">31 </span></b>The Exponential Model: Start to Finish</a></li>
+<li data-level="" data-path="Chx2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx2.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Preparing for the Exam</a></li>
+<li data-level="A" data-path="A1.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">A </span></b>Background from Probability</a></li>
+<li data-level="B" data-path="A2.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">B </span></b>Introduction to R</a></li>
+<li data-level="C" data-path="A3.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">C </span></b>Solutions to the Exercises</a></li>
+<li data-level="" data-path="bib.html" class="ltx_tocentry ltx_tocentry_bibliography  chapter "><a href="bib.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Bibliography</a></li>
+<li data-level="" data-path="idx.html" class="ltx_tocentry ltx_tocentry_index  chapter "><a href="idx.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Index</a></li>
+</ul>
+</nav></div>
+<div class="ltx_page_main book-body fixed">
+<div class="body-inner">
+<header class="book-header fixed" aria-label="toolbar"><span class="bml-separator"></span></header>
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="ltx_page_content page-inner" id="bml-main-content">
+<section class="ltx_chapter bml_mathjax4 ltx_authors_1line normal">
+<div class="section level1">
+<h1 class="ltx_title ltx_title_chapter">
+<span class="ltx_tag ltx_tag_chapter header-section-number">Lecture 20</span> Hypothesis Testing</h1>
+
+<div id="p1" class="ltx_para">
+<p class="ltx_p">So far we have asked questions about the value of <math id="p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. In this
+lecture we will consider the second question from
+lecture <a href="Ch1.html" title="Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1</span></a>: if there is a claim about <math id="p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, is it
+supported by the data? We will spend some time to carefully set up
+the language of hypothesis testing, which will be used in
+lectures <a href="Ch22.html" title="Lecture 22 The Neyman–Pearson Lemma ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">22</span></a>, <a href="Ch23.html" title="Lecture 23 Likelihood-Ratio Tests ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">23</span></a>, <a href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">25</span></a>
+and <a href="Ch29.html" title="Lecture 29 Standard Tests Revisited ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">29</span></a>. We will conclude the lecture by considering two
+examples, both about the mean of a normal sample.</p>
+</div>
+<section id="S1" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">20.1</span> Hypotheses</h2>
+
+<div id="S1.p1" class="ltx_para">
+<p class="ltx_p">Throughout, <math id="S1.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> follow a parametric model in the sense of
+definition <a href="Ch1.html#Thmtheorem1" title="Definition 1.1. ‣ 1.1 Statistical Models ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.1</span></a>. Questions like the one about fairness
+of a coin or about the effect of a treatment ask whether the true
+parameter value <math id="S1.p1.m2" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math> belongs to a subset of the parameter
+space <math id="S1.p1.m3" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math>.</p>
+</div>
+<div id="Thmtheorem1" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id1">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id1"><span class="ltx_text ltx_font_bold">Definition 20.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem1.p1" class="ltx_para">
+<p class="ltx_p">A <em class="ltx_emph ltx_font_italic">hypothesis</em> is a statement of the form <math id="Thmtheorem1.p1.m1" class="ltx_Math" alttext="\theta\in\Theta^{\prime}" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><msup><mi mathvariant="normal">Θ</mi><mo>′</mo></msup></mrow><annotation encoding="application/x-tex">\theta\in\Theta^{\prime}</annotation></semantics></math> for a
+subset <math id="Thmtheorem1.p1.m2" class="ltx_Math" alttext="\Theta^{\prime}\subseteq\Theta" display="inline"><semantics><mrow><msup><mi mathvariant="normal">Θ</mi><mo>′</mo></msup><mo>⊆</mo><mi mathvariant="normal">Θ</mi></mrow><annotation encoding="application/x-tex">\Theta^{\prime}\subseteq\Theta</annotation></semantics></math>. In a testing problem, the
+<em class="ltx_emph ltx_font_italic">null hypothesis</em> <math id="Thmtheorem1.p1.m3" class="ltx_Math" alttext="H_{0}\colon\theta\in\Theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>∈</mo><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta\in\Theta_{0}</annotation></semantics></math> and the
+<em class="ltx_emph ltx_font_italic">alternative hypothesis</em> <math id="Thmtheorem1.p1.m4" class="ltx_Math" alttext="H_{1}\colon\theta\in\Theta_{1}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>∈</mo><msub><mi mathvariant="normal">Θ</mi><mn>1</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta\in\Theta_{1}</annotation></semantics></math> are given, where
+<math id="Thmtheorem1.p1.m5" class="ltx_Math" alttext="\Theta_{0}" display="inline"><semantics><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\Theta_{0}</annotation></semantics></math> and <math id="Thmtheorem1.p1.m6" class="ltx_Math" alttext="\Theta_{1}" display="inline"><semantics><msub><mi mathvariant="normal">Θ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Theta_{1}</annotation></semantics></math> are disjoint subsets of <math id="Thmtheorem1.p1.m7" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math>. A hypothesis
+is called <em class="ltx_emph ltx_font_italic">simple</em>, if the corresponding subset consists of a
+single point, and <em class="ltx_emph ltx_font_italic">composite</em> otherwise.</p>
+</div>
+</div>
+<div id="S1.p2" class="ltx_para">
+<p class="ltx_p">As an abbreviation, from this lecture on we write <math id="S1.p2.m1" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math> for the
+value chosen to test a null hypothesis. In lectures <a href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">16</span></a>
+and <a href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">17</span></a>, the same symbol was used to denote the unknown,
+true value of the parameter. The context should make it clear which
+meaning is intended.</p>
+</div>
+<div id="S1.p3" class="ltx_para">
+<p class="ltx_p">In most problems we have <math id="S1.p3.m1" class="ltx_Math" alttext="\Theta_{1}=\Theta\setminus\Theta_{0}" display="inline"><semantics><mrow><msub><mi mathvariant="normal">Θ</mi><mn>1</mn></msub><mo>=</mo><mrow><mi mathvariant="normal">Θ</mi><mo>∖</mo><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">\Theta_{1}=\Theta\setminus\Theta_{0}</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> we
+can assume that exactly one of the two hypotheses is true. For
+example, for the mean <math id="S1.p3.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> of a normal sample, the hypothesis
+<math id="S1.p3.m3" class="ltx_Math" alttext="H_{0}\colon\theta=\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta=\theta_{0}</annotation></semantics></math> is simple, whereas the one-sided alternative
+<math id="S1.p3.m4" class="ltx_Math" alttext="H_{1}\colon\theta&gt;\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>&gt;</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta&gt;\theta_{0}</annotation></semantics></math>, the two-sided alternative <math id="S1.p3.m5" class="ltx_Math" alttext="H_{1}\colon\theta\neq\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>≠</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta\neq\theta_{0}</annotation></semantics></math> and the
+one-sided null hypothesis <math id="S1.p3.m6" class="ltx_Math" alttext="H_{0}\colon\theta\leq\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>≤</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta\leq\theta_{0}</annotation></semantics></math> are all composite.</p>
+</div>
+<div id="S1.p4" class="ltx_para">
+<p class="ltx_p">The two hypotheses have different roles: the null hypothesis is the
+default position, and the alternative is the claim which requires
+evidence before we can act on it. Section <a href="#S3" title="20.3 The Power Function, Size and Level ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.3</span></a> will make
+this distinction precise.</p>
+</div>
+</div>
+</section>
+<section id="S2" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">20.2</span> Tests, Critical Regions and Errors</h2>
+
+<div id="S2.p1" class="ltx_para">
+<p class="ltx_p">A test decides between the two hypotheses under consideration, and
+can be described by the set of data values where it rejects <math id="S2.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>.</p>
+</div>
+<div id="Thmtheorem2" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id2">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id2"><span class="ltx_text ltx_font_bold">Definition 20.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem2.p1" class="ltx_para">
+<p class="ltx_p">A <em class="ltx_emph ltx_font_italic">test</em> of <math id="Thmtheorem2.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> against <math id="Thmtheorem2.p1.m2" class="ltx_Math" alttext="H_{1}" display="inline"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_{1}</annotation></semantics></math> is a rule which
+for every possible data vector <math id="Thmtheorem2.p1.m3" class="ltx_Math" alttext="x=(x_{1},\dots,x_{n})" display="inline"><semantics><mrow><mi>x</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">x=(x_{1},\dots,x_{n})</annotation></semantics></math> decides whether to “reject <math id="Thmtheorem2.p1.m4" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>” or “do not reject <math id="Thmtheorem2.p1.m5" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>”. The
+set</p>
+<div id="Ex1" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex1.m1" class="ltx_Math" alttext="C=\bigl{\{}\,x\mathrel{\big{|}}\text{the test rejects $H_{0}$ for the data $x$%
+}\,\bigr{\}}" display="block"><semantics><mrow><mi>C</mi><mo>=</mo><mrow><mo maxsize="120%" minsize="120%" rspace="0.170em">{</mo><mrow><mi>x</mi><mo fence="false" mathsize="120%">|</mo><mrow><mtext>the test rejects </mtext><msub><mi>H</mi><mn>0</mn></msub><mtext> for the data </mtext><mi>x</mi></mrow></mrow><mo maxsize="120%" minsize="120%">}</mo></mrow></mrow><annotation encoding="application/x-tex">C=\bigl{\{}\,x\mathrel{\big{|}}\text{the test rejects $H_{0}$ for the data $x$%
+}\,\bigr{\}}</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">is called the <em class="ltx_emph ltx_font_italic">critical region</em> (or rejection region) of the test.
+Alternatively, a test can be described by its <em class="ltx_emph ltx_font_italic">test function</em>
+<math id="Thmtheorem2.p1.m6" class="ltx_Math" alttext="\varphi(x)=1" display="inline"><semantics><mrow><mrow><mi>φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\varphi(x)=1</annotation></semantics></math> for <math id="Thmtheorem2.p1.m7" class="ltx_Math" alttext="x\in C" display="inline"><semantics><mrow><mi>x</mi><mo>∈</mo><mi>C</mi></mrow><annotation encoding="application/x-tex">x\in C</annotation></semantics></math> and <math id="Thmtheorem2.p1.m8" class="ltx_Math" alttext="\varphi(x)=0" display="inline"><semantics><mrow><mrow><mi>φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\varphi(x)=0</annotation></semantics></math>
+otherwise, where <math id="Thmtheorem2.p1.m9" class="ltx_Math" alttext="1" display="inline"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math> indicates rejection.</p>
+</div>
+</div>
+<div id="S2.p2" class="ltx_para">
+<p class="ltx_p">In practice, the critical region is almost always of the form
+<math id="S2.p2.m1" class="ltx_Math" alttext="C=\{x\mid T(x)&gt;c\}" display="inline"><semantics><mrow><mi>C</mi><mo>=</mo><mrow><mo stretchy="false">{</mo><mi>x</mi><mo fence="true" lspace="0em" rspace="0em">∣</mo><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&gt;</mo><mi>c</mi></mrow><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">C=\{x\mid T(x)&gt;c\}</annotation></semantics></math> or <math id="S2.p2.m2" class="ltx_Math" alttext="C=\{x\mid T(x)\geq c\}" display="inline"><semantics><mrow><mi>C</mi><mo>=</mo><mrow><mo stretchy="false">{</mo><mi>x</mi><mo fence="true" lspace="0em" rspace="0em">∣</mo><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>≥</mo><mi>c</mi></mrow><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">C=\{x\mid T(x)\geq c\}</annotation></semantics></math> for a statistic <math id="S2.p2.m3" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>
+given by definition <a href="Ch1.html#Thmtheorem3" title="Definition 1.3. ‣ 1.2 Statistics and Estimators ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.3</span></a>, called the <em class="ltx_emph ltx_font_italic">test
+statistic</em>, and a
+constant <math id="S2.p2.m4" class="ltx_Math" alttext="c" display="inline"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math> called the <em class="ltx_emph ltx_font_italic">critical value</em>. The two forms of the critical region differ if <math id="S2.p2.m5" class="ltx_Math" alttext="T(x)=c" display="inline"><semantics><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">T(x)=c</annotation></semantics></math> has
+positive probability (exercise <a href="#Thmexercise2" title="Exercise 20.2. ‣ 20.5 The 𝑝-Value ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a> shows an example of
+this case, for discrete distributions).</p>
+</div>
+<div id="S2.p3" class="ltx_para">
+<p class="ltx_p">A test applied to random data will sometimes wrongly decide. This
+can happen in two different ways.</p>
+</div>
+<div id="Thmtheorem3" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id3">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id3"><span class="ltx_text ltx_font_bold">Definition 20.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem3.p1" class="ltx_para">
+<p class="ltx_p">A <em class="ltx_emph ltx_font_italic">type I error</em> occurs, if the test wrongly rejects <math id="Thmtheorem3.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>
+when <math id="Thmtheorem3.p1.m2" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> is true. A <em class="ltx_emph ltx_font_italic">type II error</em> occurs, if the test
+wrongly does not reject <math id="Thmtheorem3.p1.m3" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> when <math id="Thmtheorem3.p1.m4" class="ltx_Math" alttext="H_{1}" display="inline"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_{1}</annotation></semantics></math> is true.</p>
+</div>
+</div>
+<div id="S2.p4" class="ltx_para">
+<p class="ltx_p">Table <a href="#T1" title="Table 20.1 ‣ 20.2 Tests, Critical Regions and Errors ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.1</span></a> summarises the possible outcomes of statistical
+tests, in relation to the truth of the hypothesis being tested.</p>
+</div>
+<figure id="T1" class="ltx_table"><div class="bml-overflow-wrapper">
+<table class="ltx_tabular ltx_centering ltx_align_middle">
+<tr class="ltx_tr">
+<td class="ltx_td ltx_border_t"></td>
+<td class="ltx_td ltx_align_center ltx_border_t">do not reject <math id="T1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t">reject <math id="T1.m2" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>
+</td>
+</tr>
+<tr class="ltx_tr">
+<td class="ltx_td ltx_align_left ltx_border_t">
+<math id="T1.m3" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> true</td>
+<td class="ltx_td ltx_align_center ltx_border_t">correct decision</td>
+<td class="ltx_td ltx_align_center ltx_border_t">type I error</td>
+</tr>
+<tr class="ltx_tr">
+<td class="ltx_td ltx_align_left ltx_border_b">
+<math id="T1.m4" class="ltx_Math" alttext="H_{1}" display="inline"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_{1}</annotation></semantics></math> true</td>
+<td class="ltx_td ltx_align_center ltx_border_b">type II error</td>
+<td class="ltx_td ltx_align_center ltx_border_b">correct decision (power)</td>
+</tr>
+</table>
+</div>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_table">Table 20.1: </span>The four possible outcomes of a test.</figcaption>
+</figure>
+<div id="S2.p5" class="ltx_para">
+<p class="ltx_p">To understand the interpretation of this table, we can use the following
+example: in a criminal trial, the null hypothesis is the presumption
+of innocence of the defendant, and the alternative is guilt. If an
+innocent person is convicted, this is a type I error. If a guilty
+person is acquitted, this is a type II error. The standard of proof
+“beyond reasonable doubt” is such that many acquittals of the guilty
+are acceptable in order to avoid too many wrongful convictions. The
+reason for this is that the two types of error have different
+consequences: the consequences of type I errors are more serious.
+Furthermore, since an acquittal does not prove innocence, we write
+“do not reject <math id="S2.p5.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>” instead of “accept <math id="S2.p5.m2" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>” in the table.</p>
+</div>
+</div>
+</section>
+<section id="S3" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">20.3</span> The Power Function, Size and Level</h2>
+
+<div id="S3.p1" class="ltx_para">
+<p class="ltx_p">The probabilities of the two errors depend on the true parameter value,
+and both can be found using a single function of <math id="S3.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+<div id="Thmtheorem4" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id4">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id4"><span class="ltx_text ltx_font_bold">Definition 20.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem4.p1" class="ltx_para">
+<p class="ltx_p">The <em class="ltx_emph ltx_font_italic">power function</em> of a test with critical region <math id="Thmtheorem4.p1.m1" class="ltx_Math" alttext="C" display="inline"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
+is given by</p>
+<div id="Ex2" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex2.m1" class="ltx_Math" alttext="\beta(\theta)=\mathbb{P}_{\theta}(X\in C)=\mathbb{E}_{\theta}\bigl{(}\varphi(X%
+)\bigr{)},\qquad\theta\in\Theta," display="block"><semantics><mrow><mrow><mrow><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>X</mi><mo>∈</mo><mi>C</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>𝔼</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><mo rspace="2.357em">,</mo><mrow><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\beta(\theta)=\mathbb{P}_{\theta}(X\in C)=\mathbb{E}_{\theta}\bigl{(}\varphi(X%
+)\bigr{)},\qquad\theta\in\Theta,</annotation></semantics></math></div>
+</div>
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">i.e.</span> the probability of rejecting <math id="Thmtheorem4.p1.m2" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> when the true
+parameter value is <math id="Thmtheorem4.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. For <math id="Thmtheorem4.p1.m4" class="ltx_Math" alttext="\theta\in\Theta_{1}" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><msub><mi mathvariant="normal">Θ</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">\theta\in\Theta_{1}</annotation></semantics></math> the value <math id="Thmtheorem4.p1.m5" class="ltx_Math" alttext="\beta(\theta)" display="inline"><semantics><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\beta(\theta)</annotation></semantics></math>
+is called the <em class="ltx_emph ltx_font_italic">power</em> of the test at the alternative <math id="Thmtheorem4.p1.m6" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="S3.p2" class="ltx_para">
+<p class="ltx_p">For <math id="S3.p2.m1" class="ltx_Math" alttext="\theta\in\Theta_{0}" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\theta\in\Theta_{0}</annotation></semantics></math> the value <math id="S3.p2.m2" class="ltx_Math" alttext="\beta(\theta)" display="inline"><semantics><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\beta(\theta)</annotation></semantics></math> is the probability of
+a type I error, and for <math id="S3.p2.m3" class="ltx_Math" alttext="\theta\in\Theta_{1}" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><msub><mi mathvariant="normal">Θ</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">\theta\in\Theta_{1}</annotation></semantics></math> the value <math id="S3.p2.m4" class="ltx_Math" alttext="1-\beta(\theta)" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">1-\beta(\theta)</annotation></semantics></math>
+is the probability of a type II error. The two probabilities
+cannot both be reduced by making the critical region larger or
+smaller. If the size of the critical region is increased,
+the value <math id="S3.p2.m5" class="ltx_Math" alttext="\beta(\theta)" display="inline"><semantics><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\beta(\theta)</annotation></semantics></math> increases for all <math id="S3.p2.m6" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>,
+<span class="ltx_text ltx_font_italic">i.e.</span> type I errors become more likely and type II
+errors become less likely. If the size of the critical region is
+decreased, the opposite happens. For this reason, we have to choose
+one of the two types of error to control and it transpires that we
+can decide which type of error to control by considering the
+asymmetry between the two types of hypotheses: type I errors are
+errors where the default position is abandoned without good reason,
+and thus we should restrict the probability of type I errors first
+and only then should we consider the power of the test.</p>
+</div>
+<div id="Thmtheorem5" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id5">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id5"><span class="ltx_text ltx_font_bold">Definition 20.5</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem5.p1" class="ltx_para">
+<p class="ltx_p">The <em class="ltx_emph ltx_font_italic">size</em> of a test with power function <math id="Thmtheorem5.p1.m1" class="ltx_Math" alttext="\beta" display="inline"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math> is given by</p>
+<div id="Ex3" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex3.m1" class="ltx_Math" alttext="\sup_{\theta\in\Theta_{0}}\beta(\theta)," display="block"><semantics><mrow><mrow><munder><mo movablelimits="false">sup</mo><mrow><mi>θ</mi><mo>∈</mo><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub></mrow></munder><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\sup_{\theta\in\Theta_{0}}\beta(\theta),</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where the supremum is the maximum probability of type I error among all
+possible null hypotheses. For <math id="Thmtheorem5.p1.m2" class="ltx_Math" alttext="\alpha\in(0,1)" display="inline"><semantics><mrow><mi>α</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\alpha\in(0,1)</annotation></semantics></math>, the test is a <em class="ltx_emph ltx_font_italic">level <math id="Thmtheorem5.p1.m3" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> test</em>,
+if the size of the test is less than or equal to <math id="Thmtheorem5.p1.m4" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="S3.p3" class="ltx_para">
+<p class="ltx_p">For a simple null hypothesis <math id="S3.p3.m1" class="ltx_Math" alttext="H_{0}\colon\theta=\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta=\theta_{0}</annotation></semantics></math>, the size of the test equals
+<math id="S3.p3.m2" class="ltx_Math" alttext="\beta(\theta_{0})" display="inline"><semantics><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mn>0</mn></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\beta(\theta_{0})</annotation></semantics></math>. The number <math id="S3.p3.m3" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> is called the <em class="ltx_emph ltx_font_italic">significance
+level</em> and the values <math id="S3.p3.m4" class="ltx_Math" alttext="0.05" display="inline"><semantics><mn>0.05</mn><annotation encoding="application/x-tex">0.05</annotation></semantics></math> and <math id="S3.p3.m5" class="ltx_Math" alttext="0.01" display="inline"><semantics><mn>0.01</mn><annotation encoding="application/x-tex">0.01</annotation></semantics></math> are only
+conventions. Among all level <math id="S3.p3.m6" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> tests, we prefer the test with
+the largest power at the alternatives. In lecture <a href="Ch22.html" title="Lecture 22 The Neyman–Pearson Lemma ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">22</span></a> we
+will see how to find the test with optimal power, when both the null
+and the alternative hypothesis are simple.</p>
+</div>
+</div>
+</section>
+<section id="S4" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">20.4</span> Testing the Mean of a Normal Sample</h2>
+
+<div id="S4.p1" class="ltx_para">
+<p class="ltx_p">We now construct a test from first principles for <math id="S4.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math>
+i.i.d. <math id="S4.p1.m2" class="ltx_Math" alttext="N(\theta,\sigma^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\theta,\sigma^{2})</annotation></semantics></math>, where the variance
+<math id="S4.p1.m3" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math> is known. Here we write <math id="S4.p1.m4" class="ltx_Math" alttext="\Phi" display="inline"><semantics><mi mathvariant="normal">Φ</mi><annotation encoding="application/x-tex">\Phi</annotation></semantics></math> for the
+standard normal distribution function and <math id="S4.p1.m5" class="ltx_Math" alttext="z_{q}" display="inline"><semantics><msub><mi>z</mi><mi>q</mi></msub><annotation encoding="application/x-tex">z_{q}</annotation></semantics></math> for the
+<math id="S4.p1.m6" class="ltx_Math" alttext="q" display="inline"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>-quantile of the standard normal distribution, <span class="ltx_text ltx_font_italic">i.e.</span> we have <math id="S4.p1.m7" class="ltx_Math" alttext="\Phi(z_{q})=q" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>z</mi><mi>q</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mi>q</mi></mrow><annotation encoding="application/x-tex">\Phi(z_{q})=q</annotation></semantics></math>. The most commonly used
+values of this function are <math id="S4.p1.m8" class="ltx_Math" alttext="z_{0.95}=1.645" display="inline"><semantics><mrow><msub><mi>z</mi><mn>0.95</mn></msub><mo>=</mo><mn>1.645</mn></mrow><annotation encoding="application/x-tex">z_{0.95}=1.645</annotation></semantics></math> and
+<math id="S4.p1.m9" class="ltx_Math" alttext="z_{0.975}=1.96" display="inline"><semantics><mrow><msub><mi>z</mi><mn>0.975</mn></msub><mo>=</mo><mn>1.96</mn></mrow><annotation encoding="application/x-tex">z_{0.975}=1.96</annotation></semantics></math>.</p>
+</div>
+<div id="Thmtheorem6" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id6">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id6"><span class="ltx_text ltx_font_bold">Example 20.6</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem6.p1" class="ltx_para">
+<p class="ltx_p">We want to test <math id="Thmtheorem6.p1.m1" class="ltx_Math" alttext="H_{0}\colon\theta=\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta=\theta_{0}</annotation></semantics></math> against <math id="Thmtheorem6.p1.m2" class="ltx_Math" alttext="H_{1}\colon\theta&gt;\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>&gt;</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta&gt;\theta_{0}</annotation></semantics></math>
+at significance level <math id="Thmtheorem6.p1.m3" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>. If <math id="Thmtheorem6.p1.m4" class="ltx_Math" alttext="\bar{X}" display="inline"><semantics><mover accent="true"><mi>X</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{X}</annotation></semantics></math> is significantly
+larger than <math id="Thmtheorem6.p1.m5" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math>, we can conclude that the alternative is more
+likely to be true. Thus, we can choose <math id="Thmtheorem6.p1.m6" class="ltx_Math" alttext="\bar{X}" display="inline"><semantics><mover accent="true"><mi>X</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{X}</annotation></semantics></math> as the test statistic
+and reject if <math id="Thmtheorem6.p1.m7" class="ltx_Math" alttext="\bar{X}&gt;c" display="inline"><semantics><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>&gt;</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">\bar{X}&gt;c</annotation></semantics></math>. From proposition <a href="A1.html#Thmtheorem3" title="Proposition A.3. ‣ A.3 Sampling from a Normal Population ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.3</span></a> we know that
+under <math id="Thmtheorem6.p1.m8" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> the standardised mean <math id="Thmtheorem6.p1.m9" class="ltx_Math" alttext="\sqrt{n}\,(\bar{X}-\theta_{0})/\sigma" display="inline"><semantics><mrow><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sqrt{n}\,(\bar{X}-\theta_{0})/\sigma</annotation></semantics></math> is standard normally
+distributed. Thus, the probability of type I errors is</p>
+<div id="Ex4" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex4.m1" class="ltx_Math" alttext="\beta(\theta_{0})=\mathbb{P}_{\theta_{0}}(\bar{X}&gt;c)=\mathbb{P}_{\theta_{0}}%
+\Bigl{(}\frac{\sqrt{n}\,(\bar{X}-\theta_{0})}{\sigma}&gt;\frac{\sqrt{n}\,(c-%
+\theta_{0})}{\sigma}\Bigr{)}=1-\Phi\Bigl{(}\frac{\sqrt{n}\,(c-\theta_{0})}{%
+\sigma}\Bigr{)}." display="block"><semantics><mrow><mrow><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mn>0</mn></msub><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>ℙ</mi><msub><mi>θ</mi><mn>0</mn></msub></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>&gt;</mo><mi>c</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>ℙ</mi><msub><mi>θ</mi><mn>0</mn></msub></msub><mo>⁢</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mfrac><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mi>σ</mi></mfrac><mo>&gt;</mo><mfrac><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>c</mi><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mi>σ</mi></mfrac></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow><mo>=</mo><mrow><mn>1</mn><mo>−</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mfrac><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>c</mi><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mi>σ</mi></mfrac><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\beta(\theta_{0})=\mathbb{P}_{\theta_{0}}(\bar{X}&gt;c)=\mathbb{P}_{\theta_{0}}%
+\Bigl{(}\frac{\sqrt{n}\,(\bar{X}-\theta_{0})}{\sigma}&gt;\frac{\sqrt{n}\,(c-%
+\theta_{0})}{\sigma}\Bigr{)}=1-\Phi\Bigl{(}\frac{\sqrt{n}\,(c-\theta_{0})}{%
+\sigma}\Bigr{)}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Setting this probability equal to <math id="Thmtheorem6.p1.m10" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>, we find the
+critical value as <math id="Thmtheorem6.p1.m11" class="ltx_Math" alttext="\sqrt{n}\,(c-\theta_{0})/\sigma=z_{1-\alpha}" display="inline"><semantics><mrow><mrow><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>c</mi><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>σ</mi></mrow><mo>=</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\sqrt{n}\,(c-\theta_{0})/\sigma=z_{1-\alpha}</annotation></semantics></math> and thus the level <math id="Thmtheorem6.p1.m12" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> test
+rejects <math id="Thmtheorem6.p1.m13" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> if</p>
+<div id="E1" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id7">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id7"><span class="bml_sr_only">equation </span>(20.1)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(20.1)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E1.m1" class="ltx_Math" alttext="\bar{X}&gt;\theta_{0}+z_{1-\alpha}\,\frac{\sigma}{\sqrt{n}},\qquad\text{%
+equivalently if}\qquad Z=\frac{\sqrt{n}\,(\bar{X}-\theta_{0})}{\sigma}&gt;z_{1-%
+\alpha}." display="block"><semantics><mrow><mrow><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>&gt;</mo><mrow><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>+</mo><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></msub><mo>⁢</mo><mfrac><mi>σ</mi><msqrt><mi>n</mi></msqrt></mfrac></mrow></mrow><mo rspace="2.357em">,</mo><mtext>equivalently if</mtext></mrow></mrow><mspace width="2.19em"></mspace><mrow><mi>Z</mi><mo>=</mo><mfrac><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mi>σ</mi></mfrac><mo>&gt;</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></msub></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\bar{X}&gt;\theta_{0}+z_{1-\alpha}\,\frac{\sigma}{\sqrt{n}},\qquad\text{%
+equivalently if}\qquad Z=\frac{\sqrt{n}\,(\bar{X}-\theta_{0})}{\sigma}&gt;z_{1-%
+\alpha}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This is the one-sided <math id="Thmtheorem6.p1.m14" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-test. Since
+<math id="Thmtheorem6.p1.m15" class="ltx_Math" alttext="\sqrt{n}\,(\bar{X}-\theta)/\sigma" display="inline"><semantics><mrow><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sqrt{n}\,(\bar{X}-\theta)/\sigma</annotation></semantics></math> is standard normally distributed under <math id="Thmtheorem6.p1.m16" class="ltx_Math" alttext="\mathbb{P}_{\theta}" display="inline"><semantics><msub><mi>ℙ</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\mathbb{P}_{\theta}</annotation></semantics></math>,
+we can use the same standardisation to determine the power of the
+test. The power function is</p>
+<div id="E2" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id8">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id8"><span class="bml_sr_only">equation </span>(20.2)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(20.2)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E2.m1" class="ltx_Math" alttext="\beta(\theta)=\mathbb{P}_{\theta}\Bigl{(}\frac{\sqrt{n}\,(\bar{X}-\theta)}{%
+\sigma}&gt;z_{1-\alpha}-\frac{\sqrt{n}\,(\theta-\theta_{0})}{\sigma}\Bigr{)}=\Phi%
+\Bigl{(}\frac{\sqrt{n}\,(\theta-\theta_{0})}{\sigma}-z_{1-\alpha}\Bigr{)}." display="block"><semantics><mrow><mrow><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mfrac><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mi>σ</mi></mfrac><mo>&gt;</mo><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></msub><mo>−</mo><mfrac><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mi>σ</mi></mfrac></mrow></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow><mo>=</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mfrac><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mi>σ</mi></mfrac><mo>−</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></msub></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\beta(\theta)=\mathbb{P}_{\theta}\Bigl{(}\frac{\sqrt{n}\,(\bar{X}-\theta)}{%
+\sigma}&gt;z_{1-\alpha}-\frac{\sqrt{n}\,(\theta-\theta_{0})}{\sigma}\Bigr{)}=\Phi%
+\Bigl{(}\frac{\sqrt{n}\,(\theta-\theta_{0})}{\sigma}-z_{1-\alpha}\Bigr{)}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Since the function <math id="Thmtheorem6.p1.m17" class="ltx_Math" alttext="\Phi" display="inline"><semantics><mi mathvariant="normal">Φ</mi><annotation encoding="application/x-tex">\Phi</annotation></semantics></math> is increasing, the graph of <math id="Thmtheorem6.p1.m18" class="ltx_Math" alttext="\beta" display="inline"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math> is an
+S-shaped curve which starts at <math id="Thmtheorem6.p1.m19" class="ltx_Math" alttext="0" display="inline"><mn>0</mn></math> and converges to <math id="Thmtheorem6.p1.m20" class="ltx_Math" alttext="1" display="inline"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>, passing
+through the point <math id="Thmtheorem6.p1.m21" class="ltx_Math" alttext="(\theta_{0},\alpha)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mn>0</mn></msub><mo>,</mo><mi>α</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\theta_{0},\alpha)</annotation></semantics></math>. Close to <math id="Thmtheorem6.p1.m22" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math> the power is only
+slightly larger than <math id="Thmtheorem6.p1.m23" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>, but as <math id="Thmtheorem6.p1.m24" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> increases, the curve gets
+steeper. This fact is used in exercise <a href="#Thmexercise1" title="Exercise 20.1. ‣ 20.5 The 𝑝-Value ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.1</span></a> to
+determine the required sample size.</p>
+</div>
+<div id="Thmtheorem6.p2" class="ltx_para">
+<p class="ltx_p">For <math id="Thmtheorem6.p2.m1" class="ltx_Math" alttext="n=25" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">n=25</annotation></semantics></math>, <math id="Thmtheorem6.p2.m2" class="ltx_Math" alttext="\sigma=2" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\sigma=2</annotation></semantics></math>, <math id="Thmtheorem6.p2.m3" class="ltx_Math" alttext="\theta_{0}=10" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\theta_{0}=10</annotation></semantics></math> and <math id="Thmtheorem6.p2.m4" class="ltx_Math" alttext="\alpha=0.05" display="inline"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">\alpha=0.05</annotation></semantics></math> the test
+rejects if <math id="Thmtheorem6.p2.m5" class="ltx_Math" alttext="\bar{X}&gt;10+1.645\cdot 2/5=10.658" display="inline"><semantics><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>&gt;</mo><mrow><mn>10</mn><mo>+</mo><mrow><mrow><mn>1.645</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><mn>2</mn></mrow><mo>/</mo><mn>5</mn></mrow></mrow><mo>=</mo><mn>10.658</mn></mrow><annotation encoding="application/x-tex">\bar{X}&gt;10+1.645\cdot 2/5=10.658</annotation></semantics></math>.
+At the alternative <math id="Thmtheorem6.p2.m6" class="ltx_Math" alttext="\theta=11" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>11</mn></mrow><annotation encoding="application/x-tex">\theta=11</annotation></semantics></math> the power is
+<math id="Thmtheorem6.p2.m7" class="ltx_Math" alttext="\Phi(2.5-1.645)=\Phi(0.855)=0.804" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2.5</mn><mo>−</mo><mn>1.645</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>0.855</mn><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0.804</mn></mrow><annotation encoding="application/x-tex">\Phi(2.5-1.645)=\Phi(0.855)=0.804</annotation></semantics></math>, at <math id="Thmtheorem6.p2.m8" class="ltx_Math" alttext="\theta=10.5" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>10.5</mn></mrow><annotation encoding="application/x-tex">\theta=10.5</annotation></semantics></math> it is
+only <math id="Thmtheorem6.p2.m9" class="ltx_Math" alttext="\Phi(1.25-1.645)=\Phi(-0.395)=0.346" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1.25</mn><mo>−</mo><mn>1.645</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mo>−</mo><mn>0.395</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0.346</mn></mrow><annotation encoding="application/x-tex">\Phi(1.25-1.645)=\Phi(-0.395)=0.346</annotation></semantics></math>: a shift of half a standard
+deviation is detected in barely a third of all samples.</p>
+</div>
+</div>
+<div id="S4.p2" class="ltx_para">
+<p class="ltx_p">Since the power function (<a href="#E2" title="In Example 20.6. ‣ 20.4 Testing the Mean of a Normal Sample ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a>) is increasing,
+the same test also has size
+<math id="S4.p2.m1" class="ltx_Math" alttext="\sup_{\theta\leq\theta_{0}}\beta(\theta)=\beta(\theta_{0})=\alpha" display="inline"><semantics><mrow><mrow><msub><mo>sup</mo><mrow><mi>θ</mi><mo>≤</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></msub><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>=</mo><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>θ</mi><mn>0</mn></msub><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">\sup_{\theta\leq\theta_{0}}\beta(\theta)=\beta(\theta_{0})=\alpha</annotation></semantics></math> for
+the composite null hypothesis <math id="S4.p2.m2" class="ltx_Math" alttext="H_{0}\colon\theta\leq\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>≤</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta\leq\theta_{0}</annotation></semantics></math>, attained
+at the boundary point; this is why definition <a href="#Thmtheorem5" title="Definition 20.5. ‣ 20.3 The Power Function, Size and Level ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.5</span></a>
+takes a supremum.</p>
+</div>
+<div id="Thmtheorem7" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id9">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id9"><span class="ltx_text ltx_font_bold">Example 20.7</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem7.p1" class="ltx_para">
+<p class="ltx_p">Assume that we want to test for both directions, <span class="ltx_text ltx_font_italic">i.e.</span> we
+test
+<math id="Thmtheorem7.p1.m1" class="ltx_Math" alttext="H_{0}\colon\theta=\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta=\theta_{0}</annotation></semantics></math> against <math id="Thmtheorem7.p1.m2" class="ltx_Math" alttext="H_{1}\colon\theta\neq\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>≠</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta\neq\theta_{0}</annotation></semantics></math> and
+we reject for <math id="Thmtheorem7.p1.m3" class="ltx_Math" alttext="|\bar{X}-\theta_{0}|&gt;c" display="inline"><semantics><mrow><mrow><mo stretchy="false">|</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">|</mo></mrow><mo>&gt;</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">|\bar{X}-\theta_{0}|&gt;c</annotation></semantics></math>. Under <math id="Thmtheorem7.p1.m4" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> the
+test statistic <math id="Thmtheorem7.p1.m5" class="ltx_Math" alttext="Z=\sqrt{n}\,(\bar{X}-\theta_{0})/\sigma" display="inline"><semantics><mrow><mi>Z</mi><mo>=</mo><mrow><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>σ</mi></mrow></mrow><annotation encoding="application/x-tex">Z=\sqrt{n}\,(\bar{X}-\theta_{0})/\sigma</annotation></semantics></math> is standard normally distributed and, since
+the normal distribution is symmetric, we have</p>
+<div id="Ex5" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex5.m1" class="ltx_Math" alttext="\mathbb{P}_{\theta_{0}}\bigl{(}|\bar{X}-\theta_{0}|&gt;c\bigr{)}=\mathbb{P}_{%
+\theta_{0}}\Bigl{(}|Z|&gt;\frac{\sqrt{n}\,c}{\sigma}\Bigr{)}=2\Bigl{(}1-\Phi\Bigl%
+{(}\frac{\sqrt{n}\,c}{\sigma}\Bigr{)}\Bigr{)}." display="block"><semantics><mrow><mrow><mrow><msub><mi>ℙ</mi><msub><mi>θ</mi><mn>0</mn></msub></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mo stretchy="false">|</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">|</mo></mrow><mo>&gt;</mo><mi>c</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>ℙ</mi><msub><mi>θ</mi><mn>0</mn></msub></msub><mo>⁢</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mrow><mo stretchy="false">|</mo><mi>Z</mi><mo stretchy="false">|</mo></mrow><mo>&gt;</mo><mfrac><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mi>c</mi></mrow><mi>σ</mi></mfrac></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow><mo>=</mo><mrow><mn>2</mn><mo>⁢</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mn>1</mn><mo>−</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mfrac><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mi>c</mi></mrow><mi>σ</mi></mfrac><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta_{0}}\bigl{(}|\bar{X}-\theta_{0}|&gt;c\bigr{)}=\mathbb{P}_{%
+\theta_{0}}\Bigl{(}|Z|&gt;\frac{\sqrt{n}\,c}{\sigma}\Bigr{)}=2\Bigl{(}1-\Phi\Bigl%
+{(}\frac{\sqrt{n}\,c}{\sigma}\Bigr{)}\Bigr{)}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Setting this equal to <math id="Thmtheorem7.p1.m6" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>, we find <math id="Thmtheorem7.p1.m7" class="ltx_Math" alttext="\sqrt{n}\,c/\sigma=z_{1-\alpha/2}" display="inline"><semantics><mrow><mrow><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mi>c</mi></mrow><mo>/</mo><mi>σ</mi></mrow><mo>=</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub></mrow><annotation encoding="application/x-tex">\sqrt{n}\,c/\sigma=z_{1-\alpha/2}</annotation></semantics></math> and thus the level <math id="Thmtheorem7.p1.m8" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>
+two-sided <math id="Thmtheorem7.p1.m9" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-test rejects <math id="Thmtheorem7.p1.m10" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> if</p>
+<div id="E3" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id10">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id10"><span class="bml_sr_only">equation </span>(20.3)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(20.3)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E3.m1" class="ltx_Math" alttext="|\bar{X}-\theta_{0}|&gt;z_{1-\alpha/2}\,\frac{\sigma}{\sqrt{n}},\qquad\text{%
+equivalently if}\qquad|Z|&gt;z_{1-\alpha/2}." display="block"><semantics><mrow><mrow><mrow><mrow><mo stretchy="false">|</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">|</mo></mrow><mo>&gt;</mo><mrow><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo>⁢</mo><mfrac><mi>σ</mi><msqrt><mi>n</mi></msqrt></mfrac></mrow><mo rspace="2.357em">,</mo><mtext>equivalently if</mtext></mrow></mrow><mspace width="2.19em"></mspace><mrow><mrow><mo stretchy="false">|</mo><mi>Z</mi><mo stretchy="false">|</mo></mrow><mo>&gt;</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">|\bar{X}-\theta_{0}|&gt;z_{1-\alpha/2}\,\frac{\sigma}{\sqrt{n}},\qquad\text{%
+equivalently if}\qquad|Z|&gt;z_{1-\alpha/2}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Let <math id="Thmtheorem7.p1.m11" class="ltx_Math" alttext="\delta=\sqrt{n}\,(\theta-\theta_{0})/\sigma" display="inline"><semantics><mrow><mi>δ</mi><mo>=</mo><mrow><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>σ</mi></mrow></mrow><annotation encoding="application/x-tex">\delta=\sqrt{n}\,(\theta-\theta_{0})/\sigma</annotation></semantics></math>. Then, similar to the result in
+example <a href="#Thmtheorem6" title="Example 20.6. ‣ 20.4 Testing the Mean of a Normal Sample ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.6</span></a>, we find the power function</p>
+<div id="E4" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id11">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id11"><span class="bml_sr_only">equation </span>(20.4)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(20.4)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E4.m1" class="ltx_Math" alttext="\beta(\theta)=\Phi(-z_{1-\alpha/2}-\delta)+1-\Phi(z_{1-\alpha/2}-\delta)." display="block"><semantics><mrow><mrow><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mrow><mo>−</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub></mrow><mo>−</mo><mi>δ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>+</mo><mn>1</mn></mrow><mo>−</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo>−</mo><mi>δ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\beta(\theta)=\Phi(-z_{1-\alpha/2}-\delta)+1-\Phi(z_{1-\alpha/2}-\delta).</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This function is symmetric about <math id="Thmtheorem7.p1.m12" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math> and has its minimum
+value <math id="Thmtheorem7.p1.m13" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> at this point. Thus, the graph of this power
+function is U-shaped instead of S-shaped. For <math id="Thmtheorem7.p1.m14" class="ltx_Math" alttext="n=25" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">n=25</annotation></semantics></math>, <math id="Thmtheorem7.p1.m15" class="ltx_Math" alttext="\sigma=2" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\sigma=2</annotation></semantics></math>, <math id="Thmtheorem7.p1.m16" class="ltx_Math" alttext="\theta_{0}=10" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\theta_{0}=10</annotation></semantics></math> and <math id="Thmtheorem7.p1.m17" class="ltx_Math" alttext="\alpha=0.05" display="inline"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">\alpha=0.05</annotation></semantics></math> the
+test rejects if <math id="Thmtheorem7.p1.m18" class="ltx_Math" alttext="|\bar{X}-10|&gt;1.96\cdot 2/5=0.784" display="inline"><semantics><mrow><mrow><mo stretchy="false">|</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>−</mo><mn>10</mn></mrow><mo stretchy="false">|</mo></mrow><mo>&gt;</mo><mrow><mrow><mn>1.96</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><mn>2</mn></mrow><mo>/</mo><mn>5</mn></mrow><mo>=</mo><mn>0.784</mn></mrow><annotation encoding="application/x-tex">|\bar{X}-10|&gt;1.96\cdot 2/5=0.784</annotation></semantics></math> and at <math id="Thmtheorem7.p1.m19" class="ltx_Math" alttext="\theta=11" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>11</mn></mrow><annotation encoding="application/x-tex">\theta=11</annotation></semantics></math>
+we have <math id="Thmtheorem7.p1.m20" class="ltx_Math" alttext="\delta=2.5" display="inline"><semantics><mrow><mi>δ</mi><mo>=</mo><mn>2.5</mn></mrow><annotation encoding="application/x-tex">\delta=2.5</annotation></semantics></math> and the power <math id="Thmtheorem7.p1.m21" class="ltx_Math" alttext="\Phi(-4.46)+1-\Phi(-0.54)=0.705" display="inline"><semantics><mrow><mrow><mrow><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mo>−</mo><mn>4.46</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>+</mo><mn>1</mn></mrow><mo>−</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mo>−</mo><mn>0.54</mn></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>=</mo><mn>0.705</mn></mrow><annotation encoding="application/x-tex">\Phi(-4.46)+1-\Phi(-0.54)=0.705</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="S4.p3" class="ltx_para">
+<p class="ltx_p">At <math id="S4.p3.m1" class="ltx_Math" alttext="\theta=11" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>11</mn></mrow><annotation encoding="application/x-tex">\theta=11</annotation></semantics></math> the one-sided test has power <math id="S4.p3.m2" class="ltx_Math" alttext="0.804" display="inline"><semantics><mn>0.804</mn><annotation encoding="application/x-tex">0.804</annotation></semantics></math> against <math id="S4.p3.m3" class="ltx_Math" alttext="0.705" display="inline"><semantics><mn>0.705</mn><annotation encoding="application/x-tex">0.705</annotation></semantics></math>,
+since it rejects all values with probability <math id="S4.p3.m4" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> from the upper tail. Thus,
+the one-sided test is superior to the two-sided test for all
+alternatives above <math id="S4.p3.m5" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math>, but is useless for alternatives below.
+Before we consider the data, we need to decide which departures
+from <math id="S4.p3.m6" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> are of interest. In lecture <a href="Ch22.html" title="Lecture 22 The Neyman–Pearson Lemma ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">22</span></a> we will see
+that there is no single test which is best for both directions, and
+in lecture <a href="Ch24.html" title="Lecture 24 Power and Size by Simulation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">24</span></a> we will consider how size and power
+behave in simulation.</p>
+</div>
+</div>
+</section>
+<section id="S5" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">20.5</span> The <math id="S5.m1" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-Value</h2>
+
+<div id="S5.p1" class="ltx_para">
+<p class="ltx_p">A test at a fixed level only states whether <math id="S5.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> is rejected or
+not. The <math id="S5.p1.m2" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value, introduced in this section, allows us to quantify
+the strength of the evidence in a more detailed way.</p>
+</div>
+<div id="Thmtheorem8" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id12">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id12"><span class="ltx_text ltx_font_bold">Definition 20.8</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem8.p1" class="ltx_para">
+<p class="ltx_p">Consider a family of tests with critical regions <math id="Thmtheorem8.p1.m1" class="ltx_Math" alttext="C_{\alpha}" display="inline"><semantics><msub><mi>C</mi><mi>α</mi></msub><annotation encoding="application/x-tex">C_{\alpha}</annotation></semantics></math> for
+all levels <math id="Thmtheorem8.p1.m2" class="ltx_Math" alttext="\alpha\in(0,1)" display="inline"><semantics><mrow><mi>α</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\alpha\in(0,1)</annotation></semantics></math>, such that
+<math id="Thmtheorem8.p1.m3" class="ltx_Math" alttext="C_{\alpha}\subseteq C_{\alpha^{\prime}}" display="inline"><semantics><mrow><msub><mi>C</mi><mi>α</mi></msub><mo>⊆</mo><msub><mi>C</mi><msup><mi>α</mi><mo>′</mo></msup></msub></mrow><annotation encoding="application/x-tex">C_{\alpha}\subseteq C_{\alpha^{\prime}}</annotation></semantics></math> whenever <math id="Thmtheorem8.p1.m4" class="ltx_Math" alttext="\alpha&lt;\alpha^{\prime}" display="inline"><semantics><mrow><mi>α</mi><mo>&lt;</mo><msup><mi>α</mi><mo>′</mo></msup></mrow><annotation encoding="application/x-tex">\alpha&lt;\alpha^{\prime}</annotation></semantics></math>. Then the
+<em class="ltx_emph ltx_font_italic"><math id="Thmtheorem8.p1.m5" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value</em> of the data <math id="Thmtheorem8.p1.m6" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> is given by</p>
+<div id="Ex6" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex6.m1" class="ltx_Math" alttext="p(x)=\inf\bigl{\{}\,\alpha\in(0,1)\mathrel{\big{|}}x\in C_{\alpha}\,\bigr{\}}," display="block"><semantics><mrow><mrow><mrow><mi>p</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.1389em">=</mo><mrow><mo lspace="0.1389em" movablelimits="false" rspace="0em">inf</mo><mrow><mo maxsize="120%" minsize="120%" rspace="0.170em">{</mo><mrow><mi>α</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mo fence="false" mathsize="120%">|</mo><mi>x</mi><mo>∈</mo><msub><mi>C</mi><mi>α</mi></msub></mrow><mo maxsize="120%" minsize="120%">}</mo></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">p(x)=\inf\bigl{\{}\,\alpha\in(0,1)\mathrel{\big{|}}x\in C_{\alpha}\,\bigr{\}},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">the smallest level at which the data lead to rejection
+of <math id="Thmtheorem8.p1.m7" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="S5.p2" class="ltx_para">
+<p class="ltx_p">The tests from section <a href="#S4" title="20.4 Testing the Mean of a Normal Sample ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.4</span></a> are nested in this way,
+since <math id="S5.p2.m1" class="ltx_Math" alttext="z_{1-\alpha}" display="inline"><semantics><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></msub><annotation encoding="application/x-tex">z_{1-\alpha}</annotation></semantics></math> decreases as <math id="S5.p2.m2" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> increases. For a test
+which rejects for large values of a statistic <math id="S5.p2.m3" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math> and which has a
+simple null hypothesis, the smallest level at which the data can lead
+to rejection is</p>
+<div id="E5" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id13">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id13"><span class="bml_sr_only">equation </span>(20.5)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(20.5)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E5.m1" class="ltx_Math" alttext="p(x)=\mathbb{P}_{\theta_{0}}\bigl{(}T(X)\geq T(x)\bigr{)}." display="block"><semantics><mrow><mrow><mrow><mi>p</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>ℙ</mi><msub><mi>θ</mi><mn>0</mn></msub></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo>≥</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">p(x)=\mathbb{P}_{\theta_{0}}\bigl{(}T(X)\geq T(x)\bigr{)}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This is the probability under <math id="S5.p2.m4" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> of the test statistic taking a value
+at least as extreme as the observed value. For the one-sided
+<math id="S5.p2.m5" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-test this probability is <math id="S5.p2.m6" class="ltx_Math" alttext="p(x)=1-\Phi(z)" display="inline"><semantics><mrow><mrow><mi>p</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>1</mn><mo>−</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>z</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">p(x)=1-\Phi(z)</annotation></semantics></math>, for the observed value
+<math id="S5.p2.m7" class="ltx_Math" alttext="z=\sqrt{n}\,(\bar{x}-\theta_{0})/\sigma" display="inline"><semantics><mrow><mi>z</mi><mo>=</mo><mrow><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>σ</mi></mrow></mrow><annotation encoding="application/x-tex">z=\sqrt{n}\,(\bar{x}-\theta_{0})/\sigma</annotation></semantics></math>. For the two-sided test we get <math id="S5.p2.m8" class="ltx_Math" alttext="p(x)=2\bigl{(}1-\Phi(|z|)\bigr{)}" display="inline"><semantics><mrow><mrow><mi>p</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>2</mn><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mn>1</mn><mo>−</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mo stretchy="false">|</mo><mi>z</mi><mo stretchy="false">|</mo></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">p(x)=2\bigl{(}1-\Phi(|z|)\bigr{)}</annotation></semantics></math>. For the situation
+of example <a href="#Thmtheorem6" title="Example 20.6. ‣ 20.4 Testing the Mean of a Normal Sample ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.6</span></a>, the observed mean <math id="S5.p2.m9" class="ltx_Math" alttext="\bar{x}=10.9" display="inline"><semantics><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>=</mo><mn>10.9</mn></mrow><annotation encoding="application/x-tex">\bar{x}=10.9</annotation></semantics></math>
+leads to <math id="S5.p2.m10" class="ltx_Math" alttext="z=2.25" display="inline"><semantics><mrow><mi>z</mi><mo>=</mo><mn>2.25</mn></mrow><annotation encoding="application/x-tex">z=2.25</annotation></semantics></math> and thus to <math id="S5.p2.m11" class="ltx_Math" alttext="p=1-\Phi(2.25)=0.0122" display="inline"><semantics><mrow><mi>p</mi><mo>=</mo><mrow><mn>1</mn><mo>−</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>2.25</mn><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>=</mo><mn>0.0122</mn></mrow><annotation encoding="application/x-tex">p=1-\Phi(2.25)=0.0122</annotation></semantics></math> for the one-sided test
+and <math id="S5.p2.m12" class="ltx_Math" alttext="p=0.0244" display="inline"><semantics><mrow><mi>p</mi><mo>=</mo><mn>0.0244</mn></mrow><annotation encoding="application/x-tex">p=0.0244</annotation></semantics></math> for the two-sided test. We can see that we can reject <math id="S5.p2.m13" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>
+at level <math id="S5.p2.m14" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> if and only if <math id="S5.p2.m15" class="ltx_Math" alttext="p(x)\leq\alpha" display="inline"><semantics><mrow><mrow><mi>p</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>≤</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">p(x)\leq\alpha</annotation></semantics></math>, and thus the
+<math id="S5.p2.m16" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value is a compact summary of a test. Under <math id="S5.p2.m17" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>, the
+<math id="S5.p2.m18" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value of a continuous test statistic is
+uniformly distributed on <math id="S5.p2.m19" class="ltx_Math" alttext="(0,1)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0,1)</annotation></semantics></math> (see exercise <a href="#Thmexercise4" title="Exercise 20.4. ‣ 20.5 The 𝑝-Value ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.4</span></a>).
+This result is used in lecture <a href="Ch30.html" title="Lecture 30 Do the Standard Tests Work? ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">30</span></a>.</p>
+</div>
+<div id="S5.p3" class="ltx_para">
+<p class="ltx_p">Both statements assume that the test statistic is continuous.
+For discrete test statistics, <span class="ltx_text ltx_font_italic">e.g.</span> the number of successes in
+a Bernoulli sample, the tail probability (<a href="#E5" title="In 20.5 The 𝑝-Value ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.5</span></a>) can only
+take the countably many values <math id="S5.p3.m1" class="ltx_Math" alttext="\mathbb{P}_{\theta_{0}}(T(X)\geq t)" display="inline"><semantics><mrow><msub><mi>ℙ</mi><msub><mi>θ</mi><mn>0</mn></msub></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo>≥</mo><mi>t</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta_{0}}(T(X)\geq t)</annotation></semantics></math> and the <math id="S5.p3.m2" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value
+is discontinuous. Most levels <math id="S5.p3.m3" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> are not attained by any critical
+region. We can still perform the test for <math id="S5.p3.m4" class="ltx_Math" alttext="p(x)\leq\alpha" display="inline"><semantics><mrow><mrow><mi>p</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>≤</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">p(x)\leq\alpha</annotation></semantics></math> and the
+resulting test is <em class="ltx_emph ltx_font_italic">conservative</em>.
+The size of the test is the largest attainable value which does not
+exceed the level <math id="S5.p3.m5" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>. The test will reject a true <math id="S5.p3.m6" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>
+less often than the nominal level suggests and the test will lose
+some power. The <math id="S5.p3.m7" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value is no longer uniformly distributed either,
+but still satisfies <math id="S5.p3.m8" class="ltx_Math" alttext="\mathbb{P}_{\theta_{0}}(p(X)\leq\alpha)\leq\alpha" display="inline"><semantics><mrow><mrow><msub><mi>ℙ</mi><msub><mi>θ</mi><mn>0</mn></msub></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mrow><mi>p</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo>≤</mo><mi>α</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>≤</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta_{0}}(p(X)\leq\alpha)\leq\alpha</annotation></semantics></math>. This
+is what allows the level to still be valid.</p>
+</div>
+<div id="S5.p4" class="ltx_para">
+<p class="ltx_p">Since the <math id="S5.p4.m1" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value is a probability, it is tempting to
+interpret the results in wrong ways; the following statements about a
+<math id="S5.p4.m2" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value of <math id="S5.p4.m3" class="ltx_Math" alttext="0.0122" display="inline"><semantics><mn>0.0122</mn><annotation encoding="application/x-tex">0.0122</annotation></semantics></math> are all wrong.</p>
+<ul id="S5.I1" class="ltx_itemize">
+<li id="S5.I1.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i1.p1" class="ltx_para">​<p class="ltx_p">“The probability that <math id="S5.I1.i1.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> is true is <math id="S5.I1.i1.p1.m2" class="ltx_Math" alttext="0.0122" display="inline"><semantics><mn>0.0122</mn><annotation encoding="application/x-tex">0.0122</annotation></semantics></math>.” Since
+<math id="S5.I1.i1.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is a fixed, unknown number, <math id="S5.I1.i1.p1.m4" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> is either true or false;
+the probability in (<a href="#E5" title="In 20.5 The 𝑝-Value ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.5</span></a>) refers to the data.
+To get a probability for a hypothesis, we have to introduce a
+prior distribution for <math id="S5.I1.i1.p1.m5" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> we have to
+follow the Bayesian approach from lecture <a href="Ch28.html" title="Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28</span></a>.</p>
+</div>
+</li>
+<li id="S5.I1.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i2.p1" class="ltx_para">​<p class="ltx_p">“The probability that the observed data could have been
+produced by chance is <math id="S5.I1.i2.p1.m1" class="ltx_Math" alttext="0.0122" display="inline"><semantics><mn>0.0122</mn><annotation encoding="application/x-tex">0.0122</annotation></semantics></math>.” The <math id="S5.I1.i2.p1.m2" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value
+corresponds to extreme values of <math id="S5.I1.i2.p1.m3" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>, not to the probability of
+the data.</p>
+</div>
+</li>
+<li id="S5.I1.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i3.p1" class="ltx_para">​<p class="ltx_p">“If we had observed a <math id="S5.I1.i3.p1.m1" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value of <math id="S5.I1.i3.p1.m2" class="ltx_Math" alttext="0.4" display="inline"><semantics><mn>0.4</mn><annotation encoding="application/x-tex">0.4</annotation></semantics></math>, we would have
+known that <math id="S5.I1.i3.p1.m3" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> is true.” Data which is compatible with <math id="S5.I1.i3.p1.m4" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>
+may be compatible with many different alternatives: the test from
+example <a href="#Thmtheorem6" title="Example 20.6. ‣ 20.4 Testing the Mean of a Normal Sample ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.6</span></a> has power only <math id="S5.I1.i3.p1.m5" class="ltx_Math" alttext="0.346" display="inline"><semantics><mn>0.346</mn><annotation encoding="application/x-tex">0.346</annotation></semantics></math> at <math id="S5.I1.i3.p1.m6" class="ltx_Math" alttext="\theta=10.5" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>10.5</mn></mrow><annotation encoding="application/x-tex">\theta=10.5</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I1.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i4.p1" class="ltx_para">​<p class="ltx_p">“The effect is important, because <math id="S5.I1.i4.p1.m1" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> is small.” If <math id="S5.I1.i4.p1.m2" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+is large enough, any difference between <math id="S5.I1.i4.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and <math id="S5.I1.i4.p1.m4" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math> will
+result in a tiny <math id="S5.I1.i4.p1.m5" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value. Reports should include both the
+estimate and the standard error.</p>
+</div>
+</li>
+</ul>
+<p class="ltx_p">None of these mistakes invalidates the <math id="S5.p4.m4" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value as a tool,
+but they do show that the <math id="S5.p4.m5" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value answers a very specific
+question, and that the same value should not be used to answer
+different questions.</p>
+</div>
+<div id="Thmsummarybodyx20" class="ltx_theorem bml_border-color_000000 ltx_theorem_summarybody ltx_framed ltx_framed_left" style="border-width:3pt;padding-left:10pt;" role="group" aria-labelledby="bml-auto-id14">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id14"><span class="ltx_text ltx_font_italic">Summary</span></span><span class="ltx_text ltx_font_italic">.</span>
+</div>
+<div id="Thmsummarybodyx20.p1" class="ltx_para">
+<ul id="S5.I2" class="ltx_itemize">
+<li id="S5.I2.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I2.i1.p1" class="ltx_para">​<p class="ltx_p">A testing problem contrasts a null hypothesis <math id="S5.I2.i1.p1.m1" class="ltx_Math" alttext="H_{0}\colon\theta\in\Theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>∈</mo><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta\in\Theta_{0}</annotation></semantics></math>
+against an alternative <math id="S5.I2.i1.p1.m2" class="ltx_Math" alttext="H_{1}\colon\theta\in\Theta_{1}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>∈</mo><msub><mi mathvariant="normal">Θ</mi><mn>1</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta\in\Theta_{1}</annotation></semantics></math>. The hypothesis is
+simple, if the corresponding subset of <math id="S5.I2.i1.p1.m3" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math> is a single point, and composite
+otherwise.</p>
+</div>
+</li>
+<li id="S5.I2.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I2.i2.p1" class="ltx_para">​<p class="ltx_p">A test is given by its critical region <math id="S5.I2.i2.p1.m1" class="ltx_Math" alttext="C" display="inline"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>, typically of the
+form <math id="S5.I2.i2.p1.m2" class="ltx_Math" alttext="T(x)&gt;c" display="inline"><semantics><mrow><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&gt;</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">T(x)&gt;c</annotation></semantics></math> for a test statistic <math id="S5.I2.i2.p1.m3" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math> and critical value <math id="S5.I2.i2.p1.m4" class="ltx_Math" alttext="c" display="inline"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I2.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I2.i3.p1" class="ltx_para">​<p class="ltx_p">Type I errors are cases where <math id="S5.I2.i3.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> is true but is wrongly rejected
+by the test, type II errors are cases where <math id="S5.I2.i3.p1.m2" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> is false but is
+not (correctly) rejected. The power function
+<math id="S5.I2.i3.p1.m3" class="ltx_Math" alttext="\beta(\theta)=\mathbb{P}_{\theta}(X\in C)" display="inline"><semantics><mrow><mrow><mi>β</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>X</mi><mo>∈</mo><mi>C</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\beta(\theta)=\mathbb{P}_{\theta}(X\in C)</annotation></semantics></math> gives the probability of type I
+errors for <math id="S5.I2.i3.p1.m4" class="ltx_Math" alttext="\Theta_{0}" display="inline"><semantics><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\Theta_{0}</annotation></semantics></math> and the power of the test for <math id="S5.I2.i3.p1.m5" class="ltx_Math" alttext="\Theta_{1}" display="inline"><semantics><msub><mi mathvariant="normal">Θ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\Theta_{1}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I2.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I2.i4.p1" class="ltx_para">​<p class="ltx_p">The size of a test is <math id="S5.I2.i4.p1.m1" class="ltx_Math" alttext="\sup_{\Theta_{0}}\beta" display="inline"><semantics><mrow><msub><mo>sup</mo><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub></msub><mi>β</mi></mrow><annotation encoding="application/x-tex">\sup_{\Theta_{0}}\beta</annotation></semantics></math>. A level <math id="S5.I2.i4.p1.m2" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> test has
+size at most <math id="S5.I2.i4.p1.m3" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>. The level is chosen first, and then the power of
+the test can be considered. For example, for the normal mean with
+known variance, the one-sided and two-sided <math id="S5.I2.i4.p1.m4" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-tests can be
+derived.</p>
+</div>
+</li>
+<li id="S5.I2.i5" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I2.i5.p1" class="ltx_para">​<p class="ltx_p">The <math id="S5.I2.i5.p1.m1" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value is the smallest level at which the data lead to
+rejection of the hypothesis. Note that this is not the probability
+that <math id="S5.I2.i5.p1.m2" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> is true, and a large <math id="S5.I2.i5.p1.m3" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value does not establish <math id="S5.I2.i5.p1.m4" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="Thmexercise1" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id15">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id15"><span class="ltx_text ltx_font_bold">Exercise 20.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise1.p1" class="ltx_para">
+<p class="ltx_p">Consider the one-sided <math id="Thmexercise1.p1.m1" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-test from example <a href="#Thmtheorem6" title="Example 20.6. ‣ 20.4 Testing the Mean of a Normal Sample ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.6</span></a>,
+at level <math id="Thmexercise1.p1.m2" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>, and let <math id="Thmexercise1.p1.m3" class="ltx_Math" alttext="\theta_{1}&gt;\theta_{0}" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>1</mn></msub><mo>&gt;</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\theta_{1}&gt;\theta_{0}</annotation></semantics></math> be the alternative and <math id="Thmexercise1.p1.m4" class="ltx_Math" alttext="1-\gamma\in(\alpha,1)" display="inline"><semantics><mrow><mrow><mn>1</mn><mo>−</mo><mi>γ</mi></mrow><mo>∈</mo><mrow><mo stretchy="false">(</mo><mi>α</mi><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">1-\gamma\in(\alpha,1)</annotation></semantics></math>
+be the target power.</p>
+<ol id="S5.I3" class="ltx_enumerate">
+<li id="S5.I3.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I3.i1.p1" class="ltx_para">​<p class="ltx_p">Show that the test has power at least <math id="S5.I3.i1.p1.m1" class="ltx_Math" alttext="1-\gamma" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>γ</mi></mrow><annotation encoding="application/x-tex">1-\gamma</annotation></semantics></math> at <math id="S5.I3.i1.p1.m2" class="ltx_Math" alttext="\theta_{1}" display="inline"><semantics><msub><mi>θ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\theta_{1}</annotation></semantics></math>
+if and only if</p>
+<div id="Ex7" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex7.m1" class="ltx_Math" alttext="n\geq\Bigl{(}\frac{(z_{1-\alpha}+z_{1-\gamma})\,\sigma}{\theta_{1}-\theta_{0}}%
+\Bigr{)}^{2}." display="block"><semantics><mrow><mrow><mi>n</mi><mo>≥</mo><msup><mrow><mo maxsize="160%" minsize="160%">(</mo><mfrac><mrow><mrow><mo stretchy="false">(</mo><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></msub><mo>+</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>γ</mi></mrow></msub></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>σ</mi></mrow><mrow><msub><mi>θ</mi><mn>1</mn></msub><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mfrac><mo maxsize="160%" minsize="160%">)</mo></mrow><mn>2</mn></msup></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">n\geq\Bigl{(}\frac{(z_{1-\alpha}+z_{1-\gamma})\,\sigma}{\theta_{1}-\theta_{0}}%
+\Bigr{)}^{2}.</annotation></semantics></math></div>
+</div>
+</div>
+</li>
+<li id="S5.I3.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I3.i2.p1" class="ltx_para">​<p class="ltx_p">For <math id="S5.I3.i2.p1.m1" class="ltx_Math" alttext="\sigma=2" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\sigma=2</annotation></semantics></math>, <math id="S5.I3.i2.p1.m2" class="ltx_Math" alttext="\theta_{1}-\theta_{0}=0.5" display="inline"><semantics><mrow><mrow><msub><mi>θ</mi><mn>1</mn></msub><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">\theta_{1}-\theta_{0}=0.5</annotation></semantics></math>, <math id="S5.I3.i2.p1.m3" class="ltx_Math" alttext="\alpha=0.05" display="inline"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">\alpha=0.05</annotation></semantics></math> and target
+power <math id="S5.I3.i2.p1.m4" class="ltx_Math" alttext="0.9" display="inline"><semantics><mn>0.9</mn><annotation encoding="application/x-tex">0.9</annotation></semantics></math> (so that <math id="S5.I3.i2.p1.m5" class="ltx_Math" alttext="z_{0.9}=1.282" display="inline"><semantics><mrow><msub><mi>z</mi><mn>0.9</mn></msub><mo>=</mo><mn>1.282</mn></mrow><annotation encoding="application/x-tex">z_{0.9}=1.282</annotation></semantics></math>), determine the smallest
+sample size which achieves the target power.</p>
+</div>
+</li>
+<li id="S5.I3.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I3.i3.p1" class="ltx_para">​<p class="ltx_p">How does the required sample size change, when the difference
+<math id="S5.I3.i3.p1.m1" class="ltx_Math" alttext="\theta_{1}-\theta_{0}" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>1</mn></msub><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\theta_{1}-\theta_{0}</annotation></semantics></math> is halved? What happens when <math id="S5.I3.i3.p1.m2" class="ltx_Math" alttext="\sigma" display="inline"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> is doubled?</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise2" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id16">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id16"><span class="ltx_text ltx_font_bold">Exercise 20.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise2.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise2.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{10}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mn>10</mn></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{10}</annotation></semantics></math> be i.i.d. Bernoulli with success
+probability <math id="Thmexercise2.p1.m2" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math> and consider testing <math id="Thmexercise2.p1.m3" class="ltx_Math" alttext="H_{0}\colon p=1/2" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>p</mi><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon p=1/2</annotation></semantics></math> against
+<math id="Thmexercise2.p1.m4" class="ltx_Math" alttext="H_{1}\colon p&gt;1/2" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>p</mi><mo>&gt;</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon p&gt;1/2</annotation></semantics></math> using the test which rejects if <math id="Thmexercise2.p1.m5" class="ltx_Math" alttext="T=\sum_{i}X_{i}\geq c" display="inline"><semantics><mrow><mi>T</mi><mo rspace="0.111em">=</mo><mrow><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>X</mi><mi>i</mi></msub></mrow><mo>≥</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">T=\sum_{i}X_{i}\geq c</annotation></semantics></math>
+for an integer <math id="Thmexercise2.p1.m6" class="ltx_Math" alttext="c" display="inline"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>.</p>
+<ol id="S5.I4" class="ltx_enumerate">
+<li id="S5.I4.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I4.i1.p1" class="ltx_para">​<p class="ltx_p">Write down the size of the test as a function of <math id="S5.I4.i1.p1.m1" class="ltx_Math" alttext="c" display="inline"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>, using
+the binomial distribution of <math id="S5.I4.i1.p1.m2" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math> under <math id="S5.I4.i1.p1.m3" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I4.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I4.i2.p1" class="ltx_para">​<p class="ltx_p">Determine the smallest <math id="S5.I4.i2.p1.m1" class="ltx_Math" alttext="c" display="inline"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math> such that the test has level
+<math id="S5.I4.i2.p1.m2" class="ltx_Math" alttext="0.05" display="inline"><semantics><mn>0.05</mn><annotation encoding="application/x-tex">0.05</annotation></semantics></math>. Compute the size of the test for this case. Justify
+your answer by showing that no choice of <math id="S5.I4.i2.p1.m3" class="ltx_Math" alttext="c" display="inline"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math> can lead to a
+size of exactly <math id="S5.I4.i2.p1.m4" class="ltx_Math" alttext="0.05" display="inline"><semantics><mn>0.05</mn><annotation encoding="application/x-tex">0.05</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I4.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I4.i3.p1" class="ltx_para">​<p class="ltx_p">Determine the power of the test from the previous part when
+<math id="S5.I4.i3.p1.m1" class="ltx_Math" alttext="p=0.7" display="inline"><semantics><mrow><mi>p</mi><mo>=</mo><mn>0.7</mn></mrow><annotation encoding="application/x-tex">p=0.7</annotation></semantics></math>, <math id="S5.I4.i3.p1.m2" class="ltx_Math" alttext="p=0.8" display="inline"><semantics><mrow><mi>p</mi><mo>=</mo><mn>0.8</mn></mrow><annotation encoding="application/x-tex">p=0.8</annotation></semantics></math> and <math id="S5.I4.i3.p1.m3" class="ltx_Math" alttext="p=0.9" display="inline"><semantics><mrow><mi>p</mi><mo>=</mo><mn>0.9</mn></mrow><annotation encoding="application/x-tex">p=0.9</annotation></semantics></math>. Comment on the
+capabilities and limitations of the test with ten observations.</p>
+</div>
+</li>
+<li id="S5.I4.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">4.</span><div id="S5.I4.i4.p1" class="ltx_para">​<p class="ltx_p">Nine successes are observed. Compute the <math id="S5.I4.i4.p1.m1" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value and
+state the decision at level <math id="S5.I4.i4.p1.m2" class="ltx_Math" alttext="0.05" display="inline"><semantics><mn>0.05</mn><annotation encoding="application/x-tex">0.05</annotation></semantics></math>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise3" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id17">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id17"><span class="ltx_text ltx_font_bold">Exercise 20.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise3.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise3.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}\sim\text{Uniform}(0,\theta)" display="inline"><semantics><mrow><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><mo>∼</mo><mrow><mtext>Uniform</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}\sim\text{Uniform}(0,\theta)</annotation></semantics></math> be i.i.d. as in
+example <a href="Ch1.html#Thmtheorem2" title="Example 1.2. ‣ 1.1 Statistical Models ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.2</span></a> and let <math id="Thmexercise3.p1.m2" class="ltx_Math" alttext="M=\max_{i}X_{i}" display="inline"><semantics><mrow><mi>M</mi><mo>=</mo><mrow><msub><mi>max</mi><mi>i</mi></msub><mo lspace="0.167em">⁡</mo><msub><mi>X</mi><mi>i</mi></msub></mrow></mrow><annotation encoding="application/x-tex">M=\max_{i}X_{i}</annotation></semantics></math>, where the density was
+found in example <a href="Ch8.html#Thmtheorem10" title="Example 8.10. ‣ 8.5 The Sample Maximum and Minimum ‣ Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">8.10</span></a>. We test
+<math id="Thmexercise3.p1.m3" class="ltx_Math" alttext="H_{0}\colon\theta=\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta=\theta_{0}</annotation></semantics></math> against <math id="Thmexercise3.p1.m4" class="ltx_Math" alttext="H_{1}\colon\theta&gt;\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>&gt;</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta&gt;\theta_{0}</annotation></semantics></math>.</p>
+<ol id="S5.I5" class="ltx_enumerate">
+<li id="S5.I5.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I5.i1.p1" class="ltx_para">​<p class="ltx_p">Show that <math id="S5.I5.i1.p1.m1" class="ltx_Math" alttext="\mathbb{P}_{\theta}(M\leq m)=(m/\theta)^{n}" display="inline"><semantics><mrow><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>M</mi><mo>≤</mo><mi>m</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mi>m</mi><mo>/</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta}(M\leq m)=(m/\theta)^{n}</annotation></semantics></math> for <math id="S5.I5.i1.p1.m2" class="ltx_Math" alttext="0\leq m\leq\theta" display="inline"><semantics><mrow><mn>0</mn><mo>≤</mo><mi>m</mi><mo>≤</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">0\leq m\leq\theta</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I5.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I5.i2.p1" class="ltx_para">​<p class="ltx_p">Consider the test which rejects if <math id="S5.I5.i2.p1.m1" class="ltx_Math" alttext="M&gt;c" display="inline"><semantics><mrow><mi>M</mi><mo>&gt;</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">M&gt;c</annotation></semantics></math>, for a constant
+<math id="S5.I5.i2.p1.m2" class="ltx_Math" alttext="c\leq\theta_{0}" display="inline"><semantics><mrow><mi>c</mi><mo>≤</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">c\leq\theta_{0}</annotation></semantics></math>. Determine the size of this test and the value of <math id="S5.I5.i2.p1.m3" class="ltx_Math" alttext="c" display="inline"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+which makes the size equal to <math id="S5.I5.i2.p1.m4" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I5.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I5.i3.p1" class="ltx_para">​<p class="ltx_p">Determine the power function of the test from the previous part,
+and evaluate this function at <math id="S5.I5.i3.p1.m1" class="ltx_Math" alttext="n=5" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">n=5</annotation></semantics></math>, <math id="S5.I5.i3.p1.m2" class="ltx_Math" alttext="\theta_{0}=1" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\theta_{0}=1</annotation></semantics></math>, <math id="S5.I5.i3.p1.m3" class="ltx_Math" alttext="\alpha=0.05" display="inline"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">\alpha=0.05</annotation></semantics></math> and <math id="S5.I5.i3.p1.m4" class="ltx_Math" alttext="\theta=1.2" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>1.2</mn></mrow><annotation encoding="application/x-tex">\theta=1.2</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I5.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">4.</span><div id="S5.I5.i4.p1" class="ltx_para">​<p class="ltx_p">Consider the second test, which rejects if <math id="S5.I5.i4.p1.m1" class="ltx_Math" alttext="M&gt;\theta_{0}" display="inline"><semantics><mrow><mi>M</mi><mo>&gt;</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">M&gt;\theta_{0}</annotation></semantics></math>.
+Show that this test has size <math id="S5.I5.i4.p1.m2" class="ltx_Math" alttext="0" display="inline"><mn>0</mn></math>. Determine the power function
+of this test and compare the power functions of the two tests.
+Which of the two tests would you choose and why?</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise4" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id18">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id18"><span class="ltx_text ltx_font_bold">Exercise 20.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise4.p1" class="ltx_para">
+<p class="ltx_p">A sample of size <math id="Thmexercise4.p1.m1" class="ltx_Math" alttext="n=16" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">n=16</annotation></semantics></math> from <math id="Thmexercise4.p1.m2" class="ltx_Math" alttext="N(\theta,\sigma^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\theta,\sigma^{2})</annotation></semantics></math> with known <math id="Thmexercise4.p1.m3" class="ltx_Math" alttext="\sigma=4" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">\sigma=4</annotation></semantics></math>
+has mean <math id="Thmexercise4.p1.m4" class="ltx_Math" alttext="\bar{x}=52.3" display="inline"><semantics><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>=</mo><mn>52.3</mn></mrow><annotation encoding="application/x-tex">\bar{x}=52.3</annotation></semantics></math>. We want to test <math id="Thmexercise4.p1.m5" class="ltx_Math" alttext="\theta_{0}=50" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>=</mo><mn>50</mn></mrow><annotation encoding="application/x-tex">\theta_{0}=50</annotation></semantics></math>.</p>
+<ol id="S5.I6" class="ltx_enumerate">
+<li id="S5.I6.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I6.i1.p1" class="ltx_para">​<p class="ltx_p">Determine the <math id="S5.I6.i1.p1.m1" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value of the one-sided <math id="S5.I6.i1.p1.m2" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-test with
+<math id="S5.I6.i1.p1.m3" class="ltx_Math" alttext="H_{0}\colon\theta=50" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><mn>50</mn></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta=50</annotation></semantics></math> against <math id="S5.I6.i1.p1.m4" class="ltx_Math" alttext="H_{1}\colon\theta&gt;50" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>&gt;</mo><mn>50</mn></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta&gt;50</annotation></semantics></math> and state the
+decisions for <math id="S5.I6.i1.p1.m5" class="ltx_Math" alttext="0.05" display="inline"><semantics><mn>0.05</mn><annotation encoding="application/x-tex">0.05</annotation></semantics></math> and <math id="S5.I6.i1.p1.m6" class="ltx_Math" alttext="0.01" display="inline"><semantics><mn>0.01</mn><annotation encoding="application/x-tex">0.01</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I6.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I6.i2.p1" class="ltx_para">​<p class="ltx_p">Determine the <math id="S5.I6.i2.p1.m1" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value of the two-sided test against
+<math id="S5.I6.i2.p1.m2" class="ltx_Math" alttext="H_{1}\colon\theta\neq 50" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>≠</mo><mn>50</mn></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta\neq 50</annotation></semantics></math> and state the same two decisions.</p>
+</div>
+</li>
+<li id="S5.I6.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I6.i3.p1" class="ltx_para">​<p class="ltx_p">Your colleague summarises the first part of the question as
+“there is a <math id="S5.I6.i3.p1.m1" class="ltx_Math" alttext="1.1\%" display="inline"><semantics><mrow><mn>1.1</mn><mo>%</mo></mrow><annotation encoding="application/x-tex">1.1\%</annotation></semantics></math> chance that the mean is <math id="S5.I6.i3.p1.m2" class="ltx_Math" alttext="50" display="inline"><semantics><mn>50</mn><annotation encoding="application/x-tex">50</annotation></semantics></math>”. What is
+wrong with this sentence? Write one correct sentence to summarise
+the first part of the question.</p>
+</div>
+</li>
+<li id="S5.I6.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">4.</span><div id="S5.I6.i4.p1" class="ltx_para">​<p class="ltx_p">Show that under <math id="S5.I6.i4.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> the <math id="S5.I6.i4.p1.m2" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value of the one-sided
+<math id="S5.I6.i4.p1.m3" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-test, <math id="S5.I6.i4.p1.m4" class="ltx_Math" alttext="p(X)=1-\Phi(Z)" display="inline"><semantics><mrow><mrow><mi>p</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>1</mn><mo>−</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>Z</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">p(X)=1-\Phi(Z)</annotation></semantics></math> with <math id="S5.I6.i4.p1.m5" class="ltx_Math" alttext="Z=\sqrt{n}\,(\bar{X}-\theta_{0})/\sigma" display="inline"><semantics><mrow><mi>Z</mi><mo>=</mo><mrow><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>σ</mi></mrow></mrow><annotation encoding="application/x-tex">Z=\sqrt{n}\,(\bar{X}-\theta_{0})/\sigma</annotation></semantics></math>,
+satisfies <math id="S5.I6.i4.p1.m6" class="ltx_Math" alttext="\mathbb{P}_{\theta_{0}}\bigl{(}p(X)\leq u\bigr{)}=u" display="inline"><semantics><mrow><mrow><msub><mi>ℙ</mi><msub><mi>θ</mi><mn>0</mn></msub></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>p</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow></mrow><mo>≤</mo><mi>u</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>=</mo><mi>u</mi></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta_{0}}\bigl{(}p(X)\leq u\bigr{)}=u</annotation></semantics></math> for all
+<math id="S5.I6.i4.p1.m7" class="ltx_Math" alttext="u\in(0,1)" display="inline"><semantics><mrow><mi>u</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">u\in(0,1)</annotation></semantics></math>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</div>
+</div>
+<a href="Ch19.html" class="navigation navigation-prev" aria-label="Previous page"><i class="fa fa-angle-left"></i></a><a href="Ch21.html" class="navigation navigation-next" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+</div>
+</div>
+<script src="bookml/gitbook/js/app.min.js"></script>
+<script src="bookml/gitbook/js/jquery.highlight.js"></script>
+<script src="bookml/gitbook/js/plugin-search.js"></script>
+<script src="bookml/gitbook/js/plugin-fontsettings.js"></script>
+<script src="bookml/gitbook/js/plugin-bookdown.js"></script>
+<script src="bookml/js/mathjax4.js"></script>
+<script type="text/javascript">
+                gitbook.require(["gitbook"], function(gitbook) {
+                gitbook.start({
+                  "fontsettings": {
+                    "theme": "white",
+                    "family": "sans",
+                    "size": 2
+                  },
+                  "download": [ [ "notes.pdf", "PDF" ], ],
+                  "search": {
+                    "engine": "fuse"
+                  },
+                  "toc": {
+                    "collapse": "none"
+                  }
+                });
+              });
+            </script>
+</body>
+
+</html>

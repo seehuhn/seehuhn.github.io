@@ -1,0 +1,754 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory</title>
+<!--Generated on Wed Sep 30 09:26:32 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<style>:root { --bml-ltx-font-size: 10.95; }</style>
+<link rel="stylesheet" href="LaTeXML.css" type="text/css">
+<link rel="stylesheet" href="ltx-book.css" type="text/css">
+<link rel="stylesheet" href="ltx-listings.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-table.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-search.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-bookdown.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-fontsettings.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook,plain.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook.css" type="text/css">
+<link rel="stylesheet" href="bmluser/colors.gitbook-notes.css" type="text/css">
+<link rel="stylesheet" href="bmluser/statheo-custom.css" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+<link rel="up" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="start" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="prev" href="Chx1.html" title="Introduction ‣ MATH5703M Statistical Theory">
+<link rel="next" href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx1.html" title="Introduction ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch3.html" title="Lecture 3 R Basics and a First Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch5.html" title="Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch6.html" title="Lecture 6 Estimators by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch7.html" title="Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch9.html" title="Lecture 9 Consistency by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch10.html" title="Lecture 10 Improving Estimators: Rao–Blackwell and Lehmann–Scheffe ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch11.html" title="Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch12.html" title="Lecture 12 Sampling Distributions and Standard Errors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch13.html" title="Lecture 13 The Cramer–Rao Inequality ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch14.html" title="Lecture 14 Multiparameter Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch15.html" title="Lecture 15 Cramer–Rao and Efficiency in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch18.html" title="Lecture 18 Maximum Likelihood in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch19.html" title="Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch20.html" title="Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch21.html" title="Lecture 21 EM in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch22.html" title="Lecture 22 The Neyman–Pearson Lemma ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch23.html" title="Lecture 23 Likelihood-Ratio Tests ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch24.html" title="Lecture 24 Power and Size by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch26.html" title="Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch27.html" title="Lecture 27 Confidence Versus Credibility ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch28.html" title="Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch29.html" title="Lecture 29 Standard Tests Revisited ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch30.html" title="Lecture 30 Do the Standard Tests Work? ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch31.html" title="Lecture 31 The Exponential Model: From Start to Finish ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx2.html" title="Preparing for the Exam ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A1.html" title="Appendix A Background from Probability ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A2.html" title="Appendix B Introduction to R ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A3.html" title="Appendix C Solutions to the Exercises ‣ MATH5703M Statistical Theory">
+<link rel="bibliography" href="bib.html" title="Bibliography ‣ MATH5703M Statistical Theory">
+<link rel="index" href="idx.html" title="Index ‣ MATH5703M Statistical Theory">
+<meta name="keywords" lang="en" content="density, estimate, estimator, family of, family of estimators, parameter, parameter space, parametric model, probability mass function, probability weights, random sample, sampling distribution, statistic, true parameter value">
+</head>
+<body class="bml_class_book">
+<div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+<a href="#bml-main-content" tabindex="0" class="bml-skip-to-content">Skip to content.</a>
+<div class="book-summary"><nav class="ltx_page_navbar">
+<ul class="ltx_toclist summary">
+<li>
+<a href="index.html" title="" class="ltx_ref" rel="start">MATH5703M Statistical Theory</a>
+</li>
+<li class="divider" aria-hidden="true">
+<li data-level="" data-path="Chx1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx1.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Introduction</a></li>
+<li data-level="1" data-path="" class="ltx_tocentry ltx_tocentry_chapter ltx_ref_self  chapter active">
+<a href="" title="In MATH5703M Statistical Theory" aria-current="page" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">1 </span></b>Statistical Models and Estimation</a>
+<ol class="ltx_toclist ltx_toclist_chapter">
+<li data-level="1.1" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S1" title="In Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">1.1 </span></b>Statistical Models</a></li>
+<li data-level="1.2" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S2" title="In Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">1.2 </span></b>Statistics and Estimators</a></li>
+<li data-level="1.3" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S3" title="In Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">1.3 </span></b>The Road Ahead</a></li>
+</ol>
+</li>
+<li data-level="2" data-path="Ch2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">2 </span></b>Bias, Mean Squared Error and Consistency</a></li>
+<li data-level="3" data-path="Ch3.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">3 </span></b>R Basics and a First Simulation</a></li>
+<li data-level="4" data-path="Ch4.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch4.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">4 </span></b>Likelihood and the Method of Moments</a></li>
+<li data-level="5" data-path="Ch5.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch5.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5 </span></b>Maximum Likelihood Estimation</a></li>
+<li data-level="6" data-path="Ch6.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch6.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">6 </span></b>Estimators by Simulation</a></li>
+<li data-level="7" data-path="Ch7.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch7.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">7 </span></b>Exponential Families</a></li>
+<li data-level="8" data-path="Ch8.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch8.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">8 </span></b>Sufficiency</a></li>
+<li data-level="9" data-path="Ch9.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch9.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">9 </span></b>Consistency by Simulation</a></li>
+<li data-level="10" data-path="Ch10.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch10.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">10 </span></b>Improving Estimators: Rao–Blackwell and Lehmann–Scheffe</a></li>
+<li data-level="11" data-path="Ch11.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch11.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">11 </span></b>Fisher Information</a></li>
+<li data-level="12" data-path="Ch12.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch12.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">12 </span></b>Sampling Distributions and Standard Errors</a></li>
+<li data-level="13" data-path="Ch13.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch13.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">13 </span></b>The Cramer–Rao Inequality</a></li>
+<li data-level="14" data-path="Ch14.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch14.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">14 </span></b>Multiparameter Fisher Information</a></li>
+<li data-level="15" data-path="Ch15.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch15.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">15 </span></b>Cramer–Rao and Efficiency in R</a></li>
+<li data-level="16" data-path="Ch16.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch16.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">16 </span></b>Consistency of the MLE</a></li>
+<li data-level="17" data-path="Ch17.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch17.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">17 </span></b>Asymptotic Normality and Efficiency of the MLE</a></li>
+<li data-level="18" data-path="Ch18.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch18.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">18 </span></b>Maximum Likelihood in R</a></li>
+<li data-level="19" data-path="Ch19.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch19.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19 </span></b>The EM Algorithm</a></li>
+<li data-level="20" data-path="Ch20.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch20.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20 </span></b>Hypothesis Testing</a></li>
+<li data-level="21" data-path="Ch21.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch21.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21 </span></b>EM in R</a></li>
+<li data-level="22" data-path="Ch22.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch22.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">22 </span></b>The Neyman–Pearson Lemma</a></li>
+<li data-level="23" data-path="Ch23.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch23.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">23 </span></b>Likelihood-Ratio Tests</a></li>
+<li data-level="24" data-path="Ch24.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch24.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">24 </span></b>Power and Size by Simulation</a></li>
+<li data-level="25" data-path="Ch25.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch25.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">25 </span></b>Confidence Intervals</a></li>
+<li data-level="26" data-path="Ch26.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch26.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">26 </span></b>Bayesian Inference: Priors and Posteriors</a></li>
+<li data-level="27" data-path="Ch27.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch27.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">27 </span></b>Confidence Versus Credibility</a></li>
+<li data-level="28" data-path="Ch28.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch28.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">28 </span></b>Credible Intervals and Bayesian Testing</a></li>
+<li data-level="29" data-path="Ch29.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch29.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">29 </span></b>Standard Tests Revisited</a></li>
+<li data-level="30" data-path="Ch30.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch30.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">30 </span></b>Do the Standard Tests Work?</a></li>
+<li data-level="31" data-path="Ch31.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch31.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">31 </span></b>The Exponential Model: Start to Finish</a></li>
+<li data-level="" data-path="Chx2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx2.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Preparing for the Exam</a></li>
+<li data-level="A" data-path="A1.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">A </span></b>Background from Probability</a></li>
+<li data-level="B" data-path="A2.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">B </span></b>Introduction to R</a></li>
+<li data-level="C" data-path="A3.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">C </span></b>Solutions to the Exercises</a></li>
+<li data-level="" data-path="bib.html" class="ltx_tocentry ltx_tocentry_bibliography  chapter "><a href="bib.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Bibliography</a></li>
+<li data-level="" data-path="idx.html" class="ltx_tocentry ltx_tocentry_index  chapter "><a href="idx.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Index</a></li>
+</ul>
+</nav></div>
+<div class="ltx_page_main book-body fixed">
+<div class="body-inner">
+<header class="book-header fixed" aria-label="toolbar"><span class="bml-separator"></span></header>
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="ltx_page_content page-inner" id="bml-main-content">
+<section class="ltx_chapter bml_mathjax4 ltx_authors_1line normal">
+<div class="section level1">
+<h1 class="ltx_title ltx_title_chapter">
+<span class="ltx_tag ltx_tag_chapter header-section-number">Lecture 1</span> Statistical Models and the
+Estimation Problem</h1>
+
+<div id="p1" class="ltx_para">
+<p class="ltx_p">The subjects of probability and statistics are in some sense the opposite
+of each other. In a probability course we are given a distribution <math id="p1.m1" class="ltx_Math" alttext="\mathbb{P}" display="inline"><semantics><mi>ℙ</mi><annotation encoding="application/x-tex">\mathbb{P}</annotation></semantics></math>
+and we ask questions about the data generated by this distribution:
+how often should we expect ten tosses of a fair coin to result in seven
+heads? In contrast, in a statistics course we are given data and we
+ask questions about the distribution: what can we learn about the coin
+by observing seven heads?</p>
+<div id="Ex1" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex1.m1" class="ltx_Math" alttext="\text{probability:}\quad\mathbb{P}\;\longrightarrow\;X_{1},\dots,X_{n},\qquad%
+\text{statistics:}\quad X_{1},\dots,X_{n}\;\longrightarrow\;\mathbb{P}." display="block"><semantics><mrow><mrow><mrow><mrow><mtext>probability:</mtext><mspace width="1.1em"></mspace><mi>ℙ</mi></mrow><mo lspace="0.558em" rspace="0.558em" stretchy="false">⟶</mo><msub><mi>X</mi><mn>1</mn></msub></mrow><mo>,</mo><mrow><mrow><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub><mo rspace="2.357em">,</mo><mtext>statistics:</mtext><mspace width="1.1em"></mspace><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><mo rspace="0.558em" stretchy="false">⟶</mo><mi>ℙ</mi></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\text{probability:}\quad\mathbb{P}\;\longrightarrow\;X_{1},\dots,X_{n},\qquad%
+\text{statistics:}\quad X_{1},\dots,X_{n}\;\longrightarrow\;\mathbb{P}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">The topic of this module is the second arrow in the above discussion.
+We will consider two questions: in <em class="ltx_emph ltx_font_italic">estimation</em> we consider how
+(and how well) we can determine an unknown quantity from data. In
+<em class="ltx_emph ltx_font_italic">hypothesis testing</em> we consider whether the data are compatible
+with a given claim. We will answer these questions first for the
+classical approach, and then for the Bayesian approach. In this first
+lecture we will lay the foundations for these questions by introducing
+the model and the estimators computed from the data.</p>
+</div>
+<section id="S1" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">1.1</span> Statistical Models</h2>
+
+<div id="S1.p1" class="ltx_para">
+<p class="ltx_p">The data are given as <math id="S1.p1.m1" class="ltx_Math" alttext="x_{1},\dots,x_{n}" display="inline"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_{1},\dots,x_{n}</annotation></semantics></math>, a list of <math id="S1.p1.m2" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> numbers. Once we
+have computed an estimate from these numbers, we want to know how far it
+is from the truth, and this only makes sense if there is a true value to
+compare the estimate to. The data themselves do not contain a ‘true
+value’. Instead, this ground truth is provided by a model, a mathematical
+description of how the data were generated.</p>
+</div>
+<div id="S1.p2" class="ltx_para">
+<p class="ltx_p">Our description of how the data were generated is called a model. We
+use a model to describe the data as the outcome of a random experiment.
+The data we have observed, <math id="S1.p2.m1" class="ltx_Math" alttext="x_{1},\dots,x_{n}" display="inline"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_{1},\dots,x_{n}</annotation></semantics></math>, are seen as the observed values
+of random variables <math id="S1.p2.m2" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math>, where the distribution of the random
+variables depends on the unknown true value. Here we use the convention
+that upper case letters like <math id="S1.p2.m3" class="ltx_Math" alttext="X_{i}" display="inline"><semantics><msub><mi>X</mi><mi>i</mi></msub><annotation encoding="application/x-tex">X_{i}</annotation></semantics></math> stand for random variables, and that
+lower case letters like <math id="S1.p2.m4" class="ltx_Math" alttext="x_{i}" display="inline"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_{i}</annotation></semantics></math> stand for the observed values for our
+dataset.</p>
+</div>
+<div id="S1.p3" class="ltx_para">
+<p class="ltx_p">In the simplest and most common situation the observations are a
+<em class="ltx_emph ltx_font_italic">random sample</em>: the <math id="S1.p3.m1" class="ltx_Math" alttext="X_{i}" display="inline"><semantics><msub><mi>X</mi><mi>i</mi></msub><annotation encoding="application/x-tex">X_{i}</annotation></semantics></math> are independent and
+identically distributed (i.i.d.), but we do not know the distribution.
+Instead, we assume that the distribution belongs to a known family of
+distributions, labelled by a parameter.</p>
+</div>
+<div id="Thmtheorem1" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id1">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id1"><span class="ltx_text ltx_font_bold">Definition 1.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem1.p1" class="ltx_para">
+<p class="ltx_p">A <em class="ltx_emph ltx_font_italic">parametric model</em> for data <math id="Thmtheorem1.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> consists of
+a family</p>
+<div id="Ex2" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex2.m1" class="ltx_Math" alttext="\bigl{(}\mathbb{P}_{\theta}\!\mathrel{\big{|}}\!\theta\in\Theta\bigr{)}" display="block"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo fence="false" mathsize="120%" rspace="0.108em">|</mo><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}\mathbb{P}_{\theta}\!\mathrel{\big{|}}\!\theta\in\Theta\bigr{)}</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">of distributions, and the assumption that the <math id="Thmtheorem1.p1.m2" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> are
+i.i.d. with distribution <math id="Thmtheorem1.p1.m3" class="ltx_Math" alttext="\mathbb{P}_{\theta}" display="inline"><semantics><msub><mi>ℙ</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\mathbb{P}_{\theta}</annotation></semantics></math> for an unknown value of the
+<em class="ltx_emph ltx_font_italic">parameter</em> <math id="Thmtheorem1.p1.m4" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. The set <math id="Thmtheorem1.p1.m5" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math> of possible parameter values
+is called the <em class="ltx_emph ltx_font_italic">parameter space</em>.</p>
+</div>
+</div>
+<div id="S1.p4" class="ltx_para">
+<p class="ltx_p">Our assumption here is that the actually observed data, <math id="S1.p4.m1" class="ltx_Math" alttext="x_{1},\dots,x_{n}" display="inline"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_{1},\dots,x_{n}</annotation></semantics></math>,
+are a sample from <math id="S1.p4.m2" class="ltx_Math" alttext="\mathbb{P}_{\theta}" display="inline"><semantics><msub><mi>ℙ</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\mathbb{P}_{\theta}</annotation></semantics></math> for one (unknown to us) <math id="S1.p4.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.
+This value is
+called the <em class="ltx_emph ltx_font_italic">true parameter value</em> and
+is denoted by <math id="S1.p4.m4" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math>. This is the value which our estimates are
+compared to: an estimate is good, if it is close to <math id="S1.p4.m5" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math>,
+and bad if it is far away from <math id="S1.p4.m6" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math>.</p>
+</div>
+<div id="S1.p5" class="ltx_para">
+<p class="ltx_p">Since the distribution is determined by the parameter, learning about
+the distribution also means learning about the parameter. Thus, the
+diagram from the beginning of this lecture can be updated to</p>
+<div id="A3.S21.EGx1" class="ltx_equationgroup ltx_eqn_align bml_equationgroup bml_equation_container ltx_align_baseline">
+<div id="Ex3" class="ltx_equation bml_equation ltx_align_baseline" role="group" aria-label="equation">
+<div class="ltx_td ltx_align_right bml_eqn_cell"><span class="ltx_text ltx_markedasmath">probability:</span></div>
+<div class="ltx_td ltx_align_left bml_eqn_cell"><math id="Ex3.m2" class="ltx_Math" alttext="\displaystyle\quad\theta_{0}\;\longrightarrow\;\mathbb{P}_{\theta_{0}}\;%
+\longrightarrow\;X_{1},\dots,X_{n}," display="inline"><semantics><mrow><mrow><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo lspace="0.558em" rspace="0.558em" stretchy="false">⟶</mo><msub><mi>ℙ</mi><msub><mi>θ</mi><mn>0</mn></msub></msub><mo rspace="0.558em" stretchy="false">⟶</mo><msub><mi>X</mi><mn>1</mn></msub></mrow><mo>,</mo><mrow><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\displaystyle\quad\theta_{0}\;\longrightarrow\;\mathbb{P}_{\theta_{0}}\;%
+\longrightarrow\;X_{1},\dots,X_{n},</annotation></semantics></math></div>
+</div>
+<div id="Ex4" class="ltx_equation bml_equation ltx_align_baseline" role="group" aria-label="equation">
+<div class="ltx_td ltx_align_right bml_eqn_cell"><span class="ltx_text ltx_markedasmath">statistics:</span></div>
+<div class="ltx_td ltx_align_left bml_eqn_cell"><math id="Ex4.m2" class="ltx_Math" alttext="\displaystyle\quad X_{1},\dots,X_{n}\;\longrightarrow\;\theta_{0}." display="inline"><semantics><mrow><mrow><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><mo rspace="0.558em" stretchy="false">⟶</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\displaystyle\quad X_{1},\dots,X_{n}\;\longrightarrow\;\theta_{0}.</annotation></semantics></math></div>
+</div>
+</div>
+<p class="ltx_p">The true
+parameter value can never be observed directly, and all information
+about the true parameter value comes from <math id="S1.p5.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math>.</p>
+</div>
+<div id="S1.p6" class="ltx_para">
+<p class="ltx_p">The parameter <math id="S1.p6.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> does not necessarily have to be a single number. For
+example, if we assume that the data are normally distributed with
+unknown mean <math id="S1.p6.m2" class="ltx_Math" alttext="\mu" display="inline"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math> and unknown variance <math id="S1.p6.m3" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math>, then
+<math id="S1.p6.m4" class="ltx_Math" alttext="\mathbb{P}_{\theta}=N(\mu,\sigma^{2})" display="inline"><semantics><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>=</mo><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta}=N(\mu,\sigma^{2})</annotation></semantics></math> and the parameter is the pair
+<math id="S1.p6.m5" class="ltx_Math" alttext="\theta=(\mu,\sigma^{2})" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta=(\mu,\sigma^{2})</annotation></semantics></math>. In this case, <math id="S1.p6.m6" class="ltx_Math" alttext="\Theta=\mathbb{R}\times(0,\infty)" display="inline"><semantics><mrow><mi mathvariant="normal">Θ</mi><mo>=</mo><mrow><mi>ℝ</mi><mo lspace="0.222em" rspace="0.222em">×</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\Theta=\mathbb{R}\times(0,\infty)</annotation></semantics></math> is a
+subset of the plane. While we allow for more general parameters from
+the start, most of the examples in this text will involve a scalar
+parameter <math id="S1.p6.m7" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+<div id="S1.p7" class="ltx_para">
+<p class="ltx_p">The distribution <math id="S1.p7.m1" class="ltx_Math" alttext="\mathbb{P}_{\theta}" display="inline"><semantics><msub><mi>ℙ</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\mathbb{P}_{\theta}</annotation></semantics></math> describes, for every set <math id="S1.p7.m2" class="ltx_Math" alttext="A" display="inline"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> of possible
+values, the probability <math id="S1.p7.m3" class="ltx_Math" alttext="\mathbb{P}_{\theta}(A)" display="inline"><semantics><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta}(A)</annotation></semantics></math> that an observation falls into <math id="S1.p7.m4" class="ltx_Math" alttext="A" display="inline"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>. In
+practice, a distribution is almost always given by a function
+<math id="S1.p7.m5" class="ltx_Math" alttext="f(x;\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)</annotation></semantics></math> of the possible values <math id="S1.p7.m6" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>, and this can be
+done in two different ways. For discrete distributions, where the
+observations can take finitely or countably many values, <span class="ltx_text ltx_font_italic">e.g.</span> for <math id="S1.p7.m7" class="ltx_Math" alttext="\{0,1\}" display="inline"><semantics><mrow><mo stretchy="false">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{0,1\}</annotation></semantics></math> or <math id="S1.p7.m8" class="ltx_Math" alttext="\{0,1,2,\dots\}" display="inline"><semantics><mrow><mo stretchy="false">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{0,1,2,\dots\}</annotation></semantics></math>, we have <math id="S1.p7.m9" class="ltx_Math" alttext="f(x;\theta)=\mathbb{P}_{\theta}(\{x\})" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mo stretchy="false">{</mo><mi>x</mi><mo stretchy="false">}</mo></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)=\mathbb{P}_{\theta}(\{x\})</annotation></semantics></math>, giving the
+probability of observing the value <math id="S1.p7.m10" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>. These numbers are called the
+<em class="ltx_emph ltx_font_italic">probability weights</em> of the
+distribution (sometimes also called the <em class="ltx_emph ltx_font_italic">probability mass
+function</em>).
+These weights are numbers in the interval <math id="S1.p7.m11" class="ltx_Math" alttext="[0,1]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0,1]</annotation></semantics></math>, summing to one,
+and satisfying</p>
+<div id="Ex5" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex5.m1" class="ltx_Math" alttext="\mathbb{P}_{\theta}(A)=\sum_{x\in A}f(x;\theta)." display="block"><semantics><mrow><mrow><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><munder><mo movablelimits="false">∑</mo><mrow><mi>x</mi><mo>∈</mo><mi>A</mi></mrow></munder><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta}(A)=\sum_{x\in A}f(x;\theta).</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">For continuous distributions, <math id="S1.p7.m12" class="ltx_Math" alttext="f(x;\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)</annotation></semantics></math> is a
+<em class="ltx_emph ltx_font_italic">density</em>: a non-negative function, which is
+integrable and has integral one, such that</p>
+<div id="Ex6" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex6.m1" class="ltx_Math" alttext="\mathbb{P}_{\theta}(A)=\int_{A}f(x;\theta)\,\mathrm{d}x." display="block"><semantics><mrow><mrow><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><msub><mo>∫</mo><mi>A</mi></msub><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mrow><mo rspace="0em">d</mo><mi>x</mi></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta}(A)=\int_{A}f(x;\theta)\,\mathrm{d}x.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">For continuous distributions, each value <math id="S1.p7.m13" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> has probability <math id="S1.p7.m14" class="ltx_Math" alttext="\mathbb{P}_{\theta}\bigl{(}\{x\}\bigr{)}=0" display="inline"><semantics><mrow><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mo stretchy="false">{</mo><mi>x</mi><mo stretchy="false">}</mo></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta}\bigl{(}\{x\}\bigr{)}=0</annotation></semantics></math>,
+and a density can take values larger than one. The function values
+<math id="S1.p7.m15" class="ltx_Math" alttext="f(x;\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)</annotation></semantics></math> of a density are not probabilities, but integrals of the
+density over sets give probabilities.</p>
+</div>
+<div id="S1.p8" class="ltx_para">
+<p class="ltx_p">In both cases, the family of functions <math id="S1.p8.m1" class="ltx_Math" alttext="\bigl{(}f(x;\theta)\!\mathrel{\big{|}}\!\theta\in\Theta\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}f(x;\theta)\!\mathrel{\big{|}}\!\theta\in\Theta\bigr{)}</annotation></semantics></math>
+determines the model, and we will often write the model in this form.
+Much of the theory in this module is common to both cases. Where
+a statement is true for both cases, we sometimes only state it for
+densities, and then the discrete case can be deduced by interpreting
+<math id="S1.p8.m2" class="ltx_Math" alttext="f(x;\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)</annotation></semantics></math> as the probability weights and all integrals over <math id="S1.p8.m3" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+as sums.</p>
+</div>
+<div id="S1.p9" class="ltx_para">
+<p class="ltx_p">We use the notation <math id="S1.p9.m1" class="ltx_Math" alttext="\mathbb{P}_{\theta}" display="inline"><semantics><msub><mi>ℙ</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\mathbb{P}_{\theta}</annotation></semantics></math> also for the probabilities of events
+involving the data, and we write <math id="S1.p9.m2" class="ltx_Math" alttext="\mathbb{E}_{\theta}" display="inline"><semantics><msub><mi>𝔼</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\mathbb{E}_{\theta}</annotation></semantics></math> for expectations, to
+indicate that the result depends on the value of the parameter. For
+example, <math id="S1.p9.m3" class="ltx_Math" alttext="\mathbb{P}_{\theta}(X_{1}\leq t)=\mathbb{P}_{\theta}\bigl{(}(-\infty,t]\bigr{)}" display="inline"><semantics><mrow><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>≤</mo><mi>t</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mo stretchy="false">(</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mo>,</mo><mi>t</mi><mo stretchy="false">]</mo></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta}(X_{1}\leq t)=\mathbb{P}_{\theta}\bigl{(}(-\infty,t]\bigr{)}</annotation></semantics></math> is the probability that a single
+observation is at most <math id="S1.p9.m4" class="ltx_Math" alttext="t" display="inline"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>, when the data have distribution <math id="S1.p9.m5" class="ltx_Math" alttext="\mathbb{P}_{\theta}" display="inline"><semantics><msub><mi>ℙ</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\mathbb{P}_{\theta}</annotation></semantics></math>.</p>
+</div>
+<div id="S1.p10" class="ltx_para">
+<p class="ltx_p">We will consider a small number of families of models throughout the
+module. The discrete families are listed in table <a href="#T1" title="Table 1.1 ‣ 1.1 Statistical Models ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.1</span></a>
+and the continuous ones in table <a href="#T2" title="Table 1.2 ‣ 1.1 Statistical Models ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.2</span></a>. The
+corresponding means and variances, which we will need frequently in
+calculations, are shown in tables <a href="A1.html#T1" title="Table A.1 ‣ A.2 Standard Distributions ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.1</span></a>
+and <a href="A1.html#T2" title="Table A.2 ‣ A.2 Standard Distributions ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.2</span></a> in appendix <a href="A1.html" title="Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A</span></a>.</p>
+</div>
+<figure id="T1" class="ltx_table"><div class="bml-overflow-wrapper">
+<table class="ltx_tabular ltx_centering ltx_align_middle">
+<tr class="ltx_tr">
+<td class="ltx_td ltx_align_left ltx_border_t">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Family</span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Weights <math id="T1.m1" class="ltx_Math" alttext="f(x;\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Support</span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T1.m2" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math></span>
+</span>
+</td>
+</tr>
+<tr class="ltx_tr">
+<td class="ltx_td ltx_align_left ltx_border_t" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Bernoulli</span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T1.m3" class="ltx_Math" alttext="\theta^{x}(1-\theta)^{1-x}" display="inline"><semantics><mrow><msup><mi>θ</mi><mi>x</mi></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mn>1</mn><mo>−</mo><mi>x</mi></mrow></msup></mrow><annotation encoding="application/x-tex">\theta^{x}(1-\theta)^{1-x}</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T1.m4" class="ltx_Math" alttext="\{0,1\}" display="inline"><semantics><mrow><mo stretchy="false">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{0,1\}</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T1.m5" class="ltx_Math" alttext="(0,1)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0,1)</annotation></semantics></math></span>
+</span>
+</td>
+</tr>
+<tr class="ltx_tr">
+<td class="ltx_td ltx_align_left" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Binomial</span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T1.m6" class="ltx_Math" alttext="\dbinom{m}{x}p^{x}(1-p)^{m-x}" display="inline"><semantics><mrow><mrow><mo>(</mo><mstyle displaystyle="true"><mfrac linethickness="0pt"><mi>m</mi><mi>x</mi></mfrac></mstyle><mo>)</mo></mrow><mo>⁢</mo><msup><mi>p</mi><mi>x</mi></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>p</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mi>m</mi><mo>−</mo><mi>x</mi></mrow></msup></mrow><annotation encoding="application/x-tex">\dbinom{m}{x}p^{x}(1-p)^{m-x}</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T1.m7" class="ltx_Math" alttext="\{0,1,\dots,m\}" display="inline"><semantics><mrow><mo stretchy="false">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><mi>m</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{0,1,\dots,m\}</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T1.m8" class="ltx_Math" alttext="\{1,2,\dots\}\times(0,1)" display="inline"><semantics><mrow><mrow><mo stretchy="false">{</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo rspace="0.055em" stretchy="false">}</mo></mrow><mo rspace="0.222em">×</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\{1,2,\dots\}\times(0,1)</annotation></semantics></math></span>
+</span>
+</td>
+</tr>
+<tr class="ltx_tr">
+<td class="ltx_td ltx_align_left ltx_border_b" style="padding-bottom:9.42914pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Poisson</span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_b" style="padding-bottom:9.42914pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T1.m9" class="ltx_Math" alttext="\dfrac{\theta^{x}}{x!}\,e^{-\theta}" display="inline"><semantics><mrow><mstyle displaystyle="true"><mfrac><msup><mi>θ</mi><mi>x</mi></msup><mrow><mi>x</mi><mo>!</mo></mrow></mfrac></mstyle><mo lspace="0.170em">⁢</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>θ</mi></mrow></msup></mrow><annotation encoding="application/x-tex">\dfrac{\theta^{x}}{x!}\,e^{-\theta}</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_b" style="padding-bottom:9.42914pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T1.m10" class="ltx_Math" alttext="\{0,1,2,\dots\}" display="inline"><semantics><mrow><mo stretchy="false">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{0,1,2,\dots\}</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_b" style="padding-bottom:9.42914pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T1.m11" class="ltx_Math" alttext="(0,\infty)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0,\infty)</annotation></semantics></math></span>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_table">Table 1.1: </span>Discrete families of models considered in the module.
+For the binomial distribution the parameter is the pair <math id="T1.m13" class="ltx_Math" alttext="\theta=(m,p)" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mi>m</mi><mo>,</mo><mi>p</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta=(m,p)</annotation></semantics></math>.</figcaption>
+</figure>
+<figure id="T2" class="ltx_table"><div class="bml-overflow-wrapper">
+<table class="ltx_tabular ltx_centering ltx_align_middle">
+<tr class="ltx_tr">
+<td class="ltx_td ltx_align_left ltx_border_t">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Family</span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Density <math id="T2.m1" class="ltx_Math" alttext="f(x;\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Support</span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T2.m2" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math></span>
+</span>
+</td>
+</tr>
+<tr class="ltx_tr">
+<td class="ltx_td ltx_align_left ltx_border_t" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Exponential</span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T2.m3" class="ltx_Math" alttext="\theta\,e^{-\theta x}" display="inline"><semantics><mrow><mi>θ</mi><mo lspace="0.170em">⁢</mo><msup><mi>e</mi><mrow><mo>−</mo><mrow><mi>θ</mi><mo>⁢</mo><mi>x</mi></mrow></mrow></msup></mrow><annotation encoding="application/x-tex">\theta\,e^{-\theta x}</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T2.m4" class="ltx_Math" alttext="[0,\infty)" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">[0,\infty)</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_t" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T2.m5" class="ltx_Math" alttext="(0,\infty)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0,\infty)</annotation></semantics></math></span>
+</span>
+</td>
+</tr>
+<tr class="ltx_tr">
+<td class="ltx_td ltx_align_left" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Normal</span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T2.m6" class="ltx_Math" alttext="\dfrac{1}{\sqrt{2\pi\sigma^{2}}}\,\exp\!\Bigl{(}-\dfrac{(x-\mu)^{2}}{2\sigma^{%
+2}}\Bigr{)}" display="inline"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>1</mn><msqrt><mrow><mn>2</mn><mo>⁢</mo><mi>π</mi><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></msqrt></mfrac></mstyle><mo lspace="0.337em">⁢</mo><mrow><mpadded width="1.370em"><mi>exp</mi></mpadded><mo>⁡</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mo>−</mo><mstyle displaystyle="true"><mfrac><msup><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><mi>μ</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mfrac></mstyle></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\dfrac{1}{\sqrt{2\pi\sigma^{2}}}\,\exp\!\Bigl{(}-\dfrac{(x-\mu)^{2}}{2\sigma^{%
+2}}\Bigr{)}</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T2.m7" class="ltx_Math" alttext="\mathbb{R}" display="inline"><semantics><mi>ℝ</mi><annotation encoding="application/x-tex">\mathbb{R}</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center" style="padding-bottom:2.82877pt;">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T2.m8" class="ltx_Math" alttext="\mathbb{R}\times(0,\infty)" display="inline"><semantics><mrow><mi>ℝ</mi><mo lspace="0.222em" rspace="0.222em">×</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{R}\times(0,\infty)</annotation></semantics></math></span>
+</span>
+</td>
+</tr>
+<tr class="ltx_tr">
+<td class="ltx_td ltx_align_left ltx_border_b">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p">Uniform</span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_b">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T2.m9" class="ltx_Math" alttext="1/\theta" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">1/\theta</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_b">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T2.m10" class="ltx_Math" alttext="[0,\theta]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mi>θ</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0,\theta]</annotation></semantics></math></span>
+</span>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_b">
+<span class="ltx_inline-block ltx_align_top">
+<span class="ltx_p"><math id="T2.m11" class="ltx_Math" alttext="(0,\infty)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0,\infty)</annotation></semantics></math></span>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_table">Table 1.2: </span>Continuous families of models considered in the module. For
+the normal distribution the parameter is the pair
+<math id="T2.m13" class="ltx_Math" alttext="\theta=(\mu,\sigma^{2})" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta=(\mu,\sigma^{2})</annotation></semantics></math>.</figcaption>
+</figure>
+<div id="S1.p11" class="ltx_para">
+<p class="ltx_p">For families where <math id="S1.p11.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is a vector, usually one component is assumed
+known and fixed, and only the remaining component is estimated. For
+example, for the binomial distribution the number <math id="S1.p11.m2" class="ltx_Math" alttext="m" display="inline"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> of trials is often
+assumed to be known, and for the normal distribution the variance <math id="S1.p11.m3" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math>
+is often assumed to be known.</p>
+</div>
+<div id="Thmtheorem2" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id2">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id2"><span class="ltx_text ltx_font_bold">Example 1.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem2.p1" class="ltx_para">
+<p class="ltx_p">Consider the model <math id="Thmtheorem2.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}\sim\text{Uniform}(0,\theta)" display="inline"><semantics><mrow><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><mo>∼</mo><mrow><mtext>Uniform</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}\sim\text{Uniform}(0,\theta)</annotation></semantics></math> with <math id="Thmtheorem2.p1.m2" class="ltx_Math" alttext="\theta&gt;0" display="inline"><semantics><mrow><mi>θ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta&gt;0</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> each observation is equally likely to take a value anywhere in the
+interval <math id="Thmtheorem2.p1.m3" class="ltx_Math" alttext="[0,\theta]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mi>θ</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0,\theta]</annotation></semantics></math> and <math id="Thmtheorem2.p1.m4" class="ltx_Math" alttext="f(x;\theta)=1/\theta" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mi>θ</mi></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)=1/\theta</annotation></semantics></math> for <math id="Thmtheorem2.p1.m5" class="ltx_Math" alttext="0\leq x\leq\theta" display="inline"><semantics><mrow><mn>0</mn><mo>≤</mo><mi>x</mi><mo>≤</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">0\leq x\leq\theta</annotation></semantics></math>, and 0 otherwise.
+Since no observation can exceed <math id="Thmtheorem2.p1.m6" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, if <math id="Thmtheorem2.p1.m7" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> increases, larger data
+values are possible. The range of the data can be used to draw
+inference about the parameter. This is in contrast to the normal
+distribution or the exponential distribution, where all values are
+possible for all <math id="Thmtheorem2.p1.m8" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. We will see later that the moving support
+of the uniform distribution leads to different behaviour than for the
+other models, and this example will return as a test case.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="S2" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">1.2</span> Statistics and Estimators</h2>
+
+<div id="S2.p1" class="ltx_para">
+<p class="ltx_p">Once a model is fixed, we want to extract information about the unknown <math id="S2.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+from the data. Since we do not know the value of <math id="S2.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, we need to
+consider quantities which can be computed from the data.</p>
+</div>
+<div id="Thmtheorem3" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id3">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id3"><span class="ltx_text ltx_font_bold">Definition 1.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem3.p1" class="ltx_para">
+<p class="ltx_p">A <em class="ltx_emph ltx_font_italic">statistic</em> is a function <math id="Thmtheorem3.p1.m1" class="ltx_Math" alttext="T=T(X_{1},\dots,X_{n})" display="inline"><semantics><mrow><mi>T</mi><mo>=</mo><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">T=T(X_{1},\dots,X_{n})</annotation></semantics></math> of the data, which
+does not depend on the parameter <math id="Thmtheorem3.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="S2.p2" class="ltx_para">
+<p class="ltx_p">Under this restriction the sample mean
+<math id="S2.p2.m1" class="ltx_Math" alttext="\bar{X}=(X_{1}+\dots+X_{n})/n" display="inline"><semantics><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>+</mo><mi mathvariant="normal">⋯</mi><mo>+</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">\bar{X}=(X_{1}+\dots+X_{n})/n</annotation></semantics></math> is a statistic,
+but <math id="S2.p2.m2" class="ltx_Math" alttext="X_{1}-\theta" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>−</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">X_{1}-\theta</annotation></semantics></math> is not, since we need to know the parameter value
+to compute it.</p>
+</div>
+<div id="Thmtheorem4" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id4">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id4"><span class="ltx_text ltx_font_bold">Definition 1.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem4.p1" class="ltx_para">
+<p class="ltx_p">An <em class="ltx_emph ltx_font_italic">estimator</em> for <math id="Thmtheorem4.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is a statistic
+<math id="Thmtheorem4.p1.m2" class="ltx_Math" alttext="\hat{\theta}=\hat{\theta}(X_{1},\dots,X_{n})" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}=\hat{\theta}(X_{1},\dots,X_{n})</annotation></semantics></math>, which can be used to approximate <math id="Thmtheorem4.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. The
+number <math id="Thmtheorem4.p1.m4" class="ltx_Math" alttext="\hat{\theta}(x_{1},\dots,x_{n})" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}(x_{1},\dots,x_{n})</annotation></semantics></math>, computed from a given dataset <math id="Thmtheorem4.p1.m5" class="ltx_Math" alttext="x_{1},\dots,x_{n}" display="inline"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_{1},\dots,x_{n}</annotation></semantics></math>, is called an
+<em class="ltx_emph ltx_font_italic">estimate</em>.</p>
+</div>
+</div>
+<div id="S2.p3" class="ltx_para">
+<p class="ltx_p">Throughout the notes we will use hats to denote estimators: <math id="S2.p3.m1" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math> is an estimator
+for <math id="S2.p3.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, <math id="S2.p3.m3" class="ltx_Math" alttext="\hat{\sigma}^{2}" display="inline"><semantics><msup><mover accent="true"><mi>σ</mi><mo>^</mo></mover><mn>2</mn></msup><annotation encoding="application/x-tex">\hat{\sigma}^{2}</annotation></semantics></math> is an estimator for <math id="S2.p3.m4" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math>, and so on. If two
+estimators for the same quantity are compared, the second one is denoted
+by a tilde: <math id="S2.p3.m5" class="ltx_Math" alttext="\tilde{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>~</mo></mover><annotation encoding="application/x-tex">\tilde{\theta}</annotation></semantics></math> is a competitor of <math id="S2.p3.m6" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math>.</p>
+</div>
+<div id="S2.p4" class="ltx_para">
+<p class="ltx_p">Most estimators are defined by a formula which works for all sample
+sizes, <span class="ltx_text ltx_font_italic">e.g.</span> <math id="S2.p4.m1" class="ltx_Math" alttext="\bar{X}=(X_{1}+\dots+X_{n})/n" display="inline"><semantics><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>+</mo><mi mathvariant="normal">⋯</mi><mo>+</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">\bar{X}=(X_{1}+\dots+X_{n})/n</annotation></semantics></math>. Technically, this
+formula defines a <em class="ltx_emph ltx_font_italic">family of estimators</em>
+<math id="S2.p4.m2" class="ltx_Math" alttext="(\hat{\theta}_{n})_{n\in\mathbb{N}}" display="inline"><semantics><msub><mrow><mo stretchy="false">(</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub><mo stretchy="false">)</mo></mrow><mrow><mi>n</mi><mo>∈</mo><mi>ℕ</mi></mrow></msub><annotation encoding="application/x-tex">(\hat{\theta}_{n})_{n\in\mathbb{N}}</annotation></semantics></math>, one for each sample size <math id="S2.p4.m3" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>. When we
+need to consider the dependence on <math id="S2.p4.m4" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>, and in particular when we
+study the behaviour of an estimator as the amount of data increases, we
+write <math id="S2.p4.m5" class="ltx_Math" alttext="\hat{\theta}_{n}" display="inline"><semantics><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub><annotation encoding="application/x-tex">\hat{\theta}_{n}</annotation></semantics></math> instead of <math id="S2.p4.m6" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math>.</p>
+</div>
+<div id="S2.p5" class="ltx_para">
+<p class="ltx_p">An important note is that the definition does not imply anything about
+quality. Any statistic is an estimator, for example the constant
+function <math id="S2.p5.m1" class="ltx_Math" alttext="\hat{\theta}=0" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\hat{\theta}=0</annotation></semantics></math> is a (bad) estimator for a Bernoulli success
+probability. We will discuss how to find and recognise good estimators
+in the following lectures.</p>
+</div>
+<div id="S2.p6" class="ltx_para">
+<p class="ltx_p">The difference between an estimator and an estimate is a subtle but
+important one. An <em class="ltx_emph ltx_font_italic">estimate</em> is a single number, computed from
+the data, for example <math id="S2.p6.m1" class="ltx_Math" alttext="\hat{\theta}=0.7" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mn>0.7</mn></mrow><annotation encoding="application/x-tex">\hat{\theta}=0.7</annotation></semantics></math>. An <em class="ltx_emph ltx_font_italic">estimator</em> is a rule for
+computing such a number, typically a function of the random variables
+<math id="S2.p6.m2" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math>, such that different outcomes of the experiment give rise to
+different values of the estimate.</p>
+</div>
+<div id="S2.p7" class="ltx_para">
+<p class="ltx_p">We can only make statements about how good an estimator is, because
+<math id="S2.p7.m1" class="ltx_Math" alttext="\hat{\theta}(X_{1},\dots,X_{n})" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}(X_{1},\dots,X_{n})</annotation></semantics></math> is a random variable. The <em class="ltx_emph ltx_font_italic">sampling distribution</em> of
+an estimator is the distribution of the resulting estimates. We
+can ask questions like the following: If the data are generated by
+the true value <math id="S2.p7.m2" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math>, how are the estimates distributed around <math id="S2.p7.m3" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math>?
+Is the distribution centred around the truth? If so, how large is
+the spread? A good estimator will have a sampling distribution
+which is concentrated around the true parameter value, for all
+possible values of the true parameter. In the next lecture we will
+learn how to quantify these ideas using the concepts of bias and
+mean squared error.</p>
+</div>
+</div>
+</section>
+<section id="S3" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">1.3</span> The Road Ahead</h2>
+
+<div id="S3.p1" class="ltx_para">
+<p class="ltx_p">Now that we have established the model and the estimator, we can
+start to build the module. The topics we will cover include point
+estimation (both likelihood and method of moments), measurement and
+comparison of estimators, the best possible estimators (sufficiency,
+information in a sample), and the limits of estimation. We will then
+consider statistical tests and the related question of compatibility
+of data with a given hypothesis about <math id="S3.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. Finally, we will
+consider both estimation and testing from a Bayesian perspective, where
+the parameter is assumed to be random.</p>
+</div>
+<div id="Thmsummarybodyx1" class="ltx_theorem bml_border-color_000000 ltx_theorem_summarybody ltx_framed ltx_framed_left" style="border-width:3pt;padding-left:10pt;" role="group" aria-labelledby="bml-auto-id5">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id5"><span class="ltx_text ltx_font_italic">Summary</span></span><span class="ltx_text ltx_font_italic">.</span>
+</div>
+<div id="Thmsummarybodyx1.p1" class="ltx_para">
+<ul id="S3.I1" class="ltx_itemize">
+<li id="S3.I1.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S3.I1.i1.p1" class="ltx_para">​<p class="ltx_p">Statistics is the inverse of probability: we use data to
+learn about the model, rather than using the model to learn about the data.</p>
+</div>
+</li>
+<li id="S3.I1.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S3.I1.i2.p1" class="ltx_para">​<p class="ltx_p">A parametric model assumes that the data are i.i.d. from a
+family <math id="S3.I1.i2.p1.m1" class="ltx_Math" alttext="\bigl{(}\mathbb{P}_{\theta}\!\mathrel{\big{|}}\!\theta\in\Theta\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo fence="false" mathsize="120%" rspace="0.108em">|</mo><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}\mathbb{P}_{\theta}\!\mathrel{\big{|}}\!\theta\in\Theta\bigr{)}</annotation></semantics></math> of distributions, for an
+unknown true parameter value <math id="S3.I1.i2.p1.m2" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math>. The model provides the
+true value which an estimate is compared to.</p>
+</div>
+</li>
+<li id="S3.I1.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S3.I1.i3.p1" class="ltx_para">​<p class="ltx_p">Discrete distributions are given by probability weights,
+which are probabilities, while continuous distributions are given by a
+density, which is not a probability. Probabilities are calculated
+as sums of weights or as integrals of the density.</p>
+</div>
+</li>
+<li id="S3.I1.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S3.I1.i4.p1" class="ltx_para">​<p class="ltx_p">A statistic is a function of the data. An estimator is a
+statistic which is used to approximate <math id="S3.I1.i4.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, and an estimate is
+the value of the estimator for a given dataset.</p>
+</div>
+</li>
+<li id="S3.I1.i5" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S3.I1.i5.p1" class="ltx_para">​<p class="ltx_p">An estimator is a random variable, and we study its sampling
+distribution. A good estimator will have a sampling distribution
+concentrated around the true value <math id="S3.I1.i5.p1.m1" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math>, for all possible
+values of <math id="S3.I1.i5.p1.m2" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math>. In the next lecture we will learn how to
+quantify this idea.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="Thmexercise1" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id6">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id6"><span class="ltx_text ltx_font_bold">Exercise 1.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise1.p1" class="ltx_para">
+<p class="ltx_p">A coin with unknown probability <math id="Thmexercise1.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> of heads is tossed <math id="Thmexercise1.p1.m2" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> times. The
+results of the individual tosses are given by <math id="Thmexercise1.p1.m3" class="ltx_Math" alttext="X_{i}=1" display="inline"><semantics><mrow><msub><mi>X</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">X_{i}=1</annotation></semantics></math>, if the
+<math id="Thmexercise1.p1.m4" class="ltx_Math" alttext="i" display="inline"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>-th toss is heads, and <math id="Thmexercise1.p1.m5" class="ltx_Math" alttext="X_{i}=0" display="inline"><semantics><mrow><msub><mi>X</mi><mi>i</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">X_{i}=0</annotation></semantics></math> otherwise.</p>
+<ol id="S3.I2" class="ltx_enumerate">
+<li id="S3.I2.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S3.I2.i1.p1" class="ltx_para">​<p class="ltx_p">Write down a parametric model for <math id="S3.I2.i1.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math>, including the
+probability weights and the parameter space.</p>
+</div>
+</li>
+<li id="S3.I2.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S3.I2.i2.p1" class="ltx_para">​<p class="ltx_p">Determine an estimator <math id="S3.I2.i2.p1.m1" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math> for <math id="S3.I2.i2.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I2.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S3.I2.i3.p1" class="ltx_para">​<p class="ltx_p">In one sentence each, explain why <math id="S3.I2.i3.p1.m1" class="ltx_Math" alttext="\hat{\theta}(X_{1},\dots,X_{n})" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}(X_{1},\dots,X_{n})</annotation></semantics></math> is a random variable
+while <math id="S3.I2.i3.p1.m2" class="ltx_Math" alttext="\hat{\theta}(x_{1},\dots,x_{n})" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}(x_{1},\dots,x_{n})</annotation></semantics></math> is a number.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise2" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id7">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id7"><span class="ltx_text ltx_font_bold">Exercise 1.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise2.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise2.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}\sim N(\mu,\sigma^{2})" display="inline"><semantics><mrow><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><mo>∼</mo><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}\sim N(\mu,\sigma^{2})</annotation></semantics></math> be i.i.d., where both the
+mean <math id="Thmexercise2.p1.m2" class="ltx_Math" alttext="\mu" display="inline"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math> and the variance <math id="Thmexercise2.p1.m3" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math> are unknown, so that the
+parameter is <math id="Thmexercise2.p1.m4" class="ltx_Math" alttext="\theta=(\mu,\sigma^{2})" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta=(\mu,\sigma^{2})</annotation></semantics></math>. Which of the following
+quantities are statistics?</p>
+<div id="Ex7" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex7.m1" class="ltx_Math" alttext="\text{(a)}\ \ \max_{1\leq i\leq n}X_{i}-\min_{1\leq i\leq n}X_{i},\qquad\text{%
+(b)}\ \ \frac{1}{n}\sum_{i=1}^{n}(X_{i}-\mu)^{2},\qquad\text{(c)}\ \ \frac{1}{%
+n-1}\sum_{i=1}^{n}(X_{i}-\bar{X})^{2}." display="block"><semantics><mrow><mrow><mtext>(a)</mtext><mspace width="1.267em"></mspace><mrow><mrow><munder><mi>max</mi><mrow><mn>1</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>n</mi></mrow></munder><mo lspace="0.167em">⁡</mo><msub><mi>X</mi><mi>i</mi></msub></mrow><mo>−</mo><mrow><munder><mi>min</mi><mrow><mn>1</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>n</mi></mrow></munder><mo lspace="0.167em">⁡</mo><msub><mi>X</mi><mi>i</mi></msub></mrow></mrow><mo rspace="2.357em">,</mo><mtext>(b)</mtext><mspace width="1.1em"></mspace><mrow><mfrac><mn>1</mn><mi>n</mi></mfrac><mo>⁢</mo><mrow><munderover><mo movablelimits="false" rspace="0em">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo stretchy="false">(</mo><mrow><msub><mi>X</mi><mi>i</mi></msub><mo>−</mo><mi>μ</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mrow><mo rspace="2.357em">,</mo><mtext>(c)</mtext><mspace width="1.1em"></mspace><mrow><mfrac><mn>1</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mo>⁢</mo><mrow><munderover><mo movablelimits="false" rspace="0em">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo stretchy="false">(</mo><mrow><msub><mi>X</mi><mi>i</mi></msub><mo>−</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\text{(a)}\ \ \max_{1\leq i\leq n}X_{i}-\min_{1\leq i\leq n}X_{i},\qquad\text{%
+(b)}\ \ \frac{1}{n}\sum_{i=1}^{n}(X_{i}-\mu)^{2},\qquad\text{(c)}\ \ \frac{1}{%
+n-1}\sum_{i=1}^{n}(X_{i}-\bar{X})^{2}.</annotation></semantics></math></div>
+</div>
+</div>
+</div>
+<div id="Thmexercise3" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id8">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id8"><span class="ltx_text ltx_font_bold">Exercise 1.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise3.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise3.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}\sim\text{Uniform}(0,\theta)" display="inline"><semantics><mrow><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><mo>∼</mo><mrow><mtext>Uniform</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}\sim\text{Uniform}(0,\theta)</annotation></semantics></math> be i.i.d., as in
+example <a href="#Thmtheorem2" title="Example 1.2. ‣ 1.1 Statistical Models ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.2</span></a>.</p>
+<ol id="S3.I3" class="ltx_enumerate">
+<li id="S3.I3.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S3.I3.i1.p1" class="ltx_para">​<p class="ltx_p">Write down the joint density <math id="S3.I3.i1.p1.m1" class="ltx_Math" alttext="f(x_{1},\dots,x_{n};\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x_{1},\dots,x_{n};\theta)</annotation></semantics></math>, and state the values
+of the data for which it is non-zero.</p>
+</div>
+</li>
+<li id="S3.I3.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S3.I3.i2.p1" class="ltx_para">​<p class="ltx_p">Show that the estimator <math id="S3.I3.i2.p1.m1" class="ltx_Math" alttext="\hat{\theta}=\max_{i}X_{i}" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mrow><msub><mi>max</mi><mi>i</mi></msub><mo lspace="0.167em">⁡</mo><msub><mi>X</mi><mi>i</mi></msub></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}=\max_{i}X_{i}</annotation></semantics></math> always satisfies
+<math id="S3.I3.i2.p1.m2" class="ltx_Math" alttext="\hat{\theta}\leq\theta" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>≤</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">\hat{\theta}\leq\theta</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I3.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S3.I3.i3.p1" class="ltx_para">​<p class="ltx_p">Show that in fact <math id="S3.I3.i3.p1.m1" class="ltx_Math" alttext="\hat{\theta}&lt;\theta" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>&lt;</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">\hat{\theta}&lt;\theta</annotation></semantics></math> with probability one, and deduce
+that <math id="S3.I3.i3.p1.m2" class="ltx_Math" alttext="\mathbb{E}_{\theta}(\hat{\theta})&lt;\theta" display="inline"><semantics><mrow><mrow><msub><mi>𝔼</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow></mrow><mo>&lt;</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\theta}(\hat{\theta})&lt;\theta</annotation></semantics></math>, so that on average the estimator
+underestimates <math id="S3.I3.i3.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</div>
+</div>
+<a href="Chx1.html" class="navigation navigation-prev" aria-label="Previous page"><i class="fa fa-angle-left"></i></a><a href="Ch2.html" class="navigation navigation-next" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+</div>
+</div>
+<script src="bookml/gitbook/js/app.min.js"></script>
+<script src="bookml/gitbook/js/jquery.highlight.js"></script>
+<script src="bookml/gitbook/js/plugin-search.js"></script>
+<script src="bookml/gitbook/js/plugin-fontsettings.js"></script>
+<script src="bookml/gitbook/js/plugin-bookdown.js"></script>
+<script src="bookml/js/mathjax4.js"></script>
+<script type="text/javascript">
+                gitbook.require(["gitbook"], function(gitbook) {
+                gitbook.start({
+                  "fontsettings": {
+                    "theme": "white",
+                    "family": "sans",
+                    "size": 2
+                  },
+                  "download": [ [ "notes.pdf", "PDF" ], ],
+                  "search": {
+                    "engine": "fuse"
+                  },
+                  "toc": {
+                    "collapse": "none"
+                  }
+                });
+              });
+            </script>
+</body>
+
+</html>

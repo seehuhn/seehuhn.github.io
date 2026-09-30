@@ -1,0 +1,858 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory</title>
+<!--Generated on Wed Sep 30 09:26:32 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<style>:root { --bml-ltx-font-size: 10.95; }</style>
+<link rel="stylesheet" href="LaTeXML.css" type="text/css">
+<link rel="stylesheet" href="ltx-book.css" type="text/css">
+<link rel="stylesheet" href="ltx-listings.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-table.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-search.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-bookdown.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-fontsettings.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook,plain.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook.css" type="text/css">
+<link rel="stylesheet" href="bmluser/colors.gitbook-notes.css" type="text/css">
+<link rel="stylesheet" href="bmluser/statheo-custom.css" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+<link rel="up" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="start" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="prev" href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory">
+<link rel="next" href="Ch27.html" title="Lecture 27 Confidence Versus Credibility ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx1.html" title="Introduction ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch1.html" title="Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch3.html" title="Lecture 3 R Basics and a First Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch5.html" title="Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch6.html" title="Lecture 6 Estimators by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch7.html" title="Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch9.html" title="Lecture 9 Consistency by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch10.html" title="Lecture 10 Improving Estimators: Rao–Blackwell and Lehmann–Scheffe ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch11.html" title="Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch12.html" title="Lecture 12 Sampling Distributions and Standard Errors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch13.html" title="Lecture 13 The Cramer–Rao Inequality ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch14.html" title="Lecture 14 Multiparameter Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch15.html" title="Lecture 15 Cramer–Rao and Efficiency in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch18.html" title="Lecture 18 Maximum Likelihood in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch19.html" title="Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch20.html" title="Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch21.html" title="Lecture 21 EM in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch22.html" title="Lecture 22 The Neyman–Pearson Lemma ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch23.html" title="Lecture 23 Likelihood-Ratio Tests ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch24.html" title="Lecture 24 Power and Size by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch27.html" title="Lecture 27 Confidence Versus Credibility ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch28.html" title="Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch29.html" title="Lecture 29 Standard Tests Revisited ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch30.html" title="Lecture 30 Do the Standard Tests Work? ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch31.html" title="Lecture 31 The Exponential Model: From Start to Finish ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx2.html" title="Preparing for the Exam ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A1.html" title="Appendix A Background from Probability ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A2.html" title="Appendix B Introduction to R ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A3.html" title="Appendix C Solutions to the Exercises ‣ MATH5703M Statistical Theory">
+<link rel="bibliography" href="bib.html" title="Bibliography ‣ MATH5703M Statistical Theory">
+<link rel="index" href="idx.html" title="Index ‣ MATH5703M Statistical Theory">
+<meta name="keywords" lang="en" content="Bayes, Bayes estimator, Bayes’ theorem, Jeffreys, Jeffreys prior, conjugate, conjugate prior, estimator, exponential family, flat, flat prior, for the parameter, hyperparameter, improper, improper prior, invariance, location and scale models, normal distribution, normal-normal, posterior density, posterior distribution, posterior mean, prior density, prior distribution">
+</head>
+<body class="bml_class_book">
+<div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+<a href="#bml-main-content" tabindex="0" class="bml-skip-to-content">Skip to content.</a>
+<div class="book-summary"><nav class="ltx_page_navbar">
+<ul class="ltx_toclist summary">
+<li>
+<a href="index.html" title="" class="ltx_ref" rel="start">MATH5703M Statistical Theory</a>
+</li>
+<li class="divider" aria-hidden="true">
+<li data-level="" data-path="Chx1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx1.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Introduction</a></li>
+<li data-level="1" data-path="Ch1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">1 </span></b>Statistical Models and Estimation</a></li>
+<li data-level="2" data-path="Ch2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">2 </span></b>Bias, Mean Squared Error and Consistency</a></li>
+<li data-level="3" data-path="Ch3.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">3 </span></b>R Basics and a First Simulation</a></li>
+<li data-level="4" data-path="Ch4.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch4.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">4 </span></b>Likelihood and the Method of Moments</a></li>
+<li data-level="5" data-path="Ch5.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch5.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5 </span></b>Maximum Likelihood Estimation</a></li>
+<li data-level="6" data-path="Ch6.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch6.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">6 </span></b>Estimators by Simulation</a></li>
+<li data-level="7" data-path="Ch7.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch7.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">7 </span></b>Exponential Families</a></li>
+<li data-level="8" data-path="Ch8.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch8.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">8 </span></b>Sufficiency</a></li>
+<li data-level="9" data-path="Ch9.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch9.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">9 </span></b>Consistency by Simulation</a></li>
+<li data-level="10" data-path="Ch10.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch10.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">10 </span></b>Improving Estimators: Rao–Blackwell and Lehmann–Scheffe</a></li>
+<li data-level="11" data-path="Ch11.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch11.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">11 </span></b>Fisher Information</a></li>
+<li data-level="12" data-path="Ch12.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch12.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">12 </span></b>Sampling Distributions and Standard Errors</a></li>
+<li data-level="13" data-path="Ch13.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch13.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">13 </span></b>The Cramer–Rao Inequality</a></li>
+<li data-level="14" data-path="Ch14.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch14.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">14 </span></b>Multiparameter Fisher Information</a></li>
+<li data-level="15" data-path="Ch15.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch15.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">15 </span></b>Cramer–Rao and Efficiency in R</a></li>
+<li data-level="16" data-path="Ch16.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch16.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">16 </span></b>Consistency of the MLE</a></li>
+<li data-level="17" data-path="Ch17.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch17.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">17 </span></b>Asymptotic Normality and Efficiency of the MLE</a></li>
+<li data-level="18" data-path="Ch18.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch18.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">18 </span></b>Maximum Likelihood in R</a></li>
+<li data-level="19" data-path="Ch19.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch19.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19 </span></b>The EM Algorithm</a></li>
+<li data-level="20" data-path="Ch20.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch20.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20 </span></b>Hypothesis Testing</a></li>
+<li data-level="21" data-path="Ch21.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch21.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21 </span></b>EM in R</a></li>
+<li data-level="22" data-path="Ch22.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch22.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">22 </span></b>The Neyman–Pearson Lemma</a></li>
+<li data-level="23" data-path="Ch23.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch23.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">23 </span></b>Likelihood-Ratio Tests</a></li>
+<li data-level="24" data-path="Ch24.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch24.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">24 </span></b>Power and Size by Simulation</a></li>
+<li data-level="25" data-path="Ch25.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch25.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">25 </span></b>Confidence Intervals</a></li>
+<li data-level="26" data-path="" class="ltx_tocentry ltx_tocentry_chapter ltx_ref_self  chapter active">
+<a href="" title="In MATH5703M Statistical Theory" aria-current="page" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">26 </span></b>Bayesian Inference: Priors and Posteriors</a>
+<ol class="ltx_toclist ltx_toclist_chapter">
+<li data-level="26.1" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S1" title="In Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">26.1 </span></b>Prior, Likelihood and Posterior</a></li>
+<li data-level="26.2" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S2" title="In Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">26.2 </span></b>Conjugate Priors</a></li>
+<li data-level="26.3" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S3" title="In Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">26.3 </span></b>Point Estimates from the Posterior</a></li>
+<li data-level="26.4" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S4" title="In Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">26.4 </span></b>Flat, Improper and Jeffreys Priors</a></li>
+</ol>
+</li>
+<li data-level="27" data-path="Ch27.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch27.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">27 </span></b>Confidence Versus Credibility</a></li>
+<li data-level="28" data-path="Ch28.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch28.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">28 </span></b>Credible Intervals and Bayesian Testing</a></li>
+<li data-level="29" data-path="Ch29.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch29.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">29 </span></b>Standard Tests Revisited</a></li>
+<li data-level="30" data-path="Ch30.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch30.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">30 </span></b>Do the Standard Tests Work?</a></li>
+<li data-level="31" data-path="Ch31.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch31.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">31 </span></b>The Exponential Model: Start to Finish</a></li>
+<li data-level="" data-path="Chx2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx2.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Preparing for the Exam</a></li>
+<li data-level="A" data-path="A1.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">A </span></b>Background from Probability</a></li>
+<li data-level="B" data-path="A2.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">B </span></b>Introduction to R</a></li>
+<li data-level="C" data-path="A3.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">C </span></b>Solutions to the Exercises</a></li>
+<li data-level="" data-path="bib.html" class="ltx_tocentry ltx_tocentry_bibliography  chapter "><a href="bib.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Bibliography</a></li>
+<li data-level="" data-path="idx.html" class="ltx_tocentry ltx_tocentry_index  chapter "><a href="idx.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Index</a></li>
+</ul>
+</nav></div>
+<div class="ltx_page_main book-body fixed">
+<div class="body-inner">
+<header class="book-header fixed" aria-label="toolbar"><span class="bml-separator"></span></header>
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="ltx_page_content page-inner" id="bml-main-content">
+<section class="ltx_chapter bml_mathjax4 ltx_authors_1line normal">
+<div class="section level1">
+<h1 class="ltx_title ltx_title_chapter">
+<span class="ltx_tag ltx_tag_chapter header-section-number">Lecture 26</span> Bayesian Inference: Priors and Posteriors</h1>
+
+<div id="p1" class="ltx_para">
+<p class="ltx_p">So far the parameter <math id="p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> has been a fixed but unknown number,
+and a sentence such as “<math id="p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is probably close to <math id="p1.m3" class="ltx_Math" alttext="0.3" display="inline"><semantics><mn>0.3</mn><annotation encoding="application/x-tex">0.3</annotation></semantics></math>” had no
+meaning. In this lecture and in lecture <a href="Ch28.html" title="Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28</span></a> we will see that
+the parameter itself can be given a probability distribution: the
+<em class="ltx_emph ltx_font_italic">prior</em>, chosen before the data are
+seen, and the <em class="ltx_emph ltx_font_italic">posterior</em>, obtained
+after the data are seen. (We will see an update in pictures in
+lecture <a href="Ch27.html" title="Lecture 27 Confidence Versus Credibility ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">27</span></a>.)</p>
+</div>
+<section id="S1" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">26.1</span> Prior, Likelihood and Posterior</h2>
+
+<div id="S1.p1" class="ltx_para">
+<p class="ltx_p">Since <math id="S1.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is now a random variable, the model density is a
+conditional density given the parameter, and in the Bayesian lectures
+we write it as <math id="S1.p1.m2" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\theta)</annotation></semantics></math>, where <math id="S1.p1.m3" class="ltx_Math" alttext="x=(x_{1},\dots,x_{n})" display="inline"><semantics><mrow><mi>x</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">x=(x_{1},\dots,x_{n})</annotation></semantics></math> is the
+whole data set, so that
+<math id="S1.p1.m4" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\theta)=\prod_{i}f(x_{i}\mskip 1.0mu|\mskip 1.0mu\theta)" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><msub><mo>∏</mo><mi>i</mi></msub><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo fence="false" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\theta)=\prod_{i}f(x_{i}\mskip 1.0mu|\mskip 1.0mu\theta)</annotation></semantics></math> is the likelihood
+<math id="S1.p1.m5" class="ltx_Math" alttext="L(\theta)" display="inline"><semantics><mrow><mi>L</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">L(\theta)</annotation></semantics></math> of lecture <a href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4</span></a>.</p>
+</div>
+<div id="Thmtheorem1" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id1">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id1"><span class="ltx_text ltx_font_bold">Definition 26.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem1.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmtheorem1.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> be a random variable with values in <math id="Thmtheorem1.p1.m2" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math> and
+density <math id="Thmtheorem1.p1.m3" class="ltx_Math" alttext="\pi(\theta)" display="inline"><semantics><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta)</annotation></semantics></math>, and assume that given <math id="Thmtheorem1.p1.m4" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> the data
+<math id="Thmtheorem1.p1.m5" class="ltx_Math" alttext="X=(X_{1},\dots,X_{n})" display="inline"><semantics><mrow><mi>X</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">X=(X_{1},\dots,X_{n})</annotation></semantics></math> have joint density <math id="Thmtheorem1.p1.m6" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\theta)</annotation></semantics></math>. Then
+the density <math id="Thmtheorem1.p1.m7" class="ltx_Math" alttext="\pi" display="inline"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math> is called the <em class="ltx_emph ltx_font_italic">prior density</em> (or prior)
+of <math id="Thmtheorem1.p1.m8" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and the conditional density <math id="Thmtheorem1.p1.m9" class="ltx_Math" alttext="\pi(\theta\mskip 1.0mu|\mskip 1.0mux)" display="inline"><semantics><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta\mskip 1.0mu|\mskip 1.0mux)</annotation></semantics></math>
+of <math id="Thmtheorem1.p1.m10" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> given <math id="Thmtheorem1.p1.m11" class="ltx_Math" alttext="X=x" display="inline"><semantics><mrow><mi>X</mi><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">X=x</annotation></semantics></math> is called the <em class="ltx_emph ltx_font_italic">posterior density</em> (or
+posterior). The parameters in the prior are called <em class="ltx_emph ltx_font_italic">hyperparameters</em>.</p>
+</div>
+</div>
+<div id="S1.p2" class="ltx_para">
+<p class="ltx_p">From now on, unless
+otherwise specified, <math id="S1.p2.m1" class="ltx_Math" alttext="\pi" display="inline"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math> will denote a prior or posterior
+density. In lecture <a href="Ch19.html" title="Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19</span></a>, we used the same letter to denote
+the mixture weight for a two-component model.</p>
+</div>
+<div id="S1.p3" class="ltx_para">
+<p class="ltx_p">The posterior density can be found using Bayes’ theorem as given
+in proposition <a href="A1.html#Thmtheorem20" title="Proposition A.20 (Bayes’ theorem). ‣ A.8 Bayes’ Theorem ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.20</span></a> in appendix <a href="A1.html" title="Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A</span></a>, where the
+parameter plays the role of <math id="S1.p3.m1" class="ltx_Math" alttext="A" display="inline"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> and the data play the role of <math id="S1.p3.m2" class="ltx_Math" alttext="B" display="inline"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>.</p>
+</div>
+<div id="Thmtheorem2" class="ltx_theorem ltx_theorem_theorem" role="region" aria-labelledby="bml-auto-id2">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id2"><span class="ltx_text ltx_font_bold">Theorem 26.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem2.p1" class="ltx_para">
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">In the situation of definition <a href="#Thmtheorem1" title="Definition 26.1. ‣ 26.1 Prior, Likelihood and Posterior ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.1</span></a>, the posterior
+density is given by</span></p>
+<div id="E1" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id3">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id3"><span class="bml_sr_only">equation </span>(26.1)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(26.1)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E1.m1" class="ltx_Math" alttext="\pi(\theta\mskip 1.0mu|\mskip 1.0mux)=\frac{f(x\mskip 1.0mu|\mskip 1.0mu\theta%
+)\,\pi(\theta)}{m(x)},\qquad\text{where }m(x)=\int_{\Theta}f(x\mskip 1.0mu|%
+\mskip 1.0mu\vartheta)\,\pi(\vartheta)\,\mathrm{d}\vartheta" display="block"><semantics><mrow><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mfrac><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mrow><mi>m</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></mfrac></mrow><mo rspace="2.357em">,</mo><mrow><mrow><mtext class="ltx_mathvariant_italic">where </mtext><mo>⁢</mo><mi>m</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><msub><mo>∫</mo><mi mathvariant="normal">Θ</mi></msub><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>ϑ</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ϑ</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mrow><mo rspace="0em">d</mo><mi>ϑ</mi></mrow></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta\mskip 1.0mu|\mskip 1.0mux)=\frac{f(x\mskip 1.0mu|\mskip 1.0mu\theta%
+)\,\pi(\theta)}{m(x)},\qquad\text{where }m(x)=\int_{\Theta}f(x\mskip 1.0mu|%
+\mskip 1.0mu\vartheta)\,\pi(\vartheta)\,\mathrm{d}\vartheta</annotation></semantics></math></div>
+</div>
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">is the marginal density of the data. The formula holds for all <math id="Thmtheorem2.p1.m1" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+with <math id="Thmtheorem2.p1.m2" class="ltx_Math" alttext="m(x)&gt;0" display="inline"><semantics><mrow><mrow><mi>m</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">m(x)&gt;0</annotation></semantics></math>.</span></p>
+</div>
+</div>
+<div class="ltx_proof" role="group" aria-labelledby="bml-auto-id4">
+<div class="ltx_title ltx_runin ltx_font_italic ltx_title_proof" id="bml-auto-id4">Proof.</div>
+<div id="S1.p4" class="ltx_para">
+<p class="ltx_p">The joint density of <math id="S1.p4.m1" class="ltx_Math" alttext="(\theta,X)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo>,</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\theta,X)</annotation></semantics></math> is given by <math id="S1.p4.m2" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\theta)\,\pi(\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\theta)\,\pi(\theta)</annotation></semantics></math>.
+Integrating out <math id="S1.p4.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> gives the marginal density <math id="S1.p4.m4" class="ltx_Math" alttext="m(x)" display="inline"><semantics><mrow><mi>m</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">m(x)</annotation></semantics></math>
+of <math id="S1.p4.m5" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>. Dividing the joint density by <math id="S1.p4.m6" class="ltx_Math" alttext="m(x)" display="inline"><semantics><mrow><mi>m</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">m(x)</annotation></semantics></math> gives the conditional
+density of <math id="S1.p4.m7" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> given <math id="S1.p4.m8" class="ltx_Math" alttext="X=x" display="inline"><semantics><mrow><mi>X</mi><mo>=</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">X=x</annotation></semantics></math>, as claimed.
+∎</p>
+</div>
+</div>
+<div id="S1.p5" class="ltx_para">
+<p class="ltx_p">The denominator <math id="S1.p5.m1" class="ltx_Math" alttext="m(x)" display="inline"><semantics><mrow><mi>m</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">m(x)</annotation></semantics></math> makes the posterior integrate to one and does
+not involve <math id="S1.p5.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>; in practice we never compute it directly, but
+write</p>
+<div id="E2" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id5">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id5"><span class="bml_sr_only">equation </span>(26.2)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(26.2)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E2.m1" class="ltx_Math" alttext="\pi(\theta\mskip 1.0mu|\mskip 1.0mux)\propto f(x\mskip 1.0mu|\mskip 1.0mu%
+\theta)\,\pi(\theta)," display="block"><semantics><mrow><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\pi(\theta\mskip 1.0mu|\mskip 1.0mux)\propto f(x\mskip 1.0mu|\mskip 1.0mu%
+\theta)\,\pi(\theta),</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where <math id="S1.p5.m3" class="ltx_Math" alttext="\propto" display="inline"><semantics><mo>∝</mo><annotation encoding="application/x-tex">\propto</annotation></semantics></math> means “equal up to a factor free of <math id="S1.p5.m4" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>”, and
+we try to recognise the right-hand side as the kernel of a known
+density, whose normalising constant then comes from
+table <a href="A1.html#T2" title="Table A.2 ‣ A.2 Standard Distributions ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.2</span></a>. In words, the
+posterior is proportional to the likelihood times the prior.</p>
+</div>
+<div id="S1.p6" class="ltx_para">
+<p class="ltx_p">The posterior is the complete Bayesian answer: a statement like
+“<math id="S1.p6.m1" class="ltx_Math" alttext="\mathbb{P}(\theta&gt;0.3\mskip 1.0mu|\mskip 1.0mux)=0.95" display="inline"><semantics><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>&gt;</mo><mrow><mn>0.3</mn><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0.95</mn></mrow><annotation encoding="application/x-tex">\mathbb{P}(\theta&gt;0.3\mskip 1.0mu|\mskip 1.0mux)=0.95</annotation></semantics></math>” now has a meaning. Point estimates
+are summaries of the posterior (section <a href="#S3" title="26.3 Point Estimates from the Posterior ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.3</span></a>),
+and intervals and tests will be considered in lecture <a href="Ch28.html" title="Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28</span></a>.</p>
+</div>
+</div>
+</section>
+<section id="S2" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">26.2</span> Conjugate Priors</h2>
+
+<div id="S2.p1" class="ltx_para">
+<p class="ltx_p">The rule (<a href="#E2" title="In 26.1 Prior, Likelihood and Posterior ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.2</span></a>) works best if the posterior distribution
+belongs to the same family of distributions as the prior distribution,
+so that the update amounts to no more than a change of the
+hyperparameters.</p>
+</div>
+<div id="Thmtheorem3" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id6">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id6"><span class="ltx_text ltx_font_bold">Definition 26.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem3.p1" class="ltx_para">
+<p class="ltx_p">A family <math id="Thmtheorem3.p1.m1" class="ltx_Math" alttext="\mathcal{P}" display="inline"><semantics><mi class="ltx_font_mathcaligraphic">𝒫︀</mi><annotation encoding="application/x-tex">\mathcal{P}</annotation></semantics></math> of prior distributions is <em class="ltx_emph ltx_font_italic">conjugate</em> for a
+model <math id="Thmtheorem3.p1.m2" class="ltx_Math" alttext="\bigl{(}f(x\mskip 1.0mu|\mskip 1.0mu\theta)\!\mathrel{\big{|}}\!\theta\in%
+\Theta\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo fence="false" lspace="0.108em" mathsize="120%" rspace="0.108em">|</mo><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}f(x\mskip 1.0mu|\mskip 1.0mu\theta)\!\mathrel{\big{|}}\!\theta\in%
+\Theta\bigr{)}</annotation></semantics></math>, if for every prior
+in <math id="Thmtheorem3.p1.m3" class="ltx_Math" alttext="\mathcal{P}" display="inline"><semantics><mi class="ltx_font_mathcaligraphic">𝒫︀</mi><annotation encoding="application/x-tex">\mathcal{P}</annotation></semantics></math> and every data set <math id="Thmtheorem3.p1.m4" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> the posterior
+<math id="Thmtheorem3.p1.m5" class="ltx_Math" alttext="\pi(\theta\mskip 1.0mu|\mskip 1.0mux)" display="inline"><semantics><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta\mskip 1.0mu|\mskip 1.0mux)</annotation></semantics></math> also belongs to <math id="Thmtheorem3.p1.m6" class="ltx_Math" alttext="\mathcal{P}" display="inline"><semantics><mi class="ltx_font_mathcaligraphic">𝒫︀</mi><annotation encoding="application/x-tex">\mathcal{P}</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="S2.p2" class="ltx_para">
+<p class="ltx_p">For exponential families, conjugate priors can be written down by
+inspection: the likelihood depends on the natural parameter <math id="S2.p2.m1" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>
+only through the exponent <math id="S2.p2.m2" class="ltx_Math" alttext="\eta T_{n}-nK(\eta)" display="inline"><semantics><mrow><mrow><mi>η</mi><mo>⁢</mo><msub><mi>T</mi><mi>n</mi></msub></mrow><mo>−</mo><mrow><mi>n</mi><mo>⁢</mo><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\eta T_{n}-nK(\eta)</annotation></semantics></math>
+(lemma <a href="Ch7.html#Thmtheorem5" title="Lemma 7.5. ‣ 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.5</span></a>), and a prior with an exponent of
+the same form reproduces itself.</p>
+</div>
+<div id="Thmtheorem4" class="ltx_theorem ltx_theorem_proposition" role="region" aria-labelledby="bml-auto-id7">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id7"><span class="ltx_text ltx_font_bold">Proposition 26.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem4.p1" class="ltx_para">
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">Let <math id="Thmtheorem4.p1.m1" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\eta)=h(x)\exp\bigl{(}\eta T(x)-K(\eta)\bigr{)}" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>η</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>η</mi><mo>⁢</mo><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\eta)=h(x)\exp\bigl{(}\eta T(x)-K(\eta)\bigr{)}</annotation></semantics></math> with
+<math id="Thmtheorem4.p1.m2" class="ltx_Math" alttext="\eta\in\mathcal{N}" display="inline"><semantics><mrow><mi>η</mi><mo>∈</mo><mi class="ltx_font_mathcaligraphic">𝒩︀</mi></mrow><annotation encoding="application/x-tex">\eta\in\mathcal{N}</annotation></semantics></math> be a one-parameter exponential family in its
+natural parametrisation, and for real numbers <math id="Thmtheorem4.p1.m3" class="ltx_Math" alttext="a" display="inline"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> and <math id="Thmtheorem4.p1.m4" class="ltx_Math" alttext="b" display="inline"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math> let</span></p>
+<div id="Ex1" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex1.m1" class="ltx_Math" alttext="\pi_{a,b}(\eta)\propto\exp\bigl{(}a\eta-bK(\eta)\bigr{)},\qquad\eta\in\mathcal%
+{N}," display="block"><semantics><mrow><mrow><mrow><mrow><msub><mi>π</mi><mrow><mi>a</mi><mo>,</mo><mi>b</mi></mrow></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>a</mi><mo>⁢</mo><mi>η</mi></mrow><mo>−</mo><mrow><mi>b</mi><mo>⁢</mo><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><mo rspace="2.357em">,</mo><mrow><mi>η</mi><mo>∈</mo><mi class="ltx_font_mathcaligraphic">𝒩︀</mi></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\pi_{a,b}(\eta)\propto\exp\bigl{(}a\eta-bK(\eta)\bigr{)},\qquad\eta\in\mathcal%
+{N},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">whenever the right-hand side has a finite integral over <math id="Thmtheorem4.p1.m5" class="ltx_Math" alttext="\mathcal{N}" display="inline"><semantics><mi class="ltx_font_mathcaligraphic">𝒩︀</mi><annotation encoding="application/x-tex">\mathcal{N}</annotation></semantics></math>.
+Then these priors are conjugate for the model: if the prior is
+<math id="Thmtheorem4.p1.m6" class="ltx_Math" alttext="\pi_{a,b}" display="inline"><semantics><msub><mi>π</mi><mrow><mi>a</mi><mo>,</mo><mi>b</mi></mrow></msub><annotation encoding="application/x-tex">\pi_{a,b}</annotation></semantics></math>, the data <math id="Thmtheorem4.p1.m7" class="ltx_Math" alttext="x_{1},\dots,x_{n}" display="inline"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>x</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">x_{1},\dots,x_{n}</annotation></semantics></math> have natural statistic
+<math id="Thmtheorem4.p1.m8" class="ltx_Math" alttext="T_{n}=\sum_{i=1}^{n}T(x_{i})" display="inline"><semantics><mrow><msub><mi>T</mi><mi>n</mi></msub><mo rspace="0.111em">=</mo><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mrow><mi>T</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">T_{n}=\sum_{i=1}^{n}T(x_{i})</annotation></semantics></math> and the marginal density satisfies
+<math id="Thmtheorem4.p1.m9" class="ltx_Math" alttext="0&lt;m(x)&lt;\infty" display="inline"><semantics><mrow><mn>0</mn><mo>&lt;</mo><mrow><mi>m</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&lt;</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">0&lt;m(x)&lt;\infty</annotation></semantics></math>, then the posterior is <math id="Thmtheorem4.p1.m10" class="ltx_Math" alttext="\pi_{a+T_{n},\,b+n}" display="inline"><semantics><msub><mi>π</mi><mrow><mrow><mi>a</mi><mo>+</mo><msub><mi>T</mi><mi>n</mi></msub></mrow><mo rspace="0.337em">,</mo><mrow><mi>b</mi><mo>+</mo><mi>n</mi></mrow></mrow></msub><annotation encoding="application/x-tex">\pi_{a+T_{n},\,b+n}</annotation></semantics></math>.</span></p>
+</div>
+</div>
+<div class="ltx_proof" role="group" aria-labelledby="bml-auto-id8">
+<div class="ltx_title ltx_runin ltx_font_italic ltx_title_proof" id="bml-auto-id8">Proof.</div>
+<div id="S2.p3" class="ltx_para">
+<p class="ltx_p">Using (<a href="#E2" title="In 26.1 Prior, Likelihood and Posterior ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.2</span></a>) and lemma <a href="Ch7.html#Thmtheorem5" title="Lemma 7.5. ‣ 7.1 Recognising the Shape ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.5</span></a> we find</p>
+<div id="A3.S21.EGx12" class="ltx_equationgroup ltx_eqn_align bml_equationgroup bml_equation_container ltx_align_baseline">
+<div id="Ex2" class="ltx_equation bml_equation ltx_align_baseline" role="group" aria-label="equation">
+<div class="ltx_td ltx_align_right bml_eqn_cell"><math id="Ex2.m1" class="ltx_Math" alttext="\displaystyle\pi(\eta\mskip 1.0mu|\mskip 1.0mux)" display="inline"><semantics><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>η</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\displaystyle\pi(\eta\mskip 1.0mu|\mskip 1.0mux)</annotation></semantics></math></div>
+<div class="ltx_td ltx_align_left bml_eqn_cell"><math id="Ex2.m2" class="ltx_Math" alttext="\displaystyle\propto\prod_{i=1}^{n}h(x_{i})\,\exp\bigl{(}\eta T_{n}-nK(\eta)%
+\bigr{)}\,\exp\bigl{(}a\eta-bK(\eta)\bigr{)}" display="inline"><semantics><mrow><mi></mi><mo>∝</mo><mrow><mstyle displaystyle="true"><munderover><mo movablelimits="false">∏</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover></mstyle><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><mo lspace="0.337em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>η</mi><mo>⁢</mo><msub><mi>T</mi><mi>n</mi></msub></mrow><mo>−</mo><mrow><mi>n</mi><mo>⁢</mo><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo lspace="0.337em">⁢</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mi>a</mi><mo>⁢</mo><mi>η</mi></mrow><mo>−</mo><mrow><mi>b</mi><mo>⁢</mo><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\displaystyle\propto\prod_{i=1}^{n}h(x_{i})\,\exp\bigl{(}\eta T_{n}-nK(\eta)%
+\bigr{)}\,\exp\bigl{(}a\eta-bK(\eta)\bigr{)}</annotation></semantics></math></div>
+</div>
+<div id="Ex3" class="ltx_equation bml_equation ltx_align_baseline" role="group" aria-label="equation">
+<div class="ltx_td bml_eqn_cell"></div>
+<div class="ltx_td ltx_align_left bml_eqn_cell"><math id="Ex3.m1" class="ltx_Math" alttext="\displaystyle\propto\exp\bigl{(}(a+T_{n})\eta-(b+n)K(\eta)\bigr{)}," display="inline"><semantics><mrow><mrow><mi></mi><mo>∝</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>a</mi><mo>+</mo><msub><mi>T</mi><mi>n</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mi>η</mi></mrow><mo>−</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>b</mi><mo>+</mo><mi>n</mi></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\displaystyle\propto\exp\bigl{(}(a+T_{n})\eta-(b+n)K(\eta)\bigr{)},</annotation></semantics></math></div>
+</div>
+</div>
+<p class="ltx_p">since <math id="S2.p3.m1" class="ltx_Math" alttext="\prod_{i}h(x_{i})" display="inline"><semantics><mrow><msub><mo>∏</mo><mi>i</mi></msub><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\prod_{i}h(x_{i})</annotation></semantics></math> does not depend on <math id="S2.p3.m2" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>. The right-hand side is the
+kernel of <math id="S2.p3.m3" class="ltx_Math" alttext="\pi_{a+T_{n},b+n}" display="inline"><semantics><msub><mi>π</mi><mrow><mrow><mi>a</mi><mo>+</mo><msub><mi>T</mi><mi>n</mi></msub></mrow><mo>,</mo><mrow><mi>b</mi><mo>+</mo><mi>n</mi></mrow></mrow></msub><annotation encoding="application/x-tex">\pi_{a+T_{n},b+n}</annotation></semantics></math> and by assumption <math id="S2.p3.m4" class="ltx_Math" alttext="m(x)&lt;\infty" display="inline"><semantics><mrow><mrow><mi>m</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&lt;</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">m(x)&lt;\infty</annotation></semantics></math> this kernel has
+finite integral and thus is a density. This shows that the posterior
+is <math id="S2.p3.m5" class="ltx_Math" alttext="\pi_{a+T_{n},b+n}" display="inline"><semantics><msub><mi>π</mi><mrow><mrow><mi>a</mi><mo>+</mo><msub><mi>T</mi><mi>n</mi></msub></mrow><mo>,</mo><mrow><mi>b</mi><mo>+</mo><mi>n</mi></mrow></mrow></msub><annotation encoding="application/x-tex">\pi_{a+T_{n},b+n}</annotation></semantics></math>. This completes the proof.
+∎</p>
+</div>
+</div>
+<div id="S2.p4" class="ltx_para">
+<p class="ltx_p">The update adds the natural statistic to <math id="S2.p4.m1" class="ltx_Math" alttext="a" display="inline"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> and the sample size
+to <math id="S2.p4.m2" class="ltx_Math" alttext="b" display="inline"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>: the prior acts like <math id="S2.p4.m3" class="ltx_Math" alttext="b" display="inline"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math> earlier observations with statistic
+total <math id="S2.p4.m4" class="ltx_Math" alttext="a" display="inline"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>. We now work the recipe for our simplest model in the
+original parameter.</p>
+</div>
+<div id="Thmtheorem5" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id9">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id9"><span class="ltx_text ltx_font_bold">Example 26.5</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem5.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmtheorem5.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be i.i.d. Bernoulli with success probability
+<math id="Thmtheorem5.p1.m2" class="ltx_Math" alttext="\theta\in(0,1)" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta\in(0,1)</annotation></semantics></math> and let the prior be the <math id="Thmtheorem5.p1.m3" class="ltx_Math" alttext="\text{Beta}(a,b)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(a,b)</annotation></semantics></math> distribution
+with <math id="Thmtheorem5.p1.m4" class="ltx_Math" alttext="a,b&gt;0" display="inline"><semantics><mrow><mrow><mi>a</mi><mo>,</mo><mi>b</mi></mrow><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">a,b&gt;0</annotation></semantics></math>. From table <a href="A1.html#T2" title="Table A.2 ‣ A.2 Standard Distributions ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.2</span></a> we know that this
+distribution has density</p>
+<div id="Ex4" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex4.m1" class="ltx_Math" alttext="\pi(\theta)=\frac{\theta^{a-1}(1-\theta)^{b-1}}{B(a,b)},\qquad 0&lt;\theta&lt;1," display="block"><semantics><mrow><mrow><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mfrac><mrow><msup><mi>θ</mi><mrow><mi>a</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mi>b</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><mrow><mi>B</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="false">)</mo></mrow></mrow></mfrac></mrow><mo rspace="2.357em">,</mo><mrow><mn>0</mn><mo>&lt;</mo><mi>θ</mi><mo>&lt;</mo><mn>1</mn></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\pi(\theta)=\frac{\theta^{a-1}(1-\theta)^{b-1}}{B(a,b)},\qquad 0&lt;\theta&lt;1,</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">and the mean of this distribution is <math id="Thmtheorem5.p1.m5" class="ltx_Math" alttext="a/(a+b)" display="inline"><semantics><mrow><mi>a</mi><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">a/(a+b)</annotation></semantics></math>. If <math id="Thmtheorem5.p1.m6" class="ltx_Math" alttext="T=\sum_{i}x_{i}" display="inline"><semantics><mrow><mi>T</mi><mo rspace="0.111em">=</mo><mrow><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub></mrow></mrow><annotation encoding="application/x-tex">T=\sum_{i}x_{i}</annotation></semantics></math> is the number
+of successes in the sample, then the likelihood is
+<math id="Thmtheorem5.p1.m7" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\theta)=\theta^{T}(1-\theta)^{n-T}" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mi>θ</mi><mi>T</mi></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mi>n</mi><mo>−</mo><mi>T</mi></mrow></msup></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\theta)=\theta^{T}(1-\theta)^{n-T}</annotation></semantics></math>, as in example <a href="Ch4.html#Thmtheorem2" title="Example 4.2. ‣ 4.1 The Likelihood Function ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.2</span></a>,
+and thus we have</p>
+<div id="Ex5" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex5.m1" class="ltx_Math" alttext="\pi(\theta\mskip 1.0mu|\mskip 1.0mux)\propto\theta^{T}(1-\theta)^{n-T}\cdot%
+\theta^{a-1}(1-\theta)^{b-1}=\theta^{a+T-1}(1-\theta)^{b+n-T-1}," display="block"><semantics><mrow><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mrow><mrow><mrow><msup><mi>θ</mi><mi>T</mi></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo rspace="0.055em" stretchy="false">)</mo></mrow><mrow><mi>n</mi><mo>−</mo><mi>T</mi></mrow></msup></mrow><mo rspace="0.222em">⋅</mo><msup><mi>θ</mi><mrow><mi>a</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mi>b</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><mo>=</mo><mrow><msup><mi>θ</mi><mrow><mrow><mi>a</mi><mo>+</mo><mi>T</mi></mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mrow><mi>b</mi><mo>+</mo><mi>n</mi></mrow><mo>−</mo><mi>T</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\pi(\theta\mskip 1.0mu|\mskip 1.0mux)\propto\theta^{T}(1-\theta)^{n-T}\cdot%
+\theta^{a-1}(1-\theta)^{b-1}=\theta^{a+T-1}(1-\theta)^{b+n-T-1},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where we have omitted the constant <math id="Thmtheorem5.p1.m8" class="ltx_Math" alttext="1/B(a,b)" display="inline"><semantics><mrow><mrow><mn>1</mn><mo>/</mo><mi>B</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">1/B(a,b)</annotation></semantics></math> for simplicity. The
+right-hand side is the kernel of a <math id="Thmtheorem5.p1.m9" class="ltx_Math" alttext="\text{Beta}(a+T,\,b+n-T)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>a</mi><mo>+</mo><mi>T</mi></mrow><mo rspace="0.337em">,</mo><mrow><mrow><mi>b</mi><mo>+</mo><mi>n</mi></mrow><mo>−</mo><mi>T</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(a+T,\,b+n-T)</annotation></semantics></math> density and thus we have
+found the posterior distribution: the Beta distributions are
+conjugate for the Bernoulli model, and the update adds the
+successes to <math id="Thmtheorem5.p1.m10" class="ltx_Math" alttext="a" display="inline"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> and the failures to <math id="Thmtheorem5.p1.m11" class="ltx_Math" alttext="b" display="inline"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>. The posterior
+mean is given by</p>
+<div id="E3" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id10">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id10"><span class="bml_sr_only">equation </span>(26.3)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(26.3)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E3.m1" class="ltx_Math" alttext="\mathbb{E}(\theta\mskip 1.0mu|\mskip 1.0mux)=\frac{a+T}{a+b+n}=\frac{a+b}{a+b+%
+n}\cdot\frac{a}{a+b}+\frac{n}{a+b+n}\cdot\bar{x}," display="block"><semantics><mrow><mrow><mrow><mi>𝔼</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mfrac><mrow><mi>a</mi><mo>+</mo><mi>T</mi></mrow><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>n</mi></mrow></mfrac><mo>=</mo><mrow><mrow><mfrac><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>n</mi></mrow></mfrac><mo lspace="0.222em" rspace="0.222em">⋅</mo><mfrac><mi>a</mi><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow></mfrac></mrow><mo>+</mo><mrow><mfrac><mi>n</mi><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>n</mi></mrow></mfrac><mo lspace="0.222em" rspace="0.222em">⋅</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\mathbb{E}(\theta\mskip 1.0mu|\mskip 1.0mux)=\frac{a+T}{a+b+n}=\frac{a+b}{a+b+%
+n}\cdot\frac{a}{a+b}+\frac{n}{a+b+n}\cdot\bar{x},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">which is a weighted average of the prior mean <math id="Thmtheorem5.p1.m12" class="ltx_Math" alttext="a/(a+b)" display="inline"><semantics><mrow><mi>a</mi><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">a/(a+b)</annotation></semantics></math> and the
+sample proportion <math id="Thmtheorem5.p1.m13" class="ltx_Math" alttext="\bar{x}=T/n" display="inline"><semantics><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>=</mo><mrow><mi>T</mi><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">\bar{x}=T/n</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> the maximum
+likelihood estimate from example <a href="Ch5.html#Thmtheorem3" title="Example 5.3. ‣ 5.2 Worked Examples ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.3</span></a>. The prior can be
+interpreted as having observed <math id="Thmtheorem5.p1.m14" class="ltx_Math" alttext="a+b" display="inline"><semantics><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a+b</annotation></semantics></math> additional samples, of which
+<math id="Thmtheorem5.p1.m15" class="ltx_Math" alttext="a" display="inline"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> were successes. This <em class="ltx_emph ltx_font_italic">equivalent sample size</em> is a
+measure for how the hyperparameters should be chosen in practice
+(exercise <a href="#Thmexercise1" title="Exercise 26.1. ‣ 26.4 Flat, Improper and Jeffreys Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.1</span></a>). As <math id="Thmtheorem5.p1.m16" class="ltx_Math" alttext="n\to\infty" display="inline"><semantics><mrow><mi>n</mi><mo stretchy="false">→</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">n\to\infty</annotation></semantics></math>, the weight of the prior
+decreases and with enough data the prior will be completely
+forgotten. For <math id="Thmtheorem5.p1.m17" class="ltx_Math" alttext="a=b=2" display="inline"><semantics><mrow><mi>a</mi><mo>=</mo><mi>b</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">a=b=2</annotation></semantics></math>, <math id="Thmtheorem5.p1.m18" class="ltx_Math" alttext="n=10" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">n=10</annotation></semantics></math> and <math id="Thmtheorem5.p1.m19" class="ltx_Math" alttext="T=7" display="inline"><semantics><mrow><mi>T</mi><mo>=</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">T=7</annotation></semantics></math>, for example, the
+posterior distribution is <math id="Thmtheorem5.p1.m20" class="ltx_Math" alttext="\text{Beta}(9,5)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>9</mn><mo>,</mo><mn>5</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(9,5)</annotation></semantics></math> with mean <math id="Thmtheorem5.p1.m21" class="ltx_Math" alttext="9/14\approx 0.643" display="inline"><semantics><mrow><mrow><mn>9</mn><mo>/</mo><mn>14</mn></mrow><mo>≈</mo><mn>0.643</mn></mrow><annotation encoding="application/x-tex">9/14\approx 0.643</annotation></semantics></math>, between the
+prior mean <math id="Thmtheorem5.p1.m22" class="ltx_Math" alttext="0.5" display="inline"><semantics><mn>0.5</mn><annotation encoding="application/x-tex">0.5</annotation></semantics></math> and the sample proportion <math id="Thmtheorem5.p1.m23" class="ltx_Math" alttext="0.7" display="inline"><semantics><mn>0.7</mn><annotation encoding="application/x-tex">0.7</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="S2.p5" class="ltx_para">
+<p class="ltx_p">In terms of the log-odds <math id="S2.p5.m1" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math>, the example is an instance of
+proposition <a href="#Thmtheorem4" title="Proposition 26.4. ‣ 26.2 Conjugate Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.4</span></a>. Using the same arguments, we can
+show that normal priors are conjugate for the normal mean with
+known variance. The cumulant function in this case is a quadratic
+function of <math id="S2.p5.m2" class="ltx_Math" alttext="\eta" display="inline"><semantics><mi>η</mi><annotation encoding="application/x-tex">\eta</annotation></semantics></math> (exercise <a href="Ch7.html#Thmexercise4" title="Exercise 7.4. ‣ 7.4 What the Structure Buys ‣ Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">7.4</span></a>). The result is
+given here without proof, and the proof, based on completing the
+square, is given as exercise <a href="#Thmexercise3" title="Exercise 26.3. ‣ 26.4 Flat, Improper and Jeffreys Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.3</span></a>.</p>
+</div>
+<div id="Thmtheorem6" class="ltx_theorem ltx_theorem_proposition" role="region" aria-labelledby="bml-auto-id11">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id11"><span class="ltx_text ltx_font_bold">Proposition 26.6</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem6.p1" class="ltx_para">
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">Let <math id="Thmtheorem6.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be i.i.d. <math id="Thmtheorem6.p1.m2" class="ltx_Math" alttext="N(\theta,\sigma^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\theta,\sigma^{2})</annotation></semantics></math> with known
+variance <math id="Thmtheorem6.p1.m3" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math> and let the prior be <math id="Thmtheorem6.p1.m4" class="ltx_Math" alttext="\theta\sim N(m,\tau^{2})" display="inline"><semantics><mrow><mi>θ</mi><mo>∼</mo><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>m</mi><mo>,</mo><msup><mi>τ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta\sim N(m,\tau^{2})</annotation></semantics></math>.
+Then the posterior distribution is <math id="Thmtheorem6.p1.m5" class="ltx_Math" alttext="N(m_{n},\tau_{n}^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>m</mi><mi>n</mi></msub><mo>,</mo><msubsup><mi>τ</mi><mi>n</mi><mn>2</mn></msubsup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(m_{n},\tau_{n}^{2})</annotation></semantics></math> where</span></p>
+<div id="Ex6" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex6.m1" class="ltx_Math" alttext="\frac{1}{\tau_{n}^{2}}=\frac{1}{\tau^{2}}+\frac{n}{\sigma^{2}}\qquad\text{and}%
+\qquad m_{n}=\frac{1/\tau^{2}}{1/\tau^{2}+n/\sigma^{2}}\,m+\frac{n/\sigma^{2}}%
+{1/\tau^{2}+n/\sigma^{2}}\,\bar{x}." display="block"><semantics><mrow><mrow><mrow><mfrac><mn>1</mn><msubsup><mi>τ</mi><mi>n</mi><mn>2</mn></msubsup></mfrac><mo>=</mo><mrow><mrow><mfrac><mn>1</mn><msup><mi>τ</mi><mn>2</mn></msup></mfrac><mo>+</mo><mfrac><mi>n</mi><msup><mi>σ</mi><mn>2</mn></msup></mfrac></mrow><mspace width="2.19em"></mspace><mtext class="ltx_mathvariant_italic">and</mtext></mrow></mrow><mspace width="2.19em"></mspace><mrow><msub><mi>m</mi><mi>n</mi></msub><mo>=</mo><mrow><mrow><mfrac><mrow><mn>1</mn><mo>/</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow><mrow><mrow><mn>1</mn><mo>/</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow><mo>+</mo><mrow><mi>n</mi><mo>/</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mrow></mfrac><mo lspace="0.170em">⁢</mo><mi>m</mi></mrow><mo>+</mo><mrow><mfrac><mrow><mi>n</mi><mo>/</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mrow><mrow><mn>1</mn><mo>/</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow><mo>+</mo><mrow><mi>n</mi><mo>/</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mrow></mfrac><mo lspace="0.170em">⁢</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\frac{1}{\tau_{n}^{2}}=\frac{1}{\tau^{2}}+\frac{n}{\sigma^{2}}\qquad\text{and}%
+\qquad m_{n}=\frac{1/\tau^{2}}{1/\tau^{2}+n/\sigma^{2}}\,m+\frac{n/\sigma^{2}}%
+{1/\tau^{2}+n/\sigma^{2}}\,\bar{x}.</annotation></semantics></math></div>
+</div>
+</div>
+</div>
+<div id="S2.p6" class="ltx_para">
+<p class="ltx_p">The reciprocal of a variance is called a <em class="ltx_emph ltx_font_italic">precision</em>, and in
+these terms the proposition is easy to remember: precisions add, and
+the posterior mean is the precision-weighted average of the prior
+mean and <math id="S2.p6.m1" class="ltx_Math" alttext="\bar{x}" display="inline"><semantics><mover accent="true"><mi>x</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>. Again, the prior washes out as <math id="S2.p6.m2" class="ltx_Math" alttext="n\to\infty" display="inline"><semantics><mrow><mi>n</mi><mo stretchy="false">→</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">n\to\infty</annotation></semantics></math>.</p>
+</div>
+</div>
+</section>
+<section id="S3" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">26.3</span> Point Estimates from the Posterior</h2>
+
+<div id="S3.p1" class="ltx_para">
+<p class="ltx_p">If a single number is required for <math id="S3.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, the posterior mean,
+median and mode can all be used. If the errors are measured in terms
+of squared error, as in lecture <a href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a>, the posterior
+mean is the optimal choice.</p>
+</div>
+<div id="Thmtheorem7" class="ltx_theorem ltx_theorem_theorem" role="region" aria-labelledby="bml-auto-id12">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id12"><span class="ltx_text ltx_font_bold">Theorem 26.7</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem7.p1" class="ltx_para">
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">Assume that the posterior distribution has finite variance. Then
+the posterior mean <math id="Thmtheorem7.p1.m1" class="ltx_Math" alttext="\hat{\theta}_{B}=\mathbb{E}(\theta\mskip 1.0mu|\mskip 1.0mux)" display="inline"><semantics><mrow><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub><mo>=</mo><mrow><mi>𝔼</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}_{B}=\mathbb{E}(\theta\mskip 1.0mu|\mskip 1.0mux)</annotation></semantics></math> minimises the posterior
+expected squared error, i.e. for every number <math id="Thmtheorem7.p1.m2" class="ltx_Math" alttext="d" display="inline"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math> we have</span></p>
+<div id="Ex7" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex7.m1" class="ltx_Math" alttext="\mathbb{E}\bigl{(}(\theta-d)^{2}\!\mathrel{\big{|}}\!x\bigr{)}\geq\mathbb{E}%
+\bigl{(}(\theta-\hat{\theta}_{B})^{2}\!\mathrel{\big{|}}\!x\bigr{)}=\mathop{%
+\mathrm{Var}}\nolimits(\theta\mskip 1.0mu|\mskip 1.0mux)," display="block"><semantics><mrow><mrow><mrow><mi>𝔼</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>−</mo><mi>d</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mo fence="false" mathsize="120%" rspace="0.108em">|</mo><mi>x</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>≥</mo><mrow><mi>𝔼</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>−</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mo fence="false" mathsize="120%" rspace="0.108em">|</mo><mi>x</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo rspace="0.1389em">=</mo><mrow><mo lspace="0.1389em" rspace="0em">Var</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\mathbb{E}\bigl{(}(\theta-d)^{2}\!\mathrel{\big{|}}\!x\bigr{)}\geq\mathbb{E}%
+\bigl{(}(\theta-\hat{\theta}_{B})^{2}\!\mathrel{\big{|}}\!x\bigr{)}=\mathop{%
+\mathrm{Var}}\nolimits(\theta\mskip 1.0mu|\mskip 1.0mux),</annotation></semantics></math></div>
+</div>
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">and the equality holds only for <math id="Thmtheorem7.p1.m3" class="ltx_Math" alttext="d=\hat{\theta}_{B}" display="inline"><semantics><mrow><mi>d</mi><mo>=</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">d=\hat{\theta}_{B}</annotation></semantics></math>.</span></p>
+</div>
+</div>
+<div class="ltx_proof" role="group" aria-labelledby="bml-auto-id13">
+<div class="ltx_title ltx_runin ltx_font_italic ltx_title_proof" id="bml-auto-id13">Proof.</div>
+<div id="S3.p2" class="ltx_para">
+<p class="ltx_p">Adding and subtracting <math id="S3.p2.m1" class="ltx_Math" alttext="\hat{\theta}_{B}" display="inline"><semantics><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub><annotation encoding="application/x-tex">\hat{\theta}_{B}</annotation></semantics></math> inside the square, as in the
+proof of theorem <a href="Ch2.html#Thmtheorem7" title="Theorem 2.7. ‣ 2.2 Mean Squared Error ‣ Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2.7</span></a>, we get</p>
+<div id="Ex8" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex8.m1" class="ltx_Math" alttext="\mathbb{E}\bigl{(}(\theta-d)^{2}\!\mathrel{\big{|}}\!x\bigr{)}=\mathbb{E}\bigl%
+{(}(\theta-\hat{\theta}_{B})^{2}\!\mathrel{\big{|}}\!x\bigr{)}+2(\hat{\theta}_%
+{B}-d)\,\mathbb{E}(\theta-\hat{\theta}_{B}\mskip 1.0mu|\mskip 1.0mux)+(\hat{%
+\theta}_{B}-d)^{2}," display="block"><semantics><mrow><mrow><mrow><mi>𝔼</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>−</mo><mi>d</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mo fence="false" mathsize="120%" rspace="0.108em">|</mo><mi>x</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>𝔼</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>−</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mo fence="false" mathsize="120%" rspace="0.108em">|</mo><mi>x</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>+</mo><mrow><mn>2</mn><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub><mo>−</mo><mi>d</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>𝔼</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>−</mo><mrow><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>+</mo><msup><mrow><mo stretchy="false">(</mo><mrow><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub><mo>−</mo><mi>d</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\mathbb{E}\bigl{(}(\theta-d)^{2}\!\mathrel{\big{|}}\!x\bigr{)}=\mathbb{E}\bigl%
+{(}(\theta-\hat{\theta}_{B})^{2}\!\mathrel{\big{|}}\!x\bigr{)}+2(\hat{\theta}_%
+{B}-d)\,\mathbb{E}(\theta-\hat{\theta}_{B}\mskip 1.0mu|\mskip 1.0mux)+(\hat{%
+\theta}_{B}-d)^{2},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where all expectations are taken with respect to the posterior. The
+middle term vanishes, because <math id="S3.p2.m2" class="ltx_Math" alttext="\mathbb{E}(\theta\mskip 1.0mu|\mskip 1.0mux)=\hat{\theta}_{B}" display="inline"><semantics><mrow><mrow><mi>𝔼</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">\mathbb{E}(\theta\mskip 1.0mu|\mskip 1.0mux)=\hat{\theta}_{B}</annotation></semantics></math>, and the
+last term is non-negative and zero only for <math id="S3.p2.m3" class="ltx_Math" alttext="d=\hat{\theta}_{B}" display="inline"><semantics><mrow><mi>d</mi><mo>=</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub></mrow><annotation encoding="application/x-tex">d=\hat{\theta}_{B}</annotation></semantics></math>. This
+completes the proof.
+∎</p>
+</div>
+</div>
+<div id="S3.p3" class="ltx_para">
+<p class="ltx_p">The estimator <math id="S3.p3.m1" class="ltx_Math" alttext="\hat{\theta}_{B}" display="inline"><semantics><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub><annotation encoding="application/x-tex">\hat{\theta}_{B}</annotation></semantics></math> is called the <em class="ltx_emph ltx_font_italic">Bayes estimator</em>
+(under squared error) for <math id="S3.p3.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. The theorem is a statement
+about fixed data. For fixed <math id="S3.p3.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, and varying data,
+exercise <a href="#Thmexercise4" title="Exercise 26.4. ‣ 26.4 Flat, Improper and Jeffreys Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.4</span></a> shows that the Bernoulli
+<math id="S3.p3.m4" class="ltx_Math" alttext="\hat{\theta}_{B}" display="inline"><semantics><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub><annotation encoding="application/x-tex">\hat{\theta}_{B}</annotation></semantics></math> is biased but consistent, and that neither the Bernoulli
+estimator nor <math id="S3.p3.m5" class="ltx_Math" alttext="\bar{X}" display="inline"><semantics><mover accent="true"><mi>X</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{X}</annotation></semantics></math> has smaller mean squared error for all <math id="S3.p3.m6" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</div>
+</section>
+<section id="S4" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">26.4</span> Flat, Improper and Jeffreys Priors</h2>
+
+<div id="S4.p1" class="ltx_para">
+<p class="ltx_p">Without prior knowledge to encode, the obvious choice is the
+<em class="ltx_emph ltx_font_italic">flat prior</em> which
+is a constant density on <math id="S4.p1.m1" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math>. This prior does not
+prefer any value of <math id="S4.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. For the Bernoulli model this prior is
+<math id="S4.p1.m3" class="ltx_Math" alttext="\text{Beta}(1,1)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(1,1)</annotation></semantics></math> and from example <a href="#Thmtheorem5" title="Example 26.5. ‣ 26.2 Conjugate Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.5</span></a> we know that the
+posterior mean is
+<math id="S4.p1.m4" class="ltx_Math" alttext="(T+1)/(n+2)" display="inline"><semantics><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>T</mi><mo>+</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>+</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">(T+1)/(n+2)</annotation></semantics></math>, which is close to <math id="S4.p1.m5" class="ltx_Math" alttext="\bar{x}" display="inline"><semantics><mover accent="true"><mi>x</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> but is shifted
+towards <math id="S4.p1.m6" class="ltx_Math" alttext="1/2" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math>. Since a constant density on an unbounded parameter
+space has infinite integral, the flat prior is <em class="ltx_emph ltx_font_italic">improper</em>.
+Nevertheless, this prior is still in use today: if <math id="S4.p1.m7" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\theta)\,\pi(\theta)" display="inline"><semantics><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\theta)\,\pi(\theta)</annotation></semantics></math> has
+finite integral, it is normalised and used as the posterior. The
+finiteness of the integral must be checked in each case
+(exercise <a href="#Thmexercise2" title="Exercise 26.2. ‣ 26.4 Flat, Improper and Jeffreys Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.2</span></a>). For the normal mean, the flat
+prior on <math id="S4.p1.m8" class="ltx_Math" alttext="\mathbb{R}" display="inline"><semantics><mi>ℝ</mi><annotation encoding="application/x-tex">\mathbb{R}</annotation></semantics></math> is the limit <math id="S4.p1.m9" class="ltx_Math" alttext="\tau\to\infty" display="inline"><semantics><mrow><mi>τ</mi><mo stretchy="false">→</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">\tau\to\infty</annotation></semantics></math> in
+proposition <a href="#Thmtheorem6" title="Proposition 26.6. ‣ 26.2 Conjugate Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.6</span></a> and in this case leads to the proper
+posterior
+<math id="S4.p1.m10" class="ltx_Math" alttext="N(\bar{x},\sigma^{2}/n)" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>,</mo><mrow><msup><mi>σ</mi><mn>2</mn></msup><mo>/</mo><mi>n</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\bar{x},\sigma^{2}/n)</annotation></semantics></math>.</p>
+</div>
+<div id="S4.p2" class="ltx_para">
+<p class="ltx_p">The flat prior has a more basic defect: flatness depends on the
+parametrisation. If <math id="S4.p2.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is uniform on <math id="S4.p2.m2" class="ltx_Math" alttext="(0,1)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0,1)</annotation></semantics></math>, then
+<math id="S4.p2.m3" class="ltx_Math" alttext="\psi=\theta^{2}" display="inline"><semantics><mrow><mi>ψ</mi><mo>=</mo><msup><mi>θ</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\psi=\theta^{2}</annotation></semantics></math> has density <math id="S4.p2.m4" class="ltx_Math" alttext="1/(2\sqrt{\psi})" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><msqrt><mi>ψ</mi></msqrt></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">1/(2\sqrt{\psi})</annotation></semantics></math> by
+proposition <a href="A1.html#Thmtheorem19" title="Proposition A.19 (Change of variable). ‣ A.7 Transformation of a Random Variable ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.19</span></a>, and a prior which
+claims to know nothing about <math id="S4.p2.m5" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> claims to know something
+about <math id="S4.p2.m6" class="ltx_Math" alttext="\theta^{2}" display="inline"><semantics><msup><mi>θ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\theta^{2}</annotation></semantics></math>. The Fisher information provides a parametrisation-free
+rule, since
+proposition <a href="Ch11.html#Thmtheorem10" title="Proposition 11.10. ‣ 11.6 Reparametrisation ‣ Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">11.10</span></a> shows how it
+transforms.</p>
+</div>
+<div id="Thmtheorem8" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id14">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id14"><span class="ltx_text ltx_font_bold">Definition 26.8</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem8.p1" class="ltx_para">
+<p class="ltx_p">In the situation of section <a href="Ch11.html#S1" title="11.1 Setting and Assumptions ‣ Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">11.1</span></a>, the
+<em class="ltx_emph ltx_font_italic">Jeffreys prior</em> for <math id="Thmtheorem8.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is given by</p>
+<div id="Ex9" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex9.m1" class="ltx_Math" alttext="\pi_{J}(\theta)\propto\sqrt{\mathcal{I}(\theta)},\qquad\theta\in\Theta," display="block"><semantics><mrow><mrow><mrow><mrow><msub><mi>π</mi><mi>J</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><msqrt><mrow><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></msqrt></mrow><mo rspace="2.357em">,</mo><mrow><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\pi_{J}(\theta)\propto\sqrt{\mathcal{I}(\theta)},\qquad\theta\in\Theta,</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where <math id="Thmtheorem8.p1.m2" class="ltx_Math" alttext="\mathcal{I}(\theta)" display="inline"><semantics><mrow><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{I}(\theta)</annotation></semantics></math> is the Fisher information of an observation.</p>
+</div>
+</div>
+<div id="S4.p3" class="ltx_para">
+<p class="ltx_p">This prior is justified by the following invariance property, which the
+flat prior lacks.</p>
+</div>
+<div id="Thmtheorem9" class="ltx_theorem ltx_theorem_proposition" role="region" aria-labelledby="bml-auto-id15">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id15"><span class="ltx_text ltx_font_bold">Proposition 26.9</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem9.p1" class="ltx_para">
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">Let <math id="Thmtheorem9.p1.m1" class="ltx_Math" alttext="\psi=g(\theta)" display="inline"><semantics><mrow><mi>ψ</mi><mo>=</mo><mrow><mi>g</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\psi=g(\theta)</annotation></semantics></math> where <math id="Thmtheorem9.p1.m2" class="ltx_Math" alttext="g\colon\Theta\to g(\Theta)" display="inline"><semantics><mrow><mi>g</mi><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">→</mo><mrow><mi>g</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">Θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">g\colon\Theta\to g(\Theta)</annotation></semantics></math> is a
+continuously differentiable bijection with <math id="Thmtheorem9.p1.m3" class="ltx_Math" alttext="g^{\prime}(\theta)\neq 0" display="inline"><semantics><mrow><mrow><msup><mi>g</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>≠</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">g^{\prime}(\theta)\neq 0</annotation></semantics></math> for
+all <math id="Thmtheorem9.p1.m4" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and let <math id="Thmtheorem9.p1.m5" class="ltx_Math" alttext="h=g^{-1}" display="inline"><semantics><mrow><mi>h</mi><mo>=</mo><msup><mi>g</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">h=g^{-1}</annotation></semantics></math>.</span></p>
+<ol id="S4.I1" class="ltx_enumerate">
+<li id="S4.I1.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I1.i1.p1" class="ltx_para">​<p class="ltx_p"><span class="ltx_text ltx_font_italic">If </span><math id="S4.I1.i1.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math><span class="ltx_text ltx_font_italic"> has the flat prior on </span><math id="S4.I1.i1.p1.m2" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math><span class="ltx_text ltx_font_italic">, then </span><math id="S4.I1.i1.p1.m3" class="ltx_Math" alttext="\psi" display="inline"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math><span class="ltx_text ltx_font_italic"> has the
+density </span><math id="S4.I1.i1.p1.m4" class="ltx_Math" alttext="|h^{\prime}(\psi)|" display="inline"><semantics><mrow><mo stretchy="false">|</mo><mrow><msup><mi>h</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo stretchy="false">|</mo></mrow><annotation encoding="application/x-tex">|h^{\prime}(\psi)|</annotation></semantics></math><span class="ltx_text ltx_font_italic"> on </span><math id="S4.I1.i1.p1.m5" class="ltx_Math" alttext="g(\Theta)" display="inline"><semantics><mrow><mi>g</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">Θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(\Theta)</annotation></semantics></math><span class="ltx_text ltx_font_italic">. The density is flat
+only if </span><math id="S4.I1.i1.p1.m6" class="ltx_Math" alttext="g" display="inline"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math><span class="ltx_text ltx_font_italic"> is affine.</span></p>
+</div>
+</li>
+<li id="S4.I1.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I1.i2.p1" class="ltx_para">​<p class="ltx_p"><span class="ltx_text ltx_font_italic">If </span><math id="S4.I1.i2.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math><span class="ltx_text ltx_font_italic"> has the Jeffreys prior </span><math id="S4.I1.i2.p1.m2" class="ltx_Math" alttext="\sqrt{\mathcal{I}_{\theta}(\theta)}" display="inline"><semantics><msqrt><mrow><msub><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></msqrt><annotation encoding="application/x-tex">\sqrt{\mathcal{I}_{\theta}(\theta)}</annotation></semantics></math><span class="ltx_text ltx_font_italic">,
+then </span><math id="S4.I1.i2.p1.m3" class="ltx_Math" alttext="\psi" display="inline"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math><span class="ltx_text ltx_font_italic"> has the density </span><math id="S4.I1.i2.p1.m4" class="ltx_Math" alttext="\sqrt{\mathcal{I}_{\psi}(\psi)}" display="inline"><semantics><msqrt><mrow><msub><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mi>ψ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow></msqrt><annotation encoding="application/x-tex">\sqrt{\mathcal{I}_{\psi}(\psi)}</annotation></semantics></math><span class="ltx_text ltx_font_italic">. This is the
+Jeffreys prior computed using the </span><math id="S4.I1.i2.p1.m5" class="ltx_Math" alttext="\psi" display="inline"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math><span class="ltx_text ltx_font_italic">-parametrisation.</span></p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="ltx_proof" role="group" aria-labelledby="bml-auto-id16">
+<div class="ltx_title ltx_runin ltx_font_italic ltx_title_proof" id="bml-auto-id16">Proof.</div>
+<div id="S4.p4" class="ltx_para">
+<p class="ltx_p">Using the change-of-variable formula from
+proposition <a href="A1.html#Thmtheorem19" title="Proposition A.19 (Change of variable). ‣ A.7 Transformation of a Random Variable ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.19</span></a>, if a density <math id="S4.p4.m1" class="ltx_Math" alttext="\pi_{\theta}" display="inline"><semantics><msub><mi>π</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\pi_{\theta}</annotation></semantics></math> for <math id="S4.p4.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+is given, then a density of
+<math id="S4.p4.m3" class="ltx_Math" alttext="\pi_{\psi}(\psi)=\pi_{\theta}\bigl{(}h(\psi)\bigr{)}\,|h^{\prime}(\psi)|" display="inline"><semantics><mrow><mrow><msub><mi>π</mi><mi>ψ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">|</mo><mrow><msup><mi>h</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo stretchy="false">|</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\pi_{\psi}(\psi)=\pi_{\theta}\bigl{(}h(\psi)\bigr{)}\,|h^{\prime}(\psi)|</annotation></semantics></math> for <math id="S4.p4.m4" class="ltx_Math" alttext="\psi" display="inline"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math> can be derived. The same
+substitution can be applied to improper densities. In the
+case of the flat prior <math id="S4.p4.m5" class="ltx_Math" alttext="\pi_{\theta}\equiv 1" display="inline"><semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo>≡</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\pi_{\theta}\equiv 1</annotation></semantics></math>, we have
+<math id="S4.p4.m6" class="ltx_Math" alttext="|h^{\prime}(\psi)|" display="inline"><semantics><mrow><mo stretchy="false">|</mo><mrow><msup><mi>h</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo stretchy="false">|</mo></mrow><annotation encoding="application/x-tex">|h^{\prime}(\psi)|</annotation></semantics></math> and the derivative of <math id="S4.p4.m7" class="ltx_Math" alttext="h" display="inline"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math> is constant
+only if <math id="S4.p4.m8" class="ltx_Math" alttext="h" display="inline"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> if <math id="S4.p4.m9" class="ltx_Math" alttext="g" display="inline"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math>, is affine. For the
+Jeffreys prior we have
+<math id="S4.p4.m10" class="ltx_Math" alttext="\pi_{\theta}(\theta)=\sqrt{\mathcal{I}_{\theta}(\theta)}" display="inline"><semantics><mrow><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><msqrt><mrow><msub><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">\pi_{\theta}(\theta)=\sqrt{\mathcal{I}_{\theta}(\theta)}</annotation></semantics></math>
+and using proposition <a href="Ch11.html#Thmtheorem10" title="Proposition 11.10. ‣ 11.6 Reparametrisation ‣ Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">11.10</span></a> and
+<math id="S4.p4.m11" class="ltx_Math" alttext="h^{\prime}(\psi)=1/g^{\prime}(\theta)" display="inline"><semantics><mrow><mrow><msup><mi>h</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mn>1</mn><mo>/</mo><msup><mi>g</mi><mo>′</mo></msup></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">h^{\prime}(\psi)=1/g^{\prime}(\theta)</annotation></semantics></math> for <math id="S4.p4.m12" class="ltx_Math" alttext="\theta=h(\psi)" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mi>h</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta=h(\psi)</annotation></semantics></math> we get</p>
+<div id="Ex10" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex10.m1" class="ltx_Math" alttext="\pi_{\psi}(\psi)=\sqrt{\mathcal{I}_{\theta}(\theta)}\,\bigl{|}h^{\prime}(\psi)%
+\bigr{|}=\frac{\sqrt{\mathcal{I}_{\theta}(\theta)}}{|g^{\prime}(\theta)|}=%
+\sqrt{\frac{\mathcal{I}_{\theta}(\theta)}{g^{\prime}(\theta)^{2}}}=\sqrt{%
+\mathcal{I}_{\psi}(\psi)}." display="block"><semantics><mrow><mrow><mrow><msub><mi>π</mi><mi>ψ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msqrt><mrow><msub><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo maxsize="120%" minsize="120%">|</mo><mrow><msup><mi>h</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">|</mo></mrow></mrow><mo>=</mo><mfrac><msqrt><mrow><msub><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></msqrt><mrow><mo stretchy="false">|</mo><mrow><msup><mi>g</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo stretchy="false">|</mo></mrow></mfrac><mo>=</mo><msqrt><mfrac><mrow><msub><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mrow><msup><mi>g</mi><mo>′</mo></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mfrac></msqrt><mo>=</mo><msqrt><mrow><msub><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mi>ψ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow></msqrt></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\pi_{\psi}(\psi)=\sqrt{\mathcal{I}_{\theta}(\theta)}\,\bigl{|}h^{\prime}(\psi)%
+\bigr{|}=\frac{\sqrt{\mathcal{I}_{\theta}(\theta)}}{|g^{\prime}(\theta)|}=%
+\sqrt{\frac{\mathcal{I}_{\theta}(\theta)}{g^{\prime}(\theta)^{2}}}=\sqrt{%
+\mathcal{I}_{\psi}(\psi)}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This is the Jeffreys prior in the <math id="S4.p4.m13" class="ltx_Math" alttext="\psi" display="inline"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math>-parametrisation. This
+completes the proof.
+∎</p>
+</div>
+</div>
+<div id="S4.p5" class="ltx_para">
+<p class="ltx_p">The Jeffreys prior is a property of the model, rather than of the
+way it is labelled, and as such it can be proper or improper.</p>
+</div>
+<div id="Thmtheorem10" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id17">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id17"><span class="ltx_text ltx_font_bold">Example 26.10</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem10.p1" class="ltx_para">
+<p class="ltx_p">For the Bernoulli model, from example <a href="Ch11.html#Thmtheorem5" title="Example 11.5. ‣ 11.4 Examples ‣ Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">11.5</span></a> we know
+<math id="Thmtheorem10.p1.m1" class="ltx_Math" alttext="\mathcal{I}(\theta)=1/\bigl{(}\theta(1-\theta)\bigr{)}" display="inline"><semantics><mrow><mrow><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>θ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathcal{I}(\theta)=1/\bigl{(}\theta(1-\theta)\bigr{)}</annotation></semantics></math> and thus the Jeffreys
+prior is given by</p>
+<div id="Ex11" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex11.m1" class="ltx_Math" alttext="\pi_{J}(\theta)\propto\theta^{-1/2}(1-\theta)^{-1/2},\qquad 0&lt;\theta&lt;1." display="block"><semantics><mrow><mrow><mrow><mrow><msub><mi>π</mi><mi>J</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mrow><msup><mi>θ</mi><mrow><mo>−</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mo>−</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow></msup></mrow></mrow><mo rspace="2.357em">,</mo><mrow><mn>0</mn><mo>&lt;</mo><mi>θ</mi><mo>&lt;</mo><mn>1</mn></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\pi_{J}(\theta)\propto\theta^{-1/2}(1-\theta)^{-1/2},\qquad 0&lt;\theta&lt;1.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This is the density of the <math id="Thmtheorem10.p1.m2" class="ltx_Math" alttext="\text{Beta}(1/2,1/2)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(1/2,1/2)</annotation></semantics></math> distribution. The Jeffreys
+prior is proper and has more weight near the boundaries of the
+interval than the flat prior does. From example <a href="#Thmtheorem5" title="Example 26.5. ‣ 26.2 Conjugate Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.5</span></a>
+we know that the posterior distribution is
+<math id="Thmtheorem10.p1.m3" class="ltx_Math" alttext="\text{Beta}(T+1/2,\,n-T+1/2)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>T</mi><mo>+</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow><mo rspace="0.337em">,</mo><mrow><mrow><mi>n</mi><mo>−</mo><mi>T</mi></mrow><mo>+</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(T+1/2,\,n-T+1/2)</annotation></semantics></math> and the mean of the
+posterior is <math id="Thmtheorem10.p1.m4" class="ltx_Math" alttext="(T+1/2)/(n+1)" display="inline"><semantics><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>T</mi><mo>+</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">(T+1/2)/(n+1)</annotation></semantics></math>. This value is between the maximum
+likelihood estimate <math id="Thmtheorem10.p1.m5" class="ltx_Math" alttext="T/n" display="inline"><semantics><mrow><mi>T</mi><mo>/</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">T/n</annotation></semantics></math> and the estimate <math id="Thmtheorem10.p1.m6" class="ltx_Math" alttext="(T+1)/(n+2)" display="inline"><semantics><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>T</mi><mo>+</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>+</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">(T+1)/(n+2)</annotation></semantics></math>
+obtained using the flat prior. For large <math id="Thmtheorem10.p1.m7" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>, all three values
+coincide.</p>
+</div>
+</div>
+<div id="S4.p6" class="ltx_para">
+<p class="ltx_p">For location and scale models the Jeffreys prior is the same for
+every base density <math id="S4.p6.m1" class="ltx_Math" alttext="f_{0}" display="inline"><semantics><msub><mi>f</mi><mn>0</mn></msub><annotation encoding="application/x-tex">f_{0}</annotation></semantics></math>.</p>
+</div>
+<div id="Thmtheorem11" class="ltx_theorem ltx_theorem_proposition" role="region" aria-labelledby="bml-auto-id18">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id18"><span class="ltx_text ltx_font_bold">Proposition 26.11</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem11.p1" class="ltx_para">
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">Let <math id="Thmtheorem11.p1.m1" class="ltx_Math" alttext="f_{0}" display="inline"><semantics><msub><mi>f</mi><mn>0</mn></msub><annotation encoding="application/x-tex">f_{0}</annotation></semantics></math> be a fixed density such that the following models satisfy the
+conditions of section <a href="Ch11.html#S1" title="11.1 Setting and Assumptions ‣ Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">11.1</span></a>.</span></p>
+<ol id="S4.I2" class="ltx_enumerate">
+<li id="S4.I2.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I2.i1.p1" class="ltx_para">​<p class="ltx_p"><span class="ltx_text ltx_font_italic">Consider the location model </span><math id="S4.I2.i1.p1.m1" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\theta)=f_{0}(x-\theta)" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>f</mi><mn>0</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\theta)=f_{0}(x-\theta)</annotation></semantics></math><span class="ltx_text ltx_font_italic"> with
+</span><math id="S4.I2.i1.p1.m2" class="ltx_Math" alttext="\theta\in\mathbb{R}" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><mi>ℝ</mi></mrow><annotation encoding="application/x-tex">\theta\in\mathbb{R}</annotation></semantics></math><span class="ltx_text ltx_font_italic">. The Fisher information in this model is constant as a
+function of </span><math id="S4.I2.i1.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math><span class="ltx_text ltx_font_italic"> and thus the Jeffreys prior is flat,
+</span><math id="S4.I2.i1.p1.m4" class="ltx_Math" alttext="\pi_{J}(\theta)\propto 1" display="inline"><semantics><mrow><mrow><msub><mi>π</mi><mi>J</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\pi_{J}(\theta)\propto 1</annotation></semantics></math><span class="ltx_text ltx_font_italic"> on </span><math id="S4.I2.i1.p1.m5" class="ltx_Math" alttext="\mathbb{R}" display="inline"><semantics><mi>ℝ</mi><annotation encoding="application/x-tex">\mathbb{R}</annotation></semantics></math><span class="ltx_text ltx_font_italic">.</span></p>
+</div>
+</li>
+<li id="S4.I2.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I2.i2.p1" class="ltx_para">​<p class="ltx_p"><span class="ltx_text ltx_font_italic">Consider the scale model </span><math id="S4.I2.i2.p1.m1" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\sigma)=f_{0}(x/\sigma)/\sigma" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>σ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><msub><mi>f</mi><mn>0</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>/</mo><mi>σ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>σ</mi></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\sigma)=f_{0}(x/\sigma)/\sigma</annotation></semantics></math><span class="ltx_text ltx_font_italic"> with
+</span><math id="S4.I2.i2.p1.m2" class="ltx_Math" alttext="\sigma&gt;0" display="inline"><semantics><mrow><mi>σ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\sigma&gt;0</annotation></semantics></math><span class="ltx_text ltx_font_italic">. The Fisher information in this model is
+</span><math id="S4.I2.i2.p1.m3" class="ltx_Math" alttext="\mathcal{I}(\sigma)=c/\sigma^{2}" display="inline"><semantics><mrow><mrow><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>σ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>c</mi><mo>/</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">\mathcal{I}(\sigma)=c/\sigma^{2}</annotation></semantics></math><span class="ltx_text ltx_font_italic"> for a constant </span><math id="S4.I2.i2.p1.m4" class="ltx_Math" alttext="c&gt;0" display="inline"><semantics><mrow><mi>c</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">c&gt;0</annotation></semantics></math><span class="ltx_text ltx_font_italic">. Thus, the Jeffreys prior is
+</span><math id="S4.I2.i2.p1.m5" class="ltx_Math" alttext="\pi_{J}(\sigma)\propto 1/\sigma" display="inline"><semantics><mrow><mrow><msub><mi>π</mi><mi>J</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>σ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mrow><mn>1</mn><mo>/</mo><mi>σ</mi></mrow></mrow><annotation encoding="application/x-tex">\pi_{J}(\sigma)\propto 1/\sigma</annotation></semantics></math><span class="ltx_text ltx_font_italic"> on </span><math id="S4.I2.i2.p1.m6" class="ltx_Math" alttext="(0,\infty)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0,\infty)</annotation></semantics></math><span class="ltx_text ltx_font_italic">.</span></p>
+</div>
+</li>
+</ol>
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">Both priors are improper.</span></p>
+</div>
+</div>
+<div id="S4.p7" class="ltx_para">
+<p class="ltx_p">Exercise <a href="#Thmexercise5" title="Exercise 26.5. ‣ 26.4 Flat, Improper and Jeffreys Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.5</span></a> verifies both statements by
+writing the score as a function of the standardised observation. The
+normal mean with known variance is a location model, so its Jeffreys
+prior is flat. Similarly, the normal standard deviation with known
+mean is a scale model with <math id="S4.p7.m1" class="ltx_Math" alttext="\mathcal{I}(\sigma)=2/\sigma^{2}" display="inline"><semantics><mrow><mrow><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>σ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>2</mn><mo>/</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">\mathcal{I}(\sigma)=2/\sigma^{2}</annotation></semantics></math>.</p>
+</div>
+<div id="Thmsummarybodyx26" class="ltx_theorem bml_border-color_000000 ltx_theorem_summarybody ltx_framed ltx_framed_left" style="border-width:3pt;padding-left:10pt;" role="group" aria-labelledby="bml-auto-id19">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id19"><span class="ltx_text ltx_font_italic">Summary</span></span><span class="ltx_text ltx_font_italic">.</span>
+</div>
+<div id="Thmsummarybodyx26.p1" class="ltx_para">
+<ul id="S4.I3" class="ltx_itemize">
+<li id="S4.I3.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I3.i1.p1" class="ltx_para">​<p class="ltx_p">The data can be used to update the prior density <math id="S4.I3.i1.p1.m1" class="ltx_Math" alttext="\pi(\theta)" display="inline"><semantics><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta)</annotation></semantics></math> to the
+posterior
+<math id="S4.I3.i1.p1.m2" class="ltx_Math" alttext="\pi(\theta\mskip 1.0mu|\mskip 1.0mux)\propto f(x\mskip 1.0mu|\mskip 1.0mu%
+\theta)\,\pi(\theta)" display="inline"><semantics><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta\mskip 1.0mu|\mskip 1.0mux)\propto f(x\mskip 1.0mu|\mskip 1.0mu%
+\theta)\,\pi(\theta)</annotation></semantics></math>. The
+normalising constant can be found by recognising the kernel of a
+known density.</p>
+</div>
+</li>
+<li id="S4.I3.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I3.i2.p1" class="ltx_para">​<p class="ltx_p">Priors are conjugate for a family if the posterior always
+belongs to the same family. For a one-parameter exponential
+family in its natural parametrisation, the priors
+<math id="S4.I3.i2.p1.m1" class="ltx_Math" alttext="\exp(a\eta-bK(\eta))" display="inline"><semantics><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mrow><mi>a</mi><mo>⁢</mo><mi>η</mi></mrow><mo>−</mo><mrow><mi>b</mi><mo>⁢</mo><mi>K</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>η</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\exp(a\eta-bK(\eta))</annotation></semantics></math> are conjugate. Beta priors are conjugate
+for the Bernoulli model, and normal priors are conjugate for the
+normal mean with known variance.</p>
+</div>
+</li>
+<li id="S4.I3.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I3.i3.p1" class="ltx_para">​<p class="ltx_p">The posterior mean is a weighted average of the prior mean and
+the maximum likelihood estimate. As <math id="S4.I3.i3.p1.m1" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> increases, the prior
+weight decreases. The posterior mean is the Bayes estimator for
+<math id="S4.I3.i3.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> under squared error.</p>
+</div>
+</li>
+<li id="S4.I3.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I3.i4.p1" class="ltx_para">​<p class="ltx_p">A flat prior is not invariant under reparametrisation, but the
+Jeffreys prior <math id="S4.I3.i4.p1.m1" class="ltx_Math" alttext="\pi_{J}(\theta)\propto\sqrt{\mathcal{I}(\theta)}" display="inline"><semantics><mrow><mrow><msub><mi>π</mi><mi>J</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><msqrt><mrow><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">\pi_{J}(\theta)\propto\sqrt{\mathcal{I}(\theta)}</annotation></semantics></math> is. The Jeffreys prior is
+<math id="S4.I3.i4.p1.m2" class="ltx_Math" alttext="\text{Beta}(1/2,1/2)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(1/2,1/2)</annotation></semantics></math> for the Bernoulli model, is flat for a
+location parameter, and is proportional to <math id="S4.I3.i4.p1.m3" class="ltx_Math" alttext="1/\sigma" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mi>σ</mi></mrow><annotation encoding="application/x-tex">1/\sigma</annotation></semantics></math> for a scale
+parameter. An improper prior can only be used if the posterior
+is proper.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="Thmexercise1" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id20">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id20"><span class="ltx_text ltx_font_bold">Exercise 26.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise1.p1" class="ltx_para">
+<p class="ltx_p">A Bernoulli model is to be fitted with a <math id="Thmexercise1.p1.m1" class="ltx_Math" alttext="\text{Beta}(a,b)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(a,b)</annotation></semantics></math> prior for
+the success probability <math id="Thmexercise1.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+<ol id="S4.I4" class="ltx_enumerate">
+<li id="S4.I4.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I4.i1.p1" class="ltx_para">​<p class="ltx_p">Find <math id="S4.I4.i1.p1.m1" class="ltx_Math" alttext="a" display="inline"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> and <math id="S4.I4.i1.p1.m2" class="ltx_Math" alttext="b" display="inline"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math> such that the prior mean is <math id="S4.I4.i1.p1.m3" class="ltx_Math" alttext="0.3" display="inline"><semantics><mn>0.3</mn><annotation encoding="application/x-tex">0.3</annotation></semantics></math> and the
+equivalent sample size <math id="S4.I4.i1.p1.m4" class="ltx_Math" alttext="a+b" display="inline"><semantics><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a+b</annotation></semantics></math> is <math id="S4.I4.i1.p1.m5" class="ltx_Math" alttext="10" display="inline"><semantics><mn>10</mn><annotation encoding="application/x-tex">10</annotation></semantics></math>. You can
+find the prior standard deviation in table <a href="A1.html#T2" title="Table A.2 ‣ A.2 Standard Distributions ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.2</span></a>.</p>
+</div>
+</li>
+<li id="S4.I4.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I4.i2.p1" class="ltx_para">​<p class="ltx_p">Find <math id="S4.I4.i2.p1.m1" class="ltx_Math" alttext="a" display="inline"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> and <math id="S4.I4.i2.p1.m2" class="ltx_Math" alttext="b" display="inline"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math> such that the prior has mean <math id="S4.I4.i2.p1.m3" class="ltx_Math" alttext="0.3" display="inline"><semantics><mn>0.3</mn><annotation encoding="application/x-tex">0.3</annotation></semantics></math>
+and standard deviation <math id="S4.I4.i2.p1.m4" class="ltx_Math" alttext="0.1" display="inline"><semantics><mn>0.1</mn><annotation encoding="application/x-tex">0.1</annotation></semantics></math>. What is the equivalent sample
+size for this prior?</p>
+</div>
+</li>
+<li id="S4.I4.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S4.I4.i3.p1" class="ltx_para">​<p class="ltx_p">For the prior in the first part of the question, a sample of
+size <math id="S4.I4.i3.p1.m1" class="ltx_Math" alttext="n=20" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">n=20</annotation></semantics></math> has <math id="S4.I4.i3.p1.m2" class="ltx_Math" alttext="T=9" display="inline"><semantics><mrow><mi>T</mi><mo>=</mo><mn>9</mn></mrow><annotation encoding="application/x-tex">T=9</annotation></semantics></math> successes. Determine the posterior
+distribution and the posterior mean. Write the posterior mean as
+a weighted average of the prior mean and <math id="S4.I4.i3.p1.m3" class="ltx_Math" alttext="\bar{x}" display="inline"><semantics><mover accent="true"><mi>x</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise2" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id21">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id21"><span class="ltx_text ltx_font_bold">Exercise 26.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise2.p1" class="ltx_para">
+<p class="ltx_p">The <em class="ltx_emph ltx_font_italic">Haldane prior</em> for the Bernoulli success probability is the
+limit <math id="Thmexercise2.p1.m1" class="ltx_Math" alttext="a,b\to 0" display="inline"><semantics><mrow><mrow><mi>a</mi><mo>,</mo><mi>b</mi></mrow><mo stretchy="false">→</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">a,b\to 0</annotation></semantics></math> of the <math id="Thmexercise2.p1.m2" class="ltx_Math" alttext="\text{Beta}(a,b)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(a,b)</annotation></semantics></math> prior, <span class="ltx_text ltx_font_italic">i.e.</span> the
+function <math id="Thmexercise2.p1.m3" class="ltx_Math" alttext="\pi(\theta)\propto\theta^{-1}(1-\theta)^{-1}" display="inline"><semantics><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mrow><msup><mi>θ</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta)\propto\theta^{-1}(1-\theta)^{-1}</annotation></semantics></math> for
+<math id="Thmexercise2.p1.m4" class="ltx_Math" alttext="0&lt;\theta&lt;1" display="inline"><semantics><mrow><mn>0</mn><mo>&lt;</mo><mi>θ</mi><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">0&lt;\theta&lt;1</annotation></semantics></math>.</p>
+<ol id="S4.I5" class="ltx_enumerate">
+<li id="S4.I5.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I5.i1.p1" class="ltx_para">​<p class="ltx_p">Show that this prior is improper.</p>
+</div>
+</li>
+<li id="S4.I5.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I5.i2.p1" class="ltx_para">​<p class="ltx_p">Show that the formal posterior
+<math id="S4.I5.i2.p1.m1" class="ltx_Math" alttext="\pi(\theta\mskip 1.0mu|\mskip 1.0mux)\propto\theta^{T-1}(1-\theta)^{n-T-1}" display="inline"><semantics><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mrow><msup><mi>θ</mi><mrow><mi>T</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mi>n</mi><mo>−</mo><mi>T</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta\mskip 1.0mu|\mskip 1.0mux)\propto\theta^{T-1}(1-\theta)^{n-T-1}</annotation></semantics></math> is a
+proper distribution if and only if <math id="S4.I5.i2.p1.m2" class="ltx_Math" alttext="0&lt;T&lt;n" display="inline"><semantics><mrow><mn>0</mn><mo>&lt;</mo><mi>T</mi><mo>&lt;</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">0&lt;T&lt;n</annotation></semantics></math>. Identify the resulting
+distribution.</p>
+</div>
+</li>
+<li id="S4.I5.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S4.I5.i3.p1" class="ltx_para">​<p class="ltx_p">For <math id="S4.I5.i3.p1.m1" class="ltx_Math" alttext="0&lt;T&lt;n" display="inline"><semantics><mrow><mn>0</mn><mo>&lt;</mo><mi>T</mi><mo>&lt;</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">0&lt;T&lt;n</annotation></semantics></math>, determine the posterior mean and compare it to
+the maximum likelihood estimate.</p>
+</div>
+</li>
+<li id="S4.I5.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">4.</span><div id="S4.I5.i4.p1" class="ltx_para">​<p class="ltx_p">Describe what happens for <math id="S4.I5.i4.p1.m1" class="ltx_Math" alttext="T=0" display="inline"><semantics><mrow><mi>T</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">T=0</annotation></semantics></math>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise3" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id22">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id22"><span class="ltx_text ltx_font_bold">Exercise 26.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise3.p1" class="ltx_para">
+<p class="ltx_p">Using the following steps, prove proposition <a href="#Thmtheorem6" title="Proposition 26.6. ‣ 26.2 Conjugate Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.6</span></a>.</p>
+<ol id="S4.I6" class="ltx_enumerate">
+<li id="S4.I6.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I6.i1.p1" class="ltx_para">​<p class="ltx_p">Show that the likelihood, as a function of <math id="S4.I6.i1.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, satisfies
+<math id="S4.I6.i1.p1.m2" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\theta)\propto\exp\bigl{(}-n(\theta-\bar{x})^{2}/(%
+2\sigma^{2})\bigr{)}" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mo>−</mo><mrow><mrow><mi>n</mi><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>−</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\theta)\propto\exp\bigl{(}-n(\theta-\bar{x})^{2}/(%
+2\sigma^{2})\bigr{)}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S4.I6.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I6.i2.p1" class="ltx_para">​<p class="ltx_p">Multiply the prior density with this function and show, by
+completing the square in <math id="S4.I6.i2.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, that</p>
+<div id="Ex12" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex12.m1" class="ltx_Math" alttext="\pi(\theta\mskip 1.0mu|\mskip 1.0mux)\propto\exp\Bigl{(}-\frac{(\theta-m_{n})^%
+{2}}{2\tau_{n}^{2}}\Bigr{)}" display="block"><semantics><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mo>−</mo><mfrac><msup><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>−</mo><msub><mi>m</mi><mi>n</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mrow><mn>2</mn><mo>⁢</mo><msubsup><mi>τ</mi><mi>n</mi><mn>2</mn></msubsup></mrow></mfrac></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta\mskip 1.0mu|\mskip 1.0mux)\propto\exp\Bigl{(}-\frac{(\theta-m_{n})^%
+{2}}{2\tau_{n}^{2}}\Bigr{)}</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where <math id="S4.I6.i2.p1.m2" class="ltx_Math" alttext="m_{n}" display="inline"><semantics><msub><mi>m</mi><mi>n</mi></msub><annotation encoding="application/x-tex">m_{n}</annotation></semantics></math> and <math id="S4.I6.i2.p1.m3" class="ltx_Math" alttext="\tau_{n}^{2}" display="inline"><semantics><msubsup><mi>τ</mi><mi>n</mi><mn>2</mn></msubsup><annotation encoding="application/x-tex">\tau_{n}^{2}</annotation></semantics></math> are as in the proposition.</p>
+</div>
+</li>
+<li id="S4.I6.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S4.I6.i3.p1" class="ltx_para">​<p class="ltx_p">What happens to <math id="S4.I6.i3.p1.m1" class="ltx_Math" alttext="m_{n}" display="inline"><semantics><msub><mi>m</mi><mi>n</mi></msub><annotation encoding="application/x-tex">m_{n}</annotation></semantics></math> and <math id="S4.I6.i3.p1.m2" class="ltx_Math" alttext="\tau_{n}^{2}" display="inline"><semantics><msubsup><mi>τ</mi><mi>n</mi><mn>2</mn></msubsup><annotation encoding="application/x-tex">\tau_{n}^{2}</annotation></semantics></math> when <math id="S4.I6.i3.p1.m3" class="ltx_Math" alttext="\tau\to\infty" display="inline"><semantics><mrow><mi>τ</mi><mo stretchy="false">→</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">\tau\to\infty</annotation></semantics></math> with
+<math id="S4.I6.i3.p1.m4" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> fixed? And when <math id="S4.I6.i3.p1.m5" class="ltx_Math" alttext="n\to\infty" display="inline"><semantics><mrow><mi>n</mi><mo stretchy="false">→</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">n\to\infty</annotation></semantics></math> with <math id="S4.I6.i3.p1.m6" class="ltx_Math" alttext="\tau" display="inline"><semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics></math> fixed?</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise4" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id23">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id23"><span class="ltx_text ltx_font_bold">Exercise 26.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise4.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise4.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be i.i.d. Bernoulli with success
+probability <math id="Thmexercise4.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and let <math id="Thmexercise4.p1.m3" class="ltx_Math" alttext="\hat{\theta}_{B}=(a+T)/(a+b+n)" display="inline"><semantics><mrow><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>a</mi><mo>+</mo><mi>T</mi></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>n</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}_{B}=(a+T)/(a+b+n)</annotation></semantics></math> with
+<math id="Thmexercise4.p1.m4" class="ltx_Math" alttext="T=\sum_{i}X_{i}" display="inline"><semantics><mrow><mi>T</mi><mo rspace="0.111em">=</mo><mrow><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>X</mi><mi>i</mi></msub></mrow></mrow><annotation encoding="application/x-tex">T=\sum_{i}X_{i}</annotation></semantics></math> be the Bayes estimator from
+example <a href="#Thmtheorem5" title="Example 26.5. ‣ 26.2 Conjugate Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.5</span></a>. Now fix <math id="Thmexercise4.p1.m5" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and
+let <math id="Thmexercise4.p1.m6" class="ltx_Math" alttext="\hat{\theta}_{B}" display="inline"><semantics><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub><annotation encoding="application/x-tex">\hat{\theta}_{B}</annotation></semantics></math> be an estimator as in
+lecture <a href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a>.</p>
+<ol id="S4.I7" class="ltx_enumerate">
+<li id="S4.I7.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I7.i1.p1" class="ltx_para">​<p class="ltx_p">What are the bias and variance of <math id="S4.I7.i1.p1.m1" class="ltx_Math" alttext="\hat{\theta}_{B}" display="inline"><semantics><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub><annotation encoding="application/x-tex">\hat{\theta}_{B}</annotation></semantics></math>? Show that
+the estimator is biased for every <math id="S4.I7.i1.p1.m2" class="ltx_Math" alttext="\theta\neq a/(a+b)" display="inline"><semantics><mrow><mi>θ</mi><mo>≠</mo><mrow><mi>a</mi><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta\neq a/(a+b)</annotation></semantics></math>, but consistent.</p>
+</div>
+</li>
+<li id="S4.I7.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I7.i2.p1" class="ltx_para">​<p class="ltx_p">For <math id="S4.I7.i2.p1.m1" class="ltx_Math" alttext="a=b=1" display="inline"><semantics><mrow><mi>a</mi><mo>=</mo><mi>b</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a=b=1</annotation></semantics></math> and <math id="S4.I7.i2.p1.m2" class="ltx_Math" alttext="n=10" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">n=10</annotation></semantics></math>, compare the estimators
+<math id="S4.I7.i2.p1.m3" class="ltx_Math" alttext="\mathop{\mathrm{MSE}}\nolimits(\hat{\theta}_{B})" display="inline"><semantics><mrow><mo rspace="0em">MSE</mo><mrow><mo stretchy="false">(</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>B</mi></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{MSE}}\nolimits(\hat{\theta}_{B})</annotation></semantics></math> and <math id="S4.I7.i2.p1.m4" class="ltx_Math" alttext="\mathop{\mathrm{MSE}}\nolimits(\bar{X})" display="inline"><semantics><mrow><mo rspace="0em">MSE</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{MSE}}\nolimits(\bar{X})</annotation></semantics></math> for <math id="S4.I7.i2.p1.m5" class="ltx_Math" alttext="\theta=1/2" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow><annotation encoding="application/x-tex">\theta=1/2</annotation></semantics></math> and
+<math id="S4.I7.i2.p1.m6" class="ltx_Math" alttext="\theta=0.1" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">\theta=0.1</annotation></semantics></math>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise5" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id24">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id24"><span class="ltx_text ltx_font_bold">Exercise 26.5</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise5.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise5.p1.m1" class="ltx_Math" alttext="f_{0}" display="inline"><semantics><msub><mi>f</mi><mn>0</mn></msub><annotation encoding="application/x-tex">f_{0}</annotation></semantics></math> be a fixed density as in
+proposition <a href="#Thmtheorem11" title="Proposition 26.11. ‣ 26.4 Flat, Improper and Jeffreys Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.11</span></a> and let
+<math id="Thmexercise5.p1.m2" class="ltx_Math" alttext="\ell_{0}(z)=\log f_{0}(z)" display="inline"><semantics><mrow><mrow><msub><mi mathvariant="normal">ℓ</mi><mn>0</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>z</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><msub><mi>f</mi><mn>0</mn></msub></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>z</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\ell_{0}(z)=\log f_{0}(z)</annotation></semantics></math>.</p>
+<ol id="S4.I8" class="ltx_enumerate">
+<li id="S4.I8.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S4.I8.i1.p1" class="ltx_para">​<p class="ltx_p">For the location model
+<math id="S4.I8.i1.p1.m1" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\theta)=f_{0}(x-\theta)" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>f</mi><mn>0</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\theta)=f_{0}(x-\theta)</annotation></semantics></math>, show that the score is
+<math id="S4.I8.i1.p1.m2" class="ltx_Math" alttext="-\ell_{0}^{\prime}(x-\theta)" display="inline"><semantics><mrow><mo>−</mo><mrow><msubsup><mi mathvariant="normal">ℓ</mi><mn>0</mn><mo>′</mo></msubsup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">-\ell_{0}^{\prime}(x-\theta)</annotation></semantics></math> and thus that the Fisher information
+does not depend on <math id="S4.I8.i1.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S4.I8.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S4.I8.i2.p1" class="ltx_para">​<p class="ltx_p">For the scale model
+<math id="S4.I8.i2.p1.m1" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\sigma)=f_{0}(x/\sigma)/\sigma" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>σ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><msub><mi>f</mi><mn>0</mn></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>/</mo><mi>σ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>σ</mi></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\sigma)=f_{0}(x/\sigma)/\sigma</annotation></semantics></math>, show that the score is
+<math id="S4.I8.i2.p1.m2" class="ltx_Math" alttext="-\bigl{(}1+z\ell_{0}^{\prime}(z)\bigr{)}/\sigma" display="inline"><semantics><mrow><mo>−</mo><mrow><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mn>1</mn><mo>+</mo><mrow><mi>z</mi><mo>⁢</mo><msubsup><mi mathvariant="normal">ℓ</mi><mn>0</mn><mo>′</mo></msubsup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>z</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><mo>/</mo><mi>σ</mi></mrow></mrow><annotation encoding="application/x-tex">-\bigl{(}1+z\ell_{0}^{\prime}(z)\bigr{)}/\sigma</annotation></semantics></math> where <math id="S4.I8.i2.p1.m3" class="ltx_Math" alttext="z=x/\sigma" display="inline"><semantics><mrow><mi>z</mi><mo>=</mo><mrow><mi>x</mi><mo>/</mo><mi>σ</mi></mrow></mrow><annotation encoding="application/x-tex">z=x/\sigma</annotation></semantics></math> and that
+<math id="S4.I8.i2.p1.m4" class="ltx_Math" alttext="\mathcal{I}(\sigma)=c/\sigma^{2}" display="inline"><semantics><mrow><mrow><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>σ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>c</mi><mo>/</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">\mathcal{I}(\sigma)=c/\sigma^{2}</annotation></semantics></math> where <math id="S4.I8.i2.p1.m5" class="ltx_Math" alttext="c" display="inline"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math> does not
+depend on <math id="S4.I8.i2.p1.m6" class="ltx_Math" alttext="\sigma" display="inline"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S4.I8.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S4.I8.i3.p1" class="ltx_para">​<p class="ltx_p">For the <math id="S4.I8.i3.p1.m1" class="ltx_Math" alttext="N(0,\sigma^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(0,\sigma^{2})</annotation></semantics></math> model with parameter <math id="S4.I8.i3.p1.m2" class="ltx_Math" alttext="\sigma" display="inline"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>, show that
+<math id="S4.I8.i3.p1.m3" class="ltx_Math" alttext="\mathcal{I}(\sigma)=2/\sigma^{2}" display="inline"><semantics><mrow><mrow><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>σ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>2</mn><mo>/</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">\mathcal{I}(\sigma)=2/\sigma^{2}</annotation></semantics></math>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</div>
+</div>
+<a href="Ch25.html" class="navigation navigation-prev" aria-label="Previous page"><i class="fa fa-angle-left"></i></a><a href="Ch27.html" class="navigation navigation-next" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+</div>
+</div>
+<script src="bookml/gitbook/js/app.min.js"></script>
+<script src="bookml/gitbook/js/jquery.highlight.js"></script>
+<script src="bookml/gitbook/js/plugin-search.js"></script>
+<script src="bookml/gitbook/js/plugin-fontsettings.js"></script>
+<script src="bookml/gitbook/js/plugin-bookdown.js"></script>
+<script src="bookml/js/mathjax4.js"></script>
+<script type="text/javascript">
+                gitbook.require(["gitbook"], function(gitbook) {
+                gitbook.start({
+                  "fontsettings": {
+                    "theme": "white",
+                    "family": "sans",
+                    "size": 2
+                  },
+                  "download": [ [ "notes.pdf", "PDF" ], ],
+                  "search": {
+                    "engine": "fuse"
+                  },
+                  "toc": {
+                    "collapse": "none"
+                  }
+                });
+              });
+            </script>
+</body>
+
+</html>

@@ -1,0 +1,839 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory</title>
+<!--Generated on Wed Sep 30 09:26:32 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<style>:root { --bml-ltx-font-size: 10.95; }</style>
+<link rel="stylesheet" href="LaTeXML.css" type="text/css">
+<link rel="stylesheet" href="ltx-book.css" type="text/css">
+<link rel="stylesheet" href="ltx-listings.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-table.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-search.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-bookdown.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-fontsettings.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook,plain.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook.css" type="text/css">
+<link rel="stylesheet" href="bmluser/colors.gitbook-notes.css" type="text/css">
+<link rel="stylesheet" href="bmluser/statheo-custom.css" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+<link rel="up" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="start" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="prev" href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory">
+<link rel="next" href="Ch6.html" title="Lecture 6 Estimators by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx1.html" title="Introduction ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch1.html" title="Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch3.html" title="Lecture 3 R Basics and a First Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch6.html" title="Lecture 6 Estimators by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch7.html" title="Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch9.html" title="Lecture 9 Consistency by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch10.html" title="Lecture 10 Improving Estimators: Rao–Blackwell and Lehmann–Scheffe ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch11.html" title="Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch12.html" title="Lecture 12 Sampling Distributions and Standard Errors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch13.html" title="Lecture 13 The Cramer–Rao Inequality ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch14.html" title="Lecture 14 Multiparameter Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch15.html" title="Lecture 15 Cramer–Rao and Efficiency in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch18.html" title="Lecture 18 Maximum Likelihood in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch19.html" title="Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch20.html" title="Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch21.html" title="Lecture 21 EM in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch22.html" title="Lecture 22 The Neyman–Pearson Lemma ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch23.html" title="Lecture 23 Likelihood-Ratio Tests ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch24.html" title="Lecture 24 Power and Size by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch26.html" title="Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch27.html" title="Lecture 27 Confidence Versus Credibility ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch28.html" title="Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch29.html" title="Lecture 29 Standard Tests Revisited ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch30.html" title="Lecture 30 Do the Standard Tests Work? ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch31.html" title="Lecture 31 The Exponential Model: From Start to Finish ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx2.html" title="Preparing for the Exam ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A1.html" title="Appendix A Background from Probability ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A2.html" title="Appendix B Introduction to R ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A3.html" title="Appendix C Solutions to the Exercises ‣ MATH5703M Statistical Theory">
+<link rel="bibliography" href="bib.html" title="Bibliography ‣ MATH5703M Statistical Theory">
+<link rel="index" href="idx.html" title="Index ‣ MATH5703M Statistical Theory">
+<meta name="keywords" lang="en" content="MLE, estimator, invariance, invariance of the MLE, likelihood equation, maximum likelihood, maximum likelihood estimator">
+</head>
+<body class="bml_class_book">
+<div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+<a href="#bml-main-content" tabindex="0" class="bml-skip-to-content">Skip to content.</a>
+<div class="book-summary"><nav class="ltx_page_navbar">
+<ul class="ltx_toclist summary">
+<li>
+<a href="index.html" title="" class="ltx_ref" rel="start">MATH5703M Statistical Theory</a>
+</li>
+<li class="divider" aria-hidden="true">
+<li data-level="" data-path="Chx1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx1.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Introduction</a></li>
+<li data-level="1" data-path="Ch1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">1 </span></b>Statistical Models and Estimation</a></li>
+<li data-level="2" data-path="Ch2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">2 </span></b>Bias, Mean Squared Error and Consistency</a></li>
+<li data-level="3" data-path="Ch3.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">3 </span></b>R Basics and a First Simulation</a></li>
+<li data-level="4" data-path="Ch4.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch4.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">4 </span></b>Likelihood and the Method of Moments</a></li>
+<li data-level="5" data-path="" class="ltx_tocentry ltx_tocentry_chapter ltx_ref_self  chapter active">
+<a href="" title="In MATH5703M Statistical Theory" aria-current="page" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5 </span></b>Maximum Likelihood Estimation</a>
+<ol class="ltx_toclist ltx_toclist_chapter">
+<li data-level="5.1" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S1" title="In Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5.1 </span></b>The Maximum Likelihood Estimator</a></li>
+<li data-level="5.2" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S2" title="In Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5.2 </span></b>Worked Examples</a></li>
+<li data-level="5.3" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S3" title="In Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5.3 </span></b>When the Recipe Fails</a></li>
+<li data-level="5.4" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S4" title="In Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5.4 </span></b>Bias of the Maximum Likelihood Estimator</a></li>
+<li data-level="5.5" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S5" title="In Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5.5 </span></b>Invariance Under Reparametrisation</a></li>
+</ol>
+</li>
+<li data-level="6" data-path="Ch6.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch6.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">6 </span></b>Estimators by Simulation</a></li>
+<li data-level="7" data-path="Ch7.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch7.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">7 </span></b>Exponential Families</a></li>
+<li data-level="8" data-path="Ch8.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch8.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">8 </span></b>Sufficiency</a></li>
+<li data-level="9" data-path="Ch9.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch9.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">9 </span></b>Consistency by Simulation</a></li>
+<li data-level="10" data-path="Ch10.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch10.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">10 </span></b>Improving Estimators: Rao–Blackwell and Lehmann–Scheffe</a></li>
+<li data-level="11" data-path="Ch11.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch11.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">11 </span></b>Fisher Information</a></li>
+<li data-level="12" data-path="Ch12.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch12.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">12 </span></b>Sampling Distributions and Standard Errors</a></li>
+<li data-level="13" data-path="Ch13.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch13.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">13 </span></b>The Cramer–Rao Inequality</a></li>
+<li data-level="14" data-path="Ch14.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch14.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">14 </span></b>Multiparameter Fisher Information</a></li>
+<li data-level="15" data-path="Ch15.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch15.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">15 </span></b>Cramer–Rao and Efficiency in R</a></li>
+<li data-level="16" data-path="Ch16.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch16.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">16 </span></b>Consistency of the MLE</a></li>
+<li data-level="17" data-path="Ch17.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch17.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">17 </span></b>Asymptotic Normality and Efficiency of the MLE</a></li>
+<li data-level="18" data-path="Ch18.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch18.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">18 </span></b>Maximum Likelihood in R</a></li>
+<li data-level="19" data-path="Ch19.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch19.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19 </span></b>The EM Algorithm</a></li>
+<li data-level="20" data-path="Ch20.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch20.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20 </span></b>Hypothesis Testing</a></li>
+<li data-level="21" data-path="Ch21.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch21.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21 </span></b>EM in R</a></li>
+<li data-level="22" data-path="Ch22.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch22.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">22 </span></b>The Neyman–Pearson Lemma</a></li>
+<li data-level="23" data-path="Ch23.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch23.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">23 </span></b>Likelihood-Ratio Tests</a></li>
+<li data-level="24" data-path="Ch24.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch24.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">24 </span></b>Power and Size by Simulation</a></li>
+<li data-level="25" data-path="Ch25.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch25.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">25 </span></b>Confidence Intervals</a></li>
+<li data-level="26" data-path="Ch26.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch26.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">26 </span></b>Bayesian Inference: Priors and Posteriors</a></li>
+<li data-level="27" data-path="Ch27.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch27.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">27 </span></b>Confidence Versus Credibility</a></li>
+<li data-level="28" data-path="Ch28.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch28.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">28 </span></b>Credible Intervals and Bayesian Testing</a></li>
+<li data-level="29" data-path="Ch29.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch29.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">29 </span></b>Standard Tests Revisited</a></li>
+<li data-level="30" data-path="Ch30.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch30.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">30 </span></b>Do the Standard Tests Work?</a></li>
+<li data-level="31" data-path="Ch31.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch31.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">31 </span></b>The Exponential Model: Start to Finish</a></li>
+<li data-level="" data-path="Chx2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx2.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Preparing for the Exam</a></li>
+<li data-level="A" data-path="A1.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">A </span></b>Background from Probability</a></li>
+<li data-level="B" data-path="A2.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">B </span></b>Introduction to R</a></li>
+<li data-level="C" data-path="A3.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">C </span></b>Solutions to the Exercises</a></li>
+<li data-level="" data-path="bib.html" class="ltx_tocentry ltx_tocentry_bibliography  chapter "><a href="bib.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Bibliography</a></li>
+<li data-level="" data-path="idx.html" class="ltx_tocentry ltx_tocentry_index  chapter "><a href="idx.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Index</a></li>
+</ul>
+</nav></div>
+<div class="ltx_page_main book-body fixed">
+<div class="body-inner">
+<header class="book-header fixed" aria-label="toolbar"><span class="bml-separator"></span></header>
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="ltx_page_content page-inner" id="bml-main-content">
+<section class="ltx_chapter bml_mathjax4 ltx_authors_1line normal">
+<div class="section level1">
+<h1 class="ltx_title ltx_title_chapter">
+<span class="ltx_tag ltx_tag_chapter header-section-number">Lecture 5</span> Maximum Likelihood Estimation</h1>
+
+<div id="p1" class="ltx_para">
+<p class="ltx_p">In the previous lecture we have seen that for the exponential model,
+the parameter value which maximises the likelihood is the one which
+‘best’ explains the data. In this lecture we will make this idea
+into the main estimation method of the module: we define the maximum
+likelihood estimator, practise computing it for the families from
+tables <a href="Ch1.html#T1" title="Table 1.1 ‣ 1.1 Statistical Models ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.1</span></a> and <a href="Ch1.html#T2" title="Table 1.2 ‣ 1.1 Statistical Models ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.2</span></a>, and will see problems where more thought is
+needed. We will see that the estimator is not unbiased in general,
+but is invariant under reparametrisation; the deeper justification of
+the method will be given in lectures <a href="Ch13.html" title="Lecture 13 The Cramer–Rao Inequality ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">13</span></a>, <a href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">16</span></a>
+and <a href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">17</span></a>.</p>
+</div>
+<section id="S1" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">5.1</span> The Maximum Likelihood Estimator</h2>
+
+<div id="S1.p1" class="ltx_para">
+<p class="ltx_p">Example <a href="Ch4.html#Thmtheorem5" title="Example 4.5. ‣ 4.2 The Score Function ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.5</span></a> already contains the idea: for the
+exponential sample the log-likelihood increases up to <math id="S1.p1.m1" class="ltx_Math" alttext="\theta=1/\bar{x}" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow></mrow><annotation encoding="application/x-tex">\theta=1/\bar{x}</annotation></semantics></math>
+and then decreases, so this value fits the data best.
+We now formalise this principle.</p>
+</div>
+<div id="Thmtheorem1" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id1">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id1"><span class="ltx_text ltx_font_bold">Definition 5.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem1.p1" class="ltx_para">
+<p class="ltx_p">A <em class="ltx_emph ltx_font_italic">maximum likelihood estimator</em> (MLE) for <math id="Thmtheorem1.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is an estimator
+<math id="Thmtheorem1.p1.m2" class="ltx_Math" alttext="\hat{\theta}=\hat{\theta}(X_{1},\dots,X_{n})" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}=\hat{\theta}(X_{1},\dots,X_{n})</annotation></semantics></math>, which maximises the likelihood function over the
+parameter space, <span class="ltx_text ltx_font_italic">i.e.</span> which satisfies</p>
+<div id="Ex1" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex1.m1" class="ltx_Math" alttext="L(\hat{\theta})\geq L(\theta)\qquad\text{for all $\theta\in\Theta$.}" display="block"><semantics><mrow><mrow><mi>L</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow></mrow><mo>≥</mo><mrow><mrow><mi>L</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mspace width="2.19em"></mspace><mrow><mtext>for all </mtext><mrow><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi></mrow><mtext>.</mtext></mrow></mrow></mrow><annotation encoding="application/x-tex">L(\hat{\theta})\geq L(\theta)\qquad\text{for all $\theta\in\Theta$.}</annotation></semantics></math></div>
+</div>
+</div>
+</div>
+<div id="S1.p2" class="ltx_para">
+<p class="ltx_p">Since the logarithm is strictly increasing, <math id="S1.p2.m1" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math> maximises <math id="S1.p2.m2" class="ltx_Math" alttext="L" display="inline"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+if and only if it maximises the log-likelihood <math id="S1.p2.m3" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math> and for the
+reasons given in lecture <a href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4</span></a> we mostly work with <math id="S1.p2.m4" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math>. The
+definition is careful to avoid the problem of a maximum not existing
+or not being unique. For example, the likelihood could increase as the
+edge of the parameter space is approached, so that no maximum exists.
+Similarly, the maximum may not be unique. In such cases, any
+maximiser can be used. For the standard families of models and
+typical data, neither of these problems will occur and it will be safe
+to speak of “the” MLE.</p>
+</div>
+<div id="S1.p3" class="ltx_para">
+<p class="ltx_p">If the set <math id="S1.p3.m1" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math> is an interval and the log-likelihood function is
+differentiable, then calculus can be used to find the MLE: at a maximum
+inside the interval <math id="S1.p3.m2" class="ltx_Math" alttext="\Theta" display="inline"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math>, the derivative of <math id="S1.p3.m3" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math> equals zero and
+thus the MLE satisfies the <em class="ltx_emph ltx_font_italic">likelihood equation</em></p>
+<div id="Ex2" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex2.m1" class="ltx_Math" alttext="\ell^{\prime}(\theta)=0," display="block"><semantics><mrow><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\ell^{\prime}(\theta)=0,</annotation></semantics></math></div>
+</div>
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">i.e.</span> the MLE is a zero of the score function from
+definition <a href="Ch4.html#Thmtheorem4" title="Definition 4.4. ‣ 4.2 The Score Function ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.4</span></a>. The general procedure is to find the
+log-likelihood function, to solve the likelihood equation and to
+verify that the solution is a maximum, for example by checking that
+<math id="S1.p3.m4" class="ltx_Math" alttext="\ell^{\prime\prime}(\theta)&lt;0" display="inline"><semantics><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ell^{\prime\prime}(\theta)&lt;0</annotation></semantics></math> or by checking that the score changes
+from positive to negative.</p>
+</div>
+<div id="Thmwarningx3" class="ltx_theorem ltx_theorem_warning" role="group" aria-labelledby="bml-auto-id2">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id2"><span class="ltx_text ltx_font_italic">Warning</span></span><span class="ltx_text ltx_font_italic">.</span>
+</div>
+<div id="Thmwarningx3.p1" class="ltx_para">
+<p class="ltx_p">The solution of the likelihood equation only gives <em class="ltx_emph ltx_font_italic">interior</em>
+critical points. These could be minima or inflection points and the
+checking step is required to avoid wrong answers. Also, the above
+procedure assumes that the maximum is interior and that
+<math id="Thmwarningx3.p1.m1" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math> is differentiable. We will see that these
+assumptions can be violated.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="S2" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">5.2</span> Worked Examples</h2>
+
+<div id="S2.p1" class="ltx_para">
+<p class="ltx_p">We start our analysis by considering the “running families” of the module.</p>
+</div>
+<div id="Thmtheorem2" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id3">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id3"><span class="ltx_text ltx_font_bold">Example 5.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem2.p1" class="ltx_para">
+<p class="ltx_p">In example <a href="Ch4.html#Thmtheorem5" title="Example 4.5. ‣ 4.2 The Score Function ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.5</span></a>, the score of the
+exponential model equals zero at <math id="Thmtheorem2.p1.m1" class="ltx_Math" alttext="\theta=1/\bar{x}" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow></mrow><annotation encoding="application/x-tex">\theta=1/\bar{x}</annotation></semantics></math>. Since
+<math id="Thmtheorem2.p1.m2" class="ltx_Math" alttext="\ell^{\prime\prime}(\theta)=-n/\theta^{2}&lt;0" display="inline"><semantics><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mo>−</mo><mrow><mi>n</mi><mo>/</mo><msup><mi>θ</mi><mn>2</mn></msup></mrow></mrow><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ell^{\prime\prime}(\theta)=-n/\theta^{2}&lt;0</annotation></semantics></math> for all <math id="Thmtheorem2.p1.m3" class="ltx_Math" alttext="\theta&gt;0" display="inline"><semantics><mrow><mi>θ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta&gt;0</annotation></semantics></math>, the function <math id="Thmtheorem2.p1.m4" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math> is strictly concave and this root
+is the only global maximum. Thus, the MLE for the rate of the
+exponential distribution is</p>
+<div id="Ex3" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex3.m1" class="ltx_Math" alttext="\hat{\theta}=\frac{1}{\bar{X}}." display="block"><semantics><mrow><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mfrac><mn>1</mn><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mfrac></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\hat{\theta}=\frac{1}{\bar{X}}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This coincides with the method of moments estimator from
+example <a href="Ch4.html#Thmtheorem7" title="Example 4.7. ‣ 4.3 The Method of Moments ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.7</span></a>.</p>
+</div>
+</div>
+<div id="Thmtheorem3" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id4">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id4"><span class="ltx_text ltx_font_bold">Example 5.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem3.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmtheorem3.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be an i.i.d. Bernoulli sample with success
+probability <math id="Thmtheorem3.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, and let <math id="Thmtheorem3.p1.m3" class="ltx_Math" alttext="s=\sum_{i}x_{i}" display="inline"><semantics><mrow><mi>s</mi><mo rspace="0.111em">=</mo><mrow><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub></mrow></mrow><annotation encoding="application/x-tex">s=\sum_{i}x_{i}</annotation></semantics></math> be the observed number of
+successes. As in example <a href="Ch4.html#Thmtheorem2" title="Example 4.2. ‣ 4.1 The Likelihood Function ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.2</span></a> we have the likelihood
+<math id="Thmtheorem3.p1.m4" class="ltx_Math" alttext="L(\theta)=\theta^{s}(1-\theta)^{n-s}" display="inline"><semantics><mrow><mrow><mi>L</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mi>θ</mi><mi>s</mi></msup><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mi>n</mi><mo>−</mo><mi>s</mi></mrow></msup></mrow></mrow><annotation encoding="application/x-tex">L(\theta)=\theta^{s}(1-\theta)^{n-s}</annotation></semantics></math> and thus</p>
+<div id="Ex4" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex4.m1" class="ltx_Math" alttext="\ell(\theta)=s\log\theta+(n-s)\log(1-\theta),\qquad\theta\in(0,1)." display="block"><semantics><mrow><mrow><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>s</mi><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>θ</mi></mrow></mrow><mo>+</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mi>s</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow></mrow><mo rspace="2.357em">,</mo><mrow><mi>θ</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\ell(\theta)=s\log\theta+(n-s)\log(1-\theta),\qquad\theta\in(0,1).</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Assume first <math id="Thmtheorem3.p1.m5" class="ltx_Math" alttext="0&lt;s&lt;n" display="inline"><semantics><mrow><mn>0</mn><mo>&lt;</mo><mi>s</mi><mo>&lt;</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">0&lt;s&lt;n</annotation></semantics></math>. Then the likelihood equation is</p>
+<div id="Ex5" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex5.m1" class="ltx_Math" alttext="\ell^{\prime}(\theta)=\frac{s}{\theta}-\frac{n-s}{1-\theta}=0." display="block"><semantics><mrow><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mfrac><mi>s</mi><mi>θ</mi></mfrac><mo>−</mo><mfrac><mrow><mi>n</mi><mo>−</mo><mi>s</mi></mrow><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow></mfrac></mrow><mo>=</mo><mn>0</mn></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\ell^{\prime}(\theta)=\frac{s}{\theta}-\frac{n-s}{1-\theta}=0.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This equation implies <math id="Thmtheorem3.p1.m6" class="ltx_Math" alttext="s(1-\theta)=(n-s)\theta" display="inline"><semantics><mrow><mrow><mi>s</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mi>s</mi></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mi>θ</mi></mrow></mrow><annotation encoding="application/x-tex">s(1-\theta)=(n-s)\theta</annotation></semantics></math> and the only solution to this
+equation is <math id="Thmtheorem3.p1.m7" class="ltx_Math" alttext="\theta=s/n" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mi>s</mi><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">\theta=s/n</annotation></semantics></math>. Since
+<math id="Thmtheorem3.p1.m8" class="ltx_Math" alttext="\ell^{\prime\prime}(\theta)=-s/\theta^{2}-(n-s)/(1-\theta)^{2}&lt;0" display="inline"><semantics><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo>−</mo><mrow><mi>s</mi><mo>/</mo><msup><mi>θ</mi><mn>2</mn></msup></mrow></mrow><mo>−</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mi>s</mi></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mrow><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ell^{\prime\prime}(\theta)=-s/\theta^{2}-(n-s)/(1-\theta)^{2}&lt;0</annotation></semantics></math> everywhere, this root is the
+global maximum and the MLE for the proportion of successes is</p>
+<div id="Ex6" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex6.m1" class="ltx_Math" alttext="\hat{\theta}=\frac{s}{n}=\bar{X}." display="block"><semantics><mrow><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mfrac><mi>s</mi><mi>n</mi></mfrac><mo>=</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\hat{\theta}=\frac{s}{n}=\bar{X}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">For the dataset from example <a href="Ch4.html#Thmtheorem2" title="Example 4.2. ‣ 4.1 The Likelihood Function ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.2</span></a>, seven heads in ten
+tosses, we get <math id="Thmtheorem3.p1.m9" class="ltx_Math" alttext="\hat{\theta}=0.7" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mn>0.7</mn></mrow><annotation encoding="application/x-tex">\hat{\theta}=0.7</annotation></semantics></math>, the value which we already
+recognised in the example.</p>
+</div>
+</div>
+<div id="Thmremarkx4" class="ltx_theorem ltx_theorem_remark" role="group" aria-labelledby="bml-auto-id5">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id5"><span class="ltx_text ltx_font_italic">Remark</span></span><span class="ltx_text ltx_font_italic">.</span>
+</div>
+<div id="Thmremarkx4.p1" class="ltx_para">
+<p class="ltx_p">The assumption <math id="Thmremarkx4.p1.m1" class="ltx_Math" alttext="0&lt;s&lt;n" display="inline"><semantics><mrow><mn>0</mn><mo>&lt;</mo><mi>s</mi><mo>&lt;</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">0&lt;s&lt;n</annotation></semantics></math> is made, because at the two extremes the MLE
+does not exist: for <math id="Thmremarkx4.p1.m2" class="ltx_Math" alttext="s=n" display="inline"><semantics><mrow><mi>s</mi><mo>=</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">s=n</annotation></semantics></math> the function <math id="Thmremarkx4.p1.m3" class="ltx_Math" alttext="\ell(\theta)=n\log\theta" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>n</mi><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>θ</mi></mrow></mrow></mrow><annotation encoding="application/x-tex">\ell(\theta)=n\log\theta</annotation></semantics></math> is
+strictly increasing on <math id="Thmremarkx4.p1.m4" class="ltx_Math" alttext="(0,1)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0,1)</annotation></semantics></math> and the supremum is approached at the
+boundary point <math id="Thmremarkx4.p1.m5" class="ltx_Math" alttext="\theta=1" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\theta=1</annotation></semantics></math>, which is outside the open parameter space, and
+thus there is no maximiser. This is a simple case of the existence
+caveat from definition <a href="#Thmtheorem1" title="Definition 5.1. ‣ 5.1 The Maximum Likelihood Estimator ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.1</span></a>. In this case we could, for
+example, report the boundary value <math id="Thmremarkx4.p1.m6" class="ltx_Math" alttext="s/n=1" display="inline"><semantics><mrow><mrow><mi>s</mi><mo>/</mo><mi>n</mi></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">s/n=1</annotation></semantics></math> or else extend the
+parameter space to the closed interval.</p>
+</div>
+</div>
+<div id="Thmtheorem4" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id6">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id6"><span class="ltx_text ltx_font_bold">Example 5.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem4.p1" class="ltx_para">
+<p class="ltx_p">Consider <math id="Thmtheorem4.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}\sim N(\mu,\sigma^{2})" display="inline"><semantics><mrow><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><mo>∼</mo><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}\sim N(\mu,\sigma^{2})</annotation></semantics></math>, where both parameters are
+unknown. Then we have <math id="Thmtheorem4.p1.m2" class="ltx_Math" alttext="\theta=(\mu,\sigma^{2})" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta=(\mu,\sigma^{2})</annotation></semantics></math>. Taking logarithms we get</p>
+<div id="Ex7" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex7.m1" class="ltx_Math" alttext="\ell(\mu,\sigma^{2})=-\frac{n}{2}\log(2\pi\sigma^{2})-\frac{1}{2\sigma^{2}}%
+\sum_{i=1}^{n}(x_{i}-\mu)^{2}." display="block"><semantics><mrow><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>μ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo>−</mo><mrow><mfrac><mi>n</mi><mn>2</mn></mfrac><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><mi>π</mi><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>−</mo><mrow><mfrac><mn>1</mn><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mfrac><mo>⁢</mo><mrow><munderover><mo movablelimits="false" rspace="0em">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>μ</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\ell(\mu,\sigma^{2})=-\frac{n}{2}\log(2\pi\sigma^{2})-\frac{1}{2\sigma^{2}}%
+\sum_{i=1}^{n}(x_{i}-\mu)^{2}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Since we have a two-dimensional parameter, the likelihood equation
+translates to a system of two equations: we set both partial derivatives
+equal to zero. Taking derivatives with respect to <math id="Thmtheorem4.p1.m3" class="ltx_Math" alttext="\mu" display="inline"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math> we find</p>
+<div id="Ex8" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex8.m1" class="ltx_Math" alttext="\frac{\partial\ell}{\partial\mu}=\frac{1}{\sigma^{2}}\sum_{i=1}^{n}(x_{i}-\mu)," display="block"><semantics><mrow><mrow><mfrac><mrow><mo rspace="0em">∂</mo><mi mathvariant="normal">ℓ</mi></mrow><mrow><mo rspace="0em">∂</mo><mi>μ</mi></mrow></mfrac><mo>=</mo><mrow><mfrac><mn>1</mn><msup><mi>σ</mi><mn>2</mn></msup></mfrac><mo>⁢</mo><mrow><munderover><mo movablelimits="false" rspace="0em">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>μ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\frac{\partial\ell}{\partial\mu}=\frac{1}{\sigma^{2}}\sum_{i=1}^{n}(x_{i}-\mu),</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">which is zero only for <math id="Thmtheorem4.p1.m4" class="ltx_Math" alttext="\mu=\bar{x}" display="inline"><semantics><mrow><mi>μ</mi><mo>=</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow><annotation encoding="application/x-tex">\mu=\bar{x}</annotation></semantics></math>. Since the sum of squares
+<math id="Thmtheorem4.p1.m5" class="ltx_Math" alttext="\sum_{i}(x_{i}-\mu)^{2}" display="inline"><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><msup><mrow><mo lspace="0em" stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>μ</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\sum_{i}(x_{i}-\mu)^{2}</annotation></semantics></math> takes its minimum for <math id="Thmtheorem4.p1.m6" class="ltx_Math" alttext="\mu=\bar{x}" display="inline"><semantics><mrow><mi>μ</mi><mo>=</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow><annotation encoding="application/x-tex">\mu=\bar{x}</annotation></semantics></math>, this value
+maximises <math id="Thmtheorem4.p1.m7" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math> over <math id="Thmtheorem4.p1.m8" class="ltx_Math" alttext="\mu" display="inline"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math> for every fixed <math id="Thmtheorem4.p1.m9" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math> and we can
+substitute <math id="Thmtheorem4.p1.m10" class="ltx_Math" alttext="\mu=\bar{x}" display="inline"><semantics><mrow><mi>μ</mi><mo>=</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow><annotation encoding="application/x-tex">\mu=\bar{x}</annotation></semantics></math> to find the maximum of the remaining function
+of one variable. Let <math id="Thmtheorem4.p1.m11" class="ltx_Math" alttext="v=\sigma^{2}" display="inline"><semantics><mrow><mi>v</mi><mo>=</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">v=\sigma^{2}</annotation></semantics></math> and <math id="Thmtheorem4.p1.m12" class="ltx_Math" alttext="W=\sum_{i}(x_{i}-\bar{x})^{2}" display="inline"><semantics><mrow><mi>W</mi><mo rspace="0.111em">=</mo><mrow><msub><mo rspace="0em">∑</mo><mi>i</mi></msub><msup><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">W=\sum_{i}(x_{i}-\bar{x})^{2}</annotation></semantics></math>. Then we have</p>
+<div id="Ex9" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex9.m1" class="ltx_Math" alttext="\ell(\bar{x},v)=-\frac{n}{2}\log(2\pi v)-\frac{W}{2v}," display="block"><semantics><mrow><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>,</mo><mi>v</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo>−</mo><mrow><mfrac><mi>n</mi><mn>2</mn></mfrac><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><mi>π</mi><mo>⁢</mo><mi>v</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>−</mo><mfrac><mi>W</mi><mrow><mn>2</mn><mo>⁢</mo><mi>v</mi></mrow></mfrac></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\ell(\bar{x},v)=-\frac{n}{2}\log(2\pi v)-\frac{W}{2v},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">with derivative</p>
+<div id="Ex10" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex10.m1" class="ltx_Math" alttext="\frac{\partial\ell}{\partial v}=-\frac{n}{2v}+\frac{W}{2v^{2}}=\frac{W-nv}{2v^%
+{2}}," display="block"><semantics><mrow><mrow><mfrac><mrow><mo rspace="0em">∂</mo><mi mathvariant="normal">ℓ</mi></mrow><mrow><mo rspace="0em">∂</mo><mi>v</mi></mrow></mfrac><mo>=</mo><mrow><mrow><mo>−</mo><mfrac><mi>n</mi><mrow><mn>2</mn><mo>⁢</mo><mi>v</mi></mrow></mfrac></mrow><mo>+</mo><mfrac><mi>W</mi><mrow><mn>2</mn><mo>⁢</mo><msup><mi>v</mi><mn>2</mn></msup></mrow></mfrac></mrow><mo>=</mo><mfrac><mrow><mi>W</mi><mo>−</mo><mrow><mi>n</mi><mo>⁢</mo><mi>v</mi></mrow></mrow><mrow><mn>2</mn><mo>⁢</mo><msup><mi>v</mi><mn>2</mn></msup></mrow></mfrac></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\frac{\partial\ell}{\partial v}=-\frac{n}{2v}+\frac{W}{2v^{2}}=\frac{W-nv}{2v^%
+{2}},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">which is positive for <math id="Thmtheorem4.p1.m13" class="ltx_Math" alttext="v&lt;W/n" display="inline"><semantics><mrow><mi>v</mi><mo>&lt;</mo><mrow><mi>W</mi><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">v&lt;W/n</annotation></semantics></math> and negative for <math id="Thmtheorem4.p1.m14" class="ltx_Math" alttext="v&gt;W/n" display="inline"><semantics><mrow><mi>v</mi><mo>&gt;</mo><mrow><mi>W</mi><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">v&gt;W/n</annotation></semantics></math>. Thus, the
+maximum is at <math id="Thmtheorem4.p1.m15" class="ltx_Math" alttext="v=W/n" display="inline"><semantics><mrow><mi>v</mi><mo>=</mo><mrow><mi>W</mi><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">v=W/n</annotation></semantics></math>. Hence, the MLE is the pair</p>
+<div id="Ex11" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex11.m1" class="ltx_Math" alttext="\hat{\mu}=\bar{X}\qquad\text{and}\qquad\hat{\sigma}^{2}=\frac{1}{n}\sum_{i=1}^%
+{n}(X_{i}-\bar{X})^{2}." display="block"><semantics><mrow><mrow><mrow><mover accent="true"><mi>μ</mi><mo>^</mo></mover><mo>=</mo><mrow><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mspace width="2.19em"></mspace><mtext>and</mtext></mrow></mrow><mspace width="2.19em"></mspace><mrow><msup><mover accent="true"><mi>σ</mi><mo>^</mo></mover><mn>2</mn></msup><mo>=</mo><mrow><mfrac><mn>1</mn><mi>n</mi></mfrac><mo>⁢</mo><mrow><munderover><mo movablelimits="false" rspace="0em">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo stretchy="false">(</mo><mrow><msub><mi>X</mi><mi>i</mi></msub><mo>−</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\hat{\mu}=\bar{X}\qquad\text{and}\qquad\hat{\sigma}^{2}=\frac{1}{n}\sum_{i=1}^%
+{n}(X_{i}-\bar{X})^{2}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This is the plug-in estimator, obtained by using the method of moments
+in example <a href="Ch4.html#Thmtheorem8" title="Example 4.8. ‣ 4.3 The Method of Moments ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.8</span></a>, with divisor <math id="Thmtheorem4.p1.m16" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>: for the normal
+distribution, both methods give the same result for both coordinates.
+In particular, the MLE for the variance is the biased estimator from
+section <a href="Ch2.html#S3" title="2.3 When Unbiasedness Is Not Enough ‣ Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2.3</span></a>, where we showed that the bias in this case
+was harmless. Whether the bias is a general property of maximum
+likelihood is a question we will consider later.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="S3" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">5.3</span> When the Recipe Fails</h2>
+
+<div id="S3.p1" class="ltx_para">
+<p class="ltx_p">Both assumptions in the recipe, <span class="ltx_text ltx_font_italic">i.e.</span> an interior maximum and
+differentiable log-likelihood, break down for the uniform model.
+In this case we have to return to definition <a href="#Thmtheorem1" title="Definition 5.1. ‣ 5.1 The Maximum Likelihood Estimator ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.1</span></a> and
+maximise the expression directly.</p>
+</div>
+<div id="Thmtheorem5" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id7">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id7"><span class="ltx_text ltx_font_bold">Example 5.5</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem5.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmtheorem5.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}\sim\text{Uniform}(0,\theta)" display="inline"><semantics><mrow><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><mo>∼</mo><mrow><mtext>Uniform</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}\sim\text{Uniform}(0,\theta)</annotation></semantics></math> be i.i.d., as in
+example <a href="Ch1.html#Thmtheorem2" title="Example 1.2. ‣ 1.1 Statistical Models ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.2</span></a>. From the joint density found in
+exercise <a href="Ch1.html#Thmexercise3" title="Exercise 1.3. ‣ 1.3 The Road Ahead ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.3</span></a>, the likelihood is</p>
+<div id="Ex12" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex12.m1" class="ltx_Math" alttext="L(\theta)=\begin{cases}\theta^{-n}&amp;\text{if $\theta\geq\max_{i}x_{i}$,}\\
+0&amp;\text{otherwise.}\end{cases}" display="block"><semantics><mrow><mrow><mi>L</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mo>{</mo><mtable columnspacing="5pt" displaystyle="true" rowspacing="0pt"><mtr><mtd class="ltx_align_left" columnalign="left"><msup><mi>θ</mi><mrow><mo>−</mo><mi>n</mi></mrow></msup></mtd><mtd class="ltx_align_left" columnalign="left"><mrow><mtext>if </mtext><mrow><mi>θ</mi><mo>≥</mo><mrow><msub><mi>max</mi><mi>i</mi></msub><mo lspace="0.167em">⁡</mo><msub><mi>x</mi><mi>i</mi></msub></mrow></mrow><mtext>,</mtext></mrow></mtd></mtr><mtr><mtd class="ltx_align_left" columnalign="left"><mn>0</mn></mtd><mtd class="ltx_align_left" columnalign="left"><mtext>otherwise.</mtext></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">L(\theta)=\begin{cases}\theta^{-n}&amp;\text{if $\theta\geq\max_{i}x_{i}$,}\\
+0&amp;\text{otherwise.}\end{cases}</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Calculus is useless here: on the region where <math id="Thmtheorem5.p1.m2" class="ltx_Math" alttext="L" display="inline"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math> is positive its derivative
+<math id="Thmtheorem5.p1.m3" class="ltx_Math" alttext="-n\theta^{-n-1}" display="inline"><semantics><mrow><mo>−</mo><mrow><mi>n</mi><mo>⁢</mo><msup><mi>θ</mi><mrow><mrow><mo>−</mo><mi>n</mi></mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow></mrow><annotation encoding="application/x-tex">-n\theta^{-n-1}</annotation></semantics></math> is negative everywhere, so the likelihood equation has no
+solution, and at <math id="Thmtheorem5.p1.m4" class="ltx_Math" alttext="\theta=\max_{i}x_{i}" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><msub><mi>max</mi><mi>i</mi></msub><mo lspace="0.167em">⁡</mo><msub><mi>x</mi><mi>i</mi></msub></mrow></mrow><annotation encoding="application/x-tex">\theta=\max_{i}x_{i}</annotation></semantics></math> the function is not even continuous. But
+maximising directly is easy: the likelihood is zero for
+<math id="Thmtheorem5.p1.m5" class="ltx_Math" alttext="\theta&lt;\max_{i}x_{i}" display="inline"><semantics><mrow><mi>θ</mi><mo>&lt;</mo><mrow><msub><mi>max</mi><mi>i</mi></msub><mo lspace="0.167em">⁡</mo><msub><mi>x</mi><mi>i</mi></msub></mrow></mrow><annotation encoding="application/x-tex">\theta&lt;\max_{i}x_{i}</annotation></semantics></math> and strictly decreasing for <math id="Thmtheorem5.p1.m6" class="ltx_Math" alttext="\theta\geq\max_{i}x_{i}" display="inline"><semantics><mrow><mi>θ</mi><mo>≥</mo><mrow><msub><mi>max</mi><mi>i</mi></msub><mo lspace="0.167em">⁡</mo><msub><mi>x</mi><mi>i</mi></msub></mrow></mrow><annotation encoding="application/x-tex">\theta\geq\max_{i}x_{i}</annotation></semantics></math>,
+and thus largest at the left edge of the positive region. The MLE is
+the sample maximum,</p>
+<div id="Ex13" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex13.m1" class="ltx_Math" alttext="\hat{\theta}=\max_{i}X_{i}." display="block"><semantics><mrow><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mrow><munder><mi>max</mi><mi>i</mi></munder><mo lspace="0.167em">⁡</mo><msub><mi>X</mi><mi>i</mi></msub></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\hat{\theta}=\max_{i}X_{i}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">This identifies the estimator we have been tracking since
+exercise <a href="Ch1.html#Thmexercise3" title="Exercise 1.3. ‣ 1.3 The Road Ahead ‣ Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">1.3</span></a>, which by exercise <a href="Ch4.html#Thmexercise4" title="Exercise 4.4. ‣ 4.4 Identifiability ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.4</span></a>
+beats the method of moments estimator <math id="Thmtheorem5.p1.m7" class="ltx_Math" alttext="2\bar{X}" display="inline"><semantics><mrow><mn>2</mn><mo>⁢</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow><annotation encoding="application/x-tex">2\bar{X}</annotation></semantics></math> in mean squared error
+for every <math id="Thmtheorem5.p1.m8" class="ltx_Math" alttext="n\geq 3" display="inline"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">n\geq 3</annotation></semantics></math>. The likelihood also rules out impossible parameter
+values automatically: for the dataset <math id="Thmtheorem5.p1.m9" class="ltx_Math" alttext="x_{1}=0.1" display="inline"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>=</mo><mn>0.1</mn></mrow><annotation encoding="application/x-tex">x_{1}=0.1</annotation></semantics></math>, <math id="Thmtheorem5.p1.m10" class="ltx_Math" alttext="x_{2}=0.2" display="inline"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>=</mo><mn>0.2</mn></mrow><annotation encoding="application/x-tex">x_{2}=0.2</annotation></semantics></math>, <math id="Thmtheorem5.p1.m11" class="ltx_Math" alttext="x_{3}=0.9" display="inline"><semantics><mrow><msub><mi>x</mi><mn>3</mn></msub><mo>=</mo><mn>0.9</mn></mrow><annotation encoding="application/x-tex">x_{3}=0.9</annotation></semantics></math>
+of lecture <a href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4</span></a>, any <math id="Thmtheorem5.p1.m12" class="ltx_Math" alttext="\theta&lt;0.9" display="inline"><semantics><mrow><mi>θ</mi><mo>&lt;</mo><mn>0.9</mn></mrow><annotation encoding="application/x-tex">\theta&lt;0.9</annotation></semantics></math> has likelihood zero, so the
+contradiction the method of moments overlooked cannot arise.</p>
+</div>
+</div>
+<div id="S3.p2" class="ltx_para">
+<p class="ltx_p">The uniform model fails the recipe in an obvious way; a failure which is
+harder to spot is a likelihood equation with several roots. Consider
+the <math id="S3.p2.m1" class="ltx_Math" alttext="t" display="inline"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> location model with <math id="S3.p2.m2" class="ltx_Math" alttext="\nu\geq 1" display="inline"><semantics><mrow><mi>ν</mi><mo>≥</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\nu\geq 1</annotation></semantics></math> degrees of freedom, where <math id="S3.p2.m3" class="ltx_Math" alttext="\nu" display="inline"><semantics><mi>ν</mi><annotation encoding="application/x-tex">\nu</annotation></semantics></math>
+is fixed and known and the density is given by</p>
+<div id="Ex14" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex14.m1" class="ltx_Math" alttext="f(x;\theta)=c_{\nu}\Bigl{(}1+\frac{(x-\theta)^{2}}{\nu}\Bigr{)}^{-(\nu+1)/2},%
+\qquad x\in\mathbb{R}," display="block"><semantics><mrow><mrow><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>c</mi><mi>ν</mi></msub><mo>⁢</mo><msup><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mn>1</mn><mo>+</mo><mfrac><msup><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mi>ν</mi></mfrac></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow><mrow><mo>−</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>ν</mi><mo>+</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mn>2</mn></mrow></mrow></msup></mrow></mrow><mo rspace="2.357em">,</mo><mrow><mi>x</mi><mo>∈</mo><mi>ℝ</mi></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">f(x;\theta)=c_{\nu}\Bigl{(}1+\frac{(x-\theta)^{2}}{\nu}\Bigr{)}^{-(\nu+1)/2},%
+\qquad x\in\mathbb{R},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">with location <math id="S3.p2.m4" class="ltx_Math" alttext="\theta\in\mathbb{R}" display="inline"><semantics><mrow><mi>θ</mi><mo>∈</mo><mi>ℝ</mi></mrow><annotation encoding="application/x-tex">\theta\in\mathbb{R}</annotation></semantics></math> and a normalising constant <math id="S3.p2.m5" class="ltx_Math" alttext="c_{\nu}" display="inline"><semantics><msub><mi>c</mi><mi>ν</mi></msub><annotation encoding="application/x-tex">c_{\nu}</annotation></semantics></math> free
+of <math id="S3.p2.m6" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. The log-likelihood is differentiable everywhere,
+so the recipe seems to apply, but after clearing denominators the
+likelihood equation</p>
+<div id="Ex15" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex15.m1" class="ltx_Math" alttext="\ell^{\prime}(\theta)=(\nu+1)\sum_{i=1}^{n}\frac{x_{i}-\theta}{\nu+(x_{i}-%
+\theta)^{2}}=0" display="block"><semantics><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>ν</mi><mo>+</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><munderover><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mfrac><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>θ</mi></mrow><mrow><mi>ν</mi><mo>+</mo><msup><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mfrac></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ell^{\prime}(\theta)=(\nu+1)\sum_{i=1}^{n}\frac{x_{i}-\theta}{\nu+(x_{i}-%
+\theta)^{2}}=0</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">turns into a polynomial equation of degree <math id="S3.p2.m7" class="ltx_Math" alttext="2n-1" display="inline"><semantics><mrow><mrow><mn>2</mn><mo>⁢</mo><mi>n</mi></mrow><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2n-1</annotation></semantics></math> in <math id="S3.p2.m8" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and for
+<math id="S3.p2.m9" class="ltx_Math" alttext="n\geq 2" display="inline"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\geq 2</annotation></semantics></math> this equation can have several roots. Exercise <a href="#Thmexercise4" title="Exercise 5.4. ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.4</span></a>
+shows that for <math id="S3.p2.m10" class="ltx_Math" alttext="n=2" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n=2</annotation></semantics></math> there are three roots when the observations are
+more than <math id="S3.p2.m11" class="ltx_Math" alttext="2\sqrt{\nu}" display="inline"><semantics><mrow><mn>2</mn><mo>⁢</mo><msqrt><mi>ν</mi></msqrt></mrow><annotation encoding="application/x-tex">2\sqrt{\nu}</annotation></semantics></math> apart: the mid-point of the interval between the
+observations, which is then a local <em class="ltx_emph ltx_font_italic">minimum</em> of the likelihood,
+and two global maxima of equal likelihood, one close to each of the
+observations. Thus, the model prefers to fit one data point and to
+consider the other as an outlier, and in this case the data cannot
+choose between the two maxima and the MLE will not be unique. The
+exercise also shows that a root of the likelihood equation can be a minimum
+and that the checking step in the recipe is not optional.</p>
+</div>
+<div id="S3.p3" class="ltx_para">
+<p class="ltx_p">For larger samples the likelihood equation of the <math id="S3.p3.m1" class="ltx_Math" alttext="t" display="inline"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> location model
+cannot be solved in closed form, and similarly the likelihood equations
+for many other models, <span class="ltx_text ltx_font_italic">e.g.</span> the two-parameter gamma distribution
+from example <a href="Ch4.html#Thmtheorem9" title="Example 4.9. ‣ 4.3 The Method of Moments ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.9</span></a>, cannot be solved in closed form. The
+solution to this problem, which is to maximise <math id="S3.p3.m2" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math> numerically, will
+be discussed, together with its pitfalls, in lecture <a href="Ch18.html" title="Lecture 18 Maximum Likelihood in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">18</span></a>.</p>
+</div>
+</div>
+</section>
+<section id="S4" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">5.4</span> Bias of the Maximum Likelihood Estimator</h2>
+
+<div id="S4.p1" class="ltx_para">
+<p class="ltx_p">Nothing in definition <a href="#Thmtheorem1" title="Definition 5.1. ‣ 5.1 The Maximum Likelihood Estimator ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.1</span></a> mentions bias and indeed the
+MLE is not always unbiased (we already know this from
+example <a href="#Thmtheorem4" title="Example 5.4. ‣ 5.2 Worked Examples ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.4</span></a> for the normal distribution). In this section we
+consider the exponential distribution with rate <math id="S4.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, where all
+moments can be determined exactly.</p>
+</div>
+<div id="S4.p2" class="ltx_para">
+<p class="ltx_p">Let <math id="S4.p2.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be i.i.d. exponential with rate <math id="S4.p2.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and let
+<math id="S4.p2.m3" class="ltx_Math" alttext="\hat{\theta}=1/\bar{X}" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}=1/\bar{X}</annotation></semantics></math> be the MLE from example <a href="#Thmtheorem2" title="Example 5.2. ‣ 5.2 Worked Examples ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.2</span></a>.
+Setting <math id="S4.p2.m4" class="ltx_Math" alttext="T=X_{1}+\dots+X_{n}" display="inline"><semantics><mrow><mi>T</mi><mo>=</mo><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>+</mo><mi mathvariant="normal">⋯</mi><mo>+</mo><msub><mi>X</mi><mi>n</mi></msub></mrow></mrow><annotation encoding="application/x-tex">T=X_{1}+\dots+X_{n}</annotation></semantics></math>, so that <math id="S4.p2.m5" class="ltx_Math" alttext="\hat{\theta}=n/T" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mrow><mi>n</mi><mo>/</mo><mi>T</mi></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}=n/T</annotation></semantics></math>, we found in
+exercise <a href="Ch2.html#Thmexercise3" title="Exercise 2.3. ‣ 2.4 Consistency ‣ Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2.3</span></a>, using the gamma density of <math id="S4.p2.m6" class="ltx_Math" alttext="T" display="inline"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>, that
+<math id="S4.p2.m7" class="ltx_Math" alttext="\mathbb{E}_{\theta}(\hat{\theta})=n\theta/(n-1)" display="inline"><semantics><mrow><mrow><msub><mi>𝔼</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>n</mi><mo>⁢</mo><mi>θ</mi></mrow><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\theta}(\hat{\theta})=n\theta/(n-1)</annotation></semantics></math> for <math id="S4.p2.m8" class="ltx_Math" alttext="n\geq 2" display="inline"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n\geq 2</annotation></semantics></math>, while for <math id="S4.p2.m9" class="ltx_Math" alttext="n=1" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n=1</annotation></semantics></math> the
+expectation is infinite. Thus the MLE is biased, with bias
+<math id="S4.p2.m10" class="ltx_Math" alttext="\theta/(n-1)" display="inline"><semantics><mrow><mi>θ</mi><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta/(n-1)</annotation></semantics></math>, and multiplying by <math id="S4.p2.m11" class="ltx_Math" alttext="(n-1)/n" display="inline"><semantics><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">(n-1)/n</annotation></semantics></math> removes the bias: the
+estimator <math id="S4.p2.m12" class="ltx_Math" alttext="\tilde{\theta}=(n-1)\hat{\theta}/n=(n-1)/T" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>~</mo></mover><mo>=</mo><mrow><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover></mrow><mo>/</mo><mi>n</mi></mrow><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mi>T</mi></mrow></mrow><annotation encoding="application/x-tex">\tilde{\theta}=(n-1)\hat{\theta}/n=(n-1)/T</annotation></semantics></math> satisfies
+<math id="S4.p2.m13" class="ltx_Math" alttext="\mathbb{E}_{\theta}(\tilde{\theta})=\theta" display="inline"><semantics><mrow><mrow><msub><mi>𝔼</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>~</mo></mover><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mi>θ</mi></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\theta}(\tilde{\theta})=\theta</annotation></semantics></math>.</p>
+</div>
+<div id="S4.p3" class="ltx_para">
+<p class="ltx_p">From lecture <a href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a> we know that removing the bias does not
+automatically give the estimator with the smaller mean squared error. In
+exercise <a href="#Thmexercise3" title="Exercise 5.3. ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.3</span></a> we compute the second moment of <math id="S4.p3.m1" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math>
+and find
+<math id="S4.p3.m2" class="ltx_Math" alttext="\mathop{\mathrm{MSE}}\nolimits(\tilde{\theta})/\mathop{\mathrm{MSE}}\nolimits(%
+\hat{\theta})=(n-1)/(n+2)&lt;1" display="inline"><semantics><mrow><mrow><mo rspace="0em">MSE</mo><mrow><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>~</mo></mover><mo stretchy="false">)</mo></mrow><mo>/</mo><mrow><mo lspace="0em" rspace="0em">MSE</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>+</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{MSE}}\nolimits(\tilde{\theta})/\mathop{\mathrm{MSE}}\nolimits(%
+\hat{\theta})=(n-1)/(n+2)&lt;1</annotation></semantics></math> for all <math id="S4.p3.m3" class="ltx_Math" alttext="n\geq 3" display="inline"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">n\geq 3</annotation></semantics></math>.
+Thus, after removing the bias, this estimator is strictly better.
+The same exercise shows that a third scaling of <math id="S4.p3.m4" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math> would
+be even better, similar to how the divisor <math id="S4.p3.m5" class="ltx_Math" alttext="n+1" display="inline"><semantics><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n+1</annotation></semantics></math> in the
+normal distribution variance was chosen.</p>
+</div>
+<div id="S4.p4" class="ltx_para">
+<p class="ltx_p">For the normal variance the biased divisor-<math id="S4.p4.m1" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> estimator was
+better than the unbiased sample variance <math id="S4.p4.m2" class="ltx_Math" alttext="S^{2}" display="inline"><semantics><msup><mi>S</mi><mn>2</mn></msup><annotation encoding="application/x-tex">S^{2}</annotation></semantics></math> (section <a href="Ch2.html#S3" title="2.3 When Unbiasedness Is Not Enough ‣ Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2.3</span></a>);
+for the exponential rate the bias-corrected estimator is better. Neither
+result is a theorem: the bias-variance trade-off can go either way, and
+the only way to know which is better is to compute both mean squared
+errors. In favour of the MLE we note that the bias decreases to zero
+as the sample size increases, and in lecture <a href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">17</span></a> we
+will see that for large sample size the MLE is in some sense the best
+estimator.</p>
+</div>
+</div>
+</section>
+<section id="S5" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">5.5</span> Invariance Under Reparametrisation</h2>
+
+<div id="S5.p1" class="ltx_para">
+<p class="ltx_p">Often the quantity we want to estimate is not the parameter itself,
+but a function of the parameter, <span class="ltx_text ltx_font_italic">e.g.</span> a probability, a mean
+or a median. The following theorem shows that under maximum likelihood
+such quantities transform together with the parameter.</p>
+</div>
+<div id="Thmtheorem6" class="ltx_theorem ltx_theorem_theorem" role="region" aria-labelledby="bml-auto-id8">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id8"><span class="ltx_text ltx_font_bold">Theorem 5.6</span></span><span class="ltx_text ltx_font_bold"> </span>(Invariance of the MLE)<span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem6.p1" class="ltx_para">
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">Let <math id="Thmtheorem6.p1.m1" class="ltx_Math" alttext="g\colon\Theta\to\Psi" display="inline"><semantics><mrow><mi>g</mi><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">→</mo><mi mathvariant="normal">Ψ</mi></mrow></mrow><annotation encoding="application/x-tex">g\colon\Theta\to\Psi</annotation></semantics></math> be a bijection and let <math id="Thmtheorem6.p1.m2" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math> be a
+maximum likelihood estimator for <math id="Thmtheorem6.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>. Then <math id="Thmtheorem6.p1.m4" class="ltx_Math" alttext="g(\hat{\theta})" display="inline"><semantics><mrow><mi>g</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(\hat{\theta})</annotation></semantics></math> is a maximum
+likelihood estimator for the transformed parameter <math id="Thmtheorem6.p1.m5" class="ltx_Math" alttext="\psi=g(\theta)" display="inline"><semantics><mrow><mi>ψ</mi><mo>=</mo><mrow><mi>g</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\psi=g(\theta)</annotation></semantics></math>.</span></p>
+</div>
+</div>
+<div id="S5.p2" class="ltx_para">
+<p class="ltx_p">The idea of the proof is that re-labelling the parameter does not
+change the family of distributions: in terms of <math id="S5.p2.m1" class="ltx_Math" alttext="\psi" display="inline"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math> the likelihood
+is
+<math id="S5.p2.m2" class="ltx_Math" alttext="\tilde{L}(\psi)=L\bigl{(}g^{-1}(\psi)\bigr{)}" display="inline"><semantics><mrow><mrow><mover accent="true"><mi>L</mi><mo>~</mo></mover><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>L</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msup><mi>g</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\tilde{L}(\psi)=L\bigl{(}g^{-1}(\psi)\bigr{)}</annotation></semantics></math>, so maximising <math id="S5.p2.m3" class="ltx_Math" alttext="\tilde{L}" display="inline"><semantics><mover accent="true"><mi>L</mi><mo>~</mo></mover><annotation encoding="application/x-tex">\tilde{L}</annotation></semantics></math>
+over <math id="S5.p2.m4" class="ltx_Math" alttext="\Psi" display="inline"><semantics><mi mathvariant="normal">Ψ</mi><annotation encoding="application/x-tex">\Psi</annotation></semantics></math> is the same maximisation as before. Writing this down
+is exercise <a href="#Thmexercise5" title="Exercise 5.5. ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.5</span></a>.</p>
+</div>
+<div id="Thmremarkx5" class="ltx_theorem ltx_theorem_remark" role="group" aria-labelledby="bml-auto-id9">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id9"><span class="ltx_text ltx_font_italic">Remark</span></span><span class="ltx_text ltx_font_italic">.</span>
+</div>
+<div id="Thmremarkx5.p1" class="ltx_para">
+<p class="ltx_p">If <math id="Thmremarkx5.p1.m1" class="ltx_Math" alttext="g" display="inline"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math> is not a bijection, then the likelihood of <math id="Thmremarkx5.p1.m2" class="ltx_Math" alttext="\psi" display="inline"><semantics><mi>ψ</mi><annotation encoding="application/x-tex">\psi</annotation></semantics></math> is
+defined to be the maximal likelihood of the values of <math id="Thmremarkx5.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> which
+map to this value. While the statement <math id="Thmremarkx5.p1.m4" class="ltx_Math" alttext="\hat{\psi}=g(\hat{\theta})" display="inline"><semantics><mrow><mover accent="true"><mi>ψ</mi><mo>^</mo></mover><mo>=</mo><mrow><mi>g</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\hat{\psi}=g(\hat{\theta})</annotation></semantics></math> is still true,
+we will not require the general case in this module.</p>
+</div>
+</div>
+<div id="S5.p3" class="ltx_para">
+<p class="ltx_p">As an application, exercise <a href="#Thmexercise8" title="Exercise 5.8. ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.8</span></a> finds the MLE for the
+<em class="ltx_emph ltx_font_italic">median</em> waiting time <math id="S5.p3.m1" class="ltx_Math" alttext="m=(\log 2)/\theta" display="inline"><semantics><mrow><mi>m</mi><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mi>θ</mi></mrow></mrow><annotation encoding="application/x-tex">m=(\log 2)/\theta</annotation></semantics></math> of the exponential model:
+since <math id="S5.p3.m2" class="ltx_Math" alttext="\theta\mapsto(\log 2)/\theta" display="inline"><semantics><mrow><mi>θ</mi><mo stretchy="false">↦</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mi>θ</mi></mrow></mrow><annotation encoding="application/x-tex">\theta\mapsto(\log 2)/\theta</annotation></semantics></math> is a bijection,
+theorem <a href="#Thmtheorem6" title="Theorem 5.6 (Invariance of the MLE). ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.6</span></a> gives <math id="S5.p3.m3" class="ltx_Math" alttext="\hat{m}=(\log 2)\,\bar{X}" display="inline"><semantics><mrow><mover accent="true"><mi>m</mi><mo>^</mo></mover><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow></mrow><annotation encoding="application/x-tex">\hat{m}=(\log 2)\,\bar{X}</annotation></semantics></math> with no
+further maximisation. The exercise also contains a surprise: <math id="S5.p3.m4" class="ltx_Math" alttext="\hat{m}" display="inline"><semantics><mover accent="true"><mi>m</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{m}</annotation></semantics></math> is
+unbiased, despite the MLE for the rate being biased. In general,
+unbiasedness is lost under nonlinear reparametrisation, and thus there
+is no analogue of theorem <a href="#Thmtheorem6" title="Theorem 5.6 (Invariance of the MLE). ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.6</span></a> for unbiasedness.</p>
+</div>
+<div id="S5.p4" class="ltx_para">
+<p class="ltx_p">Since we have seen that the MLE can be biased, non-unique and even
+non-existent, we need to do more work to understand the method.
+The arguments for the validity of the MLE can be found in
+lectures <a href="Ch13.html" title="Lecture 13 The Cramer–Rao Inequality ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">13</span></a>, <a href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">16</span></a>
+and <a href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">17</span></a>: the main result is the Cramer–Rao
+bound, which no unbiased estimator can violate. For large sample
+sizes, the MLE is shown to be consistent and to asymptotically achieve
+this bound. In preparation for these arguments,
+lecture <a href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">8</span></a> summarises the observation from
+example <a href="Ch4.html#Thmtheorem3" title="Example 4.3. ‣ 4.1 The Likelihood Function ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.3</span></a> that the likelihood function can be
+collapsed to a small number of data summaries.</p>
+</div>
+<div id="Thmsummarybodyx5" class="ltx_theorem bml_border-color_000000 ltx_theorem_summarybody ltx_framed ltx_framed_left" style="border-width:3pt;padding-left:10pt;" role="group" aria-labelledby="bml-auto-id10">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id10"><span class="ltx_text ltx_font_italic">Summary</span></span><span class="ltx_text ltx_font_italic">.</span>
+</div>
+<div id="Thmsummarybodyx5.p1" class="ltx_para">
+<ul id="S5.I1" class="ltx_itemize">
+<li id="S5.I1.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i1.p1" class="ltx_para">​<p class="ltx_p">The maximum likelihood estimator <math id="S5.I1.i1.p1.m1" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math> is the parameter
+value which maximises the likelihood (or log-likelihood) of the
+data.</p>
+</div>
+</li>
+<li id="S5.I1.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i2.p1" class="ltx_para">​<p class="ltx_p">For smooth problems, where the maximum is an interior point of
+the parameter space, the MLE can be found by solving the likelihood
+equation <math id="S5.I1.i2.p1.m1" class="ltx_Math" alttext="\ell^{\prime}(\theta)=0" display="inline"><semantics><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ell^{\prime}(\theta)=0</annotation></semantics></math> and verifying that the root is a maximum.
+For the standard families of models this gives <math id="S5.I1.i2.p1.m2" class="ltx_Math" alttext="\bar{X}" display="inline"><semantics><mover accent="true"><mi>X</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{X}</annotation></semantics></math> (Bernoulli
+and Poisson), <math id="S5.I1.i2.p1.m3" class="ltx_Math" alttext="1/\bar{X}" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow><annotation encoding="application/x-tex">1/\bar{X}</annotation></semantics></math> (exponential rate) and
+<math id="S5.I1.i2.p1.m4" class="ltx_Math" alttext="\bigl{(}\bar{X},(1/n)\sum_{i}(X_{i}-\bar{X})^{2}\bigr{)}" display="inline"><semantics><mrow><mo maxsize="120%" minsize="120%">(</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover><mo>,</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mi>n</mi></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><msub><mo rspace="0em">∑</mo><mi>i</mi></msub><msup><mrow><mo stretchy="false">(</mo><mrow><msub><mi>X</mi><mi>i</mi></msub><mo>−</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><annotation encoding="application/x-tex">\bigl{(}\bar{X},(1/n)\sum_{i}(X_{i}-\bar{X})^{2}\bigr{)}</annotation></semantics></math> (normal).</p>
+</div>
+</li>
+<li id="S5.I1.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i3.p1" class="ltx_para">​<p class="ltx_p">If the recipe fails, the definition can still be used: for the
+uniform distribution the maximum sits at the boundary, at
+<math id="S5.I1.i3.p1.m1" class="ltx_Math" alttext="\hat{\theta}=\max_{i}X_{i}" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mrow><msub><mi>max</mi><mi>i</mi></msub><mo lspace="0.167em">⁡</mo><msub><mi>X</mi><mi>i</mi></msub></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}=\max_{i}X_{i}</annotation></semantics></math>, and for the <math id="S5.I1.i3.p1.m2" class="ltx_Math" alttext="t" display="inline"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> location model with two
+observations far apart the MLE is not unique.</p>
+</div>
+</li>
+<li id="S5.I1.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i4.p1" class="ltx_para">​<p class="ltx_p">The MLE is not unbiased in general. Whether removing the bias
+improves the mean squared error depends on the model: for the
+exponential rate the corrected estimator wins, reversing the
+normal-variance comparison of lecture <a href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2</span></a>.</p>
+</div>
+</li>
+<li id="S5.I1.i5" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i5.p1" class="ltx_para">​<p class="ltx_p">The MLE is invariant under reparametrisation: the MLE for
+<math id="S5.I1.i5.p1.m1" class="ltx_Math" alttext="g(\theta)" display="inline"><semantics><mrow><mi>g</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(\theta)</annotation></semantics></math> is <math id="S5.I1.i5.p1.m2" class="ltx_Math" alttext="g(\hat{\theta})" display="inline"><semantics><mrow><mi>g</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(\hat{\theta})</annotation></semantics></math>. Unbiasedness is not invariant.</p>
+</div>
+</li>
+<li id="S5.I1.i6" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S5.I1.i6.p1" class="ltx_para">​<p class="ltx_p">The full justification of the method, including efficiency and
+large-sample optimality, follows in lectures <a href="Ch13.html" title="Lecture 13 The Cramer–Rao Inequality ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">13</span></a>,
+<a href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">16</span></a> and <a href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">17</span></a>.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="Thmexercise1" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id11">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id11"><span class="ltx_text ltx_font_bold">Exercise 5.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise1.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise1.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be an i.i.d. sample from the geometric
+distribution with parameter <math id="Thmexercise1.p1.m2" class="ltx_Math" alttext="p\in(0,1)" display="inline"><semantics><mrow><mi>p</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">p\in(0,1)</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> <math id="Thmexercise1.p1.m3" class="ltx_Math" alttext="f(x;p)=(1-p)^{x-1}p" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>p</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>p</mi></mrow><mo stretchy="false">)</mo></mrow><mrow><mi>x</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><mi>p</mi></mrow></mrow><annotation encoding="application/x-tex">f(x;p)=(1-p)^{x-1}p</annotation></semantics></math> for
+<math id="Thmexercise1.p1.m4" class="ltx_Math" alttext="x\in\{1,2,\dots\}" display="inline"><semantics><mrow><mi>x</mi><mo>∈</mo><mrow><mo stretchy="false">{</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mi mathvariant="normal">…</mi><mo stretchy="false">}</mo></mrow></mrow><annotation encoding="application/x-tex">x\in\{1,2,\dots\}</annotation></semantics></math> as in exercise <a href="Ch4.html#Thmexercise2" title="Exercise 4.2. ‣ 4.4 Identifiability ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.2</span></a>.</p>
+<ol id="S5.I2" class="ltx_enumerate">
+<li id="S5.I2.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I2.i1.p1" class="ltx_para">​<p class="ltx_p">Show that the log-likelihood function is given by
+<math id="S5.I2.i1.p1.m1" class="ltx_Math" alttext="\ell(p)=n\log p+\bigl{(}\sum_{i}x_{i}-n\bigr{)}\log(1-p)" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>p</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mi>n</mi><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>p</mi></mrow></mrow><mo>+</mo><mrow><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><msub><mo lspace="0em">∑</mo><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub></mrow><mo>−</mo><mi>n</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo>⁡</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>p</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\ell(p)=n\log p+\bigl{(}\sum_{i}x_{i}-n\bigr{)}\log(1-p)</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I2.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I2.i2.p1" class="ltx_para">​<p class="ltx_p">Solve the likelihood equation and show that your solution
+is a maximum. Deduce that the MLE is <math id="S5.I2.i2.p1.m1" class="ltx_Math" alttext="\hat{p}=1/\bar{X}" display="inline"><semantics><mrow><mover accent="true"><mi>p</mi><mo>^</mo></mover><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow></mrow><annotation encoding="application/x-tex">\hat{p}=1/\bar{X}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I2.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I2.i3.p1" class="ltx_para">​<p class="ltx_p">Discuss your results in the light of the method of moments
+estimator from exercise <a href="Ch4.html#Thmexercise2" title="Exercise 4.2. ‣ 4.4 Identifiability ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.2</span></a>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise2" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id12">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id12"><span class="ltx_text ltx_font_bold">Exercise 5.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise2.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise2.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be i.i.d. with density
+<math id="Thmexercise2.p1.m2" class="ltx_Math" alttext="f(x;\theta)=\theta^{-2}x\,e^{-x/\theta}" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>;</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mi>θ</mi><mrow><mo>−</mo><mn>2</mn></mrow></msup><mo>⁢</mo><mi>x</mi><mo lspace="0.170em">⁢</mo><msup><mi>e</mi><mrow><mo>−</mo><mrow><mi>x</mi><mo>/</mo><mi>θ</mi></mrow></mrow></msup></mrow></mrow><annotation encoding="application/x-tex">f(x;\theta)=\theta^{-2}x\,e^{-x/\theta}</annotation></semantics></math> for <math id="Thmexercise2.p1.m3" class="ltx_Math" alttext="x\geq 0" display="inline"><semantics><mrow><mi>x</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x\geq 0</annotation></semantics></math>, where <math id="Thmexercise2.p1.m4" class="ltx_Math" alttext="\theta&gt;0" display="inline"><semantics><mrow><mi>θ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta&gt;0</annotation></semantics></math>. This is
+the gamma distribution with known shape <math id="Thmexercise2.p1.m5" class="ltx_Math" alttext="2" display="inline"><semantics><mn>2</mn><annotation encoding="application/x-tex">2</annotation></semantics></math> and scale <math id="Thmexercise2.p1.m6" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>,
+<span class="ltx_text ltx_font_italic">i.e.</span> <math id="Thmexercise2.p1.m7" class="ltx_Math" alttext="\text{Gamma}(2,1/\theta)" display="inline"><semantics><mrow><mtext>Gamma</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mrow><mn>1</mn><mo>/</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Gamma}(2,1/\theta)</annotation></semantics></math> in the rate parametrisation from
+table <a href="A1.html#T2" title="Table A.2 ‣ A.2 Standard Distributions ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.2</span></a>.</p>
+<ol id="S5.I3" class="ltx_enumerate">
+<li id="S5.I3.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I3.i1.p1" class="ltx_para">​<p class="ltx_p">Find the MLE <math id="S5.I3.i1.p1.m1" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math> for <math id="S5.I3.i1.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I3.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I3.i2.p1" class="ltx_para">​<p class="ltx_p">Show that your estimator <math id="S5.I3.i2.p1.m1" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math> is unbiased.</p>
+</div>
+</li>
+<li id="S5.I3.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I3.i3.p1" class="ltx_para">​<p class="ltx_p">Determine <math id="S5.I3.i3.p1.m1" class="ltx_Math" alttext="\mathop{\mathrm{MSE}}\nolimits(\hat{\theta})" display="inline"><semantics><mrow><mo rspace="0em">MSE</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{MSE}}\nolimits(\hat{\theta})</annotation></semantics></math> and use this to show that
+<math id="S5.I3.i3.p1.m2" class="ltx_Math" alttext="\hat{\theta}" display="inline"><semantics><mover accent="true"><mi>θ</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{\theta}</annotation></semantics></math> is consistent.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise3" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id13">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id13"><span class="ltx_text ltx_font_bold">Exercise 5.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise3.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise3.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be i.i.d. exponential with rate <math id="Thmexercise3.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, let
+<math id="Thmexercise3.p1.m3" class="ltx_Math" alttext="\hat{\theta}=1/\bar{X}" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}=1/\bar{X}</annotation></semantics></math> be the MLE and assume <math id="Thmexercise3.p1.m4" class="ltx_Math" alttext="n\geq 3" display="inline"><semantics><mrow><mi>n</mi><mo>≥</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">n\geq 3</annotation></semantics></math>. Consider the family
+of estimators <math id="Thmexercise3.p1.m5" class="ltx_Math" alttext="c\hat{\theta}" display="inline"><semantics><mrow><mi>c</mi><mo>⁢</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">c\hat{\theta}</annotation></semantics></math> for constants <math id="Thmexercise3.p1.m6" class="ltx_Math" alttext="c&gt;0" display="inline"><semantics><mrow><mi>c</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">c&gt;0</annotation></semantics></math>.</p>
+<ol id="S5.I4" class="ltx_enumerate">
+<li id="S5.I4.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I4.i1.p1" class="ltx_para">​<p class="ltx_p">Using the gamma density of <math id="S5.I4.i1.p1.m1" class="ltx_Math" alttext="T=X_{1}+\dots+X_{n}" display="inline"><semantics><mrow><mi>T</mi><mo>=</mo><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>+</mo><mi mathvariant="normal">⋯</mi><mo>+</mo><msub><mi>X</mi><mi>n</mi></msub></mrow></mrow><annotation encoding="application/x-tex">T=X_{1}+\dots+X_{n}</annotation></semantics></math> as in
+exercise <a href="Ch2.html#Thmexercise3" title="Exercise 2.3. ‣ 2.4 Consistency ‣ Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2.3</span></a>, show that
+<math id="S5.I4.i1.p1.m2" class="ltx_Math" alttext="\mathbb{E}_{\theta}(\hat{\theta}^{2})=n^{2}\theta^{2}/\bigl{(}(n-1)(n-2)\bigr{)}" display="inline"><semantics><mrow><mrow><msub><mi>𝔼</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msup><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><msup><mi>n</mi><mn>2</mn></msup><mo>⁢</mo><msup><mi>θ</mi><mn>2</mn></msup></mrow><mo>/</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\theta}(\hat{\theta}^{2})=n^{2}\theta^{2}/\bigl{(}(n-1)(n-2)\bigr{)}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I4.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I4.i2.p1" class="ltx_para">​<p class="ltx_p">Show that</p>
+<div id="Ex16" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex16.m1" class="ltx_Math" alttext="\mathop{\mathrm{MSE}}\nolimits(c\hat{\theta})=\Bigl{(}\frac{n^{2}}{(n-1)(n-2)}%
+\,c^{2}-\frac{2n}{n-1}\,c+1\Bigr{)}\theta^{2}," display="block"><semantics><mrow><mrow><mrow><mo rspace="0em">MSE</mo><mrow><mo stretchy="false">(</mo><mrow><mi>c</mi><mo>⁢</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mrow><mrow><mfrac><msup><mi>n</mi><mn>2</mn></msup><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow></mfrac><mo lspace="0.170em">⁢</mo><msup><mi>c</mi><mn>2</mn></msup></mrow><mo>−</mo><mrow><mfrac><mrow><mn>2</mn><mo>⁢</mo><mi>n</mi></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mo lspace="0.170em">⁢</mo><mi>c</mi></mrow></mrow><mo>+</mo><mn>1</mn></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow><mo>⁢</mo><msup><mi>θ</mi><mn>2</mn></msup></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{MSE}}\nolimits(c\hat{\theta})=\Bigl{(}\frac{n^{2}}{(n-1)(n-2)}%
+\,c^{2}-\frac{2n}{n-1}\,c+1\Bigr{)}\theta^{2},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">and deduce the values <math id="S5.I4.i2.p1.m1" class="ltx_Math" alttext="\mathop{\mathrm{MSE}}\nolimits(\hat{\theta})=(n+2)\theta^{2}/\bigl{(}(n-1)(n-2%
+)\bigr{)}" display="inline"><semantics><mrow><mrow><mo rspace="0em">MSE</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>+</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msup><mi>θ</mi><mn>2</mn></msup></mrow><mo>/</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{MSE}}\nolimits(\hat{\theta})=(n+2)\theta^{2}/\bigl{(}(n-1)(n-2%
+)\bigr{)}</annotation></semantics></math>
+for the MLE and <math id="S5.I4.i2.p1.m2" class="ltx_Math" alttext="\mathop{\mathrm{MSE}}\nolimits(\tilde{\theta})=\theta^{2}/(n-2)" display="inline"><semantics><mrow><mrow><mo rspace="0em">MSE</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>~</mo></mover><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mi>θ</mi><mn>2</mn></msup><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{MSE}}\nolimits(\tilde{\theta})=\theta^{2}/(n-2)</annotation></semantics></math> for the unbiased
+version <math id="S5.I4.i2.p1.m3" class="ltx_Math" alttext="\tilde{\theta}=(n-1)\hat{\theta}/n" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>~</mo></mover><mo>=</mo><mrow><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover></mrow><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">\tilde{\theta}=(n-1)\hat{\theta}/n</annotation></semantics></math> from the text, and the ratio
+<math id="S5.I4.i2.p1.m4" class="ltx_Math" alttext="\mathop{\mathrm{MSE}}\nolimits(\tilde{\theta})/\mathop{\mathrm{MSE}}\nolimits(%
+\hat{\theta})=(n-1)/(n+2)" display="inline"><semantics><mrow><mrow><mo rspace="0em">MSE</mo><mrow><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>~</mo></mover><mo stretchy="false">)</mo></mrow><mo>/</mo><mrow><mo lspace="0em" rspace="0em">MSE</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>+</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathop{\mathrm{MSE}}\nolimits(\tilde{\theta})/\mathop{\mathrm{MSE}}\nolimits(%
+\hat{\theta})=(n-1)/(n+2)</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I4.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I4.i3.p1" class="ltx_para">​<p class="ltx_p">Determine the value of <math id="S5.I4.i3.p1.m1" class="ltx_Math" alttext="c" display="inline"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math> which minimises the mean squared error,
+and show that the minimal mean squared error is <math id="S5.I4.i3.p1.m2" class="ltx_Math" alttext="\theta^{2}/(n-1)" display="inline"><semantics><mrow><msup><mi>θ</mi><mn>2</mn></msup><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta^{2}/(n-1)</annotation></semantics></math>.
+Compare your result with the MLE (<math id="S5.I4.i3.p1.m3" class="ltx_Math" alttext="c=1" display="inline"><semantics><mrow><mi>c</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">c=1</annotation></semantics></math>), the unbiased version
+<math id="S5.I4.i3.p1.m4" class="ltx_Math" alttext="c=(n-1)/n" display="inline"><semantics><mrow><mi>c</mi><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">c=(n-1)/n</annotation></semantics></math>, and the result for the normal variance in
+section <a href="Ch2.html#S3" title="2.3 When Unbiasedness Is Not Enough ‣ Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">2.3</span></a>. Comment upon your result.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise4" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id14">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id14"><span class="ltx_text ltx_font_bold">Exercise 5.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise4.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise4.p1.m1" class="ltx_Math" alttext="x_{1}&gt;x_{2}" display="inline"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>&gt;</mo><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">x_{1}&gt;x_{2}</annotation></semantics></math> be any two observations from the <math id="Thmexercise4.p1.m2" class="ltx_Math" alttext="t" display="inline"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> location model
+given in section <a href="#S3" title="5.3 When the Recipe Fails ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.3</span></a>. Let <math id="Thmexercise4.p1.m3" class="ltx_Math" alttext="m=(x_{1}+x_{2})/2" display="inline"><semantics><mrow><mi>m</mi><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>x</mi><mn>2</mn></msub></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mn>2</mn></mrow></mrow><annotation encoding="application/x-tex">m=(x_{1}+x_{2})/2</annotation></semantics></math> be the mid-point and <math id="Thmexercise4.p1.m4" class="ltx_Math" alttext="d=(x_{1}-x_{2})/2" display="inline"><semantics><mrow><mi>d</mi><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>−</mo><msub><mi>x</mi><mn>2</mn></msub></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mn>2</mn></mrow></mrow><annotation encoding="application/x-tex">d=(x_{1}-x_{2})/2</annotation></semantics></math>
+be half the distance between the two observations.</p>
+<ol id="S5.I5" class="ltx_enumerate">
+<li id="S5.I5.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I5.i1.p1" class="ltx_para">​<p class="ltx_p">Let <math id="S5.I5.i1.p1.m1" class="ltx_Math" alttext="a=x_{1}-\theta" display="inline"><semantics><mrow><mi>a</mi><mo>=</mo><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>−</mo><mi>θ</mi></mrow></mrow><annotation encoding="application/x-tex">a=x_{1}-\theta</annotation></semantics></math> and <math id="S5.I5.i1.p1.m2" class="ltx_Math" alttext="b=x_{2}-\theta" display="inline"><semantics><mrow><mi>b</mi><mo>=</mo><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>−</mo><mi>θ</mi></mrow></mrow><annotation encoding="application/x-tex">b=x_{2}-\theta</annotation></semantics></math>. Show that the likelihood
+equation <math id="S5.I5.i1.p1.m3" class="ltx_Math" alttext="\ell^{\prime}(\theta)=0" display="inline"><semantics><mrow><mrow><msup><mi mathvariant="normal">ℓ</mi><mo>′</mo></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\ell^{\prime}(\theta)=0</annotation></semantics></math> is equivalent to <math id="S5.I5.i1.p1.m4" class="ltx_Math" alttext="(a+b)(\nu+ab)=0" display="inline"><semantics><mrow><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>ν</mi><mo>+</mo><mrow><mi>a</mi><mo>⁢</mo><mi>b</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(a+b)(\nu+ab)=0</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I5.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I5.i2.p1" class="ltx_para">​<p class="ltx_p">Show that for <math id="S5.I5.i2.p1.m1" class="ltx_Math" alttext="\theta=m+t" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mi>m</mi><mo>+</mo><mi>t</mi></mrow></mrow><annotation encoding="application/x-tex">\theta=m+t</annotation></semantics></math> the log-likelihood function is
+<math id="S5.I5.i2.p1.m2" class="ltx_Math" alttext="\ell(m+t)=C-\frac{\nu+1}{2}\log P(t)" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>m</mi><mo>+</mo><mi>t</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>C</mi><mo>−</mo><mrow><mfrac><mrow><mi>ν</mi><mo>+</mo><mn>1</mn></mrow><mn>2</mn></mfrac><mo lspace="0.167em">⁢</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>P</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\ell(m+t)=C-\frac{\nu+1}{2}\log P(t)</annotation></semantics></math>, where <math id="S5.I5.i2.p1.m3" class="ltx_Math" alttext="C" display="inline"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math> does not depend
+on <math id="S5.I5.i2.p1.m4" class="ltx_Math" alttext="t" display="inline"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> and</p>
+<div id="Ex17" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex17.m1" class="ltx_Math" alttext="P(t)=(\nu+d^{2})^{2}+2(\nu-d^{2})\,t^{2}+t^{4}." display="block"><semantics><mrow><mrow><mrow><mi>P</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mi>ν</mi><mo>+</mo><msup><mi>d</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mo>+</mo><mrow><mn>2</mn><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>ν</mi><mo>−</mo><msup><mi>d</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><msup><mi>t</mi><mn>2</mn></msup></mrow><mo>+</mo><msup><mi>t</mi><mn>4</mn></msup></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">P(t)=(\nu+d^{2})^{2}+2(\nu-d^{2})\,t^{2}+t^{4}.</annotation></semantics></math></div>
+</div>
+</div>
+</li>
+<li id="S5.I5.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I5.i3.p1" class="ltx_para">​<p class="ltx_p">Show that for <math id="S5.I5.i3.p1.m1" class="ltx_Math" alttext="d^{2}&lt;\nu" display="inline"><semantics><mrow><msup><mi>d</mi><mn>2</mn></msup><mo>&lt;</mo><mi>ν</mi></mrow><annotation encoding="application/x-tex">d^{2}&lt;\nu</annotation></semantics></math> the mid-point <math id="S5.I5.i3.p1.m2" class="ltx_Math" alttext="m" display="inline"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> is the unique MLE,
+but for <math id="S5.I5.i3.p1.m3" class="ltx_Math" alttext="d^{2}&gt;\nu" display="inline"><semantics><mrow><msup><mi>d</mi><mn>2</mn></msup><mo>&gt;</mo><mi>ν</mi></mrow><annotation encoding="application/x-tex">d^{2}&gt;\nu</annotation></semantics></math> the likelihood equation has three roots
+<math id="S5.I5.i3.p1.m4" class="ltx_Math" alttext="m" display="inline"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>, <math id="S5.I5.i3.p1.m5" class="ltx_Math" alttext="m\pm\sqrt{d^{2}-\nu}" display="inline"><semantics><mrow><mi>m</mi><mo>±</mo><msqrt><mrow><msup><mi>d</mi><mn>2</mn></msup><mo>−</mo><mi>ν</mi></mrow></msqrt></mrow><annotation encoding="application/x-tex">m\pm\sqrt{d^{2}-\nu}</annotation></semantics></math>, where <math id="S5.I5.i3.p1.m6" class="ltx_Math" alttext="m" display="inline"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> is a local minimum of <math id="S5.I5.i3.p1.m7" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math> and the other
+two are maximum likelihood estimates with equal likelihood.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise5" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id15">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id15"><span class="ltx_text ltx_font_bold">Exercise 5.5</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise5.p1" class="ltx_para">
+<p class="ltx_p">Prove the statement of theorem <a href="#Thmtheorem6" title="Theorem 5.6 (Invariance of the MLE). ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.6</span></a>: Let <math id="Thmexercise5.p1.m1" class="ltx_Math" alttext="g\colon\Theta\to\Psi" display="inline"><semantics><mrow><mi>g</mi><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false">→</mo><mi mathvariant="normal">Ψ</mi></mrow></mrow><annotation encoding="application/x-tex">g\colon\Theta\to\Psi</annotation></semantics></math>
+be a bijection and let the likelihood in the new parametrisation
+be given by <math id="Thmexercise5.p1.m2" class="ltx_Math" alttext="\tilde{L}(\psi)=L\bigl{(}g^{-1}(\psi)\bigr{)}" display="inline"><semantics><mrow><mrow><mover accent="true"><mi>L</mi><mo>~</mo></mover><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>L</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msup><mi>g</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>ψ</mi><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\tilde{L}(\psi)=L\bigl{(}g^{-1}(\psi)\bigr{)}</annotation></semantics></math>. Show that <math id="Thmexercise5.p1.m3" class="ltx_Math" alttext="g(\hat{\theta})" display="inline"><semantics><mrow><mi>g</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">g(\hat{\theta})</annotation></semantics></math>
+is the maximum of <math id="Thmexercise5.p1.m4" class="ltx_Math" alttext="\tilde{L}" display="inline"><semantics><mover accent="true"><mi>L</mi><mo>~</mo></mover><annotation encoding="application/x-tex">\tilde{L}</annotation></semantics></math> over <math id="Thmexercise5.p1.m5" class="ltx_Math" alttext="\Psi" display="inline"><semantics><mi mathvariant="normal">Ψ</mi><annotation encoding="application/x-tex">\Psi</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="Thmexercise6" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id16">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id16"><span class="ltx_text ltx_font_bold">Exercise 5.6</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise6.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise6.p1.m1" class="ltx_Math" alttext="X" display="inline"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> be an observation from the exponential distribution with
+rate <math id="Thmexercise6.p1.m2" class="ltx_Math" alttext="\theta&gt;0" display="inline"><semantics><mrow><mi>θ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta&gt;0</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> <math id="Thmexercise6.p1.m3" class="ltx_Math" alttext="\mathbb{P}_{\theta}(X&gt;x)=e^{-\theta x}" display="inline"><semantics><mrow><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>X</mi><mo>&gt;</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mrow><mi>θ</mi><mo>⁢</mo><mi>x</mi></mrow></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta}(X&gt;x)=e^{-\theta x}</annotation></semantics></math> for <math id="Thmexercise6.p1.m4" class="ltx_Math" alttext="x\geq 0" display="inline"><semantics><mrow><mi>x</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x\geq 0</annotation></semantics></math>. The following
+properties of the exponential distribution will be needed later in the
+module.</p>
+<ol id="S5.I6" class="ltx_enumerate">
+<li id="S5.I6.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I6.i1.p1" class="ltx_para">​<p class="ltx_p">Show that the exponential distribution has no memory, <span class="ltx_text ltx_font_italic">i.e.</span> that for all <math id="S5.I6.i1.p1.m1" class="ltx_Math" alttext="s,t\geq 0" display="inline"><semantics><mrow><mrow><mi>s</mi><mo>,</mo><mi>t</mi></mrow><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">s,t\geq 0</annotation></semantics></math> we have</p>
+<div id="Ex18" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex18.m1" class="ltx_Math" alttext="\mathbb{P}_{\theta}(X&gt;s+t\mskip 1.0mu|\mskip 1.0muX&gt;s)=\mathbb{P}_{\theta}(X&gt;t)." display="block"><semantics><mrow><mrow><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>X</mi><mo>&gt;</mo><mrow><mi>s</mi><mo>+</mo><mrow><mi>t</mi><mo lspace="0.060em">⁢</mo><mrow><mo rspace="0.060em" stretchy="false">|</mo><mi>X</mi><mo fence="true" lspace="0em">&gt;</mo></mrow><mo lspace="0em">⁢</mo><mi>s</mi></mrow></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>X</mi><mo>&gt;</mo><mi>t</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta}(X&gt;s+t\mskip 1.0mu|\mskip 1.0muX&gt;s)=\mathbb{P}_{\theta}(X&gt;t).</annotation></semantics></math></div>
+</div>
+</div>
+</li>
+<li id="S5.I6.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I6.i2.p1" class="ltx_para">​<p class="ltx_p">Show that for all <math id="S5.I6.i2.p1.m1" class="ltx_Math" alttext="c\geq 0" display="inline"><semantics><mrow><mi>c</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">c\geq 0</annotation></semantics></math> we have</p>
+<div id="Ex19" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex19.m1" class="ltx_Math" alttext="\mathbb{E}_{\theta}(X\mskip 1.0mu|\mskip 1.0muX&gt;c)=c+\frac{1}{\theta}." display="block"><semantics><mrow><mrow><mrow><msub><mi>𝔼</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>X</mi><mo lspace="0.060em">⁢</mo><mrow><mo rspace="0.060em" stretchy="false">|</mo><mi>X</mi><mo fence="true" lspace="0em">&gt;</mo></mrow><mo lspace="0em">⁢</mo><mi>c</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>c</mi><mo>+</mo><mfrac><mn>1</mn><mi>θ</mi></mfrac></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\theta}(X\mskip 1.0mu|\mskip 1.0muX&gt;c)=c+\frac{1}{\theta}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Comment upon your result in the light of the first part of the
+question.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise7" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id17">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id17"><span class="ltx_text ltx_font_bold">Exercise 5.7</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise7.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise7.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be an i.i.d. sample from the Poisson distribution
+with parameter <math id="Thmexercise7.p1.m2" class="ltx_Math" alttext="\theta&gt;0" display="inline"><semantics><mrow><mi>θ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta&gt;0</annotation></semantics></math>, and assume that <math id="Thmexercise7.p1.m3" class="ltx_Math" alttext="\sum_{i}x_{i}\geq 1" display="inline"><semantics><mrow><mrow><msub><mo>∑</mo><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub></mrow><mo>≥</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sum_{i}x_{i}\geq 1</annotation></semantics></math>.</p>
+<ol id="S5.I7" class="ltx_enumerate">
+<li id="S5.I7.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I7.i1.p1" class="ltx_para">​<p class="ltx_p">In exercise <a href="Ch4.html#Thmexercise1" title="Exercise 4.1. ‣ 4.4 Identifiability ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.1</span></a> we have seen that the score
+equals zero at <math id="S5.I7.i1.p1.m1" class="ltx_Math" alttext="\bar{x}" display="inline"><semantics><mover accent="true"><mi>x</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>. Show that <math id="S5.I7.i1.p1.m2" class="ltx_Math" alttext="\bar{X}" display="inline"><semantics><mover accent="true"><mi>X</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{X}</annotation></semantics></math> is indeed the MLE
+for <math id="S5.I7.i1.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I7.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I7.i2.p1" class="ltx_para">​<p class="ltx_p">Determine the MLE for the probability <math id="S5.I7.i2.p1.m1" class="ltx_Math" alttext="p_{0}=\mathbb{P}_{\theta}(X_{1}=0)" display="inline"><semantics><mrow><msub><mi>p</mi><mn>0</mn></msub><mo>=</mo><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>=</mo><mn>0</mn></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">p_{0}=\mathbb{P}_{\theta}(X_{1}=0)</annotation></semantics></math> of observing
+zero.</p>
+</div>
+</li>
+<li id="S5.I7.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I7.i3.p1" class="ltx_para">​<p class="ltx_p">Using the relation <math id="S5.I7.i3.p1.m1" class="ltx_Math" alttext="\mathbb{E}_{\theta}\bigl{(}z^{X_{1}}\bigr{)}=e^{\theta(z-1)}" display="inline"><semantics><mrow><mrow><msub><mi>𝔼</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><msup><mi>z</mi><msub><mi>X</mi><mn>1</mn></msub></msup><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo>=</mo><msup><mi>e</mi><mrow><mi>θ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>z</mi><mo>−</mo><mn>1</mn></mrow><mo stretchy="false">)</mo></mrow></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbb{E}_{\theta}\bigl{(}z^{X_{1}}\bigr{)}=e^{\theta(z-1)}</annotation></semantics></math> for
+<math id="S5.I7.i3.p1.m2" class="ltx_Math" alttext="z&gt;0" display="inline"><semantics><mrow><mi>z</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">z&gt;0</annotation></semantics></math>, show that your estimator from the previous part is
+biased, but asymptotically unbiased. Comment on your result in the
+light of the fact that <math id="S5.I7.i3.p1.m3" class="ltx_Math" alttext="\bar{X}" display="inline"><semantics><mover accent="true"><mi>X</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{X}</annotation></semantics></math> is unbiased.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise8" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id18">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id18"><span class="ltx_text ltx_font_bold">Exercise 5.8</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise8.p1" class="ltx_para">
+<p class="ltx_p">Assume that we have observed the i.i.d. exponential waiting
+times <math id="Thmexercise8.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> with rate <math id="Thmexercise8.p1.m2" class="ltx_Math" alttext="\theta&gt;0" display="inline"><semantics><mrow><mi>θ</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\theta&gt;0</annotation></semantics></math>, and that we want to estimate the
+<em class="ltx_emph ltx_font_italic">median</em> waiting time <math id="Thmexercise8.p1.m3" class="ltx_Math" alttext="m" display="inline"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> the value such that
+<math id="Thmexercise8.p1.m4" class="ltx_Math" alttext="\mathbb{P}_{\theta}(X_{1}\leq m)=1/2" display="inline"><semantics><mrow><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>≤</mo><mi>m</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta}(X_{1}\leq m)=1/2</annotation></semantics></math>.</p>
+<ol id="S5.I8" class="ltx_enumerate">
+<li id="S5.I8.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S5.I8.i1.p1" class="ltx_para">​<p class="ltx_p">Show that <math id="S5.I8.i1.p1.m1" class="ltx_Math" alttext="m=g(\theta)=(\log 2)/\theta" display="inline"><semantics><mrow><mi>m</mi><mo>=</mo><mrow><mi>g</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mi>θ</mi></mrow></mrow><annotation encoding="application/x-tex">m=g(\theta)=(\log 2)/\theta</annotation></semantics></math> and that the map <math id="S5.I8.i1.p1.m2" class="ltx_Math" alttext="g" display="inline"><semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics></math>
+maps <math id="S5.I8.i1.p1.m3" class="ltx_Math" alttext="(0,\infty)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0,\infty)</annotation></semantics></math> to <math id="S5.I8.i1.p1.m4" class="ltx_Math" alttext="(0,\infty)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0,\infty)</annotation></semantics></math> bijectively.</p>
+</div>
+</li>
+<li id="S5.I8.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S5.I8.i2.p1" class="ltx_para">​<p class="ltx_p">Using theorem <a href="#Thmtheorem6" title="Theorem 5.6 (Invariance of the MLE). ‣ 5.5 Invariance Under Reparametrisation ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.6</span></a> and
+example <a href="#Thmtheorem2" title="Example 5.2. ‣ 5.2 Worked Examples ‣ Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">5.2</span></a>, show that the MLE for the
+median is given by <math id="S5.I8.i2.p1.m1" class="ltx_Math" alttext="\hat{m}=(\log 2)\,\bar{X}" display="inline"><semantics><mrow><mover accent="true"><mi>m</mi><mo>^</mo></mover><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mn>2</mn></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow></mrow><annotation encoding="application/x-tex">\hat{m}=(\log 2)\,\bar{X}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S5.I8.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S5.I8.i3.p1" class="ltx_para">​<p class="ltx_p">Show that <math id="S5.I8.i3.p1.m1" class="ltx_Math" alttext="\hat{m}" display="inline"><semantics><mover accent="true"><mi>m</mi><mo>^</mo></mover><annotation encoding="application/x-tex">\hat{m}</annotation></semantics></math> is an unbiased estimator for <math id="S5.I8.i3.p1.m2" class="ltx_Math" alttext="m" display="inline"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>, and
+comment on why this does not contradict the bias of the MLE
+<math id="S5.I8.i3.p1.m3" class="ltx_Math" alttext="\hat{\theta}=1/\bar{X}" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mrow><mn>1</mn><mo>/</mo><mover accent="true"><mi>X</mi><mo>¯</mo></mover></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}=1/\bar{X}</annotation></semantics></math> for the rate observed in this lecture.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</div>
+</div>
+<a href="Ch4.html" class="navigation navigation-prev" aria-label="Previous page"><i class="fa fa-angle-left"></i></a><a href="Ch6.html" class="navigation navigation-next" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+</div>
+</div>
+<script src="bookml/gitbook/js/app.min.js"></script>
+<script src="bookml/gitbook/js/jquery.highlight.js"></script>
+<script src="bookml/gitbook/js/plugin-search.js"></script>
+<script src="bookml/gitbook/js/plugin-fontsettings.js"></script>
+<script src="bookml/gitbook/js/plugin-bookdown.js"></script>
+<script src="bookml/js/mathjax4.js"></script>
+<script type="text/javascript">
+                gitbook.require(["gitbook"], function(gitbook) {
+                gitbook.start({
+                  "fontsettings": {
+                    "theme": "white",
+                    "family": "sans",
+                    "size": 2
+                  },
+                  "download": [ [ "notes.pdf", "PDF" ], ],
+                  "search": {
+                    "engine": "fuse"
+                  },
+                  "toc": {
+                    "collapse": "none"
+                  }
+                });
+              });
+            </script>
+</body>
+
+</html>

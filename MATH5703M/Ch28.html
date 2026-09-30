@@ -1,0 +1,791 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory</title>
+<!--Generated on Wed Sep 30 09:26:32 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<style>:root { --bml-ltx-font-size: 10.95; }</style>
+<link rel="stylesheet" href="LaTeXML.css" type="text/css">
+<link rel="stylesheet" href="ltx-book.css" type="text/css">
+<link rel="stylesheet" href="ltx-listings.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-table.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-search.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-bookdown.css" type="text/css">
+<link rel="stylesheet" href="bookml/gitbook/css/plugin-fontsettings.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook,plain.css" type="text/css">
+<link rel="stylesheet" href="bookml/CSS/style.gitbook.css" type="text/css">
+<link rel="stylesheet" href="bmluser/colors.gitbook-notes.css" type="text/css">
+<link rel="stylesheet" href="bmluser/statheo-custom.css" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6"></script>
+<link rel="up" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="start" href="index.html" title="MATH5703M Statistical Theory">
+<link rel="prev" href="Ch27.html" title="Lecture 27 Confidence Versus Credibility ‣ MATH5703M Statistical Theory">
+<link rel="next" href="Ch29.html" title="Lecture 29 Standard Tests Revisited ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx1.html" title="Introduction ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch1.html" title="Lecture 1 Statistical Models and the Estimation Problem ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch2.html" title="Lecture 2 Bias, Mean Squared Error and Consistency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch3.html" title="Lecture 3 R Basics and a First Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch4.html" title="Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch5.html" title="Lecture 5 Maximum Likelihood Estimation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch6.html" title="Lecture 6 Estimators by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch7.html" title="Lecture 7 Exponential Families ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch8.html" title="Lecture 8 Sufficiency ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch9.html" title="Lecture 9 Consistency by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch10.html" title="Lecture 10 Improving Estimators: Rao–Blackwell and Lehmann–Scheffe ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch11.html" title="Lecture 11 Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch12.html" title="Lecture 12 Sampling Distributions and Standard Errors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch13.html" title="Lecture 13 The Cramer–Rao Inequality ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch14.html" title="Lecture 14 Multiparameter Fisher Information ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch15.html" title="Lecture 15 Cramer–Rao and Efficiency in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch16.html" title="Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch17.html" title="Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch18.html" title="Lecture 18 Maximum Likelihood in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch19.html" title="Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch20.html" title="Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch21.html" title="Lecture 21 EM in R ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch22.html" title="Lecture 22 The Neyman–Pearson Lemma ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch23.html" title="Lecture 23 Likelihood-Ratio Tests ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch24.html" title="Lecture 24 Power and Size by Simulation ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch26.html" title="Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch27.html" title="Lecture 27 Confidence Versus Credibility ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch29.html" title="Lecture 29 Standard Tests Revisited ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch30.html" title="Lecture 30 Do the Standard Tests Work? ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Ch31.html" title="Lecture 31 The Exponential Model: From Start to Finish ‣ MATH5703M Statistical Theory">
+<link rel="chapter" href="Chx2.html" title="Preparing for the Exam ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A1.html" title="Appendix A Background from Probability ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A2.html" title="Appendix B Introduction to R ‣ MATH5703M Statistical Theory">
+<link rel="appendix" href="A3.html" title="Appendix C Solutions to the Exercises ‣ MATH5703M Statistical Theory">
+<link rel="bibliography" href="bib.html" title="Bibliography ‣ MATH5703M Statistical Theory">
+<link rel="index" href="idx.html" title="Index ‣ MATH5703M Statistical Theory">
+<meta name="keywords" lang="en" content="Bayes factor, Bayesian, Bayesian test, HPD interval, credibility, credible interval, equal-tailed, highest posterior density, highest posterior density interval, posterior odds, posterior probability, prior odds, test">
+</head>
+<body class="bml_class_book">
+<div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+<a href="#bml-main-content" tabindex="0" class="bml-skip-to-content">Skip to content.</a>
+<div class="book-summary"><nav class="ltx_page_navbar">
+<ul class="ltx_toclist summary">
+<li>
+<a href="index.html" title="" class="ltx_ref" rel="start">MATH5703M Statistical Theory</a>
+</li>
+<li class="divider" aria-hidden="true">
+<li data-level="" data-path="Chx1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx1.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Introduction</a></li>
+<li data-level="1" data-path="Ch1.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">1 </span></b>Statistical Models and Estimation</a></li>
+<li data-level="2" data-path="Ch2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">2 </span></b>Bias, Mean Squared Error and Consistency</a></li>
+<li data-level="3" data-path="Ch3.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">3 </span></b>R Basics and a First Simulation</a></li>
+<li data-level="4" data-path="Ch4.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch4.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">4 </span></b>Likelihood and the Method of Moments</a></li>
+<li data-level="5" data-path="Ch5.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch5.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">5 </span></b>Maximum Likelihood Estimation</a></li>
+<li data-level="6" data-path="Ch6.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch6.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">6 </span></b>Estimators by Simulation</a></li>
+<li data-level="7" data-path="Ch7.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch7.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">7 </span></b>Exponential Families</a></li>
+<li data-level="8" data-path="Ch8.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch8.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">8 </span></b>Sufficiency</a></li>
+<li data-level="9" data-path="Ch9.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch9.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">9 </span></b>Consistency by Simulation</a></li>
+<li data-level="10" data-path="Ch10.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch10.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">10 </span></b>Improving Estimators: Rao–Blackwell and Lehmann–Scheffe</a></li>
+<li data-level="11" data-path="Ch11.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch11.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">11 </span></b>Fisher Information</a></li>
+<li data-level="12" data-path="Ch12.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch12.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">12 </span></b>Sampling Distributions and Standard Errors</a></li>
+<li data-level="13" data-path="Ch13.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch13.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">13 </span></b>The Cramer–Rao Inequality</a></li>
+<li data-level="14" data-path="Ch14.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch14.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">14 </span></b>Multiparameter Fisher Information</a></li>
+<li data-level="15" data-path="Ch15.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch15.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">15 </span></b>Cramer–Rao and Efficiency in R</a></li>
+<li data-level="16" data-path="Ch16.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch16.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">16 </span></b>Consistency of the MLE</a></li>
+<li data-level="17" data-path="Ch17.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch17.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">17 </span></b>Asymptotic Normality and Efficiency of the MLE</a></li>
+<li data-level="18" data-path="Ch18.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch18.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">18 </span></b>Maximum Likelihood in R</a></li>
+<li data-level="19" data-path="Ch19.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch19.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">19 </span></b>The EM Algorithm</a></li>
+<li data-level="20" data-path="Ch20.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch20.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">20 </span></b>Hypothesis Testing</a></li>
+<li data-level="21" data-path="Ch21.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch21.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21 </span></b>EM in R</a></li>
+<li data-level="22" data-path="Ch22.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch22.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">22 </span></b>The Neyman–Pearson Lemma</a></li>
+<li data-level="23" data-path="Ch23.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch23.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">23 </span></b>Likelihood-Ratio Tests</a></li>
+<li data-level="24" data-path="Ch24.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch24.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">24 </span></b>Power and Size by Simulation</a></li>
+<li data-level="25" data-path="Ch25.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch25.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">25 </span></b>Confidence Intervals</a></li>
+<li data-level="26" data-path="Ch26.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch26.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">26 </span></b>Bayesian Inference: Priors and Posteriors</a></li>
+<li data-level="27" data-path="Ch27.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch27.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">27 </span></b>Confidence Versus Credibility</a></li>
+<li data-level="28" data-path="" class="ltx_tocentry ltx_tocentry_chapter ltx_ref_self  chapter active">
+<a href="" title="In MATH5703M Statistical Theory" aria-current="page" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">28 </span></b>Credible Intervals and Bayesian Testing</a>
+<ol class="ltx_toclist ltx_toclist_chapter">
+<li data-level="28.1" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S1" title="In Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">28.1 </span></b>Credible Intervals</a></li>
+<li data-level="28.2" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S2" title="In Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">28.2 </span></b>Bayesian Testing</a></li>
+<li data-level="28.3" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S3" title="In Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">28.3 </span></b>Comparing Frequentist and Bayesian Answers</a></li>
+</ol>
+</li>
+<li data-level="29" data-path="Ch29.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch29.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">29 </span></b>Standard Tests Revisited</a></li>
+<li data-level="30" data-path="Ch30.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch30.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">30 </span></b>Do the Standard Tests Work?</a></li>
+<li data-level="31" data-path="Ch31.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Ch31.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">31 </span></b>The Exponential Model: Start to Finish</a></li>
+<li data-level="" data-path="Chx2.html" class="ltx_tocentry ltx_tocentry_chapter  chapter "><a href="Chx2.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Preparing for the Exam</a></li>
+<li data-level="A" data-path="A1.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A1.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">A </span></b>Background from Probability</a></li>
+<li data-level="B" data-path="A2.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A2.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">B </span></b>Introduction to R</a></li>
+<li data-level="C" data-path="A3.html" class="ltx_tocentry ltx_tocentry_appendix  chapter "><a href="A3.html" title="In MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">C </span></b>Solutions to the Exercises</a></li>
+<li data-level="" data-path="bib.html" class="ltx_tocentry ltx_tocentry_bibliography  chapter "><a href="bib.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Bibliography</a></li>
+<li data-level="" data-path="idx.html" class="ltx_tocentry ltx_tocentry_index  chapter "><a href="idx.html" title="In MATH5703M Statistical Theory" class="ltx_ref">Index</a></li>
+</ul>
+</nav></div>
+<div class="ltx_page_main book-body fixed">
+<div class="body-inner">
+<header class="book-header fixed" aria-label="toolbar"><span class="bml-separator"></span></header>
+<div class="page-wrapper" tabindex="-1" role="main">
+<div class="ltx_page_content page-inner" id="bml-main-content">
+<section class="ltx_chapter bml_mathjax4 ltx_authors_1line normal">
+<div class="section level1">
+<h1 class="ltx_title ltx_title_chapter">
+<span class="ltx_tag ltx_tag_chapter header-section-number">Lecture 28</span> Credible Intervals and Bayesian Testing</h1>
+
+<div id="p1" class="ltx_para">
+<p class="ltx_p">Lecture <a href="Ch26.html" title="Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26</span></a> ended with the posterior distribution as the
+complete Bayesian answer. In this lecture we answer the interval
+question of lecture <a href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">25</span></a> and the testing question of
+lectures <a href="Ch20.html" title="Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20</span></a> to <a href="Ch23.html" title="Lecture 23 Likelihood-Ratio Tests ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">23</span></a> in posterior terms, and then
+set the two approaches side by side on the mean of a normal sample;
+lecture <a href="Ch27.html" title="Lecture 27 Confidence Versus Credibility ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">27</span></a> shows the same comparison in pictures.</p>
+</div>
+<div id="p2" class="ltx_para">
+<p class="ltx_p">We use the two conjugate pairs from lecture <a href="Ch26.html" title="Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26</span></a>:
+the Beta posterior from example <a href="Ch26.html#Thmtheorem5" title="Example 26.5. ‣ 26.2 Conjugate Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.5</span></a> for the
+Bernoulli distribution, and for the normal distribution
+<math id="p2.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}\sim N(\theta,\sigma^{2})" display="inline"><semantics><mrow><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><mo>∼</mo><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}\sim N(\theta,\sigma^{2})</annotation></semantics></math> with known variance and prior
+<math id="p2.m2" class="ltx_Math" alttext="\theta\sim N(m,\tau^{2})" display="inline"><semantics><mrow><mi>θ</mi><mo>∼</mo><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>m</mi><mo>,</mo><msup><mi>τ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\theta\sim N(m,\tau^{2})</annotation></semantics></math>, we have the posterior
+<math id="p2.m3" class="ltx_Math" alttext="N(m_{n},\tau_{n}^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>m</mi><mi>n</mi></msub><mo>,</mo><msubsup><mi>τ</mi><mi>n</mi><mn>2</mn></msubsup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(m_{n},\tau_{n}^{2})</annotation></semantics></math> from proposition <a href="Ch26.html#Thmtheorem6" title="Proposition 26.6. ‣ 26.2 Conjugate Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.6</span></a>, with</p>
+<div id="E1" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id1">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id1"><span class="bml_sr_only">equation </span>(28.1)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(28.1)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E1.m1" class="ltx_Math" alttext="\frac{1}{\tau_{n}^{2}}=\frac{1}{\tau^{2}}+\frac{n}{\sigma^{2}}\qquad\text{and}%
+\qquad m_{n}=\tau_{n}^{2}\Bigl{(}\frac{m}{\tau^{2}}+\frac{n\bar{x}}{\sigma^{2}%
+}\Bigr{)}." display="block"><semantics><mrow><mrow><mrow><mfrac><mn>1</mn><msubsup><mi>τ</mi><mi>n</mi><mn>2</mn></msubsup></mfrac><mo>=</mo><mrow><mrow><mfrac><mn>1</mn><msup><mi>τ</mi><mn>2</mn></msup></mfrac><mo>+</mo><mfrac><mi>n</mi><msup><mi>σ</mi><mn>2</mn></msup></mfrac></mrow><mspace width="2.19em"></mspace><mtext>and</mtext></mrow></mrow><mspace width="2.19em"></mspace><mrow><msub><mi>m</mi><mi>n</mi></msub><mo>=</mo><mrow><msubsup><mi>τ</mi><mi>n</mi><mn>2</mn></msubsup><mo>⁢</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mfrac><mi>m</mi><msup><mi>τ</mi><mn>2</mn></msup></mfrac><mo>+</mo><mfrac><mrow><mi>n</mi><mo>⁢</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow><msup><mi>σ</mi><mn>2</mn></msup></mfrac></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\frac{1}{\tau_{n}^{2}}=\frac{1}{\tau^{2}}+\frac{n}{\sigma^{2}}\qquad\text{and}%
+\qquad m_{n}=\tau_{n}^{2}\Bigl{(}\frac{m}{\tau^{2}}+\frac{n\bar{x}}{\sigma^{2}%
+}\Bigr{)}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">We consider the data set from example <a href="Ch25.html#Thmtheorem3" title="Example 25.3. ‣ 25.2 Pivotal Quantities ‣ Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">25.3</span></a>:
+<math id="p2.m4" class="ltx_Math" alttext="n=16" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">n=16</annotation></semantics></math> observations with <math id="p2.m5" class="ltx_Math" alttext="\sigma=2" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\sigma=2</annotation></semantics></math> and <math id="p2.m6" class="ltx_Math" alttext="\bar{x}=10.3" display="inline"><semantics><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>=</mo><mn>10.3</mn></mrow><annotation encoding="application/x-tex">\bar{x}=10.3</annotation></semantics></math>. Assume that before
+the data were collected we expected the mean to be around <math id="p2.m7" class="ltx_Math" alttext="12" display="inline"><semantics><mn>12</mn><annotation encoding="application/x-tex">12</annotation></semantics></math> and
+we chose the prior <math id="p2.m8" class="ltx_Math" alttext="N(12,1)" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>12</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(12,1)</annotation></semantics></math>. Then the posterior precision is
+<math id="p2.m9" class="ltx_Math" alttext="1/1+16/4=5" display="inline"><semantics><mrow><mrow><mrow><mn>1</mn><mo>/</mo><mn>1</mn></mrow><mo>+</mo><mrow><mn>16</mn><mo>/</mo><mn>4</mn></mrow></mrow><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">1/1+16/4=5</annotation></semantics></math> and the posterior mean is
+<math id="p2.m10" class="ltx_Math" alttext="m_{n}=0.2\cdot(12+4\cdot 10.3)=10.64" display="inline"><semantics><mrow><msub><mi>m</mi><mi>n</mi></msub><mo>=</mo><mrow><mn>0.2</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><mrow><mo stretchy="false">(</mo><mrow><mn>12</mn><mo>+</mo><mrow><mn>4</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><mn>10.3</mn></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>10.64</mn></mrow><annotation encoding="application/x-tex">m_{n}=0.2\cdot(12+4\cdot 10.3)=10.64</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> the posterior
+distribution is <math id="p2.m11" class="ltx_Math" alttext="N(10.64,0.2)" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>10.64</mn><mo>,</mo><mn>0.2</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(10.64,0.2)</annotation></semantics></math>.</p>
+</div>
+<section id="S1" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">28.1</span> Credible Intervals</h2>
+
+<div id="S1.p1" class="ltx_para">
+<p class="ltx_p">A confidence interval, as given in definition <a href="Ch25.html#Thmtheorem1" title="Definition 25.1. ‣ 25.1 Definition and Interpretation ‣ Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">25.1</span></a>, is a
+random interval which covers the fixed parameter with a given probability.
+In contrast, in a Bayesian model the data are fixed after observation,
+the parameter is random and an interval estimate is a set which contains
+most of the posterior probability.</p>
+</div>
+<div id="Thmtheorem1" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id2">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id2"><span class="ltx_text ltx_font_bold">Definition 28.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem1.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmtheorem1.p1.m1" class="ltx_Math" alttext="\pi(\theta\mskip 1.0mu|\mskip 1.0mux)" display="inline"><semantics><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta\mskip 1.0mu|\mskip 1.0mux)</annotation></semantics></math> be the posterior density of <math id="Thmtheorem1.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> given the
+data <math id="Thmtheorem1.p1.m3" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and let <math id="Thmtheorem1.p1.m4" class="ltx_Math" alttext="\alpha\in(0,1)" display="inline"><semantics><mrow><mi>α</mi><mo>∈</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\alpha\in(0,1)</annotation></semantics></math>. An interval <math id="Thmtheorem1.p1.m5" class="ltx_Math" alttext="[l,u]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mi>l</mi><mo>,</mo><mi>u</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l,u]</annotation></semantics></math> is a
+<em class="ltx_emph ltx_font_italic">credible interval</em> for <math id="Thmtheorem1.p1.m6" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> with <em class="ltx_emph ltx_font_italic">credibility</em>
+<math id="Thmtheorem1.p1.m7" class="ltx_Math" alttext="1-\alpha" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math>, if</p>
+<div id="Ex1" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex1.m1" class="ltx_Math" alttext="\mathbb{P}(l\leq\theta\leq u\mskip 1.0mu|\mskip 1.0mux)=\int_{l}^{u}\pi(%
+\vartheta\mskip 1.0mu|\mskip 1.0mux)\,\mathrm{d}\vartheta=1-\alpha." display="block"><semantics><mrow><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>l</mi><mo>≤</mo><mi>θ</mi><mo>≤</mo><mrow><mi>u</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><msubsup><mo>∫</mo><mi>l</mi><mi>u</mi></msubsup><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>ϑ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mrow><mo rspace="0em">d</mo><mi>ϑ</mi></mrow></mrow></mrow><mo>=</mo><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\mathbb{P}(l\leq\theta\leq u\mskip 1.0mu|\mskip 1.0mux)=\int_{l}^{u}\pi(%
+\vartheta\mskip 1.0mu|\mskip 1.0mux)\,\mathrm{d}\vartheta=1-\alpha.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">The <em class="ltx_emph ltx_font_italic">equal-tailed</em> credible interval is the interval
+<math id="Thmtheorem1.p1.m8" class="ltx_Math" alttext="[q_{\alpha/2},q_{1-\alpha/2}]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><msub><mi>q</mi><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></msub><mo>,</mo><msub><mi>q</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[q_{\alpha/2},q_{1-\alpha/2}]</annotation></semantics></math>, between the <math id="Thmtheorem1.p1.m9" class="ltx_Math" alttext="\alpha/2" display="inline"><semantics><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\alpha/2</annotation></semantics></math>- and
+<math id="Thmtheorem1.p1.m10" class="ltx_Math" alttext="(1-\alpha/2)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1-\alpha/2)</annotation></semantics></math>-quantiles of the posterior distribution.</p>
+</div>
+</div>
+<div id="S1.p2" class="ltx_para">
+<p class="ltx_p">The probability in the definition is a probability
+about <math id="S1.p2.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, for the given data set: the sentence “<math id="S1.p2.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is in
+<math id="S1.p2.m3" class="ltx_Math" alttext="[l,u]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mi>l</mi><mo>,</mo><mi>u</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l,u]</annotation></semantics></math> with probability <math id="S1.p2.m4" class="ltx_Math" alttext="0.95" display="inline"><semantics><mn>0.95</mn><annotation encoding="application/x-tex">0.95</annotation></semantics></math>” (which we had to
+forbid in lecture <a href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">25</span></a>) is the exact statement a <math id="S1.p2.m5" class="ltx_Math" alttext="95\%" display="inline"><semantics><mrow><mn>95</mn><mo>%</mo></mrow><annotation encoding="application/x-tex">95\%</annotation></semantics></math>
+credible interval makes. The trade-off is that this probability
+depends on the prior distribution.</p>
+</div>
+<div id="S1.p3" class="ltx_para">
+<p class="ltx_p">Any interval which has posterior probability <math id="S1.p3.m1" class="ltx_Math" alttext="1-\alpha" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math> works, and
+the equal-tailed interval is the usual choice, because the edges of this
+interval are quantiles. The alternative would be to find the shortest
+such set.</p>
+</div>
+<div id="Thmtheorem2" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id3">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id3"><span class="ltx_text ltx_font_bold">Definition 28.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem2.p1" class="ltx_para">
+<p class="ltx_p">A <em class="ltx_emph ltx_font_italic">highest posterior density</em> (HPD) set with credibility
+<math id="Thmtheorem2.p1.m1" class="ltx_Math" alttext="1-\alpha" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math> is the set</p>
+<div id="Ex2" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex2.m1" class="ltx_Math" alttext="H_{c}=\bigl{\{}\,\theta\in\Theta\mathrel{\big{|}}\pi(\theta\mskip 1.0mu|\mskip
+1%
+.0mux)\geq c\,\bigr{\}}," display="block"><semantics><mrow><mrow><msub><mi>H</mi><mi>c</mi></msub><mo>=</mo><mrow><mo maxsize="120%" minsize="120%" rspace="0.170em">{</mo><mrow><mi>θ</mi><mo>∈</mo><mi mathvariant="normal">Θ</mi><mo fence="false" mathsize="120%">|</mo><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>≥</mo><mi>c</mi></mrow><mo lspace="0.170em" maxsize="120%" minsize="120%">}</mo></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">H_{c}=\bigl{\{}\,\theta\in\Theta\mathrel{\big{|}}\pi(\theta\mskip 1.0mu|\mskip
+1%
+.0mux)\geq c\,\bigr{\}},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where <math id="Thmtheorem2.p1.m2" class="ltx_Math" alttext="c&gt;0" display="inline"><semantics><mrow><mi>c</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">c&gt;0</annotation></semantics></math> is chosen such that <math id="Thmtheorem2.p1.m3" class="ltx_Math" alttext="\mathbb{P}(\theta\in H_{c}\mskip 1.0mu|\mskip 1.0mux)=1-\alpha" display="inline"><semantics><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>∈</mo><mrow><msub><mi>H</mi><mi>c</mi></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}(\theta\in H_{c}\mskip 1.0mu|\mskip 1.0mux)=1-\alpha</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="S1.p4" class="ltx_para">
+<p class="ltx_p">The set <math id="S1.p4.m1" class="ltx_Math" alttext="H_{c}" display="inline"><semantics><msub><mi>H</mi><mi>c</mi></msub><annotation encoding="application/x-tex">H_{c}</annotation></semantics></math> is the smallest set with posterior probability
+<math id="S1.p4.m2" class="ltx_Math" alttext="1-\alpha" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math>. Any time we want to exchange part of this set with a region
+where the density is below <math id="S1.p4.m3" class="ltx_Math" alttext="c" display="inline"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>, we need to include more length in the
+interval to make up for the lost probability. For a unimodal posterior
+distribution, <math id="S1.p4.m4" class="ltx_Math" alttext="H_{c}" display="inline"><semantics><msub><mi>H</mi><mi>c</mi></msub><annotation encoding="application/x-tex">H_{c}</annotation></semantics></math> forms an interval, called the <em class="ltx_emph ltx_font_italic">HPD
+interval</em>, where the two boundaries have the same posterior density.
+For a symmetric, unimodal posterior distribution, this interval will be
+an equal-tailed interval (see exercise <a href="#Thmexercise1" title="Exercise 28.1. ‣ 28.3 Comparing Frequentist and Bayesian Answers ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.1</span></a>).</p>
+</div>
+<div id="Thmtheorem3" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id4">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id4"><span class="ltx_text ltx_font_bold">Example 28.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem3.p1" class="ltx_para">
+<p class="ltx_p">If the posterior distribution is equal to the normal distribution
+<math id="Thmtheorem3.p1.m1" class="ltx_Math" alttext="N(m_{n},\tau_{n}^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mi>m</mi><mi>n</mi></msub><mo>,</mo><msubsup><mi>τ</mi><mi>n</mi><mn>2</mn></msubsup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(m_{n},\tau_{n}^{2})</annotation></semantics></math>, then the density is symmetric around
+<math id="Thmtheorem3.p1.m2" class="ltx_Math" alttext="m_{n}" display="inline"><semantics><msub><mi>m</mi><mi>n</mi></msub><annotation encoding="application/x-tex">m_{n}</annotation></semantics></math> and decreases as it gets further away from this point. Thus,
+the HPD interval is the equal-tailed interval</p>
+<div id="E2" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id5">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id5"><span class="bml_sr_only">equation </span>(28.2)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(28.2)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E2.m1" class="ltx_Math" alttext="\bigl{[}\,m_{n}-z_{1-\alpha/2}\,\tau_{n},\ m_{n}+z_{1-\alpha/2}\,\tau_{n}\,%
+\bigr{]}." display="block"><semantics><mrow><mrow><mo maxsize="120%" minsize="120%" rspace="0.170em">[</mo><mrow><msub><mi>m</mi><mi>n</mi></msub><mo>−</mo><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo>⁢</mo><msub><mi>τ</mi><mi>n</mi></msub></mrow></mrow><mo rspace="0.717em">,</mo><mrow><msub><mi>m</mi><mi>n</mi></msub><mo>+</mo><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo>⁢</mo><msub><mi>τ</mi><mi>n</mi></msub></mrow></mrow><mo maxsize="120%" minsize="120%">]</mo></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\bigl{[}\,m_{n}-z_{1-\alpha/2}\,\tau_{n},\ m_{n}+z_{1-\alpha/2}\,\tau_{n}\,%
+\bigr{]}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">For the data set and prior used in the section, we have
+the prior <math id="Thmtheorem3.p1.m3" class="ltx_Math" alttext="N(12,1)" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>12</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(12,1)</annotation></semantics></math> and <math id="Thmtheorem3.p1.m4" class="ltx_Math" alttext="\tau_{n}=\sqrt{0.2}=0.447" display="inline"><semantics><mrow><msub><mi>τ</mi><mi>n</mi></msub><mo>=</mo><msqrt><mn>0.2</mn></msqrt><mo>=</mo><mn>0.447</mn></mrow><annotation encoding="application/x-tex">\tau_{n}=\sqrt{0.2}=0.447</annotation></semantics></math>, and the <math id="Thmtheorem3.p1.m5" class="ltx_Math" alttext="95\%" display="inline"><semantics><mrow><mn>95</mn><mo>%</mo></mrow><annotation encoding="application/x-tex">95\%</annotation></semantics></math>
+credible interval is
+<math id="Thmtheorem3.p1.m6" class="ltx_Math" alttext="10.64\pm 1.96\cdot 0.447" display="inline"><semantics><mrow><mn>10.64</mn><mo>±</mo><mrow><mn>1.96</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><mn>0.447</mn></mrow></mrow><annotation encoding="application/x-tex">10.64\pm 1.96\cdot 0.447</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> the interval
+<math id="Thmtheorem3.p1.m7" class="ltx_Math" alttext="[9.76,11.52]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mn>9.76</mn><mo>,</mo><mn>11.52</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[9.76,11.52]</annotation></semantics></math>. The credible interval is shifted
+towards the prior mean and is shorter than the <math id="Thmtheorem3.p1.m8" class="ltx_Math" alttext="95\%" display="inline"><semantics><mrow><mn>95</mn><mo>%</mo></mrow><annotation encoding="application/x-tex">95\%</annotation></semantics></math> confidence
+interval <math id="Thmtheorem3.p1.m9" class="ltx_Math" alttext="[9.32,11.28]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mn>9.32</mn><mo>,</mo><mn>11.28</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[9.32,11.28]</annotation></semantics></math> from example <a href="Ch25.html#Thmtheorem3" title="Example 25.3. ‣ 25.2 Pivotal Quantities ‣ Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">25.3</span></a>, because the prior
+provides additional information. In the case of the flat prior,
+<math id="Thmtheorem3.p1.m10" class="ltx_Math" alttext="\tau\to\infty" display="inline"><semantics><mrow><mi>τ</mi><mo stretchy="false">→</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">\tau\to\infty</annotation></semantics></math> in section <a href="Ch26.html#S4" title="26.4 Flat, Improper and Jeffreys Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.4</span></a>, the posterior distribution is
+<math id="Thmtheorem3.p1.m11" class="ltx_Math" alttext="N(\bar{x},\sigma^{2}/n)" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>,</mo><mrow><msup><mi>σ</mi><mn>2</mn></msup><mo>/</mo><mi>n</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\bar{x},\sigma^{2}/n)</annotation></semantics></math> and the credible interval (<a href="#E2" title="In Example 28.3. ‣ 28.1 Credible Intervals ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.2</span></a>) coincides with the
+confidence interval
+<math id="Thmtheorem3.p1.m12" class="ltx_Math" alttext="\bar{x}\pm z_{1-\alpha/2}\,\sigma/\sqrt{n}" display="inline"><semantics><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>±</mo><mrow><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo>⁢</mo><mi>σ</mi></mrow><mo>/</mo><msqrt><mi>n</mi></msqrt></mrow></mrow><annotation encoding="application/x-tex">\bar{x}\pm z_{1-\alpha/2}\,\sigma/\sqrt{n}</annotation></semantics></math>. This coincidence is
+shown in section <a href="#S3" title="28.3 Comparing Frequentist and Bayesian Answers ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.3</span></a>.</p>
+</div>
+</div>
+<div id="S1.p5" class="ltx_para">
+<p class="ltx_p">For a skewed posterior the HPD interval is shifted towards the mode,
+slightly shorter than the equal-tailed interval, and the numerical
+determination of this interval is the topic of exercise <a href="#Thmexercise2" title="Exercise 28.2. ‣ 28.3 Comparing Frequentist and Bayesian Answers ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.2</span></a>,
+which shows the difference between the two intervals for the skewed
+posterior <math id="S1.p5.m1" class="ltx_Math" alttext="\text{Beta}(9,5)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>9</mn><mo>,</mo><mn>5</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(9,5)</annotation></semantics></math> in example <a href="Ch26.html#Thmtheorem5" title="Example 26.5. ‣ 26.2 Conjugate Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.5</span></a>. As <math id="S1.p5.m2" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+increases, the difference between the intervals decreases, because
+the posterior distribution approaches a symmetric normal distribution
+and the equal-tailed interval is then appropriate.</p>
+</div>
+</div>
+</section>
+<section id="S2" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">28.2</span> Bayesian Testing</h2>
+
+<div id="S2.p1" class="ltx_para">
+<p class="ltx_p">In the Bayesian model a hypothesis <math id="S2.p1.m1" class="ltx_Math" alttext="H_{0}\colon\theta\in\Theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>∈</mo><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta\in\Theta_{0}</annotation></semantics></math>, in
+the sense of definition <a href="Ch20.html#Thmtheorem1" title="Definition 20.1. ‣ 20.1 Hypotheses ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.1</span></a>, is an event concerning
+the random variable <math id="S2.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and thus has a probability before and after
+the data are seen. Testing does not require new theory.</p>
+</div>
+<div id="Thmtheorem4" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id6">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id6"><span class="ltx_text ltx_font_bold">Definition 28.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem4.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmtheorem4.p1.m1" class="ltx_Math" alttext="H_{0}\colon\theta\in\Theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>∈</mo><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta\in\Theta_{0}</annotation></semantics></math> and
+<math id="Thmtheorem4.p1.m2" class="ltx_Math" alttext="H_{1}\colon\theta\in\Theta_{1}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>∈</mo><msub><mi mathvariant="normal">Θ</mi><mn>1</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta\in\Theta_{1}</annotation></semantics></math> be hypotheses with positive prior probability. Then the
+<em class="ltx_emph ltx_font_italic">posterior probability</em> of <math id="Thmtheorem4.p1.m3" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> is given by</p>
+<div id="Ex3" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex3.m1" class="ltx_Math" alttext="\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)=\mathbb{P}(\theta\in\Theta_{0}%
+\mskip 1.0mu|\mskip 1.0mux)=\int_{\Theta_{0}}\pi(\vartheta\mskip 1.0mu|\mskip 1%
+.0mux)\,\mathrm{d}\vartheta." display="block"><semantics><mrow><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>0</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>∈</mo><mrow><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.111em">=</mo><mrow><msub><mo>∫</mo><msub><mi mathvariant="normal">Θ</mi><mn>0</mn></msub></msub><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>ϑ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow><mo lspace="0.170em">⁢</mo><mrow><mo rspace="0em">d</mo><mi>ϑ</mi></mrow></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)=\mathbb{P}(\theta\in\Theta_{0}%
+\mskip 1.0mu|\mskip 1.0mux)=\int_{\Theta_{0}}\pi(\vartheta\mskip 1.0mu|\mskip 1%
+.0mux)\,\mathrm{d}\vartheta.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Similarly, we can find the posterior probability of <math id="Thmtheorem4.p1.m4" class="ltx_Math" alttext="H_{1}" display="inline"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_{1}</annotation></semantics></math>. A
+<em class="ltx_emph ltx_font_italic">Bayesian test</em> rejects <math id="Thmtheorem4.p1.m5" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> if <math id="Thmtheorem4.p1.m6" class="ltx_Math" alttext="\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)" display="inline"><semantics><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>0</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)</annotation></semantics></math> falls below a
+threshold or, if both hypotheses are treated equally, chooses the hypothesis
+with the higher posterior probability.</p>
+</div>
+</div>
+<div id="S2.p2" class="ltx_para">
+<p class="ltx_p">The threshold plays the role of the level <math id="S2.p2.m1" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> of
+definition <a href="Ch20.html#Thmtheorem5" title="Definition 20.5. ‣ 20.3 The Power Function, Size and Level ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.5</span></a>, but the two numbers are not
+comparable: <math id="S2.p2.m2" class="ltx_Math" alttext="\alpha" display="inline"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> bounds the probability of a type I error over
+repeated samples, whereas the threshold bounds the posterior
+probability of <math id="S2.p2.m3" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> for the data in hand. Any asymmetry between the
+hypotheses can be expressed by the prior.</p>
+</div>
+<div id="Thmtheorem5" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id7">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id7"><span class="ltx_text ltx_font_bold">Example 28.5</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem5.p1" class="ltx_para">
+<p class="ltx_p">We consider the running data set, testing <math id="Thmtheorem5.p1.m1" class="ltx_Math" alttext="H_{0}\colon\theta\leq 10" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>≤</mo><mn>10</mn></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta\leq 10</annotation></semantics></math> against
+<math id="Thmtheorem5.p1.m2" class="ltx_Math" alttext="H_{1}\colon\theta&gt;10" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>&gt;</mo><mn>10</mn></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta&gt;10</annotation></semantics></math>. Using the prior <math id="Thmtheorem5.p1.m3" class="ltx_Math" alttext="N(12,1)" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>12</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(12,1)</annotation></semantics></math>, we find the posterior
+distribution to be <math id="Thmtheorem5.p1.m4" class="ltx_Math" alttext="N(10.64,0.2)" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>10.64</mn><mo>,</mo><mn>0.2</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(10.64,0.2)</annotation></semantics></math>. Thus we have</p>
+<div id="Ex4" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex4.m1" class="ltx_Math" alttext="\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)=\mathbb{P}(\theta\leq 10\mskip 1.0%
+mu|\mskip 1.0mux)=\Phi\Bigl{(}\frac{10-10.64}{0.447}\Bigr{)}=\Phi(-1.43)=0.076," display="block"><semantics><mrow><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>0</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>≤</mo><mrow><mn>10</mn><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mfrac><mrow><mn>10</mn><mo>−</mo><mn>10.64</mn></mrow><mn>0.447</mn></mfrac><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow><mo>=</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mo>−</mo><mn>1.43</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0.076</mn></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)=\mathbb{P}(\theta\leq 10\mskip 1.0%
+mu|\mskip 1.0mux)=\Phi\Bigl{(}\frac{10-10.64}{0.447}\Bigr{)}=\Phi(-1.43)=0.076,</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">and consequently <math id="Thmtheorem5.p1.m5" class="ltx_Math" alttext="\mathbb{P}(H_{1}\mskip 1.0mu|\mskip 1.0mux)=0.924" display="inline"><semantics><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>1</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0.924</mn></mrow><annotation encoding="application/x-tex">\mathbb{P}(H_{1}\mskip 1.0mu|\mskip 1.0mux)=0.924</annotation></semantics></math>. A symmetric decision
+between the hypotheses favours <math id="Thmtheorem5.p1.m6" class="ltx_Math" alttext="H_{1}" display="inline"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_{1}</annotation></semantics></math>. Using the rule with
+threshold <math id="Thmtheorem5.p1.m7" class="ltx_Math" alttext="0.05" display="inline"><semantics><mn>0.05</mn><annotation encoding="application/x-tex">0.05</annotation></semantics></math>, we would not have rejected <math id="Thmtheorem5.p1.m8" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>. For the
+flat prior case, the posterior is <math id="Thmtheorem5.p1.m9" class="ltx_Math" alttext="N(10.3,0.25)" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>10.3</mn><mo>,</mo><mn>0.25</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(10.3,0.25)</annotation></semantics></math> and we get
+<math id="Thmtheorem5.p1.m10" class="ltx_Math" alttext="\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)=\Phi(-0.6)=0.274" display="inline"><semantics><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>0</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mo>−</mo><mn>0.6</mn></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mn>0.274</mn></mrow><annotation encoding="application/x-tex">\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)=\Phi(-0.6)=0.274</annotation></semantics></math>. This is a much less certain result than in
+the example above: the prior <math id="Thmtheorem5.p1.m11" class="ltx_Math" alttext="N(12,1)" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>12</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(12,1)</annotation></semantics></math>, which had only <math id="Thmtheorem5.p1.m12" class="ltx_Math" alttext="2.3\%" display="inline"><semantics><mrow><mn>2.3</mn><mo>%</mo></mrow><annotation encoding="application/x-tex">2.3\%</annotation></semantics></math> of its
+mass below <math id="Thmtheorem5.p1.m13" class="ltx_Math" alttext="10" display="inline"><semantics><mn>10</mn><annotation encoding="application/x-tex">10</annotation></semantics></math>, contributed significantly to the evidence
+against <math id="Thmtheorem5.p1.m14" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>. The same approach can be used to find the posterior
+probability of a hypothesis about a proportion: for the posterior <math id="Thmtheorem5.p1.m15" class="ltx_Math" alttext="\text{Beta}(9,5)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>9</mn><mo>,</mo><mn>5</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(9,5)</annotation></semantics></math> in
+example <a href="Ch26.html#Thmtheorem5" title="Example 26.5. ‣ 26.2 Conjugate Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.5</span></a>, the posterior probability of
+<math id="Thmtheorem5.p1.m16" class="ltx_Math" alttext="H_{0}\colon\theta\leq 1/2" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>≤</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta\leq 1/2</annotation></semantics></math> is the value of the Beta distribution function at <math id="Thmtheorem5.p1.m17" class="ltx_Math" alttext="1/2" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math>.
+This can be computed using any statistical package (in R, the
+function is <span class="ltx_text ltx_font_typewriter">pbeta</span>), and the result is <math id="Thmtheorem5.p1.m18" class="ltx_Math" alttext="0.133" display="inline"><semantics><mn>0.133</mn><annotation encoding="application/x-tex">0.133</annotation></semantics></math>.
+Exercise <a href="#Thmexercise3" title="Exercise 28.3. ‣ 28.3 Comparing Frequentist and Bayesian Answers ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.3</span></a> shows how to compute this integral
+manually.</p>
+</div>
+</div>
+<div id="S2.p3" class="ltx_para">
+<p class="ltx_p">A simple hypothesis <math id="S2.p3.m1" class="ltx_Math" alttext="\theta=\theta_{0}" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\theta=\theta_{0}</annotation></semantics></math> has probability zero under every
+prior with a density, and thus for two simple hypotheses the prior
+must be a two-point distribution. The posterior in this case is
+then simple.</p>
+</div>
+<div id="Thmtheorem6" class="ltx_theorem ltx_theorem_definition" role="region" aria-labelledby="bml-auto-id8">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id8"><span class="ltx_text ltx_font_bold">Definition 28.6</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem6.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmtheorem6.p1.m1" class="ltx_Math" alttext="H_{0}\colon\theta=\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta=\theta_{0}</annotation></semantics></math> and <math id="Thmtheorem6.p1.m2" class="ltx_Math" alttext="H_{1}\colon\theta=\theta_{1}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><msub><mi>θ</mi><mn>1</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta=\theta_{1}</annotation></semantics></math> be simple hypotheses and let the prior
+have probability <math id="Thmtheorem6.p1.m3" class="ltx_Math" alttext="p_{0}" display="inline"><semantics><msub><mi>p</mi><mn>0</mn></msub><annotation encoding="application/x-tex">p_{0}</annotation></semantics></math> for <math id="Thmtheorem6.p1.m4" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math> and <math id="Thmtheorem6.p1.m5" class="ltx_Math" alttext="p_{1}=1-p_{0}" display="inline"><semantics><mrow><msub><mi>p</mi><mn>1</mn></msub><mo>=</mo><mrow><mn>1</mn><mo>−</mo><msub><mi>p</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">p_{1}=1-p_{0}</annotation></semantics></math> for <math id="Thmtheorem6.p1.m6" class="ltx_Math" alttext="\theta_{1}" display="inline"><semantics><msub><mi>θ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\theta_{1}</annotation></semantics></math>. Then the
+<em class="ltx_emph ltx_font_italic">prior odds</em> of <math id="Thmtheorem6.p1.m7" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> against <math id="Thmtheorem6.p1.m8" class="ltx_Math" alttext="H_{1}" display="inline"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_{1}</annotation></semantics></math> are
+<math id="Thmtheorem6.p1.m9" class="ltx_Math" alttext="p_{0}/p_{1}" display="inline"><semantics><mrow><msub><mi>p</mi><mn>0</mn></msub><mo>/</mo><msub><mi>p</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">p_{0}/p_{1}</annotation></semantics></math> and the <em class="ltx_emph ltx_font_italic">posterior odds</em> are
+<math id="Thmtheorem6.p1.m10" class="ltx_Math" alttext="\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)/\mathbb{P}(H_{1}\mskip 1.0mu|%
+\mskip 1.0mux)" display="inline"><semantics><mrow><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>0</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>ℙ</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>1</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)/\mathbb{P}(H_{1}\mskip 1.0mu|%
+\mskip 1.0mux)</annotation></semantics></math>.</p>
+</div>
+</div>
+<div id="S2.p4" class="ltx_para">
+<p class="ltx_p">Using the result of Bayes’ theorem, proposition <a href="A1.html#Thmtheorem20" title="Proposition A.20 (Bayes’ theorem). ‣ A.8 Bayes’ Theorem ‣ Appendix A Background from Probability ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">A.20</span></a>, we
+find
+<math id="S2.p4.m1" class="ltx_Math" alttext="\mathbb{P}(H_{j}\mskip 1.0mu|\mskip 1.0mux)=p_{j}\,f(x\mskip 1.0mu|\mskip 1.0%
+mu\theta_{j})/m(x)" display="inline"><semantics><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mi>j</mi></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mrow><msub><mi>p</mi><mi>j</mi></msub><mo>⁢</mo><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mi>j</mi></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>m</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}(H_{j}\mskip 1.0mu|\mskip 1.0mux)=p_{j}\,f(x\mskip 1.0mu|\mskip 1.0%
+mu\theta_{j})/m(x)</annotation></semantics></math> for <math id="S2.p4.m2" class="ltx_Math" alttext="j=0,1" display="inline"><semantics><mrow><mi>j</mi><mo>=</mo><mrow><mn>0</mn><mo>,</mo><mn>1</mn></mrow></mrow><annotation encoding="application/x-tex">j=0,1</annotation></semantics></math> and dividing these two expressions
+we find that the marginal density <math id="S2.p4.m3" class="ltx_Math" alttext="m(x)" display="inline"><semantics><mrow><mi>m</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">m(x)</annotation></semantics></math> cancels out. This
+gives</p>
+<div id="E3" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id9">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id9"><span class="bml_sr_only">equation </span>(28.3)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(28.3)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E3.m1" class="ltx_Math" alttext="\frac{\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)}{\mathbb{P}(H_{1}\mskip 1.0%
+mu|\mskip 1.0mux)}=\frac{p_{0}}{p_{1}}\cdot\frac{f(x\mskip 1.0mu|\mskip 1.0mu%
+\theta_{0})}{f(x\mskip 1.0mu|\mskip 1.0mu\theta_{1})}," display="block"><semantics><mrow><mrow><mfrac><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>0</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>1</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mfrac><mo>=</mo><mrow><mfrac><msub><mi>p</mi><mn>0</mn></msub><msub><mi>p</mi><mn>1</mn></msub></mfrac><mo lspace="0.222em" rspace="0.222em">⋅</mo><mfrac><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mn>1</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mfrac></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\frac{\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)}{\mathbb{P}(H_{1}\mskip 1.0%
+mu|\mskip 1.0mux)}=\frac{p_{0}}{p_{1}}\cdot\frac{f(x\mskip 1.0mu|\mskip 1.0mu%
+\theta_{0})}{f(x\mskip 1.0mu|\mskip 1.0mu\theta_{1})},</annotation></semantics></math></div>
+</div>
+<p class="ltx_p"><span class="ltx_text ltx_font_italic">i.e.</span> the posterior odds are the prior odds times the
+likelihood ratio. In this context, the likelihood ratio is also
+called the <em class="ltx_emph ltx_font_italic">Bayes factor</em> in favour of <math id="S2.p4.m4" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>. This is the
+inverse of the ratio considered in the Neyman–Pearson lemma,
+theorem <a href="Ch22.html#Thmtheorem2" title="Theorem 22.2 (Neyman–Pearson lemma). ‣ 22.2 The Lemma ‣ Lecture 22 The Neyman–Pearson Lemma ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">22.2</span></a>. From the posterior odds <math id="S2.p4.m5" class="ltx_Math" alttext="r" display="inline"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> we can
+derive the posterior probabilities as <math id="S2.p4.m6" class="ltx_Math" alttext="\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)=r/(1+r)" display="inline"><semantics><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>0</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>r</mi><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>+</mo><mi>r</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)=r/(1+r)</annotation></semantics></math>.</p>
+</div>
+<div id="Thmtheorem7" class="ltx_theorem ltx_theorem_example" role="region" aria-labelledby="bml-auto-id10">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id10"><span class="ltx_text ltx_font_bold">Example 28.7</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmtheorem7.p1" class="ltx_para">
+<p class="ltx_p">We consider the running data set again, this time to test the
+hypothesis <math id="Thmtheorem7.p1.m1" class="ltx_Math" alttext="H_{0}\colon\theta=10" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><mn>10</mn></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta=10</annotation></semantics></math> against the hypothesis
+<math id="Thmtheorem7.p1.m2" class="ltx_Math" alttext="H_{1}\colon\theta=11" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><mn>11</mn></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta=11</annotation></semantics></math>. Since the likelihood of observing a normal
+sample is
+<math id="Thmtheorem7.p1.m3" class="ltx_Math" alttext="f(x\mskip 1.0mu|\mskip 1.0mu\theta)\propto\exp\bigl{(}-n(\bar{x}-\theta)^{2}/(%
+2\sigma^{2})\bigr{)}" display="inline"><semantics><mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>∝</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mo>−</mo><mrow><mrow><mi>n</mi><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">f(x\mskip 1.0mu|\mskip 1.0mu\theta)\propto\exp\bigl{(}-n(\bar{x}-\theta)^{2}/(%
+2\sigma^{2})\bigr{)}</annotation></semantics></math>
+from exercise <a href="Ch26.html#Thmexercise3" title="Exercise 26.3. ‣ 26.4 Flat, Improper and Jeffreys Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.3</span></a>, we find the Bayes factor to be</p>
+<div id="Ex5" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline">
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="Ex5.m1" class="ltx_Math" alttext="\frac{f(x\mskip 1.0mu|\mskip 1.0mu\theta_{0})}{f(x\mskip 1.0mu|\mskip 1.0mu%
+\theta_{1})}=\exp\Bigl{(}\frac{n}{2\sigma^{2}}\bigl{(}(\bar{x}-\theta_{1})^{2}%
+-(\bar{x}-\theta_{0})^{2}\bigr{)}\Bigr{)}=\exp\Bigl{(}\frac{n(\theta_{1}-%
+\theta_{0})(\theta_{0}+\theta_{1}-2\bar{x})}{2\sigma^{2}}\Bigr{)}." display="block"><semantics><mrow><mrow><mfrac><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mrow><mi>f</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><msub><mi>θ</mi><mn>1</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mfrac><mo>=</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mrow><mfrac><mi>n</mi><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mfrac><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>1</mn></msub></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mo>−</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow><mo>=</mo><mrow><mi>exp</mi><mo>⁡</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><mfrac><mrow><mi>n</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>θ</mi><mn>1</mn></msub><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>+</mo><msub><mi>θ</mi><mn>1</mn></msub></mrow><mo>−</mo><mrow><mn>2</mn><mo>⁢</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mrow><mn>2</mn><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mfrac><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow></mrow><mo lspace="0em">.</mo></mrow><annotation encoding="application/x-tex">\frac{f(x\mskip 1.0mu|\mskip 1.0mu\theta_{0})}{f(x\mskip 1.0mu|\mskip 1.0mu%
+\theta_{1})}=\exp\Bigl{(}\frac{n}{2\sigma^{2}}\bigl{(}(\bar{x}-\theta_{1})^{2}%
+-(\bar{x}-\theta_{0})^{2}\bigr{)}\Bigr{)}=\exp\Bigl{(}\frac{n(\theta_{1}-%
+\theta_{0})(\theta_{0}+\theta_{1}-2\bar{x})}{2\sigma^{2}}\Bigr{)}.</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">Thus we have <math id="Thmtheorem7.p1.m4" class="ltx_Math" alttext="n=16" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">n=16</annotation></semantics></math>, <math id="Thmtheorem7.p1.m5" class="ltx_Math" alttext="\sigma=2" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\sigma=2</annotation></semantics></math> and <math id="Thmtheorem7.p1.m6" class="ltx_Math" alttext="\bar{x}=10.3" display="inline"><semantics><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>=</mo><mn>10.3</mn></mrow><annotation encoding="application/x-tex">\bar{x}=10.3</annotation></semantics></math> and the exponent
+is
+<math id="Thmtheorem7.p1.m7" class="ltx_Math" alttext="16\cdot 1\cdot 0.4/8=0.8" display="inline"><semantics><mrow><mrow><mrow><mn>16</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><mn>1</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><mn>0.4</mn></mrow><mo>/</mo><mn>8</mn></mrow><mo>=</mo><mn>0.8</mn></mrow><annotation encoding="application/x-tex">16\cdot 1\cdot 0.4/8=0.8</annotation></semantics></math>
+and the Bayes factor is <math id="Thmtheorem7.p1.m8" class="ltx_Math" alttext="e^{0.8}=2.23" display="inline"><semantics><mrow><msup><mi>e</mi><mn>0.8</mn></msup><mo>=</mo><mn>2.23</mn></mrow><annotation encoding="application/x-tex">e^{0.8}=2.23</annotation></semantics></math>: the data are closer to the
+value <math id="Thmtheorem7.p1.m9" class="ltx_Math" alttext="10" display="inline"><semantics><mn>10</mn><annotation encoding="application/x-tex">10</annotation></semantics></math> than to <math id="Thmtheorem7.p1.m10" class="ltx_Math" alttext="11" display="inline"><semantics><mn>11</mn><annotation encoding="application/x-tex">11</annotation></semantics></math> and the data favour <math id="Thmtheorem7.p1.m11" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> by a factor
+of approximately two. If the prior odds are <math id="Thmtheorem7.p1.m12" class="ltx_Math" alttext="1" display="inline"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>, the posterior
+odds are <math id="Thmtheorem7.p1.m13" class="ltx_Math" alttext="2.23" display="inline"><semantics><mn>2.23</mn><annotation encoding="application/x-tex">2.23</annotation></semantics></math> and <math id="Thmtheorem7.p1.m14" class="ltx_Math" alttext="\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)=2.23/3.23=0.69" display="inline"><semantics><mrow><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>0</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mn>2.23</mn><mo>/</mo><mn>3.23</mn></mrow><mo>=</mo><mn>0.69</mn></mrow><annotation encoding="application/x-tex">\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)=2.23/3.23=0.69</annotation></semantics></math>. We see that the Bayes factor
+multiplies all prior opinions by the same factor, and in cases where
+the prior is very strong, it can be difficult to overturn the prior
+opinion. The situation in exercise <a href="#Thmexercise4" title="Exercise 28.4. ‣ 28.3 Comparing Frequentist and Bayesian Answers ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.4</span></a> is more
+complicated, because the prior odds are not equal.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="S3" class="ltx_section normal">
+<div class="section level2">
+<h2 class="ltx_title ltx_title_section">
+<span class="ltx_tag ltx_tag_section header-section-number">28.3</span> Comparing Frequentist and Bayesian Answers</h2>
+
+<div id="S3.p1" class="ltx_para">
+<p class="ltx_p">Now we have two different sets of answers, for the same data, for
+the normal mean. We conclude by comparing the two sets.</p>
+</div>
+<div id="S3.p2" class="ltx_para">
+<p class="ltx_p">The first difference is in the nature of the statements. A <math id="S3.p2.m1" class="ltx_Math" alttext="95\%" display="inline"><semantics><mrow><mn>95</mn><mo>%</mo></mrow><annotation encoding="application/x-tex">95\%</annotation></semantics></math> confidence
+interval is a statement about a procedure: it says that for repeated
+samples, the interval covers the fixed truth in <math id="S3.p2.m2" class="ltx_Math" alttext="95\%" display="inline"><semantics><mrow><mn>95</mn><mo>%</mo></mrow><annotation encoding="application/x-tex">95\%</annotation></semantics></math> of cases. A
+<math id="S3.p2.m3" class="ltx_Math" alttext="95\%" display="inline"><semantics><mrow><mn>95</mn><mo>%</mo></mrow><annotation encoding="application/x-tex">95\%</annotation></semantics></math> credible interval is a statement about the parameter, given the
+data and the prior. Similarly, a <math id="S3.p2.m4" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value is computed assuming
+<math id="S3.p2.m5" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> is true, whereas <math id="S3.p2.m6" class="ltx_Math" alttext="\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)" display="inline"><semantics><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>0</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)</annotation></semantics></math> is the probability of the hypothesis
+given the data.</p>
+</div>
+<div id="S3.p3" class="ltx_para">
+<p class="ltx_p">The second observation is that for a location parameter with a flat
+prior, both numbers coincide. Example <a href="#Thmtheorem3" title="Example 28.3. ‣ 28.1 Credible Intervals ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.3</span></a> shows
+the two intervals coinciding, and the tests coincide as well: for
+<math id="S3.p3.m1" class="ltx_Math" alttext="H_{0}\colon\theta\leq\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>≤</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta\leq\theta_{0}</annotation></semantics></math> the flat-prior
+posterior probability
+<math id="S3.p3.m2" class="ltx_Math" alttext="\Phi\bigl{(}\sqrt{n}\,(\theta_{0}-\bar{x})/\sigma\bigr{)}" display="inline"><semantics><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>−</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>σ</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Phi\bigl{(}\sqrt{n}\,(\theta_{0}-\bar{x})/\sigma\bigr{)}</annotation></semantics></math> equals, by the
+symmetry of <math id="S3.p3.m3" class="ltx_Math" alttext="\Phi" display="inline"><semantics><mi mathvariant="normal">Φ</mi><annotation encoding="application/x-tex">\Phi</annotation></semantics></math>, the <math id="S3.p3.m4" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value
+<math id="S3.p3.m5" class="ltx_Math" alttext="1-\Phi\bigl{(}\sqrt{n}\,(\bar{x}-\theta_{0})/\sigma\bigr{)}" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mrow><mi mathvariant="normal">Φ</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><msqrt><mi>n</mi></msqrt><mo lspace="0.170em">⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>−</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>/</mo><mi>σ</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">1-\Phi\bigl{(}\sqrt{n}\,(\bar{x}-\theta_{0})/\sigma\bigr{)}</annotation></semantics></math> of the one-sided
+<math id="S3.p3.m6" class="ltx_Math" alttext="z" display="inline"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-test from example <a href="Ch20.html#Thmtheorem6" title="Example 20.6. ‣ 20.4 Testing the Mean of a Normal Sample ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.6</span></a>; for the running data
+set both values equal <math id="S3.p3.m7" class="ltx_Math" alttext="0.274" display="inline"><semantics><mn>0.274</mn><annotation encoding="application/x-tex">0.274</annotation></semantics></math>. This is the case because the
+flat-prior posterior density in <math id="S3.p3.m8" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> has the same shape as the
+sampling density of <math id="S3.p3.m9" class="ltx_Math" alttext="\bar{X}" display="inline"><semantics><mover accent="true"><mi>X</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{X}</annotation></semantics></math> in <math id="S3.p3.m10" class="ltx_Math" alttext="\bar{x}" display="inline"><semantics><mover accent="true"><mi>x</mi><mo>¯</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>. This is the reason why the
+misreadings in lectures <a href="Ch20.html" title="Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20</span></a> and <a href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">25</span></a> were
+so tempting: the forbidden sentence about the <math id="S3.p3.m11" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value is, for the
+simplest model, a true sentence about the flat-prior posterior, and
+only the interpretation needs to be changed.</p>
+</div>
+<div id="S3.p4" class="ltx_para">
+<p class="ltx_p">The coincidence is only true for special models and priors. A
+genuine prior will move the Bayesian answer closer to the prior mean
+and will concentrate the answer around this value, as in the case of
+<math id="S3.p4.m1" class="ltx_Math" alttext="N(12,1)" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>12</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(12,1)</annotation></semantics></math> above. If the prior is correct, this is an advantage, but
+if the prior is wrong this effect will work against us. The
+frequentist guarantee from definition <a href="Ch25.html#Thmtheorem1" title="Definition 25.1. ‣ 25.1 Definition and Interpretation ‣ Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">25.1</span></a>
+applies for all <math id="S3.p4.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and thus cannot be violated in this way;
+exercise <a href="#Thmexercise5" title="Exercise 28.5. ‣ 28.3 Comparing Frequentist and Bayesian Answers ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.5</span></a>, however, shows that the frequentist
+coverage of a credible interval can be worse than <math id="S3.p4.m3" class="ltx_Math" alttext="95\%" display="inline"><semantics><mrow><mn>95</mn><mo>%</mo></mrow><annotation encoding="application/x-tex">95\%</annotation></semantics></math> when <math id="S3.p4.m4" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is
+far from the prior mean.</p>
+</div>
+<div id="S3.p5" class="ltx_para">
+<p class="ltx_p">As the sample size increases, the influence of the prior decreases.
+For the normal mean, equation (<a href="#E1" title="In Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.1</span></a>) shows that the
+weight of the prior mean in <math id="S3.p5.m1" class="ltx_Math" alttext="m_{n}" display="inline"><semantics><msub><mi>m</mi><mi>n</mi></msub><annotation encoding="application/x-tex">m_{n}</annotation></semantics></math> goes to zero and that
+<math id="S3.p5.m2" class="ltx_Math" alttext="\tau_{n}^{2}\leq\sigma^{2}/n" display="inline"><semantics><mrow><msubsup><mi>τ</mi><mi>n</mi><mn>2</mn></msubsup><mo>≤</mo><mrow><msup><mi>σ</mi><mn>2</mn></msup><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">\tau_{n}^{2}\leq\sigma^{2}/n</annotation></semantics></math> so that both the posterior
+mean and the posterior standard deviation converge to the values
+they would have with flat prior. The same effect holds for
+all regular models. The general version of this result is the
+Bayesian analogue of theorem <a href="Ch17.html#Thmtheorem1" title="Theorem 17.1. ‣ 17.1 The Theorem ‣ Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">17.1</span></a>: under the
+regularity conditions from definition <a href="Ch16.html#Thmtheorem1" title="Definition 16.1. ‣ 16.1 The Regularity Conditions ‣ Lecture 16 Consistency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">16.1</span></a>, and for any
+continuous, positive prior density at the true value, the posterior
+distribution is approximately</p>
+<div id="E4" class="ltx_equation bml_equation bml_equation_container ltx_align_baseline" role="region" aria-labelledby="bml-auto-id11">
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno" id="bml-auto-id11"><span class="bml_sr_only">equation </span>(28.4)</span>
+<span class="ltx_tag ltx_tag_equation ltx_eqn_eqno">(28.4)</span>
+<div class="ltx_Math bml_eqn_cell ltx_align_center"><math id="E4.m1" class="ltx_Math" alttext="N\Bigl{(}\hat{\theta}_{n},\ \frac{1}{\mathcal{I}_{n}(\hat{\theta}_{n})}\Bigr{)%
+}\qquad\text{for large }n," display="block"><semantics><mrow><mrow><mrow><mi>N</mi><mo>⁢</mo><mrow><mo maxsize="160%" minsize="160%">(</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub><mo rspace="0.717em">,</mo><mfrac><mn>1</mn><mrow><msub><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mi>n</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mfrac><mo maxsize="160%" minsize="160%">)</mo></mrow></mrow><mspace width="2.19em"></mspace><mrow><mtext>for large </mtext><mo>⁢</mo><mi>n</mi></mrow></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">N\Bigl{(}\hat{\theta}_{n},\ \frac{1}{\mathcal{I}_{n}(\hat{\theta}_{n})}\Bigr{)%
+}\qquad\text{for large }n,</annotation></semantics></math></div>
+</div>
+<p class="ltx_p">where <math id="S3.p5.m3" class="ltx_Math" alttext="\hat{\theta}_{n}" display="inline"><semantics><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub><annotation encoding="application/x-tex">\hat{\theta}_{n}</annotation></semantics></math> is the maximum likelihood estimator. Without
+proof, we state that this result holds. The proof is similar to the
+one for theorem <a href="Ch17.html#Thmtheorem1" title="Theorem 17.1. ‣ 17.1 The Theorem ‣ Lecture 17 Asymptotic Normality and Efficiency of the MLE ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">17.1</span></a>: the log-posterior is
+<math id="S3.p5.m4" class="ltx_Math" alttext="\ell(\theta)+\log\pi(\theta)" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><mo>+</mo><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>π</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\ell(\theta)+\log\pi(\theta)</annotation></semantics></math> up to a constant, the log-likelihood is
+approximately <math id="S3.p5.m5" class="ltx_Math" alttext="\ell(\hat{\theta}_{n})-\tfrac{1}{2}\mathcal{I}_{n}(\hat{\theta}_{n})(\theta-%
+\hat{\theta}_{n})^{2}" display="inline"><semantics><mrow><mrow><mi mathvariant="normal">ℓ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mo>−</mo><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>⁢</mo><msub><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mi>n</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msup><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo>−</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup></mrow></mrow><annotation encoding="application/x-tex">\ell(\hat{\theta}_{n})-\tfrac{1}{2}\mathcal{I}_{n}(\hat{\theta}_{n})(\theta-%
+\hat{\theta}_{n})^{2}</annotation></semantics></math>
+at its maximum, and this quadratic term grows like <math id="S3.p5.m6" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> while
+<math id="S3.p5.m7" class="ltx_Math" alttext="\log\pi(\theta)" display="inline"><semantics><mrow><mrow><mi>log</mi><mo lspace="0.167em">⁡</mo><mi>π</mi></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\log\pi(\theta)</annotation></semantics></math> does not. From (<a href="#E4" title="In 28.3 Comparing Frequentist and Bayesian Answers ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.4</span></a>) we know that the
+equal-tailed credible interval is approximately the Wald interval
+<math id="S3.p5.m8" class="ltx_Math" alttext="\hat{\theta}_{n}\pm z_{1-\alpha/2}\,\mathop{\mathrm{se}}\nolimits(\hat{\theta}%
+_{n})" display="inline"><semantics><mrow><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub><mo>±</mo><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo lspace="0.167em">⁢</mo><mrow><mo rspace="0em">se</mo><mrow><mo stretchy="false">(</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}_{n}\pm z_{1-\alpha/2}\,\mathop{\mathrm{se}}\nolimits(\hat{\theta}%
+_{n})</annotation></semantics></math> of
+proposition <a href="Ch25.html#Thmtheorem7" title="Proposition 25.7. ‣ 25.4 Approximate Intervals from the MLE ‣ Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">25.7</span></a>, independently of the prior: for large
+sample size both approaches will determine the same interval with
+approximately frequentist coverage <math id="S3.p5.m9" class="ltx_Math" alttext="1-\alpha" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math>.</p>
+</div>
+<div id="S3.p6" class="ltx_para">
+<p class="ltx_p">The two approaches differ most when testing for a point null
+hypothesis <math id="S3.p6.m1" class="ltx_Math" alttext="H_{0}\colon\theta=\theta_{0}" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><msub><mi>θ</mi><mn>0</mn></msub></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta=\theta_{0}</annotation></semantics></math> against a two-sided alternative. In this case
+a Bayesian test requires a prior which puts a lump of probability
+on <math id="S3.p6.m2" class="ltx_Math" alttext="\theta_{0}" display="inline"><semantics><msub><mi>θ</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\theta_{0}</annotation></semantics></math> but which spreads the remaining probability over the
+alternative. The exact distribution of the remaining probability
+over the alternative matters: if the prior is diffuse on the
+alternative, <math id="S3.p6.m3" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> can have posterior probability of more than
+one half for a data set with <math id="S3.p6.m4" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value <math id="S3.p6.m5" class="ltx_Math" alttext="0.01" display="inline"><semantics><mn>0.01</mn><annotation encoding="application/x-tex">0.01</annotation></semantics></math>. We will not
+consider this case in detail, but we can conclude that small <math id="S3.p6.m6" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value
+and small posterior probability of <math id="S3.p6.m7" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> are different quantities and
+that in this case the difference can be substantial.</p>
+</div>
+<div id="Thmsummarybodyx28" class="ltx_theorem bml_border-color_000000 ltx_theorem_summarybody ltx_framed ltx_framed_left" style="border-width:3pt;padding-left:10pt;" role="group" aria-labelledby="bml-auto-id12">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id12"><span class="ltx_text ltx_font_italic">Summary</span></span><span class="ltx_text ltx_font_italic">.</span>
+</div>
+<div id="Thmsummarybodyx28.p1" class="ltx_para">
+<ul id="S3.I1" class="ltx_itemize">
+<li id="S3.I1.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S3.I1.i1.p1" class="ltx_para">​<p class="ltx_p">A credible interval with credibility <math id="S3.I1.i1.p1.m1" class="ltx_Math" alttext="1-\alpha" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math> has
+posterior probability <math id="S3.I1.i1.p1.m2" class="ltx_Math" alttext="1-\alpha" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math>: this is a
+probability statement about <math id="S3.I1.i1.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> for the given data, taking the
+prior into account. The equal-tailed interval is based on
+posterior quantiles, the HPD interval is the shortest one, and for
+symmetric, unimodal posteriors both intervals coincide.</p>
+</div>
+</li>
+<li id="S3.I1.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S3.I1.i2.p1" class="ltx_para">​<p class="ltx_p">For the normal mean with known variance and normal prior,
+the <math id="S3.I1.i2.p1.m1" class="ltx_Math" alttext="1-\alpha" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math> credible interval is <math id="S3.I1.i2.p1.m2" class="ltx_Math" alttext="m_{n}\pm z_{1-\alpha/2}\,\tau_{n}" display="inline"><semantics><mrow><msub><mi>m</mi><mi>n</mi></msub><mo>±</mo><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo>⁢</mo><msub><mi>τ</mi><mi>n</mi></msub></mrow></mrow><annotation encoding="application/x-tex">m_{n}\pm z_{1-\alpha/2}\,\tau_{n}</annotation></semantics></math>;
+for the flat prior this interval coincides with the confidence
+interval <math id="S3.I1.i2.p1.m3" class="ltx_Math" alttext="\bar{x}\pm z_{1-\alpha/2}\,\sigma/\sqrt{n}" display="inline"><semantics><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>±</mo><mrow><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo>⁢</mo><mi>σ</mi></mrow><mo>/</mo><msqrt><mi>n</mi></msqrt></mrow></mrow><annotation encoding="application/x-tex">\bar{x}\pm z_{1-\alpha/2}\,\sigma/\sqrt{n}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I1.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S3.I1.i3.p1" class="ltx_para">​<p class="ltx_p">A Bayesian test compares posterior probabilities of the
+hypotheses, or rejects <math id="S3.I1.i3.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> if <math id="S3.I1.i3.p1.m2" class="ltx_Math" alttext="\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)" display="inline"><semantics><mrow><mi>ℙ</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><msub><mi>H</mi><mn>0</mn></msub><mo fence="false" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}(H_{0}\mskip 1.0mu|\mskip 1.0mux)</annotation></semantics></math> falls below a
+threshold. For two simple hypotheses, the posterior odds are the prior
+odds times the likelihood ratio, known as the Bayes factor.</p>
+</div>
+</li>
+<li id="S3.I1.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S3.I1.i4.p1" class="ltx_para">​<p class="ltx_p">The level of a test and the confidence level of an interval
+are statements about the procedure applied to repeated samples,
+whereas the credibility of an interval is a statement about the
+parameter given one data set. For a location parameter with flat prior,
+the intervals, and the one-sided test and <math id="S3.I1.i4.p1.m1" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value, agree
+numerically while the statements do not have the same
+meaning.</p>
+</div>
+</li>
+<li id="S3.I1.i5" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span><div id="S3.I1.i5.p1" class="ltx_para">​<p class="ltx_p">An informative prior will shift and shorten the Bayesian answer;
+as <math id="S3.I1.i5.p1.m1" class="ltx_Math" alttext="n\to\infty" display="inline"><semantics><mrow><mi>n</mi><mo stretchy="false">→</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">n\to\infty</annotation></semantics></math> the posterior is approximately <math id="S3.I1.i5.p1.m2" class="ltx_Math" alttext="N\bigl{(}\hat{\theta}_{n},1/\mathcal{I}_{n}(\hat{\theta}_{n})\bigr{)}" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub><mo>,</mo><mrow><mrow><mn>1</mn><mo>/</mo><msub><mi class="ltx_font_mathcaligraphic">ℐ︀</mi><mi>n</mi></msub></mrow><mo>⁢</mo><mrow><mo stretchy="false">(</mo><msub><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mi>n</mi></msub><mo stretchy="false">)</mo></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><annotation encoding="application/x-tex">N\bigl{(}\hat{\theta}_{n},1/\mathcal{I}_{n}(\hat{\theta}_{n})\bigr{)}</annotation></semantics></math> and then the
+credible and Wald intervals coincide. For point-null hypothesis
+testing, the two approaches can differ significantly.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="Thmexercise1" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id13">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id13"><span class="ltx_text ltx_font_bold">Exercise 28.1</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise1.p1" class="ltx_para">
+<p class="ltx_p">Let the posterior density <math id="Thmexercise1.p1.m1" class="ltx_Math" alttext="\pi(\theta\mskip 1.0mu|\mskip 1.0mux)" display="inline"><semantics><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>θ</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\pi(\theta\mskip 1.0mu|\mskip 1.0mux)</annotation></semantics></math> be continuous, strictly
+increasing on <math id="Thmexercise1.p1.m2" class="ltx_Math" alttext="(-\infty,\mu]" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mo>,</mo><mi>μ</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">(-\infty,\mu]</annotation></semantics></math> and strictly decreasing on <math id="Thmexercise1.p1.m3" class="ltx_Math" alttext="[\mu,\infty)" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mi>μ</mi><mo>,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">[\mu,\infty)</annotation></semantics></math>.</p>
+<ol id="S3.I2" class="ltx_enumerate">
+<li id="S3.I2.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S3.I2.i1.p1" class="ltx_para">​<p class="ltx_p">Show that the HPD set <math id="S3.I2.i1.p1.m1" class="ltx_Math" alttext="H_{c}" display="inline"><semantics><msub><mi>H</mi><mi>c</mi></msub><annotation encoding="application/x-tex">H_{c}</annotation></semantics></math> from
+definition <a href="#Thmtheorem2" title="Definition 28.2. ‣ 28.1 Credible Intervals ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.2</span></a> is an interval <math id="S3.I2.i1.p1.m2" class="ltx_Math" alttext="[l,u]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mi>l</mi><mo>,</mo><mi>u</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l,u]</annotation></semantics></math> with <math id="S3.I2.i1.p1.m3" class="ltx_Math" alttext="l&lt;\mu&lt;u" display="inline"><semantics><mrow><mi>l</mi><mo>&lt;</mo><mi>μ</mi><mo>&lt;</mo><mi>u</mi></mrow><annotation encoding="application/x-tex">l&lt;\mu&lt;u</annotation></semantics></math> and
+<math id="S3.I2.i1.p1.m4" class="ltx_Math" alttext="\pi(l\mskip 1.0mu|\mskip 1.0mux)=\pi(u\mskip 1.0mu|\mskip 1.0mux)" display="inline"><semantics><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>l</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>u</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\pi(l\mskip 1.0mu|\mskip 1.0mux)=\pi(u\mskip 1.0mu|\mskip 1.0mux)</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I2.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S3.I2.i2.p1" class="ltx_para">​<p class="ltx_p">Assume that the density is symmetric about <math id="S3.I2.i2.p1.m1" class="ltx_Math" alttext="\mu" display="inline"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math>, <span class="ltx_text ltx_font_italic">i.e.</span> that <math id="S3.I2.i2.p1.m2" class="ltx_Math" alttext="\pi(\mu+t\mskip 1.0mu|\mskip 1.0mux)=\pi(\mu-t\mskip 1.0mu|\mskip 1.0mux)" display="inline"><semantics><mrow><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>μ</mi><mo>+</mo><mrow><mi>t</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mi>π</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>μ</mi><mo>−</mo><mrow><mi>t</mi><mo fence="false" lspace="0.338em" rspace="0.338em">|</mo><mi>x</mi></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\pi(\mu+t\mskip 1.0mu|\mskip 1.0mux)=\pi(\mu-t\mskip 1.0mu|\mskip 1.0mux)</annotation></semantics></math> for all <math id="S3.I2.i2.p1.m3" class="ltx_Math" alttext="t" display="inline"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>. Show that the HPD
+interval with credibility <math id="S3.I2.i2.p1.m4" class="ltx_Math" alttext="1-\alpha" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math> coincides with the
+equal-tailed interval <math id="S3.I2.i2.p1.m5" class="ltx_Math" alttext="[q_{\alpha/2},q_{1-\alpha/2}]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><msub><mi>q</mi><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></msub><mo>,</mo><msub><mi>q</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[q_{\alpha/2},q_{1-\alpha/2}]</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I2.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S3.I2.i3.p1" class="ltx_para">​<p class="ltx_p">Now assume that the posterior density is continuous and
+strictly decreasing on <math id="S3.I2.i3.p1.m1" class="ltx_Math" alttext="[0,\infty)" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">[0,\infty)</annotation></semantics></math> and zero elsewhere. Show that
+the HPD set with credibility <math id="S3.I2.i3.p1.m2" class="ltx_Math" alttext="1-\alpha" display="inline"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math> is the one-sided interval
+<math id="S3.I2.i3.p1.m3" class="ltx_Math" alttext="[0,q_{1-\alpha}]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>,</mo><msub><mi>q</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></msub><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0,q_{1-\alpha}]</annotation></semantics></math> and that this interval is shorter than
+the equal-tailed interval.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise2" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id14">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id14"><span class="ltx_text ltx_font_bold">Exercise 28.2</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise2.p1" class="ltx_para">
+<p class="ltx_p">In example <a href="Ch26.html#Thmtheorem5" title="Example 26.5. ‣ 26.2 Conjugate Priors ‣ Lecture 26 Bayesian Inference: Priors and Posteriors ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">26.5</span></a>, where a Bernoulli sample with
+<math id="Thmexercise2.p1.m1" class="ltx_Math" alttext="n=10" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">n=10</annotation></semantics></math> and <math id="Thmexercise2.p1.m2" class="ltx_Math" alttext="T=7" display="inline"><semantics><mrow><mi>T</mi><mo>=</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">T=7</annotation></semantics></math> successes was combined with the prior
+<math id="Thmexercise2.p1.m3" class="ltx_Math" alttext="\text{Beta}(2,2)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(2,2)</annotation></semantics></math> to obtain the posterior distribution
+<math id="Thmexercise2.p1.m4" class="ltx_Math" alttext="\text{Beta}(9,5)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>9</mn><mo>,</mo><mn>5</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(9,5)</annotation></semantics></math> with mean <math id="Thmexercise2.p1.m5" class="ltx_Math" alttext="9/14=0.643" display="inline"><semantics><mrow><mrow><mn>9</mn><mo>/</mo><mn>14</mn></mrow><mo>=</mo><mn>0.643</mn></mrow><annotation encoding="application/x-tex">9/14=0.643</annotation></semantics></math>, the quantiles of the
+Beta distribution had to be found numerically. Using any
+statistical package, and using the <span class="ltx_text ltx_font_typewriter">qbeta</span> function in R, we
+find the <math id="Thmexercise2.p1.m6" class="ltx_Math" alttext="0.025" display="inline"><semantics><mn>0.025</mn><annotation encoding="application/x-tex">0.025</annotation></semantics></math>- and <math id="Thmexercise2.p1.m7" class="ltx_Math" alttext="0.975" display="inline"><semantics><mn>0.975</mn><annotation encoding="application/x-tex">0.975</annotation></semantics></math>-quantiles of <math id="Thmexercise2.p1.m8" class="ltx_Math" alttext="\text{Beta}(9,5)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>9</mn><mo>,</mo><mn>5</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(9,5)</annotation></semantics></math> to be
+<math id="Thmexercise2.p1.m9" class="ltx_Math" alttext="0.386" display="inline"><semantics><mn>0.386</mn><annotation encoding="application/x-tex">0.386</annotation></semantics></math> and <math id="Thmexercise2.p1.m10" class="ltx_Math" alttext="0.861" display="inline"><semantics><mn>0.861</mn><annotation encoding="application/x-tex">0.861</annotation></semantics></math>.</p>
+<ol id="S3.I3" class="ltx_enumerate">
+<li id="S3.I3.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S3.I3.i1.p1" class="ltx_para">​<p class="ltx_p">Write down the equal-tailed <math id="S3.I3.i1.p1.m1" class="ltx_Math" alttext="95\%" display="inline"><semantics><mrow><mn>95</mn><mo>%</mo></mrow><annotation encoding="application/x-tex">95\%</annotation></semantics></math> credible interval
+for <math id="S3.I3.i1.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> and compare the mid-point of this interval to the
+posterior mean.</p>
+</div>
+</li>
+<li id="S3.I3.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S3.I3.i2.p1" class="ltx_para">​<p class="ltx_p">Show that the posterior density has its maximum at <math id="S3.I3.i2.p1.m1" class="ltx_Math" alttext="\theta=2/3" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mn>2</mn><mo>/</mo><mn>3</mn></mrow></mrow><annotation encoding="application/x-tex">\theta=2/3</annotation></semantics></math>,
+<span class="ltx_text ltx_font_italic">i.e.</span> that the posterior distribution is skewed with
+the mode above the mean.</p>
+</div>
+</li>
+<li id="S3.I3.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S3.I3.i3.p1" class="ltx_para">​<p class="ltx_p">The HPD interval for <math id="S3.I3.i3.p1.m1" class="ltx_Math" alttext="\text{Beta}(9,5)" display="inline"><semantics><mrow><mtext>Beta</mtext><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mn>9</mn><mo>,</mo><mn>5</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{Beta}(9,5)</annotation></semantics></math>, found numerically, is
+<math id="S3.I3.i3.p1.m2" class="ltx_Math" alttext="[0.401,0.874]" display="inline"><semantics><mrow><mo stretchy="false">[</mo><mn>0.401</mn><mo>,</mo><mn>0.874</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0.401,0.874]</annotation></semantics></math>. Using definition <a href="#Thmtheorem2" title="Definition 28.2. ‣ 28.1 Credible Intervals ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.2</span></a>, explain why this
+interval is shifted towards the mode, compared to the equal-tailed
+interval. Also explain why the difference between the two
+intervals decreases as <math id="S3.I3.i3.p1.m3" class="ltx_Math" alttext="n" display="inline"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> increases.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise3" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id15">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id15"><span class="ltx_text ltx_font_bold">Exercise 28.3</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise3.p1" class="ltx_para">
+<p class="ltx_p">Assume that we have observed two successes in three Bernoulli trials
+with success probability <math id="Thmexercise3.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>, and the prior distribution of <math id="Thmexercise3.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+is flat on the interval <math id="Thmexercise3.p1.m3" class="ltx_Math" alttext="(0,1)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0,1)</annotation></semantics></math>.</p>
+<ol id="S3.I4" class="ltx_enumerate">
+<li id="S3.I4.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S3.I4.i1.p1" class="ltx_para">​<p class="ltx_p">Determine the posterior distribution of <math id="S3.I4.i1.p1.m1" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I4.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S3.I4.i2.p1" class="ltx_para">​<p class="ltx_p">Calculate the posterior probability of <math id="S3.I4.i2.p1.m1" class="ltx_Math" alttext="H_{0}\colon\theta\leq 1/2" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>≤</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta\leq 1/2</annotation></semantics></math>
+by integrating the posterior density. Also, calculate the
+posterior odds of <math id="S3.I4.i2.p1.m2" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> against <math id="S3.I4.i2.p1.m3" class="ltx_Math" alttext="H_{1}\colon\theta&gt;1/2" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>&gt;</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta&gt;1/2</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I4.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S3.I4.i3.p1" class="ltx_para">​<p class="ltx_p">The prior odds of <math id="S3.I4.i3.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> against <math id="S3.I4.i3.p1.m2" class="ltx_Math" alttext="H_{1}" display="inline"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_{1}</annotation></semantics></math> were <math id="S3.I4.i3.p1.m3" class="ltx_Math" alttext="1" display="inline"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>.
+By what factor have the data changed these odds? How is this
+factor related to the likelihood? Why is it not simply the ratio
+of the likelihoods at the two parameter values, as in (<a href="#E3" title="In 28.2 Bayesian Testing ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.3</span></a>)?</p>
+</div>
+</li>
+<li id="S3.I4.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">4.</span><div id="S3.I4.i4.p1" class="ltx_para">​<p class="ltx_p">Write down the equations for the boundaries of the <math id="S3.I4.i4.p1.m1" class="ltx_Math" alttext="95\%" display="inline"><semantics><mrow><mn>95</mn><mo>%</mo></mrow><annotation encoding="application/x-tex">95\%</annotation></semantics></math>
+equal-tailed credible interval and explain why these equations can
+only be solved numerically.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise4" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id16">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id16"><span class="ltx_text ltx_font_bold">Exercise 28.4</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise4.p1" class="ltx_para">
+<p class="ltx_p">In the situation of example <a href="Ch20.html#Thmtheorem6" title="Example 20.6. ‣ 20.4 Testing the Mean of a Normal Sample ‣ Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.6</span></a>, a sample of size
+<math id="Thmexercise4.p1.m1" class="ltx_Math" alttext="n=25" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">n=25</annotation></semantics></math> from <math id="Thmexercise4.p1.m2" class="ltx_Math" alttext="N(\theta,4)" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\theta,4)</annotation></semantics></math> has mean <math id="Thmexercise4.p1.m3" class="ltx_Math" alttext="\bar{x}=10.9" display="inline"><semantics><mrow><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>=</mo><mn>10.9</mn></mrow><annotation encoding="application/x-tex">\bar{x}=10.9</annotation></semantics></math>. We want to compare the
+simple hypotheses <math id="Thmexercise4.p1.m4" class="ltx_Math" alttext="H_{0}\colon\theta=10" display="inline"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><mn>10</mn></mrow></mrow><annotation encoding="application/x-tex">H_{0}\colon\theta=10</annotation></semantics></math> and <math id="Thmexercise4.p1.m5" class="ltx_Math" alttext="H_{1}\colon\theta=11" display="inline"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo lspace="0.278em" rspace="0.278em">:</mo><mrow><mi>θ</mi><mo>=</mo><mn>11</mn></mrow></mrow><annotation encoding="application/x-tex">H_{1}\colon\theta=11</annotation></semantics></math>.</p>
+<ol id="S3.I5" class="ltx_enumerate">
+<li id="S3.I5.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S3.I5.i1.p1" class="ltx_para">​<p class="ltx_p">Compute the Bayes factor in favour of <math id="S3.I5.i1.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I5.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S3.I5.i2.p1" class="ltx_para">​<p class="ltx_p">Before the data were available, <math id="S3.I5.i2.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> was three times as likely
+as <math id="S3.I5.i2.p1.m2" class="ltx_Math" alttext="H_{1}" display="inline"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_{1}</annotation></semantics></math>. Compute the posterior odds and the posterior probability
+of <math id="S3.I5.i2.p1.m3" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I5.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S3.I5.i3.p1" class="ltx_para">​<p class="ltx_p">In lecture <a href="Ch20.html" title="Lecture 20 Hypothesis Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20</span></a> we have seen that the one-sided
+<math id="S3.I5.i3.p1.m1" class="ltx_Math" alttext="p" display="inline"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value <math id="S3.I5.i3.p1.m2" class="ltx_Math" alttext="0.0122" display="inline"><semantics><mn>0.0122</mn><annotation encoding="application/x-tex">0.0122</annotation></semantics></math> can be found for the data.
+Compare your two numbers and explain why they can disagree,
+despite the fact that both values are against <math id="S3.I5.i3.p1.m3" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I5.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">4.</span><div id="S3.I5.i4.p1" class="ltx_para">​<p class="ltx_p">What value must the prior odds in favour of <math id="S3.I5.i4.p1.m1" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> have
+for the posterior probability of <math id="S3.I5.i4.p1.m2" class="ltx_Math" alttext="H_{0}" display="inline"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_{0}</annotation></semantics></math> to be greater than one
+half?</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="Thmexercise5" class="ltx_theorem ltx_theorem_exercise" role="region" aria-labelledby="bml-auto-id17">
+<div class="ltx_title ltx_runin ltx_title_theorem">
+<span class="ltx_tag ltx_tag_theorem header-section-number" id="bml-auto-id17"><span class="ltx_text ltx_font_bold">Exercise 28.5</span></span><span class="ltx_text ltx_font_bold">.</span>
+</div>
+<div id="Thmexercise5.p1" class="ltx_para">
+<p class="ltx_p">Let <math id="Thmexercise5.p1.m1" class="ltx_Math" alttext="X_{1},\dots,X_{n}" display="inline"><semantics><mrow><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><mi mathvariant="normal">…</mi><mo>,</mo><msub><mi>X</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">X_{1},\dots,X_{n}</annotation></semantics></math> be i.i.d. with <math id="Thmexercise5.p1.m2" class="ltx_Math" alttext="N(\theta,\sigma^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>θ</mi><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(\theta,\sigma^{2})</annotation></semantics></math>
+where <math id="Thmexercise5.p1.m3" class="ltx_Math" alttext="\sigma^{2}" display="inline"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^{2}</annotation></semantics></math> is known, and let the prior be
+<math id="Thmexercise5.p1.m4" class="ltx_Math" alttext="N(m,\tau^{2})" display="inline"><semantics><mrow><mi>N</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mi>m</mi><mo>,</mo><msup><mi>τ</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">N(m,\tau^{2})</annotation></semantics></math>. Let <math id="Thmexercise5.p1.m5" class="ltx_Math" alttext="w=(1/\tau^{2})/(1/\tau^{2}+n/\sigma^{2})" display="inline"><semantics><mrow><mi>w</mi><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow><mo stretchy="false">)</mo></mrow><mo>/</mo><mrow><mo stretchy="false">(</mo><mrow><mrow><mn>1</mn><mo>/</mo><msup><mi>τ</mi><mn>2</mn></msup></mrow><mo>+</mo><mrow><mi>n</mi><mo>/</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">w=(1/\tau^{2})/(1/\tau^{2}+n/\sigma^{2})</annotation></semantics></math> be the weight of the
+prior mean in <math id="Thmexercise5.p1.m6" class="ltx_Math" alttext="m_{n}" display="inline"><semantics><msub><mi>m</mi><mi>n</mi></msub><annotation encoding="application/x-tex">m_{n}</annotation></semantics></math>. Consider the credible interval (<a href="#E2" title="In Example 28.3. ‣ 28.1 Credible Intervals ‣ Lecture 28 Credible Intervals and Bayesian Testing ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">28.2</span></a>)
+to be a random interval, as introduced in lecture <a href="Ch25.html" title="Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">25</span></a>,
+where <math id="Thmexercise5.p1.m7" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> is fixed and the data are random.</p>
+<ol id="S3.I6" class="ltx_enumerate">
+<li id="S3.I6.i1" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1.</span><div id="S3.I6.i1.p1" class="ltx_para">​<p class="ltx_p">Show that <math id="S3.I6.i1.p1.m1" class="ltx_Math" alttext="\tau_{n}^{2}=(1-w)\sigma^{2}/n" display="inline"><semantics><mrow><msubsup><mi>τ</mi><mi>n</mi><mn>2</mn></msubsup><mo>=</mo><mrow><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>w</mi></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo>/</mo><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">\tau_{n}^{2}=(1-w)\sigma^{2}/n</annotation></semantics></math> and that under <math id="S3.I6.i1.p1.m2" class="ltx_Math" alttext="\mathbb{P}_{\theta}" display="inline"><semantics><msub><mi>ℙ</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\mathbb{P}_{\theta}</annotation></semantics></math>
+the posterior mean satisfies
+<math id="S3.I6.i1.p1.m3" class="ltx_Math" alttext="m_{n}-\theta\sim N\bigl{(}w(m-\theta),\,(1-w)^{2}\sigma^{2}/n\bigr{)}" display="inline"><semantics><mrow><mrow><msub><mi>m</mi><mi>n</mi></msub><mo>−</mo><mi>θ</mi></mrow><mo>∼</mo><mrow><mi>N</mi><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mi>w</mi><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>m</mi><mo>−</mo><mi>θ</mi></mrow><mo stretchy="false">)</mo></mrow></mrow><mo rspace="0.337em">,</mo><mrow><mrow><msup><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>w</mi></mrow><mo stretchy="false">)</mo></mrow><mn>2</mn></msup><mo>⁢</mo><msup><mi>σ</mi><mn>2</mn></msup></mrow><mo>/</mo><mi>n</mi></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">m_{n}-\theta\sim N\bigl{(}w(m-\theta),\,(1-w)^{2}\sigma^{2}/n\bigr{)}</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I6.i2" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2.</span><div id="S3.I6.i2.p1" class="ltx_para">​<p class="ltx_p">Determine the coverage probability
+<math id="S3.I6.i2.p1.m1" class="ltx_Math" alttext="\mathbb{P}_{\theta}\bigl{(}m_{n}-z_{1-\alpha/2}\tau_{n}\leq\theta\leq m_{n}+z_%
+{1-\alpha/2}\tau_{n}\bigr{)}" display="inline"><semantics><mrow><msub><mi>ℙ</mi><mi>θ</mi></msub><mo>⁢</mo><mrow><mo maxsize="120%" minsize="120%">(</mo><mrow><mrow><msub><mi>m</mi><mi>n</mi></msub><mo>−</mo><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo>⁢</mo><msub><mi>τ</mi><mi>n</mi></msub></mrow></mrow><mo>≤</mo><mi>θ</mi><mo>≤</mo><mrow><msub><mi>m</mi><mi>n</mi></msub><mo>+</mo><mrow><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mrow><mi>α</mi><mo>/</mo><mn>2</mn></mrow></mrow></msub><mo>⁢</mo><msub><mi>τ</mi><mi>n</mi></msub></mrow></mrow></mrow><mo maxsize="120%" minsize="120%">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbb{P}_{\theta}\bigl{(}m_{n}-z_{1-\alpha/2}\tau_{n}\leq\theta\leq m_{n}+z_%
+{1-\alpha/2}\tau_{n}\bigr{)}</annotation></semantics></math>
+as a function of <math id="S3.I6.i2.p1.m2" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I6.i3" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3.</span><div id="S3.I6.i3.p1" class="ltx_para">​<p class="ltx_p">For <math id="S3.I6.i3.p1.m1" class="ltx_Math" alttext="n=16" display="inline"><semantics><mrow><mi>n</mi><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">n=16</annotation></semantics></math>, <math id="S3.I6.i3.p1.m2" class="ltx_Math" alttext="\sigma=2" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\sigma=2</annotation></semantics></math>, <math id="S3.I6.i3.p1.m3" class="ltx_Math" alttext="\tau=1" display="inline"><semantics><mrow><mi>τ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\tau=1</annotation></semantics></math>, <math id="S3.I6.i3.p1.m4" class="ltx_Math" alttext="m=12" display="inline"><semantics><mrow><mi>m</mi><mo>=</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">m=12</annotation></semantics></math> and <math id="S3.I6.i3.p1.m5" class="ltx_Math" alttext="\alpha=0.05" display="inline"><semantics><mrow><mi>α</mi><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">\alpha=0.05</annotation></semantics></math>,
+determine the coverage probability for <math id="S3.I6.i3.p1.m6" class="ltx_Math" alttext="\theta=12" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">\theta=12</annotation></semantics></math> and for <math id="S3.I6.i3.p1.m7" class="ltx_Math" alttext="\theta=10" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\theta=10</annotation></semantics></math>
+and discuss the result as <math id="S3.I6.i3.p1.m8" class="ltx_Math" alttext="|\theta-m|\to\infty" display="inline"><semantics><mrow><mrow><mo stretchy="false">|</mo><mrow><mi>θ</mi><mo>−</mo><mi>m</mi></mrow><mo stretchy="false">|</mo></mrow><mo stretchy="false">→</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">|\theta-m|\to\infty</annotation></semantics></math>.</p>
+</div>
+</li>
+<li id="S3.I6.i4" class="ltx_item" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">4.</span><div id="S3.I6.i4.p1" class="ltx_para">​<p class="ltx_p">Is the credible interval a confidence interval with level
+<math id="S3.I6.i4.p1.m1" class="ltx_Math" alttext="0.95" display="inline"><semantics><mn>0.95</mn><annotation encoding="application/x-tex">0.95</annotation></semantics></math> in the sense of definition <a href="Ch25.html#Thmtheorem1" title="Definition 25.1. ‣ 25.1 Definition and Interpretation ‣ Lecture 25 Confidence Intervals ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">25.1</span></a>?
+What happens to the coverage probability as <math id="S3.I6.i4.p1.m2" class="ltx_Math" alttext="n\to\infty" display="inline"><semantics><mrow><mi>n</mi><mo stretchy="false">→</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">n\to\infty</annotation></semantics></math> with
+<math id="S3.I6.i4.p1.m3" class="ltx_Math" alttext="\theta" display="inline"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math> fixed?</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</div>
+</div>
+<a href="Ch27.html" class="navigation navigation-prev" aria-label="Previous page"><i class="fa fa-angle-left"></i></a><a href="Ch29.html" class="navigation navigation-next" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+</div>
+</div>
+<script src="bookml/gitbook/js/app.min.js"></script>
+<script src="bookml/gitbook/js/jquery.highlight.js"></script>
+<script src="bookml/gitbook/js/plugin-search.js"></script>
+<script src="bookml/gitbook/js/plugin-fontsettings.js"></script>
+<script src="bookml/gitbook/js/plugin-bookdown.js"></script>
+<script src="bookml/js/mathjax4.js"></script>
+<script type="text/javascript">
+                gitbook.require(["gitbook"], function(gitbook) {
+                gitbook.start({
+                  "fontsettings": {
+                    "theme": "white",
+                    "family": "sans",
+                    "size": 2
+                  },
+                  "download": [ [ "notes.pdf", "PDF" ], ],
+                  "search": {
+                    "engine": "fuse"
+                  },
+                  "toc": {
+                    "collapse": "none"
+                  }
+                });
+              });
+            </script>
+</body>
+
+</html>
