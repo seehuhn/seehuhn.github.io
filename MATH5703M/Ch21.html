@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Lecture 21 EM in R ‣ MATH5703M Statistical Theory</title>
-<!--Generated on Tue Nov 10 21:43:44 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<!--Generated on Wed Nov 11 10:52:42 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
 <style>:root { --bml-ltx-font-size: 10.95; }</style>
 <link rel="stylesheet" href="LaTeXML.css" type="text/css">
 <link rel="stylesheet" href="ltx-book.css" type="text/css">
@@ -131,7 +131,7 @@
 <div id="p1" class="ltx_para">
 <p class="ltx_p">This is the R session for week 7. In lecture <a href="Ch19.html" title="Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19</span></a>
 the EM algorithm was introduced and an ascent property was proved.
-In example <a href="Ch19.html#Thmtheorem4" title="Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a> the E and M steps were illustrated
+In example <a href="Ch19.html#Thmtheorem1" title="Example 19.1. ‣ 19.1 Incomplete Data ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a> the E and M steps were illustrated
 for a two-component normal mixture. Today we will type the two
 steps into R functions, check the functions against the hand computation
 from the example, and then run the functions on a simulated sample
@@ -147,12 +147,12 @@ reference for this session is appendix <a href="A2.html" title="Appendix B Intr
 <div id="S1.p1" class="ltx_para">
 <p class="ltx_p">Throughout, the parameter is the vector <math id="S1.p1.m1" class="ltx_Math" alttext="\theta=(\pi,\mu_{1},\mu_{2})" display="inline"><semantics><mrow><mi>θ</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mi>π</mi><mo>,</mo><msub><mi>μ</mi><mn>1</mn></msub><mo>,</mo><msub><mi>μ</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta=(\pi,\mu_{1},\mu_{2})</annotation></semantics></math> and
 the common standard deviation <math id="S1.p1.m2" class="ltx_Math" alttext="\sigma" display="inline"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math> is known. The E step of
-example <a href="Ch19.html#Thmtheorem4" title="Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a> computes the responsibilities <math id="S1.p1.m3" class="ltx_Math" alttext="\gamma_{i}" display="inline"><semantics><msub><mi>γ</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\gamma_{i}</annotation></semantics></math>,
-the M step computes the updates (<a href="Ch19.html#E2" title="In Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.2</span></a>), and both
+example <a href="Ch19.html#Thmtheorem1" title="Example 19.1. ‣ 19.1 Incomplete Data ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a> computes the responsibilities <math id="S1.p1.m3" class="ltx_Math" alttext="\gamma_{i}" display="inline"><semantics><msub><mi>γ</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\gamma_{i}</annotation></semantics></math>,
+the M step computes the updates (<a href="Ch19.html#E1" title="In Example 19.1 (continued). ‣ 19.2 The Algorithm ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a>), and both
 involve only vector arithmetic. The function <span class="ltx_text ltx_font_typewriter">dnorm</span> is also
 used to compute the normal density. We also need to compute
 the observed-data log-likelihood <math id="S1.p1.m4" class="ltx_Math" alttext="\ell" display="inline"><semantics><mi mathvariant="normal">ℓ</mi><annotation encoding="application/x-tex">\ell</annotation></semantics></math>. By
-proposition <a href="Ch19.html#Thmtheorem2" title="Proposition 19.2. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.2</span></a>, this cannot decrease.</p>
+proposition <a href="Ch19.html#Thmtheorem3" title="Proposition 19.3. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.3</span></a>, this cannot decrease.</p>
 </div>
 <div id="S1.p2" class="ltx_para">
 <div class="bml_listing"><div class="ltx_listing ltx_lstlisting ltx_framed ltx_framed_rectangle ltx_listing">
@@ -175,7 +175,7 @@ proposition <a href="Ch19.html#Thmtheorem2" title="Proposition 19.2. ‣ 19.3 T
 </div>
 <div id="S1.p3" class="ltx_para">
 <p class="ltx_p">We first test our functions on the data from
-example <a href="Ch19.html#Thmtheorem4" title="Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a>. For this we use the five observations
+example <a href="Ch19.html#Thmtheorem1" title="Example 19.1. ‣ 19.1 Incomplete Data ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a>. For this we use the five observations
 <math id="S1.p3.m1" class="ltx_Math" alttext="x=(0,1,5,6,7)" display="inline"><semantics><mrow><mi>x</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>5</mn><mo>,</mo><mn>6</mn><mo>,</mo><mn>7</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">x=(0,1,5,6,7)</annotation></semantics></math> where <math id="S1.p3.m2" class="ltx_Math" alttext="\sigma=1" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=1</annotation></semantics></math> and the initial value is
 <math id="S1.p3.m3" class="ltx_Math" alttext="\theta_{0}=(1/2,2,4)" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>=</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta_{0}=(1/2,2,4)</annotation></semantics></math>. The results of one iteration of the algorithm
 are then compared to the responsibilities and the iterate <math id="S1.p3.m4" class="ltx_Math" alttext="\theta_{1}" display="inline"><semantics><msub><mi>θ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\theta_{1}</annotation></semantics></math>,
@@ -202,7 +202,7 @@ and to the two values of the log-likelihood computed by hand.</p>
 <div id="S1.p5" class="ltx_para">
 <p class="ltx_p">Everything agrees with the hand computation (<math id="S1.p5.m1" class="ltx_Math" alttext="\mu_{2,1}" display="inline"><semantics><msub><mi>μ</mi><mrow><mn>2</mn><mo>,</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\mu_{2,1}</annotation></semantics></math> differs in the
 last digit because the example rounded the intermediate sums), and the
-last line is the check for exercise <a href="Ch19.html#Thmexercise3" title="Exercise 19.3. ‣ 19.5 Practical Matters ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.3</span></a>.</p>
+last line is the check for exercise <a href="Ch19.html#Thmexercise3" title="Exercise 19.3. ‣ 19.4 Practical Matters ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.3</span></a>.</p>
 </div>
 </div>
 </section>
@@ -212,7 +212,7 @@ last line is the check for exercise <a href="Ch19.html#Thmexercise3" title="Exe
 <span class="ltx_tag ltx_tag_section header-section-number">21.2</span> A Larger Sample</h2>
 
 <div id="S2.p1" class="ltx_para">
-<p class="ltx_p">In example <a href="Ch19.html#Thmtheorem4" title="Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a> the iteration came to rest after two
+<p class="ltx_p">In example <a href="Ch19.html#Thmtheorem1" title="Example 19.1. ‣ 19.1 Incomplete Data ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a> the iteration came to rest after two
 steps, because the two groups were far apart. Here we simulate a
 sample where the groups overlap. We can simulate such a sample by
 first randomly choosing a group, using <span class="ltx_text ltx_font_typewriter">rbinom</span> to get <math id="S2.p1.m1" class="ltx_Math" alttext="Z_{i}=1" display="inline"><semantics><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">Z_{i}=1</annotation></semantics></math>
@@ -224,7 +224,7 @@ contains the complete script for simulation and EM iteration, with
 lines shuffled (except for the body of the loop). Before you can run
 the script, you have to arrange these lines into a working script.
 The loop finishes when the log-likelihood increases by less than
-<math id="S2.p1.m6" class="ltx_Math" alttext="10^{-8}" display="inline"><semantics><msup><mn>10</mn><mrow><mo>−</mo><mn>8</mn></mrow></msup><annotation encoding="application/x-tex">10^{-8}</annotation></semantics></math>, as described in section <a href="Ch19.html#S5" title="19.5 Practical Matters ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.5</span></a>. The vector
+<math id="S2.p1.m6" class="ltx_Math" alttext="10^{-8}" display="inline"><semantics><msup><mn>10</mn><mrow><mo>−</mo><mn>8</mn></mrow></msup><annotation encoding="application/x-tex">10^{-8}</annotation></semantics></math>, as described in section <a href="Ch19.html#S4" title="19.4 Practical Matters ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a>. The vector
 <span class="ltx_text ltx_font_typewriter">ll</span> stores the log-likelihood after each iteration, with the
 initial value at position <math id="S2.p1.m7" class="ltx_Math" alttext="1" display="inline"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>.</p>
 </div>
@@ -283,9 +283,9 @@ tenths. The loop required <math id="S2.p5.m3" class="ltx_Math" alttext="28" disp
 responsibilities of the observations were far away from <math id="S2.p5.m4" class="ltx_Math" alttext="0" display="inline"><mn>0</mn></math> and <math id="S2.p5.m5" class="ltx_Math" alttext="1" display="inline"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>
 and because in each iteration the means were only slightly changed.
 The recorded values are increasing with each iteration, as
-proposition <a href="Ch19.html#Thmtheorem2" title="Proposition 19.2. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.2</span></a> guarantees, but at decreasing rates:
+proposition <a href="Ch19.html#Thmtheorem3" title="Proposition 19.3. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.3</span></a> guarantees, but at decreasing rates:
 <math id="S2.p5.m6" class="ltx_Math" alttext="5.0" display="inline"><semantics><mn>5.0</mn><annotation encoding="application/x-tex">5.0</annotation></semantics></math>, then <math id="S2.p5.m7" class="ltx_Math" alttext="4.4" display="inline"><semantics><mn>4.4</mn><annotation encoding="application/x-tex">4.4</annotation></semantics></math>, <math id="S2.p5.m8" class="ltx_Math" alttext="3.8" display="inline"><semantics><mn>3.8</mn><annotation encoding="application/x-tex">3.8</annotation></semantics></math>, <math id="S2.p5.m9" class="ltx_Math" alttext="3.0" display="inline"><semantics><mn>3.0</mn><annotation encoding="application/x-tex">3.0</annotation></semantics></math>, <math id="S2.p5.m10" class="ltx_Math" alttext="2.1" display="inline"><semantics><mn>2.1</mn><annotation encoding="application/x-tex">2.1</annotation></semantics></math>. By
-proposition <a href="Ch19.html#Thmtheorem3" title="Proposition 19.3. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.3</span></a> the fixed point is a root of the
+proposition <a href="Ch19.html#Thmtheorem4" title="Proposition 19.4. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a> the fixed point is a root of the
 likelihood equation.</p>
 </div>
 <div id="S2.p6" class="ltx_para">
@@ -329,7 +329,7 @@ script <span class="ltx_text ltx_font_typewriter">R/S21-mixture.R</span>.</p>
 <span class="ltx_tag ltx_tag_section header-section-number">21.3</span> Label Switching and a Bad Start</h2>
 
 <div id="S3.p1" class="ltx_para">
-<p class="ltx_p">Section <a href="Ch19.html#S5" title="19.5 Practical Matters ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.5</span></a> discusses label switching and the
+<p class="ltx_p">Section <a href="Ch19.html#S4" title="19.4 Practical Matters ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a> discusses label switching and the
 danger of a poor start. In the script <span class="ltx_text ltx_font_typewriter">R/S21-starts.R</span> the
 loop is packaged as a function <span class="ltx_text ltx_font_typewriter">em</span>, which is then run on our
 sample from three starts: the quartile start, the same start with the two means
@@ -391,7 +391,7 @@ mean while leaving the weight unchanged. The next step changes
 nothing, and the loop stops after two iterations at
 <math id="S3.p2.m6" class="ltx_Math" alttext="(1/2,2.3915,2.3915)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2.3915</mn><mo>,</mo><mn>2.3915</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1/2,2.3915,2.3915)</annotation></semantics></math>, effectively a single normal distribution, with a
 log-likelihood <math id="S3.p2.m7" class="ltx_Math" alttext="67" display="inline"><semantics><mn>67</mn><annotation encoding="application/x-tex">67</annotation></semantics></math> below the maximum. This resting point is a root
-of the likelihood equation by proposition <a href="Ch19.html#Thmtheorem3" title="Proposition 19.3. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.3</span></a>,
+of the likelihood equation by proposition <a href="Ch19.html#Thmtheorem4" title="Proposition 19.4. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a>,
 but a saddle point instead of a maximum, and EM cannot tell the two
 apart. Figure <a href="#F2" title="Figure 21.2 ‣ 21.3 Label Switching and a Bad Start ‣ Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">21.2</span></a> shows that only exact equality of
 the means causes this: from a start with nearly equal means the
@@ -462,7 +462,7 @@ is appendix <a href="A2.html" title="Appendix B Introduction to R ‣ MATH5703M
 </div>
 </li>
 <li id="S4.I1.i2" class="ltx_item" style="list-style-type:none;">
-<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i2.p1" class="ltx_para">​<p class="ltx_p">The E step and M step from example <a href="Ch19.html#Thmtheorem4" title="Example 19.4. ‣ 19.4 A Two-Component Normal Mixture ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.4</span></a>
+<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i2.p1" class="ltx_para">​<p class="ltx_p">The E step and M step from example <a href="Ch19.html#Thmtheorem1" title="Example 19.1. ‣ 19.1 Incomplete Data ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a>
 involve only a few lines of vector arithmetic. For five
 observations, these lines reproduce the manual computation.</p>
 </div>
@@ -471,7 +471,7 @@ observations, these lines reproduce the manual computation.</p>
 <span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i3.p1" class="ltx_para">​<p class="ltx_p">For a sample of size <math id="S4.I1.i3.p1.m1" class="ltx_Math" alttext="200" display="inline"><semantics><mn>200</mn><annotation encoding="application/x-tex">200</annotation></semantics></math> with overlapping groups, it takes
 <math id="S4.I1.i3.p1.m2" class="ltx_Math" alttext="28" display="inline"><semantics><mn>28</mn><annotation encoding="application/x-tex">28</annotation></semantics></math> iterations for EM to converge. The log-likelihood
 increases in every step, as required by
-proposition <a href="Ch19.html#Thmtheorem2" title="Proposition 19.2. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.2</span></a>, but by increasingly small amounts.</p>
+proposition <a href="Ch19.html#Thmtheorem3" title="Proposition 19.3. ‣ 19.3 The Ascent Property ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.3</span></a>, but by increasingly small amounts.</p>
 </div>
 </li>
 <li id="S4.I1.i4" class="ltx_item" style="list-style-type:none;">
