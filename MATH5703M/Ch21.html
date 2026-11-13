@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Lecture 21 EM in R ‣ MATH5703M Statistical Theory</title>
-<!--Generated on Fri Nov 13 10:17:53 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<!--Generated on Fri Nov 13 10:56:14 2026 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
 <style>:root { --bml-ltx-font-size: 10.95; }</style>
 <link rel="stylesheet" href="LaTeXML.css" type="text/css">
 <link rel="stylesheet" href="ltx-book.css" type="text/css">
@@ -97,7 +97,7 @@
 <ol class="ltx_toclist ltx_toclist_chapter">
 <li data-level="21.1" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S1" title="In Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21.1 </span></b>The E and M Steps as R Functions</a></li>
 <li data-level="21.2" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S2" title="In Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21.2 </span></b>A Larger Sample</a></li>
-<li data-level="21.3" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S3" title="In Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21.3 </span></b>Label Switching and a Bad Start</a></li>
+<li data-level="21.3" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S3" title="In Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21.3 </span></b>Label Switching and a Poor Start</a></li>
 <li data-level="21.4" data-path="" class="ltx_tocentry ltx_tocentry_section  chapter "><a href="#S4" title="In Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><b><span class="ltx_tag ltx_tag_ref">21.4 </span></b>A Task to Take Home</a></li>
 </ol>
 </li>
@@ -131,15 +131,12 @@
 <span class="ltx_tag ltx_tag_chapter header-section-number">Lecture 21</span> EM in R</h1>
 
 <div id="p1" class="ltx_para">
-<p class="ltx_p">In lecture <a href="Ch19.html" title="Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19</span></a> the EM algorithm was introduced, and in
-lecture <a href="Ch20.html" title="Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20</span></a> the ascent property was proved. In example <a href="Ch19.html#Thmtheorem1" title="Example 19.1. ‣ 19.1 Incomplete Data ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a> the E
-and M steps were derived for a two-component normal mixture. In this
-lecture we will type the two
-steps into R functions, check the functions against the hand computation
-of exercise <a href="Ch20.html#Thmexercise2" title="Exercise 20.2. ‣ 20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a>, and then run the functions on a simulated sample
-of size <math id="p1.m1" class="ltx_Math" alttext="200" display="inline"><semantics><mn>200</mn><annotation encoding="application/x-tex">200</annotation></semantics></math>. We will conclude by considering the problem
-of label switching and the effect of a bad start. The written
-reference for this session is appendix <a href="A2.html" title="Appendix B Introduction to R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">B</span></a>.</p>
+<p class="ltx_p">In example <a href="Ch19.html#Thmtheorem1" title="Example 19.1. ‣ 19.1 Incomplete Data ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a> we derived the E and M steps of the EM
+algorithm for a two-component normal mixture. In this lecture we write
+the two steps as R functions, check them against the hand computation
+of exercise <a href="Ch20.html#Thmexercise2" title="Exercise 20.2. ‣ 20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a> and run them on a simulated
+sample of size <math id="p1.m1" class="ltx_Math" alttext="200" display="inline"><semantics><mn>200</mn><annotation encoding="application/x-tex">200</annotation></semantics></math>. We end with label switching and the effect of a
+poor starting value.</p>
 </div>
 <section id="S1" class="ltx_section normal">
 <div class="section level2">
@@ -177,12 +174,12 @@ iteration to the next.</p>
 </div></div>
 </div>
 <div id="S1.p3" class="ltx_para">
-<p class="ltx_p">We first test our functions on the data from
-exercise <a href="Ch20.html#Thmexercise2" title="Exercise 20.2. ‣ 20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a>. For this we use the five observations
-<math id="S1.p3.m1" class="ltx_Math" alttext="x=(0,1,5,6,7)" display="inline"><semantics><mrow><mi>x</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>5</mn><mo>,</mo><mn>6</mn><mo>,</mo><mn>7</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">x=(0,1,5,6,7)</annotation></semantics></math> where <math id="S1.p3.m2" class="ltx_Math" alttext="\sigma=1" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=1</annotation></semantics></math> and the initial value is
-<math id="S1.p3.m3" class="ltx_Math" alttext="\theta_{0}=(1/2,2,4)" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>=</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta_{0}=(1/2,2,4)</annotation></semantics></math>. The results of one iteration of the algorithm
-are then compared to the responsibilities and the iterate <math id="S1.p3.m4" class="ltx_Math" alttext="\theta_{1}" display="inline"><semantics><msub><mi>θ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\theta_{1}</annotation></semantics></math>,
-and to the two values of the log-likelihood computed by hand.</p>
+<p class="ltx_p">We first test the functions on the data of
+exercise <a href="Ch20.html#Thmexercise2" title="Exercise 20.2. ‣ 20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a>, the five observations
+<math id="S1.p3.m1" class="ltx_Math" alttext="x=(0,1,5,6,7)" display="inline"><semantics><mrow><mi>x</mi><mo>=</mo><mrow><mo stretchy="false">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>5</mn><mo>,</mo><mn>6</mn><mo>,</mo><mn>7</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">x=(0,1,5,6,7)</annotation></semantics></math> with <math id="S1.p3.m2" class="ltx_Math" alttext="\sigma=1" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=1</annotation></semantics></math> and the initial value
+<math id="S1.p3.m3" class="ltx_Math" alttext="\theta_{0}=(1/2,2,4)" display="inline"><semantics><mrow><msub><mi>θ</mi><mn>0</mn></msub><mo>=</mo><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\theta_{0}=(1/2,2,4)</annotation></semantics></math>. We run one iteration and compare the
+responsibilities, the iterate <math id="S1.p3.m4" class="ltx_Math" alttext="\theta_{1}" display="inline"><semantics><msub><mi>θ</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\theta_{1}</annotation></semantics></math> and the two values of the
+log-likelihood with the hand computation.</p>
 </div>
 <div id="S1.p4" class="ltx_para">
 <div class="bml_listing"><div class="ltx_listing ltx_lstlisting ltx_framed ltx_framed_rectangle ltx_listing">
@@ -217,25 +214,26 @@ last digit because the hand computation rounded the intermediate sums).</p>
 <p class="ltx_p">The two groups in the five observations of
 exercise <a href="Ch20.html#Thmexercise2" title="Exercise 20.2. ‣ 20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a> are far apart, and the iteration
 converges to <math id="S2.p1.m1" class="ltx_Math" alttext="(0.4,0.5,6.0)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0.4</mn><mo>,</mo><mn>0.5</mn><mo>,</mo><mn>6.0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0.4,0.5,6.0)</annotation></semantics></math>, as stated in
-section <a href="Ch20.html#S2" title="20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a>. Here we simulate a sample where the
-groups overlap. We can simulate such a sample by first randomly
-choosing a group, using <span class="ltx_text ltx_font_typewriter">rbinom</span> to get <math id="S2.p1.m2" class="ltx_Math" alttext="Z_{i}=1" display="inline"><semantics><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">Z_{i}=1</annotation></semantics></math> with
+section <a href="Ch20.html#S2" title="20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a>. We now simulate a larger sample in
+which the groups overlap. For each observation we first choose a
+group, using the command <span class="ltx_text ltx_font_typewriter">rbinom</span> to set <math id="S2.p1.m2" class="ltx_Math" alttext="Z_{i}=1" display="inline"><semantics><mrow><msub><mi>Z</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">Z_{i}=1</annotation></semantics></math> with
 probability <math id="S2.p1.m3" class="ltx_Math" alttext="\pi=0.3" display="inline"><semantics><mrow><mi>π</mi><mo>=</mo><mn>0.3</mn></mrow><annotation encoding="application/x-tex">\pi=0.3</annotation></semantics></math>. For the other group R gives the value <math id="S2.p1.m4" class="ltx_Math" alttext="0" display="inline"><mn>0</mn></math>
 instead of <math id="S2.p1.m5" class="ltx_Math" alttext="2" display="inline"><semantics><mn>2</mn><annotation encoding="application/x-tex">2</annotation></semantics></math>, and thus <span class="ltx_text ltx_font_typewriter">z == 0</span> marks group 2. We then
-simulate the measurements from
-the normal distribution corresponding to the group, <span class="ltx_text ltx_font_italic">i.e.</span> with
-means <math id="S2.p1.m6" class="ltx_Math" alttext="0" display="inline"><mn>0</mn></math> and <math id="S2.p1.m7" class="ltx_Math" alttext="3" display="inline"><semantics><mn>3</mn><annotation encoding="application/x-tex">3</annotation></semantics></math> and <math id="S2.p1.m8" class="ltx_Math" alttext="\sigma=1" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=1</annotation></semantics></math>. The command <span class="ltx_text ltx_font_typewriter">ifelse</span> can be
-used to choose the correct mean for each observation. The box below
-contains the complete script for simulation and EM iteration, with
-lines shuffled (except for the body of the loop). Before you can run
-the script, you have to arrange these lines into a working script.
-Following the stopping rule of section <a href="Ch20.html#S2" title="20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a>, the
-command <span class="ltx_text ltx_font_typewriter">break</span> ends the loop as soon as the log-likelihood
-increases by less than <math id="S2.p1.m9" class="ltx_Math" alttext="10^{-8}" display="inline"><semantics><msup><mn>10</mn><mrow><mo>−</mo><mn>8</mn></mrow></msup><annotation encoding="application/x-tex">10^{-8}</annotation></semantics></math>. The vector <span class="ltx_text ltx_font_typewriter">ll</span> stores the
-log-likelihood after each iteration, with the initial value at
-position <math id="S2.p1.m10" class="ltx_Math" alttext="1" display="inline"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>, and grows by one entry per iteration.</p>
+simulate the observation from the normal distribution of its group,
+with mean <math id="S2.p1.m6" class="ltx_Math" alttext="0" display="inline"><mn>0</mn></math> or <math id="S2.p1.m7" class="ltx_Math" alttext="3" display="inline"><semantics><mn>3</mn><annotation encoding="application/x-tex">3</annotation></semantics></math> and <math id="S2.p1.m8" class="ltx_Math" alttext="\sigma=1" display="inline"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=1</annotation></semantics></math>. The command <span class="ltx_text ltx_font_typewriter">ifelse</span> can
+be used to choose the mean for each observation.</p>
 </div>
 <div id="S2.p2" class="ltx_para">
+<p class="ltx_p">The box below contains the complete script for the simulation and the
+EM iteration, with the lines shuffled except for the body of the loop.
+Before you can run the script, you have to put these lines into a
+working order. The loop uses the stopping rule of
+section <a href="Ch20.html#S2" title="20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a>: the command <span class="ltx_text ltx_font_typewriter">break</span> ends it as
+soon as the log-likelihood increases by less than <math id="S2.p2.m1" class="ltx_Math" alttext="10^{-8}" display="inline"><semantics><msup><mn>10</mn><mrow><mo>−</mo><mn>8</mn></mrow></msup><annotation encoding="application/x-tex">10^{-8}</annotation></semantics></math>. The
+vector <span class="ltx_text ltx_font_typewriter">ll</span> stores the log-likelihood after each iteration,
+with the initial value at position <math id="S2.p2.m2" class="ltx_Math" alttext="1" display="inline"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>.</p>
+</div>
+<div id="S2.p3" class="ltx_para">
 <div class="bml_listing"><div class="ltx_listing ltx_lstlisting ltx_framed ltx_framed_rectangle ltx_listing">
 <div class="ltx_listing_data"><div><span><button title="copy code" aria-label="copy code" onclick="const u=event.currentTarget.nextElementSibling.href;navigator.clipboard.writeText(atob(u.substring(u.indexOf(',')+1)))"><i class="fa fa-clone" aria-hidden="true"></i></button><a download="" title="download " href="data:text/plain;base64,dGhldGEgPC0gYygwLjUsIHFbMV0sIHFbMl0pCmZvciAoayBpbiAxOjEwMDApIHsKICB0aGV0YSA8LSBtc3RlcCh4LCByZXNwKHgsIHRoZXRhLCAxKSkKICBsbFtrICsgMV0gPC0gbG9nbGlrKHgsIHRoZXRhLCAxKQogIGlmIChsbFtrICsgMV0gLSBsbFtrXSA8IDFlLTgpIGJyZWFrCn0KeiA8LSByYmlub20obiwgc2l6ZSA9IDEsIHByb2IgPSAwLjMpCm4gPC0gMjAwCnEgICAgIDwtIHF1YW50aWxlKHgsIGMoMC4yNSwgMC43NSksIG5hbWVzID0gRkFMU0UpCnNldC5zZWVkKDIwMjYpCmxsICAgIDwtIGxvZ2xpayh4LCB0aGV0YSwgMSkKeCA8LSBybm9ybShuLCBtZWFuID0gaWZlbHNlKHogPT0gMSwgMCwgMyksIHNkID0gMSk="><i class="fa fa-download" aria-hidden="true"></i></a></span></div></div>
 <div id="lstnumberx404" class="ltx_listingline"><code><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">theta</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">&lt;-</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">c</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">(0.5,</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">q</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">[1],</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">q</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">[2])</span></code></div>
@@ -252,21 +250,24 @@ position <math id="S2.p1.m10" class="ltx_Math" alttext="1" display="inline"><se
 <div id="lstnumberx415" class="ltx_listingline"><code><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">x</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">&lt;-</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">rnorm</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">(</span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">n</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">,</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">mean</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">=</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">ifelse</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">(</span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">z</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">==</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">1,</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">0,</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">3),</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">sd</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">=</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">1)</span></code></div>
 </div></div>
 </div>
-<div id="S2.p3" class="ltx_para">
-<p class="ltx_p">The rule is the one from lecture <a href="Ch9.html" title="Lecture 9 Consistency by Simulation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">9</span></a>: each line must
-come after all lines on which it depends. As in that lecture,
-several orders satisfy the rule. One of them is seed, <span class="ltx_text ltx_font_typewriter">n</span>,
-<span class="ltx_text ltx_font_typewriter">z</span> and <span class="ltx_text ltx_font_typewriter">x</span>, quartiles <span class="ltx_text ltx_font_typewriter">q</span>, start value, first
-entry of <span class="ltx_text ltx_font_typewriter">ll</span>, and then the loop; the seed and <span class="ltx_text ltx_font_typewriter">n</span> can
-also be swapped. The start values put the weight at <math id="S2.p3.m1" class="ltx_Math" alttext="1/2" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math> and the
-two means at the two quartiles, which is a cheap way to split the
-sample into two groups. After the loop, the variable <span class="ltx_text ltx_font_typewriter">k</span> keeps
-the number of the last iteration. Before you look at the output,
-answer two questions. Will the loop need fewer than <math id="S2.p3.m2" class="ltx_Math" alttext="10" display="inline"><semantics><mn>10</mn><annotation encoding="application/x-tex">10</annotation></semantics></math> iterations,
-between <math id="S2.p3.m3" class="ltx_Math" alttext="10" display="inline"><semantics><mn>10</mn><annotation encoding="application/x-tex">10</annotation></semantics></math> and <math id="S2.p3.m4" class="ltx_Math" alttext="50" display="inline"><semantics><mn>50</mn><annotation encoding="application/x-tex">50</annotation></semantics></math>, or more than <math id="S2.p3.m5" class="ltx_Math" alttext="50" display="inline"><semantics><mn>50</mn><annotation encoding="application/x-tex">50</annotation></semantics></math>? Will the log-likelihood
-increase by the same amount in each iteration?</p>
-</div>
 <div id="S2.p4" class="ltx_para">
+<p class="ltx_p">The order follows the rule of lecture <a href="Ch9.html" title="Lecture 9 Consistency by Simulation ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">9</span></a>: each line must
+come after all lines on which it depends. As in that lecture, several
+orders satisfy the rule. One of them is the seed, <span class="ltx_text ltx_font_typewriter">n</span>,
+<span class="ltx_text ltx_font_typewriter">z</span>, <span class="ltx_text ltx_font_typewriter">x</span>, the quartiles <span class="ltx_text ltx_font_typewriter">q</span>, the start value and
+the first entry of <span class="ltx_text ltx_font_typewriter">ll</span>, followed by the loop. The seed and
+<span class="ltx_text ltx_font_typewriter">n</span> can also be swapped. The start value puts the weight
+at <math id="S2.p4.m1" class="ltx_Math" alttext="1/2" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math> and the two means at the lower and upper quartiles, which is
+a simple way to split the sample into two groups. After the loop, the
+variable <span class="ltx_text ltx_font_typewriter">k</span> holds the number of the last iteration.</p>
+</div>
+<div id="S2.p5" class="ltx_para">
+<p class="ltx_p">Before you look at the output, answer two questions. Will the loop
+need fewer than <math id="S2.p5.m1" class="ltx_Math" alttext="10" display="inline"><semantics><mn>10</mn><annotation encoding="application/x-tex">10</annotation></semantics></math> iterations, between <math id="S2.p5.m2" class="ltx_Math" alttext="10" display="inline"><semantics><mn>10</mn><annotation encoding="application/x-tex">10</annotation></semantics></math> and <math id="S2.p5.m3" class="ltx_Math" alttext="50" display="inline"><semantics><mn>50</mn><annotation encoding="application/x-tex">50</annotation></semantics></math>, or more
+than <math id="S2.p5.m4" class="ltx_Math" alttext="50" display="inline"><semantics><mn>50</mn><annotation encoding="application/x-tex">50</annotation></semantics></math>? Will the log-likelihood increase by the same amount in
+each iteration?</p>
+</div>
+<div id="S2.p6" class="ltx_para">
 <div class="bml_listing"><div class="ltx_listing ltx_lstlisting ltx_framed ltx_framed_rectangle ltx_listing">
 <div class="ltx_listing_data"><div><span><button title="copy code" aria-label="copy code" onclick="const u=event.currentTarget.nextElementSibling.href;navigator.clipboard.writeText(atob(u.substring(u.indexOf(',')+1)))"><i class="fa fa-clone" aria-hidden="true"></i></button><a download="" title="download " href="data:text/plain;base64,dGFibGUoeikKawpyb3VuZCh0aGV0YSwgNCkKcm91bmQobGxbayArIDFdLCAzKQpkIDwtIGRpZmYobGwpCnNpZ25pZihkWzE6N10sIDIpCnNpZ25pZihkWzIxOjI3XSwgMik="><i class="fa fa-download" aria-hidden="true"></i></a></span></div></div>
 <div id="lstnumberx416" class="ltx_listingline"><code><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">table</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">(</span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">z</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">)</span></code></div>
@@ -289,34 +290,38 @@ increase by the same amount in each iteration?</p>
 <div id="lstnumberx430" class="ltx_listingline"><code><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">##</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">[1]</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">3.3</span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">e</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">-06</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">1.3</span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">e</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">-06</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">5.4</span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">e</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">-07</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">2.2</span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">e</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">-07</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">8.8</span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">e</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">-08</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">3.6</span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">e</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">-08</span><span class="ltx_text ltx_lst_space ltx_font_typewriter" style="font-size:91%;"> </span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">1.4</span><span class="ltx_text ltx_lst_identifier ltx_font_typewriter" style="font-size:91%;">e</span><span class="ltx_text ltx_font_typewriter" style="font-size:91%;">-08</span></code></div>
 </div></div>
 </div>
-<div id="S2.p5" class="ltx_para">
-<p class="ltx_p">The fixed point <math id="S2.p5.m1" class="ltx_Math" alttext="\hat{\theta}=(0.240,0.220,3.076)" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mrow><mo stretchy="false">(</mo><mn>0.240</mn><mo>,</mo><mn>0.220</mn><mo>,</mo><mn>3.076</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}=(0.240,0.220,3.076)</annotation></semantics></math> is close to the
-proportion <math id="S2.p5.m2" class="ltx_Math" alttext="48/200=0.24" display="inline"><semantics><mrow><mrow><mn>48</mn><mo>/</mo><mn>200</mn></mrow><mo>=</mo><mn>0.24</mn></mrow><annotation encoding="application/x-tex">48/200=0.24</annotation></semantics></math> of group-1 observations which were actually
-drawn, rather than to <math id="S2.p5.m3" class="ltx_Math" alttext="\pi=0.3" display="inline"><semantics><mrow><mi>π</mi><mo>=</mo><mn>0.3</mn></mrow><annotation encoding="application/x-tex">\pi=0.3</annotation></semantics></math>, and it recovers the two means to
-within about two tenths. By proposition <a href="Ch20.html#Thmtheorem3" title="Proposition 20.3. ‣ 20.1 The Ascent Property ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.3</span></a>
-the fixed point is a root of the likelihood equation. The command
-<span class="ltx_text ltx_font_typewriter">diff</span> can be used to compute the differences of consecutive
-entries of a vector, and thus <span class="ltx_text ltx_font_typewriter">d</span> holds the increases of the
-log-likelihood in the <math id="S2.p5.m4" class="ltx_Math" alttext="28" display="inline"><semantics><mn>28</mn><annotation encoding="application/x-tex">28</annotation></semantics></math> iterations. The last two lines of the
-output show the first seven and seven of the last increases. They are
-positive, as proposition <a href="Ch20.html#Thmtheorem2" title="Proposition 20.2. ‣ 20.1 The Ascent Property ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a> guarantees, but they are
-not equal. Towards the end, each increase is about <math id="S2.p5.m5" class="ltx_Math" alttext="0.4" display="inline"><semantics><mn>0.4</mn><annotation encoding="application/x-tex">0.4</annotation></semantics></math> times the
-previous one, for example <math id="S2.p5.m6" class="ltx_Math" alttext="3.3\cdot 10^{-6}" display="inline"><semantics><mrow><mn>3.3</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>6</mn></mrow></msup></mrow><annotation encoding="application/x-tex">3.3\cdot 10^{-6}</annotation></semantics></math>, then <math id="S2.p5.m7" class="ltx_Math" alttext="1.3\cdot 10^{-6}" display="inline"><semantics><mrow><mn>1.3</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>6</mn></mrow></msup></mrow><annotation encoding="application/x-tex">1.3\cdot 10^{-6}</annotation></semantics></math>
-and <math id="S2.p5.m8" class="ltx_Math" alttext="5.4\cdot 10^{-7}" display="inline"><semantics><mrow><mn>5.4</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>7</mn></mrow></msup></mrow><annotation encoding="application/x-tex">5.4\cdot 10^{-7}</annotation></semantics></math>. This is the geometric convergence mentioned
-in section <a href="Ch20.html#S2" title="20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a>. Since <math id="S2.p5.m9" class="ltx_Math" alttext="0.66\cdot 0.4^{20}" display="inline"><semantics><mrow><mn>0.66</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><msup><mn>0.4</mn><mn>20</mn></msup></mrow><annotation encoding="application/x-tex">0.66\cdot 0.4^{20}</annotation></semantics></math> is
-approximately <math id="S2.p5.m10" class="ltx_Math" alttext="7\cdot 10^{-9}" display="inline"><semantics><mrow><mn>7</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>9</mn></mrow></msup></mrow><annotation encoding="application/x-tex">7\cdot 10^{-9}</annotation></semantics></math>, at this rate about <math id="S2.p5.m11" class="ltx_Math" alttext="20" display="inline"><semantics><mn>20</mn><annotation encoding="application/x-tex">20</annotation></semantics></math> further
-iterations are needed to reduce the increase from <math id="S2.p5.m12" class="ltx_Math" alttext="0.66" display="inline"><semantics><mn>0.66</mn><annotation encoding="application/x-tex">0.66</annotation></semantics></math> in the
-seventh iteration to below the tolerance <math id="S2.p5.m13" class="ltx_Math" alttext="10^{-8}" display="inline"><semantics><msup><mn>10</mn><mrow><mo>−</mo><mn>8</mn></mrow></msup><annotation encoding="application/x-tex">10^{-8}</annotation></semantics></math>, which explains
-the total of <math id="S2.p5.m14" class="ltx_Math" alttext="28" display="inline"><semantics><mn>28</mn><annotation encoding="application/x-tex">28</annotation></semantics></math> iterations. The factor <math id="S2.p5.m15" class="ltx_Math" alttext="0.4" display="inline"><semantics><mn>0.4</mn><annotation encoding="application/x-tex">0.4</annotation></semantics></math> depends on
+<div id="S2.p7" class="ltx_para">
+<p class="ltx_p">The loop stops at the fixed point <math id="S2.p7.m1" class="ltx_Math" alttext="\hat{\theta}=(0.240,0.220,3.076)" display="inline"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mrow><mo stretchy="false">(</mo><mn>0.240</mn><mo>,</mo><mn>0.220</mn><mo>,</mo><mn>3.076</mn><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\theta}=(0.240,0.220,3.076)</annotation></semantics></math>.
+Its weight is close to the proportion <math id="S2.p7.m2" class="ltx_Math" alttext="48/200=0.24" display="inline"><semantics><mrow><mrow><mn>48</mn><mo>/</mo><mn>200</mn></mrow><mo>=</mo><mn>0.24</mn></mrow><annotation encoding="application/x-tex">48/200=0.24</annotation></semantics></math> of group-1
+observations which were actually drawn, rather than to <math id="S2.p7.m3" class="ltx_Math" alttext="\pi=0.3" display="inline"><semantics><mrow><mi>π</mi><mo>=</mo><mn>0.3</mn></mrow><annotation encoding="application/x-tex">\pi=0.3</annotation></semantics></math>, and
+its two means are within about two tenths of the true values. By
+proposition <a href="Ch20.html#Thmtheorem3" title="Proposition 20.3. ‣ 20.1 The Ascent Property ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.3</span></a> the fixed point is a root of the
+likelihood equation.</p>
+</div>
+<div id="S2.p8" class="ltx_para">
+<p class="ltx_p">The command <span class="ltx_text ltx_font_typewriter">diff</span> can be used to compute the differences of
+consecutive entries of a vector, and thus <span class="ltx_text ltx_font_typewriter">d</span> holds the
+increases of the log-likelihood in the <math id="S2.p8.m1" class="ltx_Math" alttext="28" display="inline"><semantics><mn>28</mn><annotation encoding="application/x-tex">28</annotation></semantics></math> iterations. The last two
+lines of the output show the first seven increases and seven
+increases near the end. They are all positive, as
+proposition <a href="Ch20.html#Thmtheorem2" title="Proposition 20.2. ‣ 20.1 The Ascent Property ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a> guarantees, but they are not equal.
+Towards the end, each increase is about <math id="S2.p8.m2" class="ltx_Math" alttext="0.4" display="inline"><semantics><mn>0.4</mn><annotation encoding="application/x-tex">0.4</annotation></semantics></math> times the
+previous one, for example <math id="S2.p8.m3" class="ltx_Math" alttext="3.3\cdot 10^{-6}" display="inline"><semantics><mrow><mn>3.3</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>6</mn></mrow></msup></mrow><annotation encoding="application/x-tex">3.3\cdot 10^{-6}</annotation></semantics></math>, then <math id="S2.p8.m4" class="ltx_Math" alttext="1.3\cdot 10^{-6}" display="inline"><semantics><mrow><mn>1.3</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>6</mn></mrow></msup></mrow><annotation encoding="application/x-tex">1.3\cdot 10^{-6}</annotation></semantics></math>
+and <math id="S2.p8.m5" class="ltx_Math" alttext="5.4\cdot 10^{-7}" display="inline"><semantics><mrow><mn>5.4</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>7</mn></mrow></msup></mrow><annotation encoding="application/x-tex">5.4\cdot 10^{-7}</annotation></semantics></math>. This is the geometric convergence mentioned
+in section <a href="Ch20.html#S2" title="20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a>. Since <math id="S2.p8.m6" class="ltx_Math" alttext="0.66\cdot 0.4^{20}" display="inline"><semantics><mrow><mn>0.66</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><msup><mn>0.4</mn><mn>20</mn></msup></mrow><annotation encoding="application/x-tex">0.66\cdot 0.4^{20}</annotation></semantics></math> is
+approximately <math id="S2.p8.m7" class="ltx_Math" alttext="7\cdot 10^{-9}" display="inline"><semantics><mrow><mn>7</mn><mo lspace="0.222em" rspace="0.222em">⋅</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>9</mn></mrow></msup></mrow><annotation encoding="application/x-tex">7\cdot 10^{-9}</annotation></semantics></math>, at this rate about <math id="S2.p8.m8" class="ltx_Math" alttext="20" display="inline"><semantics><mn>20</mn><annotation encoding="application/x-tex">20</annotation></semantics></math> further
+iterations are needed to reduce the increase from <math id="S2.p8.m9" class="ltx_Math" alttext="0.66" display="inline"><semantics><mn>0.66</mn><annotation encoding="application/x-tex">0.66</annotation></semantics></math> in the
+seventh iteration to below the tolerance <math id="S2.p8.m10" class="ltx_Math" alttext="10^{-8}" display="inline"><semantics><msup><mn>10</mn><mrow><mo>−</mo><mn>8</mn></mrow></msup><annotation encoding="application/x-tex">10^{-8}</annotation></semantics></math>, which explains
+the total of <math id="S2.p8.m11" class="ltx_Math" alttext="28" display="inline"><semantics><mn>28</mn><annotation encoding="application/x-tex">28</annotation></semantics></math> iterations. The factor <math id="S2.p8.m12" class="ltx_Math" alttext="0.4" display="inline"><semantics><mn>0.4</mn><annotation encoding="application/x-tex">0.4</annotation></semantics></math> depends on
 the data, and the take-home task below shows what happens when the
 groups overlap more.</p>
 </div>
-<div id="S2.p6" class="ltx_para">
+<div id="S2.p9" class="ltx_para">
 <p class="ltx_p">At the fixed point the responsibility of group 1 is a decreasing
-function of <math id="S2.p6.m1" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> which equals <math id="S2.p6.m2" class="ltx_Math" alttext="1/2" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math> where
-<math id="S2.p6.m3" class="ltx_Math" alttext="\pi\varphi_{\sigma}(x-\mu_{1})=(1-\pi)\varphi_{\sigma}(x-\mu_{2})" display="inline"><semantics><mrow><mrow><mi>π</mi><mo>⁢</mo><msub><mi>φ</mi><mi>σ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><msub><mi>μ</mi><mn>1</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msub><mi>φ</mi><mi>σ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\pi\varphi_{\sigma}(x-\mu_{1})=(1-\pi)\varphi_{\sigma}(x-\mu_{2})</annotation></semantics></math>. Before you
+function of <math id="S2.p9.m1" class="ltx_Math" alttext="x" display="inline"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> which equals <math id="S2.p9.m2" class="ltx_Math" alttext="1/2" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math> where
+<math id="S2.p9.m3" class="ltx_Math" alttext="\pi\varphi_{\sigma}(x-\mu_{1})=(1-\pi)\varphi_{\sigma}(x-\mu_{2})" display="inline"><semantics><mrow><mrow><mi>π</mi><mo>⁢</mo><msub><mi>φ</mi><mi>σ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><msub><mi>μ</mi><mn>1</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow><mo>=</mo><mrow><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>−</mo><mi>π</mi></mrow><mo stretchy="false">)</mo></mrow><mo>⁢</mo><msub><mi>φ</mi><mi>σ</mi></msub><mo>⁢</mo><mrow><mo stretchy="false">(</mo><mrow><mi>x</mi><mo>−</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><mo stretchy="false">)</mo></mrow></mrow></mrow><annotation encoding="application/x-tex">\pi\varphi_{\sigma}(x-\mu_{1})=(1-\pi)\varphi_{\sigma}(x-\mu_{2})</annotation></semantics></math>. Before you
 look at figure <a href="#F1" title="Figure 21.1 ‣ 21.2 A Larger Sample ‣ Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">21.1</span></a>, predict where the
-crossing lies: at the midpoint <math id="S2.p6.m4" class="ltx_Math" alttext="1.648" display="inline"><semantics><mn>1.648</mn><annotation encoding="application/x-tex">1.648</annotation></semantics></math> of the two fitted means, or
+crossing lies: at the midpoint <math id="S2.p9.m4" class="ltx_Math" alttext="1.648" display="inline"><semantics><mn>1.648</mn><annotation encoding="application/x-tex">1.648</annotation></semantics></math> of the two fitted means, or
 above or below this point?</p>
 </div>
 <figure id="F1" class="ltx_figure"><div class="bml-overflow-wrapper"><img src="figures/S21-responsibilities.png" id="F1.g1" class="ltx_graphics ltx_centering ltx_img_square" width="479" height="419" alt="Two panels. Top: histogram of 200 observations with
@@ -334,23 +339,23 @@ circles mark the observations which were simulated from group 1. The
 dotted lines give the responsibility <math id="F1.m3" class="ltx_Math" alttext="1/2" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math> and the crossing
 point <math id="F1.m4" class="ltx_Math" alttext="1.244" display="inline"><semantics><mn>1.244</mn><annotation encoding="application/x-tex">1.244</annotation></semantics></math>.</figcaption>
 </figure>
-<div id="S2.p7" class="ltx_para">
-<p class="ltx_p">The crossing happens at <math id="S2.p7.m1" class="ltx_Math" alttext="1.244" display="inline"><semantics><mn>1.244</mn><annotation encoding="application/x-tex">1.244</annotation></semantics></math>, well below the midpoint <math id="S2.p7.m2" class="ltx_Math" alttext="1.648" display="inline"><semantics><mn>1.648</mn><annotation encoding="application/x-tex">1.648</annotation></semantics></math>, since
-the weights are unequal: an observation which is half-way between the
-means has three times the probability of being from the larger group.
-The filled and open circles give the true group of each observation,
-which is not known to EM. The responsibilities agree with the
-truth when the observations are far away from the crossing point, but
-between <math id="S2.p7.m3" class="ltx_Math" alttext="0.7" display="inline"><semantics><mn>0.7</mn><annotation encoding="application/x-tex">0.7</annotation></semantics></math> and <math id="S2.p7.m4" class="ltx_Math" alttext="1.6" display="inline"><semantics><mn>1.6</mn><annotation encoding="application/x-tex">1.6</annotation></semantics></math> both types of observations can be found and
-the group cannot be decided. The figure is drawn by the
-script <span class="ltx_text ltx_font_typewriter">R/S21-mixture.R</span>.</p>
+<div id="S2.p10" class="ltx_para">
+<p class="ltx_p">The crossing lies at <math id="S2.p10.m1" class="ltx_Math" alttext="1.244" display="inline"><semantics><mn>1.244</mn><annotation encoding="application/x-tex">1.244</annotation></semantics></math>, well below the midpoint <math id="S2.p10.m2" class="ltx_Math" alttext="1.648" display="inline"><semantics><mn>1.648</mn><annotation encoding="application/x-tex">1.648</annotation></semantics></math>, since
+the weights are unequal: an observation half-way between the means is
+about three times as likely to come from the larger group as from the
+smaller one. The filled and open circles give the true group of each
+observation, which is not known to EM. Far from the crossing point
+the responsibilities agree with the true groups, but between <math id="S2.p10.m3" class="ltx_Math" alttext="0.7" display="inline"><semantics><mn>0.7</mn><annotation encoding="application/x-tex">0.7</annotation></semantics></math>
+and <math id="S2.p10.m4" class="ltx_Math" alttext="1.6" display="inline"><semantics><mn>1.6</mn><annotation encoding="application/x-tex">1.6</annotation></semantics></math> observations from both groups occur, and the value of an
+observation there does not decide its group. The figure is drawn by
+the script <span class="ltx_text ltx_font_typewriter">R/S21-mixture.R</span>.</p>
 </div>
 </div>
 </section>
 <section id="S3" class="ltx_section normal">
 <div class="section level2">
 <h2 class="ltx_title ltx_title_section">
-<span class="ltx_tag ltx_tag_section header-section-number">21.3</span> Label Switching and a Bad Start</h2>
+<span class="ltx_tag ltx_tag_section header-section-number">21.3</span> Label Switching and a Poor Start</h2>
 
 <div id="S3.p1" class="ltx_para">
 <p class="ltx_p">Section <a href="Ch20.html#S2" title="20.2 Practical Matters ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a> discusses label switching and the
@@ -358,9 +363,9 @@ danger of a poor start. In the script <span class="ltx_text ltx_font_typewriter"
 loop is packaged as a function <span class="ltx_text ltx_font_typewriter">em</span>, which is then run on our
 sample from three starts: the quartile start, the same start with the two means
 swapped, and the start <math id="S3.p1.m1" class="ltx_Math" alttext="(1/2,3,3)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>3</mn><mo>,</mo><mn>3</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1/2,3,3)</annotation></semantics></math> with both means equal. Before you
-look at table <a href="#T1" title="Table 21.1 ‣ 21.3 Label Switching and a Bad Start ‣ Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">21.1</span></a>, predict where the start with the
-swapped means ends up, and what happens to the responsibilities, and
-thus to the next update, when <math id="S3.p1.m2" class="ltx_Math" alttext="\mu_{1}=\mu_{2}" display="inline"><semantics><mrow><msub><mi>μ</mi><mn>1</mn></msub><mo>=</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_{1}=\mu_{2}</annotation></semantics></math>.</p>
+look at table <a href="#T1" title="Table 21.1 ‣ 21.3 Label Switching and a Poor Start ‣ Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">21.1</span></a>, answer two questions. Where does
+the start with the swapped means end up? What happens to the
+responsibilities, and thus to the next update, when <math id="S3.p1.m2" class="ltx_Math" alttext="\mu_{1}=\mu_{2}" display="inline"><semantics><mrow><msub><mi>μ</mi><mn>1</mn></msub><mo>=</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_{1}=\mu_{2}</annotation></semantics></math>?</p>
 </div>
 <figure id="T1" class="ltx_table"><div class="bml-overflow-wrapper">
 <table class="ltx_tabular ltx_centering ltx_align_middle">
@@ -405,49 +410,51 @@ script <span class="ltx_text ltx_font_typewriter">R/S21-starts.R</span>.</figcap
 <div id="S3.p2" class="ltx_para">
 <p class="ltx_p">The start with swapped means ends in the mirror image
 <math id="S3.p2.m1" class="ltx_Math" alttext="(0.760,3.076,0.220)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mn>0.760</mn><mo>,</mo><mn>3.076</mn><mo>,</mo><mn>0.220</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0.760,3.076,0.220)</annotation></semantics></math> after the same <math id="S3.p2.m2" class="ltx_Math" alttext="28" display="inline"><semantics><mn>28</mn><annotation encoding="application/x-tex">28</annotation></semantics></math> iterations and with the same
-log-likelihood. Both parameter values give the same density, so the
-model is not identifiable in the sense of
-definition <a href="Ch4.html#Thmtheorem10" title="Definition 4.10. ‣ 4.4 Identifiability ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.10</span></a>, and the labelling in the start
-determines which of the two maxima we reach. When <math id="S3.p2.m3" class="ltx_Math" alttext="\mu_{1}=\mu_{2}" display="inline"><semantics><mrow><msub><mi>μ</mi><mn>1</mn></msub><mo>=</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_{1}=\mu_{2}</annotation></semantics></math>, the
-two normal densities in the responsibility cancel, all <math id="S3.p2.m4" class="ltx_Math" alttext="\gamma_{i}" display="inline"><semantics><msub><mi>γ</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\gamma_{i}</annotation></semantics></math> are
-equal to <math id="S3.p2.m5" class="ltx_Math" alttext="\pi" display="inline"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math>, and the M step sets both means equal to the sample
-mean while leaving the weight unchanged. The next step changes
-nothing, and the loop stops after two iterations at
-<math id="S3.p2.m6" class="ltx_Math" alttext="(1/2,2.3915,2.3915)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2.3915</mn><mo>,</mo><mn>2.3915</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1/2,2.3915,2.3915)</annotation></semantics></math>, effectively a single normal distribution, with a
-log-likelihood <math id="S3.p2.m7" class="ltx_Math" alttext="67" display="inline"><semantics><mn>67</mn><annotation encoding="application/x-tex">67</annotation></semantics></math> below the maximum. This resting point is a root
-of the likelihood equation by proposition <a href="Ch20.html#Thmtheorem3" title="Proposition 20.3. ‣ 20.1 The Ascent Property ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.3</span></a>.
-Since the density does not depend on <math id="S3.p2.m8" class="ltx_Math" alttext="\pi" display="inline"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math> when <math id="S3.p2.m9" class="ltx_Math" alttext="\mu_{1}=\mu_{2}" display="inline"><semantics><mrow><msub><mi>μ</mi><mn>1</mn></msub><mo>=</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_{1}=\mu_{2}</annotation></semantics></math>, every
-point <math id="S3.p2.m10" class="ltx_Math" alttext="(\pi,\bar{x},\bar{x})" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mi>π</mi><mo>,</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>,</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\pi,\bar{x},\bar{x})</annotation></semantics></math> is such a root, and the weight <math id="S3.p2.m11" class="ltx_Math" alttext="1/2" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math> is
-simply the weight of the start.</p>
+log-likelihood. Both parameter values give the same density, and thus
+the model is not identifiable in the sense of
+definition <a href="Ch4.html#Thmtheorem10" title="Definition 4.10. ‣ 4.4 Identifiability ‣ Lecture 4 Likelihood and the Method of Moments ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">4.10</span></a>. The labelling in the start
+determines which of the two maxima we reach.</p>
 </div>
 <div id="S3.p3" class="ltx_para">
-<p class="ltx_p">The resting point is not a local maximum. The log-likelihood at
-the nearby start <math id="S3.p3.m1" class="ltx_Math" alttext="(1/2,2.39,2.41)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2.39</mn><mo>,</mo><mn>2.41</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1/2,2.39,2.41)</annotation></semantics></math> is already equal to <math id="S3.p3.m2" class="ltx_Math" alttext="-421.800" display="inline"><semantics><mrow><mo>−</mo><mn>421.800</mn></mrow><annotation encoding="application/x-tex">-421.800</annotation></semantics></math>. This is
-slightly above the value <math id="S3.p3.m3" class="ltx_Math" alttext="-421.807" display="inline"><semantics><mrow><mo>−</mo><mn>421.807</mn></mrow><annotation encoding="application/x-tex">-421.807</annotation></semantics></math> at the resting point, and
-figure <a href="#F2" title="Figure 21.2 ‣ 21.3 Label Switching and a Bad Start ‣ Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">21.2</span></a> shows that EM started there climbs all the
-way to the maximum. Neither is it a local minimum, since among the
-points with <math id="S3.p3.m4" class="ltx_Math" alttext="\mu_{1}=\mu_{2}" display="inline"><semantics><mrow><msub><mi>μ</mi><mn>1</mn></msub><mo>=</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_{1}=\mu_{2}</annotation></semantics></math> the log-likelihood is largest at the sample
-mean. The resting point is thus a saddle point, and EM cannot tell a
-saddle point apart from a maximum. The figure also shows that near
+<p class="ltx_p">When <math id="S3.p3.m1" class="ltx_Math" alttext="\mu_{1}=\mu_{2}" display="inline"><semantics><mrow><msub><mi>μ</mi><mn>1</mn></msub><mo>=</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_{1}=\mu_{2}</annotation></semantics></math>, the two normal densities in the responsibility
+cancel, all <math id="S3.p3.m2" class="ltx_Math" alttext="\gamma_{i}" display="inline"><semantics><msub><mi>γ</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\gamma_{i}</annotation></semantics></math> are equal to <math id="S3.p3.m3" class="ltx_Math" alttext="\pi" display="inline"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math>, and the M step sets both
+means equal to the sample mean while leaving the weight unchanged.
+The next step changes nothing, and the loop stops after two iterations
+at <math id="S3.p3.m4" class="ltx_Math" alttext="(1/2,2.3915,2.3915)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2.3915</mn><mo>,</mo><mn>2.3915</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1/2,2.3915,2.3915)</annotation></semantics></math>. This is effectively a single normal
+distribution, with a log-likelihood <math id="S3.p3.m5" class="ltx_Math" alttext="67" display="inline"><semantics><mn>67</mn><annotation encoding="application/x-tex">67</annotation></semantics></math> below the maximum. By
+proposition <a href="Ch20.html#Thmtheorem3" title="Proposition 20.3. ‣ 20.1 The Ascent Property ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.3</span></a> the point is a root of the
+likelihood equation. Since the density does not depend on <math id="S3.p3.m6" class="ltx_Math" alttext="\pi" display="inline"><semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics></math> when
+<math id="S3.p3.m7" class="ltx_Math" alttext="\mu_{1}=\mu_{2}" display="inline"><semantics><mrow><msub><mi>μ</mi><mn>1</mn></msub><mo>=</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_{1}=\mu_{2}</annotation></semantics></math>, every point <math id="S3.p3.m8" class="ltx_Math" alttext="(\pi,\bar{x},\bar{x})" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mi>π</mi><mo>,</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>,</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\pi,\bar{x},\bar{x})</annotation></semantics></math> is such a root, and
+the weight <math id="S3.p3.m9" class="ltx_Math" alttext="1/2" display="inline"><semantics><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math> is the weight of the start.</p>
+</div>
+<div id="S3.p4" class="ltx_para">
+<p class="ltx_p">The point <math id="S3.p4.m1" class="ltx_Math" alttext="(1/2,\bar{x},\bar{x})" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo>,</mo><mover accent="true"><mi>x</mi><mo>¯</mo></mover><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1/2,\bar{x},\bar{x})</annotation></semantics></math> is not a local maximum. The
+log-likelihood at the nearby start <math id="S3.p4.m2" class="ltx_Math" alttext="(1/2,2.39,2.41)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2.39</mn><mo>,</mo><mn>2.41</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1/2,2.39,2.41)</annotation></semantics></math> is
+already <math id="S3.p4.m3" class="ltx_Math" alttext="-421.800" display="inline"><semantics><mrow><mo>−</mo><mn>421.800</mn></mrow><annotation encoding="application/x-tex">-421.800</annotation></semantics></math>. This is slightly above the value <math id="S3.p4.m4" class="ltx_Math" alttext="-421.807" display="inline"><semantics><mrow><mo>−</mo><mn>421.807</mn></mrow><annotation encoding="application/x-tex">-421.807</annotation></semantics></math> at
+the point itself, and figure <a href="#F2" title="Figure 21.2 ‣ 21.3 Label Switching and a Poor Start ‣ Lecture 21 EM in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">21.2</span></a> shows that EM
+started there climbs all the way to the maximum. Neither is it a
+local minimum, since among the points with <math id="S3.p4.m5" class="ltx_Math" alttext="\mu_{1}=\mu_{2}" display="inline"><semantics><mrow><msub><mi>μ</mi><mn>1</mn></msub><mo>=</mo><msub><mi>μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_{1}=\mu_{2}</annotation></semantics></math> the
+log-likelihood is largest at the sample mean. The point is thus a
+saddle point, and EM stops there just as it would at a maximum. The
+figure also shows that near
 the saddle point the log-likelihood increases only slowly at first:
-the first iteration from the nearby start gains only <math id="S3.p3.m5" class="ltx_Math" alttext="0.07" display="inline"><semantics><mn>0.07</mn><annotation encoding="application/x-tex">0.07</annotation></semantics></math>. With a
-coarse tolerance such as <math id="S3.p3.m6" class="ltx_Math" alttext="0.1" display="inline"><semantics><mn>0.1</mn><annotation encoding="application/x-tex">0.1</annotation></semantics></math>, the loop would have stopped there, far
+the first iteration from the nearby start gains only <math id="S3.p4.m6" class="ltx_Math" alttext="0.07" display="inline"><semantics><mn>0.07</mn><annotation encoding="application/x-tex">0.07</annotation></semantics></math>. With a
+coarse tolerance such as <math id="S3.p4.m7" class="ltx_Math" alttext="0.1" display="inline"><semantics><mn>0.1</mn><annotation encoding="application/x-tex">0.1</annotation></semantics></math>, the loop would have stopped there, far
 away from the maximum.</p>
 </div>
 <figure id="F2" class="ltx_figure"><div class="bml-overflow-wrapper"><img src="figures/S21-loglik.png" id="F2.g1" class="ltx_graphics ltx_centering ltx_img_landscape" width="479" height="299" alt="Log-likelihood as a function of iteration number.
 The thick, solid curve starts at -375 and gradually flattens to
--354.5. The process ends after iteration 28. The dotted curve
-starts at -422, is nearly constant for the first two iterations, and
-then increases to the same plateau as the solid curve does. The
-process ends in iteration 33. The dash-dotted line with crosses
-starts at -459, jumps to -422 in the first iteration, and ends in
-iteration~2."></div>
-<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">Figure 21.2: </span>Log-likelihood of the given data as a function of the
-iteration number for the EM algorithm, for the start with
-quartile-spaced means (solid line), for the start <math id="F2.m2" class="ltx_Math" alttext="(1/2,2.39,2.41)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2.39</mn><mo>,</mo><mn>2.41</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1/2,2.39,2.41)</annotation></semantics></math>
-with nearly equal means (dotted line) and for the start with equal
-means (dash-dotted line with crosses). The trace of the start with
-interchanged means coincides with the solid line.</figcaption>
+-354.5 and ends after iteration 28. The dotted curve starts at
+-422, is nearly constant for the first two iterations, then
+increases to the same plateau as the solid curve and ends after
+iteration 33. The dash-dotted line with crosses starts at -459,
+jumps to -422 in the first iteration and ends after iteration 2."></div>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">Figure 21.2: </span>Log-likelihood of the simulated data as a function of the
+iteration number of the EM algorithm, for the quartile start (solid
+line), for the start <math id="F2.m2" class="ltx_Math" alttext="(1/2,2.39,2.41)" display="inline"><semantics><mrow><mo stretchy="false">(</mo><mrow><mn>1</mn><mo>/</mo><mn>2</mn></mrow><mo>,</mo><mn>2.39</mn><mo>,</mo><mn>2.41</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1/2,2.39,2.41)</annotation></semantics></math> with nearly equal means
+(dotted line) and for the start with equal means (dash-dotted line
+with crosses). The trace of the start with swapped means coincides
+with the solid line.</figcaption>
 </figure>
 </div>
 </section>
@@ -465,20 +472,19 @@ the mixture with <math id="S4.p1.m5" class="ltx_Math" alttext="\sigma=1" display
 start. The EM algorithm does not provide standard errors. To obtain
 them, use <span class="ltx_text ltx_font_typewriter">optim</span> with <span class="ltx_text ltx_font_typewriter">hessian = TRUE</span> to minimise the
 negative of <span class="ltx_text ltx_font_typewriter">loglik</span>, starting from the fixed point, as in
-lecture <a href="Ch18.html" title="Lecture 18 Maximum Likelihood in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">18</span></a>; the script <span class="ltx_text ltx_font_typewriter">R/S21-mixture.R</span> contains
+lecture <a href="Ch18.html" title="Lecture 18 Maximum Likelihood in R ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">18</span></a>. The script <span class="ltx_text ltx_font_typewriter">R/S21-mixture.R</span> contains
 the necessary command. Report each estimate with its standard error.
 Then repeat the task with the two means only one unit apart. How many
-iterations does the loop need now, and what happens to the standard
+iterations does the loop need now? What happens to the standard
 errors? If the loop runs through all <math id="S4.p1.m6" class="ltx_Math" alttext="1000" display="inline"><semantics><mn>1000</mn><annotation encoding="application/x-tex">1000</annotation></semantics></math> iterations, the stopping
-rule was never met and the result is not a fixed point, so you should
-say so in your answer.</p>
+rule was never met and the result is not a fixed point. Say so in
+your answer if this happens.</p>
 </div>
 <div id="S4.p2" class="ltx_para">
-<p class="ltx_p">Typing the commands
-yourself is an important step towards understanding how the R scripts
-work. Before the next session, please type in the commands from
-this session, and check that you get the same results as shown in the
-text.</p>
+<p class="ltx_p">Typing the commands yourself is an important step towards
+understanding how the R scripts work. Before the next session, please
+type in the commands from this session and check that you get the
+results shown in the text.</p>
 </div>
 <div id="Thmsummarybodyx21" class="ltx_theorem bml_border-color_000000 ltx_theorem_summarybody ltx_framed ltx_framed_left" style="border-width:3pt;padding-left:10pt;" role="group" aria-labelledby="bml-auto-id1">
 <div class="ltx_title ltx_runin ltx_title_theorem">
@@ -494,12 +500,12 @@ is appendix <a href="A2.html" title="Appendix B Introduction to R ‣ MATH5703M
 <li id="S4.I1.i2" class="ltx_item" style="list-style-type:none;">
 <span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i2.p1" class="ltx_para">​<p class="ltx_p">The E step and M step from example <a href="Ch19.html#Thmtheorem1" title="Example 19.1. ‣ 19.1 Incomplete Data ‣ Lecture 19 The EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">19.1</span></a>
 involve only a few lines of vector arithmetic. For five
-observations, these lines reproduce the manual computation.</p>
+observations, these lines reproduce the hand computation.</p>
 </div>
 </li>
 <li id="S4.I1.i3" class="ltx_item" style="list-style-type:none;">
-<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i3.p1" class="ltx_para">​<p class="ltx_p">For a sample of size <math id="S4.I1.i3.p1.m1" class="ltx_Math" alttext="200" display="inline"><semantics><mn>200</mn><annotation encoding="application/x-tex">200</annotation></semantics></math> with overlapping groups, it takes
-<math id="S4.I1.i3.p1.m2" class="ltx_Math" alttext="28" display="inline"><semantics><mn>28</mn><annotation encoding="application/x-tex">28</annotation></semantics></math> iterations for EM to converge. The log-likelihood
+<span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i3.p1" class="ltx_para">​<p class="ltx_p">For a sample of size <math id="S4.I1.i3.p1.m1" class="ltx_Math" alttext="200" display="inline"><semantics><mn>200</mn><annotation encoding="application/x-tex">200</annotation></semantics></math> with overlapping groups, EM
+converges in <math id="S4.I1.i3.p1.m2" class="ltx_Math" alttext="28" display="inline"><semantics><mn>28</mn><annotation encoding="application/x-tex">28</annotation></semantics></math> iterations. The log-likelihood
 increases in every step, as required by
 proposition <a href="Ch20.html#Thmtheorem2" title="Proposition 20.2. ‣ 20.1 The Ascent Property ‣ Lecture 20 Properties of the EM Algorithm ‣ MATH5703M Statistical Theory" class="ltx_ref"><span class="ltx_text ltx_ref_tag">20.2</span></a>. Near the fixed point each
 increase is about <math id="S4.I1.i3.p1.m3" class="ltx_Math" alttext="0.4" display="inline"><semantics><mn>0.4</mn><annotation encoding="application/x-tex">0.4</annotation></semantics></math> times the previous one, and this
@@ -518,11 +524,11 @@ observation belongs to.</p>
 <span class="ltx_tag ltx_tag_item">•</span><div id="S4.I1.i5.p1" class="ltx_para">​<p class="ltx_p">If the labels are swapped before starting the EM algorithm,
 the algorithm converges to the mirror-image maximum with the same
 log-likelihood. If the two means are equal at the start, the EM
-algorithm stops at a saddle point immediately, <span class="ltx_text ltx_font_italic">i.e.</span> at a
-root of the likelihood equation which is not a maximum. To avoid
-this, the EM algorithm should be started with different values and
-the best of the resulting runs should be chosen, based on the
-log-likelihood of the observed data.</p>
+algorithm stops after two iterations at a saddle point,
+<span class="ltx_text ltx_font_italic">i.e.</span> at a root of the likelihood equation which is not a
+maximum. As a precaution, EM is run from several starting values,
+and the run with the largest observed-data log-likelihood is
+kept.</p>
 </div>
 </li>
 </ul>
